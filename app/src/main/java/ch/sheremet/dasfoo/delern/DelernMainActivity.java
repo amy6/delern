@@ -62,6 +62,6 @@ public class DelernMainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        
+
     }
 }
