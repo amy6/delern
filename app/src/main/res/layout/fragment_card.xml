@@ -16,7 +16,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textCardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -41,14 +41,14 @@
         android:layout_margin="10dp">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/to_know_button"
             android:text="I know it!"
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/to_repeat_button"
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:layout_height="wrap_content"
@@ -56,12 +56,19 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/to_memorize_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="To memorize"
         android:layout_below="@+id/card_view"
         android:layout_centerHorizontal="true" />
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
 
 

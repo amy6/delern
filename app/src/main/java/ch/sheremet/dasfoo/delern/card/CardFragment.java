@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import ch.sheremet.dasfoo.delern.R;
 
@@ -24,11 +27,42 @@ public class CardFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private Button mKnowButton;
+    private Button mMemorizeButton;
+    private Button mRepeatButton;
+    private Button mNextButton;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            switch (v.getId()) {
+                case R.id.to_know_button:
+                    TextView tViev = (TextView) getActivity().findViewById(R.id.textCardView);
+                    tViev.setText("Some text 2");
+                    mMemorizeButton.setVisibility(View.VISIBLE);
+                    mRepeatButton.setVisibility(View.INVISIBLE);
+                    mKnowButton.setVisibility(View.INVISIBLE);
+                    mNextButton.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.to_memorize_button:
+                    break;
+                case R.id.to_repeat_button:
+                    mMemorizeButton.setVisibility(View.INVISIBLE);
+                    mRepeatButton.setVisibility(View.INVISIBLE);
+                    mKnowButton.setVisibility(View.INVISIBLE);
+                    break;
+                default:
+                    Log.v("CardFragment", "Button is not implemented yet.");
+                    break;
+            }
+        }
+    };
 
     public CardFragment() {
         // Required empty public constructor
@@ -65,14 +99,18 @@ public class CardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_card, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        View view = inflater.inflate(R.layout.fragment_card, container, false);
+        mKnowButton = (Button) view.findViewById(R.id.to_know_button);
+        mKnowButton.setOnClickListener(onClickListener);
+        mMemorizeButton = (Button) view.findViewById(R.id.to_memorize_button);
+        mMemorizeButton.setOnClickListener(onClickListener);
+        mRepeatButton = (Button) view.findViewById(R.id.to_repeat_button);
+        mRepeatButton.setOnClickListener(onClickListener);
+        mMemorizeButton.setVisibility(View.INVISIBLE);
+        mNextButton = (Button) view.findViewById(R.id.next_button);
+        mNextButton.setOnClickListener(onClickListener);
+        mNextButton.setVisibility(View.INVISIBLE);
+        return view;
     }
 
     @Override
