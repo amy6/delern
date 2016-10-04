@@ -3,6 +3,8 @@ package ch.sheremet.dasfoo.delern;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +38,14 @@ public class DelernMainActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
 
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         //TODO: move init to onActivityCreated
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
