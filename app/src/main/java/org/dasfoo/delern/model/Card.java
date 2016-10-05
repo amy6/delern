@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern.model;
+package org.dasfoo.delern.model;
 
 /**
  * Created by katarina on 10/4/16.

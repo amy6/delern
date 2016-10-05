@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ch.sheremet.dasfoo.delern.DelernMainActivity">
+    tools:context="org.dasfoo.delern.DelernMainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

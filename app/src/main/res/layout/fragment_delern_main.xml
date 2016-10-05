@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ch.sheremet.dasfoo.delern.DelernMainActivityFragment">
+    tools:context="org.dasfoo.delern.DelernMainActivityFragment">
     <!-- tools:showIn="@layout/activity_delern_main"-->
 
     <android.support.v7.widget.RecyclerView

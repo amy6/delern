@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern.card;
+package org.dasfoo.delern.card;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import java.util.Iterator;
 
-import ch.sheremet.dasfoo.delern.R;
-import ch.sheremet.dasfoo.delern.model.Card;
-import ch.sheremet.dasfoo.delern.model.DBListTest;
+import org.dasfoo.delern.R;
+import org.dasfoo.delern.model.Card;
+import org.dasfoo.delern.model.DBListTest;
 
 /**
  * A simple {@link Fragment} subclass.

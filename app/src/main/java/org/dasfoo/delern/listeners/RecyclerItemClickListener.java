@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern.listeners;
+package org.dasfoo.delern.listeners;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

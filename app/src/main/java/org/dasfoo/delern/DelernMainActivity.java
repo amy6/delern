@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern;
+package org.dasfoo.delern;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import ch.sheremet.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.card.CardFragment;
 
 public class DelernMainActivity extends AppCompatActivity
         implements CardFragment.OnFragmentInteractionListener {

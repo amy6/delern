@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern.model;
+package org.dasfoo.delern.model;
 
 import android.os.Bundle;
 import android.util.Log;

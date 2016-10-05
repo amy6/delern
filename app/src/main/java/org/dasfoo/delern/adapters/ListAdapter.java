@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern.adapters;
+package org.dasfoo.delern.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.sheremet.dasfoo.delern.R;
+import org.dasfoo.delern.R;
 
 /**
  * Created by Katarina Sheremet on 9/22/16 1:11 AM.

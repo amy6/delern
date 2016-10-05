@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern;
+package org.dasfoo.delern;
 
 import android.content.DialogInterface;
 import android.net.Uri;
@@ -20,10 +20,10 @@ import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import ch.sheremet.dasfoo.delern.adapters.ListAdapter;
-import ch.sheremet.dasfoo.delern.card.CardFragment;
-import ch.sheremet.dasfoo.delern.listeners.RecyclerItemClickListener;
-import ch.sheremet.dasfoo.delern.model.DBListTest;
+import org.dasfoo.delern.adapters.ListAdapter;
+import org.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.listeners.RecyclerItemClickListener;
+import org.dasfoo.delern.model.DBListTest;
 
 /**
  * A placeholder fragment containing a simple view.

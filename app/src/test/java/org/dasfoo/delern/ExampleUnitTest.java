@@ -1,4 +1,4 @@
-package ch.sheremet.dasfoo.delern;
+package org.dasfoo.delern;
 
 import org.junit.Test;
 
