@@ -48,20 +48,23 @@ public class CardFragment extends Fragment {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    mTextView.setText(mCurrentCard.getBackSide());
+                    showBackSide(mCurrentCard);
                     mMemorizeButton.setVisibility(View.VISIBLE);
-                    mRepeatButton.setVisibility(View.INVISIBLE);
-                    mKnowButton.setVisibility(View.INVISIBLE);
-                    mNextButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.to_memorize_button:
+                    // TODO: Add time parameters
                     break;
                 case R.id.to_repeat_button:
+                    showBackSide(mCurrentCard);
                     mMemorizeButton.setVisibility(View.INVISIBLE);
-                    mRepeatButton.setVisibility(View.INVISIBLE);
-                    mKnowButton.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.next_button:
+                    if (mCardIterator.hasNext()){
+                        mCurrentCard = mCardIterator.next();
+                        showFrontSide(mCurrentCard);
+                    } else {
+                        getFragmentManager().popBackStack();
+                    }
                     break;
                 default:
                     Log.v("CardFragment", "Button is not implemented yet.");
@@ -110,16 +113,14 @@ public class CardFragment extends Fragment {
         mMemorizeButton.setOnClickListener(onClickListener);
         mRepeatButton = (Button) view.findViewById(R.id.to_repeat_button);
         mRepeatButton.setOnClickListener(onClickListener);
-        mMemorizeButton.setVisibility(View.INVISIBLE);
         mNextButton = (Button) view.findViewById(R.id.next_button);
         mNextButton.setOnClickListener(onClickListener);
-        mNextButton.setVisibility(View.INVISIBLE);
         mTextView = (TextView) view.findViewById(R.id.textCardView);
         // TODO: Move this code somewhere
         mCardIterator = DBListTest.newInstance().getCardsById(mParam1).iterator();
         if (mCardIterator.hasNext()){
             mCurrentCard = mCardIterator.next();
-            mTextView.setText(mCurrentCard.getFrontSide());
+           showFrontSide(mCurrentCard);
         }
         return view;
     }
@@ -154,5 +155,20 @@ public class CardFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void showFrontSide(Card card) {
+        mTextView.setText(mCurrentCard.getFrontSide());
+        mMemorizeButton.setVisibility(View.INVISIBLE);
+        mRepeatButton.setVisibility(View.VISIBLE);
+        mKnowButton.setVisibility(View.VISIBLE);
+        mNextButton.setVisibility(View.INVISIBLE);
+    }
+
+    private void showBackSide(Card card) {
+        mTextView.setText(mCurrentCard.getBackSide());
+        mNextButton.setVisibility(View.VISIBLE);
+        mRepeatButton.setVisibility(View.INVISIBLE);
+        mKnowButton.setVisibility(View.INVISIBLE);
     }
 }
