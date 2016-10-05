@@ -1,5 +1,6 @@
 package ch.sheremet.dasfoo.delern;
 
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,11 +8,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -19,6 +23,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import ch.sheremet.dasfoo.delern.adapters.ListAdapter;
 import ch.sheremet.dasfoo.delern.card.CardFragment;
 import ch.sheremet.dasfoo.delern.listeners.RecyclerItemClickListener;
+import ch.sheremet.dasfoo.delern.model.DBListTest;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -42,8 +47,33 @@ public class DelernMainActivityFragment extends Fragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Topic");
+
+                // Set up the input
+                final EditText input = new EditText(getActivity());
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DBListTest.newInstance().addNewTopic(input.getText().toString());
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
         //TODO: move init to onActivityCreated
@@ -81,8 +111,9 @@ public class DelernMainActivityFragment extends Fragment
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // TODO: move to db
-        String[] list = {"Deutsch", "English", "Algorithms", "My cards"};
-        mAdapter = new ListAdapter(list);
+
+        //String[] list = {"Deutsch", "English", "Algorithms", "My cards"};
+        mAdapter = new ListAdapter(DBListTest.newInstance().getTopicList());
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }

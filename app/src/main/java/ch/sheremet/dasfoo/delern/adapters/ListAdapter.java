@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import ch.sheremet.dasfoo.delern.R;
 
 /**
@@ -15,10 +17,10 @@ import ch.sheremet.dasfoo.delern.R;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
-    private String[] mDataset;
+    private List<String> mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ListAdapter(String[] myDataset) {
+    public ListAdapter(List<String> myDataset) {
         this.mDataset = myDataset;
     }
 
@@ -93,7 +95,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public void onBindViewHolder(ListAdapter.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset[position]);
+        holder.mTextView.setText(mDataset.get(position));
 
     }
 
@@ -104,6 +106,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

@@ -14,6 +14,7 @@ public final class DBListTest {
 
     public static DBListTest instansce;
     private List<List<Card>> cardsList = new ArrayList<List<Card>>(5);
+    private List<String> topicList = new ArrayList<String>(5);
 
     public static DBListTest newInstance() {
 
@@ -51,6 +52,11 @@ public final class DBListTest {
         cardsList.add(cards4);
 
         Log.v("ListSIze", String.valueOf(cardsList.size()));
+
+        topicList.add("Deutsch");
+        topicList.add("English");
+        topicList.add("Algorithms");
+        topicList.add("My cards");
     }
 
     public List<Card> getCardsById(int i) {
@@ -59,4 +65,11 @@ public final class DBListTest {
         return list;
     }
 
+    public List<String> getTopicList() {
+        return topicList;
+    }
+
+    public void addNewTopic(String topic) {
+        topicList.add(topic);
+    }
 }

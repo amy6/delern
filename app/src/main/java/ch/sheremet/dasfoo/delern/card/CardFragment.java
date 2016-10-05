@@ -117,10 +117,12 @@ public class CardFragment extends Fragment {
         mNextButton.setOnClickListener(onClickListener);
         mTextView = (TextView) view.findViewById(R.id.textCardView);
         // TODO: Move this code somewhere
-        mCardIterator = DBListTest.newInstance().getCardsById(mParam1).iterator();
-        if (mCardIterator.hasNext()){
+        try {
+            mCardIterator = DBListTest.newInstance().getCardsById(mParam1).iterator();
             mCurrentCard = mCardIterator.next();
-           showFrontSide(mCurrentCard);
+            showFrontSide(mCurrentCard);
+        } catch (IndexOutOfBoundsException e) {
+            getFragmentManager().popBackStack();
         }
         return view;
     }
