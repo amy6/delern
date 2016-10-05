@@ -57,11 +57,7 @@ public class DelernMainActivityFragment extends Fragment
                     public void onItemClick(View view, int position) {
                         Toast.makeText(getContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
                         // Create fragment and give it an argument specifying the article it should show
-                        CardFragment newFragment = new CardFragment();
-                        //      Bundle args = new Bundle();
-                        //     args.putInt(ArticleFragment.ARG_POSITION, position);
-                        //     newFragment.setArguments(args);
-
+                        CardFragment newFragment = CardFragment.newInstance(position);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                                 .beginTransaction();
 
