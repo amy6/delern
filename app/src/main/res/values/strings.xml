@@ -2,7 +2,10 @@
     <string name="app_name">Delern</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Some Text</string>
     <string name="sign_out">Sign Out</string>
+
+    <string name="invite_menu_label">Invite</string>
+    <string name="invitation_message">Please join me for learning</string>
+    <string name="invitation_cta">Call to action</string>
+    <string name="invitation_title">Delern Invite</string>
 </resources>
