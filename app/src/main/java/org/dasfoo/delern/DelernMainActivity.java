@@ -24,6 +24,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.auth.api.Auth;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.signin.SignInActivity;
@@ -150,6 +151,8 @@ public class DelernMainActivity extends AppCompatActivity
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        // TODO(ksheremet): add this to errors that crashed apps for crash reports Firebase
+        FirebaseCrash.logcat(Log.ERROR, TAG, connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
 
     }
