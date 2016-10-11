@@ -29,11 +29,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView mTextView;
-        public ViewHolder(TextView v) {
+        public TextView desktopTextView;
+
+        public ViewHolder(View v) {
             super(v);
-            mTextView = v;
+            desktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
+
         }
 
 
@@ -95,7 +96,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     public void onBindViewHolder(ListAdapter.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset.get(position));
+        holder.desktopTextView.setText(mDataset.get(position));
 
     }
 

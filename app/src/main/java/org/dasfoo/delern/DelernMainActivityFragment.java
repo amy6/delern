@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,16 +18,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.ListAdapter;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.listeners.RecyclerItemClickListener;
 import org.dasfoo.delern.model.DBListTest;
+import org.dasfoo.delern.model.Desktop;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,10 +42,27 @@ public class DelernMainActivityFragment extends Fragment
         implements CardFragment.OnFragmentInteractionListener {
 
     private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    // Firebase realtime database instance variables
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseRecyclerAdapter<Desktop, ListAdapter.ViewHolder>
+            mFirebaseAdapter;
+
+    public static final String DESKTOP_NAME = "desktop";
 
     public DelernMainActivityFragment() {
+    }
+
+    public static class DesktopViewHolder extends RecyclerView.ViewHolder {
+        public TextView desktopTextView;
+
+        public DesktopViewHolder(View v) {
+            super(v);
+           desktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
+
+        }
     }
 
     @Override
@@ -46,6 +70,7 @@ public class DelernMainActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
 
+        // TODO(ksheremet) : move logic in separate class
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +90,12 @@ public class DelernMainActivityFragment extends Fragment
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DBListTest.newInstance().addNewTopic(input.getText().toString());
-                        mAdapter.notifyDataSetChanged();
+                       // DBListTest.newInstance().addNewTopic(input.getText().toString());
+                       // mAdapter.notifyDataSetChanged();
+                        Desktop newDesktop = new
+                                Desktop(input.getText().toString(), null);
+                        mFirebaseDatabaseReference.child(DESKTOP_NAME)
+                                .push().setValue(newDesktop);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -80,6 +109,7 @@ public class DelernMainActivityFragment extends Fragment
             }
         });
         //TODO: move init to onActivityCreated
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
@@ -114,10 +144,34 @@ public class DelernMainActivityFragment extends Fragment
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // TODO: move to db
+        // New child entries
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop,
+                ListAdapter.ViewHolder>(
+                Desktop.class,
+                R.layout.card_text_view,
+                ListAdapter.ViewHolder.class,
+                mFirebaseDatabaseReference.child(DESKTOP_NAME)) {
+
+            @Override
+            protected void populateViewHolder(ListAdapter.ViewHolder viewHolder, Desktop desktop, int position) {
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.desktopTextView.setText(desktop.getName());
+
+            }
+        };
+
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+            }
+        });
+
 
         //String[] list = {"Deutsch", "English", "Algorithms", "My cards"};
-        mAdapter = new ListAdapter(DBListTest.newInstance().getTopicList());
-        mRecyclerView.setAdapter(mAdapter);
+       // mAdapter = new ListAdapter(DBListTest.newInstance().getTopicList());
+        mRecyclerView.setAdapter(mFirebaseAdapter);
         return rootView;
     }
 

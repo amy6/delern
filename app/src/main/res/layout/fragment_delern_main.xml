@@ -29,5 +29,16 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:layout_anchor="@+id/list_recycler_view"
+        app:layout_anchorGravity="top|left"
+        android:layout_gravity="center_vertical|end" />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -20,4 +20,12 @@ public class Card {
     public String getBackSide() {
         return backSide;
     }
+
+    public void setFrontSide(String frontSide) {
+        this.frontSide = frontSide;
+    }
+
+    public void setBackSide(String backSide) {
+        this.backSide = backSide;
+    }
 }
