@@ -34,11 +34,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        app:layout_anchor="@+id/list_recycler_view"
-        app:layout_anchorGravity="top|left"
-        android:layout_gravity="center_vertical|end" />
+        android:layout_gravity="center" />
 
 
 </android.support.design.widget.CoordinatorLayout>
