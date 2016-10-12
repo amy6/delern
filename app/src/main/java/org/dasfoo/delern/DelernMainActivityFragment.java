@@ -3,13 +3,10 @@ package org.dasfoo.delern;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +18,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -32,7 +27,6 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.adapters.ListAdapter;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.listeners.RecyclerItemClickListener;
-import org.dasfoo.delern.model.DBListTest;
 import org.dasfoo.delern.model.Desktop;
 
 /**
