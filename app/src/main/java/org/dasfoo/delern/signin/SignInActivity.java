@@ -20,10 +20,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.User;
 
 public class SignInActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -37,6 +41,8 @@ public class SignInActivity extends AppCompatActivity
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
 
     // Firebase instance variables
@@ -45,16 +51,12 @@ public class SignInActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-
         // Initialize FirebaseAuth
         mFirebaseAuth = FirebaseAuth.getInstance();
-
         // Assign fields
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-
         // Set click listeners
         mSignInButton.setOnClickListener(this);
-
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -64,8 +66,22 @@ public class SignInActivity extends AppCompatActivity
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        // Initialize FirebaseAuth
+        // AuthStateListener that responds to changes in the user's sign-in state
+        mAuthListener = new FirebaseAuth.AuthStateListener(){
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    User changedUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                    ref.child("users").child(user.getUid()).setValue(changedUser);
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
     }
 
     @Override
@@ -103,7 +119,6 @@ public class SignInActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -125,6 +140,20 @@ public class SignInActivity extends AppCompatActivity
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     private void signIn() {

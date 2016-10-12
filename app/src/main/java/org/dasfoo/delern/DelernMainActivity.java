@@ -25,8 +25,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends AppCompatActivity
@@ -37,13 +40,13 @@ public class DelernMainActivity extends AppCompatActivity
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     public static final String ANONYMOUS = "anonymous";
     private static final int REQUEST_INVITE = 1;
 
     private String mUsername;
-    private String mPhotoUrl;
     private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
 
@@ -60,6 +63,7 @@ public class DelernMainActivity extends AppCompatActivity
         mUsername = ANONYMOUS;
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
+
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
             // Not signed in, launch the Sign In activity
@@ -67,10 +71,7 @@ public class DelernMainActivity extends AppCompatActivity
             finish();
             return;
         } else {
-            mUsername = mFirebaseUser.getDisplayName();
-            if (mFirebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
+            User user = new User(mUsername, mFirebaseUser.getEmail(), mFirebaseUser.getPhotoUrl().toString());
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -95,6 +96,16 @@ public class DelernMainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_delern_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override

@@ -14,8 +14,8 @@ import android.widget.TextView;
 import java.util.Iterator;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.model.Card;
-import org.dasfoo.delern.model.DBListTest;
+import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.DBListTest;
 
 /**
  * A simple {@link Fragment} subclass.

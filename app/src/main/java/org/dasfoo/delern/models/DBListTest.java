@@ -1,6 +1,5 @@
-package org.dasfoo.delern.model;
+package org.dasfoo.delern.models;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;

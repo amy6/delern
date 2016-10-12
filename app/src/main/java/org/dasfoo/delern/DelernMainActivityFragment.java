@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -27,7 +26,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.adapters.ListAdapter;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.listeners.RecyclerItemClickListener;
-import org.dasfoo.delern.model.Desktop;
+import org.dasfoo.delern.models.Desktop;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -47,16 +46,6 @@ public class DelernMainActivityFragment extends Fragment
     public static final String DESKTOP_NAME = "desktop";
 
     public DelernMainActivityFragment() {
-    }
-
-    public static class DesktopViewHolder extends RecyclerView.ViewHolder {
-        public TextView desktopTextView;
-
-        public DesktopViewHolder(View v) {
-            super(v);
-           desktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
-
-        }
     }
 
     @Override
@@ -84,8 +73,6 @@ public class DelernMainActivityFragment extends Fragment
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       // DBListTest.newInstance().addNewTopic(input.getText().toString());
-                       // mAdapter.notifyDataSetChanged();
                         Desktop newDesktop = new
                                 Desktop(input.getText().toString(), null);
                         mFirebaseDatabaseReference.child(DESKTOP_NAME)

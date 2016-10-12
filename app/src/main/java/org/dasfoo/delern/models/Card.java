@@ -1,4 +1,4 @@
-package org.dasfoo.delern.model;
+package org.dasfoo.delern.models;
 
 /**
  * Created by katarina on 10/4/16.

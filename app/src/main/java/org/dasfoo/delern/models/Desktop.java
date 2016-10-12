@@ -1,4 +1,4 @@
-package org.dasfoo.delern.model;
+package org.dasfoo.delern.models;
 
 import java.util.List;
 
