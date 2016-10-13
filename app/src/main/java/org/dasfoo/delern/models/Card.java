@@ -5,27 +5,46 @@ package org.dasfoo.delern.models;
  */
 
 public class Card {
-    private String frontSide;
-    private String backSide;
+    private String uid;
+    private String backside;
+    private String frontside;
 
-    public Card(String frontSide, String backSide) {
-        this.frontSide = frontSide;
-        this.backSide = backSide;
+    public Card(){
+
     }
 
-    public String getFrontSide() {
-        return frontSide;
+    public Card(String backSide, String frontSide) {
+        this.backside = backSide;
+        this.frontside = frontSide;
+    }
+
+    public Card(String uid, String backSide, String frontSide) {
+        this.uid = uid;
+        this.backside = backSide;
+        this.frontside = frontSide;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getBackSide() {
-        return backSide;
-    }
-
-    public void setFrontSide(String frontSide) {
-        this.frontSide = frontSide;
+        return backside;
     }
 
     public void setBackSide(String backSide) {
-        this.backSide = backSide;
+        this.backside = backSide;
+    }
+
+    public String getFrontSide() {
+        return frontside;
+    }
+
+    public void setFrontSide(String frontSide) {
+        this.frontside = frontSide;
     }
 }

@@ -7,16 +7,23 @@ import java.util.List;
  */
 
 public class Desktop {
+    private String uid;
     private String name;
-    private List<Card> cardList;
 
     public Desktop(){
 
     }
 
-    public Desktop(String name, List<Card> cardList) {
+    public Desktop(String name) {
         this.name = name;
-        this.cardList = cardList;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
@@ -27,11 +34,4 @@ public class Desktop {
         this.name = name;
     }
 
-    public List<Card> getCardList() {
-        return cardList;
-    }
-
-    public void setCardList(List<Card> cardList) {
-        this.cardList = cardList;
-    }
 }

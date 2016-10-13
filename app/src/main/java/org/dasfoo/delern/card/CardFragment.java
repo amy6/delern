@@ -11,11 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.DBListTest;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,9 +34,8 @@ import org.dasfoo.delern.models.DBListTest;
  * create an instance of this fragment.
  */
 public class CardFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "id";
+    private static final String FB_REFERENCE = "reference";
+    private static final String CARDS_FIREBASE = "cards";
 
     private Button mKnowButton;
     private Button mMemorizeButton;
@@ -38,30 +45,25 @@ public class CardFragment extends Fragment {
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
 
-    // TODO: Rename and change types of parameters
-    private int mParam1;
-
-    private OnFragmentInteractionListener mListener;
-
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    showBackSide(mCurrentCard);
+                    showBackSide();
                     mMemorizeButton.setVisibility(View.VISIBLE);
                     break;
                 case R.id.to_memorize_button:
-                    // TODO: Add time parameters
+                    // TODO: Add time parameters and memorization logic
                     break;
                 case R.id.to_repeat_button:
-                    showBackSide(mCurrentCard);
+                    showBackSide();
                     mMemorizeButton.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.next_button:
-                    if (mCardIterator.hasNext()){
+                    if (mCardIterator.hasNext()) {
                         mCurrentCard = mCardIterator.next();
-                        showFrontSide(mCurrentCard);
+                        showFrontSide();
                     } else {
                         getFragmentManager().popBackStack();
                     }
@@ -81,30 +83,63 @@ public class CardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param fbReference reference to firebase dataset.
      * @return A new instance of fragment CardFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static CardFragment newInstance(int param1) {
+    public static CardFragment newInstance(final String fbReference) {
         CardFragment fragment = new CardFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
+        args.putString(FB_REFERENCE, fbReference);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getInt(ARG_PARAM1);
-            Log.v("Input parameter", String.valueOf(mParam1));
+            String dbReference = getArguments().getString(FB_REFERENCE);
+            // Init Firebase to get cards
+            assert dbReference != null;
+            DatabaseReference mFirebaseDatabaseReference = FirebaseDatabase
+                    .getInstance()
+                    .getReferenceFromUrl(dbReference)
+                    .child(CARDS_FIREBASE);
+            // Attach a listener to read the cards. This function will be called anytime
+            // new data is added to our database reference.
+            mFirebaseDatabaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Card> cards = new ArrayList<>();
+                    for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                        Card card = cardSnapshot.getValue(Card.class);
+                        card.setUid(cardSnapshot.getKey());
+                        cards.add(card);
+                    }
+                    try {
+                        mCardIterator = cards.iterator();
+                        mCurrentCard = mCardIterator.next();
+                        showFrontSide();
+                    } catch (NoSuchElementException e) {
+                        getFragmentManager().popBackStack();
+                    }
+                }
+
+                // TODO(ksheremet): Implementation on error
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                // Not implemented yet.
+                }
+            });
+        } else {
+            // If no parameters, return to previous state
+            getFragmentManager().popBackStack();
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public final View onCreateView(final LayoutInflater inflater,final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_card, container, false);
         mKnowButton = (Button) view.findViewById(R.id.to_know_button);
@@ -116,32 +151,42 @@ public class CardFragment extends Fragment {
         mNextButton = (Button) view.findViewById(R.id.next_button);
         mNextButton.setOnClickListener(onClickListener);
         mTextView = (TextView) view.findViewById(R.id.textCardView);
-        // TODO: Move this code somewhere
-        try {
-            mCardIterator = DBListTest.newInstance().getCardsById(mParam1).iterator();
-            mCurrentCard = mCardIterator.next();
-            showFrontSide(mCurrentCard);
-        } catch (IndexOutOfBoundsException e) {
-            getFragmentManager().popBackStack();
-        }
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public final void onAttach(final Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
+        if (!(context instanceof OnFragmentInteractionListener)) {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public void onDetach() {
+    public final void onDetach() {
         super.onDetach();
-        mListener = null;
+    }
+
+    /**
+     * Shows front side of the current card and appropriate buttons
+     */
+    private void showFrontSide() {
+        mTextView.setText(mCurrentCard.getFrontSide());
+        mMemorizeButton.setVisibility(View.INVISIBLE);
+        mRepeatButton.setVisibility(View.VISIBLE);
+        mKnowButton.setVisibility(View.VISIBLE);
+        mNextButton.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Shows back side of current card and appropriate buttons.
+     */
+    private void showBackSide() {
+        mTextView.setText(mCurrentCard.getBackSide());
+        mNextButton.setVisibility(View.VISIBLE);
+        mRepeatButton.setVisibility(View.INVISIBLE);
+        mKnowButton.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -157,20 +202,5 @@ public class CardFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void showFrontSide(Card card) {
-        mTextView.setText(mCurrentCard.getFrontSide());
-        mMemorizeButton.setVisibility(View.INVISIBLE);
-        mRepeatButton.setVisibility(View.VISIBLE);
-        mKnowButton.setVisibility(View.VISIBLE);
-        mNextButton.setVisibility(View.INVISIBLE);
-    }
-
-    private void showBackSide(Card card) {
-        mTextView.setText(mCurrentCard.getBackSide());
-        mNextButton.setVisibility(View.VISIBLE);
-        mRepeatButton.setVisibility(View.INVISIBLE);
-        mKnowButton.setVisibility(View.INVISIBLE);
     }
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +83,8 @@ public class DelernMainActivityFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Desktop newDesktop = new
-                                Desktop(input.getText().toString(), null);
+                                Desktop(input.getText().toString());
+                        // TODO(ksheremet): move referencies to one place
                         mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_NAME)
                                 .push().setValue(newDesktop);
                     }
@@ -107,9 +109,8 @@ public class DelernMainActivityFragment extends Fragment
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(getContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
-                        // Create fragment and give it an argument specifying the article it should show
-                        CardFragment newFragment = CardFragment.newInstance(position);
+                        Log.v("On click",mFirebaseAdapter.getRef(position).toString());
+                        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).toString());
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                                 .beginTransaction();
 
@@ -118,7 +119,7 @@ public class DelernMainActivityFragment extends Fragment
                         transaction.replace(R.id.fragment_container, newFragment);
                         transaction.addToBackStack(null);
 
-// Commit the transaction
+                        // Commit the transaction
                         transaction.commit();
                     }
                 })
@@ -131,7 +132,7 @@ public class DelernMainActivityFragment extends Fragment
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        
+
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop,
