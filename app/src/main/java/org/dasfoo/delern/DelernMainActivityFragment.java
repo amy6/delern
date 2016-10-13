@@ -19,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -34,6 +36,9 @@ import org.dasfoo.delern.models.Desktop;
 public class DelernMainActivityFragment extends Fragment
         implements CardFragment.OnFragmentInteractionListener {
 
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private RecyclerView.Adapter mAdapter;
@@ -43,7 +48,7 @@ public class DelernMainActivityFragment extends Fragment
     private FirebaseRecyclerAdapter<Desktop, ListAdapter.ViewHolder>
             mFirebaseAdapter;
 
-    public static final String DESKTOP_NAME = "desktop";
+    public static final String DESKTOP_NAME = "desktops";
 
     public DelernMainActivityFragment() {
     }
@@ -52,6 +57,9 @@ public class DelernMainActivityFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         // TODO(ksheremet) : move logic in separate class
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
@@ -75,7 +83,7 @@ public class DelernMainActivityFragment extends Fragment
                     public void onClick(DialogInterface dialog, int which) {
                         Desktop newDesktop = new
                                 Desktop(input.getText().toString(), null);
-                        mFirebaseDatabaseReference.child(DESKTOP_NAME)
+                        mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_NAME)
                                 .push().setValue(newDesktop);
                     }
                 });
@@ -123,8 +131,7 @@ public class DelernMainActivityFragment extends Fragment
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // TODO: move to db
+        
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop,
@@ -132,7 +139,7 @@ public class DelernMainActivityFragment extends Fragment
                 Desktop.class,
                 R.layout.card_text_view,
                 ListAdapter.ViewHolder.class,
-                mFirebaseDatabaseReference.child(DESKTOP_NAME)) {
+                mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_NAME)) {
 
             @Override
             protected void populateViewHolder(ListAdapter.ViewHolder viewHolder, Desktop desktop, int position) {
