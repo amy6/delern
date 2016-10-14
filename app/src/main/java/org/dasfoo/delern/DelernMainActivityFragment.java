@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.dasfoo.delern.adapters.ListAdapter;
+import org.dasfoo.delern.viewholders.DesktopViewHolder;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.listeners.RecyclerItemClickListener;
 import org.dasfoo.delern.models.Desktop;
@@ -46,10 +45,10 @@ public class DelernMainActivityFragment extends Fragment
     private RecyclerView.LayoutManager mLayoutManager;
     // Firebase realtime database instance variables
     private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseRecyclerAdapter<Desktop, ListAdapter.ViewHolder>
+    private FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>
             mFirebaseAdapter;
 
-    public static final String DESKTOP_NAME = "desktops";
+    public static final String DESKTOP_PATH = "desktops";
 
     public DelernMainActivityFragment() {
     }
@@ -85,7 +84,7 @@ public class DelernMainActivityFragment extends Fragment
                         Desktop newDesktop = new
                                 Desktop(input.getText().toString());
                         // TODO(ksheremet): move referencies to one place
-                        mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_NAME)
+                        mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_PATH)
                                 .push().setValue(newDesktop);
                     }
                 });
@@ -135,17 +134,16 @@ public class DelernMainActivityFragment extends Fragment
 
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop,
-                ListAdapter.ViewHolder>(
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>(
                 Desktop.class,
                 R.layout.card_text_view,
-                ListAdapter.ViewHolder.class,
-                mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_NAME)) {
+                DesktopViewHolder.class,
+                mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_PATH)) {
 
             @Override
-            protected void populateViewHolder(ListAdapter.ViewHolder viewHolder, Desktop desktop, int position) {
+            protected void populateViewHolder(DesktopViewHolder viewHolder, Desktop desktop, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.desktopTextView.setText(desktop.getName());
+                viewHolder.getDesktopTextView().setText(desktop.getName());
 
             }
         };
@@ -157,9 +155,8 @@ public class DelernMainActivityFragment extends Fragment
             }
         });
 
-
         //String[] list = {"Deutsch", "English", "Algorithms", "My cards"};
-       // mAdapter = new ListAdapter(DBListTest.newInstance().getTopicList());
+       // mAdapter = new DesktopViewHolder(DBListTest.newInstance().getTopicList());
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return rootView;
     }
