@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +24,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.dasfoo.delern.viewholders.DesktopViewHolder;
+import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
+import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
-import org.dasfoo.delern.listeners.RecyclerItemClickListener;
 import org.dasfoo.delern.models.Desktop;
+import org.dasfoo.delern.viewholders.DesktopViewHolder;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DelernMainActivityFragment extends Fragment
-        implements CardFragment.OnFragmentInteractionListener {
+public class DelernMainActivityFragment extends Fragment implements OnDesktopViewHolderClick{
+
+    private final String TAG = this.getTag();
+    private OnDesktopViewHolderClick onDesktopViewHolderClick = this;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -104,30 +106,6 @@ public class DelernMainActivityFragment extends Fragment
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
 
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Log.v("On click",mFirebaseAdapter.getRef(position).toString());
-                        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).toString());
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                .beginTransaction();
-
-// Replace whatever is in the fragment_container view with this fragment,
-// and add the transaction to the back stack so the user can navigate back
-                        transaction.replace(R.id.fragment_container, newFragment);
-                        transaction.addToBackStack(null);
-
-                        // Commit the transaction
-                        transaction.commit();
-                    }
-                })
-        );
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        //mRecyclerView.setHasFixedSize(true);
-
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -143,8 +121,8 @@ public class DelernMainActivityFragment extends Fragment
             @Override
             protected void populateViewHolder(DesktopViewHolder viewHolder, Desktop desktop, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.getDesktopTextView().setText(desktop.getName());
-
+                viewHolder.getmDesktopTextView().setText(desktop.getName());
+                viewHolder.setOnViewClick(onDesktopViewHolderClick);
             }
         };
 
@@ -155,8 +133,6 @@ public class DelernMainActivityFragment extends Fragment
             }
         });
 
-        //String[] list = {"Deutsch", "English", "Algorithms", "My cards"};
-       // mAdapter = new DesktopViewHolder(DBListTest.newInstance().getTopicList());
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return rootView;
     }
@@ -167,7 +143,28 @@ public class DelernMainActivityFragment extends Fragment
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void doOnAddButtonClick(int position) {
+        AddNewCardFragment newCardFragment = AddNewCardFragment.newInstance(mFirebaseAdapter.getRef(position).toString(), "World");
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container, newCardFragment);
+        transaction.addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
 
+    }
+
+    @Override
+    public void doOnTextViewClick(int position) {
+        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).toString());
+        FragmentTransaction transaction = getFragmentManager()
+                .beginTransaction();
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
     }
 }

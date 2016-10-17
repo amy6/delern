@@ -1,15 +1,13 @@
 package org.dasfoo.delern.viewholders;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
 
 /**
   Created by Katarina Sheremet on 9/22/16 1:11 AM.
@@ -20,25 +18,45 @@ import org.dasfoo.delern.R;
 
 public class DesktopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    // TODO: try privat
-    private TextView desktopTextView;
+    private static final String TAG = DesktopViewHolder.class.getSimpleName();
+
+    private TextView mDesktopTextView;
+    private Button mAddCardButton;
+    private OnDesktopViewHolderClick onViewClick;
 
     public DesktopViewHolder(View v) {
         super(v);
-        desktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
-
+        mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
+        mDesktopTextView.setOnClickListener(this);
+        mAddCardButton = (Button) itemView.findViewById(R.id.add_card_button);
+        mAddCardButton.setOnClickListener(this);
     }
 
-    public TextView getDesktopTextView() {
-        return desktopTextView;
+    public TextView getmDesktopTextView() {
+        return mDesktopTextView;
     }
 
-    public void setDesktopTextView(TextView desktopTextView) {
-        this.desktopTextView = desktopTextView;
+    public void setmDesktopTextView(TextView mDesktopTextView) {
+        this.mDesktopTextView = mDesktopTextView;
+    }
+
+    public void setOnViewClick(OnDesktopViewHolderClick onViewClick) {
+        this.onViewClick = onViewClick;
     }
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.add_card_button) {
+            Log.v(TAG, "Button was pressed" + getAdapterPosition());
+            onViewClick.doOnAddButtonClick(getAdapterPosition());
+
+        }
+
+        if (v.getId() == R.id.desktop_text_view){
+            Log.v(TAG, "wow, it is desktop" + getAdapterPosition());
+            onViewClick.doOnTextViewClick(getAdapterPosition());
+
+        }
 
     }
 }

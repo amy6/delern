@@ -23,12 +23,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends AppCompatActivity
-        implements CardFragment.OnFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
+        implements CardFragment.OnFragmentInteractionListener,
+        GoogleApiClient.OnConnectionFailedListener,
+        AddNewCardFragment.OnFragmentInteractionListener{
 
     private static final String TAG = "DelernMailActivity";
 
