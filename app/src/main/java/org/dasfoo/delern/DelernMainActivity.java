@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
@@ -31,21 +32,17 @@ import org.dasfoo.delern.signin.SignInActivity;
 public class DelernMainActivity extends AppCompatActivity
         implements CardFragment.OnFragmentInteractionListener,
         GoogleApiClient.OnConnectionFailedListener,
-        AddNewCardFragment.OnFragmentInteractionListener{
+        AddNewCardFragment.OnFragmentInteractionListener {
 
+    public static final String ANONYMOUS = "anonymous";
     private static final String TAG = "DelernMailActivity";
-
+    private static final int REQUEST_INVITE = 1;
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-    public static final String ANONYMOUS = "anonymous";
-    private static final int REQUEST_INVITE = 1;
-
     private String mUsername;
-    private SharedPreferences mSharedPreferences;
     private GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -55,8 +52,6 @@ public class DelernMainActivity extends AppCompatActivity
 // By initializing Firebase Analytics it will automatically
 // track the lifecycle of your application throughout user sessions.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
         // Initialize Firebase Auth
@@ -78,15 +73,25 @@ public class DelernMainActivity extends AppCompatActivity
                 .addApi(AppInvite.API)
                 .build();
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         DelernMainActivityFragment listFragment = new DelernMainActivityFragment();
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, listFragment).commit();
-
+        getSupportFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    enableToolbarArrow(true);
+                } else {
+                    enableToolbarArrow(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -118,6 +123,10 @@ public class DelernMainActivity extends AppCompatActivity
                 mUsername = ANONYMOUS;
                 startActivity(new Intent(this, SignInActivity.class));
                 return true;
+            case android.R.id.home:
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -163,7 +172,6 @@ public class DelernMainActivity extends AppCompatActivity
         // TODO(ksheremet): add this to errors that crashed apps for crash reports Firebase
         FirebaseCrash.logcat(Log.ERROR, TAG, connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
-
     }
 
     private void sendInvitation() {
@@ -172,5 +180,10 @@ public class DelernMainActivity extends AppCompatActivity
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    private void enableToolbarArrow(boolean value) {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(value);
+        getSupportActionBar().setHomeButtonEnabled(value);
     }
 }

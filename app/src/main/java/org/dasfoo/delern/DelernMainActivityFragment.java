@@ -1,11 +1,11 @@
 package org.dasfoo.delern;
 
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,14 +33,13 @@ import org.dasfoo.delern.viewholders.DesktopViewHolder;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DelernMainActivityFragment extends Fragment implements OnDesktopViewHolderClick{
+public class DelernMainActivityFragment extends Fragment implements OnDesktopViewHolderClick {
 
+    public static final String DESKTOP_PATH = "desktops";
     private final String TAG = this.getTag();
     private OnDesktopViewHolderClick onDesktopViewHolderClick = this;
-
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private RecyclerView.Adapter mAdapter;
@@ -49,8 +48,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>
             mFirebaseAdapter;
-
-    public static final String DESKTOP_PATH = "desktops";
 
     public DelernMainActivityFragment() {
     }
@@ -68,7 +65,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Topic");
@@ -145,20 +142,20 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
     @Override
     public void doOnAddButtonClick(int position) {
         AddNewCardFragment newCardFragment = AddNewCardFragment.newInstance(mFirebaseAdapter.getRef(position).toString(), "World");
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.fragment_container, newCardFragment);
         transaction.addToBackStack(null);
         // Commit the transaction
         transaction.commit();
-
     }
 
     @Override
     public void doOnTextViewClick(int position) {
         CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).toString());
-        FragmentTransaction transaction = getFragmentManager()
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
