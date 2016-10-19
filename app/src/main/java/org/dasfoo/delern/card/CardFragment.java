@@ -14,16 +14,16 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.FirebaseController;
+import org.dasfoo.delern.models.Card;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import org.dasfoo.delern.R;
-import org.dasfoo.delern.models.Card;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +35,9 @@ import org.dasfoo.delern.models.Card;
  */
 public class CardFragment extends Fragment {
     private static final String FB_REFERENCE = "reference";
-    private static final String CARDS_FIREBASE = "cards";
+
+    private FirebaseController firebaseController = FirebaseController.getInstance();
+    private static final String Tag = CardFragment.class.getSimpleName();
 
     private Button mKnowButton;
     private Button mMemorizeButton;
@@ -101,13 +103,13 @@ public class CardFragment extends Fragment {
             String dbReference = getArguments().getString(FB_REFERENCE);
             // Init Firebase to get cards
             assert dbReference != null;
-            DatabaseReference mFirebaseDatabaseReference = FirebaseDatabase
-                    .getInstance()
-                    .getReferenceFromUrl(dbReference)
-                    .child(CARDS_FIREBASE);
+
+            DatabaseReference fdReference = firebaseController
+                    .getCardsRefFromDesktopUrl(dbReference);
             // Attach a listener to read the cards. This function will be called anytime
             // new data is added to our database reference.
-            mFirebaseDatabaseReference.addValueEventListener(new ValueEventListener() {
+            // TODO(ksheremet): Refactor
+            fdReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     List<Card> cards = new ArrayList<>();
@@ -131,6 +133,7 @@ public class CardFragment extends Fragment {
                 // Not implemented yet.
                 }
             });
+
         } else {
             // If no parameters, return to previous state
             getFragmentManager().popBackStack();

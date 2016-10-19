@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 
 /**
@@ -28,7 +26,7 @@ import org.dasfoo.delern.models.Card;
 public class AddNewCardFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String FB_PATH = "param1";
+    private static final String FB_PATH = "fbPath";
     private static final String ARG_PARAM2 = "param2";
     private final String TAG = this.getClass().getSimpleName();
 
@@ -40,6 +38,7 @@ public class AddNewCardFragment extends Fragment implements View.OnClickListener
     private Button mAddCardToDbButton;
 
     private OnFragmentInteractionListener mListener;
+    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     public AddNewCardFragment() {
         // Required empty public constructor
@@ -113,18 +112,10 @@ public class AddNewCardFragment extends Fragment implements View.OnClickListener
             Card newCard = new Card();
             newCard.setFrontSide(mFrontSideInputText.getText().toString());
             newCard.setBackSide(mBackSideInputText.getText().toString());
-            writeCardToFirebase(newCard, fbPath);
+            firebaseController.writeCardToDesktop(newCard, fbPath);
             cleanTextFields();
             Toast.makeText(this.getContext(), "Added", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void writeCardToFirebase(Card newCard, String mParam1) {
-        DatabaseReference mFirebaseDatabaseReference = FirebaseDatabase
-                .getInstance()
-                .getReferenceFromUrl(mParam1)
-                .child("cards");
-        mFirebaseDatabaseReference.push().setValue(newCard);
     }
 
     private void cleanTextFields(){

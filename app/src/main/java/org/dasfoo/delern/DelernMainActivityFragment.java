@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,15 +17,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
 import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Desktop;
 import org.dasfoo.delern.viewholders.DesktopViewHolder;
 
@@ -35,19 +31,15 @@ import org.dasfoo.delern.viewholders.DesktopViewHolder;
  */
 public class DelernMainActivityFragment extends Fragment implements OnDesktopViewHolderClick {
 
-    public static final String DESKTOP_PATH = "desktops";
-    private final String TAG = this.getTag();
+    private static final String TAG = DelernMainActivityFragment.class.getSimpleName();
     private OnDesktopViewHolderClick onDesktopViewHolderClick = this;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    // Firebase realtime database instance variables
-    private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>
             mFirebaseAdapter;
+    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     public DelernMainActivityFragment() {
     }
@@ -56,10 +48,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
-
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
         // TODO(ksheremet) : move logic in separate class
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +70,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
                     public void onClick(DialogInterface dialog, int which) {
                         Desktop newDesktop = new
                                 Desktop(input.getText().toString());
-                        // TODO(ksheremet): move referencies to one place
-                        mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_PATH)
+                        firebaseController.getFirebaseDesktopRef()
                                 .push().setValue(newDesktop);
                     }
                 });
@@ -106,14 +93,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // New child entries
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>(
                 Desktop.class,
                 R.layout.card_text_view,
                 DesktopViewHolder.class,
-                mFirebaseDatabaseReference.child("users").child(mFirebaseUser.getUid()).child(DESKTOP_PATH)) {
+                firebaseController.getFirebaseDesktopRef()) {
 
             @Override
             protected void populateViewHolder(DesktopViewHolder viewHolder, Desktop desktop, int position) {

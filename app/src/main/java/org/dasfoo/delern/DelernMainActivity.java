@@ -1,18 +1,16 @@
 package org.dasfoo.delern;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
@@ -26,7 +24,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
-import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends AppCompatActivity
@@ -37,13 +35,11 @@ public class DelernMainActivity extends AppCompatActivity
     public static final String ANONYMOUS = "anonymous";
     private static final String TAG = "DelernMailActivity";
     private static final int REQUEST_INVITE = 1;
-    // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAnalytics mFirebaseAnalytics;
     private String mUsername;
     private GoogleApiClient mGoogleApiClient;
+    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +51,13 @@ public class DelernMainActivity extends AppCompatActivity
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
         // Initialize Firebase Auth
-        mFirebaseAuth = FirebaseAuth.getInstance();
 
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null) {
+        FirebaseUser user = firebaseController.getmFirebaseUser();
+        if (user == null) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return;
-        } else {
-            User user = new User(mUsername, mFirebaseUser.getEmail(), mFirebaseUser.getPhotoUrl().toString());
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -118,7 +111,7 @@ public class DelernMainActivity extends AppCompatActivity
                 sendInvitation();
                 return true;
             case R.id.sign_out_menu:
-                mFirebaseAuth.signOut();
+                firebaseController.getmFirebaseAuth().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mUsername = ANONYMOUS;
                 startActivity(new Intent(this, SignInActivity.class));
@@ -146,6 +139,7 @@ public class DelernMainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Bundle payload = new Bundle();
                 payload.putString(FirebaseAnalytics.Param.VALUE, "sent");
+                // TODO(ksheremet): move to FirebaseController
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
                         payload);
                 // Check how many invitations were sent and log.

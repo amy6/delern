@@ -1,9 +1,9 @@
 package org.dasfoo.delern.signin;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -22,11 +22,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.User;
 
 public class SignInActivity extends AppCompatActivity
@@ -35,20 +34,19 @@ public class SignInActivity extends AppCompatActivity
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    private FirebaseController firebaseController = FirebaseController.getInstance();
+
     private SignInButton mSignInButton;
 
     private GoogleApiClient mGoogleApiClient;
 
-    // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-        // Initialize FirebaseAuth
-        mFirebaseAuth = FirebaseAuth.getInstance();
         // Assign fields
         mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         // Set click listeners
@@ -66,12 +64,11 @@ public class SignInActivity extends AppCompatActivity
         mAuthListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseController.getmFirebaseUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                     User changedUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
-                    ref.child("users").child(user.getUid()).setValue(changedUser);
+                   firebaseController.getFirebaseUsersRef().child(user.getUid()).setValue(changedUser);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -92,7 +89,6 @@ public class SignInActivity extends AppCompatActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -110,7 +106,7 @@ public class SignInActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGooogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mFirebaseAuth.signInWithCredential(credential)
+        firebaseController.getmFirebaseAuth().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -141,14 +137,14 @@ public class SignInActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
+        firebaseController.getmFirebaseAuth().addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            mFirebaseAuth.removeAuthStateListener(mAuthListener);
+            firebaseController.getmFirebaseAuth().removeAuthStateListener(mAuthListener);
         }
     }
 
