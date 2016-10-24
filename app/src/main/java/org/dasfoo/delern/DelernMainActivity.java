@@ -25,6 +25,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.controller.FirebaseController;
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends AppCompatActivity
@@ -45,14 +46,12 @@ public class DelernMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delern_main);
-// By initializing Firebase Analytics it will automatically
-// track the lifecycle of your application throughout user sessions.
+        // By initializing Firebase Analytics it will automatically
+        // track the lifecycle of your application throughout user sessions.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set default username is anonymous.
         mUsername = ANONYMOUS;
-        // Initialize Firebase Auth
-
-        FirebaseUser user = firebaseController.getmFirebaseUser();
+        FirebaseUser user = firebaseController.getFirebaseAuth().getCurrentUser();
         if (user == null) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
@@ -111,7 +110,7 @@ public class DelernMainActivity extends AppCompatActivity
                 sendInvitation();
                 return true;
             case R.id.sign_out_menu:
-                firebaseController.getmFirebaseAuth().signOut();
+                firebaseController.getFirebaseAuth().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mUsername = ANONYMOUS;
                 startActivity(new Intent(this, SignInActivity.class));
