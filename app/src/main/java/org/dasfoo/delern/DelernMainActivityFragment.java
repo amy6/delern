@@ -15,8 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
@@ -47,17 +51,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
         // TODO(ksheremet) : move logic in separate class
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Topic");
-
                 // Set up the input
                 final EditText input = new EditText(getActivity());
                 // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -72,6 +73,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
                                 Desktop(input.getText().toString());
                         firebaseController.getFirebaseDesktopRef()
                                 .push().setValue(newDesktop);
+                        rootView.findViewById(R.id.empty_recyclerview_message)
+                                .setVisibility(TextView.INVISIBLE);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -111,6 +114,28 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
+            }
+        });
+
+        //add the listener for the single value event that will function
+        //like a completion listener for initial data load of the FirebaseRecyclerAdapter
+        // Checks if the recyclerview is empty, ProgressBar is invisible
+        // and writes message for user
+        firebaseController.getFirebaseDesktopRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                rootView.findViewById(R.id.empty_recyclerview_message)
+                        .setVisibility(TextView.INVISIBLE);
+                if (!dataSnapshot.hasChildren()) {
+                    rootView.findViewById(R.id.empty_recyclerview_message)
+                            .setVisibility(TextView.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
