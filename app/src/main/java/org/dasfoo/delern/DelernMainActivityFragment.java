@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,26 +24,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
+import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.CardFragment;
 import org.dasfoo.delern.controller.FirebaseController;
-import org.dasfoo.delern.models.Desktop;
-import org.dasfoo.delern.viewholders.DesktopViewHolder;
+import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DelernMainActivityFragment extends Fragment implements OnDesktopViewHolderClick {
+public class DelernMainActivityFragment extends Fragment implements OnDeckViewHolderClick {
 
     private static final String TAG = DelernMainActivityFragment.class.getSimpleName();
-    private OnDesktopViewHolderClick onDesktopViewHolderClick = this;
+    private OnDeckViewHolderClick onDeckViewHolderClick = this;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>
-            mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<Deck, DeckViewHolder> mFirebaseAdapter;
     private FirebaseController firebaseController = FirebaseController.getInstance();
 
     public DelernMainActivityFragment() {
@@ -58,21 +57,18 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Topic");
+                builder.setTitle("Deck");
                 // Set up the input
                 final EditText input = new EditText(getActivity());
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                // Specify the type of input expected
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
-
                 // Set up the buttons
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Desktop newDesktop = new
-                                Desktop(input.getText().toString());
-                        firebaseController.getFirebaseDesktopRef()
-                                .push().setValue(newDesktop);
+                        Deck newDeck = new Deck(input.getText().toString());
+                        firebaseController.createNewDeck(newDeck);
                         rootView.findViewById(R.id.empty_recyclerview_message)
                                 .setVisibility(TextView.INVISIBLE);
                     }
@@ -83,11 +79,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
                         dialog.cancel();
                     }
                 });
-
                 builder.show();
             }
         });
-        //TODO: move init to onActivityCreated
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
@@ -96,17 +90,17 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Desktop, DesktopViewHolder>(
-                Desktop.class,
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
+                Deck.class,
                 R.layout.card_text_view,
-                DesktopViewHolder.class,
-                firebaseController.getFirebaseDesktopRef()) {
+                DeckViewHolder.class,
+                firebaseController.getUsersDecks()) {
 
             @Override
-            protected void populateViewHolder(DesktopViewHolder viewHolder, Desktop desktop, int position) {
+            protected void populateViewHolder(DeckViewHolder viewHolder, Deck deck, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.getmDesktopTextView().setText(desktop.getName());
-                viewHolder.setOnViewClick(onDesktopViewHolderClick);
+                viewHolder.getmDesktopTextView().setText(deck.getName());
+                viewHolder.setOnViewClick(onDeckViewHolderClick);
             }
         };
 
@@ -121,7 +115,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
         //like a completion listener for initial data load of the FirebaseRecyclerAdapter
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        firebaseController.getFirebaseDesktopRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseController.getFirebaseDecksRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -130,12 +124,13 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
                 if (!dataSnapshot.hasChildren()) {
                     rootView.findViewById(R.id.empty_recyclerview_message)
                             .setVisibility(TextView.VISIBLE);
+                    return;
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.v(TAG, databaseError.getMessage());
             }
         });
 
@@ -149,8 +144,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
     }
 
     @Override
-    public void doOnAddButtonClick(int position) {
-        AddNewCardFragment newCardFragment = AddNewCardFragment.newInstance(mFirebaseAdapter.getRef(position).toString(), "World");
+    public void doOnAddCardButtonClick(int position) {
+        AddNewCardFragment newCardFragment = AddNewCardFragment.newInstance(mFirebaseAdapter.getRef(position).getKey());
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack so the user can navigate back
@@ -162,8 +157,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDesktopVie
 
     @Override
     public void doOnTextViewClick(int position) {
-        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).toString());
-
+        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).getKey());
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment,

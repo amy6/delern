@@ -6,15 +6,15 @@ import java.util.List;
  * Created by katarina on 10/11/16.
  */
 
-public class Desktop {
+public class Deck {
     private String uid;
     private String name;
 
-    public Desktop(){
+    public Deck(){
 
     }
 
-    public Desktop(String name) {
+    public Deck(String name) {
         this.name = name;
     }
 

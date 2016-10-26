@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
+import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 
 /**
   Created by Katarina Sheremet on 9/22/16 1:11 AM.
@@ -16,15 +16,15 @@ import org.dasfoo.delern.callbacks.OnDesktopViewHolderClick;
   you provide access to all the views for a data item in a view holder
  */
 
-public class DesktopViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private static final String TAG = DesktopViewHolder.class.getSimpleName();
+    private static final String TAG = DeckViewHolder.class.getSimpleName();
 
     private TextView mDesktopTextView;
     private Button mAddCardButton;
-    private OnDesktopViewHolderClick onViewClick;
+    private OnDeckViewHolderClick onViewClick;
 
-    public DesktopViewHolder(View v) {
+    public DeckViewHolder(View v) {
         super(v);
         mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
         mDesktopTextView.setOnClickListener(this);
@@ -40,7 +40,7 @@ public class DesktopViewHolder extends RecyclerView.ViewHolder implements View.O
         this.mDesktopTextView = mDesktopTextView;
     }
 
-    public void setOnViewClick(OnDesktopViewHolderClick onViewClick) {
+    public void setOnViewClick(OnDeckViewHolderClick onViewClick) {
         this.onViewClick = onViewClick;
     }
 
@@ -48,7 +48,7 @@ public class DesktopViewHolder extends RecyclerView.ViewHolder implements View.O
     public void onClick(View v) {
         if (v.getId() == R.id.add_card_button) {
             Log.v(TAG, "Button was pressed" + getAdapterPosition());
-            onViewClick.doOnAddButtonClick(getAdapterPosition());
+            onViewClick.doOnAddCardButtonClick(getAdapterPosition());
 
         }
 

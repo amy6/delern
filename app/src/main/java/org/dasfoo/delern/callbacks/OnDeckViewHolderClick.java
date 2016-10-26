@@ -5,7 +5,7 @@ package org.dasfoo.delern.callbacks;
  * Manages clicks on RecyclerView
  */
 
-public interface OnDesktopViewHolderClick {
-    void doOnAddButtonClick(int position);
+public interface OnDeckViewHolderClick {
+    void doOnAddCardButtonClick(int position);
     void doOnTextViewClick(int position);
 }

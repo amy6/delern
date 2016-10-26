@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
@@ -34,7 +34,7 @@ import java.util.NoSuchElementException;
  * create an instance of this fragment.
  */
 public class CardFragment extends Fragment {
-    private static final String FB_REFERENCE = "reference";
+    private static final String DECK_ID = "deckId";
 
     private FirebaseController firebaseController = FirebaseController.getInstance();
     private static final String Tag = CardFragment.class.getSimpleName();
@@ -85,13 +85,13 @@ public class CardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param fbReference reference to firebase dataset.
+     * @param deckId id of deck which cards to show.
      * @return A new instance of fragment CardFragment.
      */
-    public static CardFragment newInstance(final String fbReference) {
+    public static CardFragment newInstance(final String deckId) {
         CardFragment fragment = new CardFragment();
         Bundle args = new Bundle();
-        args.putString(FB_REFERENCE, fbReference);
+        args.putString(DECK_ID, deckId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -100,20 +100,17 @@ public class CardFragment extends Fragment {
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String dbReference = getArguments().getString(FB_REFERENCE);
-            // Init Firebase to get cards
-            assert dbReference != null;
-
-            DatabaseReference fdReference = firebaseController
-                    .getCardsRefFromDesktopUrl(dbReference);
+            String deckId = getArguments().getString(DECK_ID);
+            Query cards = firebaseController.getCardsFromDeck(deckId);
             // Attach a listener to read the cards. This function will be called anytime
             // new data is added to our database reference.
             // TODO(ksheremet): Refactor
-            fdReference.addValueEventListener(new ValueEventListener() {
+            cards.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     List<Card> cards = new ArrayList<>();
                     for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                        Log.v(Tag, cardSnapshot.toString());
                         Card card = cardSnapshot.getValue(Card.class);
                         card.setUid(cardSnapshot.getKey());
                         cards.add(card);
@@ -127,22 +124,22 @@ public class CardFragment extends Fragment {
                     }
                 }
 
-                // TODO(ksheremet): Implementation on error
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                // Not implemented yet.
+                    Log.v(Tag, databaseError.getMessage());
                 }
             });
 
         } else {
             // If no parameters, return to previous state
+            // TODO(ksheremet): check in previous fragment
             getFragmentManager().popBackStack();
         }
     }
 
     @Override
-    public final View onCreateView(final LayoutInflater inflater,final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                                   final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_card, container, false);
         mKnowButton = (Button) view.findViewById(R.id.to_know_button);
@@ -160,6 +157,7 @@ public class CardFragment extends Fragment {
     @Override
     public final void onAttach(final Context context) {
         super.onAttach(context);
+        // TODO(ksheremet): remove unused code
         if (!(context instanceof OnFragmentInteractionListener)) {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
