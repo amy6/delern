@@ -23,13 +23,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.dasfoo.delern.card.AddNewCardFragment;
-import org.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
-import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends AppCompatActivity
-        implements CardFragment.OnFragmentInteractionListener,
+        implements ShowCardsFragment.OnFragmentInteractionListener,
         GoogleApiClient.OnConnectionFailedListener,
         AddNewCardFragment.OnFragmentInteractionListener {
 

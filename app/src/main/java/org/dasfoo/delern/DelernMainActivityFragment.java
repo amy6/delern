@@ -21,15 +21,19 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.AddNewCardFragment;
-import org.dasfoo.delern.card.CardFragment;
+import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
+import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
+
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -157,14 +161,34 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     @Override
     public void doOnTextViewClick(int position) {
-        CardFragment newFragment = CardFragment.newInstance(mFirebaseAdapter.getRef(position).getKey());
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                .beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_container, newFragment);
-        transaction.addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
+        Query query = firebaseController.getCardsFromDeck(mFirebaseAdapter.getRef(position).getKey());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Card> cards = new ArrayList<>();
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    Log.v(TAG, cardSnapshot.toString());
+                    Card card = cardSnapshot.getValue(Card.class);
+                    card.setUid(cardSnapshot.getKey());
+                    cards.add(card);
+                }
+                if (cards.size() != 0) {
+                    ShowCardsFragment newFragment = ShowCardsFragment.newInstance(cards);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                            .beginTransaction();
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack so the user can navigate back
+                    transaction.replace(R.id.fragment_container, newFragment);
+                    transaction.addToBackStack(null);
+                    // Commit the transaction
+                    transaction.commit();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v(TAG, databaseError.getMessage());
+            }
+        });
     }
 }

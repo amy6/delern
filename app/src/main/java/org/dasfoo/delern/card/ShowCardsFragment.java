@@ -11,11 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
@@ -23,21 +18,20 @@ import org.dasfoo.delern.models.Card;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CardFragment.OnFragmentInteractionListener} interface
+ * {@link ShowCardsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CardFragment#newInstance} factory method to
+ * Use the {@link ShowCardsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CardFragment extends Fragment {
-    private static final String DECK_ID = "deckId";
+public class ShowCardsFragment extends Fragment {
+    private static final String CARDS = "cards";
 
     private FirebaseController firebaseController = FirebaseController.getInstance();
-    private static final String Tag = CardFragment.class.getSimpleName();
+    private static final String TAG = ShowCardsFragment.class.getSimpleName();
 
     private Button mKnowButton;
     private Button mMemorizeButton;
@@ -71,13 +65,13 @@ public class CardFragment extends Fragment {
                     }
                     break;
                 default:
-                    Log.v("CardFragment", "Button is not implemented yet.");
+                    Log.v("ShowCardsFragment", "Button is not implemented yet.");
                     break;
             }
         }
     };
 
-    public CardFragment() {
+    public ShowCardsFragment() {
         // Required empty public constructor
     }
 
@@ -85,13 +79,13 @@ public class CardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param deckId id of deck which cards to show.
-     * @return A new instance of fragment CardFragment.
+     * @param cards to show.
+     * @return A new instance of fragment ShowCardsFragment.
      */
-    public static CardFragment newInstance(final String deckId) {
-        CardFragment fragment = new CardFragment();
+    public static ShowCardsFragment newInstance(final ArrayList<Card> cards) {
+        ShowCardsFragment fragment = new ShowCardsFragment();
         Bundle args = new Bundle();
-        args.putString(DECK_ID, deckId);
+        args.putParcelableArrayList(CARDS, cards);
         fragment.setArguments(args);
         return fragment;
     }
@@ -100,39 +94,10 @@ public class CardFragment extends Fragment {
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String deckId = getArguments().getString(DECK_ID);
-            Query cards = firebaseController.getCardsFromDeck(deckId);
-            // Attach a listener to read the cards. This function will be called anytime
-            // new data is added to our database reference.
-            // TODO(ksheremet): Refactor
-            cards.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    List<Card> cards = new ArrayList<>();
-                    for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                        Log.v(Tag, cardSnapshot.toString());
-                        Card card = cardSnapshot.getValue(Card.class);
-                        card.setUid(cardSnapshot.getKey());
-                        cards.add(card);
-                    }
-                    try {
-                        mCardIterator = cards.iterator();
-                        mCurrentCard = mCardIterator.next();
-                        showFrontSide();
-                    } catch (NoSuchElementException e) {
-                        getFragmentManager().popBackStack();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.v(Tag, databaseError.getMessage());
-                }
-            });
-
+            List<Card> cards = getArguments().getParcelableArrayList(CARDS);
+            mCardIterator = cards.iterator();
+            mCurrentCard = mCardIterator.next();
         } else {
-            // If no parameters, return to previous state
-            // TODO(ksheremet): check in previous fragment
             getFragmentManager().popBackStack();
         }
     }
@@ -151,6 +116,7 @@ public class CardFragment extends Fragment {
         mNextButton = (Button) view.findViewById(R.id.next_button);
         mNextButton.setOnClickListener(onClickListener);
         mTextView = (TextView) view.findViewById(R.id.textCardView);
+        showFrontSide();
         return view;
     }
 
