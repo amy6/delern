@@ -7,6 +7,7 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.View;
 
 /**
  * Created by katarina on 10/19/16.
@@ -16,6 +17,7 @@ public final class FirebaseController {
     private static final String DECKS = "decks";
     private static final String USERS = "users";
     private static final String CARDS = "cards";
+    private static final String VIEWS = "views";
 
     private static FirebaseController ourInstance;
 
@@ -54,6 +56,10 @@ public final class FirebaseController {
         return mFirebaseDatabaseReference.child(CARDS);
     }
 
+    public DatabaseReference getFirebaseViewsRef() {
+        return mFirebaseDatabaseReference.child(VIEWS).child(mFirebaseAuth.getCurrentUser().getUid());
+    }
+
     public Query getUsersDecks() {
         return getFirebaseDecksRef()
                 .orderByChild("users/" + (mFirebaseAuth.getCurrentUser().getUid()))
@@ -72,7 +78,7 @@ public final class FirebaseController {
      * @param newCard model of card
      * @return key of record
      */
-    public String createCard(Card newCard, String fbPath) {
+    public String createCard(Card newCard, String deckId) {
         String cardKey = getFirebaseCardsRef()
                 .push()
                 .getKey();
@@ -83,8 +89,16 @@ public final class FirebaseController {
         getFirebaseCardsRef()
                 .child(cardKey)
                 .child(DECKS)
-                .child(fbPath)
+                .child(deckId)
                 .setValue(true);
+
+        // Add card to views
+        getFirebaseViewsRef()
+                .child(deckId)
+                .child(cardKey)
+                .push()
+                .setValue(new View());
+
         return cardKey;
     }
 
@@ -106,7 +120,7 @@ public final class FirebaseController {
     }
 
     public void addDeckToUser(String deckKey) {
-        mFirebaseDatabaseReference.child(USERS)
+        getFirebaseUsersRef()
                 .child(mFirebaseAuth.getCurrentUser().getUid())
                 .child(DECKS)
                 .child(deckKey)
