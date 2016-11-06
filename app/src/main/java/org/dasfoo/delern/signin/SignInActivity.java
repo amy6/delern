@@ -70,6 +70,7 @@ public class SignInActivity extends AppCompatActivity
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
+                    // TODO: Move to FirebaseController
                     firebaseController.getFirebaseUsersRef().child(user.getUid()).setValue(changedUser);
                 } else {
                     // User is signed out

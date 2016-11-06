@@ -94,6 +94,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        //TODO(ksheremet): Move adapter to package adapters
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
                 Deck.class,
                 R.layout.card_text_view,
@@ -161,18 +162,20 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     @Override
     public void doOnTextViewClick(int position) {
-        Query query = firebaseController.getCardsFromDeck(mFirebaseAdapter.getRef(position).getKey());
+        final String deckId = mFirebaseAdapter.getRef(position).getKey();
+        Query query = firebaseController.getCardsFromDeckToRepeat(deckId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Card> cards = new ArrayList<>();
+                final ArrayList<Card> cards = new ArrayList<>();
                 for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    Log.v(TAG, cardSnapshot.toString());
-                    Card card = cardSnapshot.getValue(Card.class);
-                    card.setUid(cardSnapshot.getKey());
+                    final Card card = cardSnapshot.getValue(Card.class);
+                    card.setcId(cardSnapshot.getKey());
+                    Log.v(TAG, card.toString());
                     cards.add(card);
                 }
                 if (cards.size() != 0) {
+                    // TODO(ksheremet): Move to separate method
                     ShowCardsFragment newFragment = ShowCardsFragment.newInstance(cards);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                             .beginTransaction();

@@ -8,29 +8,31 @@ import android.os.Parcelable;
  */
 
 public class Card implements Parcelable {
-    private String uid;
-    private String backside;
-    private String frontside;
+    private String cId;
+    private String back;
+    private String front;
+    private String level;
+    private long repeatAt;
 
     public Card(){
 
     }
 
     public Card(String backSide, String frontSide) {
-        this.backside = backSide;
-        this.frontside = frontSide;
+        this.back = backSide;
+        this.front = frontSide;
     }
 
-    public Card(String uid, String backSide, String frontSide) {
-        this.uid = uid;
-        this.backside = backSide;
-        this.frontside = frontSide;
+    public Card(String cId, String backSide, String frontSide) {
+        this.cId = cId;
+        this.back = backSide;
+        this.front = frontSide;
     }
 
     protected Card(Parcel in) {
-        uid = in.readString();
-        backside = in.readString();
-        frontside = in.readString();
+        cId = in.readString();
+        back = in.readString();
+        front = in.readString();
     }
 
     public static final Creator<Card> CREATOR = new Creator<Card>() {
@@ -45,28 +47,44 @@ public class Card implements Parcelable {
         }
     };
 
-    public String getUid() {
-        return uid;
+    public String getcId() {
+        return cId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setcId(String cId) {
+        this.cId = cId;
     }
 
-    public String getBackSide() {
-        return backside;
+    public String getBack() {
+        return back;
     }
 
-    public void setBackSide(String backSide) {
-        this.backside = backSide;
+    public void setBack(String backSide) {
+        this.back = backSide;
     }
 
-    public String getFrontSide() {
-        return frontside;
+    public String getFront() {
+        return front;
     }
 
-    public void setFrontSide(String frontSide) {
-        this.frontside = frontSide;
+    public void setFront(String frontSide) {
+        this.front = frontSide;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public long getRepeatAt() {
+        return repeatAt;
+    }
+
+    public void setRepeatAt(long repeatAt) {
+        this.repeatAt = repeatAt;
     }
 
     /**
@@ -94,17 +112,17 @@ public class Card implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.uid);
-        dest.writeString(this.backside);
-        dest.writeString(this.frontside);
+        dest.writeString(this.cId);
+        dest.writeString(this.back);
+        dest.writeString(this.front);
     }
 
     @Override
     public String toString() {
         return "Card{" +
-                "uid='" + uid + '\'' +
-                ", backside='" + backside + '\'' +
-                ", frontside='" + frontside + '\'' +
+                "cId='" + cId + '\'' +
+                ", back='" + back + '\'' +
+                ", front='" + front + '\'' +
                 '}';
     }
 }

@@ -139,7 +139,7 @@ public class ShowCardsFragment extends Fragment {
      * Shows front side of the current card and appropriate buttons
      */
     private void showFrontSide() {
-        mTextView.setText(mCurrentCard.getFrontSide());
+        mTextView.setText(mCurrentCard.getFront());
         mMemorizeButton.setVisibility(View.INVISIBLE);
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
@@ -150,7 +150,7 @@ public class ShowCardsFragment extends Fragment {
      * Shows back side of current card and appropriate buttons.
      */
     private void showBackSide() {
-        mTextView.setText(mCurrentCard.getBackSide());
+        mTextView.setText(mCurrentCard.getBack());
         mNextButton.setVisibility(View.VISIBLE);
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);

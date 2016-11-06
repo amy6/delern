@@ -1,5 +1,7 @@
 package org.dasfoo.delern.controller;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -7,7 +9,6 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.View;
 
 /**
  * Created by katarina on 10/19/16.
@@ -17,7 +18,6 @@ public final class FirebaseController {
     private static final String DECKS = "decks";
     private static final String USERS = "users";
     private static final String CARDS = "cards";
-    private static final String VIEWS = "views";
 
     private static FirebaseController ourInstance;
 
@@ -56,83 +56,46 @@ public final class FirebaseController {
         return mFirebaseDatabaseReference.child(CARDS);
     }
 
-    public DatabaseReference getFirebaseViewsRef() {
-        return mFirebaseDatabaseReference.child(VIEWS).child(mFirebaseAuth.getCurrentUser().getUid());
-    }
-
     public Query getUsersDecks() {
         return getFirebaseDecksRef()
-                .orderByChild("users/" + (mFirebaseAuth.getCurrentUser().getUid()))
-                .equalTo("true");
+                .orderByChild("user")
+                .equalTo(mFirebaseAuth.getCurrentUser().getUid());
     }
 
-    public Query getCardsFromDeck(String deckId) {
+    public Query getCardsFromDeckToRepeat(String deckId) {
+        long time = System.currentTimeMillis();
+        Log.v(TAG, String.valueOf(time));
+
         return getFirebaseCardsRef()
-                .orderByChild(DECKS + "/" + deckId)
-                .equalTo(true);
+                .child(deckId)
+                .orderByChild("repeatAt")
+                .endAt(time);
     }
 
-    /**
-     * Creates new Card in Firebase.
-     *
-     * @param newCard model of card
-     * @return key of record
-     */
-    public String createCard(Card newCard, String deckId) {
+    public void createNewCard(Card newCard, String deckId) {
         String cardKey = getFirebaseCardsRef()
+                .child(deckId)
                 .push()
                 .getKey();
         getFirebaseCardsRef()
+                .child(deckId)
                 .child(cardKey)
                 .setValue(newCard);
-        // Add deck to card
-        getFirebaseCardsRef()
-                .child(cardKey)
-                .child(DECKS)
-                .child(deckId)
-                .setValue(true);
-
-        // Add card to views
-        getFirebaseViewsRef()
-                .child(deckId)
-                .child(cardKey)
-                .push()
-                .setValue(new View());
-
-        return cardKey;
-    }
-
-    public void writeCardToDesktop(Card newCard, String deckId) {
-        String cardKey = createCard(newCard, deckId);
-        getFirebaseDecksRef()
-                .child(deckId)
-                .child(CARDS)
-                .child(cardKey)
-                .setValue(true);
     }
 
     public void createNewDeck(Deck deck) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.setValue(deck);
         String key = reference.getKey();
-        addDeckToUser(key);
         addUserToDeck(key);
     }
 
-    public void addDeckToUser(String deckKey) {
-        getFirebaseUsersRef()
-                .child(mFirebaseAuth.getCurrentUser().getUid())
-                .child(DECKS)
-                .child(deckKey)
-                .setValue(true);
-    }
 
-    public void addUserToDeck(String deckKey) {
+    private void addUserToDeck(String deckKey) {
         // Add user to deck
         getFirebaseDecksRef()
                 .child(deckKey)
-                .child(USERS)
-                .child(mFirebaseAuth.getCurrentUser().getUid())
-                .setValue("true");
+                .child("user")
+                .setValue(mFirebaseAuth.getCurrentUser().getUid());
     }
 }

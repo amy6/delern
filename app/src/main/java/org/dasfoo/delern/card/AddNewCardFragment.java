@@ -14,6 +14,7 @@ import android.widget.Toast;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Level;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,9 +99,11 @@ public class AddNewCardFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         if (v.getId() == R.id.add_card_to_db) {
             Card newCard = new Card();
-            newCard.setFrontSide(mFrontSideInputText.getText().toString());
-            newCard.setBackSide(mBackSideInputText.getText().toString());
-            firebaseController.writeCardToDesktop(newCard, deckId);
+            newCard.setFront(mFrontSideInputText.getText().toString());
+            newCard.setBack(mBackSideInputText.getText().toString());
+            newCard.setLevel(Level.L0.name());
+            newCard.setRepeatAt(System.currentTimeMillis());
+            firebaseController.createNewCard(newCard, deckId);
             cleanTextFields();
             Toast.makeText(this.getContext(), "Added", Toast.LENGTH_SHORT).show();
         }
