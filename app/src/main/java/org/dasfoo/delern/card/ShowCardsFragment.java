@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.FirebaseController;
+import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Level;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,6 +31,7 @@ import java.util.List;
  */
 public class ShowCardsFragment extends Fragment {
     private static final String CARDS = "cards";
+    private static final String DECK_ID = "deckID";
 
     private FirebaseController firebaseController = FirebaseController.getInstance();
     private static final String TAG = ShowCardsFragment.class.getSimpleName();
@@ -38,8 +41,10 @@ public class ShowCardsFragment extends Fragment {
     private Button mRepeatButton;
     private Button mNextButton;
     private TextView mTextView;
+
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
+    private String deckId;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -48,15 +53,22 @@ public class ShowCardsFragment extends Fragment {
                 case R.id.to_know_button:
                     showBackSide();
                     mMemorizeButton.setVisibility(View.VISIBLE);
+                    String newCardLevel = setNewLevel(mCurrentCard.getLevel());
+                    mCurrentCard.setLevel(newCardLevel);
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis() + RepetitionIntervals.getInstance().intervals.get(newCardLevel));
                     break;
                 case R.id.to_memorize_button:
-                    // TODO: Add time parameters and memorization logic
+                    mCurrentCard.setLevel(Level.L0.name());
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis());
                     break;
                 case R.id.to_repeat_button:
                     showBackSide();
                     mMemorizeButton.setVisibility(View.INVISIBLE);
+                    mCurrentCard.setLevel(Level.L0.name());
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis());
                     break;
                 case R.id.next_button:
+                    firebaseController.updateCard(mCurrentCard, deckId);
                     if (mCardIterator.hasNext()) {
                         mCurrentCard = mCardIterator.next();
                         showFrontSide();
@@ -71,9 +83,6 @@ public class ShowCardsFragment extends Fragment {
         }
     };
 
-    public ShowCardsFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -82,10 +91,11 @@ public class ShowCardsFragment extends Fragment {
      * @param cards to show.
      * @return A new instance of fragment ShowCardsFragment.
      */
-    public static ShowCardsFragment newInstance(final ArrayList<Card> cards) {
+    public static ShowCardsFragment newInstance(final ArrayList<Card> cards, final String deckId) {
         ShowCardsFragment fragment = new ShowCardsFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(CARDS, cards);
+        args.putString(DECK_ID, deckId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,6 +104,7 @@ public class ShowCardsFragment extends Fragment {
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            deckId = getArguments().getString(DECK_ID);
             List<Card> cards = getArguments().getParcelableArrayList(CARDS);
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
@@ -154,6 +165,14 @@ public class ShowCardsFragment extends Fragment {
         mNextButton.setVisibility(View.VISIBLE);
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
+    }
+
+    private String setNewLevel(String currLevel) {
+        Level cLevel = Level.valueOf(currLevel);
+        if (cLevel == Level.L7) {
+            return Level.L7.name();
+        }
+        return cLevel.next().name();
     }
 
     /**

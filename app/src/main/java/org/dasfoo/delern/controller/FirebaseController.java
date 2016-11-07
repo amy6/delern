@@ -10,6 +10,9 @@ import com.google.firebase.database.Query;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by katarina on 10/19/16.
  */
@@ -90,6 +93,13 @@ public final class FirebaseController {
         addUserToDeck(key);
     }
 
+    public void updateCard(Card card, String deckId) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/"+ card.getcId(), card);
+        getFirebaseCardsRef()
+                .child(deckId)
+                .updateChildren(childUpdates);
+    }
 
     private void addUserToDeck(String deckKey) {
         // Add user to deck

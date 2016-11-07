@@ -3,11 +3,14 @@ package org.dasfoo.delern.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 /**
  * Created by katarina on 10/4/16.
  */
 
 public class Card implements Parcelable {
+    @Exclude
     private String cId;
     private String back;
     private String front;
@@ -47,10 +50,12 @@ public class Card implements Parcelable {
         }
     };
 
+    @Exclude
     public String getcId() {
         return cId;
     }
 
+    @Exclude
     public void setcId(String cId) {
         this.cId = cId;
     }

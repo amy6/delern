@@ -12,5 +12,12 @@ public enum Level {
     L4,
     L5,
     L6,
-    L7
+    L7;
+
+    private static Level[] vals = values();
+
+    public Level next()
+    {
+        return vals[(this.ordinal()+1) % vals.length];
+    }
 }

@@ -31,6 +31,7 @@ import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 import java.util.ArrayList;
@@ -164,7 +165,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnTextViewClick(int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
         Query query = firebaseController.getCardsFromDeckToRepeat(deckId);
-        query.addValueEventListener(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final ArrayList<Card> cards = new ArrayList<>();
@@ -176,7 +177,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 }
                 if (cards.size() != 0) {
                     // TODO(ksheremet): Move to separate method
-                    ShowCardsFragment newFragment = ShowCardsFragment.newInstance(cards);
+                    ShowCardsFragment newFragment = ShowCardsFragment.newInstance(cards, deckId);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                             .beginTransaction();
                     // Replace whatever is in the fragment_container view with this fragment,
@@ -190,7 +191,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.v(TAG, databaseError.getMessage());
+                Log.e(TAG, databaseError.getMessage());
             }
         });
     }
