@@ -31,7 +31,6 @@ import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 import java.util.ArrayList;
@@ -107,6 +106,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.getmDesktopTextView().setText(deck.getName());
                 viewHolder.setOnViewClick(onDeckViewHolderClick);
+                viewHolder.setContext(getContext());
             }
         };
 
@@ -130,7 +130,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 if (!dataSnapshot.hasChildren()) {
                     rootView.findViewById(R.id.empty_recyclerview_message)
                             .setVisibility(TextView.VISIBLE);
-                    return;
                 }
             }
 
@@ -194,5 +193,20 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 Log.e(TAG, databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void doOnRenameMenuClick(int position) {
+        Log.v(TAG, "Rename:" + position);
+    }
+
+    @Override
+    public void doOnEditMenuClick(int position) {
+        Log.v(TAG, "Edit:" + position);
+    }
+
+    @Override
+    public void doOnDeleteMenuClick(int position) {
+        Log.v(TAG, "Delete:" + position);
     }
 }

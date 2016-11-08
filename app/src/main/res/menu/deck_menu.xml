@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/rename_deck_menu"
+        android:orderInCategory="100"
+        android:title="@string/rename_string"/>
+    <item
+        android:id="@+id/edit_deck_menu"
+        android:orderInCategory="101"
+        android:title="@string/edit_string"/>
+    <item
+        android:id="@+id/delete_deck_menu"
+        android:orderInCategory="102"
+        android:title="@string/delete_string"/>
+</menu>
