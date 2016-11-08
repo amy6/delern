@@ -15,6 +15,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
+import org.dasfoo.delern.util.LogUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +29,10 @@ public class AddNewCardFragment extends Fragment implements View.OnClickListener
 
     private static final String DECK_ID = "deckId";
 
-    private final String TAG = this.getClass().getSimpleName();
+    /**
+     * Class information for logging.
+     */
+    private final String TAG = LogUtil.tagFor(AddNewCardFragment.class);
 
     private String deckId;
 

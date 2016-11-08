@@ -5,13 +5,18 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.dasfoo.delern.util.LogUtil;
+
 /**
  * Created by katarina on 10/7/16.
  */
 
 public class DelernFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "DelernFMService";
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(DelernFirebaseMessagingService.class);
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

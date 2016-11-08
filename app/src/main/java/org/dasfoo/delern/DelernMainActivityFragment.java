@@ -31,6 +31,7 @@ import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ import java.util.ArrayList;
  */
 public class DelernMainActivityFragment extends Fragment implements OnDeckViewHolderClick {
 
-    private static final String TAG = DelernMainActivityFragment.class.getSimpleName();
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(DelernMainActivityFragment.class);
     private OnDeckViewHolderClick onDeckViewHolderClick = this;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;

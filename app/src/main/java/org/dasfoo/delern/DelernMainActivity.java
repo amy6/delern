@@ -26,6 +26,7 @@ import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.signin.SignInActivity;
+import org.dasfoo.delern.util.LogUtil;
 
 public class DelernMainActivity extends AppCompatActivity
         implements ShowCardsFragment.OnFragmentInteractionListener,
@@ -33,7 +34,11 @@ public class DelernMainActivity extends AppCompatActivity
         AddNewCardFragment.OnFragmentInteractionListener {
 
     public static final String ANONYMOUS = "anonymous";
-    private static final String TAG = "DelernMailActivity";
+
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
     private static final int REQUEST_INVITE = 1;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAnalytics mFirebaseAnalytics;

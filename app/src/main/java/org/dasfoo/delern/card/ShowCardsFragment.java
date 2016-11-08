@@ -16,6 +16,7 @@ import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
+import org.dasfoo.delern.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,7 +35,11 @@ public class ShowCardsFragment extends Fragment {
     private static final String DECK_ID = "deckID";
 
     private FirebaseController firebaseController = FirebaseController.getInstance();
-    private static final String TAG = ShowCardsFragment.class.getSimpleName();
+
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(ShowCardsFragment.class);
 
     private Button mKnowButton;
     private Button mMemorizeButton;

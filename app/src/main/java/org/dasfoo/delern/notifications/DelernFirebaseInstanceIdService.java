@@ -6,13 +6,18 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.dasfoo.delern.util.LogUtil;
+
 /**
  * Created by katarina on 10/7/16.
  */
 
 public class DelernFirebaseInstanceIdService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "FirebaseIdService";
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(DelernFirebaseInstanceIdService.class);
     private static final String DELERN_TOPIC = "delern_engage";
 
     /**

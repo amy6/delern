@@ -9,6 +9,7 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,10 @@ import java.util.Map;
  * Created by katarina on 10/19/16.
  */
 public final class FirebaseController {
-    private static final String TAG = FirebaseController.class.getSimpleName();
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(FirebaseController.class);
     private static final String DECKS = "decks";
     private static final String USERS = "users";
     private static final String CARDS = "cards";

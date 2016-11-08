@@ -27,11 +27,15 @@ import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.util.LogUtil;
 
 public class SignInActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private static final String TAG = "SignInActivity";
+    /**
+     * Class information for logging.
+     */
+    private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
 
     private FirebaseController firebaseController = FirebaseController.getInstance();
