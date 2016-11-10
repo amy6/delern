@@ -16,4 +16,5 @@
     <string name="delete_string">Delete</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
     <string name="add_button">add</string>
+    <string name="invitation_failed_message">Failed to send invitation</string>
 </resources>
