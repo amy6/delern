@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".signin.SignInActivity"></activity>
+        <activity android:name=".signin.SignInActivity" />
+
         <service
             android:name=".notifications.DelernFirebaseMessagingService"
             android:exported="false">
