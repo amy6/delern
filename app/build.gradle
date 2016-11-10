@@ -18,6 +18,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
+            // https://developers.google.com/android/guides/google-services-plugin
             //applicationIdSuffix '.debug'
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:

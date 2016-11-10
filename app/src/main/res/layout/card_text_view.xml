@@ -25,13 +25,14 @@
         android:id="@+id/add_card_button"
         android:text="@string/add_button"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/deck_popup_menu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
+        android:layout_gravity="center"
         android:contentDescription="@string/deck_menu_description"
-        android:src="@drawable/ic_action_overflow" />
+        android:src="@drawable/ic_more_vert" />
 
 </LinearLayout>
 
