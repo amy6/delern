@@ -72,7 +72,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
                 // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Deck newDeck = new Deck(input.getText().toString());
@@ -200,17 +200,37 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     @Override
-    public void doOnRenameMenuClick(int position) {
+    public void doOnRenameMenuClick(final int position) {
         Log.v(TAG, "Rename:" + position);
     }
 
     @Override
-    public void doOnEditMenuClick(int position) {
+    public void doOnEditMenuClick(final int position) {
         Log.v(TAG, "Edit:" + position);
     }
 
+    /**
+     * Deletes deck with all cards.
+     *
+     * @param position of deck in RecyclerView
+     */
     @Override
-    public void doOnDeleteMenuClick(int position) {
-        Log.v(TAG, "Delete:" + position);
+    public void doOnDeleteMenuClick(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Delete deck with all cards!");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String deckId = mFirebaseAdapter.getRef(position).getKey();
+                firebaseController.deleteDeck(deckId);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 }

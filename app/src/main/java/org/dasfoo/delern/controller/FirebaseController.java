@@ -97,6 +97,15 @@ public final class FirebaseController {
         addUserToDeck(key);
     }
 
+    public void deleteDeck(String deckId) {
+        // Remove deck
+        DatabaseReference reference = getFirebaseDecksRef();
+        reference.child(deckId).removeValue();
+        // Delete all cards in the deck
+        reference = getFirebaseCardsRef();
+        reference.child(deckId).removeValue();
+    }
+
     public void updateCard(Card card, String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/"+ card.getcId(), card);
