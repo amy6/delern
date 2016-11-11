@@ -106,6 +106,14 @@ public final class FirebaseController {
         reference.child(deckId).removeValue();
     }
 
+    public void renameDeck(Deck deck) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/" + deck.getUid(), deck);
+        getFirebaseDecksRef().updateChildren(childUpdates);
+        addUserToDeck(deck.getUid());
+
+    }
+
     public void updateCard(Card card, String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/"+ card.getcId(), card);

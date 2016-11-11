@@ -1,5 +1,7 @@
 package org.dasfoo.delern.models;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,7 @@ import java.util.List;
  */
 
 public class Deck {
+    @Exclude
     private String uid;
     private String name;
 
@@ -18,10 +21,12 @@ public class Deck {
         this.name = name;
     }
 
+    @Exclude
     public String getUid() {
         return uid;
     }
 
+    @Exclude
     public void setUid(String uid) {
         this.uid = uid;
     }
@@ -34,4 +39,11 @@ public class Deck {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

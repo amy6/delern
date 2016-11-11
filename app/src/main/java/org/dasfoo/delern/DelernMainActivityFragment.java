@@ -59,19 +59,13 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
-        // TODO(ksheremet) : move logic in separate class
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Deck");
                 // Set up the input
                 final EditText input = new EditText(getActivity());
-                // Specify the type of input expected
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-                // Set up the buttons
+                AlertDialog.Builder builder = newOrUpdateDeckDialog(new Deck(), input);
                 builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -79,12 +73,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                         firebaseController.createNewDeck(newDeck);
                         rootView.findViewById(R.id.empty_recyclerview_message)
                                 .setVisibility(TextView.INVISIBLE);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                     }
                 });
                 builder.show();
@@ -98,7 +86,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //TODO(ksheremet): Move adapter to package adapters
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
                 Deck.class,
                 R.layout.card_text_view,
@@ -201,7 +188,19 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     @Override
     public void doOnRenameMenuClick(final int position) {
-        Log.v(TAG, "Rename:" + position);
+        final Deck deck =  mFirebaseAdapter.getItem(position);
+        deck.setUid(mFirebaseAdapter.getRef(position).getKey());
+        Log.v(TAG, deck.toString());
+        final EditText input = new EditText(getActivity());
+        AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
+        builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deck.setName(input.getText().toString());
+                firebaseController.renameDeck(deck);
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -232,5 +231,21 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         });
         builder.show();
+    }
+
+    private AlertDialog.Builder newOrUpdateDeckDialog(Deck deck, EditText input) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Deck");
+        // Specify the type of input expected
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(deck.getName());
+        builder.setView(input);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        return builder;
     }
 }
