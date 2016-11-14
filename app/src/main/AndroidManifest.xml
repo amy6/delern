@@ -27,7 +27,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".notifications.DelernFirebaseInstanceIdService"
             android:exported="false">
@@ -35,6 +34,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".card.EditCardListActivity"
+            android:parentActivityName=".DelernMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.DelernMainActivity" />
+        </activity>
     </application>
 
 </manifest>

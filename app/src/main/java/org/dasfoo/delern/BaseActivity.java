@@ -83,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
-    private void enableToolbarArrow(boolean value) {
+    protected void enableToolbarArrow(boolean value) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(value);
         //getSupportActionBar().setHomeButtonEnabled(value);
     }

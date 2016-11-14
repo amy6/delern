@@ -129,4 +129,9 @@ public final class FirebaseController {
                 .child("user")
                 .setValue(mFirebaseAuth.getCurrentUser().getUid());
     }
+
+    public Query getAllCardsForDeck(String deckId) {
+        return getFirebaseCardsRef()
+                .child(deckId);
+    }
 }

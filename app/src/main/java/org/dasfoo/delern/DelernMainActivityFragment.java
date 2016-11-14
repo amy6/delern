@@ -1,6 +1,7 @@
 package org.dasfoo.delern;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.AddNewCardFragment;
+import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
@@ -78,8 +80,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 builder.show();
             }
         });
+        // TODO(ksheremet): Create base fragment for mProgressBar
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.deck_recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
 
@@ -88,7 +91,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         mRecyclerView.setLayoutManager(mLayoutManager);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
                 Deck.class,
-                R.layout.card_text_view,
+                R.layout.deck_text_view,
                 DeckViewHolder.class,
                 firebaseController.getUsersDecks()) {
 
@@ -206,6 +209,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnEditMenuClick(final int position) {
         Log.v(TAG, "Edit:" + position);
+        // Not signed in, launch the Sign In activity
+        Intent intent = new Intent(getActivity(), EditCardListActivity.class);
+        intent.putExtra("deckId", mFirebaseAdapter.getRef(position).getKey());
+        intent.putExtra("label", mFirebaseAdapter.getItem(position).getName());
+        startActivity(intent);
     }
 
     /**
