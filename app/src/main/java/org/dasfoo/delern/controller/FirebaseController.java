@@ -90,11 +90,12 @@ public final class FirebaseController {
                 .setValue(newCard);
     }
 
-    public void createNewDeck(Deck deck) {
+    public String createNewDeck(Deck deck) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.setValue(deck);
         String key = reference.getKey();
         addUserToDeck(key);
+        return key;
     }
 
     public void deleteDeck(String deckId) {

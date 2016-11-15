@@ -72,9 +72,10 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Deck newDeck = new Deck(input.getText().toString());
-                        firebaseController.createNewDeck(newDeck);
+                        String key = firebaseController.createNewDeck(newDeck);
                         rootView.findViewById(R.id.empty_recyclerview_message)
                                 .setVisibility(TextView.INVISIBLE);
+                        startEditCardsActivity(key, newDeck.getName());
                     }
                 });
                 builder.show();
@@ -208,12 +209,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     @Override
     public void doOnEditMenuClick(final int position) {
-        Log.v(TAG, "Edit:" + position);
-        // Not signed in, launch the Sign In activity
-        Intent intent = new Intent(getActivity(), EditCardListActivity.class);
-        intent.putExtra("deckId", mFirebaseAdapter.getRef(position).getKey());
-        intent.putExtra("label", mFirebaseAdapter.getItem(position).getName());
-        startActivity(intent);
+        startEditCardsActivity(mFirebaseAdapter.getRef(position).getKey(),
+                mFirebaseAdapter.getItem(position).getName());
     }
 
     /**
@@ -255,5 +252,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         });
         return builder;
+    }
+
+    private void startEditCardsActivity(String key, String name) {
+        Intent intent = new Intent(getActivity(), EditCardListActivity.class);
+        intent.putExtra("deckId", key);
+        intent.putExtra("label", name);
+        startActivity(intent);
     }
 }
