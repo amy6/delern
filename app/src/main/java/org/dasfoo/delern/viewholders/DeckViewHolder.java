@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private static final String TAG = DeckViewHolder.class.getSimpleName();
 
     private TextView mDesktopTextView;
-    private Button mAddCardButton;
     private ImageView popupMenuImageView;
     private OnDeckViewHolderClick onViewClick;
     private Context context;
@@ -37,8 +35,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(v);
         mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
         mDesktopTextView.setOnClickListener(this);
-        mAddCardButton = (Button) itemView.findViewById(R.id.add_card_button);
-        mAddCardButton.setOnClickListener(this);
         popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
         popupMenuImageView.setOnClickListener(this);
     }
@@ -57,12 +53,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.add_card_button) {
-            Log.v(TAG, "Button was pressed" + getAdapterPosition());
-            onViewClick.doOnAddCardButtonClick(getAdapterPosition());
-
-        }
-
         if (v.getId() == R.id.desktop_text_view) {
             Log.v(TAG, "wow, it is desktop" + getAdapterPosition());
             onViewClick.doOnTextViewClick(getAdapterPosition());

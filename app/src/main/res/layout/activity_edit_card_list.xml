@@ -7,8 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="org.dasfoo.delern.card.EditCardListActivity">
 
-    <include layout="@layout/toolbar"/>
-
     <include layout="@layout/content_edit_card_list" />
 
     <android.support.design.widget.FloatingActionButton
@@ -18,5 +16,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <include layout="@layout/toolbar"/>
 
 </android.support.design.widget.CoordinatorLayout>

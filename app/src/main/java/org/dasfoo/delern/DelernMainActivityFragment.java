@@ -27,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
-import org.dasfoo.delern.card.AddNewCardFragment;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.controller.FirebaseController;
@@ -141,18 +140,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void doOnAddCardButtonClick(int position) {
-        AddNewCardFragment newCardFragment = AddNewCardFragment.newInstance(mFirebaseAdapter.getRef(position).getKey());
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_container, newCardFragment);
-        transaction.addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
     }
 
     @Override

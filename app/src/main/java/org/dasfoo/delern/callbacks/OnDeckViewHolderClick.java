@@ -6,7 +6,6 @@ package org.dasfoo.delern.callbacks;
  */
 
 public interface OnDeckViewHolderClick {
-    void doOnAddCardButtonClick(int position);
     void doOnTextViewClick(int position);
     void doOnRenameMenuClick(int position);
     void doOnEditMenuClick(int position);

@@ -12,17 +12,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.9"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorPrimaryText"
         android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/add_card_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:text="@string/add_button" />
 
     <ImageView
         android:id="@+id/deck_popup_menu"

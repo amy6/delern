@@ -3,7 +3,6 @@ package org.dasfoo.delern.card;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,6 +13,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends BaseActivity {
@@ -22,13 +22,15 @@ public class EditCardListActivity extends BaseActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter<Card, CardViewHolder> mFirebaseAdapter;
 
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        String message = intent.getStringExtra("label");
-        String deckId = intent.getStringExtra("deckId");
-        this.setTitle(message+":"+deckId);
+        final String label = intent.getStringExtra("label");
+        final String deckId = intent.getStringExtra("deckId");
+        this.setTitle(label);
 
         enableToolbarArrow(true);
 
@@ -36,8 +38,7 @@ public class EditCardListActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startAddCardsActivity(deckId, label);
             }
         });
 
@@ -74,6 +75,13 @@ public class EditCardListActivity extends BaseActivity {
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_edit_card_list;
+    }
+
+    private void startAddCardsActivity(String key, String label) {
+        Intent intent = new Intent(this, AddCardActivity.class);
+        intent.putExtra(AddCardActivity.DECK_ID, key);
+        intent.putExtra(AddCardActivity.LABEL, label);
+        startActivity(intent);
     }
 
 }
