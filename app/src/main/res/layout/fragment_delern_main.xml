@@ -42,7 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Add your decks!"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        style="@style/SecondaryText"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

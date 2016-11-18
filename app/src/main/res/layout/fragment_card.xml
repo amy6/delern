@@ -27,7 +27,7 @@
                 android:layout_margin="25dp"
                 android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                style="@style/PrimaryText" />
 
             <View
                 android:id="@+id/delimeter"
@@ -44,7 +44,7 @@
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/textBackCardView"
                 android:layout_margin="25dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+                style="@style/PrimaryText"/>
 
 
         </LinearLayout>

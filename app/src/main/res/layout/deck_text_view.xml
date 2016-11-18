@@ -13,9 +13,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
         android:layout_weight="0.9"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="20sp" />
+        style="@style/PrimaryText"/>
 
     <ImageView
         android:id="@+id/deck_popup_menu"
