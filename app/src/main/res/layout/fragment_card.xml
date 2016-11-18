@@ -11,12 +11,13 @@
         card_view:cardBackgroundColor="@color/colorPrimaryLight"
         card_view:cardCornerRadius="10dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textCardView"
+                android:id="@+id/textFrontCardView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -27,7 +28,28 @@
                 android:layout_marginTop="110dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        </RelativeLayout>
+            <View
+                android:id="@+id/delimeter"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:background="@android:color/darker_gray"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignBottom="@+id/textFrontCardView"
+                android:alpha="0.88"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textBackCardView"
+                android:layout_marginLeft="69dp"
+                android:layout_below="@+id/delimeter"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
     <LinearLayout
@@ -36,38 +58,28 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:weightSum="1.0"
         android:layout_margin="10dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/to_know_button"
-            android:text="I know it!"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/to_repeat_button"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I don't remember" />
+            android:src="@drawable/ic_done" />
+
+        <ImageButton
+            android:id="@+id/to_repeat_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_cancel"/>
     </LinearLayout>
 
     <Button
-        android:id="@+id/to_memorize_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To memorize"
+        android:text="turn"
         android:layout_below="@+id/card_view"
-        android:layout_centerHorizontal="true" />
-    <Button
-        android:id="@+id/next_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_centerHorizontal="true"
+        android:id="@+id/turn_card_button" />
 </RelativeLayout>
 
 

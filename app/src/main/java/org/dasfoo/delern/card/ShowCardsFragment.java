@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
@@ -41,11 +42,12 @@ public class ShowCardsFragment extends Fragment {
      */
     private static final String TAG = LogUtil.tagFor(ShowCardsFragment.class);
 
-    private Button mKnowButton;
-    private Button mMemorizeButton;
-    private Button mRepeatButton;
-    private Button mNextButton;
-    private TextView mTextView;
+    private ImageButton mKnowButton;
+    private ImageButton mRepeatButton;
+    private Button mTurnCardButton;
+    private TextView mFrontTextView;
+    private TextView mBackTextView;
+    private View mDelimeter;
 
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
@@ -56,30 +58,21 @@ public class ShowCardsFragment extends Fragment {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    showBackSide();
-                    mMemorizeButton.setVisibility(View.VISIBLE);
                     String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
                     mCurrentCard.setRepeatAt(System.currentTimeMillis() + RepetitionIntervals.getInstance().intervals.get(newCardLevel));
-                    break;
-                case R.id.to_memorize_button:
-                    mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis());
+                    updateCardInFirebase();
+                    showNextCard();
                     break;
                 case R.id.to_repeat_button:
-                    showBackSide();
-                    mMemorizeButton.setVisibility(View.INVISIBLE);
                     mCurrentCard.setLevel(Level.L0.name());
                     mCurrentCard.setRepeatAt(System.currentTimeMillis());
+                    updateCardInFirebase();
+                    showNextCard();
                     break;
-                case R.id.next_button:
-                    firebaseController.updateCard(mCurrentCard, deckId);
-                    if (mCardIterator.hasNext()) {
-                        mCurrentCard = mCardIterator.next();
-                        showFrontSide();
-                    } else {
-                        getFragmentManager().popBackStack();
-                    }
+                case R.id.turn_card_button:
+                    Log.v(TAG, "Turn");
+                    showBackSide();
                     break;
                 default:
                     Log.v("ShowCardsFragment", "Button is not implemented yet.");
@@ -123,15 +116,23 @@ public class ShowCardsFragment extends Fragment {
                                    final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_card, container, false);
-        mKnowButton = (Button) view.findViewById(R.id.to_know_button);
+        mKnowButton = (ImageButton) view.findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(onClickListener);
-        mMemorizeButton = (Button) view.findViewById(R.id.to_memorize_button);
-        mMemorizeButton.setOnClickListener(onClickListener);
-        mRepeatButton = (Button) view.findViewById(R.id.to_repeat_button);
+
+        mRepeatButton = (ImageButton) view.findViewById(R.id.to_repeat_button);
         mRepeatButton.setOnClickListener(onClickListener);
-        mNextButton = (Button) view.findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(onClickListener);
-        mTextView = (TextView) view.findViewById(R.id.textCardView);
+
+        mFrontTextView = (TextView) view.findViewById(R.id.textFrontCardView);
+        mBackTextView = (TextView) view.findViewById(R.id.textBackCardView);
+
+        mTurnCardButton = (Button) view.findViewById(R.id.turn_card_button);
+        mTurnCardButton.setOnClickListener(onClickListener);
+
+        mDelimeter = view.findViewById(R.id.delimeter);
+        mDelimeter.setVisibility(View.INVISIBLE);
+
+
+
         showFrontSide();
         return view;
     }
@@ -155,21 +156,23 @@ public class ShowCardsFragment extends Fragment {
      * Shows front side of the current card and appropriate buttons
      */
     private void showFrontSide() {
-        mTextView.setText(mCurrentCard.getFront());
-        mMemorizeButton.setVisibility(View.INVISIBLE);
-        mRepeatButton.setVisibility(View.VISIBLE);
-        mKnowButton.setVisibility(View.VISIBLE);
-        mNextButton.setVisibility(View.INVISIBLE);
+        mFrontTextView.setText(mCurrentCard.getFront());
+        mBackTextView.setText("");
+        mRepeatButton.setVisibility(View.INVISIBLE);
+        mKnowButton.setVisibility(View.INVISIBLE);
+        mTurnCardButton.setVisibility(View.VISIBLE);
+        mDelimeter.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Shows back side of current card and appropriate buttons.
      */
     private void showBackSide() {
-        mTextView.setText(mCurrentCard.getBack());
-        mNextButton.setVisibility(View.VISIBLE);
-        mRepeatButton.setVisibility(View.INVISIBLE);
-        mKnowButton.setVisibility(View.INVISIBLE);
+        mBackTextView.setText(mCurrentCard.getBack());
+        mRepeatButton.setVisibility(View.VISIBLE);
+        mKnowButton.setVisibility(View.VISIBLE);
+        mTurnCardButton.setVisibility(View.INVISIBLE);
+        mDelimeter.setVisibility(View.VISIBLE);
     }
 
     private String setNewLevel(String currLevel) {
@@ -193,5 +196,18 @@ public class ShowCardsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void updateCardInFirebase() {
+        firebaseController.updateCard(mCurrentCard, deckId);
+    }
+
+    private void showNextCard() {
+        if (mCardIterator.hasNext()) {
+            mCurrentCard = mCardIterator.next();
+            showFrontSide();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 }
