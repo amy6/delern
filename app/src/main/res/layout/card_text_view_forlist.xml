@@ -8,13 +8,13 @@
         android:id="@+id/front_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        style="@style/PrimaryText"
         android:maxLines="1"/>
     <TextView
         android:id="@+id/back_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        style="@style/SecondaryText"/>
 
 </LinearLayout>

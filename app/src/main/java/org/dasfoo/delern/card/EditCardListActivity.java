@@ -12,24 +12,26 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends BaseActivity {
 
+    public static final String LABEL = "label";
+    public static final String DECK_ID = "deckId";
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private FirebaseRecyclerAdapter<Card, CardViewHolder> mFirebaseAdapter;
-
-    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
+    private CardRecyclerViewAdapter mFirebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        final String label = intent.getStringExtra("label");
-        final String deckId = intent.getStringExtra("deckId");
+        final String label = intent.getStringExtra(LABEL);
+        final String deckId = intent.getStringExtra(DECK_ID);
         this.setTitle(label);
 
         enableToolbarArrow(true);
@@ -42,25 +44,15 @@ public class EditCardListActivity extends BaseActivity {
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.card_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Card, CardViewHolder>(
-                Card.class,
-                R.layout.card_text_view_forlist,
-                CardViewHolder.class,
-                firebaseController.getAllCardsForDeck(deckId)) {
-
-            @Override
-            protected void populateViewHolder(CardViewHolder cardViewHolder, Card card, int position) {
-                cardViewHolder.getmFrontTextView().setText(card.getFront());
-                cardViewHolder.getmBackTextView().setText(card.getBack());
-            }
-        };
+        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
+                CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override

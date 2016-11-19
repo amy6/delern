@@ -25,7 +25,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -37,8 +36,6 @@ public class SignInActivity extends AppCompatActivity
      */
     private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
-
-    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     private SignInButton mSignInButton;
 
@@ -67,15 +64,14 @@ public class SignInActivity extends AppCompatActivity
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseController.getFirebaseAuth().getCurrentUser();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     User changedUser = new User(user.getDisplayName(), user.getEmail(), null);
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
-                    // TODO: Move to FirebaseController
-                    firebaseController.getFirebaseUsersRef().child(user.getUid()).setValue(changedUser);
+                    User.getFirebaseUsersRef().child(user.getUid()).setValue(changedUser);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -113,7 +109,7 @@ public class SignInActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGooogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseController.getFirebaseAuth().signInWithCredential(credential)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -144,14 +140,14 @@ public class SignInActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseController.getFirebaseAuth().addAuthStateListener(mAuthListener);
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            firebaseController.getFirebaseAuth().removeAuthStateListener(mAuthListener);
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
     }
 
