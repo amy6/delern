@@ -19,13 +19,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsFragment;
@@ -47,7 +47,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private static final String TAG = LogUtil.tagFor(DelernMainActivityFragment.class);
     private OnDeckViewHolderClick onDeckViewHolderClick = this;
     private ProgressBar mProgressBar;
-    private FirebaseRecyclerAdapter<Deck, DeckViewHolder> mFirebaseAdapter;
+    private DeckRecyclerViewAdapter mFirebaseAdapter;
 
     public DelernMainActivityFragment() {
     }
@@ -85,26 +85,16 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // TODO(ksheremet): Move adapters in new class
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
-                Deck.class,
-                R.layout.deck_text_view,
-                DeckViewHolder.class,
-                Deck.getUsersDecks()) {
-
-            @Override
-            protected void populateViewHolder(DeckViewHolder viewHolder, Deck deck, int position) {
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.getmDesktopTextView().setText(deck.getName());
-                viewHolder.setOnViewClick(onDeckViewHolderClick);
-                viewHolder.setContext(getContext());
-            }
-        };
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
+                DeckViewHolder.class, Deck.getUsersDecks());
+        mFirebaseAdapter.setContext(getContext());
+        mFirebaseAdapter.setOnDeckViewHolderClick(onDeckViewHolderClick);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
+                Log.v(TAG, String.valueOf(itemCount));
             }
         });
 
@@ -112,12 +102,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         //like a completion listener for initial data load of the FirebaseRecyclerAdapter
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        Deck.getFirebaseDecksRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        Deck.getUsersDecks().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                Log.v(TAG,"Progress bar");
                 rootView.findViewById(R.id.empty_recyclerview_message)
                         .setVisibility(TextView.INVISIBLE);
+
                 if (!dataSnapshot.hasChildren()) {
                     rootView.findViewById(R.id.empty_recyclerview_message)
                             .setVisibility(TextView.VISIBLE);
@@ -176,7 +168,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     @Override
     public void doOnRenameMenuClick(final int position) {
-        final Deck deck =  mFirebaseAdapter.getItem(position);
+        final Deck deck = mFirebaseAdapter.getItem(position);
         deck.setUid(mFirebaseAdapter.getRef(position).getKey());
         Log.v(TAG, deck.toString());
         final EditText input = new EditText(getActivity());

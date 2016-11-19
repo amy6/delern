@@ -12,6 +12,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
@@ -23,7 +24,7 @@ public class EditCardListActivity extends BaseActivity {
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private FirebaseRecyclerAdapter<Card, CardViewHolder> mFirebaseAdapter;
+    private CardRecyclerViewAdapter mFirebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +51,8 @@ public class EditCardListActivity extends BaseActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Card, CardViewHolder>(
-                Card.class,
-                R.layout.card_text_view_forlist,
-                CardViewHolder.class,
-                Card.fetchAllCardsForDeck(deckId)) {
-
-            @Override
-            protected void populateViewHolder(CardViewHolder cardViewHolder, Card card, int position) {
-                cardViewHolder.getmFrontTextView().setText(card.getFront());
-                cardViewHolder.getmBackTextView().setText(card.getBack());
-            }
-        };
+        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
+                CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
