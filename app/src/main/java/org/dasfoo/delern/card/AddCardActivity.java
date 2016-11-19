@@ -57,13 +57,13 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
             newCard.setBack(mBackSideInputText.getText().toString());
             newCard.setLevel(Level.L0.name());
             newCard.setRepeatAt(System.currentTimeMillis());
-            firebaseController.createNewCard(newCard, deckId);
+            Card.createNewCard(newCard, deckId);
             cleanTextFields();
             Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void cleanTextFields(){
+    private void cleanTextFields() {
         mFrontSideInputText.setText("");
         mBackSideInputText.setText("");
     }

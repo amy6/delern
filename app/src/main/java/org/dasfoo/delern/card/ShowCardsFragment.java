@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
@@ -34,8 +33,6 @@ import java.util.List;
 public class ShowCardsFragment extends Fragment {
     private static final String CARDS = "cards";
     private static final String DECK_ID = "deckID";
-
-    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     /**
      * Class information for logging.
@@ -104,6 +101,7 @@ public class ShowCardsFragment extends Fragment {
         if (getArguments() != null) {
             deckId = getArguments().getString(DECK_ID);
             List<Card> cards = getArguments().getParcelableArrayList(CARDS);
+            assert cards != null;
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
         } else {
@@ -199,7 +197,7 @@ public class ShowCardsFragment extends Fragment {
     }
 
     private void updateCardInFirebase() {
-        firebaseController.updateCard(mCurrentCard, deckId);
+        Card.updateCard(mCurrentCard, deckId);
     }
 
     private void showNextCard() {

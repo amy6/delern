@@ -18,18 +18,19 @@ import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends BaseActivity {
 
+    public static final String LABEL = "label";
+    public static final String DECK_ID = "deckId";
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter<Card, CardViewHolder> mFirebaseAdapter;
-
-    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        final String label = intent.getStringExtra("label");
-        final String deckId = intent.getStringExtra("deckId");
+        final String label = intent.getStringExtra(LABEL);
+        final String deckId = intent.getStringExtra(DECK_ID);
         this.setTitle(label);
 
         enableToolbarArrow(true);
@@ -53,7 +54,7 @@ public class EditCardListActivity extends BaseActivity {
                 Card.class,
                 R.layout.card_text_view_forlist,
                 CardViewHolder.class,
-                firebaseController.getAllCardsForDeck(deckId)) {
+                Card.fetchAllCardsForDeck(deckId)) {
 
             @Override
             protected void populateViewHolder(CardViewHolder cardViewHolder, Card card, int position) {

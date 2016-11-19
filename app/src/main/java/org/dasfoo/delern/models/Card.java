@@ -2,14 +2,38 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
+import org.dasfoo.delern.util.LogUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by katarina on 10/4/16.
  */
 
 public class Card implements Parcelable {
+
+    public static final Creator<Card> CREATOR = new Creator<Card>() {
+        @Override
+        public Card createFromParcel(Parcel in) {
+            return new Card(in);
+        }
+
+        @Override
+        public Card[] newArray(int size) {
+            return new Card[size];
+        }
+    };
+    @Exclude
+    private static final String CARDS = "cards";
+    private static final String TAG = LogUtil.tagFor(Card.class);
     @Exclude
     private String cId;
     private String back;
@@ -17,7 +41,7 @@ public class Card implements Parcelable {
     private String level;
     private long repeatAt;
 
-    public Card(){
+    public Card() {
 
     }
 
@@ -38,17 +62,54 @@ public class Card implements Parcelable {
         front = in.readString();
     }
 
-    public static final Creator<Card> CREATOR = new Creator<Card>() {
-        @Override
-        public Card createFromParcel(Parcel in) {
-            return new Card(in);
-        }
+    @Exclude
+    public static DatabaseReference getFirebaseCardsRef() {
+        return FirebaseDatabase.getInstance().getReference().child(CARDS);
+    }
 
-        @Override
-        public Card[] newArray(int size) {
-            return new Card[size];
-        }
-    };
+    @Exclude
+    public static Query fetchCardsFromDeckToRepeat(String deckId) {
+        long time = System.currentTimeMillis();
+        Log.v(TAG, String.valueOf(time));
+
+        return getFirebaseCardsRef()
+                .child(deckId)
+                .orderByChild("repeatAt")
+                .endAt(time);
+    }
+
+    @Exclude
+    public static void createNewCard(Card newCard, String deckId) {
+        String cardKey = getFirebaseCardsRef()
+                .child(deckId)
+                .push()
+                .getKey();
+        getFirebaseCardsRef()
+                .child(deckId)
+                .child(cardKey)
+                .setValue(newCard);
+    }
+
+    @Exclude
+    public static void updateCard(Card card, String deckId) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/" + card.getcId(), card);
+        getFirebaseCardsRef()
+                .child(deckId)
+                .updateChildren(childUpdates);
+    }
+
+    @Exclude
+    public static Query fetchAllCardsForDeck(String deckId) {
+        return getFirebaseCardsRef()
+                .child(deckId);
+    }
+
+    @Exclude
+    public static void deleteCardsFromDeck(String deckId) {
+        getFirebaseCardsRef()
+                .child(deckId).removeValue();
+    }
 
     @Exclude
     public String getcId() {

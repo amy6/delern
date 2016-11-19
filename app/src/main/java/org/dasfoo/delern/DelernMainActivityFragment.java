@@ -29,7 +29,6 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsFragment;
-import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
@@ -47,11 +46,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     private static final String TAG = LogUtil.tagFor(DelernMainActivityFragment.class);
     private OnDeckViewHolderClick onDeckViewHolderClick = this;
-    private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
-    private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter<Deck, DeckViewHolder> mFirebaseAdapter;
-    private FirebaseController firebaseController = FirebaseController.getInstance();
 
     public DelernMainActivityFragment() {
     }
@@ -71,7 +67,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Deck newDeck = new Deck(input.getText().toString());
-                        String key = firebaseController.createNewDeck(newDeck);
+                        String key = Deck.createNewDeck(newDeck);
                         rootView.findViewById(R.id.empty_recyclerview_message)
                                 .setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
@@ -82,18 +78,19 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
         // TODO(ksheremet): Create base fragment for mProgressBar
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        // TODO(ksheremet): Move adapters in new class
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Deck, DeckViewHolder>(
                 Deck.class,
                 R.layout.deck_text_view,
                 DeckViewHolder.class,
-                firebaseController.getUsersDecks()) {
+                Deck.getUsersDecks()) {
 
             @Override
             protected void populateViewHolder(DeckViewHolder viewHolder, Deck deck, int position) {
@@ -115,7 +112,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         //like a completion listener for initial data load of the FirebaseRecyclerAdapter
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        firebaseController.getFirebaseDecksRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        Deck.getFirebaseDecksRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -145,7 +142,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnTextViewClick(int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
-        Query query = firebaseController.getCardsFromDeckToRepeat(deckId);
+        Query query = Card.fetchCardsFromDeckToRepeat(deckId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -188,7 +185,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deck.setName(input.getText().toString());
-                firebaseController.renameDeck(deck);
+                Deck.renameDeck(deck);
             }
         });
         builder.show();
@@ -213,7 +210,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
-                firebaseController.deleteDeck(deckId);
+                Deck.deleteDeck(deckId);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -243,8 +240,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     private void startEditCardsActivity(String key, String name) {
         Intent intent = new Intent(getActivity(), EditCardListActivity.class);
-        intent.putExtra("deckId", key);
-        intent.putExtra("label", name);
+        intent.putExtra(EditCardListActivity.DECK_ID, key);
+        intent.putExtra(EditCardListActivity.LABEL, name);
         startActivity(intent);
     }
 }

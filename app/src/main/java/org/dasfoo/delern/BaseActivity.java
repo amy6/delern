@@ -17,10 +17,10 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
-import org.dasfoo.delern.controller.FirebaseController;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -29,8 +29,6 @@ import org.dasfoo.delern.util.LogUtil;
  */
 public abstract class BaseActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener {
-
-    protected FirebaseController firebaseController = FirebaseController.getInstance();
 
     /**
      * Class information for logging
@@ -85,7 +83,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected void enableToolbarArrow(boolean value) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(value);
-        //getSupportActionBar().setHomeButtonEnabled(value);
     }
 
     private void sendInvitation() {
@@ -140,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 sendInvitation();
                 return true;
             case R.id.sign_out_menu:
-                firebaseController.getFirebaseAuth().signOut();
+                FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startActivity(new Intent(this, SignInActivity.class));
                 return true;
@@ -160,7 +157,7 @@ public abstract class BaseActivity extends AppCompatActivity
      * @return true if user signed in
      */
     protected boolean isUserSignedIn() {
-        FirebaseUser user = firebaseController.getFirebaseAuth().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return user != null;
     }
 }
