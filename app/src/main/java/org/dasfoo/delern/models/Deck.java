@@ -7,10 +7,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static org.dasfoo.delern.models.Card.getFirebaseCardsRef;
 
 /**
  * Created by katarina on 10/11/16.
@@ -21,7 +18,7 @@ public class Deck {
     private static final String DECKS = "decks";
 
     @Exclude
-    private String uid;
+    private String dId;
     private String name;
 
     public Deck() {
@@ -33,13 +30,13 @@ public class Deck {
     }
 
     @Exclude
-    public String getUid() {
-        return uid;
+    public String getdId() {
+        return dId;
     }
 
     @Exclude
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setdId(String dId) {
+        this.dId = dId;
     }
 
     public String getName() {
@@ -53,7 +50,7 @@ public class Deck {
     @Override
     public String toString() {
         return "Deck{" +
-                "uid='" + uid + '\'' +
+                "dId='" + dId + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
@@ -90,9 +87,9 @@ public class Deck {
     @Exclude
     public static void renameDeck(Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/" + deck.getUid(), deck);
+        childUpdates.put("/" + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
-        addUserToDeck(deck.getUid());
+        addUserToDeck(deck.getdId());
     }
 
     @Exclude
