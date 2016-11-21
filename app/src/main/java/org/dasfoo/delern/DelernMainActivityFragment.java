@@ -49,9 +49,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private ProgressBar mProgressBar;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
 
-    public DelernMainActivityFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

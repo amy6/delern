@@ -37,8 +37,6 @@ public class SignInActivity extends AppCompatActivity
     private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
 
-    private SignInButton mSignInButton;
-
     private GoogleApiClient mGoogleApiClient;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -48,7 +46,7 @@ public class SignInActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         // Assign fields
-        mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        SignInButton mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
         // Set click listeners
         mSignInButton.setOnClickListener(this);
         // Configure Google Sign In
@@ -86,6 +84,8 @@ public class SignInActivity extends AppCompatActivity
             case R.id.sign_in_button:
                 signIn();
                 break;
+            default:
+                Log.v(TAG, "Button is not implemented yet");
         }
     }
 

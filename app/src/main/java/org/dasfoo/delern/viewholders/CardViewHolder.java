@@ -9,7 +9,7 @@ import org.dasfoo.delern.R;
 /**
  * Created by katarina on 11/14/16.
  */
-public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class CardViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mFrontTextView;
     private TextView mBackTextView;
@@ -36,13 +36,4 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.mBackTextView = mBackTextView;
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-
-    }
 }

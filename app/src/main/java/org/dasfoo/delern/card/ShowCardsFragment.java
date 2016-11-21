@@ -1,7 +1,6 @@
 package org.dasfoo.delern.card;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,11 +23,6 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ShowCardsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ShowCardsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class ShowCardsFragment extends Fragment {
     private static final String CARDS = "cards";
@@ -57,7 +51,8 @@ public class ShowCardsFragment extends Fragment {
                 case R.id.to_know_button:
                     String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() + RepetitionIntervals.getInstance().intervals.get(newCardLevel));
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                            RepetitionIntervals.getInstance().intervals.get(newCardLevel));
                     updateCardInFirebase();
                     showNextCard();
                     break;
@@ -129,8 +124,6 @@ public class ShowCardsFragment extends Fragment {
         mDelimeter = view.findViewById(R.id.delimeter);
         mDelimeter.setVisibility(View.INVISIBLE);
 
-
-
         showFrontSide();
         return view;
     }
@@ -138,11 +131,6 @@ public class ShowCardsFragment extends Fragment {
     @Override
     public final void onAttach(final Context context) {
         super.onAttach(context);
-        // TODO(ksheremet): remove unused code
-        if (!(context instanceof OnFragmentInteractionListener)) {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -179,21 +167,6 @@ public class ShowCardsFragment extends Fragment {
             return Level.L7.name();
         }
         return cLevel.next().name();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     private void updateCardInFirebase() {

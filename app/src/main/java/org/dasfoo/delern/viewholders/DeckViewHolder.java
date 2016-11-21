@@ -26,7 +26,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private static final String TAG = DeckViewHolder.class.getSimpleName();
 
     private TextView mDesktopTextView;
-    private ImageView popupMenuImageView;
     private OnDeckViewHolderClick onViewClick;
     private Context context;
 
@@ -35,7 +34,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(v);
         mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
         mDesktopTextView.setOnClickListener(this);
-        popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
+        ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
         popupMenuImageView.setOnClickListener(this);
     }
 
@@ -54,15 +53,11 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.desktop_text_view) {
-            Log.v(TAG, "wow, it is desktop" + getAdapterPosition());
             onViewClick.doOnTextViewClick(getAdapterPosition());
-
         }
-
         if (v.getId() == R.id.deck_popup_menu) {
             showPopup(v);
         }
-
     }
 
     private void showPopup(View v) {

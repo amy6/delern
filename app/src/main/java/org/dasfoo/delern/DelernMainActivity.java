@@ -7,8 +7,7 @@ import android.os.Bundle;
 import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.signin.SignInActivity;
 
-public class DelernMainActivity extends BaseActivity
-        implements ShowCardsFragment.OnFragmentInteractionListener {
+public class DelernMainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +29,6 @@ public class DelernMainActivity extends BaseActivity
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_delern_main;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 }

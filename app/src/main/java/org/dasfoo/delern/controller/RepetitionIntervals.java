@@ -7,14 +7,12 @@ import java.util.HashMap;
 /**
  * Created by katarina on 11/6/16.
  */
+
+
 public class RepetitionIntervals {
-    private static RepetitionIntervals ourInstance = new RepetitionIntervals();
+
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
-
-    public static RepetitionIntervals getInstance() {
-        return ourInstance;
-    }
-
+    private static RepetitionIntervals ourInstance = new RepetitionIntervals();
     public HashMap<String, Long> intervals = new HashMap<>();
 
     private RepetitionIntervals() {
@@ -25,5 +23,9 @@ public class RepetitionIntervals {
         intervals.put(Level.L5.name(), 14 * ONE_DAY);
         intervals.put(Level.L6.name(), 30 * ONE_DAY);
         intervals.put(Level.L7.name(), 60 * ONE_DAY);
+    }
+
+    public static RepetitionIntervals getInstance() {
+        return ourInstance;
     }
 }
