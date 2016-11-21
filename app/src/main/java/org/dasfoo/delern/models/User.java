@@ -1,7 +1,5 @@
 package org.dasfoo.delern.models;
 
-import android.net.Uri;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;

@@ -44,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected GoogleApiClient mGoogleApiClient;
 
-    Toolbar toolbar;
+    protected Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,22 +132,29 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // When you successfully handle a menu item, return true.
+        // If you don't handle the menu item, you should call the superclass implementation of
+        // onOptionsItemSelected() (the default implementation returns false).
+        // https://developer.android.com/guide/topics/ui/menus.html#options-menu
         switch (item.getItemId()) {
             case R.id.invite_menu:
                 sendInvitation();
-                return true;
+                break;
             case R.id.sign_out_menu:
                 FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startActivity(new Intent(this, SignInActivity.class));
-                return true;
+                break;
             case android.R.id.home:
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     getSupportFragmentManager().popBackStack();
+                    break;
                 }
+                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     /**

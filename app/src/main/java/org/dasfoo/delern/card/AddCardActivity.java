@@ -21,7 +21,6 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
 
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
-    private Button mAddCardToDbButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
 
         mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
-        mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
+        Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
         mAddCardToDbButton.setOnClickListener(this);
     }
 

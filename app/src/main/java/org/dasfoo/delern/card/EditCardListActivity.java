@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.BaseActivity;
@@ -21,10 +20,6 @@ public class EditCardListActivity extends BaseActivity {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
-    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private CardRecyclerViewAdapter mFirebaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +39,16 @@ public class EditCardListActivity extends BaseActivity {
             }
         });
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
-                CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
+        CardRecyclerViewAdapter mFirebaseAdapter =
+                new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
+                        CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
