@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -12,11 +13,14 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
+import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
-public class EditCardListActivity extends BaseActivity {
+public class EditCardListActivity extends BaseActivity implements OnCardViewHolderClick {
+
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
@@ -49,6 +53,7 @@ public class EditCardListActivity extends BaseActivity {
         CardRecyclerViewAdapter mFirebaseAdapter =
                 new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
                         CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
+        mFirebaseAdapter.setOnCardViewHolderClick(this);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -72,4 +77,10 @@ public class EditCardListActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onCardClick(int position){
+        Log.v(TAG, "Position:" + position);
+        Intent intent = new Intent(this, PreEditCardActivity.class);
+        startActivity(intent);
+    }
 }

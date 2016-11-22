@@ -54,6 +54,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.card.EditCardListActivity" />
         </activity>
+        <activity
+            android:name=".card.PreEditCardActivity"
+            android:label="@string/title_activity_pre_edit_card"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

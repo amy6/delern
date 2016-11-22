@@ -3,6 +3,7 @@ package org.dasfoo.delern.adapters;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
@@ -11,6 +12,8 @@ import org.dasfoo.delern.viewholders.CardViewHolder;
  */
 
 public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardViewHolder> {
+
+    private OnCardViewHolderClick onCardViewHolderClick;
     /**
      * @param modelClass      Firebase will marshall the data at a location into an instance of a class that you provide
      * @param modelLayout     This is the layout used to represent a single item in the list. You will be responsible for populating an
@@ -20,6 +23,10 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
      */
     public CardRecyclerViewAdapter(Class<Card> modelClass, int modelLayout, Class<CardViewHolder> viewHolderClass, Query ref) {
         super(modelClass, modelLayout, viewHolderClass, ref);
+    }
+
+    public void setOnCardViewHolderClick(OnCardViewHolderClick onCardViewHolderClick) {
+        this.onCardViewHolderClick = onCardViewHolderClick;
     }
 
     /**
@@ -37,6 +44,6 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
     protected void populateViewHolder(CardViewHolder viewHolder, Card card, int position) {
         viewHolder.getmFrontTextView().setText(card.getFront());
         viewHolder.getmBackTextView().setText(card.getBack());
-
+        viewHolder.setOnViewClick(onCardViewHolderClick);
     }
 }
