@@ -21,7 +21,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_pre_edit_card" />
+    <include layout="@layout/pre_edit_card_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

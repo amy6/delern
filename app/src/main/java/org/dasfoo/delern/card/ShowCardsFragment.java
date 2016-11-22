@@ -108,7 +108,7 @@ public class ShowCardsFragment extends Fragment {
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                    final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_card, container, false);
+        View view = inflater.inflate(R.layout.card_fragment, container, false);
         mKnowButton = (ImageButton) view.findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(onClickListener);
 

@@ -51,7 +51,7 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         CardRecyclerViewAdapter mFirebaseAdapter =
-                new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_forlist,
+                new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
                         CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
         mFirebaseAdapter.setOnCardViewHolderClick(this);
 
@@ -67,7 +67,7 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_edit_card_list;
+        return R.layout.show_deck_activity;
     }
 
     private void startAddCardsActivity(String key, String label) {

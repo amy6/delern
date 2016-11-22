@@ -40,7 +40,7 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_add_card;
+        return R.layout.add_card_activity;
     }
 
     /**

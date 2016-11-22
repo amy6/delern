@@ -1,10 +1,8 @@
 package org.dasfoo.delern;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
-import org.dasfoo.delern.card.ShowCardsFragment;
 import org.dasfoo.delern.signin.SignInActivity;
 
 public class DelernMainActivity extends BaseActivity {
@@ -28,7 +26,7 @@ public class DelernMainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_delern_main;
+        return R.layout.delern_main_activity;
     }
 
 }
