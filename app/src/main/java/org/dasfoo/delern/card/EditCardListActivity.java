@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.BaseActivity;
@@ -20,18 +24,20 @@ import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends BaseActivity implements OnCardViewHolderClick {
 
-    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
-
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
+    CardRecyclerViewAdapter mFirebaseAdapter;
+    private String mLabel;
+    private String mDeckId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        final String label = intent.getStringExtra(LABEL);
-        final String deckId = intent.getStringExtra(DECK_ID);
-        this.setTitle(label);
+        mLabel = intent.getStringExtra(LABEL);
+        mDeckId = intent.getStringExtra(DECK_ID);
+        this.setTitle(mLabel);
 
         enableToolbarArrow(true);
 
@@ -39,7 +45,7 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startAddCardsActivity(deckId, label);
+                startAddCardsActivity(mDeckId, mLabel);
             }
         });
 
@@ -50,9 +56,8 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        CardRecyclerViewAdapter mFirebaseAdapter =
-                new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                        CardViewHolder.class, Card.fetchAllCardsForDeck(deckId));
+        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
+                CardViewHolder.class, Card.fetchAllCardsForDeck(mDeckId));
         mFirebaseAdapter.setOnCardViewHolderClick(this);
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -78,9 +83,36 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
     }
 
     @Override
-    public void onCardClick(int position){
+    public void onCardClick(int position) {
         Log.v(TAG, "Position:" + position);
+        Query query = Card.getCardById(mDeckId, mFirebaseAdapter.getRef(position).getKey());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Card card = null;
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    Log.v(TAG, cardSnapshot.toString());
+                    card = cardSnapshot.getValue(Card.class);
+                    card.setcId(cardSnapshot.getKey());
+                    Log.v(TAG, card.toString());
+                }
+                if (card != null) {
+                    showCardForEdit(card);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v(TAG, databaseError.getMessage());
+            }
+        });
+    }
+
+    private void showCardForEdit(Card card) {
         Intent intent = new Intent(this, PreEditCardActivity.class);
+        intent.putExtra(PreEditCardActivity.LABEL, mLabel);
+        intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
+        intent.putExtra(PreEditCardActivity.CARD, card);
         startActivity(intent);
     }
 }

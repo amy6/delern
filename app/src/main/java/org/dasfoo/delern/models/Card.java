@@ -60,6 +60,8 @@ public class Card implements Parcelable {
         cId = in.readString();
         back = in.readString();
         front = in.readString();
+        level = in.readString();
+        repeatAt = in.readLong();
     }
 
     @Exclude
@@ -88,6 +90,14 @@ public class Card implements Parcelable {
                 .child(deckId)
                 .child(cardKey)
                 .setValue(newCard);
+    }
+
+    @Exclude
+    public static Query getCardById(String deckId, String cardId) {
+        return getFirebaseCardsRef()
+                .child(deckId)
+                .orderByKey()
+                .equalTo(cardId);
     }
 
     @Exclude
@@ -181,6 +191,8 @@ public class Card implements Parcelable {
         dest.writeString(this.cId);
         dest.writeString(this.back);
         dest.writeString(this.front);
+        dest.writeString(this.level);
+        dest.writeLong(this.repeatAt);
     }
 
     @Override
@@ -189,6 +201,8 @@ public class Card implements Parcelable {
                 "cId='" + cId + '\'' +
                 ", back='" + back + '\'' +
                 ", front='" + front + '\'' +
+                ", level='" + level + '\'' +
+                ", repeatAt=" + repeatAt +
                 '}';
     }
 }
