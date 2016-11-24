@@ -122,6 +122,14 @@ public class Card implements Parcelable {
     }
 
     @Exclude
+    public static void deleteCardFromDeck(String deckId, Card card) {
+        getFirebaseCardsRef()
+                .child(deckId)
+                .child(card.getcId())
+                .removeValue();
+    }
+
+    @Exclude
     public String getcId() {
         return cId;
     }
