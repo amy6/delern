@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
@@ -35,7 +35,7 @@ public class ShowCardsFragment extends Fragment {
 
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
-    private Button mTurnCardButton;
+    private ImageView mTurnCardButton;
     private TextView mFrontTextView;
     private TextView mBackTextView;
     private View mDelimeter;
@@ -118,7 +118,7 @@ public class ShowCardsFragment extends Fragment {
         mFrontTextView = (TextView) view.findViewById(R.id.textFrontCardView);
         mBackTextView = (TextView) view.findViewById(R.id.textBackCardView);
 
-        mTurnCardButton = (Button) view.findViewById(R.id.turn_card_button);
+        mTurnCardButton = (ImageView) view.findViewById(R.id.turn_card_button);
         mTurnCardButton.setOnClickListener(onClickListener);
 
         mDelimeter = view.findViewById(R.id.delimeter);

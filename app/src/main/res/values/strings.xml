@@ -22,4 +22,5 @@
     <string name="title_activity_pre_edit_card">PreEditCardActivit</string>
     <string name="add_button_string">add</string>
     <string name="save_button_string">Save</string>
+    <string name="flip_the_card_message">Flip the card</string>
 </resources>
