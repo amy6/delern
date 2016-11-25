@@ -15,6 +15,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends BaseActivity implements OnCardViewHolderClick {
