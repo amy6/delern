@@ -8,10 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.BaseActivity;
@@ -27,7 +23,7 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
-    CardRecyclerViewAdapter mFirebaseAdapter;
+    private CardRecyclerViewAdapter mFirebaseAdapter;
     private String mLabel;
     private String mDeckId;
 
@@ -76,43 +72,23 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
     }
 
     private void startAddCardsActivity(String key, String label) {
-        Intent intent = new Intent(this, AddCardActivity.class);
-        intent.putExtra(AddCardActivity.DECK_ID, key);
-        intent.putExtra(AddCardActivity.LABEL, label);
+        Intent intent = new Intent(this, AddEditCardActivity.class);
+        intent.putExtra(AddEditCardActivity.DECK_ID, key);
+        intent.putExtra(AddEditCardActivity.LABEL, label);
         startActivity(intent);
     }
 
     @Override
     public void onCardClick(int position) {
         Log.v(TAG, "Position:" + position);
-        Query query = Card.getCardById(mDeckId, mFirebaseAdapter.getRef(position).getKey());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Card card = null;
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    Log.v(TAG, cardSnapshot.toString());
-                    card = cardSnapshot.getValue(Card.class);
-                    card.setcId(cardSnapshot.getKey());
-                    Log.v(TAG, card.toString());
-                }
-                if (card != null) {
-                    showCardForEdit(card);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.v(TAG, databaseError.getMessage());
-            }
-        });
+        showCardForEdit(mFirebaseAdapter.getRef(position).getKey());
     }
 
-    private void showCardForEdit(Card card) {
+    private void showCardForEdit(String cardId) {
         Intent intent = new Intent(this, PreEditCardActivity.class);
         intent.putExtra(PreEditCardActivity.LABEL, mLabel);
         intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
-        intent.putExtra(PreEditCardActivity.CARD, card);
+        intent.putExtra(PreEditCardActivity.CARD_ID, cardId);
         startActivity(intent);
     }
 }

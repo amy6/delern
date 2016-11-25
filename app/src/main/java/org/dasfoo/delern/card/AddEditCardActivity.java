@@ -12,22 +12,25 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 
-public class AddCardActivity extends BaseActivity implements View.OnClickListener {
+public class AddEditCardActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String LABEL = "label";
-    public static final String DECK_ID = "deckId";
+    public static final String DECK_ID = "mDeckId";
+    public static final String CARD = "card";
 
-    private String deckId;
+    private String mDeckId;
 
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
+    private Card mCard = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         final String label = intent.getStringExtra(LABEL);
-        deckId = intent.getStringExtra(DECK_ID);
+        mDeckId = intent.getStringExtra(DECK_ID);
+        mCard = intent.getParcelableExtra(CARD);
         this.setTitle(label);
 
         enableToolbarArrow(true);
@@ -35,12 +38,17 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
         mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
+        if (mCard != null) {
+            mAddCardToDbButton.setText(R.string.save_button_string);
+            mFrontSideInputText.setText(mCard.getFront());
+            mBackSideInputText.setText(mCard.getBack());
+        }
         mAddCardToDbButton.setOnClickListener(this);
     }
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.add_card_activity;
+        return R.layout.add_edit_card_activity;
     }
 
     /**
@@ -51,14 +59,22 @@ public class AddCardActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.add_card_to_db) {
-            Card newCard = new Card();
-            newCard.setFront(mFrontSideInputText.getText().toString());
-            newCard.setBack(mBackSideInputText.getText().toString());
-            newCard.setLevel(Level.L0.name());
-            newCard.setRepeatAt(System.currentTimeMillis());
-            Card.createNewCard(newCard, deckId);
-            cleanTextFields();
-            Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+            if (mCard == null) {
+                Card newCard = new Card();
+                newCard.setFront(mFrontSideInputText.getText().toString());
+                newCard.setBack(mBackSideInputText.getText().toString());
+                newCard.setLevel(Level.L0.name());
+                newCard.setRepeatAt(System.currentTimeMillis());
+                Card.createNewCard(newCard, mDeckId);
+                cleanTextFields();
+                Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+            } else {
+                mCard.setFront(mFrontSideInputText.getText().toString());
+                mCard.setBack(mBackSideInputText.getText().toString());
+                Card.updateCard(mCard, mDeckId);
+                Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
