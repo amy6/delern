@@ -2,13 +2,13 @@ package org.dasfoo.delern.card;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
@@ -33,8 +33,8 @@ public class ShowCardsFragment extends Fragment {
      */
     private static final String TAG = LogUtil.tagFor(ShowCardsFragment.class);
 
-    private ImageButton mKnowButton;
-    private ImageButton mRepeatButton;
+    private FloatingActionButton mKnowButton;
+    private FloatingActionButton mRepeatButton;
     private Button mTurnCardButton;
     private TextView mFrontTextView;
     private TextView mBackTextView;
@@ -109,10 +109,10 @@ public class ShowCardsFragment extends Fragment {
                                    final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.card_fragment, container, false);
-        mKnowButton = (ImageButton) view.findViewById(R.id.to_know_button);
+        mKnowButton = (FloatingActionButton) view.findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(onClickListener);
 
-        mRepeatButton = (ImageButton) view.findViewById(R.id.to_repeat_button);
+        mRepeatButton = (FloatingActionButton) view.findViewById(R.id.to_repeat_button);
         mRepeatButton.setOnClickListener(onClickListener);
 
         mFrontTextView = (TextView) view.findViewById(R.id.textFrontCardView);
