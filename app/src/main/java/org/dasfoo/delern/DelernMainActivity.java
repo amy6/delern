@@ -26,7 +26,7 @@ public class DelernMainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.activity_delern_main;
+        return R.layout.delern_main_activity;
     }
 
 }

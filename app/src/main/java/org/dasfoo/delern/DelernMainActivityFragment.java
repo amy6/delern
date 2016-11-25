@@ -52,7 +52,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_delern_main, container, false);
+        final View rootView = inflater.inflate(R.layout.delern_main_fragment, container, false);
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

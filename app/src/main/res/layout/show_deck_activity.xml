@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="org.dasfoo.delern.card.EditCardListActivity">
 
-    <include layout="@layout/content_edit_card_list" />
+    <include layout="@layout/show_deck_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/f_add_card_button"

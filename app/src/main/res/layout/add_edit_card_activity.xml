@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="org.dasfoo.delern.card.AddCardActivity">
+    tools:context="org.dasfoo.delern.card.AddEditCardActivity">
 
    <include layout="@layout/toolbar"/>
 
@@ -21,11 +21,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hello_blank_fragment" />
-
         <android.support.design.widget.TextInputEditText
             android:id="@+id/front_side_text"
             android:layout_height="wrap_content"
@@ -39,7 +34,7 @@
             android:id="@+id/add_card_to_db"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add"/>
+            android:text="@string/add_button_string"/>
     </LinearLayout>
 
 

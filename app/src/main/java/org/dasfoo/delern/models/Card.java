@@ -60,6 +60,8 @@ public class Card implements Parcelable {
         cId = in.readString();
         back = in.readString();
         front = in.readString();
+        level = in.readString();
+        repeatAt = in.readLong();
     }
 
     @Exclude
@@ -91,6 +93,14 @@ public class Card implements Parcelable {
     }
 
     @Exclude
+    public static Query getCardById(String deckId, String cardId) {
+        return getFirebaseCardsRef()
+                .child(deckId)
+                .orderByKey()
+                .equalTo(cardId);
+    }
+
+    @Exclude
     public static void updateCard(Card card, String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + card.getcId(), card);
@@ -109,6 +119,14 @@ public class Card implements Parcelable {
     public static void deleteCardsFromDeck(String deckId) {
         getFirebaseCardsRef()
                 .child(deckId).removeValue();
+    }
+
+    @Exclude
+    public static void deleteCardFromDeck(String deckId, Card card) {
+        getFirebaseCardsRef()
+                .child(deckId)
+                .child(card.getcId())
+                .removeValue();
     }
 
     @Exclude
@@ -181,6 +199,8 @@ public class Card implements Parcelable {
         dest.writeString(this.cId);
         dest.writeString(this.back);
         dest.writeString(this.front);
+        dest.writeString(this.level);
+        dest.writeLong(this.repeatAt);
     }
 
     @Override
@@ -189,6 +209,8 @@ public class Card implements Parcelable {
                 "cId='" + cId + '\'' +
                 ", back='" + back + '\'' +
                 ", front='" + front + '\'' +
+                ", level='" + level + '\'' +
+                ", repeatAt=" + repeatAt +
                 '}';
     }
 }

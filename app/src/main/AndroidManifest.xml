@@ -46,7 +46,7 @@
                 android:value="org.dasfoo.delern.DelernMainActivity" />
         </activity>
         <activity
-            android:name=".card.AddCardActivity"
+            android:name=".card.AddEditCardActivity"
             android:label="@string/title_activity_add_card"
             android:parentActivityName=".card.EditCardListActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -54,6 +54,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.card.EditCardListActivity" />
         </activity>
+        <activity
+            android:name=".card.PreEditCardActivity"
+            android:label="@string/title_activity_pre_edit_card"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
