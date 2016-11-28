@@ -1,35 +1,43 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "firebase_url": "https://example-aaa.firebaseio.com",
-    "project_id": "example-aaa",
-    "storage_bucket": "example-aaa.appspot.com"
+    "project_number": "174595342338",
+    "firebase_url": "https://delern-e1b33.firebaseio.com",
+    "project_id": "delern-e1b33",
+    "storage_bucket": "delern-e1b33.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "0:0000000000000:android:aaaaaaaaaaaaaaaa",
+        "mobilesdk_app_id": "1:174595342338:android:bdd110e6a1b09d99",
         "android_client_info": {
           "package_name": "org.dasfoo.delern"
         }
       },
       "oauth_client": [
         {
-          "client_id": "0000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
+          "client_id": "174595342338-138a2u9lmf4lj6u6urnj6abkitv387r8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern",
-            "certificate_hash": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "certificate_hash": "50E1521006397D510BC6DCED00D6CD508A593CD3"
           }
         },
         {
-          "client_id": "0000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
+          "client_id": "174595342338-54hpcnq4ljaqpmkln9glak07alete9lv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern",
+            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
+          }
+        },
+        {
+          "client_id": "174595342338-ehfok3g5rs4imk0jd16uprqhfklajjfv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "0000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"
+          "current_key": "AIzaSyBaipyY9vqazShbW3fXVKY70joHWf7PXbk"
         }
       ],
       "services": {
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "0000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
+              "client_id": "174595342338-ehfok3g5rs4imk0jd16uprqhfklajjfv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

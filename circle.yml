@@ -32,8 +32,26 @@ test:
       parallel: true
   - circle-android wait-for-boot
   override:
-  - GRADLE_OPTS=-Xmx256m ./gradlew build connectedCheck
+  # Not "build connectedCheck" because these targets will involve Release, which is not available
+  # due to lack of signing keystore at this stage.
+  - GRADLE_OPTS=-Xmx256m ./gradlew lintDebug testDebugUnitTest connectedDebugAndroidTest --console=plain
   post:
   # TODO(dotdoom): cleanup, leave only useful files.
   - mv app/build/{outputs,reports} "${CIRCLE_ARTIFACTS?}"
   - mv app/build/test-results/* "${CIRCLE_TEST_REPORTS?}"
+
+deployment:
+  release:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    owner: dasfoo
+    commands:
+    # TODO(dotdoom): Make sure the tag is signed. Do not deploy unsigned tags!
+    #- git verify-tag $CIRCLE_TAG
+    # Taken from https://circleci.com/docs/google-auth/.
+    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    - echo $GCLOUD_SERVICE_KEY | base64 --decode > app/play-store-service-account.json
+    - gcloud auth activate-service-account --key-file app/play-store-service-account.json
+    - gcloud config set project $GCLOUD_PROJECT
+    # Get our keystore.
+    - gsutil cp gs://dasfoo-keystore/delern.jks app
+    - ./gradlew publishRelease --console=plain

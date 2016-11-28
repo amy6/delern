@@ -39,5 +39,8 @@ captures/
 # Keystore files
 *.jks
 
-# Firebase application configuration
-google-services.json
+# Google Cloud service account credentials with access to Google Play Store
+/app/play-store-service-account.json
+
+# Temporary files (normally from the CI)
+nohup.out
