@@ -128,6 +128,12 @@ public class ShowCardsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
                 Log.v(TAG, "Edit");
+                Intent intentEdit = new Intent(this, AddEditCardActivity.class);
+                intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
+                // TODO(ksheremet): Move all strings to string.xml
+                intentEdit.putExtra(AddEditCardActivity.LABEL, "Edit");
+                intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
+                startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
                 Log.v(TAG, "Delete");
