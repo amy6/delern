@@ -1,13 +1,12 @@
 package org.dasfoo.delern.card;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,21 +16,15 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ShowCardsFragment extends Fragment {
-    private static final String CARDS = "cards";
-    private static final String DECK_ID = "deckID";
+public class ShowCardsActivity extends AppCompatActivity {
 
-    /**
-     * Class information for logging.
-     */
-    private static final String TAG = LogUtil.tagFor(ShowCardsFragment.class);
+    public static final String DECK_ID = "mDeckId";
+    public static final String CARDS = "cards";
+    public static final String LABEL = "label";
+    private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
 
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
@@ -42,8 +35,7 @@ public class ShowCardsFragment extends Fragment {
 
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
-    private String deckId;
-
+    private String mDeckId;
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -67,75 +59,62 @@ public class ShowCardsFragment extends Fragment {
                     showBackSide();
                     break;
                 default:
-                    Log.v("ShowCardsFragment", "Button is not implemented yet.");
+                    Log.v("ShowCardsActivity", "Button is not implemented yet.");
                     break;
             }
         }
     };
 
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param cards to show.
-     * @return A new instance of fragment ShowCardsFragment.
-     */
-    public static ShowCardsFragment newInstance(final ArrayList<Card> cards, final String deckId) {
-        ShowCardsFragment fragment = new ShowCardsFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(CARDS, cards);
-        args.putString(DECK_ID, deckId);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.show_cards_activity);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getParameters();
+        initViews();
+        showFrontSide();
     }
 
-    @Override
-    public final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            deckId = getArguments().getString(DECK_ID);
-            List<Card> cards = getArguments().getParcelableArrayList(CARDS);
-            assert cards != null;
+    /**
+     * Gets parameters sended from previous Activity.
+     */
+    private void getParameters() {
+        Intent intent = getIntent();
+        mDeckId = intent.getStringExtra(DECK_ID);
+        List<Card> cards = intent.getParcelableArrayListExtra(CARDS);
+        String label = intent.getStringExtra(LABEL);
+        this.setTitle(label);
+        if (cards != null) {
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
         } else {
-            getFragmentManager().popBackStack();
+            finish();
         }
     }
 
-    @Override
-    public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                   final Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.card_fragment, container, false);
-        mKnowButton = (FloatingActionButton) view.findViewById(R.id.to_know_button);
+    /**
+     * Initializes buttons and views.
+     * Sets click listeners.
+     */
+    private void initViews() {
+        mKnowButton = (FloatingActionButton) findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(onClickListener);
 
-        mRepeatButton = (FloatingActionButton) view.findViewById(R.id.to_repeat_button);
+        mRepeatButton = (FloatingActionButton) findViewById(R.id.to_repeat_button);
         mRepeatButton.setOnClickListener(onClickListener);
 
-        mFrontTextView = (TextView) view.findViewById(R.id.textFrontCardView);
-        mBackTextView = (TextView) view.findViewById(R.id.textBackCardView);
+        mFrontTextView = (TextView) findViewById(R.id.textFrontCardView);
+        mBackTextView = (TextView) findViewById(R.id.textBackCardView);
 
-        mTurnCardButton = (ImageView) view.findViewById(R.id.turn_card_button);
+        mTurnCardButton = (ImageView) findViewById(R.id.turn_card_button);
         mTurnCardButton.setOnClickListener(onClickListener);
 
-        mDelimeter = view.findViewById(R.id.delimeter);
+        mDelimeter = findViewById(R.id.delimeter);
         mDelimeter.setVisibility(View.INVISIBLE);
-
-        showFrontSide();
-        return view;
-    }
-
-    @Override
-    public final void onAttach(final Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public final void onDetach() {
-        super.onDetach();
     }
 
     /**
@@ -161,7 +140,7 @@ public class ShowCardsFragment extends Fragment {
         mDelimeter.setVisibility(View.VISIBLE);
     }
 
-    private String setNewLevel(String currLevel) {
+    private String setNewLevel(final String currLevel) {
         Level cLevel = Level.valueOf(currLevel);
         if (cLevel == Level.L7) {
             return Level.L7.name();
@@ -170,7 +149,7 @@ public class ShowCardsFragment extends Fragment {
     }
 
     private void updateCardInFirebase() {
-        Card.updateCard(mCurrentCard, deckId);
+        Card.updateCard(mCurrentCard, mDeckId);
     }
 
     private void showNextCard() {
@@ -178,7 +157,7 @@ public class ShowCardsFragment extends Fragment {
             mCurrentCard = mCardIterator.next();
             showFrontSide();
         } else {
-            getFragmentManager().popBackStack();
+            finish();
         }
     }
 }

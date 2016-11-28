@@ -59,6 +59,15 @@
             android:label="@string/title_activity_pre_edit_card"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".card.ShowCardsActivity"
+            android:label="@string/title_activity_show_cards"
+            android:parentActivityName=".DelernMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.DelernMainActivity" />
+        </activity>
     </application>
 
 </manifest>

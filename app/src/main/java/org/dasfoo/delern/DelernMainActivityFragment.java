@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
-import org.dasfoo.delern.card.ShowCardsFragment;
+import org.dasfoo.delern.card.ShowCardsActivity;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
@@ -103,7 +102,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                Log.v(TAG,"Progress bar");
+                Log.v(TAG, "Progress bar");
                 rootView.findViewById(R.id.empty_recyclerview_message)
                         .setVisibility(TextView.INVISIBLE);
 
@@ -129,7 +128,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     @Override
-    public void doOnTextViewClick(int position) {
+    public void doOnTextViewClick(final int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
         Query query = Card.fetchCardsFromDeckToRepeat(deckId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -143,16 +142,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     cards.add(card);
                 }
                 if (cards.size() != 0) {
-                    // TODO(ksheremet): Move to separate method
-                    ShowCardsFragment newFragment = ShowCardsFragment.newInstance(cards, deckId);
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                            .beginTransaction();
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack so the user can navigate back
-                    transaction.replace(R.id.fragment_container, newFragment);
-                    transaction.addToBackStack(null);
-                    // Commit the transaction
-                    transaction.commit();
+                    startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId, cards);
                 }
             }
 
@@ -231,6 +221,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         Intent intent = new Intent(getActivity(), EditCardListActivity.class);
         intent.putExtra(EditCardListActivity.DECK_ID, key);
         intent.putExtra(EditCardListActivity.LABEL, name);
+        startActivity(intent);
+    }
+
+    private void startShowCardActivity(String label, String deckId, ArrayList<Card> cards) {
+        Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
+        intent.putExtra(ShowCardsActivity.DECK_ID, deckId);
+        intent.putExtra(ShowCardsActivity.CARDS, cards);
+        intent.putExtra(ShowCardsActivity.LABEL, label);
         startActivity(intent);
     }
 }
