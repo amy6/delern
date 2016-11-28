@@ -24,3 +24,16 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Keep original names for Firebase serialization:
+# https://firebase.google.com/docs/database/android/start/#proguard
+-keepattributes Signature
+-keepclassmembers class org.dasfoo.delern.models.** {
+  *;
+}
+
+# Keep ViewHolder classes because Firebase uses reflection on them:
+# https://github.com/firebase/FirebaseUI-Android/issues/46#issuecomment-247516749
+-keep class org.dasfoo.delern.viewholders.** {
+  *;
+}
