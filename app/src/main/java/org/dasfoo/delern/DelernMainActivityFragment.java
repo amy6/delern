@@ -3,7 +3,6 @@ package org.dasfoo.delern;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -47,11 +46,17 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private OnDeckViewHolderClick onDeckViewHolderClick = this;
     private ProgressBar mProgressBar;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.AdapterDataObserver mAdapterDataObserver;
+    private ValueEventListener mProgressBarListener;
+    private TextView mEmptyMessageTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.delern_main_fragment, container, false);
+        mEmptyMessageTextView = (TextView) rootView.findViewById(R.id.empty_recyclerview_message);
+
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +69,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     public void onClick(DialogInterface dialog, int which) {
                         Deck newDeck = new Deck(input.getText().toString());
                         String key = Deck.createNewDeck(newDeck);
-                        rootView.findViewById(R.id.empty_recyclerview_message)
-                                .setVisibility(TextView.INVISIBLE);
+                        mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
                     }
                 });
@@ -74,41 +78,40 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
         // TODO(ksheremet): Create base fragment for mProgressBar
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
 
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
-                DeckViewHolder.class, Deck.getUsersDecks());
-        mFirebaseAdapter.setContext(getContext());
-        mFirebaseAdapter.setOnDeckViewHolderClick(onDeckViewHolderClick);
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        return rootView;
+    }
+
+    /**
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to { Activity#onStart() Activity.onStart} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                Log.v(TAG, String.valueOf(itemCount));
             }
-        });
+        };
 
-        //add the listener for the single value event that will function
-        //like a completion listener for initial data load of the FirebaseRecyclerAdapter
-        // Checks if the recyclerview is empty, ProgressBar is invisible
-        // and writes message for user
-        Deck.getUsersDecks().addListenerForSingleValueEvent(new ValueEventListener() {
+        mProgressBarListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 Log.v(TAG, "Progress bar");
-                rootView.findViewById(R.id.empty_recyclerview_message)
-                        .setVisibility(TextView.INVISIBLE);
-
+                mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                 if (!dataSnapshot.hasChildren()) {
-                    rootView.findViewById(R.id.empty_recyclerview_message)
-                            .setVisibility(TextView.VISIBLE);
+                    mEmptyMessageTextView.setVisibility(TextView.VISIBLE);
                 }
             }
 
@@ -116,15 +119,32 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onCancelled(DatabaseError databaseError) {
                 Log.v(TAG, databaseError.getMessage());
             }
-        });
+        };
 
+
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
+                DeckViewHolder.class, Deck.getUsersDecks());
+        mFirebaseAdapter.setContext(getContext());
+        mFirebaseAdapter.setOnDeckViewHolderClick(onDeckViewHolderClick);
+        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
-        return rootView;
+
+
+        // Checks if the recyclerview is empty, ProgressBar is invisible
+        // and writes message for user
+        Deck.getUsersDecks().addListenerForSingleValueEvent(mProgressBarListener);
     }
 
+    /**
+     * Called when the Fragment is no longer started.  This is generally
+     * tied to { Activity#onStop() Activity.onStop} of the containing
+     * Activity's lifecycle.
+     */
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStop() {
+        super.onStop();
+        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        Deck.getUsersDecks().removeEventListener(mProgressBarListener);
     }
 
     @Override

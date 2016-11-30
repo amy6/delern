@@ -1,12 +1,18 @@
 package org.dasfoo.delern.adapters;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
+import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 /**
@@ -14,6 +20,8 @@ import org.dasfoo.delern.viewholders.DeckViewHolder;
  */
 
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
+
+    private static final String TAG = LogUtil.tagFor(DeckRecyclerViewAdapter.class);
 
     private OnDeckViewHolderClick onDeckViewHolderClick;
     private Context context;
@@ -43,10 +51,25 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * @param position   The position in the list of the view being populated
      */
     @Override
-    protected void populateViewHolder(DeckViewHolder viewHolder, Deck deck, int position) {
+    protected void populateViewHolder(final DeckViewHolder viewHolder, Deck deck, int position) {
         viewHolder.getmDesktopTextView().setText(deck.getName());
         viewHolder.setOnViewClick(onDeckViewHolderClick);
         viewHolder.setContext(context);
+        Log.v(TAG, deck.toString());
+        Log.v(TAG, String.valueOf(getRef(position).getKey()));
+        // TODO(ksheremet): unregister somewhere
+        Card.fetchCardsFromDeckToRepeat(getRef(position).getKey()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.v(TAG, String.valueOf(dataSnapshot.getChildrenCount()));
+                viewHolder.getmCountToLearnTextView().setText(String.valueOf(dataSnapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.v(TAG, databaseError.getMessage());
+            }
+        });
     }
 
     public void setOnDeckViewHolderClick(OnDeckViewHolderClick onDeckViewHolderClick) {

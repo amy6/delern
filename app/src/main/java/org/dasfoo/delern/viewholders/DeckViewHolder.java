@@ -26,6 +26,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private static final String TAG = DeckViewHolder.class.getSimpleName();
 
     private TextView mDesktopTextView;
+    private TextView mCountToLearnTextView;
     private OnDeckViewHolderClick onViewClick;
     private Context context;
 
@@ -33,6 +34,8 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     public DeckViewHolder(View v) {
         super(v);
         mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
+        mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
+
         mDesktopTextView.setOnClickListener(this);
         ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
         popupMenuImageView.setOnClickListener(this);
@@ -40,6 +43,10 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public TextView getmDesktopTextView() {
         return mDesktopTextView;
+    }
+
+    public TextView getmCountToLearnTextView() {
+        return mCountToLearnTextView;
     }
 
     public void setOnViewClick(OnDeckViewHolderClick onViewClick) {
@@ -67,7 +74,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         popup.show();
     }
-
 
     /**
      * This method will be invoked when a menu item is clicked if the item
