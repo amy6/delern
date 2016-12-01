@@ -1,4 +1,8 @@
-# TODO(dotdoom): adjust cache to save SDK and Android image.
+general:
+  artifacts:
+  - app/build/outputs
+  - app/build/reports
+
 machine:
   java:
     version: oraclejdk8
@@ -9,20 +13,22 @@ checkout:
   - git submodule update --init
 
 dependencies:
-    pre:
-    - mkdir -p "${ANDROID_HOME?}/licenses"
-    # Take this text from the Android SDK directory on your machine.
-    - echo '8933bad161af4178b1185d1a37fbf41ea5269c55' >"${ANDROID_HOME?}/licenses/android-sdk-license"
-    post:
-    # For emulator. Cannot use x86 w/o HW acceleration, which is provided by KVM.
-    # Keep in sync with the SDK version.
-    # To list all supported images:
-    # $ cd android-sdk-linux; tools/android list sdk --extended --all
-    # (look for a string: sys-img-XX-android-YY)
-    # Currently, there's no image for API level 25 with ARM EABI.
-    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-24
-    # For lint to be able to detect deprecated API.
-    - echo y | android update sdk --no-ui --all --filter platform-tools
+  cache_directories:
+  - ~/.gradle
+  pre:
+  - mkdir -p "${ANDROID_HOME?}/licenses"
+  # This is just a hash sum of the license agreements accepted.
+  # Take this text from the Android SDK directory on your machine.
+  - echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
+  post:
+  # For emulator. Cannot use x86 w/o HW acceleration, which is only provided by KVM.
+  # Keep in sync with the SDK version. To list all supported images:
+  # $ cd android-sdk-linux; tools/android list sdk --extended --all
+  # (look for a string: sys-img-XX-android-YY)
+  # Currently, there's no image for API level 25 with ARM EABI.
+  - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-24
+  # For lint to be able to detect deprecated API.
+  - echo y | android update sdk --no-ui --all --filter platform-tools
 
 test:
   pre:
@@ -34,24 +40,39 @@ test:
   override:
   # Not "build connectedCheck" because these targets will involve Release, which is not available
   # due to lack of signing keystore at this stage.
+  # TODO(dotdoom): consider -PdisablePreDex.
   - GRADLE_OPTS=-Xmx256m ./gradlew lintDebug testDebugUnitTest connectedDebugAndroidTest --console=plain
   post:
-  # TODO(dotdoom): cleanup, leave only useful files.
-  - mv app/build/{outputs,reports} "${CIRCLE_ARTIFACTS?}"
-  - mv app/build/test-results/* "${CIRCLE_TEST_REPORTS?}"
+  # Instrumental tests do not output XML (because they are not junit?). See also:
+  # http://stackoverflow.com/questions/2178870/how-to-generate-android-testing-report-in-html-automatically.
+  # TODO(dotdoom): figure out how to make instrumental tests and linter results more visible.
+  - mv app/build/test-results/debug "${CIRCLE_TEST_REPORTS?}"
 
 deployment:
   release:
     tag: /v[0-9]+(\.[0-9]+)*/
     owner: dasfoo
     commands:
-    # TODO(dotdoom): Make sure the tag is signed. Do not deploy unsigned tags!
-    #- git verify-tag $CIRCLE_TAG
-    # Taken from https://circleci.com/docs/google-auth/.
-    - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+    # https://circleci.com/docs/google-auth/
+    # `sudo -i` to prevent gcloud from creating logs directory in our $HOME with root:root owner.
+    - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components update
     - echo $GCLOUD_SERVICE_KEY | base64 --decode > app/play-store-service-account.json
     - gcloud auth activate-service-account --key-file app/play-store-service-account.json
-    - gcloud config set project $GCLOUD_PROJECT
     # Get our keystore.
     - gsutil cp gs://dasfoo-keystore/delern.jks app
+    # Run unit tests for Release locally.
+    # TODO(dotdoom): consider setting "testBuildType" to "release" (dynamically?),
+    # http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Basics-and-Configuration
+    - ./gradlew lintRelease testReleaseUnitTest --console=plain
+    - mv app/build/test-results/release "${CIRCLE_TEST_REPORTS?}"
+    # https://circleci.com/docs/firebase-test-lab/
+    - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components install beta
+    - >
+        gcloud --project=delern-e1b33 beta test android run
+        --app app/build/outputs/apk/app-debug.apk
+        --test app/build/outputs/apk/app-debug-androidTest.apk
+        --results-bucket delern-test-results
+    - pip install -U crcmod
+    - gsutil -m cp -r "$(gsutil ls gs://delern-test-results | tail -1)" "${CIRCLE_ARTIFACTS?}"
+    # Publish to Google Play.
     - ./gradlew publishRelease --console=plain

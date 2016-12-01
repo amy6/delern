@@ -46,6 +46,13 @@ android {
             //   debuggable false
         }
     }
+    lintOptions {
+        // https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html
+        // Enable all warnings, even those disabled by default.
+        checkAllWarnings true
+        // We use ProGuard to remove specific log levels.
+        disable 'LogConditional'
+    }
 }
 
 dependencies {
