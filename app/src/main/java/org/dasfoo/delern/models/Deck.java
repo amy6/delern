@@ -1,10 +1,14 @@
 package org.dasfoo.delern.models;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import org.dasfoo.delern.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +18,8 @@ import java.util.Map;
  */
 
 public class Deck {
+    @Exclude
+    private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
     private static final String DECKS = "decks";
 
@@ -62,9 +68,15 @@ public class Deck {
 
     @Exclude
     public static Query getUsersDecks() {
-        return getFirebaseDecksRef()
-                .orderByChild("user")
-                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            return getFirebaseDecksRef()
+                    .orderByChild("user")
+                    .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        } else {
+            Log.v(TAG, "User is not signed");
+            return null;
+        }
+
     }
 
     @Exclude
