@@ -75,7 +75,7 @@ public class Deck {
                     .orderByChild("user")
                     .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
         } else {
-            Log.v(TAG, "User is not signed");
+            Log.v(TAG, "User is not signed in");
             return null;
         }
 

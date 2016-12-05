@@ -6,23 +6,23 @@
 
     <TextView
         android:id="@+id/desktop_text_view"
+        style="@style/PrimaryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.8"
-        style="@style/PrimaryText"/>
+        android:layout_weight="0.8"/>
 
     <TextView
         android:id="@+id/count_to_learn_textview"
+        style="@style/SecondaryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="0.1"
-        android:text="0"
-        style="@style/SecondaryText"
-        android:layout_gravity="center_vertical"/>
+        android:text="@string/n_a_string"/>
 
     <ImageView
         android:id="@+id/deck_popup_menu"
