@@ -63,7 +63,9 @@ public class Deck {
 
     @Exclude
     public static DatabaseReference getFirebaseDecksRef() {
-        return FirebaseDatabase.getInstance().getReference().child(DECKS);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(DECKS);
+        databaseReference.keepSynced(true);
+        return databaseReference;
     }
 
     @Exclude

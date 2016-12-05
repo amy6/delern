@@ -66,7 +66,9 @@ public class Card implements Parcelable {
 
     @Exclude
     public static DatabaseReference getFirebaseCardsRef() {
-        return FirebaseDatabase.getInstance().getReference().child(CARDS);
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference().child(CARDS);
+        databaseReference.keepSynced(true);
+        return databaseReference;
     }
 
     @Exclude

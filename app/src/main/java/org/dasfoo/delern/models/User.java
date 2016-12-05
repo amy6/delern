@@ -25,6 +25,17 @@ public final class User {
         this.photoUrl = photoUrl;
     }
 
+    /**
+     * Firebase apps automatically handle temporary network interruptions. Cached data will
+     * still be available while offline and your writes will be resent when network connectivity is
+     * recovered. Enabling disk persistence allows our app to also keep all of its state even after
+     * an app restart.
+     */
+    @Exclude
+    public static void enableDiskPersistence() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+    }
+
     @Exclude
     public static DatabaseReference getFirebaseUsersRef() {
         return FirebaseDatabase.getInstance().getReference().child(USERS);
