@@ -149,7 +149,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         if (mUsersDecksQuery != null) {
             mUsersDecksQuery.removeEventListener(mProgressBarListener);
         } else {
-            Log.v(TAG, "User is not registered");
+            Log.v(TAG, "User is not signed in");
         }
     }
 

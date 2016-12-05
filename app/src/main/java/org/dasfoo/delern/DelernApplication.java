@@ -2,7 +2,7 @@ package org.dasfoo.delern;
 
 import android.app.Application;
 
-import org.dasfoo.delern.models.User;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by katarina on 12/5/16.
@@ -23,6 +23,12 @@ public class DelernApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        User.enableDiskPersistence();
+        /**
+         * Firebase apps automatically handle temporary network interruptions. Cached data will
+         * still be available while offline and your writes will be resent when network connectivity is
+         * recovered. Enabling disk persistence allows our app to also keep all of its state even after
+         * an app restart.
+         */
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }
