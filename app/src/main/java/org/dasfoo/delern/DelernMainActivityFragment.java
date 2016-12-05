@@ -50,6 +50,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
     private ValueEventListener mProgressBarListener;
     private TextView mEmptyMessageTextView;
+    private Query mUsersDecksQuery;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,11 +129,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         mFirebaseAdapter.setOnDeckViewHolderClick(onDeckViewHolderClick);
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
-
-
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        Deck.getUsersDecks().addListenerForSingleValueEvent(mProgressBarListener);
+        mUsersDecksQuery = Deck.getUsersDecks();
+        if (mUsersDecksQuery != null) {
+           mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
+        }
     }
 
     /**
@@ -144,7 +146,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void onStop() {
         super.onStop();
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
-        Deck.getUsersDecks().removeEventListener(mProgressBarListener);
+        if (mUsersDecksQuery != null) {
+            mUsersDecksQuery.removeEventListener(mProgressBarListener);
+        } else {
+            Log.v(TAG, "User is not signed in");
+        }
     }
 
     @Override
