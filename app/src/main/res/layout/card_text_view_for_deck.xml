@@ -3,20 +3,21 @@
     android:id="@+id/card_edit_click"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:clickable="true">
+    android:clickable="true"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/front_textview"
+        style="@style/PrimaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/PrimaryText"
-        android:maxLines="1"/>
+        android:maxLines="1" />
+
     <TextView
         android:id="@+id/back_textview"
+        style="@style/SecondaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        style="@style/SecondaryText"/>
+        android:maxLines="1" />
 
 </LinearLayout>

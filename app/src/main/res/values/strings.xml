@@ -25,4 +25,5 @@
     <string name="flip_the_card_message">Flip the card</string>
     <string name="title_activity_show_cards">ShowCardsActivity</string>
     <string name="n_a_string">N/A</string>
+    <string name="empty_decks_message">Add your decks!</string>
 </resources>
