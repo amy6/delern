@@ -23,41 +23,47 @@
         card_view:cardBackgroundColor="@color/colorPrimaryLight"
         card_view:cardCornerRadius="10dp">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textFrontCardView"
-                style="@style/PrimaryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="25dp"
-                android:layout_marginTop="30dp"
-                android:textIsSelectable="true" />
-
-            <View
-                android:id="@+id/delimeter"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:alpha="0.88"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/textBackCardView"
-                style="@style/PrimaryText"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="25dp"
-                android:textIsSelectable="true" />
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textFrontCardView"
+                    style="@style/PrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="25dp"
+                    android:layout_marginTop="30dp"
+                    android:textIsSelectable="true" />
+
+                <View
+                    android:id="@+id/delimeter"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:alpha="0.88"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/textBackCardView"
+                    style="@style/PrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="25dp"
+                    android:textIsSelectable="true" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
     </android.support.v7.widget.CardView>
 
     <LinearLayout
