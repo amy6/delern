@@ -75,11 +75,12 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_know_button"
+            android:id="@+id/to_repeat_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            android:src="@drawable/ic_done" />
+            android:src="@drawable/ic_action_cancel"
+            app:backgroundTint="@color/dontKnowButton" />
 
         <ImageView
             android:id="@+id/turn_card_button"
@@ -90,12 +91,11 @@
             android:src="@drawable/ic_action_reload" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_repeat_button"
+            android:id="@+id/to_know_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="25dp"
-            android:src="@drawable/ic_action_cancel"
-            app:backgroundTint="@color/dontKnowButton" />
+            android:src="@drawable/ic_done" />
 
     </LinearLayout>
 
