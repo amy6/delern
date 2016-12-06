@@ -23,39 +23,47 @@
         card_view:cardBackgroundColor="@color/colorPrimaryLight"
         card_view:cardCornerRadius="10dp">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textFrontCardView"
-                style="@style/PrimaryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="25dp"
-                android:layout_marginTop="30dp" />
-
-            <View
-                android:id="@+id/delimeter"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:alpha="0.88"
-                android:background="@android:color/darker_gray" />
-
-            <TextView
-                android:id="@+id/textBackCardView"
-                style="@style/PrimaryText"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="25dp" />
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/textFrontCardView"
+                    style="@style/PrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="25dp"
+                    android:layout_marginTop="30dp"
+                    android:textIsSelectable="true" />
+
+                <View
+                    android:id="@+id/delimeter"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:alpha="0.88"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/textBackCardView"
+                    style="@style/PrimaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="25dp"
+                    android:textIsSelectable="true" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
     </android.support.v7.widget.CardView>
 
     <LinearLayout
@@ -67,11 +75,15 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_know_button"
+            android:id="@+id/to_repeat_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="25dp"
-            android:src="@drawable/ic_done" />
+            android:layout_height="wrap_content"
+            android:paddingEnd="40dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingStart="40dp"
+            android:src="@drawable/ic_action_cancel"
+            app:backgroundTint="@color/dontKnowButton" />
 
         <ImageView
             android:id="@+id/turn_card_button"
@@ -79,15 +91,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/flip_the_card_message"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
             android:src="@drawable/ic_action_reload" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_repeat_button"
+            android:id="@+id/to_know_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            android:src="@drawable/ic_action_cancel"
-            app:backgroundTint="@color/dontKnowButton" />
+            android:layout_height="match_parent"
+            android:paddingEnd="40dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingStart="40dp"
+            android:src="@drawable/ic_done" />
 
     </LinearLayout>
 
