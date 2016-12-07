@@ -26,4 +26,5 @@
     <string name="title_activity_show_cards">ShowCardsActivity</string>
     <string name="n_a_string">N/A</string>
     <string name="empty_decks_message">Add your decks!</string>
+    <string name="no_card_message">All cards are learned</string>
 </resources>
