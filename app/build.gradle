@@ -5,6 +5,7 @@ ext {
     git = org.ajoberstar.grgit.Grgit.open()
     gitVersionCode = git.tag.list().size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
+    firebaseVersion = "10.0.1"
 }
 
 android {
@@ -67,15 +68,15 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.android.gms:play-services-auth:9.6.1'
-    compile 'com.google.firebase:firebase-core:9.6.1'
-    compile 'com.google.firebase:firebase-database:9.6.1'
-    compile 'com.google.firebase:firebase-auth:9.6.1'
-    compile 'com.google.firebase:firebase-messaging:9.6.1'
-    compile 'com.google.android.gms:play-services-appinvite:9.6.1'
-    compile 'com.google.firebase:firebase-analytics:9.6.1'
-    compile 'com.google.firebase:firebase-crash:9.6.1'
-    compile 'com.firebaseui:firebase-ui-database:0.4.0'
+    compile "com.google.android.gms:play-services-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-core:$firebaseVersion"
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-messaging:$firebaseVersion"
+    compile "com.google.android.gms:play-services-appinvite:$firebaseVersion"
+    compile "com.google.firebase:firebase-analytics:$firebaseVersion"
+    compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    compile "com.firebaseui:firebase-ui-database:1.0.0"
     testCompile 'junit:junit:4.12'
 }
 
