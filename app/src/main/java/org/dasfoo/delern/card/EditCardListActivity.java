@@ -25,6 +25,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     public static final String DECK_ID = "deckId";
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.AdapterDataObserver mAdapterDataObserver;
+
     private String mLabel;
     private String mDeckId;
 
@@ -46,25 +49,35 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
             }
         });
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
                 CardViewHolder.class, Card.fetchAllCardsForDeck(mDeckId));
         mFirebaseAdapter.setOnCardViewHolderClick(this);
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
             }
-        });
+        };
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
     private void configureToolbar() {
