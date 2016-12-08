@@ -59,7 +59,12 @@
             android:name=".card.PreEditCardActivity"
             android:label="@string/title_activity_pre_edit_card"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".card.EditCardListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.card.EditCardListActivity" />
+        </activity>
         <activity
             android:name=".card.ShowCardsActivity"
             android:label="@string/title_activity_show_cards"

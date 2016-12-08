@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -169,6 +170,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 }
                 if (cards.size() != 0) {
                     startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId, cards);
+                } else {
+                    Toast.makeText(getContext(), R.string.no_card_message, Toast.LENGTH_SHORT).show();
                 }
             }
 
