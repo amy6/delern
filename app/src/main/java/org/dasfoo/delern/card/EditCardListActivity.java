@@ -36,9 +36,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
-        Intent intent = getIntent();
-        mLabel = intent.getStringExtra(LABEL);
-        mDeckId = intent.getStringExtra(DECK_ID);
+        getInputVariables();
         this.setTitle(mLabel);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.f_add_card_button);
@@ -50,14 +48,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .build());
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class, Card.fetchAllCardsForDeck(mDeckId));
-        mFirebaseAdapter.setOnCardViewHolderClick(this);
+        configureRecyclerView();
 
         mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -71,7 +62,6 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     protected void onStart() {
         super.onStart();
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     @Override
@@ -88,6 +78,24 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void getInputVariables() {
+        Intent intent = getIntent();
+        mLabel = intent.getStringExtra(LABEL);
+        mDeckId = intent.getStringExtra(DECK_ID);
+    }
+
+    private void configureRecyclerView() {
+        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+                .build());
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
+                CardViewHolder.class, Card.fetchAllCardsForDeck(mDeckId));
+        mFirebaseAdapter.setOnCardViewHolderClick(this);
+        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     private void startAddCardsActivity(String key, String label) {
