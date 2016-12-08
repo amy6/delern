@@ -3,14 +3,15 @@ package org.dasfoo.delern.card;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
@@ -18,7 +19,7 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
-public class EditCardListActivity extends BaseActivity implements OnCardViewHolderClick {
+public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
@@ -30,12 +31,12 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.show_deck_activity);
+        configureToolbar();
         Intent intent = getIntent();
         mLabel = intent.getStringExtra(LABEL);
         mDeckId = intent.getStringExtra(DECK_ID);
         this.setTitle(mLabel);
-
-        enableToolbarArrow(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.f_add_card_button);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,9 +67,14 @@ public class EditCardListActivity extends BaseActivity implements OnCardViewHold
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.show_deck_activity;
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void startAddCardsActivity(String key, String label) {
