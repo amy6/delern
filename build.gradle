@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath 'org.ajoberstar:grgit:1.7.1'
