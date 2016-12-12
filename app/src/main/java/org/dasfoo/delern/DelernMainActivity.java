@@ -7,7 +7,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -17,22 +20,30 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
-public class DelernMainActivity extends BaseActivity
+public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_INVITE = 1;
     private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
 
+    public FirebaseAnalytics mFirebaseAnalytics;
+    protected GoogleApiClient mGoogleApiClient;
+    protected Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_delern_main);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        configureToolbar();
 
         if (!isUserSignedIn()) {
             // Not signed in, launch the Sign In activity
@@ -63,11 +74,6 @@ public class DelernMainActivity extends BaseActivity
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_delern_main;
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -75,6 +81,37 @@ public class DelernMainActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.delern_main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // When you successfully handle a menu item, return true.
+        // If you don't handle the menu item, you should call the superclass implementation of
+        // onOptionsItemSelected() (the default implementation returns false).
+        // https://developer.android.com/guide/topics/ui/menus.html#options-menu
+        switch (item.getItemId()) {
+            case R.id.sign_out_menu:
+                FirebaseAuth.getInstance().signOut();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                startActivity(new Intent(this, SignInActivity.class));
+                break;
+            case android.R.id.home:
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    getSupportFragmentManager().popBackStack();
+                    break;
+                }
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -109,6 +146,25 @@ public class DelernMainActivity extends BaseActivity
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    /**
+     * Checks current user in Firebase. If user doesn't exist
+     * return false.
+     *
+     * @return true if user signed in
+     */
+    // TODO(ksheremet): Move to User model
+    protected boolean isUserSignedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+    }
+
+    private void configureToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
     }
 
     @Override

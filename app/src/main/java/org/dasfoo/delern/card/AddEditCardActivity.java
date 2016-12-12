@@ -3,23 +3,22 @@ package org.dasfoo.delern.card;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.dasfoo.delern.BaseActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 
-public class AddEditCardActivity extends BaseActivity implements View.OnClickListener {
+public class AddEditCardActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "mDeckId";
     public static final String CARD = "card";
-
     private String mDeckId;
-
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
     private Card mCard = null;
@@ -27,13 +26,13 @@ public class AddEditCardActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.add_edit_card_activity);
+        configureToolbar();
         Intent intent = getIntent();
         final String label = intent.getStringExtra(LABEL);
         mDeckId = intent.getStringExtra(DECK_ID);
         mCard = intent.getParcelableExtra(CARD);
         this.setTitle(label);
-
-        enableToolbarArrow(true);
 
         mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
@@ -44,11 +43,6 @@ public class AddEditCardActivity extends BaseActivity implements View.OnClickLis
             mBackSideInputText.setText(mCard.getBack());
         }
         mAddCardToDbButton.setOnClickListener(this);
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.add_edit_card_activity;
     }
 
     /**
@@ -81,5 +75,15 @@ public class AddEditCardActivity extends BaseActivity implements View.OnClickLis
     private void cleanTextFields() {
         mFrontSideInputText.setText("");
         mBackSideInputText.setText("");
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 }
