@@ -3,12 +3,12 @@
     package="org.dasfoo.delern">
 
     <application
+        android:name=".DelernApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="org.dasfoo.delern.DelernApplication">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".DelernMainActivity"
             android:label="@string/app_name"
@@ -59,8 +59,8 @@
             android:name=".card.PreEditCardActivity"
             android:label="@string/title_activity_pre_edit_card"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".card.EditCardListActivity" >
+            android:parentActivityName=".card.EditCardListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.card.EditCardListActivity" />

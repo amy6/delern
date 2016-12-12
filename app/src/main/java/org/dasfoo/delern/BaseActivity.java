@@ -117,7 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_delern_main, menu);
+        getMenuInflater().inflate(R.menu.delern_main_menu, menu);
         return true;
     }
 

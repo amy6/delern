@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_import"
+            android:icon="@drawable/ic_action_import"
+            android:title="@string/import_menu" />
+        <item
+            android:id="@+id/nav_export"
+            android:icon="@drawable/ic_action_export"
+            android:title="@string/export_menu" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/tools_menu" />
+    </group>
+
+    <item android:title="@string/communicate_menu">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/share_menu" />
+            <item
+                android:id="@+id/nav_invite"
+                android:icon="@drawable/ic_contact_mail"
+                android:title="@string/invite_menu_label"/>
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/send_feedback_menu" />
+        </menu>
+    </item>
+
+</menu>
