@@ -1,5 +1,7 @@
 package org.dasfoo.delern.models;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,6 +30,12 @@ public final class User {
     @Exclude
     public static DatabaseReference getFirebaseUsersRef() {
         return FirebaseDatabase.getInstance().getReference().child(USERS);
+    }
+
+    @Exclude
+    public static boolean isUserSignedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
     }
 
     public String getName() {

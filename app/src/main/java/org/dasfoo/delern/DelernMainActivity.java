@@ -21,9 +21,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -45,7 +45,7 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
 
-        if (!isUserSignedIn()) {
+        if (!User.isUserSignedIn()) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -132,7 +132,6 @@ public class DelernMainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_invite) {
             sendInvitation();
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,18 +145,6 @@ public class DelernMainActivity extends AppCompatActivity
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
-    }
-
-    /**
-     * Checks current user in Firebase. If user doesn't exist
-     * return false.
-     *
-     * @return true if user signed in
-     */
-    // TODO(ksheremet): Move to User model
-    protected boolean isUserSignedIn() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return user != null;
     }
 
     private void configureToolbar() {
