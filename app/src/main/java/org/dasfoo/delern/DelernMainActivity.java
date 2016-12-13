@@ -69,7 +69,6 @@ public class DelernMainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         configureProfileInfo(navigationView);
@@ -110,13 +109,6 @@ public class DelernMainActivity extends AppCompatActivity
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
-            // TODO(ksheremet): Remove unused code
-            case android.R.id.home:
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    getSupportFragmentManager().popBackStack();
-                    break;
-                }
-                return false;
             default:
                 return super.onOptionsItemSelected(item);
         }

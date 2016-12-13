@@ -48,7 +48,6 @@
         </activity>
         <activity
             android:name=".card.AddEditCardActivity"
-            android:label="@string/title_activity_add_card"
             android:parentActivityName=".card.EditCardListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -57,7 +56,6 @@
         </activity>
         <activity
             android:name=".card.PreEditCardActivity"
-            android:label="@string/title_activity_pre_edit_card"
             android:launchMode="singleTop"
             android:parentActivityName=".card.EditCardListActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -67,7 +65,6 @@
         </activity>
         <activity
             android:name=".card.ShowCardsActivity"
-            android:label="@string/title_activity_show_cards"
             android:parentActivityName=".DelernMainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

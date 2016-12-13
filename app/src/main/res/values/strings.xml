@@ -8,9 +8,7 @@
     <string name="invitation_message">Please join me for learning</string>
     <string name="invitation_cta">Call to action</string>
     <string name="invitation_title">Delern Invite</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
     <string name="rename_string">Rename</string>
     <string name="edit_string">Edit</string>
     <string name="delete_string">Delete</string>
@@ -18,12 +16,8 @@
     <string name="add_button">add</string>
     <string name="invitation_failed_message">Failed to send invitation</string>
     <string name="title_activity_edit_card_list">Edit CardListActivity</string>
-    <string name="title_activity_add_card">AddCardActivity</string>
-    <string name="title_activity_pre_edit_card">PreEditCardActivit</string>
-    <string name="add_button_string">add</string>
     <string name="save_button_string">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
-    <string name="title_activity_show_cards">ShowCardsActivity</string>
     <string name="n_a_string">N/A</string>
     <string name="empty_decks_message">Add your decks!</string>
     <string name="no_card_message">All cards are learned</string>
@@ -31,7 +25,6 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="email_string">odasfoo@gmail.com</string>
     <string name="import_menu">Import</string>
     <string name="export_menu">Export</string>
     <string name="tools_menu">Tools</string>
