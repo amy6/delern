@@ -20,6 +20,7 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,6 +94,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
         if (cards != null) {
+            Collections.shuffle(cards);
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
         } else {
