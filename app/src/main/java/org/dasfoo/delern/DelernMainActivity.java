@@ -45,7 +45,7 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
 
-        if (!User.isUserSignedIn()) {
+        if (!User.isSignedIn()) {
             // Not signed in, launch the Sign In activity
             startActivity(new Intent(this, SignInActivity.class));
             finish();

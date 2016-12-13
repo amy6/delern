@@ -33,7 +33,7 @@ public final class User {
     }
 
     @Exclude
-    public static boolean isUserSignedIn() {
+    public static boolean isSignedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return user != null;
     }
