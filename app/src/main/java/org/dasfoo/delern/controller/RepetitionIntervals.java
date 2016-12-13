@@ -11,11 +11,13 @@ import java.util.HashMap;
 
 public class RepetitionIntervals {
 
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
+    private static final long ONE_HOUR = 60 * 60 * 1000;
+    private static final long ONE_DAY = 24 * ONE_HOUR;
     private static RepetitionIntervals ourInstance = new RepetitionIntervals();
     public HashMap<String, Long> intervals = new HashMap<>();
 
     private RepetitionIntervals() {
+        intervals.put(Level.L0.name(), 4* ONE_HOUR);
         intervals.put(Level.L1.name(), 1 * ONE_DAY);
         intervals.put(Level.L2.name(), 2 * ONE_DAY);
         intervals.put(Level.L3.name(), 5 * ONE_DAY);

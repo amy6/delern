@@ -20,6 +20,7 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,12 +36,12 @@ public class ShowCardsActivity extends AppCompatActivity {
     private ImageView mTurnCardButton;
     private TextView mFrontTextView;
     private TextView mBackTextView;
-    private View mDelimeter;
+    private View mDelimiter;
 
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
     private String mDeckId;
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
+    private final View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
@@ -54,7 +55,8 @@ public class ShowCardsActivity extends AppCompatActivity {
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis());
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                            RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel()));
                     updateCardInFirebase();
                     showNextCard();
                     break;
@@ -84,7 +86,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets parameters sended from previous Activity.
+     * Gets parameters sent from previous Activity.
      */
     private void getParameters() {
         Intent intent = getIntent();
@@ -93,6 +95,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
         if (cards != null) {
+            Collections.shuffle(cards);
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
         } else {
@@ -177,8 +180,8 @@ public class ShowCardsActivity extends AppCompatActivity {
         mTurnCardButton = (ImageView) findViewById(R.id.turn_card_button);
         mTurnCardButton.setOnClickListener(onClickListener);
 
-        mDelimeter = findViewById(R.id.delimeter);
-        mDelimeter.setVisibility(View.INVISIBLE);
+        mDelimiter = findViewById(R.id.delimeter);
+        mDelimiter.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -190,7 +193,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
         mTurnCardButton.setVisibility(View.VISIBLE);
-        mDelimeter.setVisibility(View.INVISIBLE);
+        mDelimiter.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -201,7 +204,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
         mTurnCardButton.setVisibility(View.INVISIBLE);
-        mDelimeter.setVisibility(View.VISIBLE);
+        mDelimiter.setVisibility(View.VISIBLE);
     }
 
     private String setNewLevel(final String currLevel) {
