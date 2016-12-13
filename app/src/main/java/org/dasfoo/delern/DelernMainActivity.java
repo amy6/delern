@@ -12,8 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
@@ -21,11 +24,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -63,8 +69,10 @@ public class DelernMainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        configureProfileInfo(navigationView);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
@@ -102,6 +110,7 @@ public class DelernMainActivity extends AppCompatActivity
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
+            // TODO(ksheremet): Remove unused code
             case android.R.id.home:
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     getSupportFragmentManager().popBackStack();
@@ -121,15 +130,15 @@ public class DelernMainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_import) {
-            // Handle the camera action
+            Log.v(TAG, "Import is not implemented yet");
         } else if (id == R.id.nav_export) {
-
+            Log.v(TAG, "Export is not implemented yet");
         } else if (id == R.id.nav_manage) {
-
+            Log.v(TAG, "Tools is not implemented yet");
         } else if (id == R.id.nav_share) {
-
+            Log.v(TAG, "Share is not implemented yet");
         } else if (id == R.id.nav_send) {
-
+            Log.v(TAG, "Send is not implemented yet");
         } else if (id == R.id.nav_invite) {
             sendInvitation();
         }
@@ -151,6 +160,22 @@ public class DelernMainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+        }
+    }
+
+    private void configureProfileInfo(NavigationView navigationView) {
+        View hView = navigationView.getHeaderView(0);
+        CircleImageView fotoUser = (CircleImageView) hView.findViewById(R.id.profile_image);
+        TextView userName = (TextView) hView.findViewById(R.id.user_name);
+        TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userName.setText(user.getDisplayName());
+            userEmail.setText(user.getEmail());
+            Glide.with(DelernMainActivity.this)
+                    .load(user.getPhotoUrl())
+                    .into(fotoUser);
         }
     }
 
