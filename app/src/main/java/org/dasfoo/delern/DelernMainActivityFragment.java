@@ -79,7 +79,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         });
         // TODO(ksheremet): Create base fragment for mProgressBar
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .build());
