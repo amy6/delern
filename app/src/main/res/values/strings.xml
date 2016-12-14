@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="sign_out">Sign Out</string>
+    <string name="sign_in">Sign In</string>
 
     <string name="invite_menu_label">Invite</string>
     <string name="invitation_message">Please join me for learning</string>
@@ -12,6 +13,7 @@
     <string name="rename_string">Rename</string>
     <string name="edit_string">Edit</string>
     <string name="delete_string">Delete</string>
+    <string name="cancel_string">Cancel</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
     <string name="add_button">add</string>
     <string name="invitation_failed_message">Failed to send invitation</string>
@@ -23,6 +25,7 @@
     <string name="no_card_message">All cards are learned</string>
     <string name="title_activity_delern_main">DelernMainActivity</string>
 
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="import_menu">Import</string>
@@ -31,4 +34,7 @@
     <string name="communicate_menu">Communicate</string>
     <string name="share_menu">Share</string>
     <string name="send_feedback_menu">Send Feedback</string>
+
+    <string name="delete_card_warning">Delete card!</string>
+
 </resources>
