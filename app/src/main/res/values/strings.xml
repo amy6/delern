@@ -25,6 +25,7 @@
     <string name="no_card_message">All cards are learned</string>
     <string name="title_activity_delern_main">DelernMainActivity</string>
 
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="import_menu">Import</string>
