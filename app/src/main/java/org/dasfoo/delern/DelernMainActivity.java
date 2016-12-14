@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -40,9 +39,9 @@ public class DelernMainActivity extends AppCompatActivity
     private static final int REQUEST_INVITE = 1;
     private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
 
-    public FirebaseAnalytics mFirebaseAnalytics;
-    protected GoogleApiClient mGoogleApiClient;
-    protected Toolbar toolbar;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private GoogleApiClient mGoogleApiClient;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class DelernMainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -96,14 +95,19 @@ public class DelernMainActivity extends AppCompatActivity
 
         if (id == R.id.nav_import) {
             Log.v(TAG, "Import is not implemented yet");
+            Toast.makeText(this, "Import is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_export) {
             Log.v(TAG, "Export is not implemented yet");
+            Toast.makeText(this, "Export is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_manage) {
             Log.v(TAG, "Tools is not implemented yet");
+            Toast.makeText(this, "Tools is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_share) {
             Log.v(TAG, "Share is not implemented yet");
+            Toast.makeText(this, "Share is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_send) {
             Log.v(TAG, "Send is not implemented yet");
+            Toast.makeText(this, "Send Feedback is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_invite) {
             sendInvitation();
         } else if (id == R.id.nav_sign_out) {
@@ -126,9 +130,9 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     private void configureToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
         }
     }
 
