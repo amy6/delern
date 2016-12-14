@@ -91,34 +91,7 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.delern_main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // When you successfully handle a menu item, return true.
-        // If you don't handle the menu item, you should call the superclass implementation of
-        // onOptionsItemSelected() (the default implementation returns false).
-        // https://developer.android.com/guide/topics/ui/menus.html#options-menu
-        switch (item.getItemId()) {
-            case R.id.sign_out_menu:
-                FirebaseAuth.getInstance().signOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                startActivity(new Intent(this, SignInActivity.class));
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_import) {
@@ -133,6 +106,10 @@ public class DelernMainActivity extends AppCompatActivity
             Log.v(TAG, "Send is not implemented yet");
         } else if (id == R.id.nav_invite) {
             sendInvitation();
+        } else if (id == R.id.nav_sign_out) {
+            FirebaseAuth.getInstance().signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            startActivity(new Intent(this, SignInActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -157,7 +134,7 @@ public class DelernMainActivity extends AppCompatActivity
 
     private void configureProfileInfo(NavigationView navigationView) {
         View hView = navigationView.getHeaderView(0);
-        CircleImageView fotoUser = (CircleImageView) hView.findViewById(R.id.profile_image);
+        CircleImageView profilePhoto = (CircleImageView) hView.findViewById(R.id.profile_image);
         TextView userName = (TextView) hView.findViewById(R.id.user_name);
         TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
 
@@ -167,7 +144,7 @@ public class DelernMainActivity extends AppCompatActivity
             userEmail.setText(user.getEmail());
             Glide.with(DelernMainActivity.this)
                     .load(user.getPhotoUrl())
-                    .into(fotoUser);
+                    .into(profilePhoto);
         }
     }
 
