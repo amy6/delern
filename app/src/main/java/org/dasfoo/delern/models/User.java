@@ -28,14 +28,22 @@ public final class User {
     }
 
     @Exclude
-    public static DatabaseReference getFirebaseUsersRef() {
-        return FirebaseDatabase.getInstance().getReference().child(USERS);
+    public static DatabaseReference getFirebaseUserRef() {
+        FirebaseUser user = getCurrentUser();
+        return FirebaseDatabase.getInstance().getReference()
+                .child(USERS)
+                .child(user.getUid());
     }
 
     @Exclude
     public static boolean isSignedIn() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = getCurrentUser();
         return user != null;
+    }
+
+    @Exclude
+    public static FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public String getName() {
