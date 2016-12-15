@@ -76,12 +76,15 @@
             android:id="@+id/to_repeat_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:elevation="6dp"
             android:paddingEnd="40dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:paddingStart="40dp"
             android:src="@drawable/ic_action_cancel"
-            app:backgroundTint="@color/dontKnowButton" />
+            app:backgroundTint="@color/dontKnowButton"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
 
         <ImageView
             android:id="@+id/turn_card_button"
@@ -97,11 +100,14 @@
             android:id="@+id/to_know_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:elevation="6dp"
             android:paddingEnd="40dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:paddingStart="40dp"
-            android:src="@drawable/ic_done" />
+            android:src="@drawable/ic_done"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
 
     </LinearLayout>
 
