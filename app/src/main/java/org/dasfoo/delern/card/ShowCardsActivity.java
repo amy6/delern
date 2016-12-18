@@ -1,8 +1,11 @@
 package org.dasfoo.delern.card;
 
+import android.animation.Animator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -201,10 +205,30 @@ public class ShowCardsActivity extends AppCompatActivity {
      */
     private void showBackSide() {
         mBackTextView.setText(mCurrentCard.getBack());
+        Animator repeatButtonAnimation = null;
+        Animator knowButtonAnimation = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            repeatButtonAnimation = appearanceAnimation(mRepeatButton);
+            knowButtonAnimation = appearanceAnimation(mKnowButton);
+        }
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
+        if (repeatButtonAnimation != null) {
+            repeatButtonAnimation.start();
+            knowButtonAnimation.start();
+        }
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private Animator appearanceAnimation(View view) {
+        // get the center for the clipping circle
+        int cx = view.getWidth() / 2;
+        int cy = view.getHeight() / 2;
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(cx, cy);
+        return ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
     }
 
     private String setNewLevel(final String currLevel) {
