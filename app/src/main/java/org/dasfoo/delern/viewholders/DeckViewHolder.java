@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
+import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Created by Katarina Sheremet on 9/22/16 1:11 AM.
@@ -23,7 +24,7 @@ import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
 public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
         PopupMenu.OnMenuItemClickListener {
 
-    private static final String TAG = DeckViewHolder.class.getSimpleName();
+    private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
 
     private TextView mDesktopTextView;
     private TextView mCountToLearnTextView;
