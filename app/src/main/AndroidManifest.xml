@@ -65,6 +65,7 @@
         </activity>
         <activity
             android:name=".card.ShowCardsActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".DelernMainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
