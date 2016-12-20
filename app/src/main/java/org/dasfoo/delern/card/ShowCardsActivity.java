@@ -52,24 +52,25 @@ public class ShowCardsActivity extends AppCompatActivity {
                 case R.id.to_know_button:
                     String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().intervals.get(newCardLevel));
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
+                            + RepetitionIntervals.getInstance().intervals.get(newCardLevel)
+                            + RepetitionIntervals.getRandomTime());
                     updateCardInFirebase();
                     showNextCard();
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel()));
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
+                            + RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel())
+                            + RepetitionIntervals.getRandomTime());
                     updateCardInFirebase();
                     showNextCard();
                     break;
                 case R.id.turn_card_button:
-                    Log.v(TAG, "Turn");
                     showBackSide();
                     break;
                 default:
-                    Log.v("ShowCardsActivity", "Button is not implemented yet.");
+                    Log.v(TAG, "Button is not implemented yet.");
                     break;
             }
         }
