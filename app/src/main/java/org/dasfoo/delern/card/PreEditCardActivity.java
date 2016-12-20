@@ -85,7 +85,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     private void editCardActivityStart() {
         Intent intentEdit = new Intent(this, AddEditCardActivity.class);
         intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
-        intentEdit.putExtra(AddEditCardActivity.LABEL, "Edit");
+        intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit_string);
         intentEdit.putExtra(AddEditCardActivity.CARD, mCard);
         startActivity(intentEdit);
     }

@@ -135,26 +135,23 @@ public class ShowCardsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
-                Log.v(TAG, "Edit");
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
                 intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
-                // TODO(ksheremet): Move all strings to string.xml
-                intentEdit.putExtra(AddEditCardActivity.LABEL, "Edit");
+                intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit_string);
                 intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
                 startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
-                Log.v(TAG, "Delete");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Delete Card?");
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.delete_card_warning);
+                builder.setPositiveButton(R.string.delete_string, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Card.deleteCardFromDeck(mDeckId, mCurrentCard);
                         showNextCard();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

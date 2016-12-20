@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -16,14 +15,12 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
-    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
@@ -43,7 +40,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startAddCardsActivity(mDeckId, mLabel);
+                startAddCardsActivity(mDeckId, R.string.add_string);
             }
         });
 
@@ -98,7 +95,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    private void startAddCardsActivity(String key, String label) {
+    private void startAddCardsActivity(String key, int label) {
         Intent intent = new Intent(this, AddEditCardActivity.class);
         intent.putExtra(AddEditCardActivity.DECK_ID, key);
         intent.putExtra(AddEditCardActivity.LABEL, label);
@@ -107,11 +104,10 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
     @Override
     public void onCardClick(int position) {
-        Log.v(TAG, "Position:" + position);
-        showCardForEdit(mFirebaseAdapter.getRef(position).getKey());
+        showCardBeforeEdit(mFirebaseAdapter.getRef(position).getKey());
     }
 
-    private void showCardForEdit(String cardId) {
+    private void showCardBeforeEdit(String cardId) {
         Intent intent = new Intent(this, PreEditCardActivity.class);
         intent.putExtra(PreEditCardActivity.LABEL, mLabel);
         intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
