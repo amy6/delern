@@ -11,14 +11,14 @@
     <string name="invitation_cta">Call to action</string>
     <string name="invitation_title">Delern Invite</string>
 
-    <string name="rename_string">Rename</string>
-    <string name="edit_string">Edit</string>
-    <string name="delete_string">Delete</string>
-    <string name="cancel_string">Cancel</string>
-    <string name="add_string">Add</string>
+    <string name="rename">Rename</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
     <string name="invitation_failed_message">Failed to send invitation</string>
-    <string name="save_button_string">Save</string>
+    <string name="save">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
 
     <!-- Navigation Drawer -->
@@ -35,7 +35,7 @@
     <string name="delete_card_warning">Delete card?</string>
     <string name="added_card_user_message">Added</string>
     <string name="updated_card_user_message">Updated</string>
-    <string name="n_a_string">N/A</string>
+    <string name="n_a">N/A</string>
     <string name="empty_decks_message">Add your decks!</string>
     <string name="no_card_message">All cards are learned</string>
 

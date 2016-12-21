@@ -38,7 +38,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
         if (mCard != null) {
-            mAddCardToDbButton.setText(R.string.save_button_string);
+            mAddCardToDbButton.setText(R.string.save);
             mFrontSideInputText.setText(mCard.getFront());
             mBackSideInputText.setText(mCard.getBack());
         }

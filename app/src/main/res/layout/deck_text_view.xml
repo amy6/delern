@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="0.1"
-        android:text="@string/n_a_string"/>
+        android:text="@string/n_a"/>
 
     <ImageView
         android:id="@+id/deck_popup_menu"

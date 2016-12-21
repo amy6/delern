@@ -137,21 +137,21 @@ public class ShowCardsActivity extends AppCompatActivity {
             case R.id.edit_card_show_menu:
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
                 intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
-                intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit_string);
+                intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
                 intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
                 startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.delete_card_warning);
-                builder.setPositiveButton(R.string.delete_string, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Card.deleteCardFromDeck(mDeckId, mCurrentCard);
                         showNextCard();
                     }
                 });
-                builder.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

@@ -40,7 +40,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startAddCardsActivity(mDeckId, R.string.add_string);
+                startAddCardsActivity(mDeckId, R.string.add);
             }
         });
 
