@@ -54,7 +54,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                     mCurrentCard.setLevel(newCardLevel);
                     mCurrentCard.setRepeatAt(System.currentTimeMillis()
                             + RepetitionIntervals.getInstance().intervals.get(newCardLevel)
-                            + RepetitionIntervals.getRandomTime());
+                            + RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
@@ -62,7 +62,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                     mCurrentCard.setLevel(Level.L0.name());
                     mCurrentCard.setRepeatAt(System.currentTimeMillis()
                             + RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel())
-                            + RepetitionIntervals.getRandomTime());
+                            + RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
