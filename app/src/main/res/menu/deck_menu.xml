@@ -3,13 +3,13 @@
     <item
         android:id="@+id/rename_deck_menu"
         android:orderInCategory="100"
-        android:title="@string/rename_string"/>
+        android:title="@string/rename"/>
     <item
         android:id="@+id/edit_deck_menu"
         android:orderInCategory="101"
-        android:title="@string/edit_string"/>
+        android:title="@string/edit"/>
     <item
         android:id="@+id/delete_deck_menu"
         android:orderInCategory="102"
-        android:title="@string/delete_string"/>
+        android:title="@string/delete"/>
 </menu>

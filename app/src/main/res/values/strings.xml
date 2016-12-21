@@ -5,25 +5,21 @@
     <string name="sign_out">Sign Out</string>
     <string name="sign_in">Sign In</string>
 
+    <!-- Invitation messages -->
     <string name="invite_menu_label">Invite</string>
     <string name="invitation_message">Please join me for learning</string>
     <string name="invitation_cta">Call to action</string>
     <string name="invitation_title">Delern Invite</string>
 
-    <string name="rename_string">Rename</string>
-    <string name="edit_string">Edit</string>
-    <string name="delete_string">Delete</string>
-    <string name="cancel_string">Cancel</string>
+    <string name="rename">Rename</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
-    <string name="add_button">add</string>
     <string name="invitation_failed_message">Failed to send invitation</string>
-    <string name="title_activity_edit_card_list">Edit CardListActivity</string>
-    <string name="save_button_string">Save</string>
+    <string name="save">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
-    <string name="n_a_string">N/A</string>
-    <string name="empty_decks_message">Add your decks!</string>
-    <string name="no_card_message">All cards are learned</string>
-    <string name="title_activity_delern_main">DelernMainActivity</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -35,6 +31,12 @@
     <string name="share_menu">Share</string>
     <string name="send_feedback_menu">Send Feedback</string>
 
-    <string name="delete_card_warning">Delete card!</string>
+    <!-- User messages, including warnins dialogs and toasts -->
+    <string name="delete_card_warning">Delete card?</string>
+    <string name="added_card_user_message">Added</string>
+    <string name="updated_card_user_message">Updated</string>
+    <string name="n_a">N/A</string>
+    <string name="empty_decks_message">Add your decks!</string>
+    <string name="no_card_message">All cards are learned</string>
 
 </resources>

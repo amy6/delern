@@ -29,7 +29,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
         Intent intent = getIntent();
-        final String label = intent.getStringExtra(LABEL);
+        final int label = intent.getIntExtra(LABEL, 0);
         mDeckId = intent.getStringExtra(DECK_ID);
         mCard = intent.getParcelableExtra(CARD);
         this.setTitle(label);
@@ -38,7 +38,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
         if (mCard != null) {
-            mAddCardToDbButton.setText(R.string.save_button_string);
+            mAddCardToDbButton.setText(R.string.save);
             mFrontSideInputText.setText(mCard.getFront());
             mBackSideInputText.setText(mCard.getBack());
         }
@@ -61,12 +61,12 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 newCard.setRepeatAt(System.currentTimeMillis());
                 Card.createNewCard(newCard, mDeckId);
                 cleanTextFields();
-                Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.added_card_user_message, Toast.LENGTH_SHORT).show();
             } else {
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
                 Card.updateCard(mCard, mDeckId);
-                Toast.makeText(this, "Updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.updated_card_user_message, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }

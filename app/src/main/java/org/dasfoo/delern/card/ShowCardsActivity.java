@@ -52,24 +52,25 @@ public class ShowCardsActivity extends AppCompatActivity {
                 case R.id.to_know_button:
                     String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().intervals.get(newCardLevel));
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
+                            + RepetitionIntervals.getInstance().intervals.get(newCardLevel)
+                            + RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel()));
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
+                            + RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel())
+                            + RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
                 case R.id.turn_card_button:
-                    Log.v(TAG, "Turn");
                     showBackSide();
                     break;
                 default:
-                    Log.v("ShowCardsActivity", "Button is not implemented yet.");
+                    Log.v(TAG, "Button is not implemented yet.");
                     break;
             }
         }
@@ -134,26 +135,23 @@ public class ShowCardsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
-                Log.v(TAG, "Edit");
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
                 intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
-                // TODO(ksheremet): Move all strings to string.xml
-                intentEdit.putExtra(AddEditCardActivity.LABEL, "Edit");
+                intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
                 intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
                 startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
-                Log.v(TAG, "Delete");
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Delete Card?");
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setMessage(R.string.delete_card_warning);
+                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Card.deleteCardFromDeck(mDeckId, mCurrentCard);
                         showNextCard();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
