@@ -3,10 +3,14 @@ package org.dasfoo.delern.card;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -17,7 +21,8 @@ import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
-public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick {
+public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick
+,SearchView.OnQueryTextListener {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
@@ -67,6 +72,16 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_card_list_menu, menu);
+        final MenuItem searchItem = menu.findItem(R.id.search_action);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
     private void configureToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -113,5 +128,33 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
         intent.putExtra(PreEditCardActivity.CARD_ID, cardId);
         startActivity(intent);
+    }
+
+    /**
+     * Called when the user submits the query. This could be due to a key press on the
+     * keyboard or due to pressing a submit button.
+     * The listener can override the standard behavior by returning true
+     * to indicate that it has handled the submit request. Otherwise return false to
+     * let the SearchView handle the submission by launching any associated intent.
+     *
+     * @param query the query text that is to be submitted
+     * @return true if the query has been handled by the listener, false to let the
+     * SearchView perform the default action.
+     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    /**
+     * Called when the query text is changed by the user.
+     *
+     * @param newText the new content of the query text field.
+     * @return false if the SearchView should perform the default action of showing any
+     * suggestions if available, true if the action was handled by the listener.
+     */
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

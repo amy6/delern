@@ -39,5 +39,6 @@
     <string name="empty_decks_message">Add your decks!</string>
     <string name="no_card_message">All cards are learned</string>
     <string name="sign_out_warning">Are you sure that you want to sign out?</string>
+    <string name="search">Search</string>
 
 </resources>
