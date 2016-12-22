@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick,
@@ -27,6 +29,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
+    private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
@@ -108,8 +111,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mRecyclerView.setLayoutManager(mLayoutManager);
         mQuery = Card.fetchAllCardsForDeck(mDeckId);
         mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class, mQuery);
-        mFirebaseAdapter.setOnCardViewHolderClick(this);
+                CardViewHolder.class, mQuery, this);
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
@@ -122,6 +124,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
     @Override
     public void onCardClick(int position) {
+        Log.v(TAG, mFirebaseAdapter.getRef(position).getKey());
         showCardBeforeEdit(mFirebaseAdapter.getRef(position).getKey());
     }
 
@@ -161,7 +164,8 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
         //TODO(ksheremet): Searching on back as well, in the middle of cards
         mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class, mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"));
+                CardViewHolder.class,
+                mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"), this);
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return true;
