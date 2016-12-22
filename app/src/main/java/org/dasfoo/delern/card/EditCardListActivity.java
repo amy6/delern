@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.database.Query;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
@@ -21,14 +22,15 @@ import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
-public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick
-,SearchView.OnQueryTextListener {
+public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick,
+        SearchView.OnQueryTextListener {
 
     public static final String LABEL = "label";
     public static final String DECK_ID = "deckId";
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
+    private Query mQuery;
 
     private String mLabel;
     private String mDeckId;
@@ -104,8 +106,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mQuery = Card.fetchAllCardsForDeck(mDeckId);
         mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class, Card.fetchAllCardsForDeck(mDeckId));
+                CardViewHolder.class, mQuery);
         mFirebaseAdapter.setOnCardViewHolderClick(this);
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
@@ -154,7 +157,13 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      * suggestions if available, true if the action was handled by the listener.
      */
     @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
+    public boolean onQueryTextChange(final String newText) {
+        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        //TODO(ksheremet): Searching on back as well, in the middle of cards
+        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
+                CardViewHolder.class, mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"));
+        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
+        mRecyclerView.setAdapter(mFirebaseAdapter);
+        return true;
     }
 }
