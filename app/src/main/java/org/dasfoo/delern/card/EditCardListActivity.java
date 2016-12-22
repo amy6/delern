@@ -182,3 +182,4 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         return true;
     }
 }
+
