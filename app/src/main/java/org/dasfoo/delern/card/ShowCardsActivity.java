@@ -100,7 +100,6 @@ public class ShowCardsActivity extends AppCompatActivity {
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
         if (cards != null) {
-            Collections.shuffle(cards);
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
         } else {
