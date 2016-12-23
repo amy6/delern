@@ -110,8 +110,14 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mQuery = Card.fetchAllCardsForDeck(mDeckId);
-        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class, mQuery, this);
+        try {
+            mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
+                    R.layout.card_text_view_for_deck, CardViewHolder.class, mQuery)
+                    .setOnClickListener(this)
+                    .build();
+        } catch (InstantiationException e) {
+            Log.e(TAG, e.getMessage());
+        }
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
@@ -162,10 +168,15 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     @Override
     public boolean onQueryTextChange(final String newText) {
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
-        //TODO(ksheremet): Searching on back as well, in the middle of cards
-        mFirebaseAdapter = new CardRecyclerViewAdapter(Card.class, R.layout.card_text_view_for_deck,
-                CardViewHolder.class,
-                mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"), this);
+        try {
+            mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
+                    R.layout.card_text_view_for_deck, CardViewHolder.class,
+                    mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"))
+                    .setOnClickListener(this)
+                    .build();
+        } catch (InstantiationException e) {
+            Log.e(TAG, e.getMessage());
+        }
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return true;

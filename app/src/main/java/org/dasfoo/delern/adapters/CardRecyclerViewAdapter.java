@@ -1,10 +1,13 @@
 package org.dasfoo.delern.adapters;
 
+import android.util.Log;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
 /**
@@ -13,22 +16,13 @@ import org.dasfoo.delern.viewholders.CardViewHolder;
 
 public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardViewHolder> {
 
+    private static final String TAG = LogUtil.tagFor(CardRecyclerViewAdapter.class);
+
     private OnCardViewHolderClick onCardViewHolderClick;
 
-    /**
-     * @param modelClass            Firebase will marshall the data at a location into an instance of a class that you provide
-     * @param modelLayout           This is the layout used to represent a single item in the list. You will be responsible for populating an
-     *                              instance of the corresponding view with the data from an instance of modelClass.
-     * @param viewHolderClass       The class that hold references to all sub-views in an instance modelLayout.
-     * @param ref                   The Firebase location to watch for data changes. Can also be a slice of a location, using some
-     * @param onCardViewHolderClick The listener that handle click on card.
-     */
-    public CardRecyclerViewAdapter(Class<Card> modelClass, int modelLayout,
-                                   Class<CardViewHolder> viewHolderClass,
-                                   Query ref,
-                                   OnCardViewHolderClick onCardViewHolderClick) {
-        super(modelClass, modelLayout, viewHolderClass, ref);
-        this.onCardViewHolderClick = onCardViewHolderClick;
+    private CardRecyclerViewAdapter(Builder builder) {
+        super(builder.nestedModelClass, builder.nestedLayout, builder.nestedViewHolderClass, builder.nestedQuery);
+        this.onCardViewHolderClick = builder.nestedOnClickListener;
     }
 
     /**
@@ -47,5 +41,37 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         viewHolder.getmFrontTextView().setText(card.getFront());
         viewHolder.getmBackTextView().setText(card.getBack());
         viewHolder.setOnViewClick(onCardViewHolderClick);
+    }
+
+    public static class Builder {
+        private Class<Card> nestedModelClass;
+        private int nestedLayout;
+        private Class<CardViewHolder> nestedViewHolderClass;
+        private Query nestedQuery;
+        private OnCardViewHolderClick nestedOnClickListener;
+
+        /**
+         * Required parameters
+         */
+        public Builder(final Class<Card> nestedModelClass, final int nestedLayout,
+                       final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery) {
+            this.nestedModelClass = nestedModelClass;
+            this.nestedLayout = nestedLayout;
+            this.nestedViewHolderClass = nestedViewHolder;
+            this.nestedQuery = nestedQuery;
+        }
+
+        public Builder setOnClickListener(final OnCardViewHolderClick nestedOnClickListener) {
+            this.nestedOnClickListener = nestedOnClickListener;
+            return this;
+        }
+
+        public CardRecyclerViewAdapter build() throws InstantiationException {
+            if (this.nestedOnClickListener == null) {
+                Log.e(TAG, "Set OnClickListener");
+                throw new InstantiationException("OnClickListener is required");
+            }
+            return new CardRecyclerViewAdapter(this);
+        }
     }
 }
