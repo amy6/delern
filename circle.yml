@@ -32,6 +32,7 @@ dependencies:
 
 test:
   pre:
+  - ./gradlew lintDebug testDebugUnitTest --console=plain
   - echo no | android create avd --force -n test -t android-24 --abi default/armeabi-v7a
   - emulator -avd test -no-audio -no-window:
       background: true
@@ -41,7 +42,7 @@ test:
   # Not "build connectedCheck" because these targets will involve Release, which is not available
   # due to lack of signing keystore at this stage.
   # TODO(dotdoom): consider -PdisablePreDex.
-  - GRADLE_OPTS=-Xmx256m ./gradlew lintDebug testDebugUnitTest connectedDebugAndroidTest --console=plain
+  - ./gradlew connectedDebugAndroidTest --console=plain
   post:
   # Instrumental tests do not output XML (because they are not junit?). See also:
   # http://stackoverflow.com/questions/2178870/how-to-generate-android-testing-report-in-html-automatically.
