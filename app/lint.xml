@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://developer.android.com/studio/write/lint.html#config -->
+<lint>
+	<!-- We use ProGuard to remove specific log levels. -->
+	<issue id="LogConditional" severity="ignore"/>
+</lint>
