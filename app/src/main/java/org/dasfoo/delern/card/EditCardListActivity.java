@@ -171,6 +171,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         try {
             mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
                     R.layout.card_text_view_for_deck, CardViewHolder.class,
+                    // The \uf8ff character used in the query is a very high code point in
+                    // the Unicode range. Because it is after most regular characters in Unicode,
+                    // the query matches all values that start with a newText.
                     mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"))
                     .setOnClickListener(this)
                     .build();
