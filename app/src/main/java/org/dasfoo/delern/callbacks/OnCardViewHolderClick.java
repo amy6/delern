@@ -5,5 +5,5 @@ package org.dasfoo.delern.callbacks;
  */
 
 public interface OnCardViewHolderClick {
-    public void onCardClick(int position);
+    void onCardClick(int position);
 }

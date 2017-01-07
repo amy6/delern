@@ -21,10 +21,10 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
-    private Card mCard = null;
+    private Card mCard;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
@@ -51,7 +51,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
      * @param v The view that was clicked.
      */
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v.getId() == R.id.add_card_to_db) {
             if (mCard == null) {
                 Card newCard = new Card();

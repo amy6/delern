@@ -26,14 +26,14 @@ public class PreEditCardActivity extends AppCompatActivity {
 
     private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
 
-    public static String LABEL = "label";
-    public static String DECK_ID = "deckId";
-    public static String CARD_ID = "cardId";
+    public static final String LABEL = "label";
+    public static final String DECK_ID = "deckId";
+    public static final String CARD_ID = "cardId";
     private String mDeckId;
     private Card mCard;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pre_edit_card_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,7 +54,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         Query query = Card.getCardById(mDeckId, cardId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 Card card ;
                 for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
                     Log.v(TAG, cardSnapshot.toString());
@@ -68,7 +68,7 @@ public class PreEditCardActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(final DatabaseError databaseError) {
                 Log.v(TAG, databaseError.getMessage());
             }
         });
@@ -76,7 +76,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 editCardActivityStart();
             }
         });
@@ -91,7 +91,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_card_menu, menu);
         return true;
@@ -114,7 +114,7 @@ public class PreEditCardActivity extends AppCompatActivity {
      * @see #onCreateOptionsMenu
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_card_menu:
                 deleteCard(mDeckId, mCard);
@@ -130,14 +130,14 @@ public class PreEditCardActivity extends AppCompatActivity {
         builder.setMessage(R.string.delete_card_warning);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 Card.deleteCardFromDeck(deckId, card);
                 finish();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 dialog.cancel();
             }
         });

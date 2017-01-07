@@ -15,9 +15,9 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     private TextView mFrontTextView;
     private TextView mBackTextView;
-    private OnCardViewHolderClick onViewClick;
+    private OnCardViewHolderClick mOnViewClick;
 
-    public CardViewHolder(View itemView) {
+    public CardViewHolder(final View itemView) {
         super(itemView);
         mFrontTextView = (TextView) itemView.findViewById(R.id.front_textview);
         mBackTextView = (TextView) itemView.findViewById(R.id.back_textview);
@@ -25,24 +25,24 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         linearLayout.setOnClickListener(this);
     }
 
-    public TextView getmFrontTextView() {
+    public TextView getFrontTextView() {
         return mFrontTextView;
     }
 
-    public void setmFrontTextView(TextView mFrontTextView) {
-        this.mFrontTextView = mFrontTextView;
+    public void setmFrontTextView(final TextView frontTextView) {
+        this.mFrontTextView = frontTextView;
     }
 
-    public TextView getmBackTextView() {
+    public TextView getBackTextView() {
         return mBackTextView;
     }
 
-    public void setmBackTextView(TextView mBackTextView) {
+    public void setBackTextView(final TextView mBackTextView) {
         this.mBackTextView = mBackTextView;
     }
 
-    public void setOnViewClick(OnCardViewHolderClick onViewClick) {
-        this.onViewClick = onViewClick;
+    public void setOnViewClick(final OnCardViewHolderClick onViewClick) {
+        this.mOnViewClick = onViewClick;
     }
 
     /**
@@ -51,9 +51,9 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * @param v The view that was clicked.
      */
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v.getId() == R.id.card_edit_click) {
-            onViewClick.onCardClick(getAdapterPosition());
+            mOnViewClick.onCardClick(getAdapterPosition());
         }
     }
 }

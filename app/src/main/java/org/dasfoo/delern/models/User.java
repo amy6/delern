@@ -21,7 +21,7 @@ public final class User {
     private String email;
     private String photoUrl;
 
-    public User(String name, String email, String photoUrl) {
+    public User(final String name, final String email, final String photoUrl) {
         this.name = name;
         this.email = email;
         this.photoUrl = photoUrl;

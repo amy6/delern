@@ -26,13 +26,13 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
 
-    private TextView mDesktopTextView;
-    private TextView mCountToLearnTextView;
-    private OnDeckViewHolderClick onViewClick;
-    private Context context;
+    private final TextView mDesktopTextView;
+    private final TextView mCountToLearnTextView;
+    private OnDeckViewHolderClick mOnViewClick;
+    private Context mContext;
 
 
-    public DeckViewHolder(View v) {
+    public DeckViewHolder(final View v) {
         super(v);
         mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
         mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
@@ -42,34 +42,34 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         popupMenuImageView.setOnClickListener(this);
     }
 
-    public TextView getmDesktopTextView() {
+    public TextView getDesktopTextView() {
         return mDesktopTextView;
     }
 
-    public TextView getmCountToLearnTextView() {
+    public TextView getCountToLearnTextView() {
         return mCountToLearnTextView;
     }
 
-    public void setOnViewClick(OnDeckViewHolderClick onViewClick) {
-        this.onViewClick = onViewClick;
+    public void setOnViewClick(final OnDeckViewHolderClick onViewClick) {
+        this.mOnViewClick = onViewClick;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setContext(final Context context) {
+        this.mContext = context;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v.getId() == R.id.desktop_text_view) {
-            onViewClick.doOnTextViewClick(getAdapterPosition());
+            mOnViewClick.doOnTextViewClick(getAdapterPosition());
         }
         if (v.getId() == R.id.deck_popup_menu) {
             showPopup(v);
         }
     }
 
-    private void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(context, v);
+    private void showPopup(final View v) {
+        PopupMenu popup = new PopupMenu(mContext, v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
@@ -85,16 +85,16 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * otherwise
      */
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.rename_deck_menu:
-                onViewClick.doOnRenameMenuClick(getAdapterPosition());
+                mOnViewClick.doOnRenameMenuClick(getAdapterPosition());
                 return true;
             case R.id.edit_deck_menu:
-                onViewClick.doOnEditMenuClick(getAdapterPosition());
+                mOnViewClick.doOnEditMenuClick(getAdapterPosition());
                 return true;
             case R.id.delete_deck_menu:
-                onViewClick.doOnDeleteMenuClick(getAdapterPosition());
+                mOnViewClick.doOnDeleteMenuClick(getAdapterPosition());
                 return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");

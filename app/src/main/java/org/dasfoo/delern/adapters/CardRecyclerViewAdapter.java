@@ -18,11 +18,11 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     private static final String TAG = LogUtil.tagFor(CardRecyclerViewAdapter.class);
 
-    private OnCardViewHolderClick onCardViewHolderClick;
+    private final OnCardViewHolderClick mOnCardViewHolderClick;
 
-    private CardRecyclerViewAdapter(Builder builder) {
-        super(builder.nestedModelClass, builder.nestedLayout, builder.nestedViewHolderClass, builder.nestedQuery);
-        this.onCardViewHolderClick = builder.nestedOnClickListener;
+    private CardRecyclerViewAdapter(final Builder builder) {
+        super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass, builder.mNestedQuery);
+        this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
     }
 
     /**
@@ -37,37 +37,38 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
      * @param position   The position in the list of the view being populated
      */
     @Override
-    protected void populateViewHolder(CardViewHolder viewHolder, Card card, int position) {
-        viewHolder.getmFrontTextView().setText(card.getFront());
-        viewHolder.getmBackTextView().setText(card.getBack());
-        viewHolder.setOnViewClick(onCardViewHolderClick);
+    protected void populateViewHolder(final CardViewHolder viewHolder, final Card card,
+                                      final int position) {
+        viewHolder.getFrontTextView().setText(card.getFront());
+        viewHolder.getBackTextView().setText(card.getBack());
+        viewHolder.setOnViewClick(mOnCardViewHolderClick);
     }
 
     public static class Builder {
-        private Class<Card> nestedModelClass;
-        private int nestedLayout;
-        private Class<CardViewHolder> nestedViewHolderClass;
-        private Query nestedQuery;
-        private OnCardViewHolderClick nestedOnClickListener;
+        private final Class<Card> mNestedModelClass;
+        private final int mNestedLayout;
+        private final Class<CardViewHolder> mNestedViewHolderClass;
+        private final Query mNestedQuery;
+        private OnCardViewHolderClick mNestedOnClickListener;
 
         /**
          * Required parameters
          */
         public Builder(final Class<Card> nestedModelClass, final int nestedLayout,
                        final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery) {
-            this.nestedModelClass = nestedModelClass;
-            this.nestedLayout = nestedLayout;
-            this.nestedViewHolderClass = nestedViewHolder;
-            this.nestedQuery = nestedQuery;
+            this.mNestedModelClass = nestedModelClass;
+            this.mNestedLayout = nestedLayout;
+            this.mNestedViewHolderClass = nestedViewHolder;
+            this.mNestedQuery = nestedQuery;
         }
 
         public Builder setOnClickListener(final OnCardViewHolderClick nestedOnClickListener) {
-            this.nestedOnClickListener = nestedOnClickListener;
+            this.mNestedOnClickListener = nestedOnClickListener;
             return this;
         }
 
         public CardRecyclerViewAdapter build() throws InstantiationException {
-            if (this.nestedOnClickListener == null) {
+            if (this.mNestedOnClickListener == null) {
                 Log.e(TAG, "Set OnClickListener");
                 throw new InstantiationException("OnClickListener is required");
             }

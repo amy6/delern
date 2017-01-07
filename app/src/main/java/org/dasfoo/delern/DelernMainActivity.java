@@ -46,7 +46,7 @@ public class DelernMainActivity extends AppCompatActivity
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delern_main);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -134,7 +134,7 @@ public class DelernMainActivity extends AppCompatActivity
         builder.setMessage(R.string.sign_out_warning);
         builder.setPositiveButton(R.string.sign_out, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class));
@@ -142,7 +142,7 @@ public class DelernMainActivity extends AppCompatActivity
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(final DialogInterface dialog, final int which) {
                 dialog.cancel();
             }
         });
@@ -156,7 +156,7 @@ public class DelernMainActivity extends AppCompatActivity
         }
     }
 
-    private void configureProfileInfo(NavigationView navigationView) {
+    private void configureProfileInfo(final NavigationView navigationView) {
         View hView = navigationView.getHeaderView(0);
         CircleImageView profilePhoto = (CircleImageView) hView.findViewById(R.id.profile_image);
         TextView userName = (TextView) hView.findViewById(R.id.user_name);
@@ -166,14 +166,15 @@ public class DelernMainActivity extends AppCompatActivity
         if (user != null) {
             userName.setText(user.getDisplayName());
             userEmail.setText(user.getEmail());
-            Glide.with(DelernMainActivity.this)
+            Glide.with(this)
                     .load(user.getPhotoUrl())
                     .into(profilePhoto);
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(final int requestCode, final int resultCode,
+                                    final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
@@ -194,7 +195,7 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);

@@ -31,7 +31,7 @@ public class Deck {
 
     }
 
-    public Deck(String name) {
+    public Deck(final String name) {
         this.name = name;
     }
 
@@ -41,7 +41,7 @@ public class Deck {
     }
 
     @Exclude
-    public void setdId(String dId) {
+    public void setdId(final String dId) {
         this.dId = dId;
     }
 
@@ -49,7 +49,7 @@ public class Deck {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -70,19 +70,19 @@ public class Deck {
 
     @Exclude
     public static Query getUsersDecks() {
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Log.v(TAG, "User is not signed in");
+            return null;
+        } else {
             return getFirebaseDecksRef()
                     .orderByChild("user")
                     .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        } else {
-            Log.v(TAG, "User is not signed in");
-            return null;
         }
 
     }
 
     @Exclude
-    public static String createNewDeck(Deck deck) {
+    public static String createNewDeck(final Deck deck) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.setValue(deck);
         String key = reference.getKey();
@@ -91,7 +91,7 @@ public class Deck {
     }
 
     @Exclude
-    public static void deleteDeck(String deckId) {
+    public static void deleteDeck(final String deckId) {
         // Remove deck
         DatabaseReference reference = getFirebaseDecksRef();
         reference.child(deckId).removeValue();
@@ -99,7 +99,7 @@ public class Deck {
     }
 
     @Exclude
-    public static void renameDeck(Deck deck) {
+    public static void renameDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
@@ -107,7 +107,7 @@ public class Deck {
     }
 
     @Exclude
-    private static void addUserToDeck(String deckKey) {
+    private static void addUserToDeck(final String deckKey) {
         // Add user to deck
         getFirebaseDecksRef()
                 .child(deckKey)
