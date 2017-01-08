@@ -50,12 +50,15 @@ public class SignInActivity extends AppCompatActivity
         // Set click listeners
         mSignInButton.setOnClickListener(this);
         // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(
+                        this /* FragmentActivity */,
+                        this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         // AuthStateListener that responds to changes in the user's sign-in state
@@ -119,7 +122,8 @@ public class SignInActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(SignInActivity.this, DelernMainActivity.class));
+                            startActivity(new Intent(SignInActivity.this,
+                                    DelernMainActivity.class));
                             finish();
                         } else {
                             Log.w(TAG, "signInWithCredential", task.getException());

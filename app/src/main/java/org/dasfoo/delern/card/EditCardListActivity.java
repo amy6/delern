@@ -19,16 +19,27 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
-import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
+import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
+/**
+ * Activity to view and edit all cards in the deck.
+ */
 public class EditCardListActivity extends AppCompatActivity implements OnCardViewHolderClick,
         SearchView.OnQueryTextListener {
 
+    /**
+     * IntentExtra R.string title of the activity.
+     */
     public static final String LABEL = "label";
+
+    /**
+     * IntentExtra deck ID to edit.
+     */
     public static final String DECK_ID = "deckId";
+
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
@@ -77,6 +88,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.edit_card_list_menu, menu);
@@ -128,6 +140,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         startActivity(intent);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCardClick(final int position) {
         Log.v(TAG, mFirebaseAdapter.getRef(position).getKey());
@@ -151,7 +164,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      *
      * @param query the query text that is to be submitted
      * @return true if the query has been handled by the listener, false to let the
-     * SearchView perform the default action.
+     *     SearchView perform the default action.
      */
     @Override
     public boolean onQueryTextSubmit(final String query) {
@@ -163,8 +176,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      *
      * @param newText the new content of the query text field.
      * @return false if the SearchView should perform the default action of showing any
-     * suggestions if available, true if the action was handled by the listener.
+     *     suggestions if available, true if the action was handled by the listener.
      */
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     @Override
     public boolean onQueryTextChange(final String newText) {
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);

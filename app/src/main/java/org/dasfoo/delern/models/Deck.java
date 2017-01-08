@@ -17,18 +17,24 @@ import java.util.Map;
  * Created by katarina on 10/11/16.
  */
 
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class Deck {
     @Exclude
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
     private static final String DECKS = "decks";
+    @Exclude
+    private static final String USER = "user";
 
     @Exclude
     private String dId;
     private String name;
 
+    /**
+     * The empty constructor is required for Firebase de-serialization.
+     */
     public Deck() {
-
+        // This constructor is intentionally left empty.
     }
 
     public Deck(final String name) {
@@ -63,7 +69,8 @@ public class Deck {
 
     @Exclude
     public static DatabaseReference getFirebaseDecksRef() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(DECKS);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child(DECKS);
         databaseReference.keepSynced(true);
         return databaseReference;
     }
@@ -75,7 +82,7 @@ public class Deck {
             return null;
         } else {
             return getFirebaseDecksRef()
-                    .orderByChild("user")
+                    .orderByChild(USER)
                     .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
         }
 
@@ -98,6 +105,7 @@ public class Deck {
         Card.deleteCardsFromDeck(deckId);
     }
 
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void renameDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
@@ -111,7 +119,7 @@ public class Deck {
         // Add user to deck
         getFirebaseDecksRef()
                 .child(deckKey)
-                .child("user")
+                .child(USER)
                 .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 }
