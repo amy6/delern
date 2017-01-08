@@ -5,7 +5,7 @@ import android.util.Log;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
+import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
@@ -20,22 +20,17 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
 
+    /**
+     * Create a new FirebaseRecyclerAdapter.
+     * @param builder inner class with all the properties
+     */
     public CardRecyclerViewAdapter(final Builder builder) {
-        super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass, builder.mNestedQuery);
+        super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass,
+                builder.mNestedQuery);
         this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
     }
 
-    /**
-     * Each time the data at the given Firebase location changes, this method will be called for each item that needs
-     * to be displayed. The first two arguments correspond to the mLayout and mModelClass given to the constructor of
-     * this class. The third argument is the item's position in the list.
-     * <p>
-     * Your implementation should populate the view using the data contained in the model.
-     *
-     * @param viewHolder The view to populate
-     * @param card       The object containing the data used to populate the view
-     * @param position   The position in the list of the view being populated
-     */
+    /** {@inheritDoc} */
     @Override
     protected void populateViewHolder(final CardViewHolder viewHolder, final Card card,
                                       final int position) {
@@ -44,6 +39,9 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         viewHolder.setOnViewClick(mOnCardViewHolderClick);
     }
 
+    /**
+     * Builder class for easy creation of CardRecyclerViewAdapter.
+     */
     public static class Builder {
         private final Class<Card> mNestedModelClass;
         private final int mNestedLayout;
@@ -52,7 +50,11 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         private OnCardViewHolderClick mNestedOnClickListener;
 
         /**
-         * Required parameters
+         * Constructor with required parameters.
+         * @param nestedModelClass ViewAdapter model class
+         * @param nestedLayout     ViewAdapter layout
+         * @param nestedViewHolder ViewAdapter holder
+         * @param nestedQuery      ViewAdapter query
          */
         public Builder(final Class<Card> nestedModelClass, final int nestedLayout,
                        final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery) {
@@ -62,11 +64,21 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
             this.mNestedQuery = nestedQuery;
         }
 
+        /**
+         * Sets the onClick listener of this view.
+         * @param nestedOnClickListener callback
+         * @return this
+         */
         public Builder setOnClickListener(final OnCardViewHolderClick nestedOnClickListener) {
             this.mNestedOnClickListener = nestedOnClickListener;
             return this;
         }
 
+        /**
+         * Build a new instance based on the fields in this builder.
+         * @return ViewAdapter with all the necessary fields set
+         * @throws InstantiationException if not all required fields are set
+         */
         public CardRecyclerViewAdapter build() throws InstantiationException {
             if (this.mNestedOnClickListener == null) {
                 Log.e(TAG, "Set OnClickListener");

@@ -1,4 +1,4 @@
-package org.dasfoo.delern.callbacks;
+package org.dasfoo.delern.handlers;
 
 /**
  * Created by katarina on 10/14/16.
@@ -6,8 +6,12 @@ package org.dasfoo.delern.callbacks;
  */
 
 public interface OnDeckViewHolderClick {
+
     void doOnTextViewClick(int position);
+
     void doOnRenameMenuClick(int position);
+
     void doOnEditMenuClick(int position);
+
     void doOnDeleteMenuClick(int position);
 }

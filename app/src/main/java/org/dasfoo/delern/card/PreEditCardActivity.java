@@ -22,13 +22,29 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.util.LogUtil;
 
+/**
+ * Activity that shows the card before it is being edited.
+ * TODO(ksheremet): use existing showCardActivity for that?
+ */
 public class PreEditCardActivity extends AppCompatActivity {
+
+    /**
+     * IntentExtra R.string title of the activity.
+     */
+    public static final String LABEL = "label";
+
+    /**
+     * IntentExtra deck ID that this card belongs to.
+     */
+    public static final String DECK_ID = "deckId";
+
+    /**
+     * IntentExtra card ID that is being edited.
+     */
+    public static final String CARD_ID = "cardId";
 
     private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
 
-    public static final String LABEL = "label";
-    public static final String DECK_ID = "deckId";
-    public static final String CARD_ID = "cardId";
     private String mDeckId;
     private Card mCard;
 
@@ -55,7 +71,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                Card card ;
+                Card card;
                 for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
                     Log.v(TAG, cardSnapshot.toString());
                     card = cardSnapshot.getValue(Card.class);
@@ -90,6 +106,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         startActivity(intentEdit);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,22 +114,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * This hook is called whenever an item in your options menu is selected.
-     * The default implementation simply returns false to have the normal
-     * processing happen (calling the item's Runnable or sending a message to
-     * its Handler as appropriate).  You can use this method for any items
-     * for which you would like to do processing without those other
-     * facilities.
-     * <p>
-     * <p>Derived classes should call through to the base class for it to
-     * perform the default menu handling.</p>
-     *
-     * @param item The menu item that was selected.
-     * @return boolean Return false to allow normal menu processing to
-     * proceed, true to consume it here.
-     * @see #onCreateOptionsMenu
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {

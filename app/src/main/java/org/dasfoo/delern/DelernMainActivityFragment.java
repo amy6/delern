@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
-import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
+import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
 import org.dasfoo.delern.models.Card;
@@ -53,6 +53,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private TextView mEmptyMessageTextView;
     private Query mUsersDecksQuery;
 
+    /** {@inheritDoc} */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -154,11 +155,16 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         }
     }
 
+    /**
+     * Load and display the deck. Loading is done on the fragment side, not the new activity.
+     * @param position position of the clicked element in the list
+     */
     @Override
     public void doOnTextViewClick(final int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
         Query query = Card.fetchCardsFromDeckToRepeat(deckId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
+            /** {@inheritDoc} */
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 final ArrayList<Card> cards = new ArrayList<>();
@@ -177,6 +183,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 }
             }
 
+            /** {@inheritDoc} */
             @Override
             public void onCancelled(final DatabaseError databaseError) {
                 Log.e(TAG, databaseError.getMessage());
@@ -184,6 +191,10 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
     }
 
+    /**
+     * "Rename" menu item of a deck.
+     * @param position position of the element in the list
+     */
     @Override
     public void doOnRenameMenuClick(final int position) {
         final Deck deck = mFirebaseAdapter.getItem(position);
@@ -201,6 +212,10 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         builder.show();
     }
 
+    /**
+     * "Edit" menu item of a deck.
+     * @param position position of the element in the list
+     */
     @Override
     public void doOnEditMenuClick(final int position) {
         startEditCardsActivity(mFirebaseAdapter.getRef(position).getKey(),
@@ -223,7 +238,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 Deck.deleteDeck(deckId);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.cancel();
@@ -239,7 +254,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(deck.getName());
         builder.setView(input);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.cancel();

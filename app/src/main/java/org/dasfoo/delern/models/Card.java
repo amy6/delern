@@ -18,6 +18,7 @@ import java.util.Map;
  * Created by katarina on 10/4/16.
  */
 
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class Card implements Parcelable {
 
     public static final Creator<Card> CREATOR = new Creator<Card>() {
@@ -58,7 +59,8 @@ public class Card implements Parcelable {
 
     @Exclude
     public static DatabaseReference getFirebaseCardsRef() {
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference().child(CARDS);
+        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference()
+                .child(CARDS);
         databaseReference.keepSynced(true);
         return databaseReference;
     }
@@ -166,17 +168,7 @@ public class Card implements Parcelable {
         this.repeatAt = repeatAt;
     }
 
-    /**
-     * Describe the kinds of special objects contained in this Parcelable
-     * instance's marshaled representation. For example, if the object will
-     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
-     * the return value of this method must include the
-     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
-     *
-     * @return a bitmask indicating the set of special object types marshaled
-     * by this Parcelable object instance.
-     * @see #CONTENTS_FILE_DESCRIPTOR
-     */
+    /** {@inheritDoc} */
     @Override
     public int describeContents() {
         return 0;

@@ -13,11 +13,26 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 
+/**
+ * Activity to edit or add a new card.
+ */
 public class AddEditCardActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * IntentExtra R.string for the title of this activity.
+     */
     public static final String LABEL = "label";
+
+    /**
+     * IntentExtra Deck ID which this card belongs to.
+     */
     public static final String DECK_ID = "mDeckId";
+
+    /**
+     * IntentExtra Card ID being edited.
+     */
     public static final String CARD = "card";
+
     private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;

@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Class keeps user information.
  */
 
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public final class User {
 
     @Exclude

@@ -44,24 +44,24 @@ public class ShowCardsActivity extends AppCompatActivity {
     private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
     private String mDeckId;
-    private final View.OnClickListener onClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
                     String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
-                            + RepetitionIntervals.getInstance().intervals.get(newCardLevel)
-                            + RepetitionIntervals.getJitter());
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                            RepetitionIntervals.getInstance().getInterval(newCardLevel) +
+                            RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis()
-                            + RepetitionIntervals.getInstance().intervals.get(mCurrentCard.getLevel())
-                            + RepetitionIntervals.getJitter());
+                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                            RepetitionIntervals.getInstance().getInterval(mCurrentCard.getLevel()) +
+                            RepetitionIntervals.getJitter());
                     updateCardInFirebase();
                     showNextCard();
                     break;
@@ -106,6 +106,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -113,22 +114,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * This hook is called whenever an item in your options menu is selected.
-     * The default implementation simply returns false to have the normal
-     * processing happen (calling the item's Runnable or sending a message to
-     * its Handler as appropriate).  You can use this method for any items
-     * for which you would like to do processing without those other
-     * facilities.
-     * <p>
-     * <p>Derived classes should call through to the base class for it to
-     * perform the default menu handling.</p>
-     *
-     * @param item The menu item that was selected.
-     * @return boolean Return false to allow normal menu processing to
-     * proceed, true to consume it here.
-     * @see #onCreateOptionsMenu
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
@@ -169,23 +155,23 @@ public class ShowCardsActivity extends AppCompatActivity {
      */
     private void initViews() {
         mKnowButton = (FloatingActionButton) findViewById(R.id.to_know_button);
-        mKnowButton.setOnClickListener(onClickListener);
+        mKnowButton.setOnClickListener(mOnClickListener);
 
         mRepeatButton = (FloatingActionButton) findViewById(R.id.to_repeat_button);
-        mRepeatButton.setOnClickListener(onClickListener);
+        mRepeatButton.setOnClickListener(mOnClickListener);
 
         mFrontTextView = (TextView) findViewById(R.id.textFrontCardView);
         mBackTextView = (TextView) findViewById(R.id.textBackCardView);
 
         mTurnCardButton = (ImageView) findViewById(R.id.turn_card_button);
-        mTurnCardButton.setOnClickListener(onClickListener);
+        mTurnCardButton.setOnClickListener(mOnClickListener);
 
         mDelimiter = findViewById(R.id.delimeter);
         mDelimiter.setVisibility(View.INVISIBLE);
     }
 
     /**
-     * Shows front side of the current card and appropriate buttons
+     * Shows front side of the current card and appropriate buttons.
      */
     private void showFrontSide() {
         mFrontTextView.setText(mCurrentCard.getFront());

@@ -11,7 +11,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.callbacks.OnDeckViewHolderClick;
+import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -76,14 +76,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         popup.show();
     }
 
-    /**
-     * This method will be invoked when a menu item is clicked if the item
-     * itself did not already handle the event.
-     *
-     * @param item the menu item that was clicked
-     * @return {@code true} if the event was handled, {@code false}
-     * otherwise
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {

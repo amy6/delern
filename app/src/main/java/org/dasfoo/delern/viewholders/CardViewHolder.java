@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.callbacks.OnCardViewHolderClick;
+import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 
 /**
  * Created by katarina on 11/14/16.
@@ -37,8 +37,8 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         return mBackTextView;
     }
 
-    public void setBackTextView(final TextView mBackTextView) {
-        this.mBackTextView = mBackTextView;
+    public void setBackTextView(final TextView backTextView) {
+        this.mBackTextView = backTextView;
     }
 
     public void setOnViewClick(final OnCardViewHolderClick onViewClick) {

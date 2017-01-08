@@ -34,6 +34,9 @@ import org.dasfoo.delern.util.LogUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Main activity of the application, containing decks and menu.
+ */
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener {
@@ -66,7 +69,8 @@ public class DelernMainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, mToolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -75,12 +79,17 @@ public class DelernMainActivity extends AppCompatActivity
         configureProfileInfo(navigationView);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(
+                        this /* FragmentActivity */,
+                        this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .addApi(AppInvite.API)
                 .build();
     }
 
+    /**
+     * Overriding to close the drawer on Back button instead of closing an activity.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -91,24 +100,20 @@ public class DelernMainActivity extends AppCompatActivity
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_import) {
-            Log.v(TAG, "Import is not implemented yet");
             Toast.makeText(this, "Import is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_export) {
-            Log.v(TAG, "Export is not implemented yet");
             Toast.makeText(this, "Export is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_manage) {
-            Log.v(TAG, "Tools is not implemented yet");
             Toast.makeText(this, "Tools is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_share) {
-            Log.v(TAG, "Share is not implemented yet");
             Toast.makeText(this, "Share is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_send) {
-            Log.v(TAG, "Send is not implemented yet");
             Toast.makeText(this, "Send Feedback is not implemented yet", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_invite) {
             sendInvitation();
@@ -194,6 +199,10 @@ public class DelernMainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Notify the user that sign in has permanently failed.
+     * @param connectionResult information about unsuccessful connection attempt
+     */
     @Override
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
