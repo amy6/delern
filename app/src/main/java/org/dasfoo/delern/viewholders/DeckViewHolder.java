@@ -86,7 +86,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.mContext = context;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onClick(final View v) {
         if (v.getId() == R.id.deck_text_view) {
@@ -105,7 +107,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         popup.show();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {

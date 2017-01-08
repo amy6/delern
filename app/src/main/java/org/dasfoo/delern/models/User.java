@@ -25,8 +25,8 @@ public final class User {
     /**
      * Create user instance using name, email, photo url of user.
      *
-     * @param name name of user.
-     * @param email email of user.
+     * @param name     name of user.
+     * @param email    email of user.
      * @param photoUrl photo url of user.
      */
     public User(final String name, final String email, final String photoUrl) {

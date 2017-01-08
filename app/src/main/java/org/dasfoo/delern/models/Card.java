@@ -70,7 +70,7 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static DatabaseReference getFirebaseCardsRef() {
-        DatabaseReference databaseReference =  FirebaseDatabase.getInstance().getReference()
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(CARDS);
         databaseReference.keepSynced(true);
         return databaseReference;
@@ -97,7 +97,7 @@ public class Card implements Parcelable {
      * Gets card and deck ID to write new card in Firebase.
      *
      * @param newCard new card for writin to Firebase.
-     * @param deckId deck ID where to writhe new card.
+     * @param deckId  deck ID where to writhe new card.
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId) {
@@ -129,7 +129,7 @@ public class Card implements Parcelable {
     /**
      * Updates card using deck ID. Card ID is the same.
      *
-     * @param card new card
+     * @param card   new card
      * @param deckId deck ID where to update card.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -169,7 +169,7 @@ public class Card implements Parcelable {
      * Removes card from deck.
      *
      * @param deckId deck ID where to remove card.
-     * @param card card to remove
+     * @param card   card to remove
      */
     @Exclude
     public static void deleteCardFromDeck(final String deckId, final Card card) {
@@ -271,7 +271,9 @@ public class Card implements Parcelable {
         this.repeatAt = repeatAt;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int describeContents() {
         return 0;
@@ -293,7 +295,9 @@ public class Card implements Parcelable {
         dest.writeLong(this.repeatAt);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Card{" +

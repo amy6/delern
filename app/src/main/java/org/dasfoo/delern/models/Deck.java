@@ -47,52 +47,6 @@ public class Deck {
     }
 
     /**
-     * Getter for ID of deck.
-     *
-     * @return ID of deck.
-     */
-    @Exclude
-    public String getdId() {
-        return dId;
-    }
-
-    /**
-     * Setter for deck ID.
-     * @param dId ID of deck.
-     */
-    @Exclude
-    public void setdId(final String dId) {
-        this.dId = dId;
-    }
-
-    /**
-     * Getter for name of deck.
-     *
-     * @return name of deck.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Setter for name of deck.
-     *
-     * @param name name of deck.
-     */
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "Deck{" +
-                "dId='" + dId + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    /**
      * Gets reference to decks in Firebase.
      *
      * @return firebase database reference.
@@ -172,5 +126,54 @@ public class Deck {
                 .child(deckKey)
                 .child(USER)
                 .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    }
+
+    /**
+     * Getter for ID of deck.
+     *
+     * @return ID of deck.
+     */
+    @Exclude
+    public String getdId() {
+        return dId;
+    }
+
+    /**
+     * Setter for deck ID.
+     *
+     * @param dId ID of deck.
+     */
+    @Exclude
+    public void setdId(final String dId) {
+        this.dId = dId;
+    }
+
+    /**
+     * Getter for name of deck.
+     *
+     * @return name of deck.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Setter for name of deck.
+     *
+     * @param name name of deck.
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "dId='" + dId + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -25,9 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
-import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
+import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
@@ -53,7 +53,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private TextView mEmptyMessageTextView;
     private Query mUsersDecksQuery;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -155,7 +157,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doOnTextViewClick(final int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
@@ -188,7 +192,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doOnRenameMenuClick(final int position) {
         final Deck deck = mFirebaseAdapter.getItem(position);
@@ -206,14 +212,18 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         builder.show();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doOnEditMenuClick(final int position) {
         startEditCardsActivity(mFirebaseAdapter.getRef(position).getKey(),
                 mFirebaseAdapter.getItem(position).getName());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doOnDeleteMenuClick(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

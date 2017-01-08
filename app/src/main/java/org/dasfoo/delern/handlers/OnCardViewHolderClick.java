@@ -7,6 +7,7 @@ package org.dasfoo.delern.handlers;
 public interface OnCardViewHolderClick {
     /**
      * Card click event listener.
+     *
      * @param position card position in the list
      */
     void onCardClick(int position);
