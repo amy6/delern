@@ -39,7 +39,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     private String mDeckId;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
@@ -49,7 +49,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.f_add_card_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 startAddCardsActivity(mDeckId, R.string.add);
             }
         });
@@ -59,7 +59,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
         mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
+            public void onItemRangeInserted(final int positionStart, final int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
             }
         };
@@ -78,7 +78,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.edit_card_list_menu, menu);
         final MenuItem searchItem = menu.findItem(R.id.search_action);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -121,7 +121,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    private void startAddCardsActivity(String key, int label) {
+    private void startAddCardsActivity(final String key, final int label) {
         Intent intent = new Intent(this, AddEditCardActivity.class);
         intent.putExtra(AddEditCardActivity.DECK_ID, key);
         intent.putExtra(AddEditCardActivity.LABEL, label);
@@ -129,12 +129,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     }
 
     @Override
-    public void onCardClick(int position) {
+    public void onCardClick(final int position) {
         Log.v(TAG, mFirebaseAdapter.getRef(position).getKey());
         showCardBeforeEdit(mFirebaseAdapter.getRef(position).getKey());
     }
 
-    private void showCardBeforeEdit(String cardId) {
+    private void showCardBeforeEdit(final String cardId) {
         Intent intent = new Intent(this, PreEditCardActivity.class);
         intent.putExtra(PreEditCardActivity.LABEL, mLabel);
         intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
@@ -154,7 +154,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      * SearchView perform the default action.
      */
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(final String query) {
         return false;
     }
 

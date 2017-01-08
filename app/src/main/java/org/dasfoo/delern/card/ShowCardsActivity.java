@@ -24,7 +24,6 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -77,7 +76,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_cards_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -99,16 +98,16 @@ public class ShowCardsActivity extends AppCompatActivity {
         List<Card> cards = intent.getParcelableArrayListExtra(CARDS);
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
-        if (cards != null) {
+        if (cards == null) {
+            finish();
+        } else {
             mCardIterator = cards.iterator();
             mCurrentCard = mCardIterator.next();
-        } else {
-            finish();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.show_card_menu, menu);
         return true;
@@ -131,7 +130,7 @@ public class ShowCardsActivity extends AppCompatActivity {
      * @see #onCreateOptionsMenu
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
@@ -145,14 +144,14 @@ public class ShowCardsActivity extends AppCompatActivity {
                 builder.setMessage(R.string.delete_card_warning);
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(final DialogInterface dialog, final int which) {
                         Card.deleteCardFromDeck(mDeckId, mCurrentCard);
                         showNextCard();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(final DialogInterface dialog, final int which) {
                         dialog.cancel();
                     }
                 });
@@ -219,7 +218,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private Animator appearanceAnimation(View view) {
+    private Animator appearanceAnimation(final View view) {
         // get the center for the clipping circle
         int cx = view.getWidth() / 2;
         int cy = view.getHeight() / 2;

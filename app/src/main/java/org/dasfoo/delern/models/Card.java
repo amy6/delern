@@ -22,12 +22,12 @@ public class Card implements Parcelable {
 
     public static final Creator<Card> CREATOR = new Creator<Card>() {
         @Override
-        public Card createFromParcel(Parcel in) {
+        public Card createFromParcel(final Parcel in) {
             return new Card(in);
         }
 
         @Override
-        public Card[] newArray(int size) {
+        public Card[] newArray(final int size) {
             return new Card[size];
         }
     };
@@ -45,18 +45,18 @@ public class Card implements Parcelable {
 
     }
 
-    public Card(String backSide, String frontSide) {
+    public Card(final String backSide, final String frontSide) {
         this.back = backSide;
         this.front = frontSide;
     }
 
-    public Card(String cId, String backSide, String frontSide) {
+    public Card(final String cId, final String backSide, final String frontSide) {
         this.cId = cId;
         this.back = backSide;
         this.front = frontSide;
     }
 
-    protected Card(Parcel in) {
+    protected Card(final Parcel in) {
         cId = in.readString();
         back = in.readString();
         front = in.readString();
@@ -72,7 +72,7 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public static Query fetchCardsFromDeckToRepeat(String deckId) {
+    public static Query fetchCardsFromDeckToRepeat(final String deckId) {
         long time = System.currentTimeMillis();
         Log.v(TAG, String.valueOf(time));
 
@@ -83,7 +83,7 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public static void createNewCard(Card newCard, String deckId) {
+    public static void createNewCard(final Card newCard, final String deckId) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)
                 .push()
@@ -95,7 +95,7 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public static Query getCardById(String deckId, String cardId) {
+    public static Query getCardById(final String deckId, final String cardId) {
         return getFirebaseCardsRef()
                 .child(deckId)
                 .orderByKey()
@@ -103,7 +103,7 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public static void updateCard(Card card, String deckId) {
+    public static void updateCard(final Card card, final String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + card.getcId(), card);
         getFirebaseCardsRef()
@@ -112,19 +112,19 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public static Query fetchAllCardsForDeck(String deckId) {
+    public static Query fetchAllCardsForDeck(final String deckId) {
         return getFirebaseCardsRef()
                 .child(deckId);
     }
 
     @Exclude
-    public static void deleteCardsFromDeck(String deckId) {
+    public static void deleteCardsFromDeck(final String deckId) {
         getFirebaseCardsRef()
                 .child(deckId).removeValue();
     }
 
     @Exclude
-    public static void deleteCardFromDeck(String deckId, Card card) {
+    public static void deleteCardFromDeck(final String deckId, final Card card) {
         getFirebaseCardsRef()
                 .child(deckId)
                 .child(card.getcId())
@@ -137,7 +137,7 @@ public class Card implements Parcelable {
     }
 
     @Exclude
-    public void setcId(String cId) {
+    public void setcId(final String cId) {
         this.cId = cId;
     }
 
@@ -145,7 +145,7 @@ public class Card implements Parcelable {
         return back;
     }
 
-    public void setBack(String backSide) {
+    public void setBack(final String backSide) {
         this.back = backSide;
     }
 
@@ -153,7 +153,7 @@ public class Card implements Parcelable {
         return front;
     }
 
-    public void setFront(String frontSide) {
+    public void setFront(final String frontSide) {
         this.front = frontSide;
     }
 
@@ -161,7 +161,7 @@ public class Card implements Parcelable {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(final String level) {
         this.level = level;
     }
 
@@ -169,7 +169,7 @@ public class Card implements Parcelable {
         return repeatAt;
     }
 
-    public void setRepeatAt(long repeatAt) {
+    public void setRepeatAt(final long repeatAt) {
         this.repeatAt = repeatAt;
     }
 
@@ -197,7 +197,7 @@ public class Card implements Parcelable {
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(this.cId);
         dest.writeString(this.back);
         dest.writeString(this.front);

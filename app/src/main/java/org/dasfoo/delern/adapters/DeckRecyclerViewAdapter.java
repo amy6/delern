@@ -23,8 +23,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     private static final String TAG = LogUtil.tagFor(DeckRecyclerViewAdapter.class);
 
-    private OnDeckViewHolderClick onDeckViewHolderClick;
-    private Context context;
+    private OnDeckViewHolderClick mOnDeckViewHolderClick;
+    private Context mContext;
     /**
      * @param modelClass      Firebase will marshall the data at a location into an instance
      *                        of a class that you provide
@@ -35,7 +35,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * @param ref             The Firebase location to watch for data changes. Can also be a slice
      *                        of a location, using some
      */
-    public DeckRecyclerViewAdapter(Class<Deck> modelClass, int modelLayout, Class<DeckViewHolder> viewHolderClass, Query ref) {
+    public DeckRecyclerViewAdapter(final Class<Deck> modelClass, final int modelLayout,
+                                   final Class<DeckViewHolder> viewHolderClass, final Query ref) {
         super(modelClass, modelLayout, viewHolderClass, ref);
     }
 
@@ -51,32 +52,33 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * @param position   The position in the list of the view being populated
      */
     @Override
-    protected void populateViewHolder(final DeckViewHolder viewHolder, Deck deck, int position) {
-        viewHolder.getmDesktopTextView().setText(deck.getName());
-        viewHolder.setOnViewClick(onDeckViewHolderClick);
-        viewHolder.setContext(context);
+    protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
+                                      final int position) {
+        viewHolder.getDesktopTextView().setText(deck.getName());
+        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
+        viewHolder.setContext(mContext);
         Log.v(TAG, deck.toString());
         Log.v(TAG, String.valueOf(getRef(position).getKey()));
         // TODO(ksheremet): unregister somewhere
         Card.fetchCardsFromDeckToRepeat(getRef(position).getKey()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(final DataSnapshot dataSnapshot) {
                 Log.v(TAG, String.valueOf(dataSnapshot.getChildrenCount()));
-                viewHolder.getmCountToLearnTextView().setText(String.valueOf(dataSnapshot.getChildrenCount()));
+                viewHolder.getCountToLearnTextView().setText(String.valueOf(dataSnapshot.getChildrenCount()));
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(final DatabaseError databaseError) {
                 Log.v(TAG, databaseError.getMessage());
             }
         });
     }
 
-    public void setOnDeckViewHolderClick(OnDeckViewHolderClick onDeckViewHolderClick) {
-        this.onDeckViewHolderClick = onDeckViewHolderClick;
+    public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
+        this.mOnDeckViewHolderClick = onDeckViewHolderClick;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setContext(final Context context) {
+        this.mContext = context;
     }
 }

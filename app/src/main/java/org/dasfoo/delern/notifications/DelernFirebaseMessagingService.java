@@ -19,7 +19,7 @@ public class DelernFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = LogUtil.tagFor(DelernFirebaseMessagingService.class);
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(final RemoteMessage remoteMessage) {
         // Handle data payload of FCM messages.
         Log.d(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
         Log.d(TAG, "FCM Notification Message: " +
