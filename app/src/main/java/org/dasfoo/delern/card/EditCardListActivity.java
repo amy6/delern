@@ -88,7 +88,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.edit_card_list_menu, menu);
@@ -140,7 +142,9 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         startActivity(intent);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCardClick(final int position) {
         Log.v(TAG, mFirebaseAdapter.getRef(position).getKey());
@@ -164,7 +168,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      *
      * @param query the query text that is to be submitted
      * @return true if the query has been handled by the listener, false to let the
-     *     SearchView perform the default action.
+     * SearchView perform the default action.
      */
     @Override
     public boolean onQueryTextSubmit(final String query) {
@@ -176,7 +180,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      *
      * @param newText the new content of the query text field.
      * @return false if the SearchView should perform the default action of showing any
-     *     suggestions if available, true if the action was handled by the listener.
+     * suggestions if available, true if the action was handled by the listener.
      */
     @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     @Override

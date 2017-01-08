@@ -42,11 +42,13 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         super(modelClass, modelLayout, viewHolderClass, ref);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
-        viewHolder.getDesktopTextView().setText(deck.getName());
+        viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
         Log.v(TAG, deck.toString());
@@ -70,6 +72,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     /**
      * Set deck view holder click handler.
+     *
      * @param onDeckViewHolderClick deck view holder click handler
      */
     public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
@@ -78,6 +81,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     /**
      * Set context for the view holder.
+     *
      * @param context context
      */
     public void setContext(final Context context) {

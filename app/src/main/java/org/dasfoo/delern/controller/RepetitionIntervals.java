@@ -7,9 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 11/6/16.
+ * Class implements repetition intervals for card.
  */
-
-
 public final class RepetitionIntervals {
 
     private static final long ONE_HOUR = 60 * 60 * 1000;
@@ -30,20 +29,31 @@ public final class RepetitionIntervals {
     }
 
     /**
+     * Class is singleton. This method is used to return instance of class.
+     *
+     * @return instance of this class
+     */
+    public static RepetitionIntervals getInstance() {
+        return sOurInstance;
+    }
+
+    /**
+     * Get jitter of the card for randomizing appearance.
+     *
+     * @return period of time in milliseconds.
+     */
+    public static long getJitter() {
+        // Random() method returns a random number between 0.0 and 0.999
+        return (long) (Math.random() * 2 * ONE_HOUR + 1);
+    }
+
+    /**
      * Get interval of the next card appearance for the level.
+     *
      * @param levelName name of the level, one of Level.* constants
      * @return interval in milliseconds
      */
     public Long getInterval(final String levelName) {
         return mIntervals.get(levelName);
-    }
-
-    public static RepetitionIntervals getInstance() {
-        return sOurInstance;
-    }
-
-    public static long getJitter() {
-        // Random() method returns a random number between 0.0 and 0.999
-        return (long) (Math.random() * 2 * ONE_HOUR + 1);
     }
 }

@@ -28,6 +28,10 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
+/**
+ * Activity that perform SignIn for user using GoogleApiClient and FirebaseAuth.
+ * Sign In is implemented using Google.
+ */
 public class SignInActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -81,6 +85,9 @@ public class SignInActivity extends AppCompatActivity
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
@@ -93,6 +100,9 @@ public class SignInActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -134,6 +144,9 @@ public class SignInActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not

@@ -100,7 +100,9 @@ public class DelernMainActivity extends AppCompatActivity
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         int id = item.getItemId();
@@ -201,6 +203,7 @@ public class DelernMainActivity extends AppCompatActivity
 
     /**
      * Notify the user that sign in has permanently failed.
+     *
      * @param connectionResult information about unsuccessful connection attempt
      */
     @Override

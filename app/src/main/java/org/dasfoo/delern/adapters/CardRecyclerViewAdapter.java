@@ -22,6 +22,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     /**
      * Create a new FirebaseRecyclerAdapter.
+     *
      * @param builder inner class with all the properties
      */
     public CardRecyclerViewAdapter(final Builder builder) {
@@ -30,7 +31,9 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void populateViewHolder(final CardViewHolder viewHolder, final Card card,
                                       final int position) {
@@ -51,6 +54,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
         /**
          * Constructor with required parameters.
+         *
          * @param nestedModelClass ViewAdapter model class
          * @param nestedLayout     ViewAdapter layout
          * @param nestedViewHolder ViewAdapter holder
@@ -66,6 +70,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
         /**
          * Sets the onClick listener of this view.
+         *
          * @param nestedOnClickListener callback
          * @return this
          */
@@ -76,6 +81,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
         /**
          * Build a new instance based on the fields in this builder.
+         *
          * @return ViewAdapter with all the necessary fields set
          * @throws InstantiationException if not all required fields are set
          */

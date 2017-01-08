@@ -10,13 +10,19 @@ import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 
 /**
  * Created by katarina on 11/14/16.
+ * Describes an item view and metadata about its place within the RecyclerView.
  */
 public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TextView mFrontTextView;
-    private TextView mBackTextView;
+    private final TextView mFrontTextView;
+    private final TextView mBackTextView;
     private OnCardViewHolderClick mOnViewClick;
 
+    /**
+     * Constructor. It initializes variable that describe how to place card.
+     *
+     * @param itemView item view.
+     */
     public CardViewHolder(final View itemView) {
         super(itemView);
         mFrontTextView = (TextView) itemView.findViewById(R.id.front_textview);
@@ -25,22 +31,29 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         linearLayout.setOnClickListener(this);
     }
 
+    /**
+     * Getter for front side of card. It references to R.id.front_textview.
+     *
+     * @return reference to R.id.front_textview.
+     */
     public TextView getFrontTextView() {
         return mFrontTextView;
     }
 
-    public void setmFrontTextView(final TextView frontTextView) {
-        this.mFrontTextView = frontTextView;
-    }
-
+    /**
+     * Getter for back side of card. It references to R.id.back_textview.
+     *
+     * @return reference to R.id.back_textview.
+     */
     public TextView getBackTextView() {
         return mBackTextView;
     }
 
-    public void setBackTextView(final TextView backTextView) {
-        this.mBackTextView = backTextView;
-    }
-
+    /**
+     * Setter for mOnViewClick. It listeners clicks on cards.
+     *
+     * @param onViewClick onCardViewHolderClick.
+     */
     public void setOnViewClick(final OnCardViewHolderClick onViewClick) {
         this.mOnViewClick = onViewClick;
     }

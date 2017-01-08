@@ -25,9 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
-import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
+import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
@@ -53,7 +53,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private TextView mEmptyMessageTextView;
     private Query mUsersDecksQuery;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // and writes message for user
         mUsersDecksQuery = Deck.getUsersDecks();
         if (mUsersDecksQuery != null) {
-           mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
+            mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
         }
     }
 
@@ -156,8 +158,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Load and display the deck. Loading is done on the fragment side, not the new activity.
-     * @param position position of the clicked element in the list
+     * {@inheritDoc}
      */
     @Override
     public void doOnTextViewClick(final int position) {
@@ -192,8 +193,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * "Rename" menu item of a deck.
-     * @param position position of the element in the list
+     * {@inheritDoc}
      */
     @Override
     public void doOnRenameMenuClick(final int position) {
@@ -213,8 +213,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * "Edit" menu item of a deck.
-     * @param position position of the element in the list
+     * {@inheritDoc}
      */
     @Override
     public void doOnEditMenuClick(final int position) {
@@ -223,9 +222,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Deletes deck with all cards.
-     *
-     * @param position of deck in RecyclerView
+     * {@inheritDoc}
      */
     @Override
     public void doOnDeleteMenuClick(final int position) {
