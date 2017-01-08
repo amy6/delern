@@ -255,6 +255,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         startActivity(intent);
     }
 
+    @SuppressWarnings("PMD.LooseCoupling")
     private void startShowCardActivity(final String label, final String deckId,
                                        final ArrayList<Card> cards) {
         Intent intent = new Intent(getActivity(), ShowCardsActivity.class);

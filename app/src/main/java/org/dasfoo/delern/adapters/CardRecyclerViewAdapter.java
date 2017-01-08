@@ -20,7 +20,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
 
-    private CardRecyclerViewAdapter(final Builder builder) {
+    public CardRecyclerViewAdapter(final Builder builder) {
         super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass, builder.mNestedQuery);
         this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
     }

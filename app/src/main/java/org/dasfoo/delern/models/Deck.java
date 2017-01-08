@@ -27,8 +27,11 @@ public class Deck {
     private String dId;
     private String name;
 
+    /**
+     * The empty constructor is required for Firebase de-serialization.
+     */
     public Deck() {
-
+        // This constructor is intentionally left empty.
     }
 
     public Deck(final String name) {
@@ -98,6 +101,7 @@ public class Deck {
         Card.deleteCardsFromDeck(deckId);
     }
 
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void renameDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();

@@ -41,19 +41,11 @@ public class Card implements Parcelable {
     private String level;
     private long repeatAt;
 
+    /**
+     * The empty constructor is required for Firebase de-serialization.
+     */
     public Card() {
-
-    }
-
-    public Card(final String backSide, final String frontSide) {
-        this.back = backSide;
-        this.front = frontSide;
-    }
-
-    public Card(final String cId, final String backSide, final String frontSide) {
-        this.cId = cId;
-        this.back = backSide;
-        this.front = frontSide;
+        // This constructor is intentionally left empty.
     }
 
     protected Card(final Parcel in) {
@@ -102,6 +94,7 @@ public class Card implements Parcelable {
                 .equalTo(cardId);
     }
 
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void updateCard(final Card card, final String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();

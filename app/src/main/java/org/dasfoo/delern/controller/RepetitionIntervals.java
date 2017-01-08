@@ -2,8 +2,8 @@ package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.models.Level;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 11/6/16.
@@ -15,7 +15,7 @@ public final class RepetitionIntervals {
     private static final long ONE_HOUR = 60 * 60 * 1000;
     private static final long ONE_DAY = 24 * ONE_HOUR;
     private static RepetitionIntervals ourInstance = new RepetitionIntervals();
-    public Map<String, Long> intervals = new HashMap<>();
+    public Map<String, Long> intervals = new ConcurrentHashMap<>();
 
     private RepetitionIntervals() {
         intervals.put(Level.L0.name(), 4 * ONE_HOUR);
