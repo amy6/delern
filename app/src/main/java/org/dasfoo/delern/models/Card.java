@@ -100,6 +100,11 @@ public class Card implements Parcelable {
      * @param deckId  deck ID where to writhe new card.
      */
     @Exclude
+    public static Query fetchNextCardToRepeat(final String deckId) {
+        return fetchCardsFromDeckToRepeat(deckId).limitToFirst(1);
+    }
+
+    @Exclude
     public static void createNewCard(final Card newCard, final String deckId) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)

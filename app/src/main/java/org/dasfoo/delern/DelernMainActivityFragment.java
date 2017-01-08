@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,12 +27,9 @@ import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
-
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -163,33 +159,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnTextViewClick(final int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
-        Query query = Card.fetchCardsFromDeckToRepeat(deckId);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            /** {@inheritDoc} */
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                final ArrayList<Card> cards = new ArrayList<>();
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    final Card card = cardSnapshot.getValue(Card.class);
-                    card.setcId(cardSnapshot.getKey());
-                    Log.v(TAG, card.toString());
-                    cards.add(card);
-                }
-                if (cards.size() == 0) {
-                    Toast.makeText(getContext(), R.string.no_card_message, Toast.LENGTH_SHORT)
-                            .show();
-                } else {
-                    startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId,
-                            cards);
-                }
-            }
-
-            /** {@inheritDoc} */
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
-            }
-        });
+        startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId);
     }
 
     /**
@@ -267,12 +237,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         startActivity(intent);
     }
 
-    @SuppressWarnings("PMD.LooseCoupling")
-    private void startShowCardActivity(final String label, final String deckId,
-                                       final ArrayList<Card> cards) {
+    private void startShowCardActivity(final String label, final String deckId) {
         Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
         intent.putExtra(ShowCardsActivity.DECK_ID, deckId);
-        intent.putExtra(ShowCardsActivity.CARDS, cards);
         intent.putExtra(ShowCardsActivity.LABEL, label);
         startActivity(intent);
     }
