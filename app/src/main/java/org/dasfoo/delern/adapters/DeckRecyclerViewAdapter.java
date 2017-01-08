@@ -46,7 +46,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @Override
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
-        viewHolder.getDesktopTextView().setText(deck.getName());
+        viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
         Log.v(TAG, deck.toString());

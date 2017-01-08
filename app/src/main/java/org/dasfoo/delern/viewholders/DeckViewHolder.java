@@ -26,41 +26,70 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
 
-    private final TextView mDesktopTextView;
+    private final TextView mDeckTextView;
     private final TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
     private Context mContext;
 
 
+    /**
+     * Constructor. It initializes variable that describe how to place deck.
+     *
+     * @param v item view.
+     */
     public DeckViewHolder(final View v) {
         super(v);
-        mDesktopTextView = (TextView) itemView.findViewById(R.id.desktop_text_view);
+        mDeckTextView = (TextView) itemView.findViewById(R.id.deck_text_view);
         mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
 
-        mDesktopTextView.setOnClickListener(this);
+        mDeckTextView.setOnClickListener(this);
         ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
         popupMenuImageView.setOnClickListener(this);
     }
 
-    public TextView getDesktopTextView() {
-        return mDesktopTextView;
+    /**
+     * Getter to reference to R.id.deck_text_view.
+     *
+     * @return textview of deck.
+     */
+    public TextView getDeckTextView() {
+        return mDeckTextView;
     }
 
+    /**
+     * Getter for number of cards to learn. mCountToLearnTextView references to
+     * R.id.count_to_learn_textview.
+     *
+     * @return textview with number of cards to learn.
+     */
     public TextView getCountToLearnTextView() {
         return mCountToLearnTextView;
     }
 
+    /**
+     * Setter for mOnViewClick. It listeners clicks on deck name and
+     * popup menu.
+     *
+     * @param onViewClick onDeckViewClickListener
+     */
     public void setOnViewClick(final OnDeckViewHolderClick onViewClick) {
         this.mOnViewClick = onViewClick;
     }
 
+    /**
+     * Setter for context.
+     * Context is needed for creating popup menu for every deck.
+     *
+     * @param context context.
+     */
     public void setContext(final Context context) {
         this.mContext = context;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onClick(final View v) {
-        if (v.getId() == R.id.desktop_text_view) {
+        if (v.getId() == R.id.deck_text_view) {
             mOnViewClick.doOnTextViewClick(getAdapterPosition());
         }
         if (v.getId() == R.id.deck_popup_menu) {

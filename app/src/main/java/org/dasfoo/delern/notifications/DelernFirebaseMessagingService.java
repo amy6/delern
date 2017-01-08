@@ -9,6 +9,7 @@ import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Created by katarina on 10/7/16.
+ * Class for communicating with Firebase Messaging.
  */
 
 public class DelernFirebaseMessagingService extends FirebaseMessagingService {
@@ -18,6 +19,7 @@ public class DelernFirebaseMessagingService extends FirebaseMessagingService {
      */
     private static final String TAG = LogUtil.tagFor(DelernFirebaseMessagingService.class);
 
+    /** {@inheritDoc} */
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         // Handle data payload of FCM messages.

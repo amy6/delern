@@ -5,7 +5,7 @@
     android:weightSum="1">
 
     <TextView
-        android:id="@+id/desktop_text_view"
+        android:id="@+id/deck_text_view"
         style="@style/PrimaryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -135,7 +135,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // and writes message for user
         mUsersDecksQuery = Deck.getUsersDecks();
         if (mUsersDecksQuery != null) {
-           mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
+            mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
         }
     }
 
@@ -155,10 +155,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         }
     }
 
-    /**
-     * Load and display the deck. Loading is done on the fragment side, not the new activity.
-     * @param position position of the clicked element in the list
-     */
+    /** {@inheritDoc} */
     @Override
     public void doOnTextViewClick(final int position) {
         final String deckId = mFirebaseAdapter.getRef(position).getKey();
@@ -191,10 +188,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
     }
 
-    /**
-     * "Rename" menu item of a deck.
-     * @param position position of the element in the list
-     */
+    /** {@inheritDoc} */
     @Override
     public void doOnRenameMenuClick(final int position) {
         final Deck deck = mFirebaseAdapter.getItem(position);
@@ -212,21 +206,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         builder.show();
     }
 
-    /**
-     * "Edit" menu item of a deck.
-     * @param position position of the element in the list
-     */
+    /** {@inheritDoc} */
     @Override
     public void doOnEditMenuClick(final int position) {
         startEditCardsActivity(mFirebaseAdapter.getRef(position).getKey(),
                 mFirebaseAdapter.getItem(position).getName());
     }
 
-    /**
-     * Deletes deck with all cards.
-     *
-     * @param position of deck in RecyclerView
-     */
+    /** {@inheritDoc} */
     @Override
     public void doOnDeleteMenuClick(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

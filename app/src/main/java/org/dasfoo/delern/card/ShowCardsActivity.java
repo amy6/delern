@@ -27,11 +27,29 @@ import org.dasfoo.delern.util.LogUtil;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Activity for showing cards to learn.
+ */
 public class ShowCardsActivity extends AppCompatActivity {
 
+    /**
+     * IntentExtra deck ID for this activity.
+     */
     public static final String DECK_ID = "mDeckId";
+
+    /**
+     * IntentExtra cards for this activity.
+     */
     public static final String CARDS = "cards";
+
+    /**
+     * IntentExtra titel for this activity.
+     */
     public static final String LABEL = "label";
+
+    /**
+     * Information about class for logging.
+     */
     private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
 
     private FloatingActionButton mKnowButton;
