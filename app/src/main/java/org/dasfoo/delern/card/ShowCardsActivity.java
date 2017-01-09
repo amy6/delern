@@ -18,14 +18,16 @@ import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Activity for showing cards to learn.
@@ -38,12 +40,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     public static final String DECK_ID = "mDeckId";
 
     /**
-     * IntentExtra cards for this activity.
-     */
-    public static final String CARDS = "cards";
-
-    /**
-     * IntentExtra titel for this activity.
+     * IntentExtra title for this activity.
      */
     public static final String LABEL = "label";
 
@@ -58,8 +55,9 @@ public class ShowCardsActivity extends AppCompatActivity {
     private TextView mFrontTextView;
     private TextView mBackTextView;
     private View mDelimiter;
+    private ValueEventListener mCurrentCardListener;
+    private Query mCurrentCardQuery;
 
-    private Iterator<Card> mCardIterator;
     private Card mCurrentCard;
     private String mDeckId;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -93,6 +91,9 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +105,45 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
-        showFrontSide();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentCardListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChildren()) {
+                    finish();
+                    // You should put a return statement after that finish,
+                    // because the method that called finish will be executed completely otherwise.
+                    return;
+                }
+                // It has only 1 card because of limit(1)
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    mCurrentCard = cardSnapshot.getValue(Card.class);
+                    mCurrentCard.setcId(cardSnapshot.getKey());
+                }
+                showFrontSide();
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
+            }
+        };
+        showNextCard();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mCurrentCardQuery != null) {
+            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
+        }
     }
 
     /**
@@ -113,15 +152,8 @@ public class ShowCardsActivity extends AppCompatActivity {
     private void getParameters() {
         Intent intent = getIntent();
         mDeckId = intent.getStringExtra(DECK_ID);
-        List<Card> cards = intent.getParcelableArrayListExtra(CARDS);
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
-        if (cards == null) {
-            finish();
-        } else {
-            mCardIterator = cards.iterator();
-            mCurrentCard = mCardIterator.next();
-        }
     }
 
     /**
@@ -248,11 +280,13 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     private void showNextCard() {
-        if (mCardIterator.hasNext()) {
-            mCurrentCard = mCardIterator.next();
-            showFrontSide();
-        } else {
-            finish();
+        // Before getting new card, we detach listener from old card.
+        if (mCurrentCardQuery != null) {
+            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
         }
+        // Get new card
+        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeckId);
+        // Attach listener to new card
+        mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
     }
 }
