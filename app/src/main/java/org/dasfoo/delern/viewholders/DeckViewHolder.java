@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
@@ -25,6 +26,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
+    private static final String NULL_CARDS = "0";
 
     private final TextView mDeckTextView;
     private final TextView mCountToLearnTextView;
@@ -92,7 +94,14 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @Override
     public void onClick(final View v) {
         if (v.getId() == R.id.deck_text_view) {
-            mOnViewClick.doOnTextViewClick(getAdapterPosition());
+            // if number of cards is 0 or N/A, show message to user
+            String cardCount = mCountToLearnTextView.getText().toString();
+            if (NULL_CARDS.equals(cardCount) ||
+                    mContext.getResources().getString(R.string.n_a).equals(cardCount)) {
+                Toast.makeText(mContext, R.string.no_card_message, Toast.LENGTH_SHORT).show();
+            } else {
+                mOnViewClick.doOnTextViewClick(getAdapterPosition());
+            }
         }
         if (v.getId() == R.id.deck_popup_menu) {
             showPopup(v);

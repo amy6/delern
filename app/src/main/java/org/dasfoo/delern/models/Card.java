@@ -2,14 +2,11 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
-import org.dasfoo.delern.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +37,7 @@ public class Card implements Parcelable {
     };
     @Exclude
     private static final String CARDS = "cards";
-    private static final String TAG = LogUtil.tagFor(Card.class);
+
     @Exclude
     private String cId;
     private String back;
@@ -85,8 +82,6 @@ public class Card implements Parcelable {
     @Exclude
     public static Query fetchCardsFromDeckToRepeat(final String deckId) {
         long time = System.currentTimeMillis();
-        Log.v(TAG, String.valueOf(time));
-
         return getFirebaseCardsRef()
                 .child(deckId)
                 .orderByChild("repeatAt")
