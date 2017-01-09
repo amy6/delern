@@ -100,10 +100,10 @@ public class Card implements Parcelable {
     }
 
     /**
-     * Gets card and deck ID to write new card in Firebase.
+     * Creates new card in deck in Firebase.
      *
-     * @param newCard new card for writin to Firebase.
-     * @param deckId  deck ID where to writhe new card.
+     * @param newCard card for writing to deck.
+     * @param deckId deck ID where to create card.
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId) {
