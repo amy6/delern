@@ -55,6 +55,8 @@ public class ShowCardsActivity extends AppCompatActivity {
     private TextView mFrontTextView;
     private TextView mBackTextView;
     private View mDelimiter;
+    private ValueEventListener mCurrentCardListener;
+    private Query mCurrentCardQuery;
 
     private Card mCurrentCard;
     private String mDeckId;
@@ -89,6 +91,9 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +105,45 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentCardListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChildren()) {
+                    finish();
+                    // You should put a return statement after that finish,
+                    // because the method that called finish will be executed completely otherwise.
+                    return;
+                }
+                // It has only 1 card because of limit(1)
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    mCurrentCard = cardSnapshot.getValue(Card.class);
+                    mCurrentCard.setcId(cardSnapshot.getKey());
+                }
+                showFrontSide();
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
+            }
+        };
         showNextCard();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mCurrentCardQuery != null) {
+            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
+        }
     }
 
     /**
@@ -237,26 +280,13 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     private void showNextCard() {
-        Query query = Card.fetchNextCardToRepeat(mDeckId);
-        // TODO(ksheremet): remove listener onStop and with new card
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChildren()) {
-                    finish();
-                }
-                // It has only 1 card because of limit(1)
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    mCurrentCard = cardSnapshot.getValue(Card.class);
-                    mCurrentCard.setcId(cardSnapshot.getKey());
-                }
-                showFrontSide();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        // Before getting new card, we detach listener from old card.
+        if (mCurrentCardQuery != null) {
+            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
+        }
+        // Get new card
+        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeckId);
+        // Attach listener to new card
+        mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
     }
 }

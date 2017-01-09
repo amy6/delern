@@ -94,16 +94,22 @@ public class Card implements Parcelable {
     }
 
     /**
-     * Gets card and deck ID to write new card in Firebase.
+     * Gets one card to learn from deck.
      *
-     * @param newCard new card for writin to Firebase.
-     * @param deckId  deck ID where to writhe new card.
+     * @param deckId deck ID.
+     * @return query of card.
      */
     @Exclude
     public static Query fetchNextCardToRepeat(final String deckId) {
         return fetchCardsFromDeckToRepeat(deckId).limitToFirst(1);
     }
 
+    /**
+     * Gets card and deck ID to write new card in Firebase.
+     *
+     * @param newCard new card for writin to Firebase.
+     * @param deckId  deck ID where to writhe new card.
+     */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId) {
         String cardKey = getFirebaseCardsRef()
