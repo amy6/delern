@@ -38,10 +38,11 @@
   *;
 }
 
-#keeps all support lib classes
+# Keep all support lib classes
+# http://stackoverflow.com/questions/22136032/action-bar-search-view-android-null-error
 -keep class android.support.** {
-*;
+  *;
 }
 -keep interface android.support.** {
-*;
+  *;
 }
