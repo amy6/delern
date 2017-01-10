@@ -37,3 +37,11 @@
 -keep class org.dasfoo.delern.viewholders.** {
   *;
 }
+
+#keeps all support lib classes
+-keep class android.support.** {
+*;
+}
+-keep interface android.support.** {
+*;
+}
