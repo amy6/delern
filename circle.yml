@@ -61,10 +61,7 @@ deployment:
     - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components update
     - echo $GCLOUD_SERVICE_KEY | base64 --decode > app/play-store-service-account.json
     - gcloud auth activate-service-account --key-file app/play-store-service-account.json
-    # Get our keystore.
-    - gsutil cp gs://dasfoo-keystore/delern.jks app
     # Run unit tests for Release locally.
-    # TODO(dotdoom): consider setting "testBuildType" to "release" (dynamically?),
     # http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Basics-and-Configuration
     - ./gradlew lintRelease testReleaseUnitTest --console=plain
     - mv app/build/test-results/release "${CIRCLE_TEST_REPORTS?}"
@@ -75,7 +72,12 @@ deployment:
         --app app/build/outputs/apk/app-debug.apk
         --test app/build/outputs/apk/app-debug-androidTest.apk
         --results-bucket delern-test-results
-    - pip install -U crcmod
-    - gsutil -m cp -r "$(gsutil ls gs://delern-test-results | tail -1)" "${CIRCLE_ARTIFACTS?}"
+    # Also run Robo tests: https://firebase.google.com/docs/test-lab/robo-ux-test
+    - gsutil cp gs://dasfoo-keystore/delern.jks app
+    - ./gradlew assembleRelease --console=plain
+    - >
+        gcloud --project=delern-e1b33 beta test android run
+        --app app/build/outputs/apk/app-release.apk
+        --results-bucket delern-test-results
     # Publish to Google Play.
     - ./gradlew publishRelease --console=plain
