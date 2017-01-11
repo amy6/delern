@@ -81,3 +81,6 @@ deployment:
         --results-bucket delern-test-results
     # Publish to Google Play.
     - ./gradlew publishRelease --console=plain
+    # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
+    - echo $FIREBASE_SERVICE_KEY | base64 --decode > app/firebase-service-account.json
+    - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadReleaseProguardMapping --console=plain
