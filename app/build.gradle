@@ -49,11 +49,13 @@ ext {
     gitVersionCode = git.tag.list().size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     firebaseVersion = "10.0.1"
+    sdkVersion = 25
+    supportVersion = "${sdkVersion}.1.0"
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion sdkVersion
+    buildToolsVersion "${sdkVersion}.0.1"
     signingConfigs {
         release {
             storeFile file("delern.jks")
@@ -65,7 +67,7 @@ android {
     defaultConfig {
         applicationId "org.dasfoo.delern"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion sdkVersion
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -103,12 +105,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:support-v4:$supportVersion"
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
@@ -118,8 +119,10 @@ dependencies {
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
     compile "com.google.firebase:firebase-crash:$firebaseVersion"
     compile "com.firebaseui:firebase-ui-database:1.0.0"
+    compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
     testCompile 'junit:junit:4.12'
 }
 
