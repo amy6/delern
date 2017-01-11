@@ -40,5 +40,7 @@
     <string name="no_card_message">All cards are learned</string>
     <string name="sign_out_warning">Are you sure that you want to sign out?</string>
     <string name="search">Search</string>
+    <string name="add_reversed_card_checkbox">Add reversed card as well </string>
+    <string name="add_extra_reversed_card_message">2 cards are added</string>
 
 </resources>
