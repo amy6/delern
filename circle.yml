@@ -26,6 +26,7 @@ dependencies:
   # $ cd android-sdk-linux; tools/android list sdk --extended --all
   # (look for a string: sys-img-XX-android-YY)
   # Currently, there's no image for API level 25 with ARM EABI.
+  - echo y | android update sdk --no-ui --all --filter android-24
   - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-24
   # For lint to be able to detect deprecated API.
   - echo y | android update sdk --no-ui --all --filter platform-tools

@@ -23,14 +23,6 @@
           }
         },
         {
-          "client_id": "174595342338-54hpcnq4ljaqpmkln9glak07alete9lv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.dasfoo.delern",
-            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
-          }
-        },
-        {
           "client_id": "174595342338-ehfok3g5rs4imk0jd16uprqhfklajjfv.apps.googleusercontent.com",
           "client_type": 3
         }
