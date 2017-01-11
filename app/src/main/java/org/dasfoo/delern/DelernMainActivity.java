@@ -56,9 +56,7 @@ public class DelernMainActivity extends AppCompatActivity
         configureToolbar();
 
         if (!User.isSignedIn()) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
+            startSignIn();
             return;
         }
 
@@ -144,7 +142,7 @@ public class DelernMainActivity extends AppCompatActivity
             public void onClick(final DialogInterface dialog, final int which) {
                 FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                startSignIn();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -213,5 +211,13 @@ public class DelernMainActivity extends AppCompatActivity
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         FirebaseCrash.logcat(Log.ERROR, TAG, connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void startSignIn() {
+        // Per https://goo.gl/qHTbjw and https://goo.gl/rnD2g3.
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(signInIntent);
+        finish();
     }
 }
