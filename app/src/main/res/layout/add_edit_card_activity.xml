@@ -31,12 +31,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <CheckBox
+            android:text="@string/add_reversed_card_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_reversed_card_checkbox"
+            android:layout_margin="@dimen/elemets_marging"/>
+
         <Button
             android:id="@+id/add_card_to_db"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_button_string" />
-    </LinearLayout>
+            android:text="@string/add_button_string"
+            android:layout_margin="@dimen/elemets_marging"/>
 
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
