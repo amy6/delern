@@ -7,4 +7,7 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="dontKnowButton">#F44336</color>
     <color name="fab_tint">#787575</color>
+    <color name="feminine">#d1f2729b</color>
+    <color name="masculine">#d160c9fa</color>
+    <color name="neutrum">#bee690</color>
 </resources>

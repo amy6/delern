@@ -7,8 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -49,6 +51,7 @@ public class ShowCardsActivity extends AppCompatActivity {
      */
     private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
 
+    private CardView mCardView;
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
     private ImageView mTurnCardButton;
@@ -208,6 +211,8 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Sets click listeners.
      */
     private void initViews() {
+        mCardView = (CardView) findViewById(R.id.card_view);
+
         mKnowButton = (FloatingActionButton) findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(mOnClickListener);
 
@@ -228,6 +233,15 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Shows front side of the current card and appropriate buttons.
      */
     private void showFrontSide() {
+        if (mCurrentCard.getBack().contains("de ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+        }
+        if (mCurrentCard.getBack().contains("d ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+        }
+        if (mCurrentCard.getBack().contains("s ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutrum));
+        }
         mFrontTextView.setText(mCurrentCard.getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
