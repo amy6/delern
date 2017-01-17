@@ -43,4 +43,10 @@
     <string name="add_reversed_card_checkbox">Add reversed card as well </string>
     <string name="add_extra_reversed_card_message">2 cards are added</string>
 
+    <!-- Cards type menu -->
+    <string name="cards_type">Cards Type</string>
+    <string name="basic_cards_type">Basic</string>
+    <string name="german_cards_type">German</string>
+    <string name="swissgerman_cards_type">Swissgerman</string>
+
 </resources>
