@@ -148,16 +148,21 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 return true;
             case R.id.basic_type:
                 Log.v(TAG, "Basic cards");
-                // TODO(ksheremet): Not set the same deckType
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
+                if (!DeckType.BASIC.name().toLowerCase().equals(mCheckedDeckType)) {
+                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
+                }
                 return true;
             case R.id.german_type:
                 Log.v(TAG, "German cards");
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
+                if (!DeckType.GERMAN.name().toLowerCase().equals(mCheckedDeckType)) {
+                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
+                }
                 return true;
             case R.id.swissgerman_type:
                 Log.v(TAG, "Swiss cards");
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
+                if (!DeckType.SWISS.name().toLowerCase().equals(mCheckedDeckType)) {
+                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
+                }
                 return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");
