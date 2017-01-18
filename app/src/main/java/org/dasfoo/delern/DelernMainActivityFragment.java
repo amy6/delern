@@ -122,16 +122,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         };
 
-
+        mUsersDecksQuery = Deck.getUsersDecks();
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
-                DeckViewHolder.class, Deck.getUsersDecks());
+                DeckViewHolder.class, mUsersDecksQuery);
         mFirebaseAdapter.setContext(getContext());
         mFirebaseAdapter.setOnDeckViewHolderClick(mOnDeckViewHolderClick);
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        mUsersDecksQuery = Deck.getUsersDecks();
         if (mUsersDecksQuery != null) {
             mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
         }
@@ -212,6 +211,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         });
         builder.show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doOnCardsTypeClick(int position) {
+
     }
 
     private AlertDialog.Builder newOrUpdateDeckDialog(final Deck deck, final EditText input) {

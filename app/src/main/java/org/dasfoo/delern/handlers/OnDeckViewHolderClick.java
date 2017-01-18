@@ -34,4 +34,12 @@ public interface OnDeckViewHolderClick {
      * @param position position of the element in the list
      */
     void doOnDeleteMenuClick(int position);
+
+
+    /**
+     * Sets cards type for the deck.
+     *
+     * @param position position of the element in the list
+     */
+    void doOnCardsTypeClick(int position);
 }

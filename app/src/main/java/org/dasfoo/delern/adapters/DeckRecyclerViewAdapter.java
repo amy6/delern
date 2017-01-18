@@ -49,16 +49,14 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
+        viewHolder.setCheckedCardType(deck.getCardsType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
-        Log.v(TAG, deck.toString());
-        Log.v(TAG, String.valueOf(getRef(position).getKey()));
         // TODO(ksheremet): unregister somewhere
         Card.fetchCardsFromDeckToRepeat(getRef(position).getKey()).addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        Log.v(TAG, String.valueOf(dataSnapshot.getChildrenCount()));
                         viewHolder.getCountToLearnTextView().setText(String.valueOf(
                                 dataSnapshot.getChildrenCount()));
                     }

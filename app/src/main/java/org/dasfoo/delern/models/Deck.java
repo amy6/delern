@@ -29,6 +29,7 @@ public class Deck {
     @Exclude
     private String dId;
     private String name;
+    private String cardsType;
 
     /**
      * The empty constructor is required for Firebase de-serialization.
@@ -164,6 +165,24 @@ public class Deck {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * Getter for cards type in deck.
+     *
+     * @return type of cards in deck.
+     */
+    public String getCardsType() {
+        return cardsType;
+    }
+
+    /**
+     * Setter for cards type in deck.
+     *
+     * @param cardsType type of cards in deck.
+     */
+    public void setCardsType(String cardsType) {
+        this.cardsType = cardsType;
     }
 
     /**

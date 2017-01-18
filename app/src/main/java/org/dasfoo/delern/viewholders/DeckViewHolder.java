@@ -32,6 +32,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private final TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
     private Context mContext;
+    private String mCheckedCardType;
 
 
     /**
@@ -114,6 +115,16 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         popup.show();
+        //TODO(ksheremet): set checked different types
+        if ((mCheckedCardType == null) || ("basic".equals(mCheckedCardType))) {
+            popup.getMenu().findItem(R.id.basic_type).setChecked(true);
+        }
+        if ("swiss".equals(mCheckedCardType)) {
+            popup.getMenu().findItem(R.id.swissgerman_type).setChecked(true);
+        }
+        if ("german".equals(mCheckedCardType)) {
+            popup.getMenu().findItem(R.id.german_type).setChecked(true);
+        }
     }
 
     /**
@@ -131,9 +142,25 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             case R.id.delete_deck_menu:
                 mOnViewClick.doOnDeleteMenuClick(getAdapterPosition());
                 return true;
+            case R.id.cards_type:
+                Log.v(TAG, "Implement checkable behavior");
+                return true;
+            case R.id.basic_type:
+                Log.v(TAG, "Basic cards");
+                return true;
+            case R.id.german_type:
+                Log.v(TAG, "German cards");
+                return true;
+            case R.id.swissgerman_type:
+                Log.v(TAG, "Swiss cards");
+                return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");
                 return false;
         }
+    }
+
+    public void setCheckedCardType(String mCheckedCardType) {
+        this.mCheckedCardType = mCheckedCardType;
     }
 }
