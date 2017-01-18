@@ -1,5 +1,7 @@
 package org.dasfoo.delern.handlers;
 
+import org.dasfoo.delern.models.DeckType;
+
 /**
  * Created by katarina on 10/14/16.
  * Manages clicks on RecyclerView
@@ -37,9 +39,10 @@ public interface OnDeckViewHolderClick {
 
 
     /**
-     * Sets cards type for the deck.
+     * Sets type of deck.
      *
      * @param position position of the element in the list
+     * @param deckType type of deck
      */
-    void doOnCardsTypeClick(int position);
+    void doOnDeckTypeClick(int position, DeckType deckType);
 }

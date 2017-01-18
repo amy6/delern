@@ -28,6 +28,7 @@ import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -175,7 +176,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString());
-                Deck.renameDeck(deck);
+                Deck.updateDeck(deck);
             }
         });
         builder.show();
@@ -217,9 +218,13 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      * {@inheritDoc}
      */
     @Override
-    public void doOnCardsTypeClick(int position) {
-
+    public void doOnDeckTypeClick(int position, DeckType deckType) {
+        final Deck deck = mFirebaseAdapter.getItem(position);
+        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+        deck.setDeckType(deckType.name().toLowerCase());
+        Deck.updateDeck(deck);
     }
+
 
     private AlertDialog.Builder newOrUpdateDeckDialog(final Deck deck, final EditText input) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -32,8 +33,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private final TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
     private Context mContext;
-    private String mCheckedCardType;
-
+    private String mCheckedDeckType;
 
     /**
      * Constructor. It initializes variable that describe how to place deck.
@@ -115,14 +115,18 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         popup.show();
-        //TODO(ksheremet): set checked different types
-        if ((mCheckedCardType == null) || ("basic".equals(mCheckedCardType))) {
+        setDeckType(popup);
+    }
+
+    private void setDeckType(PopupMenu popup) {
+        if ((mCheckedDeckType == null) ||
+                (DeckType.BASIC.name().toLowerCase().equals(mCheckedDeckType))) {
             popup.getMenu().findItem(R.id.basic_type).setChecked(true);
         }
-        if ("swiss".equals(mCheckedCardType)) {
+        if (DeckType.SWISS.name().toLowerCase().equals(mCheckedDeckType)) {
             popup.getMenu().findItem(R.id.swissgerman_type).setChecked(true);
         }
-        if ("german".equals(mCheckedCardType)) {
+        if (DeckType.GERMAN.name().toLowerCase().equals(mCheckedDeckType)) {
             popup.getMenu().findItem(R.id.german_type).setChecked(true);
         }
     }
@@ -142,17 +146,18 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             case R.id.delete_deck_menu:
                 mOnViewClick.doOnDeleteMenuClick(getAdapterPosition());
                 return true;
-            case R.id.cards_type:
-                Log.v(TAG, "Implement checkable behavior");
-                return true;
             case R.id.basic_type:
                 Log.v(TAG, "Basic cards");
+                // TODO(ksheremet): Not set the same deckType
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
                 return true;
             case R.id.german_type:
                 Log.v(TAG, "German cards");
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
                 return true;
             case R.id.swissgerman_type:
                 Log.v(TAG, "Swiss cards");
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
                 return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");
@@ -161,6 +166,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     public void setCheckedCardType(String mCheckedCardType) {
-        this.mCheckedCardType = mCheckedCardType;
+        this.mCheckedDeckType = mCheckedCardType;
     }
 }

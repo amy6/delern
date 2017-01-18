@@ -29,7 +29,7 @@ public class Deck {
     @Exclude
     private String dId;
     private String name;
-    private String cardsType;
+    private String deckType;
 
     /**
      * The empty constructor is required for Firebase de-serialization.
@@ -113,7 +113,7 @@ public class Deck {
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void renameDeck(final Deck deck) {
+    public static void updateDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
@@ -172,17 +172,17 @@ public class Deck {
      *
      * @return type of cards in deck.
      */
-    public String getCardsType() {
-        return cardsType;
+    public String getDeckType() {
+        return deckType;
     }
 
     /**
      * Setter for cards type in deck.
      *
-     * @param cardsType type of cards in deck.
+     * @param deckType type of cards in deck.
      */
-    public void setCardsType(String cardsType) {
-        this.cardsType = cardsType;
+    public void setDeckType(String deckType) {
+        this.deckType = deckType;
     }
 
     /**

@@ -49,7 +49,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
-        viewHolder.setCheckedCardType(deck.getCardsType());
+        viewHolder.setCheckedCardType(deck.getDeckType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
         // TODO(ksheremet): unregister somewhere
