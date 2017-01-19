@@ -38,7 +38,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     /**
      * Constructor. It initializes variable that describe how to place deck.
      *
-     * @param v item view.
+     * @param v item view
      */
     public DeckViewHolder(final View v) {
         super(v);
@@ -53,7 +53,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     /**
      * Getter to reference to R.id.deck_text_view.
      *
-     * @return textview of deck.
+     * @return textview of deck
      */
     public TextView getDeckTextView() {
         return mDeckTextView;
@@ -63,7 +63,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * Getter for number of cards to learn. mCountToLearnTextView references to
      * R.id.count_to_learn_textview.
      *
-     * @return textview with number of cards to learn.
+     * @return textview with number of cards to learn
      */
     public TextView getCountToLearnTextView() {
         return mCountToLearnTextView;
@@ -83,7 +83,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * Setter for context.
      * Context is needed for creating popup menu for every deck.
      *
-     * @param context context.
+     * @param context context
      */
     public void setContext(final Context context) {
         this.mContext = context;
@@ -118,17 +118,23 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         setDeckType(popup);
     }
 
-    private void setDeckType(PopupMenu popup) {
-        if ((mCheckedDeckType == null) ||
-                (DeckType.BASIC.name().toLowerCase().equals(mCheckedDeckType))) {
-            popup.getMenu().findItem(R.id.basic_type).setChecked(true);
+    /**
+     * Sets current deck type in popup menu and make disable this deck type.
+     * Disabled menuItem doesn't allow to write in Firebase the same deck type
+     * if user touch it.
+     *
+     * @param popup popup menu
+     */
+    private void setDeckType(final PopupMenu popup) {
+        MenuItem menuItem = popup.getMenu().findItem(R.id.basic_type);
+        if (DeckType.SWISS.name().equalsIgnoreCase(mCheckedDeckType)) {
+            menuItem = popup.getMenu().findItem(R.id.swissgerman_type);
         }
-        if (DeckType.SWISS.name().toLowerCase().equals(mCheckedDeckType)) {
-            popup.getMenu().findItem(R.id.swissgerman_type).setChecked(true);
+        if (DeckType.GERMAN.name().equalsIgnoreCase(mCheckedDeckType)) {
+            menuItem = popup.getMenu().findItem(R.id.german_type);
         }
-        if (DeckType.GERMAN.name().toLowerCase().equals(mCheckedDeckType)) {
-            popup.getMenu().findItem(R.id.german_type).setChecked(true);
-        }
+        menuItem.setChecked(true);
+        menuItem.setEnabled(false);
     }
 
     /**
@@ -147,22 +153,14 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 mOnViewClick.doOnDeleteMenuClick(getAdapterPosition());
                 return true;
             case R.id.basic_type:
-                Log.v(TAG, "Basic cards");
-                if (!DeckType.BASIC.name().toLowerCase().equals(mCheckedDeckType)) {
-                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
-                }
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
                 return true;
             case R.id.german_type:
-                Log.v(TAG, "German cards");
-                if (!DeckType.GERMAN.name().toLowerCase().equals(mCheckedDeckType)) {
-                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
-                }
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
                 return true;
             case R.id.swissgerman_type:
-                Log.v(TAG, "Swiss cards");
-                if (!DeckType.SWISS.name().toLowerCase().equals(mCheckedDeckType)) {
-                    mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
-                }
+                Log.v(TAG, "Swiss deck");
+                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
                 return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");
@@ -170,7 +168,12 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         }
     }
 
-    public void setCheckedCardType(String mCheckedCardType) {
-        this.mCheckedDeckType = mCheckedCardType;
+    /**
+     * Setter for deck type.
+     *
+     * @param checkedDeckType deck type
+     */
+    public void setDeckCardType(final String checkedDeckType) {
+        this.mCheckedDeckType = checkedDeckType;
     }
 }

@@ -181,7 +181,7 @@ public class Deck {
      *
      * @param deckType type of cards in deck.
      */
-    public void setDeckType(String deckType) {
+    public void setDeckType(final String deckType) {
         this.deckType = deckType;
     }
 
@@ -193,6 +193,7 @@ public class Deck {
         return "Deck{" +
                 "dId='" + dId + '\'' +
                 ", name='" + name + '\'' +
+                ", deckType='" + deckType + '\'' +
                 '}';
     }
 }

@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -45,6 +46,11 @@ public class ShowCardsActivity extends AppCompatActivity {
      * IntentExtra title for this activity.
      */
     public static final String LABEL = "label";
+
+    /**
+     * IntentExtra type of deck.
+     */
+    public static final String DECK_TYPE = "deckType";
 
     /**
      * Information about class for logging.
@@ -93,6 +99,7 @@ public class ShowCardsActivity extends AppCompatActivity {
             }
         }
     };
+    private String mDeckType;
 
     /**
      * {@inheritDoc}
@@ -157,6 +164,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         mDeckId = intent.getStringExtra(DECK_ID);
         String label = intent.getStringExtra(LABEL);
         this.setTitle(label);
+        mDeckType = intent.getStringExtra(DECK_TYPE);
     }
 
     /**
@@ -233,21 +241,46 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Shows front side of the current card and appropriate buttons.
      */
     private void showFrontSide() {
-        if (mCurrentCard.getBack().contains("de ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-        }
-        if (mCurrentCard.getBack().contains("d ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-        }
-        if (mCurrentCard.getBack().contains("s ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutrum));
-        }
+        setBackgrountCardColor();
         mFrontTextView.setText(mCurrentCard.getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
         mTurnCardButton.setVisibility(View.VISIBLE);
         mDelimiter.setVisibility(View.INVISIBLE);
+    }
+
+    private void setBackgrountCardColor() {
+        // Set default color
+        mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
+        if (DeckType.SWISS.name().equalsIgnoreCase(mDeckType)) {
+            if (mCurrentCard.getBack().startsWith("de ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("d ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("s ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+                return;
+            }
+        }
+        if (DeckType.GERMAN.name().equalsIgnoreCase(mDeckType)) {
+            if (mCurrentCard.getBack().startsWith("der ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("die ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("das ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+            }
+        }
+
     }
 
     /**

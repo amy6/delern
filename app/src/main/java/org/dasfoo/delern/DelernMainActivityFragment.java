@@ -70,6 +70,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         Deck newDeck = new Deck(input.getText().toString());
+                        newDeck.setDeckType(DeckType.BASIC.name().toLowerCase());
                         String key = Deck.createNewDeck(newDeck);
                         mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
@@ -158,8 +159,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     @Override
     public void doOnTextViewClick(final int position) {
-        final String deckId = mFirebaseAdapter.getRef(position).getKey();
-        startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId);
+        Deck deck = getDeckFromAdapter(position);
+        startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deck);
     }
 
     /**
@@ -167,8 +168,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     @Override
     public void doOnRenameMenuClick(final int position) {
-        final Deck deck = mFirebaseAdapter.getItem(position);
-        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+        final Deck deck = getDeckFromAdapter(position);
         Log.v(TAG, deck.toString());
         final EditText input = new EditText(getActivity());
         AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
@@ -218,9 +218,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      * {@inheritDoc}
      */
     @Override
-    public void doOnDeckTypeClick(int position, DeckType deckType) {
-        final Deck deck = mFirebaseAdapter.getItem(position);
-        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+    public void doOnDeckTypeClick(final int position, final DeckType deckType) {
+        final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name().toLowerCase());
         Deck.updateDeck(deck);
     }
@@ -249,10 +248,20 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         startActivity(intent);
     }
 
-    private void startShowCardActivity(final String label, final String deckId) {
+    private void startShowCardActivity(final String label, final Deck deck) {
         Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
-        intent.putExtra(ShowCardsActivity.DECK_ID, deckId);
+        intent.putExtra(ShowCardsActivity.DECK_ID, deck.getdId());
         intent.putExtra(ShowCardsActivity.LABEL, label);
+        if (deck.getDeckType() == null) {
+            deck.setDeckType(DeckType.BASIC.name().toLowerCase());
+        }
+        intent.putExtra(ShowCardsActivity.DECK_TYPE, deck.getDeckType());
         startActivity(intent);
+    }
+
+    private Deck getDeckFromAdapter(final int position) {
+        final Deck deck = mFirebaseAdapter.getItem(position);
+        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+        return deck;
     }
 }
