@@ -21,6 +21,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:elevation="6dp"
+        android:tint="@color/fab_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"
         app:srcCompat="@android:drawable/ic_input_add" />

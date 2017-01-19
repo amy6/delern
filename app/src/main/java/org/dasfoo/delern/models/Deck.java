@@ -1,5 +1,7 @@
 package org.dasfoo.delern.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +20,25 @@ import java.util.Map;
  */
 
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Deck {
+public class Deck implements Parcelable {
+
+    /**
+     * Classes implementing the Parcelable interface must also have a non-null static
+     * field called CREATOR of a type that implements the Parcelable.Creator interface.
+     * https://developer.android.com/reference/android/os/Parcelable.html
+     */
+    public static final Creator<Deck> CREATOR = new Creator<Deck>() {
+        @Override
+        public Deck createFromParcel(final Parcel in) {
+            return new Deck(in);
+        }
+
+        @Override
+        public Deck[] newArray(final int size) {
+            return new Deck[size];
+        }
+    };
+
     @Exclude
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
@@ -29,6 +49,7 @@ public class Deck {
     @Exclude
     private String dId;
     private String name;
+    private String deckType;
 
     /**
      * The empty constructor is required for Firebase de-serialization.
@@ -44,6 +65,12 @@ public class Deck {
      */
     public Deck(final String name) {
         this.name = name;
+    }
+
+    protected Deck(final Parcel in) {
+        dId = in.readString();
+        name = in.readString();
+        deckType = in.readString();
     }
 
     /**
@@ -112,7 +139,7 @@ public class Deck {
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void renameDeck(final Deck deck) {
+    public static void updateDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
@@ -167,6 +194,27 @@ public class Deck {
     }
 
     /**
+     * Getter for cards type in deck.
+     *
+     * @return type of cards in deck.
+     */
+    public String getDeckType() {
+        if (deckType == null) {
+            return DeckType.BASIC.name().toLowerCase();
+        }
+        return deckType;
+    }
+
+    /**
+     * Setter for cards type in deck.
+     *
+     * @param deckType type of cards in deck.
+     */
+    public void setDeckType(final String deckType) {
+        this.deckType = deckType;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -174,6 +222,25 @@ public class Deck {
         return "Deck{" +
                 "dId='" + dId + '\'' +
                 ", name='" + name + '\'' +
+                ", deckType='" + deckType + '\'' +
                 '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeToParcel(final Parcel parcel, final int i) {
+        parcel.writeString(this.dId);
+        parcel.writeString(this.name);
+        parcel.writeString(this.deckType);
     }
 }

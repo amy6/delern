@@ -7,8 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -35,20 +39,16 @@ import org.dasfoo.delern.util.LogUtil;
 public class ShowCardsActivity extends AppCompatActivity {
 
     /**
-     * IntentExtra deck ID for this activity.
+     * IntentExtra deck for this activity.
      */
-    public static final String DECK_ID = "mDeckId";
-
-    /**
-     * IntentExtra title for this activity.
-     */
-    public static final String LABEL = "label";
+    public static final String DECK = "deck";
 
     /**
      * Information about class for logging.
      */
     private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
 
+    private CardView mCardView;
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
     private ImageView mTurnCardButton;
@@ -59,7 +59,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     private Query mCurrentCardQuery;
 
     private Card mCurrentCard;
-    private String mDeckId;
+    private Deck mDeck;
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -151,9 +151,8 @@ public class ShowCardsActivity extends AppCompatActivity {
      */
     private void getParameters() {
         Intent intent = getIntent();
-        mDeckId = intent.getStringExtra(DECK_ID);
-        String label = intent.getStringExtra(LABEL);
-        this.setTitle(label);
+        mDeck = intent.getParcelableExtra(DECK);
+        this.setTitle(mDeck.getName());
     }
 
     /**
@@ -174,7 +173,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
-                intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
+                intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeck.getdId());
                 intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
                 intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
                 startActivity(intentEdit);
@@ -185,7 +184,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
-                        Card.deleteCardFromDeck(mDeckId, mCurrentCard);
+                        Card.deleteCardFromDeck(mDeck.getdId(), mCurrentCard);
                         showNextCard();
                     }
                 });
@@ -208,6 +207,8 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Sets click listeners.
      */
     private void initViews() {
+        mCardView = (CardView) findViewById(R.id.card_view);
+
         mKnowButton = (FloatingActionButton) findViewById(R.id.to_know_button);
         mKnowButton.setOnClickListener(mOnClickListener);
 
@@ -228,12 +229,46 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Shows front side of the current card and appropriate buttons.
      */
     private void showFrontSide() {
+        setBackgrountCardColor();
         mFrontTextView.setText(mCurrentCard.getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
         mTurnCardButton.setVisibility(View.VISIBLE);
         mDelimiter.setVisibility(View.INVISIBLE);
+    }
+
+    private void setBackgrountCardColor() {
+        // Set default color
+        mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
+        if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {
+            if (mCurrentCard.getBack().startsWith("de ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("d ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("s ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+                return;
+            }
+        }
+        if (DeckType.GERMAN.name().equalsIgnoreCase(mDeck.getDeckType())) {
+            if (mCurrentCard.getBack().startsWith("der ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("die ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+                return;
+            }
+            if (mCurrentCard.getBack().startsWith("das ")) {
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+            }
+        }
+
     }
 
     /**
@@ -276,7 +311,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     private void updateCardInFirebase() {
-        Card.updateCard(mCurrentCard, mDeckId);
+        Card.updateCard(mCurrentCard, mDeck.getdId());
     }
 
     private void showNextCard() {
@@ -285,7 +320,7 @@ public class ShowCardsActivity extends AppCompatActivity {
             mCurrentCardQuery.removeEventListener(mCurrentCardListener);
         }
         // Get new card
-        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeckId);
+        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeck.getdId());
         // Attach listener to new card
         mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
     }

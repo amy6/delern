@@ -28,6 +28,7 @@ import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.ShowCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -69,6 +70,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         Deck newDeck = new Deck(input.getText().toString());
+                        newDeck.setDeckType(DeckType.BASIC.name().toLowerCase());
                         String key = Deck.createNewDeck(newDeck);
                         mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
@@ -122,16 +124,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             }
         };
 
-
+        mUsersDecksQuery = Deck.getUsersDecks();
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
-                DeckViewHolder.class, Deck.getUsersDecks());
+                DeckViewHolder.class, mUsersDecksQuery);
         mFirebaseAdapter.setContext(getContext());
         mFirebaseAdapter.setOnDeckViewHolderClick(mOnDeckViewHolderClick);
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        mUsersDecksQuery = Deck.getUsersDecks();
         if (mUsersDecksQuery != null) {
             mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
         }
@@ -158,8 +159,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     @Override
     public void doOnTextViewClick(final int position) {
-        final String deckId = mFirebaseAdapter.getRef(position).getKey();
-        startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deckId);
+        Deck deck = getDeckFromAdapter(position);
+        startShowCardActivity(deck);
     }
 
     /**
@@ -167,8 +168,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     @Override
     public void doOnRenameMenuClick(final int position) {
-        final Deck deck = mFirebaseAdapter.getItem(position);
-        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+        final Deck deck = getDeckFromAdapter(position);
         Log.v(TAG, deck.toString());
         final EditText input = new EditText(getActivity());
         AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
@@ -176,7 +176,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString());
-                Deck.renameDeck(deck);
+                Deck.updateDeck(deck);
             }
         });
         builder.show();
@@ -214,6 +214,17 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         builder.show();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doOnDeckTypeClick(final int position, final DeckType deckType) {
+        final Deck deck = getDeckFromAdapter(position);
+        deck.setDeckType(deckType.name().toLowerCase());
+        Deck.updateDeck(deck);
+    }
+
+
     private AlertDialog.Builder newOrUpdateDeckDialog(final Deck deck, final EditText input) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Deck");
@@ -237,10 +248,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         startActivity(intent);
     }
 
-    private void startShowCardActivity(final String label, final String deckId) {
+    private void startShowCardActivity(final Deck deck) {
         Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
-        intent.putExtra(ShowCardsActivity.DECK_ID, deckId);
-        intent.putExtra(ShowCardsActivity.LABEL, label);
+        intent.putExtra(ShowCardsActivity.DECK, deck);
         startActivity(intent);
+    }
+
+    private Deck getDeckFromAdapter(final int position) {
+        final Deck deck = mFirebaseAdapter.getItem(position);
+        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
+        return deck;
     }
 }
