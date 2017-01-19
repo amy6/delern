@@ -251,7 +251,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                 return;
             }
             if (mCurrentCard.getBack().startsWith("s ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
                 return;
             }
         }
@@ -265,7 +265,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                 return;
             }
             if (mCurrentCard.getBack().startsWith("das ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neutral));
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
             }
         }
 
