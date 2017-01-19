@@ -55,8 +55,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         mAddReversedCardCheckbox = (CheckBox) findViewById(R.id.add_reversed_card_checkbox);
         Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
+        mAddCardToDbButton.setOnClickListener(this);
         if (mCard == null) {
-            mAddCardToDbButton.setOnClickListener(this);
             mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
         } else {
             mAddCardToDbButton.setText(R.string.save);

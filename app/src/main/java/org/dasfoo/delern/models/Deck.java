@@ -1,5 +1,7 @@
 package org.dasfoo.delern.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +20,25 @@ import java.util.Map;
  */
 
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Deck {
+public class Deck implements Parcelable {
+
+    /**
+     * Classes implementing the Parcelable interface must also have a non-null static
+     * field called CREATOR of a type that implements the Parcelable.Creator interface.
+     * https://developer.android.com/reference/android/os/Parcelable.html
+     */
+    public static final Creator<Deck> CREATOR = new Creator<Deck>() {
+        @Override
+        public Deck createFromParcel(final Parcel in) {
+            return new Deck(in);
+        }
+
+        @Override
+        public Deck[] newArray(final int size) {
+            return new Deck[size];
+        }
+    };
+
     @Exclude
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
@@ -45,6 +65,12 @@ public class Deck {
      */
     public Deck(final String name) {
         this.name = name;
+    }
+
+    protected Deck(final Parcel in) {
+        dId = in.readString();
+        name = in.readString();
+        deckType = in.readString();
     }
 
     /**
@@ -173,6 +199,9 @@ public class Deck {
      * @return type of cards in deck.
      */
     public String getDeckType() {
+        if (deckType == null) {
+            return DeckType.BASIC.name().toLowerCase();
+        }
         return deckType;
     }
 
@@ -195,5 +224,23 @@ public class Deck {
                 ", name='" + name + '\'' +
                 ", deckType='" + deckType + '\'' +
                 '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeToParcel(final Parcel parcel, final int i) {
+        parcel.writeString(this.dId);
+        parcel.writeString(this.name);
+        parcel.writeString(this.deckType);
     }
 }

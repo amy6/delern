@@ -160,7 +160,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnTextViewClick(final int position) {
         Deck deck = getDeckFromAdapter(position);
-        startShowCardActivity(mFirebaseAdapter.getItem(position).getName(), deck);
+        startShowCardActivity(deck);
     }
 
     /**
@@ -248,14 +248,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         startActivity(intent);
     }
 
-    private void startShowCardActivity(final String label, final Deck deck) {
+    private void startShowCardActivity(final Deck deck) {
         Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
-        intent.putExtra(ShowCardsActivity.DECK_ID, deck.getdId());
-        intent.putExtra(ShowCardsActivity.LABEL, label);
-        if (deck.getDeckType() == null) {
-            deck.setDeckType(DeckType.BASIC.name().toLowerCase());
-        }
-        intent.putExtra(ShowCardsActivity.DECK_TYPE, deck.getDeckType());
+        intent.putExtra(ShowCardsActivity.DECK, deck);
         startActivity(intent);
     }
 
