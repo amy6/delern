@@ -71,7 +71,6 @@ public class ShowCardsActivity extends AppCompatActivity {
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
                             RepetitionIntervals.getJitter());
                     updateCardInFirebase();
-                    showNextCard();
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
@@ -79,7 +78,6 @@ public class ShowCardsActivity extends AppCompatActivity {
                             RepetitionIntervals.getInstance().getInterval(mCurrentCard.getLevel()) +
                             RepetitionIntervals.getJitter());
                     updateCardInFirebase();
-                    showNextCard();
                     break;
                 case R.id.turn_card_button:
                     showBackSide();
@@ -105,6 +103,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
+        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeck.getdId());
     }
 
     /**
@@ -135,7 +134,9 @@ public class ShowCardsActivity extends AppCompatActivity {
                 Log.e(TAG, databaseError.getMessage());
             }
         };
-        showNextCard();
+        // It listens to always the mCurrentCardQuery. If mCurrentCardQuery changes,
+        // onDataChange executes and initializes mCurrentCard.
+        mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
     }
 
     @Override
@@ -185,7 +186,6 @@ public class ShowCardsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         Card.deleteCardFromDeck(mDeck.getdId(), mCurrentCard);
-                        showNextCard();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -312,16 +312,5 @@ public class ShowCardsActivity extends AppCompatActivity {
 
     private void updateCardInFirebase() {
         Card.updateCard(mCurrentCard, mDeck.getdId());
-    }
-
-    private void showNextCard() {
-        // Before getting new card, we detach listener from old card.
-        if (mCurrentCardQuery != null) {
-            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
-        }
-        // Get new card
-        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeck.getdId());
-        // Attach listener to new card
-        mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
     }
 }
