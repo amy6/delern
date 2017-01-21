@@ -167,7 +167,7 @@ public class DelernMainActivity extends AppCompatActivity
         TextView userName = (TextView) hView.findViewById(R.id.user_name);
         TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = User.getCurrentUser();
         if (user != null) {
             userName.setText(user.getDisplayName());
             userEmail.setText(user.getEmail());
