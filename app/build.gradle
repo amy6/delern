@@ -46,6 +46,7 @@ project.afterEvaluate {
 
 ext {
     git = org.ajoberstar.grgit.Grgit.open()
+    // Alternatively: grgit.log(includes:['HEAD']).size()
     gitVersionCode = git.tag.list().size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     firebaseVersion = "10.0.1"
@@ -110,6 +111,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
+
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
@@ -118,6 +120,7 @@ dependencies {
     compile "com.google.android.gms:play-services-appinvite:$firebaseVersion"
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
     compile "com.google.firebase:firebase-crash:$firebaseVersion"
+
     compile "com.firebaseui:firebase-ui-database:1.0.0"
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
