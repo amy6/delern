@@ -146,11 +146,9 @@ public class ShowCardsActivity extends AppCompatActivity {
                     mCurrentCard = cardSnapshot.getValue(Card.class);
                     mCurrentCard.setcId(cardSnapshot.getKey());
                 }
+                showFrontSide();
                 if (mBackIsShown) {
-                    showFrontSide();
                     showBackSide();
-                } else {
-                    showFrontSide();
                 }
             }
 

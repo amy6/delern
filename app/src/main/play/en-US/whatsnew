@@ -1,3 +1,1 @@
-Supports different decks for learning German and Swiss German. Cards with different genus have
-different colors.
-Buttons design is changed. Actions have better visibility.
+Fixed bug with rotation learning cards activity and returning from previous activity.
