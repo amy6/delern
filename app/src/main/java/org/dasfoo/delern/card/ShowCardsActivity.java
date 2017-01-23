@@ -48,6 +48,11 @@ public class ShowCardsActivity extends AppCompatActivity {
      */
     private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
 
+    /**
+     * Key for saving onSaveInstanceState.
+     */
+    private static final String BACK_IS_SHOWN = "back";
+
     private CardView mCardView;
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
@@ -57,6 +62,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     private View mDelimiter;
     private ValueEventListener mCurrentCardListener;
     private Query mCurrentCardQuery;
+    private boolean mBackIsShown;
 
     private Card mCurrentCard;
     private Deck mDeck;
@@ -71,6 +77,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
                             RepetitionIntervals.getJitter());
                     updateCardInFirebase();
+                    mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
                     mCurrentCard.setLevel(Level.L0.name());
@@ -78,6 +85,7 @@ public class ShowCardsActivity extends AppCompatActivity {
                             RepetitionIntervals.getInstance().getInterval(mCurrentCard.getLevel()) +
                             RepetitionIntervals.getJitter());
                     updateCardInFirebase();
+                    mBackIsShown = false;
                     break;
                 case R.id.turn_card_button:
                     showBackSide();
@@ -96,6 +104,9 @@ public class ShowCardsActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_cards_activity);
+        if (savedInstanceState != null) {
+            mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -104,6 +115,15 @@ public class ShowCardsActivity extends AppCompatActivity {
         getParameters();
         initViews();
         mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeck.getdId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BACK_IS_SHOWN, mBackIsShown);
     }
 
     /**
@@ -126,7 +146,12 @@ public class ShowCardsActivity extends AppCompatActivity {
                     mCurrentCard = cardSnapshot.getValue(Card.class);
                     mCurrentCard.setcId(cardSnapshot.getKey());
                 }
-                showFrontSide();
+                if (mBackIsShown) {
+                    showFrontSide();
+                    showBackSide();
+                } else {
+                    showFrontSide();
+                }
             }
 
             @Override
@@ -290,6 +315,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
+        mBackIsShown = true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
