@@ -1,1 +1,1 @@
-Fixed bug with rotation learning cards activity and returning from previous activity.
+Don't paint the cards which have a comma in them

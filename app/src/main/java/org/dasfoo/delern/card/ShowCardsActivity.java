@@ -252,7 +252,7 @@ public class ShowCardsActivity extends AppCompatActivity {
      * Shows front side of the current card and appropriate buttons.
      */
     private void showFrontSide() {
-        setBackgrountCardColor();
+        setBackgroundCardColor();
         mFrontTextView.setText(mCurrentCard.getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
@@ -261,37 +261,54 @@ public class ShowCardsActivity extends AppCompatActivity {
         mDelimiter.setVisibility(View.INVISIBLE);
     }
 
-    private void setBackgrountCardColor() {
+    private void setBackgroundCardColor() {
         // Set default color
         mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
+        if (mCurrentCard.getBack().contains(",")) {
+            return;
+        }
         if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            if (mCurrentCard.getBack().startsWith("de ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-                return;
-            }
-            if (mCurrentCard.getBack().startsWith("d ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-                return;
-            }
-            if (mCurrentCard.getBack().startsWith("s ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
-                return;
-            }
+            setSwissBackgroundColor();
+            return;
         }
         if (DeckType.GERMAN.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            if (mCurrentCard.getBack().startsWith("der ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-                return;
-            }
-            if (mCurrentCard.getBack().startsWith("die ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-                return;
-            }
-            if (mCurrentCard.getBack().startsWith("das ")) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
-            }
+            setGermanBackgroundColor();
         }
 
+    }
+
+    /**
+     * Sets background colors for swissgerman cards.
+     */
+    private void setSwissBackgroundColor() {
+        if (mCurrentCard.getBack().startsWith("de ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+            return;
+        }
+        if (mCurrentCard.getBack().startsWith("d ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+            return;
+        }
+        if (mCurrentCard.getBack().startsWith("s ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
+        }
+    }
+
+    /**
+     * Sets background colors for german cards.
+     */
+    private void setGermanBackgroundColor() {
+        if (mCurrentCard.getBack().startsWith("der ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+            return;
+        }
+        if (mCurrentCard.getBack().startsWith("die ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+            return;
+        }
+        if (mCurrentCard.getBack().startsWith("das ")) {
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
+        }
     }
 
     /**
