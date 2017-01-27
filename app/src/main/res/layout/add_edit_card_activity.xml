@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context="org.dasfoo.delern.card.AddEditCardActivity">
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/front_side_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/back_side_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <CheckBox
-            android:text="@string/add_reversed_card_checkbox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/add_reversed_card_checkbox"
-            android:layout_margin="@dimen/elemets_marging"/>
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
-        <Button
-            android:id="@+id/add_card_to_db"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_button_string"
-            android:layout_margin="@dimen/elemets_marging"/>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/front_side_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/back_side_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/add_reversed_card_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/elemets_marging"
+                android:text="@string/add_reversed_card_checkbox" />
 
-</android.support.design.widget.CoordinatorLayout>
+            <Button
+                android:id="@+id/add_card_to_db"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/elemets_marging"
+                android:text="@string/add_button_string" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
