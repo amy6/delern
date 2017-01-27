@@ -32,6 +32,8 @@ import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
+import java.util.Map;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -93,9 +95,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to { Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
+     * {@inheritDoc}
      */
     @Override
     public void onStart() {
@@ -139,9 +139,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Called when the Fragment is no longer started.  This is generally
-     * tied to { Activity#onStop() Activity.onStop} of the containing
-     * Activity's lifecycle.
+     * {@inheritDoc}
      */
     @Override
     public void onStop() {
@@ -151,6 +149,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             Log.v(TAG, "User is not signed in");
         } else {
             mUsersDecksQuery.removeEventListener(mProgressBarListener);
+        }
+        // Detach listener from DeckRecyclerViewAdapter for counting cards in deck.
+        Map<Query, ValueEventListener> map = mFirebaseAdapter.getQueryListenerMap();
+        for (Query query: map.keySet()) {
+            query.removeEventListener(map.get(query));
         }
     }
 

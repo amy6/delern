@@ -15,6 +15,9 @@ import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Created by katarina on 11/19/16.
  */
@@ -25,6 +28,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
     private Context mContext;
+    private final Map<Query, ValueEventListener> mQueryListenerMap = new ConcurrentHashMap<>();
 
     /**
      * @param modelClass      Firebase will marshall the data at a location into an instance
@@ -52,20 +56,21 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.setDeckCardType(deck.getDeckType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
-        // TODO(ksheremet): unregister somewhere
-        Card.fetchCardsFromDeckToRepeat(getRef(position).getKey()).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        viewHolder.getCountToLearnTextView().setText(String.valueOf(
-                                dataSnapshot.getChildrenCount()));
-                    }
+        ValueEventListener deckEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                viewHolder.getCountToLearnTextView().setText(String.valueOf(
+                        dataSnapshot.getChildrenCount()));
+            }
 
-                    @Override
-                    public void onCancelled(final DatabaseError databaseError) {
-                        Log.v(TAG, databaseError.getMessage());
-                    }
-                });
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.v(TAG, databaseError.getMessage());
+            }
+        };
+        Query query = Card.fetchCardsFromDeckToRepeat(getRef(position).getKey());
+        query.addValueEventListener(deckEventListener);
+        mQueryListenerMap.put(query, deckEventListener);
     }
 
     /**
@@ -84,5 +89,15 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      */
     public void setContext(final Context context) {
         this.mContext = context;
+    }
+
+    /**
+     * Getter for map of queries and listeners to this queries. Every listener has to be detached.
+     * https://firebase.google.com/docs/database/android/read-and-write
+     *
+     * @return map of query and listeners
+     */
+    public Map<Query, ValueEventListener> getQueryListenerMap() {
+        return mQueryListenerMap;
     }
 }
