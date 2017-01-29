@@ -47,7 +47,7 @@ project.afterEvaluate {
 ext {
     git = org.ajoberstar.grgit.Grgit.open()
     // Alternatively: grgit.log(includes:['HEAD']).size()
-    gitVersionCode = git.tag.list().size()
+    gitVersionCode = git.tag.list().size() + 20
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     firebaseVersion = "10.0.1"
     sdkVersion = 25
