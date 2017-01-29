@@ -30,21 +30,24 @@ dependencies:
   - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-google_apis-19
   # For lint to be able to detect deprecated API.
   - echo y | android update sdk --no-ui --all --filter platform-tools
+  # Local firebase server for instrumented tests.
+  - npm install firebase-server
+  - node node_modules/.bin/firebase-server -p 5533 -v:
+      background: true
 
 test:
   pre:
-  # TODO(dotdoom): consider -PdisablePreDex.
-  - ./gradlew lintDebug testDebugUnitTest assembleDebug assembleDebugAndroidTest --console=plain
   - echo no | android create avd --force -n test -t android-19 --abi google_apis/armeabi-v7a
-  - emulator -avd test -no-audio -no-window:
+  # Raise memory for the emulator.
+  - sed -i 's/^hw.ramSize=.*/hw.ramSize=1024/' ~/.android/avd/test.avd/config.ini
+  - ./gradlew lintNormalDebug testNormalDebugUnitTest assembleInstrumentedLocalRelease assembleInstrumentedLocalReleaseAndroidTest --console=plain
+  - emulator -avd test -no-window:
       background: true
   - circle-android wait-for-boot
-  # Not ideal, but gives an emulator some time to ramp up (especially slow due to google_apis).
-  - sleep 60s
+  # Not ideal, but lets the emulator ramp up (especially slow because of google_apis).
+  - sleep 120s
   override:
-  # Not "build connectedCheck" because these targets will involve Release, which is not available
-  # due to lack of signing keystore at this stage.
-  - GRADLE_OPTS=-Xmx256m ./gradlew connectedDebugAndroidTest --console=plain
+  - GRADLE_OPTS=-Xmx256m ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
   post:
   - adb logcat -d >"${CIRCLE_ARTIFACTS?}"/logcat.txt
   # Kill running emulator to free up resources for e.g. Release build.
@@ -52,7 +55,7 @@ test:
   # Instrumental tests do not output XML (because they are not junit?). See also:
   # http://stackoverflow.com/questions/2178870/how-to-generate-android-testing-report-in-html-automatically.
   # TODO(dotdoom): figure out how to make instrumental tests and linter results more visible.
-  - mv app/build/test-results/debug "${CIRCLE_TEST_REPORTS?}"
+  - mv app/build/test-results/normalDebug "${CIRCLE_TEST_REPORTS?}"
 
 deployment:
   release:
@@ -62,29 +65,29 @@ deployment:
     # https://circleci.com/docs/google-auth/
     # `sudo -i` to prevent gcloud from creating logs directory in our $HOME with root:root owner.
     - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components update
-    - echo $GCLOUD_SERVICE_KEY | base64 --decode > app/play-store-service-account.json
-    - gcloud auth activate-service-account --key-file app/play-store-service-account.json
-    # Run unit tests for Release locally.
-    # http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Basics-and-Configuration
-    - ./gradlew lintRelease testReleaseUnitTest --console=plain
-    - mv app/build/test-results/release "${CIRCLE_TEST_REPORTS?}"
-    # https://circleci.com/docs/firebase-test-lab/
     - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components install beta
+    - echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
+    - gcloud auth activate-service-account --key-file app/play-store-service-account.json
+    - gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
+    # https://circleci.com/docs/firebase-test-lab/
+    - ./gradlew assembleInstrumentedRemoteRelease assembleInstrumentedRemoteReleaseAndroidTest --console=plain
     - >
-        gcloud --project=delern-e1b33 beta test android run
-        --app app/build/outputs/apk/app-debug.apk
-        --test app/build/outputs/apk/app-debug-androidTest.apk
+        gcloud --project=delern-debug beta test android run
+        --app app/build/outputs/apk/app-instrumentedRemote-release.apk
+        --test app/build/outputs/apk/app-instrumentedRemote-release-androidTest.apk
         --results-bucket delern-test-results
     # Also run Robo tests: https://firebase.google.com/docs/test-lab/robo-ux-test
     - gsutil cp gs://dasfoo-keystore/delern.jks app
-    - ./gradlew assembleRelease --console=plain
+    - ./gradlew lintNormalRelease assembleNormalRelease --console=plain
     - >
         gcloud --project=delern-e1b33 beta test android run
-        --app app/build/outputs/apk/app-release.apk
+        --app app/build/outputs/apk/app-normal-release.apk
         --results-bucket delern-test-results
     # Publish to Google Play.
-    - ./gradlew publishRelease --console=plain
+    - ./gradlew publishNormalRelease --console=plain
     # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
-    - echo $FIREBASE_SERVICE_KEY | base64 --decode > app/firebase-service-account.json
+    - echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
     # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
-    - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadReleaseProguardMapping --console=plain
+    - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadNormalReleaseProguardMapping --console=plain
+
+

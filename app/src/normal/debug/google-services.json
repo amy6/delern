@@ -1,0 +1,123 @@
+{
+  "project_info": {
+    "project_number": "90374592783",
+    "firebase_url": "https://delern-debug.firebaseio.com",
+    "project_id": "delern-debug",
+    "storage_bucket": "delern-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90374592783:android:ce5a1461c9dc123b",
+        "android_client_info": {
+          "package_name": "org.dasfoo.delern.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90374592783-h4brnp3b5vl9br1dk2js2oiv54ck7nf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.debug",
+            "certificate_hash": "B9AED4717D63C42C4F99E39DAF0501F6F2E37F68"
+          }
+        },
+        {
+          "client_id": "90374592783-p5mc0kck64fpcil4eo94m7m7h51ob75d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.debug",
+            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
+          }
+        },
+        {
+          "client_id": "90374592783-rm5983jsqlpbd6onh17dpk4aev283nnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD46LE2aCllbWC5aAoeM10JEQvZEVoUgU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90374592783-rm5983jsqlpbd6onh17dpk4aev283nnv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90374592783:android:151c5b7dbe3798a0",
+        "android_client_info": {
+          "package_name": "org.dasfoo.delern.instrumented"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90374592783-40vcud523tulat61m2cuhc1aeu3hs44g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.instrumented",
+            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
+          }
+        },
+        {
+          "client_id": "90374592783-et3ffa60117jp0b3jkcvqfrtod0h2141.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.instrumented",
+            "certificate_hash": "B9AED4717D63C42C4F99E39DAF0501F6F2E37F68"
+          }
+        },
+        {
+          "client_id": "90374592783-elptceresdbv15j3p05e80io6r2f000t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.instrumented",
+            "certificate_hash": "1A9E4CB3B8509A41C26A5025A76CEF55293CAD51"
+          }
+        },
+        {
+          "client_id": "90374592783-rm5983jsqlpbd6onh17dpk4aev283nnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD46LE2aCllbWC5aAoeM10JEQvZEVoUgU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90374592783-rm5983jsqlpbd6onh17dpk4aev283nnv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

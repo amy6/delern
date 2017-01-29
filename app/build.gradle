@@ -57,6 +57,8 @@ ext {
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion "${sdkVersion}.0.1"
+    testBuildType "release"
+
     signingConfigs {
         release {
             storeFile file("delern.jks")
@@ -77,7 +79,6 @@ android {
         release {
             minifyEnabled true
             // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
             play {
@@ -87,11 +88,43 @@ android {
             }
         }
         debug {
+            signingConfig signingConfigs.debug
             // https://developers.google.com/android/guides/google-services-plugin
             applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
+        }
+    }
+    productFlavors {
+        normal {
+            signingConfig signingConfigs.release
+        }
+        instrumentedLocal {
+            // A flavor for running instrumented tests inside Circle CI, e.g. for external
+            // Pull Requests, where a real keystore is not available. APK is therefore signed
+            // by a key from a locally-generated debug.keystore, and doesn't have access to a real
+            // Firebase server. It will require a local Firebase to be running, the application
+            // should use Anonymous auth to skip the login intent.
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.instrumented'
+            versionNameSuffix '-instrumented-local'
+        }
+        instrumentedRemote {
+            // A flavor for running instrumented tests in the Firebase Test Lab (which is only used
+            // on Release phase). APK is signed by a key with an access to a real (but debug-only)
+            // Firebase project, the application should use Anonymous auth to skip the login intent.
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.instrumented'
+            versionNameSuffix '-instrumented-remote'
+        }
+    }
+    variantFilter { variant ->
+        if (variant.buildType.name == "debug") {
+            // For "debug" we don't need instrumented flavors, because we want to run instrumented
+            // tests with ProGuard.
+            variant.ignore = !variant.flavors*.name.contains("normal")
         }
     }
     lintOptions {
@@ -128,6 +161,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
