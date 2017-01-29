@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -93,13 +92,13 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static Query getUsersDecks() {
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (User.getCurrentUser() == null) {
             Log.v(TAG, "User is not signed in");
             return null;
         } else {
             return getFirebaseDecksRef()
                     .orderByChild(USER)
-                    .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    .equalTo(User.getCurrentUser().getUid());
         }
 
     }
@@ -152,7 +151,7 @@ public class Deck implements Parcelable {
         getFirebaseDecksRef()
                 .child(deckKey)
                 .child(USER)
-                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .setValue(User.getCurrentUser().getUid());
     }
 
     /**

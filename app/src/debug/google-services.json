@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "90374592783-g8d1tra0lkhep22kmk9qerm97v5nbtjm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.debug",
+            "certificate_hash": "1A9E4CB3B8509A41C26A5025A76CEF55293CAD51"
+          }
+        },
+        {
           "client_id": "90374592783-h4brnp3b5vl9br1dk2js2oiv54ck7nf6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
