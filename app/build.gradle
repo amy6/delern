@@ -77,8 +77,9 @@ android {
         release {
             minifyEnabled true
             // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
             play {
                 track = 'alpha'
                 jsonFile = file('play-store-service-account.json')
@@ -121,7 +122,7 @@ dependencies {
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
     compile "com.google.firebase:firebase-crash:$firebaseVersion"
 
-    compile "com.firebaseui:firebase-ui-database:1.0.0"
+    compile 'com.firebaseui:firebase-ui-database:1.0.0'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
