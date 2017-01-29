@@ -66,7 +66,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 // Set up the input
                 final EditText input = new EditText(getActivity());
                 AlertDialog.Builder builder = newOrUpdateDeckDialog(new Deck(), input);
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         Deck newDeck = new Deck(input.getText().toString());
