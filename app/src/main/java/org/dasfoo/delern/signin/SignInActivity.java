@@ -49,22 +49,7 @@ public class SignInActivity extends AppCompatActivity
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
-        // Assign fields
-        SignInButton mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        // Set click listeners
-        mSignInButton.setOnClickListener(this);
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
-                GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(
-                        this /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+
         // AuthStateListener that responds to changes in the user's sign-in state
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -83,6 +68,42 @@ public class SignInActivity extends AppCompatActivity
                 }
             }
         };
+
+        if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
+            // Force logging by using Log.e because ProGuard removes Log.w.
+            Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
+            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this,
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull final Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                startActivity(new Intent(SignInActivity.this,
+                                        DelernMainActivity.class));
+                                finish();
+                            } else {
+                                Log.e(TAG, task.toString(), task.getException());
+                            }
+                        }
+                    });
+            return;
+        }
+
+        // Assign fields
+        SignInButton mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        // Set click listeners
+        mSignInButton.setOnClickListener(this);
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(
+                        this /* FragmentActivity */,
+                        this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
     }
 
     /**

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1234567890",
+    "firebase_url": "ws://10.0.2.2:5533",
+    "project_id": "example",
+    "storage_bucket": "example.org"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "example",
+        "android_client_info": {
+          "package_name": "org.dasfoo.delern.instrumented"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "example",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD46LE2aCllbWC5aAoeM10JEQvZEVoUgU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "example",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
