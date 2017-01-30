@@ -21,6 +21,7 @@ dependencies:
   # Take this text from the Android SDK directory on your machine.
   - echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
   post:
+  - sudo apt update; sudo apt install -y xsltproc
   # For emulator. Cannot use x86 w/o HW acceleration, which is only provided by KVM.
   # Keep in sync with the SDK version. To list all supported images:
   # $ cd android-sdk-linux; tools/android list sdk --extended --all
@@ -41,6 +42,9 @@ test:
   # Raise memory for the emulator.
   - sed -i 's/^hw.ramSize=.*/hw.ramSize=1024/' ~/.android/avd/test.avd/config.ini
   - ./gradlew lintNormalDebug testNormalDebugUnitTest assembleInstrumentedLocalRelease assembleInstrumentedLocalReleaseAndroidTest --console=plain
+  # Have to keep the directory for CircleCI to correctly identify the tests.
+  - mkdir "${CIRCLE_TEST_REPORTS?}"/lint
+  - xsltproc app/config/lint-junit.xslt app/build/outputs/lint-results-normalDebug.xml >"${CIRCLE_TEST_REPORTS?}"/lint/results.xml
   - emulator -avd test -no-window:
       background: true
   - circle-android wait-for-boot
@@ -87,5 +91,3 @@ deployment:
     - echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
     # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
     - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadNormalReleaseProguardMapping --console=plain
-
-
