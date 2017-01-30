@@ -93,9 +93,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to { Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
+     * {@inheritDoc}
      */
     @Override
     public void onStart() {
@@ -139,9 +137,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     /**
-     * Called when the Fragment is no longer started.  This is generally
-     * tied to { Activity#onStop() Activity.onStop} of the containing
-     * Activity's lifecycle.
+     * {@inheritDoc}
      */
     @Override
     public void onStop() {
@@ -152,6 +148,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         } else {
             mUsersDecksQuery.removeEventListener(mProgressBarListener);
         }
+        mFirebaseAdapter.cleanup();
     }
 
     /**

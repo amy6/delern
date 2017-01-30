@@ -1,2 +1,3 @@
-Don't paint the cards which have a comma in them.
-Make Add/Edit Layout scrollable.
+* Don't paint the cards which have a comma in them.
+* Make Add/Edit Layout scrollable.
+* Performance for learning cards is improved.
