@@ -52,10 +52,8 @@ test:
   - adb logcat -d >"${CIRCLE_ARTIFACTS?}"/logcat.txt
   # Kill running emulator to free up resources for e.g. Release build.
   - adb -s emulator-5554 emu kill
-  # Instrumental tests do not output XML (because they are not junit?). See also:
-  # http://stackoverflow.com/questions/2178870/how-to-generate-android-testing-report-in-html-automatically.
-  # TODO(dotdoom): figure out how to make instrumental tests and linter results more visible.
-  - mv app/build/test-results/normalDebug "${CIRCLE_TEST_REPORTS?}"
+  - mv app/build/test-results "${CIRCLE_TEST_REPORTS?}"
+  - mv app/build/outputs/androidTest-results "${CIRCLE_TEST_REPORTS?}"
 
 deployment:
   release:
