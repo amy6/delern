@@ -3,6 +3,7 @@ package org.dasfoo.delern;
 import android.app.Application;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created by katarina on 12/5/16.
@@ -23,6 +24,12 @@ public class DelernApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         /* Firebase apps automatically handle temporary network interruptions. Cached data will
         still be available while offline and your writes will be resent when network connectivity is
         recovered. Enabling disk persistence allows our app to also keep all of its state even after
