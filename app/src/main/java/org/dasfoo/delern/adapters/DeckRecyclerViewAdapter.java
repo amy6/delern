@@ -74,6 +74,18 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cleanup() {
+        super.cleanup();
+        for (Map.Entry<Query, ValueEventListener> entry: mQueryListenerMap.entrySet()) {
+            entry.getKey().removeEventListener(entry.getValue());
+        }
+        mQueryListenerMap.clear();
+    }
+
+    /**
      * Set deck view holder click handler.
      *
      * @param onDeckViewHolderClick deck view holder click handler
@@ -91,13 +103,5 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         this.mContext = context;
     }
 
-    /**
-     * Getter for map of queries and listeners to this queries. Every listener has to be detached.
-     * https://firebase.google.com/docs/database/android/read-and-write
-     *
-     * @return map of query and listeners
-     */
-    public Map<Query, ValueEventListener> getQueryListenerMap() {
-        return mQueryListenerMap;
-    }
+
 }
