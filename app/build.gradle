@@ -97,6 +97,8 @@ android {
             //   debuggable false
         }
     }
+    // Have to use flavors instead of buildTypes because testBuildType can only
+    // be set to a single buildType, which fortunately can have multiple flavors.
     productFlavors {
         normal {
             signingConfig signingConfigs.release
