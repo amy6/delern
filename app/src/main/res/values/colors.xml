@@ -5,6 +5,7 @@
     <color name="colorAccent">#CDDC39</color>
     <color name="colorPrimaryLight">#DCEDC8</color>
     <color name="colorPrimaryText">#212121</color>
+    <color name="toolbarIconColor">#f7f7f7</color>
     <color name="dontKnowButton">#F44336</color>
     <color name="grey_tint">#787575</color>
     <color name="feminine">#d1f2729b</color>
