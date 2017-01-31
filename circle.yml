@@ -90,4 +90,5 @@ deployment:
     # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
     - echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
     # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
+    - ln -sf $PWD/app/src/normal/release/google-services.json app/google-services.json
     - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadNormalReleaseProguardMapping --console=plain
