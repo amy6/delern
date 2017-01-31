@@ -74,7 +74,7 @@ android {
         targetSdkVersion sdkVersion
         versionCode gitVersionCode
         versionName gitVersionName
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'org.dasfoo.delern.TestButlerEnabledRunner'
     }
     buildTypes {
         release {
@@ -169,6 +169,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.linkedin.testbutler:test-butler-library:1.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
