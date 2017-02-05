@@ -71,8 +71,10 @@ deployment:
     # `sudo -i` to prevent gcloud from creating logs directory in our $HOME with root:root owner.
     - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components update
     - sudo -i /opt/google-cloud-sdk/bin/gcloud --quiet components install beta
-    - echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/build/play-store-service-account.json
-    - gcloud auth activate-service-account --key-file app/build/play-store-service-account.json
+    # We use this account to access both Google Play account and GCS.
+    # The former requires it to be in "app" subdirectory.
+    - echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
+    - gcloud auth activate-service-account --key-file app/play-store-service-account.json
     - gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
     # https://circleci.com/docs/firebase-test-lab/
     - ./gradlew -PdisablePreDex assembleInstrumentedRemoteRelease assembleInstrumentedRemoteReleaseAndroidTest --console=plain
@@ -91,7 +93,7 @@ deployment:
     # Publish to Google Play.
     - ./gradlew publishNormalRelease --console=plain
     # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
-    - echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/build/firebase-service-account.json
+    - echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
     # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
     - ln -sf $PWD/app/src/normal/release/google-services.json app/google-services.json
-    - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/build/firebase-service-account.json app:firebaseUploadNormalReleaseProguardMapping --console=plain
+    - ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json app:firebaseUploadNormalReleaseProguardMapping --console=plain

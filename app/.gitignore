@@ -1,4 +1,11 @@
 /build
+
 # A symlink to release google-services.json created during a CI build
 # because Firebase ProGuard mapping uploader can only find it here.
 /google-services.json
+
+# Google Cloud service account credentials with access to Google Play and GCS.
+/play-store-service-account.json
+
+# Firebase account credentials to upload ProGuard mapping.
+/firebase-service-account.json
