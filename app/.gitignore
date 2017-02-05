@@ -1,1 +1,4 @@
 /build
+# A symlink to release google-services.json created during a CI build
+# because Firebase ProGuard mapping uploader can only find it here.
+/google-services.json

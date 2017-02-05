@@ -39,8 +39,5 @@ captures/
 # Keystore files
 *.jks
 
-# Google Cloud service account credentials with access to Google Play Store
-/app/play-store-service-account.json
-
 # Temporary files (normally from the CI)
 nohup.out
