@@ -41,7 +41,8 @@ test:
   - echo no | android create avd --force -n test -t android-19 --abi google_apis/armeabi-v7a
   # Raise memory for the emulator.
   - sed -i 's/^hw.ramSize=.*/hw.ramSize=1024/' ~/.android/avd/test.avd/config.ini
-  - ./gradlew lintNormalDebug testNormalDebugUnitTest assembleInstrumentedLocalRelease assembleInstrumentedLocalReleaseAndroidTest --console=plain
+  # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+  - ./gradlew -PdisablePreDex lintNormalDebug testNormalDebugUnitTest assembleInstrumentedLocalRelease assembleInstrumentedLocalReleaseAndroidTest --console=plain
   # Have to keep the directory for CircleCI to correctly identify the tests.
   - mkdir "${CIRCLE_TEST_REPORTS?}"/lint
   - xsltproc app/config/lint-junit.xslt app/build/outputs/lint-results-normalDebug.xml >"${CIRCLE_TEST_REPORTS?}"/lint/results.xml
@@ -74,7 +75,7 @@ deployment:
     - gcloud auth activate-service-account --key-file app/play-store-service-account.json
     - gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
     # https://circleci.com/docs/firebase-test-lab/
-    - ./gradlew assembleInstrumentedRemoteRelease assembleInstrumentedRemoteReleaseAndroidTest --console=plain
+    - ./gradlew -PdisablePreDex assembleInstrumentedRemoteRelease assembleInstrumentedRemoteReleaseAndroidTest --console=plain
     - >
         gcloud --project=delern-debug beta test android run
         --app app/build/outputs/apk/app-instrumentedRemote-release.apk
@@ -82,7 +83,7 @@ deployment:
         --results-bucket delern-test-results
     # Also run Robo tests: https://firebase.google.com/docs/test-lab/robo-ux-test
     - gsutil cp gs://dasfoo-keystore/delern.jks app
-    - ./gradlew lintNormalRelease assembleNormalRelease --console=plain
+    - ./gradlew -PdisablePreDex lintNormalRelease assembleNormalRelease --console=plain
     - >
         gcloud --project=delern-e1b33 beta test android run
         --app app/build/outputs/apk/app-normal-release.apk
