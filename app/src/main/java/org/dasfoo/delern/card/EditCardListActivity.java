@@ -86,6 +86,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     protected void onStop() {
         super.onStop();
         mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        mFirebaseAdapter.cleanup();
     }
 
     /**

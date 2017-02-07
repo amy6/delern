@@ -93,4 +93,9 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
             return new CardRecyclerViewAdapter(this);
         }
     }
+
+    @Override
+    public void cleanup() {
+        super.cleanup();
+    }
 }
