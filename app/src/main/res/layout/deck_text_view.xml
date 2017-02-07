@@ -32,7 +32,7 @@
         android:layout_gravity="center"
         android:layout_weight="0.1"
         android:contentDescription="@string/deck_menu_description"
-        app:srcCompat="@drawable/ic_more_vert" />
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 </LinearLayout>
 
