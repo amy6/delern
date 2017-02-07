@@ -51,24 +51,18 @@ public class PreEditCardActivity extends AppCompatActivity {
     private TextView mFrontPreview;
     private TextView mBackPreview;
     private Query mCardQuery;
+    private String mLabel;
+    private String mCardId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pre_edit_card_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        Intent intent = getIntent();
-        String label = intent.getStringExtra(LABEL);
-        mDeckId = intent.getStringExtra(DECK_ID);
-        String cardId = intent.getStringExtra(CARD_ID);
-        mCardQuery = Card.getCardById(mDeckId, cardId);
-
-        this.setTitle(label);
+        configureToolbar();
+        getInputVariables();
+        mCardQuery = Card.getCardById(mDeckId, mCardId);
+        this.setTitle(mLabel);
         mFrontPreview = (TextView) findViewById(R.id.textFrontPreview);
         mBackPreview = (TextView) findViewById(R.id.textBackPreview);
 
@@ -79,6 +73,21 @@ public class PreEditCardActivity extends AppCompatActivity {
                 editCardActivityStart();
             }
         });
+    }
+
+    private void getInputVariables() {
+        Intent intent = getIntent();
+        mLabel = intent.getStringExtra(LABEL);
+        mDeckId = intent.getStringExtra(DECK_ID);
+        mCardId = intent.getStringExtra(CARD_ID);
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
