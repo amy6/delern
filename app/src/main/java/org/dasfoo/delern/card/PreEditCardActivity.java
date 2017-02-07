@@ -47,47 +47,24 @@ public class PreEditCardActivity extends AppCompatActivity {
 
     private String mDeckId;
     private Card mCard;
+    private ValueEventListener mCardValueEventListener;
+    private TextView mFrontPreview;
+    private TextView mBackPreview;
+    private Query mCardQuery;
+    private String mLabel;
+    private String mCardId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pre_edit_card_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        Intent intent = getIntent();
-        String label = intent.getStringExtra(LABEL);
-        mDeckId = intent.getStringExtra(DECK_ID);
-        String cardId = intent.getStringExtra(CARD_ID);
-
-        this.setTitle(label);
-        final TextView frontPreview = (TextView) findViewById(R.id.textFrontPreview);
-        final TextView backPreview = (TextView) findViewById(R.id.textBackPreview);
-
-        Query query = Card.getCardById(mDeckId, cardId);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                Card card;
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    Log.v(TAG, cardSnapshot.toString());
-                    card = cardSnapshot.getValue(Card.class);
-                    card.setcId(cardSnapshot.getKey());
-                    Log.v(TAG, card.toString());
-                    frontPreview.setText(card.getFront());
-                    backPreview.setText(card.getBack());
-                    mCard = card;
-                }
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                Log.v(TAG, databaseError.getMessage());
-            }
-        });
+        configureToolbar();
+        getInputVariables();
+        mCardQuery = Card.getCardById(mDeckId, mCardId);
+        this.setTitle(mLabel);
+        mFrontPreview = (TextView) findViewById(R.id.textFrontPreview);
+        mBackPreview = (TextView) findViewById(R.id.textBackPreview);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +73,51 @@ public class PreEditCardActivity extends AppCompatActivity {
                 editCardActivityStart();
             }
         });
+    }
+
+    private void getInputVariables() {
+        Intent intent = getIntent();
+        mLabel = intent.getStringExtra(LABEL);
+        mDeckId = intent.getStringExtra(DECK_ID);
+        mCardId = intent.getStringExtra(CARD_ID);
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCardValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                Card card;
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    card = cardSnapshot.getValue(Card.class);
+                    card.setcId(cardSnapshot.getKey());
+                    mFrontPreview.setText(card.getFront());
+                    mBackPreview.setText(card.getBack());
+                    mCard = card;
+                }
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.v(TAG, databaseError.getMessage());
+            }
+        };
+        mCardQuery.addValueEventListener(mCardValueEventListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mCardQuery.removeEventListener(mCardValueEventListener);
     }
 
     private void editCardActivityStart() {
