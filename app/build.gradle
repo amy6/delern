@@ -75,6 +75,10 @@ android {
         versionCode gitVersionCode
         versionName gitVersionName
         testInstrumentationRunner 'org.dasfoo.delern.TestButlerEnabledRunner'
+        // The VectorDrawableCompat class in the Support Library allows you
+        // to support VectorDrawable in Android 2.1 (API level 7) and higher.
+        // https://developer.android.com/studio/write/vector-asset-studio.html
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {

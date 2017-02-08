@@ -82,10 +82,11 @@
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:paddingStart="40dp"
-            android:src="@drawable/ic_action_cancel"
+            app:srcCompat="@drawable/ic_close_black_24dp"
             app:backgroundTint="@color/dontKnowButton"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp" />
+            app:pressedTranslationZ="12dp"
+            android:visibility="invisible"/>
 
         <ImageView
             android:id="@+id/turn_card_button"
@@ -95,7 +96,8 @@
             android:contentDescription="@string/flip_the_card_message"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:src="@drawable/ic_action_reload" />
+            android:tint="@color/grey_tint"
+            app:srcCompat="@drawable/ic_cached_black_36dp" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/to_know_button"
@@ -106,9 +108,10 @@
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:paddingStart="40dp"
-            android:src="@drawable/ic_done"
+            app:srcCompat="@drawable/ic_check_black_24dp"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp" />
+            app:pressedTranslationZ="12dp"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

@@ -2,8 +2,11 @@ package org.dasfoo.delern.card;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -135,6 +138,15 @@ public class PreEditCardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_card_menu, menu);
+
+        // Menu icons from drawable folder isn't tinted on default.
+        // http://stackoverflow.com/questions/24301235/tint-menu-icons
+        MenuItem deleteMenuItem = menu.findItem(R.id.delete_card_menu);
+        Drawable tintedIcon = deleteMenuItem.getIcon();
+        // TODO(ksheremet): Check mode http://ssp.impulsetrain.com/porterduff.html
+        tintedIcon.mutate().setColorFilter(ContextCompat.getColor(this, R.color.toolbarIconColor),
+                PorterDuff.Mode.SRC_IN);
+        deleteMenuItem.setIcon(tintedIcon);
         return true;
     }
 
