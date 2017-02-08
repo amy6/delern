@@ -11,6 +11,10 @@ checkout:
   post:
   - git submodule sync
   - git submodule update --init
+  # We count tags to compute a version number; make sure renamed tags
+  # (aka removed and re-added) do not count twice.
+  - git tag -l | xargs git tag -d
+  - git fetch --tags
 
 dependencies:
   cache_directories:
