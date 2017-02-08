@@ -13,7 +13,6 @@
         android:orderInCategory="102"
         android:title="@string/delete" />
     <item
-        android:id="@+id/cards_type"
         android:orderInCategory="103"
         android:title="@string/cards_type">
         <menu>
