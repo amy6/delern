@@ -36,8 +36,8 @@ dependencies:
   # For lint to be able to detect deprecated API.
   - echo y | android update sdk --no-ui --all --filter platform-tools
   # Local firebase server for instrumented tests.
-  - npm install firebase-server
-  - node node_modules/.bin/firebase-server -p 5533 -v:
+  - npm install --prefix=app/build firebase-server
+  - node app/build/node_modules/.bin/firebase-server -p 5533 -v:
       background: true
 
 test:
