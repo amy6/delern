@@ -52,7 +52,7 @@ ext {
     firebaseVersion = '10.0.1'
     sdkVersion = 25
     leakCanaryVersion = '1.5'
-    supportVersion = "${sdkVersion}.1.0"
+    supportVersion = "${sdkVersion}.1.1"
 }
 
 android {
