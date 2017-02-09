@@ -106,15 +106,15 @@ public class DelernMainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_import) {
-            Toast.makeText(this, "Import is not implemented yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_export) {
-            Toast.makeText(this, "Export is not implemented yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_manage) {
-            Toast.makeText(this, "Tools is not implemented yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_share) {
-            Toast.makeText(this, "Share is not implemented yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_send) {
-            Toast.makeText(this, "Send Feedback is not implemented yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_invite) {
             sendInvitation();
         } else if (id == R.id.nav_sign_out) {

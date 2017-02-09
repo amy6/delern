@@ -169,7 +169,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         Log.v(TAG, deck.toString());
         final EditText input = new EditText(getActivity());
         AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
-        builder.setPositiveButton("Rename", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString());
@@ -194,8 +194,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnDeleteMenuClick(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Delete deck with all cards!");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_deck);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
@@ -224,7 +224,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
     private AlertDialog.Builder newOrUpdateDeckDialog(final Deck deck, final EditText input) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Deck");
+        builder.setTitle(R.string.deck);
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setText(deck.getName());

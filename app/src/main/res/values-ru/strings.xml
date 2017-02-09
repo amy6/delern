@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Delern</string>
+
+    <string name="sign_out">Выход</string>
+    <string name="sign_in">Войти</string>
+
+    <!-- Invitation messages -->
+    <string name="invite_menu_label">Пригласить</string>
+    <string name="invitation_message">Пожалуйста, присоединяйтесь к изучению</string>
+    <string name="invitation_cta">Call to action</string>
+    <string name="invitation_title">Delern Приглашение</string>
+
+    <string name="rename">Переименовать</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отменить</string>
+    <string name="add">Добавить</string>
+    <string name="deck_menu_description">Меню для операций со списками и карточками</string>
+    <string name="invitation_failed_message">Ошибка при отправлении приглашения</string>
+    <string name="save">Сохранить</string>
+    <string name="flip_the_card_message">Перевернуть карточку</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+    <string name="import_menu">Импортировать</string>
+    <string name="export_menu">Экспортировать</string>
+    <string name="tools_menu">Инструменты</string>
+    <string name="communicate_menu">Общение</string>
+    <string name="share_menu">Поделиться</string>
+    <string name="send_feedback_menu">Отправить отзыв</string>
+
+    <!-- User messages, including warnins dialogs and toasts -->
+    <string name="delete_card_warning">Удалить карточку?</string>
+    <string name="added_card_user_message">Добавлена</string>
+    <string name="updated_card_user_message">Обновлена</string>
+    <string name="n_a">N/A</string>
+    <string name="empty_decks_message">Добавьте свои каточки!</string>
+    <string name="no_card_message">Все карточки изучены</string>
+    <string name="sign_out_warning">Вы уверены, что хотите выйти?</string>
+    <string name="search">Поиск</string>
+    <string name="add_reversed_card_checkbox">Добавить также обратную карточку </string>
+    <string name="add_extra_reversed_card_message">2 карточки добавлены</string>
+    <string name="deck">Список</string>
+    <string name="delete_deck">Удалить все карточки в списке?</string>
+
+    <!-- Cards type menu -->
+    <string name="cards_type">Тип списка</string>
+    <string name="basic_cards_type">Базовый</string>
+    <string name="german_cards_type">Немецкий</string>
+    <string name="swissgerman_cards_type">Швейцарский</string>
+
+    <!--Feature is not implemented message -->
+    <string name="not_implemented">Не реализовано</string>
+
+</resources>
