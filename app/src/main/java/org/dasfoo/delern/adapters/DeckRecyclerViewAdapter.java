@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final String TAG = LogUtil.tagFor(DeckRecyclerViewAdapter.class);
+    private static final int CARDS_COUNTER_LIMIT = 200;
 
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
     private Context mContext;
@@ -59,8 +60,14 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         ValueEventListener deckEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                viewHolder.getCountToLearnTextView().setText(String.valueOf(
-                        dataSnapshot.getChildrenCount()));
+                long cardsCount = dataSnapshot.getChildrenCount();
+                if (cardsCount <= CARDS_COUNTER_LIMIT) {
+                    viewHolder.getCountToLearnTextView().setText(String.valueOf(cardsCount));
+                } else {
+                    String toManyCards = CARDS_COUNTER_LIMIT + "+";
+                    viewHolder.getCountToLearnTextView().setText(toManyCards);
+                }
+
             }
 
             @Override
@@ -68,7 +75,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                 Log.v(TAG, databaseError.getMessage());
             }
         };
-        Query query = Card.fetchCardsFromDeckToRepeat(getRef(position).getKey());
+        Query query = Card.fetchCardsFromDeckToRepeatWithLimit(getRef(position).getKey(),
+                CARDS_COUNTER_LIMIT + 1);
         query.addValueEventListener(deckEventListener);
         mQueryListenerMap.put(query, deckEventListener);
     }

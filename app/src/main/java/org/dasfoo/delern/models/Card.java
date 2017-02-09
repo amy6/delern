@@ -89,6 +89,18 @@ public class Card implements Parcelable {
     }
 
     /**
+     * Gets cards to learn with limit.
+     *
+     * @param deckId deck ID where to get cards.
+     * @param limit limits number of cards.
+     * @return query of cards to repeat.
+     */
+    @Exclude
+    public static Query fetchCardsFromDeckToRepeatWithLimit(final String deckId, final int limit) {
+        return fetchCardsFromDeckToRepeat(deckId).limitToFirst(limit);
+    }
+
+    /**
      * Gets one card to learn from deck.
      *
      * @param deckId deck ID.
