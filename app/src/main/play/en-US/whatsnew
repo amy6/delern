@@ -1,2 +1,2 @@
-* Support russian interface.
-* Limits number of cards showing in deck to 200.
+* Fix overlapping N/A and number of cards.
+* Enable fetching cards for learning from N/A message.
