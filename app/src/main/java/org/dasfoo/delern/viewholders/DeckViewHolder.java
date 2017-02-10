@@ -44,6 +44,8 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(v);
         mDeckTextView = (TextView) itemView.findViewById(R.id.deck_text_view);
         mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
+        // Set default mCountToLearnTextView to N/A
+        mCountToLearnTextView.setText(R.string.n_a);
 
         mDeckTextView.setOnClickListener(this);
         ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
