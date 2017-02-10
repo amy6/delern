@@ -97,10 +97,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @Override
     public void onClick(final View v) {
         if (v.getId() == R.id.deck_text_view) {
-            // if number of cards is 0 or N/A, show message to user
+            // if number of cards is 0, show message to user
             String cardCount = mCountToLearnTextView.getText().toString();
-            if (NULL_CARDS.equals(cardCount) ||
-                    mContext.getResources().getString(R.string.n_a).equals(cardCount)) {
+            if (NULL_CARDS.equals(cardCount)) {
                 Toast.makeText(mContext, R.string.no_card_message, Toast.LENGTH_SHORT).show();
             } else {
                 mOnViewClick.doOnTextViewClick(getAdapterPosition());
