@@ -44,7 +44,7 @@ dependencies:
 
 test:
   pre:
-  - echo no | android create avd --force -n test -t android-"${ANDROID_EMULATOR_VERSION}" --abi google_apis/armeabi-v7a
+  - echo no | android create avd --force --name test --target android-"${ANDROID_EMULATOR_VERSION}" --abi google_apis/armeabi-v7a
   # Raise memory for the emulator.
   - sed -i 's/^hw.ramSize=.*/hw.ramSize=1024/' ~/.android/avd/test.avd/config.ini
   # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
