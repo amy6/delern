@@ -57,6 +57,10 @@ test:
   - circle-android wait-for-boot
   # Not ideal, but lets the emulator ramp up (especially slow because of google_apis).
   - sleep 180s
+  # Save the "boot" log events for deeper investigation.
+  - adb logcat -d >"${CIRCLE_ARTIFACTS?}"/logcat-boot.txt
+  # But keep the actual test run logcat clean.
+  - adb logcat -c
   # Unlock the screen.
   - adb shell input keyevent 82
   override:
