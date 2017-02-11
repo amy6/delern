@@ -55,8 +55,14 @@ test:
   - emulator -avd test -no-window:
       background: true
   - circle-android wait-for-boot
-  # Not ideal, but lets the emulator ramp up (especially slow because of google_apis).
-  - sleep 180s
+  # Wait until there's no log spam for 20s -- means all Google Play Services have booted.
+  - >
+      while ! cmp /tmp/android.log /tmp/android-previous.log; do
+        mv /tmp/android.log /tmp/android-previous.log
+        sleep 20
+        # Compare last lines of logcat, if equal for several seconds, probably all services have already finished startup.
+        adb logcat -t 5 >/tmp/android.log
+      done
   # Save the "boot" log events for deeper investigation.
   - adb logcat -d >"${CIRCLE_ARTIFACTS?}"/logcat-boot.txt
   # But keep the actual test run logcat clean.
