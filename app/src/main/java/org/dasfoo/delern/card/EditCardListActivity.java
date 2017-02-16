@@ -64,9 +64,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
                 startAddCardsActivity(mDeckId, R.string.add);
             }
         });
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        configureRecyclerView();
+        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+                .build());
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -74,11 +77,13 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
                 super.onItemRangeInserted(positionStart, itemCount);
             }
         };
+        mQuery = Card.fetchAllCardsForDeck(mDeckId);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        configureFirebaseAdapter();
         mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
     }
 
@@ -118,13 +123,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mDeckId = intent.getStringExtra(DECK_ID);
     }
 
-    private void configureRecyclerView() {
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .build());
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mQuery = Card.fetchAllCardsForDeck(mDeckId);
+    private void configureFirebaseAdapter() {
         try {
             mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
                     R.layout.card_text_view_for_deck, CardViewHolder.class, mQuery)
