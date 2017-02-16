@@ -1,2 +1,3 @@
 * Fix overlapping N/A and number of cards.
 * Enable fetching cards for learning from N/A message.
+* Fix a few bugs.
