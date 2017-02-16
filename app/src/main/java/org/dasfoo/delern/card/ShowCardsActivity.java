@@ -208,7 +208,9 @@ public class ShowCardsActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
+                        mBackIsShown = false;
                         Card.deleteCardFromDeck(mDeck.getdId(), mCurrentCard);
+
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
