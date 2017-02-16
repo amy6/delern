@@ -14,7 +14,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.75"/>
+        android:layout_weight="0.75"
+        android:textIsSelectable="true" />
 
     <TextView
         android:id="@+id/count_to_learn_textview"

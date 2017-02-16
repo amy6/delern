@@ -11,13 +11,15 @@
         style="@style/PrimaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textIsSelectable="true" />
 
     <TextView
         android:id="@+id/back_textview"
         style="@style/SecondaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textIsSelectable="true" />
 
 </LinearLayout>
