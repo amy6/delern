@@ -119,6 +119,9 @@ public class DelernMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_invite) {
             sendInvitation();
         } else if (id == R.id.nav_sign_out) {
+            // If user signs out, remove all listeners in advance that can be.
+            // OnStop called after a sign out. User is already signed out,
+            // but listeners are attached yet, therefore log has permission denied message.
             mListFragment.cleanup();
             signOut();
         }

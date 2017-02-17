@@ -133,9 +133,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onStop() {
         super.onStop();
-        if (mIsListenersAttached) {
-            cleanup();
-        }
+
+        cleanup();
     }
 
     /**
@@ -248,12 +247,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      * Removes listeners and cleans resources.
      */
     public void cleanup() {
-        mIsListenersAttached = false;
-        if (mUsersDecksQuery == null) {
-            Log.v(TAG, "User is not signed in");
-        } else {
-            mUsersDecksQuery.removeEventListener(mProgressBarListener);
+        if (mIsListenersAttached) {
+            mIsListenersAttached = false;
+            if (mUsersDecksQuery == null) {
+                Log.v(TAG, "User is not signed in");
+            } else {
+                mUsersDecksQuery.removeEventListener(mProgressBarListener);
+            }
+            mFirebaseAdapter.cleanup();
         }
-        mFirebaseAdapter.cleanup();
     }
 }
