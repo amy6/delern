@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
@@ -264,53 +265,31 @@ public class ShowCardsActivity extends AppCompatActivity {
     }
 
     private void setBackgroundCardColor() {
-        // Set default color
-        mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryLight));
-        if (mCurrentCard.getBack().contains(",")) {
-            return;
-        }
+        GrammaticalGenderSpecifier.Gender gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            setSwissBackgroundColor();
-            return;
+            gender = GrammaticalGenderSpecifier
+                    .specifyGender(DeckType.SWISS, mCurrentCard.getBack());
         }
         if (DeckType.GERMAN.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            setGermanBackgroundColor();
+            gender = GrammaticalGenderSpecifier
+                    .specifyGender(DeckType.GERMAN, mCurrentCard.getBack());
+        }
+        switch (gender) {
+            case FEMININE:
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
+                break;
+            case MASCULINE:
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
+                break;
+            case NEUTER:
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
+                break;
+            default:
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(this,
+                        R.color.colorPrimaryLight));
+                break;
         }
 
-    }
-
-    /**
-     * Sets background colors for swissgerman cards.
-     */
-    private void setSwissBackgroundColor() {
-        if (mCurrentCard.getBack().startsWith("de ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-            return;
-        }
-        if (mCurrentCard.getBack().startsWith("d ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-            return;
-        }
-        if (mCurrentCard.getBack().startsWith("s ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
-        }
-    }
-
-    /**
-     * Sets background colors for german cards.
-     */
-    private void setGermanBackgroundColor() {
-        if (mCurrentCard.getBack().startsWith("der ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-            return;
-        }
-        if (mCurrentCard.getBack().startsWith("die ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-            return;
-        }
-        if (mCurrentCard.getBack().startsWith("das ")) {
-            mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
-        }
     }
 
     /**
