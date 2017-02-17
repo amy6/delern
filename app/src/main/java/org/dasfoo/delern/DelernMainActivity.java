@@ -87,36 +87,6 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "OnResume");
-    }
-
-    /**
-     * Dispatch onPause() to fragments.
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.v(TAG, "onStop");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStart");
-    }
-
-    /**
      * Overriding to close the drawer on Back button instead of closing an activity.
      */
     @Override
@@ -172,12 +142,8 @@ public class DelernMainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.sign_out, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-
-                Log.v(TAG, "Firebase sign out");
                 FirebaseAuth.getInstance().signOut();
-                Log.v(TAG, "Google sign out");
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                Log.v(TAG, "start Sign in");
                 startSignIn();
             }
         });
