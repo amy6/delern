@@ -43,7 +43,6 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
-    private RecyclerView.AdapterDataObserver mAdapterDataObserver;
     private Query mQuery;
 
     private String mLabel;
@@ -71,12 +70,6 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(final int positionStart, final int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-            }
-        };
         mQuery = Card.fetchAllCardsForDeck(mDeckId);
     }
 
@@ -84,13 +77,11 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     protected void onStart() {
         super.onStart();
         configureFirebaseAdapter();
-        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
         mFirebaseAdapter.cleanup();
     }
 
@@ -185,7 +176,6 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     @Override
     public boolean onQueryTextChange(final String newText) {
-        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
         try {
             mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
                     R.layout.card_text_view_for_deck, CardViewHolder.class,
@@ -198,7 +188,6 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         } catch (InstantiationException e) {
             Log.e(TAG, e.getMessage());
         }
-        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return true;
     }

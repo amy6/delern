@@ -45,7 +45,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private ProgressBar mProgressBar;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
-    private RecyclerView.AdapterDataObserver mAdapterDataObserver;
     private ValueEventListener mProgressBarListener;
     private TextView mEmptyMessageTextView;
     private Query mUsersDecksQuery;
@@ -89,12 +88,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(final int positionStart, final int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-            }
-        };
         mProgressBarListener = new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -125,7 +118,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 DeckViewHolder.class, mUsersDecksQuery);
         mFirebaseAdapter.setContext(getContext());
         mFirebaseAdapter.setOnDeckViewHolderClick(mOnDeckViewHolderClick);
-        mFirebaseAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
@@ -257,7 +249,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     public void cleanup() {
         mIsListenersAttached = false;
-        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
         if (mUsersDecksQuery == null) {
             Log.v(TAG, "User is not signed in");
         } else {
