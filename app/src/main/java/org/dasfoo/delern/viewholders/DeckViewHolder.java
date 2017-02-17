@@ -102,7 +102,10 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             if (NULL_CARDS.equals(cardCount)) {
                 Toast.makeText(mContext, R.string.no_card_message, Toast.LENGTH_SHORT).show();
             } else {
-                mOnViewClick.doOnTextViewClick(getAdapterPosition());
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mOnViewClick.doOnTextViewClick(position);
+                }
             }
         }
         if (v.getId() == R.id.deck_popup_menu) {
@@ -143,25 +146,31 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
+        int position = getAdapterPosition();
+        if (position == RecyclerView.NO_POSITION) {
+            // ViewHolder was either removed or the view has been changed.
+            // Rather than failing, ignore the click.
+            return false;
+        }
         switch (item.getItemId()) {
             case R.id.rename_deck_menu:
-                mOnViewClick.doOnRenameMenuClick(getAdapterPosition());
+                mOnViewClick.doOnRenameMenuClick(position);
                 return true;
             case R.id.edit_deck_menu:
-                mOnViewClick.doOnEditMenuClick(getAdapterPosition());
+                mOnViewClick.doOnEditMenuClick(position);
                 return true;
             case R.id.delete_deck_menu:
-                mOnViewClick.doOnDeleteMenuClick(getAdapterPosition());
+                mOnViewClick.doOnDeleteMenuClick(position);
                 return true;
             case R.id.basic_type:
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.BASIC);
+                mOnViewClick.doOnDeckTypeClick(position, DeckType.BASIC);
                 return true;
             case R.id.german_type:
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.GERMAN);
+                mOnViewClick.doOnDeckTypeClick(position, DeckType.GERMAN);
                 return true;
             case R.id.swissgerman_type:
                 Log.v(TAG, "Swiss deck");
-                mOnViewClick.doOnDeckTypeClick(getAdapterPosition(), DeckType.SWISS);
+                mOnViewClick.doOnDeckTypeClick(position, DeckType.SWISS);
                 return true;
             default:
                 Log.v(TAG, "Menu Item is not implemented yet");
