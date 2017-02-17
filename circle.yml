@@ -55,20 +55,20 @@ test:
   - emulator -avd test -no-window:
       background: true
   - circle-android wait-for-boot
-  # Wait until there's no log spam for 20s -- means all Google Play Services have booted.
+  # Wait until there's no log spam for some time -- means all Google Play Services have booted.
   - >
       while ! cmp /tmp/android.log /tmp/android-previous.log; do
         mv /tmp/android.log /tmp/android-previous.log
         sleep 20
-        # Compare last lines of logcat, if equal for several seconds, probably all services have already finished startup.
-        adb logcat -t 5 >/tmp/android.log
+        # Compare the last lines of logcat
+        adb logcat -t 25 >/tmp/android.log
       done
+  # Unlock the screen.
+  - adb shell input keyevent 82
   # Save the "boot" log events for deeper investigation.
   - adb logcat -d >"${CIRCLE_ARTIFACTS?}"/logcat-boot.txt
   # But keep the actual test run logcat clean.
   - adb logcat -c
-  # Unlock the screen.
-  - adb shell input keyevent 82
   override:
   - GRADLE_OPTS=-Xmx256m ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
   post:
