@@ -49,6 +49,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private ValueEventListener mProgressBarListener;
     private TextView mEmptyMessageTextView;
     private Query mUsersDecksQuery;
+    private boolean mIsListenersAttached = true;
 
     /**
      * {@inheritDoc}
@@ -88,23 +89,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        return rootView;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
         mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(final int positionStart, final int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
             }
         };
-
         mProgressBarListener = new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -121,8 +111,16 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 Log.v(TAG, databaseError.getMessage());
             }
         };
-
         mUsersDecksQuery = Deck.getUsersDecks();
+        return rootView;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
                 DeckViewHolder.class, mUsersDecksQuery);
         mFirebaseAdapter.setContext(getContext());
@@ -134,6 +132,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         if (mUsersDecksQuery != null) {
             mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
         }
+        mIsListenersAttached = true;
     }
 
     /**
@@ -142,13 +141,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onStop() {
         super.onStop();
-        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
-        if (mUsersDecksQuery == null) {
-            Log.v(TAG, "User is not signed in");
-        } else {
-            mUsersDecksQuery.removeEventListener(mProgressBarListener);
+        if (mIsListenersAttached) {
+            cleanup();
         }
-        mFirebaseAdapter.cleanup();
     }
 
     /**
@@ -255,5 +250,19 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         final Deck deck = mFirebaseAdapter.getItem(position);
         deck.setdId(mFirebaseAdapter.getRef(position).getKey());
         return deck;
+    }
+
+    /**
+     * Removes listeners and cleans resources.
+     */
+    public void cleanup() {
+        mIsListenersAttached = false;
+        mFirebaseAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        if (mUsersDecksQuery == null) {
+            Log.v(TAG, "User is not signed in");
+        } else {
+            mUsersDecksQuery.removeEventListener(mProgressBarListener);
+        }
+        mFirebaseAdapter.cleanup();
     }
 }

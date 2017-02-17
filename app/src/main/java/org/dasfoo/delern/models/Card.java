@@ -69,6 +69,7 @@ public class Card implements Parcelable {
     public static DatabaseReference getFirebaseCardsRef() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(CARDS);
+        // TODO(ksheremet): keep synced only cards of current user (after changing FB)
         databaseReference.keepSynced(true);
         return databaseReference;
     }
