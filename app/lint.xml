@@ -3,4 +3,12 @@
 <lint>
 	<!-- We use ProGuard to remove specific log levels. -->
 	<issue id="LogConditional" severity="ignore"/>
+	<issue id="UnusedAttribute">
+		<!--
+			Some attributes are unavailable on lower API levels.
+			Here we list those which can be safely ignored without
+			causing significant side effects.
+		-->
+		<ignore regexp="Attribute `(elevation|parentActivityName)`"/>
+	</issue>
 </lint>
