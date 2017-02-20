@@ -75,10 +75,10 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                 Log.v(TAG, databaseError.getMessage());
             }
         };
-        Query query = Card.fetchCardsFromDeckToRepeatWithLimit(getRef(position).getKey(),
+        /*Query query = Card.fetchCardsFromDeckToRepeatWithLimit(getRef(position).getKey(),
                 CARDS_COUNTER_LIMIT + 1);
         query.addValueEventListener(deckEventListener);
-        mQueryListenerMap.put(query, deckEventListener);
+        mQueryListenerMap.put(query, deckEventListener);*/
     }
 
     /**
@@ -87,10 +87,10 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @Override
     public void cleanup() {
         super.cleanup();
-        for (Map.Entry<Query, ValueEventListener> entry: mQueryListenerMap.entrySet()) {
+        /*for (Map.Entry<Query, ValueEventListener> entry: mQueryListenerMap.entrySet()) {
             entry.getKey().removeEventListener(entry.getValue());
         }
-        mQueryListenerMap.clear();
+        mQueryListenerMap.clear();*/
     }
 
     /**

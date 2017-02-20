@@ -42,13 +42,14 @@ public class Deck implements Parcelable {
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
     private static final String DECKS = "decks";
-    @Exclude
-    private static final String USER = "user";
 
     @Exclude
     private String dId;
     private String name;
     private String deckType;
+    private String category;
+    private String access;
+    private boolean accepted;
 
     /**
      * The empty constructor is required for Firebase de-serialization.
@@ -62,14 +63,23 @@ public class Deck implements Parcelable {
      *
      * @param name name of deck.
      */
-    public Deck(final String name) {
+    public Deck(final String name, final String dType, final String userAccess,
+                final boolean userAccepted) {
         this.name = name;
+        this.deckType = dType;
+        this.access = userAccess;
+        this.accepted = userAccepted;
     }
 
     protected Deck(final Parcel in) {
         dId = in.readString();
         name = in.readString();
         deckType = in.readString();
+        category = in.readString();
+        access = in.readString();
+        // Reading and writing boolean for parceable
+        // http://stackoverflow.com/questions/6201311/how-to-read-write-a-boolean-when-implementing-the-parcelable-interface
+        accepted = in.readByte() != 0;
     }
 
     /**
@@ -80,8 +90,8 @@ public class Deck implements Parcelable {
     @Exclude
     public static DatabaseReference getFirebaseDecksRef() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child(DECKS);
-        databaseReference.keepSynced(true);
+                .child(DECKS).child(User.getCurrentUser().getUid());
+        //databaseReference.keepSynced(true);
         return databaseReference;
     }
 
@@ -96,9 +106,7 @@ public class Deck implements Parcelable {
             Log.v(TAG, "User is not signed in");
             return null;
         } else {
-            return getFirebaseDecksRef()
-                    .orderByChild(USER)
-                    .equalTo(User.getCurrentUser().getUid());
+            return getFirebaseDecksRef();
         }
 
     }
@@ -113,9 +121,7 @@ public class Deck implements Parcelable {
     public static String createNewDeck(final Deck deck) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.setValue(deck);
-        String key = reference.getKey();
-        addUserToDeck(key);
-        return key;
+        return reference.getKey();
     }
 
     /**
@@ -142,16 +148,6 @@ public class Deck implements Parcelable {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
-        addUserToDeck(deck.getdId());
-    }
-
-    @Exclude
-    private static void addUserToDeck(final String deckKey) {
-        // Add user to deck
-        getFirebaseDecksRef()
-                .child(deckKey)
-                .child(USER)
-                .setValue(User.getCurrentUser().getUid());
     }
 
     /**
@@ -214,6 +210,58 @@ public class Deck implements Parcelable {
     }
 
     /**
+     * Getter for category of deck.
+     *
+     * @return category of deck.
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * Setter for category of deck.
+     *
+     * @param category category of deck.
+     */
+    public void setCategory(final String category) {
+        this.category = category;
+    }
+
+    /**
+     * Getter for access of deck. Access can be "owner", "write", "read".
+     *
+     * @return access of deck of current user.
+     */
+    public String getAccess() {
+        return access;
+    }
+
+    /**
+     * Setter for access of deck.
+     *
+     * @param access access of deck.
+     */
+    public void setAccess(final String access) {
+        this.access = access;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    /**
+     * User can accept shared deck or not.
+     *
+     * @param accepted true of false
+     */
+    public void setAccepted(final boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -222,6 +270,9 @@ public class Deck implements Parcelable {
                 "dId='" + dId + '\'' +
                 ", name='" + name + '\'' +
                 ", deckType='" + deckType + '\'' +
+                ", categoty='" + category + '\'' +
+                ", acces='" + access + '\'' +
+                ", accepted='" + accepted + '\'' +
                 '}';
     }
 
@@ -241,5 +292,8 @@ public class Deck implements Parcelable {
         parcel.writeString(this.dId);
         parcel.writeString(this.name);
         parcel.writeString(this.deckType);
+        parcel.writeString(this.category);
+        parcel.writeString(access);
+        parcel.writeByte((byte) (accepted ? 1 : 0));
     }
 }

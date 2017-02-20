@@ -69,8 +69,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
-                        Deck newDeck = new Deck(input.getText().toString());
-                        newDeck.setDeckType(DeckType.BASIC.name().toLowerCase());
+                        Deck newDeck = new Deck(input.getText().toString(),
+                                DeckType.BASIC.name().toLowerCase(), "owner", true);
                         String key = Deck.createNewDeck(newDeck);
                         mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
