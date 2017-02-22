@@ -5,14 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.google.firebase.database.ServerValue;
+
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
+import org.dasfoo.delern.models.ScheduledCard;
 
 /**
  * Activity to edit or add a new card.
@@ -113,11 +117,13 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void addNewCard(final String frontSide, final String backSide) {
+        ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(), System.currentTimeMillis());
+
         Card newCard = new Card();
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
-        newCard.setLevel(Level.L0.name());
-        newCard.setRepeatAt(System.currentTimeMillis());
-        Card.createNewCard(newCard, mDeckId);
+        //TODO(ksheremet): Put timestamp in Card.class
+        newCard.setCreatedAt(ServerValue.TIMESTAMP);
+        Card.createNewCard(newCard, mDeckId, scheduledCard);
     }
 }

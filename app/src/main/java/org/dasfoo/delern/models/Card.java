@@ -42,8 +42,7 @@ public class Card implements Parcelable {
     private String cId;
     private String back;
     private String front;
-    private String level;
-    private long repeatAt;
+    private Object createdAt;
 
     /**
      * The empty constructor is required for Firebase de-serialization.
@@ -56,8 +55,7 @@ public class Card implements Parcelable {
         cId = in.readString();
         back = in.readString();
         front = in.readString();
-        level = in.readString();
-        repeatAt = in.readLong();
+        //createdAt = in.readLong();
     }
 
     /**
@@ -85,7 +83,7 @@ public class Card implements Parcelable {
         long time = System.currentTimeMillis();
         return getFirebaseCardsRef()
                 .child(deckId)
-                .orderByChild("repeatAt")
+                .orderByChild("createdAt")
                 .endAt(time);
     }
 
@@ -119,7 +117,8 @@ public class Card implements Parcelable {
      * @param deckId  deck ID where to create card.
      */
     @Exclude
-    public static void createNewCard(final Card newCard, final String deckId) {
+    public static void createNewCard(final Card newCard, final String deckId,
+                                     ScheduledCard scheduledCard) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)
                 .push()
@@ -128,6 +127,8 @@ public class Card implements Parcelable {
                 .child(deckId)
                 .child(cardKey)
                 .setValue(newCard);
+
+        ScheduledCard.writeScheduleForCard(deckId, cardKey, scheduledCard);
     }
 
     /**
@@ -156,6 +157,7 @@ public class Card implements Parcelable {
     public static void updateCard(final Card card, final String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/" + card.getcId(), card);
+        //TODO(ksheremet): rewrite fields front and back
         getFirebaseCardsRef()
                 .child(deckId)
                 .updateChildren(childUpdates);
@@ -255,39 +257,21 @@ public class Card implements Parcelable {
     }
 
     /**
-     * Getter for level of card. Level is used for repetition intervals.
-     *
-     * @return level of card.
-     */
-    public String getLevel() {
-        return level;
-    }
-
-    /**
-     * Setter for level of card. Level is used for repetition intervals.
-     *
-     * @param level level of card.
-     */
-    public void setLevel(final String level) {
-        this.level = level;
-    }
-
-    /**
      * Getter for time im milliseconds when card should be repeated in the next time.
      *
      * @return time in milliseconds when to repeat card.
      */
-    public long getRepeatAt() {
-        return repeatAt;
+    public Object getCreatedAt() {
+        return createdAt;
     }
 
     /**
      * Setter for time im milliseconds when card should be repeated in the next time.
      *
-     * @param repeatAt time in milliseconds when to repeat card.
+     * @param createdAt time in milliseconds when to repeat card.
      */
-    public void setRepeatAt(final long repeatAt) {
-        this.repeatAt = repeatAt;
+    public void setCreatedAt(final Object createdAt) {
+        this.createdAt = createdAt;
     }
 
     /**
@@ -310,8 +294,7 @@ public class Card implements Parcelable {
         dest.writeString(this.cId);
         dest.writeString(this.back);
         dest.writeString(this.front);
-        dest.writeString(this.level);
-        dest.writeLong(this.repeatAt);
+        //dest.writeString(this.createdAt);
     }
 
     /**
@@ -323,8 +306,7 @@ public class Card implements Parcelable {
                 "cId='" + cId + '\'' +
                 ", back='" + back + '\'' +
                 ", front='" + front + '\'' +
-                ", level='" + level + '\'' +
-                ", repeatAt=" + repeatAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

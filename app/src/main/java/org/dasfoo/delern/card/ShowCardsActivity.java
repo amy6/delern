@@ -72,21 +72,21 @@ public class ShowCardsActivity extends AppCompatActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    String newCardLevel = setNewLevel(mCurrentCard.getLevel());
+                    /*String newCardLevel = setNewLevel(mCurrentCard.getLevel());
                     mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                    mCurrentCard.setCreatedAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
-                            RepetitionIntervals.getJitter());
+                            RepetitionIntervals.getJitter());*/
                     updateCardInFirebase();
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
-                    mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setRepeatAt(System.currentTimeMillis() +
+                    /*mCurrentCard.setLevel(Level.L0.name());
+                    mCurrentCard.setCreatedAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(mCurrentCard.getLevel()) +
                             RepetitionIntervals.getJitter());
                     updateCardInFirebase();
-                    mBackIsShown = false;
+                    mBackIsShown = false;*/
                     break;
                 case R.id.turn_card_button:
                     showBackSide();

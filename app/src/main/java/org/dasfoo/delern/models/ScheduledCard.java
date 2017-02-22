@@ -8,7 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by katarina on 2/20/17.
  */
 
-public class Learning {
+public class ScheduledCard {
 
     private String cId;
     private String level;
@@ -16,6 +16,11 @@ public class Learning {
 
     @Exclude
     private static final String LEARNING = "learning";
+
+    public ScheduledCard(String level, long repeatAt) {
+        this.level = level;
+        this.repeatAt = repeatAt;
+    }
 
     public String getcId() {
         return cId;
@@ -47,11 +52,18 @@ public class Learning {
      * @return reference to cards.
      */
     @Exclude
-    public static DatabaseReference getFirebaseLearningRef() {
+    public static DatabaseReference getFirebaseScheduledCardRef() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(LEARNING).child(User.getCurrentUser().getUid());
         //databaseReference.keepSynced(true);
         return databaseReference;
+    }
+
+    @Exclude
+    public static void writeScheduleForCard(final String deckId,final String cardId,
+                                            final ScheduledCard scheduledCard ) {
+        DatabaseReference databaseReference = getFirebaseScheduledCardRef();
+        databaseReference.child(deckId).child(cardId).setValue(scheduledCard);
     }
 
 
