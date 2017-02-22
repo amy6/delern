@@ -48,7 +48,6 @@ public class Deck implements Parcelable {
     private String name;
     private String deckType;
     private String category;
-    private String access;
     private boolean accepted;
 
     /**
@@ -63,11 +62,9 @@ public class Deck implements Parcelable {
      *
      * @param name name of deck.
      */
-    public Deck(final String name, final String dType, final String userAccess,
-                final boolean userAccepted) {
+    public Deck(final String name, final String dType, final boolean userAccepted) {
         this.name = name;
         this.deckType = dType;
-        this.access = userAccess;
         this.accepted = userAccepted;
     }
 
@@ -76,7 +73,6 @@ public class Deck implements Parcelable {
         name = in.readString();
         deckType = in.readString();
         category = in.readString();
-        access = in.readString();
         // Reading and writing boolean for parceable
         // http://stackoverflow.com/questions/6201311/how-to-read-write-a-boolean-when-implementing-the-parcelable-interface
         accepted = in.readByte() != 0;
@@ -120,6 +116,11 @@ public class Deck implements Parcelable {
     @Exclude
     public static String createNewDeck(final Deck deck) {
         DatabaseReference reference = getFirebaseDecksRef().push();
+        String key = reference.getKey();
+        // Write deckAccess
+        DeckAccess deckAccess = new DeckAccess("owner");
+        DeckAccess.writeDeckAccessToFB(deckAccess, key);
+
         reference.setValue(deck);
         return reference.getKey();
     }
@@ -134,7 +135,8 @@ public class Deck implements Parcelable {
         // Remove deck
         DatabaseReference reference = getFirebaseDecksRef();
         reference.child(deckId).removeValue();
-        Card.deleteCardsFromDeck(deckId);
+        DeckAccess.deleteDeckAccess(deckId);
+        //Card.deleteCardsFromDeck(deckId);
     }
 
     /**
@@ -228,24 +230,6 @@ public class Deck implements Parcelable {
     }
 
     /**
-     * Getter for access of deck. Access can be "owner", "write", "read".
-     *
-     * @return access of deck of current user.
-     */
-    public String getAccess() {
-        return access;
-    }
-
-    /**
-     * Setter for access of deck.
-     *
-     * @param access access of deck.
-     */
-    public void setAccess(final String access) {
-        this.access = access;
-    }
-
-    /**
      * @return
      */
     public boolean isAccepted() {
@@ -271,7 +255,6 @@ public class Deck implements Parcelable {
                 ", name='" + name + '\'' +
                 ", deckType='" + deckType + '\'' +
                 ", categoty='" + category + '\'' +
-                ", acces='" + access + '\'' +
                 ", accepted='" + accepted + '\'' +
                 '}';
     }
@@ -293,7 +276,6 @@ public class Deck implements Parcelable {
         parcel.writeString(this.name);
         parcel.writeString(this.deckType);
         parcel.writeString(this.category);
-        parcel.writeString(access);
         parcel.writeByte((byte) (accepted ? 1 : 0));
     }
 }
