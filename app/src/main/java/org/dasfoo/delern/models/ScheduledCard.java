@@ -19,15 +19,13 @@ import java.util.Map;
 public class ScheduledCard {
 
     @Exclude
+    private static final String LEARNING = "learning";
+    @Exclude
+    private static final String TAG = LogUtil.tagFor(ScheduledCard.class);
+    @Exclude
     private String cId;
     private String level;
     private long repeatAt;
-
-    @Exclude
-    private static final String LEARNING = "learning";
-
-    @Exclude
-    private static final String TAG = LogUtil.tagFor(ScheduledCard.class);
 
     public ScheduledCard() {
         // Empty constructor is needed for casting DataSnaphot to current class.
@@ -35,30 +33,6 @@ public class ScheduledCard {
 
     public ScheduledCard(final String level, final long repeatAt) {
         this.level = level;
-        this.repeatAt = repeatAt;
-    }
-
-    public String getcId() {
-        return cId;
-    }
-
-    public void setcId(final String cId) {
-        this.cId = cId;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(final String level) {
-        this.level = level;
-    }
-
-    public long getRepeatAt() {
-        return repeatAt;
-    }
-
-    public void setRepeatAt(final long repeatAt) {
         this.repeatAt = repeatAt;
     }
 
@@ -132,6 +106,30 @@ public class ScheduledCard {
                 .child(deckId)
                 .child(scheduledCard.getcId())
                 .updateChildren(childUpdates);
+    }
+
+    public String getcId() {
+        return cId;
+    }
+
+    public void setcId(final String cId) {
+        this.cId = cId;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(final String level) {
+        this.level = level;
+    }
+
+    public long getRepeatAt() {
+        return repeatAt;
+    }
+
+    public void setRepeatAt(final long repeatAt) {
+        this.repeatAt = repeatAt;
     }
 
     @Override
