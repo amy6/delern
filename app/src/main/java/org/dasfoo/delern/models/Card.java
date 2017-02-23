@@ -117,10 +117,12 @@ public class Card implements Parcelable {
     @Exclude
     public static void updateCard(final Card card, final String deckId) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/" + card.getcId(), card);
+        childUpdates.put("front", card.getFront());
+        childUpdates.put("back", card.getBack());
         //TODO(ksheremet): rewrite fields front and back
         getFirebaseCardsRef()
                 .child(deckId)
+                .child(card.getcId())
                 .updateChildren(childUpdates);
     }
 
