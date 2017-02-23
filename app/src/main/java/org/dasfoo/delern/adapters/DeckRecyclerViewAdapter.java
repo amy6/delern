@@ -10,7 +10,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.util.LogUtil;

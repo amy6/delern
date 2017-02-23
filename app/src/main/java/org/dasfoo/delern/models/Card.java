@@ -91,7 +91,7 @@ public class Card implements Parcelable {
      * Gets cards to learn with limit.
      *
      * @param deckId deck ID where to get cards.
-     * @param limit limits number of cards.
+     * @param limit  limits number of cards.
      * @return query of cards to repeat.
      */
     @Exclude
@@ -118,7 +118,7 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
-                                     ScheduledCard scheduledCard) {
+                                     final ScheduledCard scheduledCard) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)
                 .push()

@@ -16,7 +16,7 @@ public class DeckAccess {
 
     private String access;
 
-    public DeckAccess(String access) {
+    public DeckAccess(final String access) {
         this.access = access;
     }
 
@@ -24,7 +24,7 @@ public class DeckAccess {
         return access;
     }
 
-    public void setAccess(String access) {
+    public void setAccess(final String access) {
         this.access = access;
     }
 

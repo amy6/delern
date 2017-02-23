@@ -18,7 +18,7 @@ public class ScheduledCard {
     @Exclude
     private static final String LEARNING = "learning";
 
-    public ScheduledCard(String level, long repeatAt) {
+    public ScheduledCard(final String level, final long repeatAt) {
         this.level = level;
         this.repeatAt = repeatAt;
     }
@@ -27,7 +27,7 @@ public class ScheduledCard {
         return cId;
     }
 
-    public void setcId(String cId) {
+    public void setcId(final String cId) {
         this.cId = cId;
     }
 
@@ -35,7 +35,7 @@ public class ScheduledCard {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(final String level) {
         this.level = level;
     }
 
@@ -43,7 +43,7 @@ public class ScheduledCard {
         return repeatAt;
     }
 
-    public void setRepeatAt(long repeatAt) {
+    public void setRepeatAt(final long repeatAt) {
         this.repeatAt = repeatAt;
     }
 
