@@ -119,7 +119,6 @@ public class Card implements Parcelable {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("front", card.getFront());
         childUpdates.put("back", card.getBack());
-        //TODO(ksheremet): rewrite fields front and back
         getFirebaseCardsRef()
                 .child(deckId)
                 .child(card.getcId())
@@ -157,6 +156,8 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static void deleteCardFromDeck(final String deckId, final Card card) {
+        View.deleteViewById(deckId, card.getcId());
+        ScheduledCard.deleteCardbyId(deckId, card.getcId());
         getFirebaseCardsRef()
                 .child(deckId)
                 .child(card.getcId())

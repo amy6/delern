@@ -107,6 +107,12 @@ public class ScheduledCard {
         getFirebaseScheduledCardRef().child(deckId).removeValue();
     }
 
+    @Exclude
+    public static void deleteCardbyId(final String deckId, final  String cardId) {
+        //TODO(ksheremet): Add listeners on success and failure
+        getFirebaseScheduledCardRef().child(deckId).child(cardId).removeValue();
+    }
+
     /**
      * Updates scheduledCard using deck ID. Card ID is the same.
      *

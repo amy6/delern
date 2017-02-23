@@ -249,7 +249,6 @@ public class LearningCardsActivity extends AppCompatActivity {
                     public void onClick(final DialogInterface dialog, final int which) {
                         mBackIsShown = false;
                         Card.deleteCardFromDeck(mDeck.getdId(), mCurrentCard);
-
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

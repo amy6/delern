@@ -37,6 +37,11 @@ public class View {
     }
 
     @Exclude
+    public static void deleteViewById(final String deckId, final String cardId) {
+        getViewDatabaseReference().child(deckId).child(cardId).removeValue();
+    }
+
+    @Exclude
     public static void addView(final String deckId, final View view) {
         String key = getViewDatabaseReference()
                 .child(deckId)
