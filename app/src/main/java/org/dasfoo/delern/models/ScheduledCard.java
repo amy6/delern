@@ -1,5 +1,6 @@
 package org.dasfoo.delern.models;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -85,6 +86,12 @@ public class ScheduledCard {
     @Exclude
     public static Query fetchCardsToRepeatWithLimit(final String deckId, final int limit) {
         return fetchCardsFromDeckToRepeat(deckId).limitToFirst(limit);
+    }
+
+    @Exclude
+    public static void deleteCardsByDeckId(final String deckId) {
+        //TODO(ksheremet): Add listeners on success and failure
+        getFirebaseScheduledCardRef().child(deckId).removeValue();
     }
 
 

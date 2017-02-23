@@ -133,7 +133,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onStop() {
         super.onStop();
-
         cleanup();
     }
 

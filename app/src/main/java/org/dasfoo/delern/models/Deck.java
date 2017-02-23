@@ -132,11 +132,14 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static void deleteDeck(final String deckId) {
-        // Remove deck
-        DatabaseReference reference = getFirebaseDecksRef();
-        reference.child(deckId).removeValue();
+        // Delete deck
+        getFirebaseDecksRef().child(deckId).removeValue();
+        // Delete cards. It must be run before deleting deckAccess. If user is not owner of cards,
+        // they won't be deleted.
+        Card.deleteCardsFromDeck(deckId);
         DeckAccess.deleteDeckAccess(deckId);
-        //Card.deleteCardsFromDeck(deckId);
+        ScheduledCard.deleteCardsByDeckId(deckId);
+        View.removeViewsFromDeck(deckId);
     }
 
     /**
