@@ -1,10 +1,16 @@
 package org.dasfoo.delern.models;
 
-import com.google.android.gms.tasks.Task;
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import org.dasfoo.delern.util.LogUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by katarina on 2/20/17.
@@ -12,12 +18,20 @@ import com.google.firebase.database.Query;
 
 public class ScheduledCard {
 
+    @Exclude
     private String cId;
     private String level;
     private long repeatAt;
 
     @Exclude
     private static final String LEARNING = "learning";
+
+    @Exclude
+    private static final String TAG = LogUtil.tagFor(ScheduledCard.class);
+
+    public ScheduledCard() {
+        // Empty constructor is needed for casting DataSnaphot to current class.
+    }
 
     public ScheduledCard(final String level, final long repeatAt) {
         this.level = level;
@@ -55,10 +69,9 @@ public class ScheduledCard {
      */
     @Exclude
     public static DatabaseReference getFirebaseScheduledCardRef() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+        return FirebaseDatabase.getInstance().getReference()
                 .child(LEARNING).child(User.getCurrentUser().getUid());
         //databaseReference.keepSynced(true);
-        return databaseReference;
     }
 
     @Exclude
@@ -94,5 +107,33 @@ public class ScheduledCard {
         getFirebaseScheduledCardRef().child(deckId).removeValue();
     }
 
+    /**
+     * Updates scheduledCard using deck ID. Card ID is the same.
+     *
+     * @param scheduledCard   new card
+     * @param deckId deck ID where to update card.
+     */
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    @Exclude
+    public static void updateCard(final ScheduledCard scheduledCard, final String deckId) {
+        Log.v(TAG, scheduledCard.toString());
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("level", scheduledCard.getLevel());
+        childUpdates.put("repeatAt", scheduledCard.getRepeatAt());
+        Log.v(TAG, childUpdates.toString());
 
+        getFirebaseScheduledCardRef()
+                .child(deckId)
+                .child(scheduledCard.getcId())
+                .updateChildren(childUpdates);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduledCard{" +
+                "cId='" + cId + '\'' +
+                ", level='" + level + '\'' +
+                ", repeatAt=" + repeatAt +
+                '}';
+    }
 }

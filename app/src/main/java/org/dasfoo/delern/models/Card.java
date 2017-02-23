@@ -65,49 +65,10 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static DatabaseReference getFirebaseCardsRef() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+        return FirebaseDatabase.getInstance().getReference()
                 .child(CARDS);
         // TODO(ksheremet): keep synced only cards of current user (after changing FB)
         //databaseReference.keepSynced(true);
-        return databaseReference;
-    }
-
-    /**
-     * Method gets all cards to repeat calculating current time im milliseconds.
-     *
-     * @param deckId deck ID where to get cards.
-     * @return query of cards to repeat.
-     */
-    @Exclude
-    public static Query fetchCardsFromDeckToRepeat(final String deckId) {
-        long time = System.currentTimeMillis();
-        return getFirebaseCardsRef()
-                .child(deckId)
-                .orderByChild("createdAt")
-                .endAt(time);
-    }
-
-    /**
-     * Gets cards to learn with limit.
-     *
-     * @param deckId deck ID where to get cards.
-     * @param limit  limits number of cards.
-     * @return query of cards to repeat.
-     */
-    @Exclude
-    public static Query fetchCardsFromDeckToRepeatWithLimit(final String deckId, final int limit) {
-        return fetchCardsFromDeckToRepeat(deckId).limitToFirst(limit);
-    }
-
-    /**
-     * Gets one card to learn from deck.
-     *
-     * @param deckId deck ID.
-     * @return query of card.
-     */
-    @Exclude
-    public static Query fetchNextCardToRepeat(final String deckId) {
-        return fetchCardsFromDeckToRepeat(deckId).limitToFirst(1);
     }
 
     /**

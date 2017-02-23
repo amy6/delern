@@ -11,12 +11,14 @@ import com.google.firebase.database.FirebaseDatabase;
 public class View {
     @Exclude
     private static final String VIEWS = "views";
-    String cardId;
-    String levelBefore;
-    String reply;
-    Object timestamp;
+    @Exclude
+    private String cardId;
+    private String levelBefore;
+    private String reply;
+    private Object timestamp;
 
-    public View(String cardId, String levelBefore, String reply, Object timestamp) {
+    public View(final String cardId, final String levelBefore, final String reply,
+                final Object timestamp) {
         this.cardId = cardId;
         this.levelBefore = levelBefore;
         this.reply = reply;
@@ -30,15 +32,25 @@ public class View {
     }
 
     @Exclude
-    public static void removeViewsFromDeck(String deckId) {
+    public static void deleteViewsFromDeck(final String deckId) {
         getViewDatabaseReference().child(deckId).removeValue();
+    }
+
+    @Exclude
+    public static void addView(final String deckId, final View view) {
+        String key = getViewDatabaseReference()
+                .child(deckId)
+                .child(view.getCardId())
+                .push()
+                .getKey();
+        getViewDatabaseReference().child(deckId).child(view.getCardId()).child(key).setValue(view);
     }
 
     public String getCardId() {
         return cardId;
     }
 
-    public void setCardId(String cardId) {
+    public void setCardId(final String cardId) {
         this.cardId = cardId;
     }
 
@@ -46,7 +58,7 @@ public class View {
         return levelBefore;
     }
 
-    public void setLevelBefore(String levelBefore) {
+    public void setLevelBefore(final String levelBefore) {
         this.levelBefore = levelBefore;
     }
 
@@ -54,7 +66,7 @@ public class View {
         return reply;
     }
 
-    public void setReply(String reply) {
+    public void setReply(final String reply) {
         this.reply = reply;
     }
 
@@ -62,7 +74,7 @@ public class View {
         return timestamp;
     }
 
-    public void setTimestamp(Object timestamp) {
+    public void setTimestamp(final Object timestamp) {
         this.timestamp = timestamp;
     }
 }

@@ -139,7 +139,7 @@ public class Deck implements Parcelable {
         Card.deleteCardsFromDeck(deckId);
         DeckAccess.deleteDeckAccess(deckId);
         ScheduledCard.deleteCardsByDeckId(deckId);
-        View.removeViewsFromDeck(deckId);
+        View.deleteViewsFromDeck(deckId);
     }
 
     /**

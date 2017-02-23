@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
@@ -32,12 +33,13 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.Level;
+import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Activity for showing cards to learn.
  */
-public class ShowCardsActivity extends AppCompatActivity {
+public class LearningCardsActivity extends AppCompatActivity {
 
     /**
      * IntentExtra deck for this activity.
@@ -47,7 +49,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     /**
      * Information about class for logging.
      */
-    private static final String TAG = LogUtil.tagFor(ShowCardsActivity.class);
+    private static final String TAG = LogUtil.tagFor(LearningCardsActivity.class);
 
     /**
      * Key for saving onSaveInstanceState.
@@ -61,32 +63,42 @@ public class ShowCardsActivity extends AppCompatActivity {
     private TextView mFrontTextView;
     private TextView mBackTextView;
     private View mDelimiter;
+
+    private ValueEventListener mScheduledCardListener;
     private ValueEventListener mCurrentCardListener;
+
     private Query mCurrentCardQuery;
+    private Query mScheduledCardQuery;
     private boolean mBackIsShown;
 
     private Card mCurrentCard;
+    private ScheduledCard mScheduledCard;
     private Deck mDeck;
+
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    /*String newCardLevel = setNewLevel(mCurrentCard.getLevel());
-                    mCurrentCard.setLevel(newCardLevel);
-                    mCurrentCard.setCreatedAt(System.currentTimeMillis() +
+                    String newCardLevel = setNewLevel(mScheduledCard.getLevel());
+                    org.dasfoo.delern.models.View view = new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
+                            mScheduledCard.getLevel(), "Y", ServerValue.TIMESTAMP);
+                    mScheduledCard.setLevel(newCardLevel);
+                    mScheduledCard.setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
-                            RepetitionIntervals.getJitter());*/
-                    updateCardInFirebase();
+                            RepetitionIntervals.getJitter());
+                    updateLearningCardInFirebase(view);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
-                    /*mCurrentCard.setLevel(Level.L0.name());
-                    mCurrentCard.setCreatedAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().getInterval(mCurrentCard.getLevel()) +
+                    view = new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
+                            mScheduledCard.getLevel(), "N", ServerValue.TIMESTAMP);
+                    mScheduledCard.setLevel(Level.L0.name());
+                    mScheduledCard.setRepeatAt(System.currentTimeMillis() +
+                            RepetitionIntervals.getInstance().getInterval(mScheduledCard.getLevel()) +
                             RepetitionIntervals.getJitter());
-                    updateCardInFirebase();
-                    mBackIsShown = false;*/
+                    updateLearningCardInFirebase(view);
+                    mBackIsShown = false;
                     break;
                 case R.id.turn_card_button:
                     showBackSide();
@@ -115,7 +127,26 @@ public class ShowCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
-        mCurrentCardQuery = Card.fetchNextCardToRepeat(mDeck.getdId());
+        mScheduledCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
+        mCurrentCardListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
+                    mCurrentCard = cardSnapshot.getValue(Card.class);
+                    mCurrentCard.setcId(cardSnapshot.getKey());
+                }
+                showFrontSide();
+                if (mBackIsShown) {
+                    showBackSide();
+                }
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
+            }
+        };
     }
 
     /**
@@ -133,7 +164,7 @@ public class ShowCardsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mCurrentCardListener = new ValueEventListener() {
+        mScheduledCardListener = new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChildren()) {
@@ -144,12 +175,15 @@ public class ShowCardsActivity extends AppCompatActivity {
                 }
                 // It has only 1 card because of limit(1)
                 for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    mCurrentCard = cardSnapshot.getValue(Card.class);
-                    mCurrentCard.setcId(cardSnapshot.getKey());
-                }
-                showFrontSide();
-                if (mBackIsShown) {
-                    showBackSide();
+                    mScheduledCard = cardSnapshot.getValue(ScheduledCard.class);
+                    mScheduledCard.setcId(cardSnapshot.getKey());
+                    // Check if current card has already old listener, remove it.
+                    if (mCurrentCardQuery != null) {
+                        mCurrentCardQuery.removeEventListener(mCurrentCardListener);
+                    }
+                    // Init query by Id
+                    mCurrentCardQuery = Card.getCardById(mDeck.getdId(), mScheduledCard.getcId());
+                    mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
                 }
             }
 
@@ -158,16 +192,20 @@ public class ShowCardsActivity extends AppCompatActivity {
                 Log.e(TAG, databaseError.getMessage());
             }
         };
-        // It listens to always the mCurrentCardQuery. If mCurrentCardQuery changes,
-        // onDataChange executes and initializes mCurrentCard.
-        mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
+        // It listens to always the mScheduledCardQuery. If mScheduledCardQuery changes,
+        // onDataChange executes and initializes mScheduledCard.
+        mScheduledCardQuery.addValueEventListener(mScheduledCardListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        // Check if current card has already listener, remove it.
         if (mCurrentCardQuery != null) {
             mCurrentCardQuery.removeEventListener(mCurrentCardListener);
+        }
+        if (mScheduledCardQuery != null) {
+            mScheduledCardQuery.removeEventListener(mScheduledCardListener);
         }
     }
 
@@ -264,6 +302,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         mDelimiter.setVisibility(View.INVISIBLE);
     }
 
+    //TODO: Move logic to another class
     private void setBackgroundCardColor() {
         GrammaticalGenderSpecifier.Gender gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {
@@ -289,7 +328,6 @@ public class ShowCardsActivity extends AppCompatActivity {
                         R.color.colorPrimaryLight));
                 break;
         }
-
     }
 
     /**
@@ -314,6 +352,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         mBackIsShown = true;
     }
 
+    // TODO(ksheremet): Move to separate class
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private Animator appearanceAnimation(final View view) {
         // get the center for the clipping circle
@@ -324,6 +363,7 @@ public class ShowCardsActivity extends AppCompatActivity {
         return ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
     }
 
+    // TODO(ksheremet): Move probably to RepetitionIntervals
     private String setNewLevel(final String currLevel) {
         Level cLevel = Level.valueOf(currLevel);
         if (cLevel == Level.L7) {
@@ -332,7 +372,8 @@ public class ShowCardsActivity extends AppCompatActivity {
         return cLevel.next().name();
     }
 
-    private void updateCardInFirebase() {
-        Card.updateCard(mCurrentCard, mDeck.getdId());
+    private void updateLearningCardInFirebase(final org.dasfoo.delern.models.View view) {
+        org.dasfoo.delern.models.View.addView(mDeck.getdId(), view);
+        ScheduledCard.updateCard(mScheduledCard, mDeck.getdId());
     }
 }

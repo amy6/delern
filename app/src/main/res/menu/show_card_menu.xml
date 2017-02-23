@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.dasfoo.delern.card.ShowCardsActivity">
+    tools:context="org.dasfoo.delern.card.LearningCardsActivity">
     <item
         android:id="@+id/edit_card_show_menu"
         android:orderInCategory="100"

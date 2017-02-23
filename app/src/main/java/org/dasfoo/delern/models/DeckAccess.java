@@ -4,8 +4,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.viewholders.DeckViewHolder;
-
 /**
  * Created by katarina on 2/22/17.
  */

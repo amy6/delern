@@ -25,7 +25,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
-import org.dasfoo.delern.card.ShowCardsActivity;
+import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
@@ -231,8 +231,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     private void startShowCardActivity(final Deck deck) {
-        Intent intent = new Intent(getActivity(), ShowCardsActivity.class);
-        intent.putExtra(ShowCardsActivity.DECK, deck);
+        Intent intent = new Intent(getActivity(), LearningCardsActivity.class);
+        intent.putExtra(LearningCardsActivity.DECK, deck);
         startActivity(intent);
     }
 
