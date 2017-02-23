@@ -81,8 +81,9 @@ public class LearningCardsActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.to_know_button:
                     String newCardLevel = setNewLevel(mScheduledCard.getLevel());
-                    org.dasfoo.delern.models.View view = new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
-                            mScheduledCard.getLevel(), "Y", ServerValue.TIMESTAMP);
+                    org.dasfoo.delern.models.View view =
+                            new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
+                                    mScheduledCard.getLevel(), "Y", ServerValue.TIMESTAMP);
                     mScheduledCard.setLevel(newCardLevel);
                     mScheduledCard.setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
@@ -95,7 +96,8 @@ public class LearningCardsActivity extends AppCompatActivity {
                             mScheduledCard.getLevel(), "N", ServerValue.TIMESTAMP);
                     mScheduledCard.setLevel(Level.L0.name());
                     mScheduledCard.setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().getInterval(mScheduledCard.getLevel()) +
+                            RepetitionIntervals.getInstance()
+                                    .getInterval(mScheduledCard.getLevel()) +
                             RepetitionIntervals.getJitter());
                     updateLearningCardInFirebase(view);
                     mBackIsShown = false;
@@ -301,7 +303,7 @@ public class LearningCardsActivity extends AppCompatActivity {
         mDelimiter.setVisibility(View.INVISIBLE);
     }
 
-    //TODO: Move logic to another class
+    // TODO(ksheremet): Move logic to another class
     private void setBackgroundCardColor() {
         GrammaticalGenderSpecifier.Gender gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {

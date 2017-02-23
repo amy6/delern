@@ -57,10 +57,13 @@ public class Deck implements Parcelable {
         // This constructor is intentionally left empty.
     }
 
+
     /**
-     * Constructor with parameter name of deck.
+     * Constructor for deck.
      *
-     * @param name name of deck.
+     * @param name         name of deck.
+     * @param dType        sets type of deck from DeckType class.
+     * @param userAccepted whether user is accepted deck or not (for sharing).
      */
     public Deck(final String name, final String dType, final boolean userAccepted) {
         this.name = name;
@@ -74,7 +77,7 @@ public class Deck implements Parcelable {
         deckType = in.readString();
         category = in.readString();
         // Reading and writing boolean for parceable
-        // http://stackoverflow.com/questions/6201311/how-to-read-write-a-boolean-when-implementing-the-parcelable-interface
+        // https://goo.gl/PLRLWY
         accepted = in.readByte() != 0;
     }
 
@@ -85,10 +88,9 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static DatabaseReference getFirebaseDecksRef() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+        return FirebaseDatabase.getInstance().getReference()
                 .child(DECKS).child(User.getCurrentUser().getUid());
         //databaseReference.keepSynced(true);
-        return databaseReference;
     }
 
     /**
@@ -233,7 +235,9 @@ public class Deck implements Parcelable {
     }
 
     /**
-     * @return
+     * Whether deck is accepted by user of not.
+     *
+     * @return true if deck is accepted, otherwise false.
      */
     public boolean isAccepted() {
         return accepted;
@@ -279,6 +283,10 @@ public class Deck implements Parcelable {
         parcel.writeString(this.name);
         parcel.writeString(this.deckType);
         parcel.writeString(this.category);
-        parcel.writeByte((byte) (accepted ? 1 : 0));
+        if (accepted) {
+            parcel.writeByte((byte) 1);
+        } else {
+            parcel.writeByte((byte) 0);
+        }
     }
 }

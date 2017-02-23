@@ -16,12 +16,13 @@ import java.util.Map;
  * Created by katarina on 2/20/17.
  */
 
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class ScheduledCard {
 
     @Exclude
-    private static final String LEARNING = "learning";
-    @Exclude
     private static final String TAG = LogUtil.tagFor(ScheduledCard.class);
+    @Exclude
+    private static final String LEARNING = "learning";
     @Exclude
     private String cId;
     private String level;
@@ -49,8 +50,8 @@ public class ScheduledCard {
     }
 
     @Exclude
-    public static void writeScheduleForCard(final String deckId,final String cardId,
-                                            final ScheduledCard scheduledCard ) {
+    public static void writeScheduleForCard(final String deckId, final String cardId,
+                                            final ScheduledCard scheduledCard) {
         DatabaseReference databaseReference = getFirebaseScheduledCardRef();
         databaseReference.child(deckId).child(cardId).setValue(scheduledCard);
     }
@@ -82,7 +83,7 @@ public class ScheduledCard {
     }
 
     @Exclude
-    public static void deleteCardbyId(final String deckId, final  String cardId) {
+    public static void deleteCardbyId(final String deckId, final String cardId) {
         //TODO(ksheremet): Add listeners on success and failure
         getFirebaseScheduledCardRef().child(deckId).child(cardId).removeValue();
     }
@@ -90,8 +91,8 @@ public class ScheduledCard {
     /**
      * Updates scheduledCard using deck ID. Card ID is the same.
      *
-     * @param scheduledCard   new card
-     * @param deckId deck ID where to update card.
+     * @param scheduledCard new card
+     * @param deckId        deck ID where to update card.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude

@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by katarina on 2/23/17.
  */
 
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class View {
     @Exclude
     private static final String VIEWS = "views";

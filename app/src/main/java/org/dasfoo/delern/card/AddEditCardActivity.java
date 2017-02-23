@@ -116,13 +116,12 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void addNewCard(final String frontSide, final String backSide) {
-        ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(), System.currentTimeMillis());
-
         Card newCard = new Card();
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
-        //TODO(ksheremet): Put timestamp in Card.class
         newCard.setCreatedAt(ServerValue.TIMESTAMP);
+        ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
+                System.currentTimeMillis());
         Card.createNewCard(newCard, mDeckId, scheduledCard);
     }
 }

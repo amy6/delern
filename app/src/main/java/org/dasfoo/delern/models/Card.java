@@ -72,10 +72,12 @@ public class Card implements Parcelable {
     }
 
     /**
-     * Creates new card in deck in Firebase.
+     * Creates new card in Firebase. Id adds time for next repetition and level of card
+     * in learning/. Sets front, back and createdAt in cards/.
      *
      * @param newCard card for writing to deck.
      * @param deckId  deck ID where to create card.
+     * @param scheduledCard schedules next appearance and sets level of card.
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
