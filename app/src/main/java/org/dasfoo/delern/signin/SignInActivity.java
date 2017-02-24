@@ -136,7 +136,7 @@ public class SignInActivity extends AppCompatActivity
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed
-                Log.e(TAG, "Google Sign In failed.");
+                Log.e(TAG, "Google Sign In failed:" + result.getStatus());
             }
         }
     }
