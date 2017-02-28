@@ -11,4 +11,5 @@
     <color name="feminine">#d1f2729b</color>
     <color name="masculine">#d160c9fa</color>
     <color name="neuter">#ede88e</color>
+    <color name="noGender">#DCEDC8</color>
 </resources>

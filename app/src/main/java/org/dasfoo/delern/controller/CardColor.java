@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 /**
  * Created by katarina on 2/26/17.
+ * Class specifies color using gender.
  */
 
 public final class CardColor {
@@ -19,7 +20,7 @@ public final class CardColor {
         color.put(GrammaticalGenderSpecifier.Gender.FEMININE, R.color.feminine);
         color.put(GrammaticalGenderSpecifier.Gender.MASCULINE, R.color.masculine);
         color.put(GrammaticalGenderSpecifier.Gender.NEUTER, R.color.neuter);
-        color.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.colorPrimaryLight);
+        color.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.noGender);
     }
 
     /**
