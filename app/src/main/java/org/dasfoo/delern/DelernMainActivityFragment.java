@@ -70,7 +70,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         Deck newDeck = new Deck(input.getText().toString(),
-                                DeckType.BASIC.name().toLowerCase(), true);
+                                DeckType.BASIC.name(), true);
                         String key = Deck.createNewDeck(newDeck);
                         mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                         startEditCardsActivity(key, newDeck.getName());
@@ -202,7 +202,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
-        deck.setDeckType(deckType.name().toLowerCase());
+        deck.setDeckType(deckType.name());
         Deck.updateDeck(deck);
     }
 

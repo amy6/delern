@@ -27,6 +27,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.Card;
@@ -303,32 +304,21 @@ public class LearningCardsActivity extends AppCompatActivity {
         mDelimiter.setVisibility(View.INVISIBLE);
     }
 
-    // TODO(ksheremet): Move logic to another class
+    /**
+     * Specifies grammatical gender of content.
+     * Sets background color for mCardView regarding gender.
+     */
     private void setBackgroundCardColor() {
-        GrammaticalGenderSpecifier.Gender gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
-        if (DeckType.SWISS.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            gender = GrammaticalGenderSpecifier
-                    .specifyGender(DeckType.SWISS, mCurrentCard.getBack());
+        GrammaticalGenderSpecifier.Gender gender;
+        try {
+            gender = GrammaticalGenderSpecifier.specifyGender(
+                    DeckType.valueOf(mDeck.getDeckType()), mCurrentCard.getBack());
+
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, e.getMessage());
+            gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         }
-        if (DeckType.GERMAN.name().equalsIgnoreCase(mDeck.getDeckType())) {
-            gender = GrammaticalGenderSpecifier
-                    .specifyGender(DeckType.GERMAN, mCurrentCard.getBack());
-        }
-        switch (gender) {
-            case FEMININE:
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.feminine));
-                break;
-            case MASCULINE:
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.masculine));
-                break;
-            case NEUTER:
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this, R.color.neuter));
-                break;
-            default:
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(this,
-                        R.color.colorPrimaryLight));
-                break;
-        }
+        mCardView.setCardBackgroundColor(ContextCompat.getColor(this, CardColor.getColor(gender)));
     }
 
     /**

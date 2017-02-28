@@ -57,7 +57,6 @@ public class Deck implements Parcelable {
         // This constructor is intentionally left empty.
     }
 
-
     /**
      * Constructor for deck.
      *
@@ -202,7 +201,7 @@ public class Deck implements Parcelable {
      */
     public String getDeckType() {
         if (deckType == null) {
-            return DeckType.BASIC.name().toLowerCase();
+            return DeckType.BASIC.name();
         }
         return deckType;
     }
