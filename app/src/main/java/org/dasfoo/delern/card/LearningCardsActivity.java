@@ -35,6 +35,7 @@ import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
+import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -329,8 +330,8 @@ public class LearningCardsActivity extends AppCompatActivity {
         Animator repeatButtonAnimation = null;
         Animator knowButtonAnimation = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            repeatButtonAnimation = appearanceAnimation(mRepeatButton);
-            knowButtonAnimation = appearanceAnimation(mKnowButton);
+            repeatButtonAnimation = Animation.appearanceAnimation(mRepeatButton);
+            knowButtonAnimation = Animation.appearanceAnimation(mKnowButton);
         }
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
@@ -341,17 +342,6 @@ public class LearningCardsActivity extends AppCompatActivity {
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
         mBackIsShown = true;
-    }
-
-    // TODO(ksheremet): Move to separate class
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private Animator appearanceAnimation(final View view) {
-        // get the center for the clipping circle
-        int cx = view.getWidth() / 2;
-        int cy = view.getHeight() / 2;
-        // get the final radius for the clipping circle
-        float finalRadius = (float) Math.hypot(cx, cy);
-        return ViewAnimationUtils.createCircularReveal(view, cx, cy, 0, finalRadius);
     }
 
     // TODO(ksheremet): Move probably to RepetitionIntervals
