@@ -1,9 +1,9 @@
 package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.models.DeckType;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by katarina on 2/26/17.
@@ -12,15 +12,15 @@ import java.util.HashMap;
 
 public final class CardColor {
 
-    private static CardColor instance = null;
+    private static CardColor sInstance;
 
-    private static HashMap<GrammaticalGenderSpecifier.Gender, Integer> color = new HashMap<>();
+    private static Map<GrammaticalGenderSpecifier.Gender, Integer> sColor = new HashMap<>();
 
     private CardColor() {
-        color.put(GrammaticalGenderSpecifier.Gender.FEMININE, R.color.feminine);
-        color.put(GrammaticalGenderSpecifier.Gender.MASCULINE, R.color.masculine);
-        color.put(GrammaticalGenderSpecifier.Gender.NEUTER, R.color.neuter);
-        color.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.noGender);
+        sColor.put(GrammaticalGenderSpecifier.Gender.FEMININE, R.color.feminine);
+        sColor.put(GrammaticalGenderSpecifier.Gender.MASCULINE, R.color.masculine);
+        sColor.put(GrammaticalGenderSpecifier.Gender.NEUTER, R.color.neuter);
+        sColor.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.noGender);
     }
 
     /**
@@ -29,11 +29,11 @@ public final class CardColor {
      * @param gender grammatical gender.
      * @return color.
      */
-    public static int getColor(GrammaticalGenderSpecifier.Gender gender) {
-        if (instance == null) {
-            instance = new CardColor();
+    public static int getColor(final GrammaticalGenderSpecifier.Gender gender) {
+        if (sInstance == null) {
+            sInstance = new CardColor();
         }
-        return color.get(gender);
+        return sColor.get(gender);
     }
 
 }
