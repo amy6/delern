@@ -3,6 +3,7 @@ package org.dasfoo.delern.models;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 /**
  * Created by katarina on 2/23/17.
@@ -24,14 +25,12 @@ public class View {
      * @param cardId id of card.
      * @param levelBefore lever of card before learning.
      * @param reply reply on card by learning (Y/N).
-     * @param timestamp time of learning card.
      */
-    public View(final String cardId, final String levelBefore, final String reply,
-                final Object timestamp) {
+    public View(final String cardId, final String levelBefore, final String reply) {
         this.cardId = cardId;
         this.levelBefore = levelBefore;
         this.reply = reply;
-        this.timestamp = timestamp;
+        this.timestamp = ServerValue.TIMESTAMP;
     }
 
     /**

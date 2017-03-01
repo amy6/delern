@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
@@ -93,7 +92,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                             .getNextLevel(mLearningCard.getScheduledCard().getLevel());
                     org.dasfoo.delern.models.View view =
                             new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
-                                    mLearningCard.getScheduledCard().getLevel(), "Y", ServerValue.TIMESTAMP);
+                                    mLearningCard.getScheduledCard().getLevel(), "Y");
                     mLearningCard.getScheduledCard().setLevel(newCardLevel);
                     mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
@@ -103,7 +102,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                     break;
                 case R.id.to_repeat_button:
                     view = new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
-                            mLearningCard.getScheduledCard().getLevel(), "N", ServerValue.TIMESTAMP);
+                            mLearningCard.getScheduledCard().getLevel(), "N");
                     mLearningCard.getScheduledCard().setLevel(Level.L0.name());
                     mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance()
