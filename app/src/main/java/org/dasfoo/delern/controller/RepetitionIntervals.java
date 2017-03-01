@@ -48,6 +48,20 @@ public final class RepetitionIntervals {
     }
 
     /**
+     * Specifies next level in repetition intervals using current.
+     *
+     * @param currentLevel current level.
+     * @return next level.
+     */
+    public static String getNextLevel(final String currentLevel) {
+        Level cLevel = Level.valueOf(currentLevel);
+        if (cLevel == Level.L7) {
+            return Level.L7.name();
+        }
+        return cLevel.next().name();
+    }
+
+    /**
      * Get interval of the next card appearance for the level.
      *
      * @param levelName name of the level, one of Level.* constants

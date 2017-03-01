@@ -89,7 +89,8 @@ public class LearningCardsActivity extends AppCompatActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    String newCardLevel = setNewLevel(mLearningCard.getScheduledCard().getLevel());
+                    String newCardLevel = RepetitionIntervals
+                            .getNextLevel(mLearningCard.getScheduledCard().getLevel());
                     org.dasfoo.delern.models.View view =
                             new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
                                     mLearningCard.getScheduledCard().getLevel(), "Y", ServerValue.TIMESTAMP);
@@ -303,15 +304,6 @@ public class LearningCardsActivity extends AppCompatActivity {
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
         mBackIsShown = true;
-    }
-
-    // TODO(ksheremet): Move probably to RepetitionIntervals
-    private String setNewLevel(final String currLevel) {
-        Level cLevel = Level.valueOf(currLevel);
-        if (cLevel == Level.L7) {
-            return Level.L7.name();
-        }
-        return cLevel.next().name();
     }
 
     // TODO(ksheremet): Move to Model
