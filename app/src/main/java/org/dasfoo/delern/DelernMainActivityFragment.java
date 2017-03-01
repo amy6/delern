@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -29,6 +28,7 @@ import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -88,7 +88,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mProgressBarListener = new ValueEventListener() {
+        mProgressBarListener = new UserMessageValueEventListener(getContext()) {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -97,11 +97,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 if (!dataSnapshot.hasChildren()) {
                     mEmptyMessageTextView.setVisibility(TextView.VISIBLE);
                 }
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                Log.v(TAG, databaseError.getMessage());
             }
         };
         mUsersDecksQuery = Deck.getUsersDecks();
@@ -122,7 +117,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
         if (mUsersDecksQuery != null) {
-            mUsersDecksQuery.addListenerForSingleValueEvent(mProgressBarListener);
+            mUsersDecksQuery.addValueEventListener(mProgressBarListener);
         }
         mIsListenersAttached = true;
     }

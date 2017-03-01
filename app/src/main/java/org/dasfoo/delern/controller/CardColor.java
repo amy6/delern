@@ -35,5 +35,4 @@ public final class CardColor {
         }
         return sColor.get(gender);
     }
-
 }

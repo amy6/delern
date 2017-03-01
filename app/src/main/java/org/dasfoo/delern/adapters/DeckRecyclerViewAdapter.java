@@ -1,18 +1,16 @@
 package org.dasfoo.delern.adapters;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.util.LogUtil;
+import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 import java.util.Map;
@@ -24,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
-    private static final String TAG = LogUtil.tagFor(DeckRecyclerViewAdapter.class);
     private static final int CARDS_COUNTER_LIMIT = 200;
 
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
@@ -57,7 +54,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.setDeckCardType(deck.getDeckType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
-        ValueEventListener deckEventListener = new ValueEventListener() {
+        ValueEventListener deckEventListener = new UserMessageValueEventListener(mContext) {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 long cardsCount = dataSnapshot.getChildrenCount();
@@ -67,12 +64,6 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                     String toManyCards = CARDS_COUNTER_LIMIT + "+";
                     viewHolder.getCountToLearnTextView().setText(toManyCards);
                 }
-
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                Log.v(TAG, databaseError.getMessage());
             }
         };
         Query query = ScheduledCard.fetchCardsToRepeatWithLimit(getRef(position).getKey(),
@@ -110,6 +101,4 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     public void setContext(final Context context) {
         this.mContext = context;
     }
-
-
 }
