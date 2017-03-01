@@ -17,21 +17,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.controller.RepetitionIntervals;
+import org.dasfoo.delern.handlers.OnLearningCardAvailable;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
+import org.dasfoo.delern.models.listener.LearningCardListener;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -62,41 +61,52 @@ public class LearningCardsActivity extends AppCompatActivity {
     private TextView mFrontTextView;
     private TextView mBackTextView;
     private View mDelimiter;
-
-    private ValueEventListener mScheduledCardListener;
-    private ValueEventListener mCurrentCardListener;
-
-    private Query mCurrentCardQuery;
-    private Query mScheduledCardQuery;
     private boolean mBackIsShown;
-
-    private Card mCurrentCard;
-    private ScheduledCard mScheduledCard;
     private Deck mDeck;
+    private LearningCardListener mLearningCard;
+    private final OnLearningCardAvailable mCardAvailable = new OnLearningCardAvailable() {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onNewCardAvailable() {
+            showFrontSide();
+            if (mBackIsShown) {
+                showBackSide();
+            }
+        }
 
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void onNoCardsAvailable() {
+            finish();
+        }
+    };
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    String newCardLevel = setNewLevel(mScheduledCard.getLevel());
+                    String newCardLevel = setNewLevel(mLearningCard.getScheduledCard().getLevel());
                     org.dasfoo.delern.models.View view =
-                            new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
-                                    mScheduledCard.getLevel(), "Y", ServerValue.TIMESTAMP);
-                    mScheduledCard.setLevel(newCardLevel);
-                    mScheduledCard.setRepeatAt(System.currentTimeMillis() +
+                            new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
+                                    mLearningCard.getScheduledCard().getLevel(), "Y", ServerValue.TIMESTAMP);
+                    mLearningCard.getScheduledCard().setLevel(newCardLevel);
+                    mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance().getInterval(newCardLevel) +
                             RepetitionIntervals.getJitter());
                     updateLearningCardInFirebase(view);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
-                    view = new org.dasfoo.delern.models.View(mCurrentCard.getcId(),
-                            mScheduledCard.getLevel(), "N", ServerValue.TIMESTAMP);
-                    mScheduledCard.setLevel(Level.L0.name());
-                    mScheduledCard.setRepeatAt(System.currentTimeMillis() +
+                    view = new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
+                            mLearningCard.getScheduledCard().getLevel(), "N", ServerValue.TIMESTAMP);
+                    mLearningCard.getScheduledCard().setLevel(Level.L0.name());
+                    mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
                             RepetitionIntervals.getInstance()
-                                    .getInterval(mScheduledCard.getLevel()) +
+                                    .getInterval(mLearningCard.getScheduledCard().getLevel()) +
                             RepetitionIntervals.getJitter());
                     updateLearningCardInFirebase(view);
                     mBackIsShown = false;
@@ -110,6 +120,7 @@ public class LearningCardsActivity extends AppCompatActivity {
             }
         }
     };
+    private Query mLearningCardQuery;
 
     /**
      * {@inheritDoc}
@@ -128,21 +139,9 @@ public class LearningCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
-        mScheduledCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
-        mCurrentCardListener = new UserMessageValueEventListener(this) {
 
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    mCurrentCard = cardSnapshot.getValue(Card.class);
-                    mCurrentCard.setcId(cardSnapshot.getKey());
-                }
-                showFrontSide();
-                if (mBackIsShown) {
-                    showBackSide();
-                }
-            }
-        };
+        mLearningCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
+        mLearningCard = new LearningCardListener(this, mDeck.getdId(), mCardAvailable);
     }
 
     /**
@@ -160,43 +159,18 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mScheduledCardListener = new UserMessageValueEventListener(this) {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChildren()) {
-                    finish();
-                    // You should put a return statement after that finish,
-                    // because the method that called finish will be executed completely otherwise.
-                    return;
-                }
-                // It has only 1 card because of limit(1)
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    mScheduledCard = cardSnapshot.getValue(ScheduledCard.class);
-                    mScheduledCard.setcId(cardSnapshot.getKey());
-                    // Check if current card has already old listener, remove it.
-                    if (mCurrentCardQuery != null) {
-                        mCurrentCardQuery.removeEventListener(mCurrentCardListener);
-                    }
-                    // Init query by Id
-                    mCurrentCardQuery = Card.getCardById(mDeck.getdId(), mScheduledCard.getcId());
-                    mCurrentCardQuery.addValueEventListener(mCurrentCardListener);
-                }
-            }
-        };
         // It listens to always the mScheduledCardQuery. If mScheduledCardQuery changes,
         // onDataChange executes and initializes mScheduledCard.
-        mScheduledCardQuery.addValueEventListener(mScheduledCardListener);
+        mLearningCardQuery.addValueEventListener(mLearningCard);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         // Check if current card has already listener, remove it.
-        if (mCurrentCardQuery != null) {
-            mCurrentCardQuery.removeEventListener(mCurrentCardListener);
-        }
-        if (mScheduledCardQuery != null) {
-            mScheduledCardQuery.removeEventListener(mScheduledCardListener);
+        if (mLearningCardQuery != null) {
+            mLearningCard.clean();
+            mLearningCardQuery.removeEventListener(mLearningCard);
         }
     }
 
@@ -229,7 +203,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
                 intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeck.getdId());
                 intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
-                intentEdit.putExtra(AddEditCardActivity.CARD, mCurrentCard);
+                intentEdit.putExtra(AddEditCardActivity.CARD, mLearningCard.getCurrentCard());
                 startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
@@ -239,7 +213,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         mBackIsShown = false;
-                        Card.deleteCardFromDeck(mDeck.getdId(), mCurrentCard);
+                        Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard());
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -284,7 +258,7 @@ public class LearningCardsActivity extends AppCompatActivity {
      */
     private void showFrontSide() {
         setBackgroundCardColor();
-        mFrontTextView.setText(mCurrentCard.getFront());
+        mFrontTextView.setText(mLearningCard.getCurrentCard().getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
@@ -300,7 +274,7 @@ public class LearningCardsActivity extends AppCompatActivity {
         GrammaticalGenderSpecifier.Gender gender;
         try {
             gender = GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mDeck.getDeckType()), mCurrentCard.getBack());
+                    DeckType.valueOf(mDeck.getDeckType()), mLearningCard.getCurrentCard().getBack());
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, e.getMessage());
@@ -313,7 +287,7 @@ public class LearningCardsActivity extends AppCompatActivity {
      * Shows back side of current card and appropriate buttons.
      */
     private void showBackSide() {
-        mBackTextView.setText(mCurrentCard.getBack());
+        mBackTextView.setText(mLearningCard.getCurrentCard().getBack());
         Animator repeatButtonAnimation = null;
         Animator knowButtonAnimation = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -340,8 +314,9 @@ public class LearningCardsActivity extends AppCompatActivity {
         return cLevel.next().name();
     }
 
+    // TODO(ksheremet): Move to Model
     private void updateLearningCardInFirebase(final org.dasfoo.delern.models.View view) {
         org.dasfoo.delern.models.View.addView(mDeck.getdId(), view);
-        ScheduledCard.updateCard(mScheduledCard, mDeck.getdId());
+        ScheduledCard.updateCard(mLearningCard.getScheduledCard(), mDeck.getdId());
     }
 }
