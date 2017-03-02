@@ -88,26 +88,23 @@ public class LearningCardsActivity extends AppCompatActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    String newCardLevel = RepetitionIntervals
+                    String newCardLevel = Level
                             .getNextLevel(mLearningCard.getScheduledCard().getLevel());
                     org.dasfoo.delern.models.View view =
-                            new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
-                                    mLearningCard.getScheduledCard().getLevel(), "Y");
+                            new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard()
+                                    .getcId(), mLearningCard.getScheduledCard().getLevel(), "Y");
                     mLearningCard.getScheduledCard().setLevel(newCardLevel);
-                    mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance().getInterval(newCardLevel) +
-                            RepetitionIntervals.getJitter());
+                    mLearningCard.getScheduledCard().setRepeatAt(RepetitionIntervals.getInstance()
+                            .getNextTimeToRepeat(newCardLevel));
                     updateLearningCardInFirebase(view);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
-                    view = new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard().getcId(),
-                            mLearningCard.getScheduledCard().getLevel(), "N");
+                    view = new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard()
+                            .getcId(), mLearningCard.getScheduledCard().getLevel(), "N");
                     mLearningCard.getScheduledCard().setLevel(Level.L0.name());
-                    mLearningCard.getScheduledCard().setRepeatAt(System.currentTimeMillis() +
-                            RepetitionIntervals.getInstance()
-                                    .getInterval(mLearningCard.getScheduledCard().getLevel()) +
-                            RepetitionIntervals.getJitter());
+                    mLearningCard.getScheduledCard().setRepeatAt(RepetitionIntervals.getInstance()
+                            .getNextTimeToRepeat(mLearningCard.getScheduledCard().getLevel()));
                     updateLearningCardInFirebase(view);
                     mBackIsShown = false;
                     break;

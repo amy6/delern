@@ -53,7 +53,21 @@ public enum Level {
      *
      * @return next level of card.
      */
-    public Level next() {
+    private Level next() {
         return sValues[(this.ordinal() + 1) % sValues.length];
+    }
+
+    /**
+     * Specifies next level in repetition intervals using current.
+     *
+     * @param currentLevel current level.
+     * @return next level.
+     */
+    public static String getNextLevel(final String currentLevel) {
+        Level cLevel = Level.valueOf(currentLevel);
+        if (cLevel == Level.L7) {
+            return Level.L7.name();
+        }
+        return cLevel.next().name();
     }
 }

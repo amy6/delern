@@ -42,23 +42,19 @@ public final class RepetitionIntervals {
      *
      * @return period of time in milliseconds.
      */
-    public static long getJitter() {
+    private long getJitter() {
         // Random() method returns a random number between 0.0 and 0.999
         return (long) (Math.random() * 2 * ONE_HOUR + 1);
     }
 
     /**
-     * Specifies next level in repetition intervals using current.
+     * Counts next time to repeat.
      *
-     * @param currentLevel current level.
-     * @return next level.
+     * @param level current level
+     * @return next time to repeat
      */
-    public static String getNextLevel(final String currentLevel) {
-        Level cLevel = Level.valueOf(currentLevel);
-        if (cLevel == Level.L7) {
-            return Level.L7.name();
-        }
-        return cLevel.next().name();
+    public long getNextTimeToRepeat(String level) {
+        return System.currentTimeMillis() + getInstance().getInterval(level) + getJitter();
     }
 
     /**
@@ -67,7 +63,7 @@ public final class RepetitionIntervals {
      * @param levelName name of the level, one of Level.* constants
      * @return interval in milliseconds
      */
-    public Long getInterval(final String levelName) {
+    private Long getInterval(final String levelName) {
         return mIntervals.get(levelName);
     }
 }
