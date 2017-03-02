@@ -53,7 +53,7 @@ public final class RepetitionIntervals {
      * @param level current level
      * @return next time to repeat
      */
-    public long getNextTimeToRepeat(String level) {
+    public long getNextTimeToRepeat(final String level) {
         return System.currentTimeMillis() + getInstance().getInterval(level) + getJitter();
     }
 

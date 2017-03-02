@@ -22,12 +22,10 @@ import com.google.firebase.database.Query;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
-import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.handlers.OnLearningCardAvailable;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.models.listener.LearningCardListener;
 import org.dasfoo.delern.util.Animation;
@@ -68,7 +66,7 @@ public class LearningCardsActivity extends AppCompatActivity {
          * {@inheritDoc}
          */
         @Override
-        public void onNewCardAvailable() {
+        public void onNewCard() {
             showFrontSide();
             if (mBackIsShown) {
                 showBackSide();
@@ -79,7 +77,7 @@ public class LearningCardsActivity extends AppCompatActivity {
          * {@inheritDoc}
          */
         @Override
-        public void onNoCardsAvailable() {
+        public void onNoCards() {
             finish();
         }
     };
@@ -88,24 +86,11 @@ public class LearningCardsActivity extends AppCompatActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
-                    String newCardLevel = Level
-                            .getNextLevel(mLearningCard.getScheduledCard().getLevel());
-                    org.dasfoo.delern.models.View view =
-                            new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard()
-                                    .getcId(), mLearningCard.getScheduledCard().getLevel(), "Y");
-                    mLearningCard.getScheduledCard().setLevel(newCardLevel);
-                    mLearningCard.getScheduledCard().setRepeatAt(RepetitionIntervals.getInstance()
-                            .getNextTimeToRepeat(newCardLevel));
-                    updateLearningCardInFirebase(view);
+                    mLearningCard.viewedCard(LearningCardListener.KNOW_CARD);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
-                    view = new org.dasfoo.delern.models.View(mLearningCard.getScheduledCard()
-                            .getcId(), mLearningCard.getScheduledCard().getLevel(), "N");
-                    mLearningCard.getScheduledCard().setLevel(Level.L0.name());
-                    mLearningCard.getScheduledCard().setRepeatAt(RepetitionIntervals.getInstance()
-                            .getNextTimeToRepeat(mLearningCard.getScheduledCard().getLevel()));
-                    updateLearningCardInFirebase(view);
+                    mLearningCard.viewedCard(LearningCardListener.DO_NOT_KNOW_CARD);
                     mBackIsShown = false;
                     break;
                 case R.id.turn_card_button:
@@ -156,8 +141,6 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // It listens to always the mScheduledCardQuery. If mScheduledCardQuery changes,
-        // onDataChange executes and initializes mScheduledCard.
         mLearningCardQuery.addValueEventListener(mLearningCard);
     }
 
@@ -271,7 +254,8 @@ public class LearningCardsActivity extends AppCompatActivity {
         GrammaticalGenderSpecifier.Gender gender;
         try {
             gender = GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mDeck.getDeckType()), mLearningCard.getCurrentCard().getBack());
+                    DeckType.valueOf(mDeck.getDeckType()),
+                    mLearningCard.getCurrentCard().getBack());
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, e.getMessage());
@@ -300,11 +284,5 @@ public class LearningCardsActivity extends AppCompatActivity {
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
         mBackIsShown = true;
-    }
-
-    // TODO(ksheremet): Move to Model
-    private void updateLearningCardInFirebase(final org.dasfoo.delern.models.View view) {
-        org.dasfoo.delern.models.View.addView(mDeck.getdId(), view);
-        ScheduledCard.updateCard(mLearningCard.getScheduledCard(), mDeck.getdId());
     }
 }

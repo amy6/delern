@@ -8,10 +8,10 @@ public interface OnLearningCardAvailable {
     /**
      * Handler on new card available for learning.
      */
-    void onNewCardAvailable();
+    void onNewCard();
 
     /**
      * Handler on no cards available for learning.
      */
-    void onNoCardsAvailable();
+    void onNoCards();
 }
