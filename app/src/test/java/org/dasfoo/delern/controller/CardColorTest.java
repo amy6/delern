@@ -1,7 +1,9 @@
-package org.dasfoo.delern;
+package org.dasfoo.delern.controller;
 
+import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class CardColorTest {
     @Test
     public void feminineCardColor() {
-        assertEquals(CardColor
+        Assert.assertEquals(CardColor
                 .getColor(GrammaticalGenderSpecifier.Gender.FEMININE), R.color.feminine);
     }
 

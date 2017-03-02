@@ -1,4 +1,4 @@
-package org.dasfoo.delern;
+package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.models.DeckType;
