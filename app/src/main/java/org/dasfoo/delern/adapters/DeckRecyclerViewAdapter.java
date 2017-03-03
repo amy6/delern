@@ -10,7 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
+import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 import java.util.Map;
@@ -54,7 +54,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.setDeckCardType(deck.getDeckType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
-        ValueEventListener deckEventListener = new UserMessageValueEventListener(mContext) {
+        ValueEventListener deckEventListener = new AbstractUserMessageValueEventListener(mContext) {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 long cardsCount = dataSnapshot.getChildrenCount();

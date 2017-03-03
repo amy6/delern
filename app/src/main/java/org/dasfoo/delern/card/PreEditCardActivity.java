@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
+import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 
 /**
  * Activity that shows the card before it is being edited.
@@ -92,7 +92,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mCardValueEventListener = new UserMessageValueEventListener(this) {
+        mCardValueEventListener = new AbstractUserMessageValueEventListener(this) {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 Card card;

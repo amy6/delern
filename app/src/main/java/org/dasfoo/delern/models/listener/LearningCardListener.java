@@ -19,7 +19,7 @@ import org.dasfoo.delern.models.View;
  * the card if card was viewed by user.
  */
 
-public class LearningCardListener extends UserMessageValueEventListener {
+public class LearningCardListener extends AbstractUserMessageValueEventListener {
 
     /**
      * Answer on card if user knows it.
@@ -52,7 +52,7 @@ public class LearningCardListener extends UserMessageValueEventListener {
         super(context);
         this.mDeckId = deckId;
         this.mCardAvailable = cardAvailable;
-        mCurrentCardListener = new UserMessageValueEventListener(context) {
+        mCurrentCardListener = new AbstractUserMessageValueEventListener(context) {
 
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {

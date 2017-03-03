@@ -28,7 +28,7 @@ import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.listener.UserMessageValueEventListener;
+import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -88,7 +88,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mProgressBarListener = new UserMessageValueEventListener(getContext()) {
+        mProgressBarListener = new AbstractUserMessageValueEventListener(getContext()) {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);

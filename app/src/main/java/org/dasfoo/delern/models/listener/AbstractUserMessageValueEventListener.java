@@ -14,9 +14,9 @@ import org.dasfoo.delern.util.LogUtil;
  * Created by katarina on 3/1/17.
  * Abstract class that implement onCancel for all listeners.
  */
-public abstract class UserMessageValueEventListener implements ValueEventListener {
+public abstract class AbstractUserMessageValueEventListener implements ValueEventListener {
 
-    private static final String TAG = LogUtil.tagFor(UserMessageValueEventListener.class);
+    private static final String TAG = LogUtil.tagFor(AbstractUserMessageValueEventListener.class);
 
     private final Context mContext;
 
@@ -25,7 +25,7 @@ public abstract class UserMessageValueEventListener implements ValueEventListene
      *
      * @param context Context
      */
-    public UserMessageValueEventListener(final Context context) {
+    public AbstractUserMessageValueEventListener(final Context context) {
         this.mContext = context;
     }
 

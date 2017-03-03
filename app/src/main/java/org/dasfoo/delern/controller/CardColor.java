@@ -2,8 +2,8 @@ package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.R;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 2/26/17.
@@ -12,15 +12,19 @@ import java.util.Map;
 
 public final class CardColor {
 
-    private static CardColor sInstance;
+    private static final Map<GrammaticalGenderSpecifier.Gender, Integer> COLOR =
+            new ConcurrentHashMap<>();
 
-    private static Map<GrammaticalGenderSpecifier.Gender, Integer> sColor = new HashMap<>();
+    // Initialize COLOR Map.
+    static {
+        COLOR.put(GrammaticalGenderSpecifier.Gender.FEMININE, R.color.feminine);
+        COLOR.put(GrammaticalGenderSpecifier.Gender.MASCULINE, R.color.masculine);
+        COLOR.put(GrammaticalGenderSpecifier.Gender.NEUTER, R.color.neuter);
+        COLOR.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.noGender);
+    }
 
     private CardColor() {
-        sColor.put(GrammaticalGenderSpecifier.Gender.FEMININE, R.color.feminine);
-        sColor.put(GrammaticalGenderSpecifier.Gender.MASCULINE, R.color.masculine);
-        sColor.put(GrammaticalGenderSpecifier.Gender.NEUTER, R.color.neuter);
-        sColor.put(GrammaticalGenderSpecifier.Gender.NO_GENDER, R.color.noGender);
+        // Disable creating instance of class
     }
 
     /**
@@ -30,9 +34,6 @@ public final class CardColor {
      * @return color.
      */
     public static int getColor(final GrammaticalGenderSpecifier.Gender gender) {
-        if (sInstance == null) {
-            sInstance = new CardColor();
-        }
-        return sColor.get(gender);
+        return COLOR.get(gender);
     }
 }
