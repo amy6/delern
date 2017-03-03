@@ -18,7 +18,7 @@ public abstract class UserMessageValueEventListener implements ValueEventListene
 
     private static final String TAG = LogUtil.tagFor(UserMessageValueEventListener.class);
 
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Constructor. Gets context to write message to user in case of error.
