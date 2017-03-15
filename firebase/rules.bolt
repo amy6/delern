@@ -1,0 +1,165 @@
+/* IMPORTANT NOTES
+ * - Access is disallowed by default. If no .write or .read rule is specified at
+ *   or above a path, access will be denied.
+ * - Child rules can only grant additional privileges to what parent nodes have
+ *   already declared. They cannot revoke a read or write privilege.
+ * - The .validate rules are only evaluated for non-null values and positive
+ *   results do not cascade.
+ * - Also perform input validation client-side for best performance and best
+ *   user experience when your app is offline.
+ */
+
+type User {
+  email: String,
+  name: String,
+  photoUrl: String,
+}
+
+isCurrentUser(uid) { auth !== null && auth.uid === uid }
+
+path /users/{userId} is User {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+path /users/{userId}/name {
+  read() { auth !== null }
+}
+
+type AccessString extends String {
+  validate() {
+    (this === "read" || this === "write" || this === "owner") &&
+    (
+      // It's either a new record, or...
+      prior(this) === null ||
+      // ...can't change "owner" to anything else, and
+      // can't change anything else to "owner".
+      ((prior(this) === "owner") === (this === "owner"))
+    )
+  }
+}
+
+deckAccess(deckId) { root.deck_access[deckId][auth.uid] }
+deckExisted(deckId) { prior(root.deck_access[deckId]) !== null }
+userExisted(userId) { prior(root.users[userId]) !== null }
+
+path /deck_access/{deckId} {
+  read() { prior(deckAccess(deckId)) === "owner" }
+}
+path /deck_access/{deckId}/{sharedWithUserId} is AccessString {
+  read() { isCurrentUser(sharedWithUserId) }
+
+  create() {
+    userExisted(sharedWithUserId) &&
+    (
+      deckExisted(deckId) ? (
+        // Sharing a deck.
+        prior(deckAccess(deckId)) === "owner" &&
+        this !== "owner"
+      ) : (
+        // Creating a new deck.
+        isCurrentUser(sharedWithUserId) &&
+        this === "owner"
+      )
+    )
+  }
+  update() { prior(deckAccess(deckId)) === "owner" }
+  delete() {
+    prior(deckAccess(deckId)) === "owner" &&
+    (
+      // Not deleting ownership access...
+      prior(this) !== "owner" ||
+      // ...unless the deck is also gone.
+      deckAccess(deckId) === null
+    )
+  }
+}
+
+type TransitionToTrueOnlyBoolean extends Boolean {
+  validate() { !prior(this) || this }
+}
+
+type Deck {
+  name: String,
+  deckType: String,
+  category: String | Null,
+  accepted: TransitionToTrueOnlyBoolean,
+  lastSyncAt: Number,
+}
+
+path /decks/{userId} {
+  read() { isCurrentUser(userId) }
+}
+path /decks/{userId}/{deckId} is Deck {
+  create() {
+    deckAccess(deckId) === "owner" &&
+    userExisted(userId) &&
+    (isCurrentUser(userId) === this.accepted)
+  }
+
+  update() { isCurrentUser(userId) }
+
+  delete() {
+    // Receiver can delete deck from themselves
+    isCurrentUser(userId) ||
+    // Owner can un-share or delete deck
+    prior(deckAccess(deckId)) === "owner"
+  }
+}
+
+type SetOnceTimestamp extends Number {
+  validate() {
+    // We could validate that this === now, but that
+    // might not play well with offline access.
+    prior(this) === null || this === prior(this)
+  }
+}
+
+type Card {
+  front: String,
+  back: String,
+  createdAt: SetOnceTimestamp,
+}
+
+path /cards/{deckId} {
+  read() { deckAccess(deckId) != null }
+  write() {
+    prior(deckAccess(deckId)) === "write" ||
+    prior(deckAccess(deckId)) === "owner"
+  }
+}
+path /cards/{deckId}/{cardId} is Card;
+
+type CardLevel extends String {
+  validate() { this.test(/^L[0-9]$/) }
+}
+
+type CardReply extends String {
+  validate() { this === "Y" || this === "N" }
+}
+
+type View {
+  // TODO(dotdoom): why is cardId duplicated?
+  cardId: String,
+  levelBefore: CardLevel,
+  reply: CardReply,
+  timestamp: Number,
+}
+
+path /views/{userId} {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+path /views/{userId}/{deckId}/{cardId}/{viewId} is View {
+}
+
+type ScheduledCard {
+  level: CardLevel,
+  repeatAt: Number,
+}
+
+path /learning/{userId} {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+path /learning/{userId}/{deckId}/{cardId} is ScheduledCard {
+}
