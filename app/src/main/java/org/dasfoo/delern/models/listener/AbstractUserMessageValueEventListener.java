@@ -45,4 +45,13 @@ public abstract class AbstractUserMessageValueEventListener implements ValueEven
             Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Getter for context.
+     *
+     * @return context.
+     */
+    public Context getContext() {
+        return mContext;
+    }
 }

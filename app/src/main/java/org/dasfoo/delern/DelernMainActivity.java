@@ -25,10 +25,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -48,6 +50,8 @@ public class DelernMainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Toolbar mToolbar;
     private DelernMainActivityFragment mListFragment;
+    private AbstractUserMessageValueEventListener mUserDataListener;
+    private DatabaseReference mUserDataReference;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -59,6 +63,14 @@ public class DelernMainActivity extends AppCompatActivity
         if (!User.isSignedIn()) {
             startSignIn();
             return;
+        }
+
+        // TODO(ksheremet): Move somewhere
+        if (getApplicationContext().getPackageName().endsWith(".instrumented") &&
+                User.getCurrentUser().isAnonymous()) {
+            final User user = new User("anonymous",
+                    "instrumented.test@example.com", "http://example.com/anonymous");
+            User.writeUser(user);
         }
 
         mListFragment = new DelernMainActivityFragment();
@@ -73,10 +85,6 @@ public class DelernMainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        configureProfileInfo(navigationView);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(
                         this /* FragmentActivity */,
@@ -84,6 +92,24 @@ public class DelernMainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .addApi(AppInvite.API)
                 .build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        configureProfileInfo(navigationView);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        removeListeners();
+    }
+
+    private void removeListeners() {
+        mUserDataReference.removeEventListener(mUserDataListener);
     }
 
     /**
@@ -145,6 +171,7 @@ public class DelernMainActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.sign_out, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
+                removeListeners();
                 FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startSignIn();
@@ -168,18 +195,26 @@ public class DelernMainActivity extends AppCompatActivity
 
     private void configureProfileInfo(final NavigationView navigationView) {
         View hView = navigationView.getHeaderView(0);
-        CircleImageView profilePhoto = (CircleImageView) hView.findViewById(R.id.profile_image);
-        TextView userName = (TextView) hView.findViewById(R.id.user_name);
-        TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
+        final CircleImageView profilePhoto =
+                (CircleImageView) hView.findViewById(R.id.profile_image);
+        final TextView userName = (TextView) hView.findViewById(R.id.user_name);
+        final TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
+        mUserDataReference = User.getFirebaseUserRef();
+        mUserDataListener = new AbstractUserMessageValueEventListener(this) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                userName.setText(String.valueOf(dataSnapshot.child(User.NAME).getValue()));
+                userEmail.setText(String.valueOf(dataSnapshot.child(User.EMAIL).getValue()));
+                Glide.with(getContext())
+                        .load(String.valueOf(dataSnapshot.child(User.PHOTO_URL).getValue()))
+                        .into(profilePhoto);
+            }
+        };
 
-        FirebaseUser user = User.getCurrentUser();
-        if (user != null) {
-            userName.setText(user.getDisplayName());
-            userEmail.setText(user.getEmail());
-            Glide.with(this)
-                    .load(user.getPhotoUrl())
-                    .into(profilePhoto);
-        }
+        mUserDataReference.addValueEventListener(mUserDataListener);
     }
 
     @Override

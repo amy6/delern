@@ -2,6 +2,7 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
@@ -9,15 +10,17 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 10/11/16.
+ * Model class for accessing deck/userId node.
  */
-
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class Deck implements Parcelable {
 
@@ -42,6 +45,8 @@ public class Deck implements Parcelable {
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
     private static final String DECKS = "decks";
+    @Exclude
+    private static final String DELIMITER = "/";
 
     @Exclude
     private String dId;
@@ -111,19 +116,40 @@ public class Deck implements Parcelable {
     /**
      * Creates new deck in Firebase.
      *
-     * @param deck new deck.
+     * @param deck     new deck.
+     * @param listener listener for handling onComplete.
      * @return key of created deck.
      */
     @Exclude
-    public static String createNewDeck(final Deck deck) {
+    public static String createNewDeck(final Deck deck,
+                                       final OnFbOperationCompleteListener<String> listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         String key = reference.getKey();
+        listener.setSavedParameter(key);
         // Write deckAccess
         DeckAccess deckAccess = new DeckAccess("owner");
-        DeckAccess.writeDeckAccessToFB(deckAccess, key);
+        Map<String, Object> newDeck = new ConcurrentHashMap<>();
+        newDeck.put(DeckAccess.getDeckAccessNodeByDeckId(key), deckAccess.getAccess());
+        newDeck.put(getDeckNodeById(key), deck);
+        Log.d(TAG, newDeck.toString());
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(newDeck)
+                .addOnCompleteListener(listener);
+        return key;
+    }
 
-        reference.setValue(deck);
-        return reference.getKey();
+    /**
+     * Gets deck node for the user. deck/userId/deckId
+     *
+     * @param deckId id of deck.
+     * @return deck node of the user.
+     */
+    @Exclude
+    public static String getDeckNodeById(final String deckId) {
+        return TextUtils.join(DELIMITER, new String[]{Deck.DECKS, User.getCurrentUser().getUid(),
+                deckId, });
     }
 
     /**
@@ -152,7 +178,7 @@ public class Deck implements Parcelable {
     @Exclude
     public static void updateDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/" + deck.getdId(), deck);
+        childUpdates.put(DELIMITER + deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates);
     }
 
@@ -260,7 +286,7 @@ public class Deck implements Parcelable {
                 "dId='" + dId + '\'' +
                 ", name='" + name + '\'' +
                 ", deckType='" + deckType + '\'' +
-                ", categoty='" + category + '\'' +
+                ", category='" + category + '\'' +
                 ", accepted='" + accepted + '\'' +
                 '}';
     }

@@ -6,6 +6,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.util.LogUtil;
+
 
 /**
  * Created by katarina on 10/12/16.
@@ -14,6 +17,26 @@ import com.google.firebase.database.FirebaseDatabase;
 
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public final class User {
+    /**
+     * User data field name in Firebase.
+     */
+    @Exclude
+    public static final String NAME = "name";
+
+    /**
+     * User data field email in Firebase.
+     */
+    @Exclude
+    public static final String EMAIL = "email";
+
+    /**
+     * User data field photoUrl in Firebase.
+     */
+    @Exclude
+    public static final String PHOTO_URL = "photoUrl";
+
+    @Exclude
+    private static final String TAG = LogUtil.tagFor(User.class);
 
     @Exclude
     private static final String USERS = "users";
@@ -49,6 +72,20 @@ public final class User {
     }
 
     /**
+     * Writes user data to firebase.
+     *
+     * @param user user data.
+     * @return true if operation was successful, else false.
+     */
+    @Exclude
+    public static boolean writeUser(final User user) {
+        return User.getFirebaseUserRef().setValue(user)
+                .addOnCompleteListener(new OnFbOperationCompleteListener<Void>(TAG))
+                //TODO(ksheremet): Check successful method.
+                .isSuccessful();
+    }
+
+    /**
      * Checks whether user is signed in.
      * It uses Firebase Auth to check whether user is signed in.
      *
@@ -61,7 +98,7 @@ public final class User {
     }
 
     /**
-     * Gets current user usint FirebaseAuth.
+     * Gets current user using FirebaseAuth.
      *
      * @return returns current user.
      */
@@ -122,5 +159,17 @@ public final class User {
      */
     public void setPhotoUrl(final String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                '}';
     }
 }

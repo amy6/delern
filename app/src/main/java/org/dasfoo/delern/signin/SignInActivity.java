@@ -64,11 +64,12 @@ public class SignInActivity extends AppCompatActivity
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
-                    User.getFirebaseUserRef().setValue(changedUser);
+                    User.writeUser(changedUser);
                 }
             }
         };
 
+        // TODO(ksheremet): Move to instrumented flavour package
         if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
             // Force logging by using Log.e because ProGuard removes Log.w.
             Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
@@ -77,9 +78,14 @@ public class SignInActivity extends AppCompatActivity
                         @Override
                         public void onComplete(@NonNull final Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                startActivity(new Intent(SignInActivity.this,
-                                        DelernMainActivity.class));
-                                finish();
+                                final User changedUser = new User("anonymous",
+                                        "instrumented.test@example.com",
+                                        "http://example.com/anonymous");
+                                if (User.writeUser(changedUser)) {
+                                    startActivity(new Intent(SignInActivity.this,
+                                            DelernMainActivity.class));
+                                    finish();
+                                }
                             } else {
                                 Log.e(TAG, task.toString(), task.getException());
                             }

@@ -1,15 +1,22 @@
 package org.dasfoo.delern.models;
 
+import android.text.TextUtils;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.dasfoo.delern.util.LogUtil;
+
 /**
  * Created by katarina on 2/22/17.
+ * Model class for accessing deck_access/userId node.
  */
 
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class DeckAccess {
+    @Exclude
+    private static final String TAG = LogUtil.tagFor(DeckAccess.class);
     @Exclude
     private static final String DECK_ACCESS = "deck_access";
 
@@ -22,6 +29,42 @@ public class DeckAccess {
      */
     public DeckAccess(final String acs) {
         this.access = acs;
+    }
+
+    /**
+     * Gets deck_access node of user. deck_access/deckId/userId
+     *
+     * @param deckId id of deck.
+     * @return path to deck_access user node
+     */
+    @Exclude
+    public static String getDeckAccessNodeByDeckId(final String deckId) {
+        return TextUtils.join("/", new String[]{DeckAccess.DECK_ACCESS, deckId,
+                User.getCurrentUser().getUid(), });
+        //return DeckAccess.DECK_ACCESS + "/" + deckId + "/" + User.getCurrentUser().getUid();
+    }
+
+    /**
+     * References to deck_access by deck id for current user.
+     * deck_access/deckId/userId
+     *
+     * @param deckId id of deck.
+     * @return reference to deck access for deck by deck id.
+     */
+    @Exclude
+    private static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
+        return FirebaseDatabase.getInstance().getReference()
+                .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
+        //databaseReference.keepSynced(true);
+    }
+
+    /**
+     * Removes information about deck access for deck by deck ID.
+     *
+     * @param deckId id of deck.
+     */
+    public static void deleteDeckAccess(final String deckId) {
+        getFirebaseDeckAccessRef(deckId).removeValue();
     }
 
     /**
@@ -43,37 +86,12 @@ public class DeckAccess {
     }
 
     /**
-     * References to deck_access by deck id for current user.
-     * deck_access/deckId/userId
-     *
-     * @param deckId id of deck.
-     * @return reference to deck access for deck by deck id.
+     * {@inheritDoc}
      */
-    @Exclude
-    public static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
-        return FirebaseDatabase.getInstance().getReference()
-                .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
-        //databaseReference.keepSynced(true);
-    }
-
-    /**
-     * Writes access to deck for current user. It can be "owner", "read", "write".
-     *
-     * @param access access to deck for current user.
-     * @param deckId id of deck.
-     */
-    @Exclude
-    public static void writeDeckAccessToFB(final DeckAccess access, final String deckId) {
-        DatabaseReference databaseReference = getFirebaseDeckAccessRef(deckId);
-        databaseReference.setValue(access.getAccess());
-    }
-
-    /**
-     * Removes information about deck access for deck by deck ID.
-     *
-     * @param deckId id of deck.
-     */
-    public static void deleteDeckAccess(final String deckId) {
-        getFirebaseDeckAccessRef(deckId).removeValue();
+    @Override
+    public String toString() {
+        return "DeckAccess{" +
+                "access='" + access + '\'' +
+                '}';
     }
 }
