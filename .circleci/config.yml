@@ -1,0 +1,207 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/delern
+    docker:
+    - image: openjdk:8
+    environment:
+    - ANDROID_EMULATOR_VERSION: 19
+    # https://d.android.com/studio/index.html#command-tools
+    - ANDROID_SDK_TOOLS_URL: https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
+    - ANDROID_HOME: /opt/android-sdk-linux
+    - TERM: dumb
+    steps:
+    - checkout
+    - run:
+        name: "Prepare checked out Git repository"
+        command: |
+          git submodule sync
+          git submodule update --init
+          # We count tags to compute a version number; make sure renamed tags
+          # (aka removed and re-added) do not count twice.
+          git tag -l | xargs git tag -d
+          git fetch --tags
+
+    - run: |
+        apt update
+        apt install -y xsltproc
+
+    - run:
+        # TODO(dotdoom): run this in a separate Docker container / nodejs image
+        #                once checkout step is available there.
+        name: "Start a local Firebase server (for instrumented tests)"
+        background: true
+        working_directory: ~/delern/app/build
+        command: |
+          curl -sL https://deb.nodesource.com/setup_6.x | bash -
+          apt install -y nodejs
+          npm install --prefix=$PWD firebase-server
+          nodejs node_modules/.bin/firebase-server -p 5533 -v
+
+    - restore_cache:
+        keys:
+        - v2-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        - v2-android-{{ .Branch }}-{{ checksum "build.gradle" }}-
+        - v2-android-{{ .Branch }}-
+        - v2-android-master-
+
+    - run:
+        name: "Install Android SDK"
+        command: |
+          mkdir -p "${ANDROID_HOME?}/licenses"
+          # This is just a hash sum of the license agreements accepted.
+          # Take this text from the Android SDK directory on your machine.
+          echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
+          ./gradlew dependencies
+    - run:
+        name: "Install / update Android Emulator"
+        # TODO(dotdoom): use environment variables once they are supported
+        working_directory: /opt/android-sdk-linux
+        command: |
+          if [ ! -d tools ]; then
+            ls -lah
+            wget -O tools.zip "${ANDROID_SDK_TOOLS_URL?}"
+            unzip -q tools.zip
+          fi
+          tools/bin/sdkmanager --update
+          # Cannot use x86 w/o HW acceleration, which is only provided by KVM. List of images:
+          # $ANDROID_HOME/tools/bin/sdkmanager --list --verbose | egrep -x 'system-images;.*;armeabi-v7a'
+          # platform-tools is required for lint to be able to detect deprecated API.
+          tools/bin/sdkmanager \
+            "platforms;android-${ANDROID_EMULATOR_VERSION?}" \
+            "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
+            emulator platform-tools
+
+    - run:
+        name: "Create Android Emulator"
+        command: |
+          echo no | "${ANDROID_HOME?}/tools/bin/avdmanager" create avd \
+            --package "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
+            --tag google_apis \
+            --name test
+          echo 'hw.ramSize=1024' >>~/.android/avd/test.avd/config.ini
+
+    - run:
+        name: "Start Android Emulator"
+        background: true
+        command: |
+          # Oh wow this is so broken!
+          LD_LIBRARY_PATH="${ANDROID_HOME?}/emulator/lib64/qt/lib" \
+            "${ANDROID_HOME?}/emulator/emulator64-arm" \
+            -avd test -no-window -no-audio
+
+    - run: |
+        # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+        ./gradlew -PdisablePreDex \
+          lintNormalDebug \
+          testNormalDebugUnitTest \
+          assembleInstrumentedLocalRelease \
+          assembleInstrumentedLocalReleaseAndroidTest \
+          --console=plain
+
+    # Some packages are installed only during the previous step, we need to cache them as well.
+    - save_cache:
+        # Use different keys because caches are immutable.
+        key: v2-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        paths:
+        - ~/.gradle
+        # TODO(dotdoom): use environment variables once they are supported
+        - /opt/android-sdk-linux
+
+    - run:
+        name: "Publish Lint results to CircleCI"
+        environment:
+        - LINT_RESULTS_FILE: app/build/outputs/lint-results-normalDebug.xml
+        command: |
+          if [ -r "${LINT_RESULTS_FILE?}" ]; then
+            mkdir -p app/build/test-results/lint
+            xsltproc app/config/lint-junit.xslt "${LINT_RESULTS_FILE?}" >app/build/test-results/lint/results.xml
+          fi
+
+    - run:
+        name: "Wait for Android Emulator to boot"
+        command: |
+          # Wait until there's no log spam for some time -- means all Google Play Services have booted.
+          touch /tmp/android.log
+          while ! cmp /tmp/android.log /tmp/android-previous.log; do
+            mv /tmp/android.log /tmp/android-previous.log
+            sleep 20
+            # Compare the last lines of logcat
+            "${ANDROID_HOME?}/platform-tools/adb" logcat -t 25 >/tmp/android.log
+          done
+          # Unlock the screen.
+          "${ANDROID_HOME?}/platform-tools/adb" shell input keyevent 82
+          # Save the "boot" log events for deeper investigation.
+          "${ANDROID_HOME?}/platform-tools/adb" logcat -d >app/build/outputs/logcat-boot.txt
+          # But keep the actual test run logcat clean.
+          "${ANDROID_HOME?}/platform-tools/adb" logcat -c
+
+    - run:
+        name: "Run instrumented tests (Release-style optimizations, local Firebase)"
+        command: |
+          ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
+          "${ANDROID_HOME?}/platform-tools/adb" logcat -d >app/build/outputs/logcat-test.txt
+          # Kill running emulator to free up resources for e.g. Release build.
+          "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
+
+    - store_test_results:
+        path: app/build/test-results
+    - store_test_results:
+        path: app/build/outputs/androidTest-results
+    - store_artifacts:
+        path: app/build/outputs
+    - store_artifacts:
+        path: app/build/reports
+
+    - deploy:
+        name: "Install Cloud SDK"
+        # https://cloud.google.com/sdk/downloads#apt-get
+        command: |
+          echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
+            >>/etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+          apt update
+          apt install -y google-cloud-sdk
+
+    - deploy:
+        name: "Build signed Release binary, run instrumented and Robo tests, publish to Google Play"
+        command: |
+          if [ -n "${CIRCLE_TAG}" ]; then
+            # We use this account to access both Google Play account and GCS.
+            # The former requires it to be in "app" subdirectory.
+            echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
+            gcloud auth activate-service-account --key-file app/play-store-service-account.json
+            gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
+            # https://circleci.com/docs/firebase-test-lab/
+            ./gradlew -PdisablePreDex \
+              assembleInstrumentedRemoteRelease \
+              assembleInstrumentedRemoteReleaseAndroidTest \
+              --console=plain
+            # Run instrumented tests
+            gcloud --project=delern-debug firebase test android run \
+              --app app/build/outputs/apk/app-instrumentedRemote-release.apk \
+              --test app/build/outputs/apk/app-instrumentedRemote-release-androidTest.apk \
+              --results-bucket delern-test-results
+            # Also run Robo tests: https://firebase.google.com/docs/test-lab/robo-ux-test
+            gsutil cp gs://dasfoo-keystore/delern.jks app
+            ./gradlew -PdisablePreDex lintNormalRelease assembleNormalRelease --console=plain
+            gcloud --project=delern-e1b33 firebase test android run \
+              --app app/build/outputs/apk/app-normal-release.apk \
+              --results-bucket delern-test-results
+            # Publish to Google Play.
+            ./gradlew publishNormalRelease --console=plain
+            # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
+            echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
+            # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
+            ln -sf $PWD/app/src/normal/release/google-services.json app/google-services.json
+            ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json \
+              app:firebaseUploadNormalReleaseProguardMapping \
+              --console=plain
+          fi
+
+# A hack per https://discuss.circleci.com/t/git-tag-deploys-in-2-0/9493/8
+deployment:
+  fake_deploy_for_cci2:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    commands:
+    - echo this is only a trigger
