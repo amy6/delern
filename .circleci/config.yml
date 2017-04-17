@@ -111,7 +111,7 @@ jobs:
     - run:
         name: "Publish Lint results to CircleCI"
         environment:
-        - LINT_RESULTS_FILE: app/build/outputs/lint-results-normalDebug.xml
+        - LINT_RESULTS_FILE: app/build/reports/lint-results-normalDebug.xml
         command: |
           if [ -r "${LINT_RESULTS_FILE?}" ]; then
             mkdir -p app/build/test-results/lint
