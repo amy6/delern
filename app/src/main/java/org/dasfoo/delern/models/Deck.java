@@ -53,6 +53,8 @@ public class Deck implements Parcelable {
     private String name;
     private String deckType;
     private String category;
+    // TODO(ksheremet): sync when app has the Internet.
+    private long lastSyncAt;
     private boolean accepted;
 
     /**
@@ -73,6 +75,7 @@ public class Deck implements Parcelable {
         this.name = name;
         this.deckType = dType;
         this.accepted = userAccepted;
+        this.lastSyncAt = System.currentTimeMillis();
     }
 
     protected Deck(final Parcel in) {
@@ -80,6 +83,7 @@ public class Deck implements Parcelable {
         name = in.readString();
         deckType = in.readString();
         category = in.readString();
+        lastSyncAt = in.readLong();
         // Reading and writing boolean for parceable
         // https://goo.gl/PLRLWY
         accepted = in.readByte() != 0;
@@ -105,7 +109,7 @@ public class Deck implements Parcelable {
     @Exclude
     public static Query getUsersDecks() {
         if (User.getCurrentUser() == null) {
-            Log.v(TAG, "User is not signed in");
+            Log.d(TAG, "User is not signed in");
             return null;
         } else {
             return getFirebaseDecksRef();
@@ -131,6 +135,12 @@ public class Deck implements Parcelable {
         Map<String, Object> newDeck = new ConcurrentHashMap<>();
         newDeck.put(DeckAccess.getDeckAccessNodeByDeckId(key), deckAccess.getAccess());
         newDeck.put(getDeckNodeById(key), deck);
+        /*String deckNode = getDeckNodeById(key);
+        newDeck.put(deckNode + "/name", deck.getName());
+        newDeck.put(deckNode + "/deckType", deck.getDeckType());
+        newDeck.put(deckNode + "/lastSyncAt", deck.getLastSyncAt());
+        newDeck.put(deckNode + "/accepted", deck.isAccepted());*/
+
         Log.d(TAG, newDeck.toString());
         FirebaseDatabase
                 .getInstance()
@@ -148,8 +158,11 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static String getDeckNodeById(final String deckId) {
-        return TextUtils.join(DELIMITER, new String[]{Deck.DECKS, User.getCurrentUser().getUid(),
-                deckId, });
+        return TextUtils.join(DELIMITER, new String[]{
+                Deck.DECKS,
+                User.getCurrentUser().getUid(),
+                deckId,
+        });
     }
 
     /**
@@ -179,6 +192,7 @@ public class Deck implements Parcelable {
     public static void updateDeck(final Deck deck) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(DELIMITER + deck.getdId(), deck);
+        Log.v(TAG, childUpdates.toString());
         getFirebaseDecksRef().updateChildren(childUpdates);
     }
 
@@ -242,6 +256,22 @@ public class Deck implements Parcelable {
     }
 
     /**
+     * Getter for time when deck was synced.
+     *
+     * @return time when deck was synced.
+     */
+    public long getLastSyncAt() {
+        return lastSyncAt;
+    }
+
+    /**
+     * Update time when deck was synced to current.
+     */
+    public void setLastSyncAt() {
+        this.lastSyncAt = System.currentTimeMillis();
+    }
+
+    /**
      * Getter for category of deck.
      *
      * @return category of deck.
@@ -288,6 +318,7 @@ public class Deck implements Parcelable {
                 ", deckType='" + deckType + '\'' +
                 ", category='" + category + '\'' +
                 ", accepted='" + accepted + '\'' +
+                ", lastSyncAt='" + lastSyncAt + '\'' +
                 '}';
     }
 
@@ -308,6 +339,7 @@ public class Deck implements Parcelable {
         parcel.writeString(this.name);
         parcel.writeString(this.deckType);
         parcel.writeString(this.category);
+        parcel.writeLong(this.lastSyncAt);
         if (accepted) {
             parcel.writeByte((byte) 1);
         } else {
