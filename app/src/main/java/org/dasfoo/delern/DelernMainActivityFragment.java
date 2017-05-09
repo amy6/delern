@@ -3,7 +3,6 @@ package org.dasfoo.delern;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -17,9 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -29,7 +26,7 @@ import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
@@ -77,21 +74,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 DeckType.BASIC.name(), true);
                         // Set onComplete listener. If it is successful, start new activity.
                         Deck.createNewDeck(newDeck,
-                                new OnFbOperationCompleteListener<String>(TAG) {
+                                new AbstractOnFbOperationCompleteListener<String>(TAG,
+                                        getContext()) {
                                     @Override
-                                    public void onComplete(@NonNull final Task task) {
-                                        super.onComplete(task);
-                                        if (task.isSuccessful()) {
-                                            startEditCardsActivity(getSavedParameter(),
-                                                    newDeck.getName());
-                                            mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
-                                        } else {
-                                            // Write message to User. Log message is written in
-                                            // super class.
-                                            Toast.makeText(getContext(),
-                                                    task.getException().getLocalizedMessage(),
-                                                    Toast.LENGTH_LONG).show();
-                                        }
+                                    public void onOperationSuccess(final String param) {
+                                        startEditCardsActivity(param, newDeck.getName());
+                                        mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                                     }
                                 });
                     }
@@ -173,7 +161,17 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString());
-                Deck.updateDeck(deck);
+                Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener<Void>(TAG,
+                        getContext()) {
+
+                    /**
+                     * {@inheritDoc}
+                     */
+                    @Override
+                    public void onOperationSuccess(final Void param) {
+                        //Not implemented
+                    }
+                });
             }
         });
         builder.show();
@@ -218,7 +216,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name());
-        Deck.updateDeck(deck);
+        Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener<Void>(TAG, getContext()) {
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onOperationSuccess(final Void param) {
+                // Not implemented yet
+            }
+        });
     }
 
 

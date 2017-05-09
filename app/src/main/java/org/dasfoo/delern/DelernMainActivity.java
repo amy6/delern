@@ -29,6 +29,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.signin.SignInActivity;
@@ -70,7 +71,12 @@ public class DelernMainActivity extends AppCompatActivity
                 User.getCurrentUser().isAnonymous()) {
             final User user = new User("anonymous",
                     "instrumented.test@example.com", "http://example.com/anonymous");
-            User.writeUser(user);
+            User.writeUser(user,  new AbstractOnFbOperationCompleteListener<String>(TAG, this) {
+                @Override
+                public void onOperationSuccess(final String param) {
+                    Log.e(TAG, "Writing user was successful");
+                }
+            });
         }
 
         mListFragment = new DelernMainActivityFragment();

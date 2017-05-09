@@ -6,8 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
-import org.dasfoo.delern.util.LogUtil;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 
 
 /**
@@ -34,9 +33,6 @@ public final class User {
      */
     @Exclude
     public static final String PHOTO_URL = "photoUrl";
-
-    @Exclude
-    private static final String TAG = LogUtil.tagFor(User.class);
 
     @Exclude
     private static final String USERS = "users";
@@ -75,14 +71,12 @@ public final class User {
      * Writes user data to firebase.
      *
      * @param user user data.
-     * @return true if operation was successful, else false.
+     * @param listener handler when operation was completed.
      */
     @Exclude
-    public static boolean writeUser(final User user) {
-        return User.getFirebaseUserRef().setValue(user)
-                .addOnCompleteListener(new OnFbOperationCompleteListener<Void>(TAG))
-                //TODO(ksheremet): Check successful method.
-                .isSuccessful();
+    public static void writeUser(final User user,
+                                 final AbstractOnFbOperationCompleteListener<String> listener) {
+        User.getFirebaseUserRef().setValue(user).addOnCompleteListener(listener);
     }
 
     /**

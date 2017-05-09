@@ -1,5 +1,6 @@
 package org.dasfoo.delern.signin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -45,6 +47,8 @@ public class SignInActivity extends AppCompatActivity
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private final Context mContext = this;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +68,20 @@ public class SignInActivity extends AppCompatActivity
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
-                    User.writeUser(changedUser);
+                    User.writeUser(changedUser,
+                            new AbstractOnFbOperationCompleteListener<String>(TAG, mContext) {
+                                @Override
+                                public void onOperationSuccess(final String param) {
+                                    Log.d(TAG, "Writing new  user to FB  was successful");
+                                }
+                            });
                 }
             }
         };
 
         // TODO(ksheremet): Move to instrumented flavour package
         if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
+            Log.d(TAG, " instrumented");
             // Force logging by using Log.e because ProGuard removes Log.w.
             Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this,
@@ -81,13 +92,17 @@ public class SignInActivity extends AppCompatActivity
                                 final User changedUser = new User("anonymous",
                                         "instrumented.test@example.com",
                                         "http://example.com/anonymous");
-                                if (User.writeUser(changedUser)) {
-                                    startActivity(new Intent(SignInActivity.this,
-                                            DelernMainActivity.class));
-                                    finish();
-                                }
-                            } else {
-                                Log.e(TAG, task.toString(), task.getException());
+                                Log.e(TAG, "Instrumented user writes to FB");
+                                User.writeUser(changedUser,
+                                        new AbstractOnFbOperationCompleteListener<String>(TAG,
+                                                mContext) {
+                                            @Override
+                                            public void onOperationSuccess(final String param) {
+                                                startActivity(new Intent(SignInActivity.this,
+                                                        DelernMainActivity.class));
+                                                finish();
+                                            }
+                                        });
                             }
                         }
                     });

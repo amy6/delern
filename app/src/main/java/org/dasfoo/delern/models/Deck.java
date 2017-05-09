@@ -10,7 +10,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 
 import java.util.HashMap;
@@ -126,7 +126,8 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static String createNewDeck(final Deck deck,
-                                       final OnFbOperationCompleteListener<String> listener) {
+                                       final AbstractOnFbOperationCompleteListener<String>
+                                               listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         String key = reference.getKey();
         listener.setSavedParameter(key);
@@ -172,6 +173,7 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static void deleteDeck(final String deckId) {
+        // TODO(ksheremet): delete in one operation to add listener
         // Delete deck
         getFirebaseDecksRef().child(deckId).removeValue();
         // Delete cards. It must be run before deleting deckAccess. If user is not owner of cards,
@@ -186,14 +188,16 @@ public class Deck implements Parcelable {
      * Renames deck.
      *
      * @param deck deck to rename.
+     * @param listener listener for handling on success and failure.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void updateDeck(final Deck deck) {
+    public static void updateDeck(final Deck deck, final AbstractOnFbOperationCompleteListener<Void>
+            listener) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(DELIMITER + deck.getdId(), deck);
         Log.v(TAG, childUpdates.toString());
-        getFirebaseDecksRef().updateChildren(childUpdates);
+        getFirebaseDecksRef().updateChildren(childUpdates).addOnCompleteListener(listener);
     }
 
     /**
