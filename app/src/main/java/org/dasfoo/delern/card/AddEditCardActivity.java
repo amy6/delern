@@ -1,5 +1,6 @@
 package org.dasfoo.delern.card;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -13,9 +14,11 @@ import android.widget.Toast;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
+import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Activity to edit or add a new card.
@@ -37,11 +40,14 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
      */
     public static final String CARD = "card";
 
+    private static final String TAG = LogUtil.tagFor(AddEditCardActivity.class);
+
     private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
     private Card mCard;
     private CheckBox mAddReversedCardCheckbox;
+    private final Context mContext = this;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -83,13 +89,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 addNewCard(frontCardSide, backCardSide);
                 if (mAddReversedCardCheckbox.isChecked()) {
                     addNewCard(backCardSide, frontCardSide);
-                    Toast.makeText(this, R.string.add_extra_reversed_card_message,
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, R.string.added_card_user_message,
-                            Toast.LENGTH_SHORT).show();
                 }
-                cleanTextFields();
             } else {
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
@@ -122,6 +122,20 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         newCard.setCreatedAt(ServerValue.TIMESTAMP);
         ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
                 System.currentTimeMillis());
-        Card.createNewCard(newCard, mDeckId, scheduledCard);
+        Card.createNewCard(newCard, mDeckId, scheduledCard,
+                new AbstractOnFbOperationCompleteListener<Void>(TAG, this) {
+                    @Override
+                    public void onOperationSuccess(final Void param) {
+                        if (mAddReversedCardCheckbox.isChecked()) {
+                            // TODO(ksheremet): Fix showing this message double times (2 card)
+                            Toast.makeText(mContext, R.string.add_extra_reversed_card_message,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, R.string.added_card_user_message,
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        cleanTextFields();
+                    }
+                });
     }
 }

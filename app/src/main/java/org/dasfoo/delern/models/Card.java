@@ -9,8 +9,11 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 10/4/16.
@@ -83,10 +86,7 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static String getCardsNodeByDeckId(final String deckId) {
-        return TextUtils.join(DELIMITER, new String[]{
-                CARDS,
-                deckId,
-        });
+        return joinStrings(CARDS, deckId);
     }
 
     /**
@@ -96,20 +96,25 @@ public class Card implements Parcelable {
      * @param newCard card for writing to deck.
      * @param deckId  deck ID where to create card.
      * @param scheduledCard schedules next appearance and sets level of card.
+     * @param listener handles on success and on failure results. I can pass param through setter.
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
-                                     final ScheduledCard scheduledCard) {
+                                     final ScheduledCard scheduledCard,
+                                     final AbstractOnFbOperationCompleteListener<Void> listener) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)
                 .push()
                 .getKey();
-        getFirebaseCardsRef()
-                .child(deckId)
-                .child(cardKey)
-                .setValue(newCard);
-
-        ScheduledCard.writeScheduleForCard(deckId, cardKey, scheduledCard);
+        Map<String, Object> createCard = new ConcurrentHashMap<>();
+        createCard.put(joinStrings(Card.getCardsNodeByDeckId(deckId), cardKey), newCard);
+        createCard.put(joinStrings(ScheduledCard.getScheduledCardNodeByDeckId(deckId), cardKey),
+                scheduledCard);
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(createCard)
+                .addOnCompleteListener(listener);
     }
 
     /**
@@ -292,5 +297,9 @@ public class Card implements Parcelable {
                 ", front='" + front + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    private static String joinStrings(final String... args) {
+        return TextUtils.join(DELIMITER, args);
     }
 }
