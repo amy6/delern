@@ -15,6 +15,12 @@ jobs:
     - run:
         name: "Prepare checked out Git repository"
         command: |
+          # --invert-grep appeared only in Git 2.4
+          if git log --format=%H "origin/master.." |
+              grep -x -v -f <(git log --format=%H "origin/master.." --grep '^relnote: '); then
+            echo "Found commits without Release Notes, aborting"
+            exit 1
+          fi
           git submodule sync
           git submodule update --init
           # We count tags to compute a version number; make sure renamed tags
@@ -170,7 +176,13 @@ jobs:
     - deploy:
         name: "Build signed Release binary, run instrumented and Robo tests, publish to Google Play"
         command: |
-          if [ -n "${CIRCLE_TAG}" ]; then
+         if [ -n "${CIRCLE_TAG}" ]; then
+            previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
+            git log "${previous_tag?}.." --format=%B | \
+              grep '^relnote: ' | \
+              grep -v -x 'relnote: none' | \
+              cut -b10- | \
+              cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
             # We use this account to access both Google Play account and GCS.
             # The former requires it to be in "app" subdirectory.
             echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
