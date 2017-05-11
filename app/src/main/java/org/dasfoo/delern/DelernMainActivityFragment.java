@@ -197,7 +197,16 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
-                Deck.deleteDeck(deckId);
+                Deck.deleteDeck(deckId,
+                        new AbstractOnFbOperationCompleteListener<Void>(TAG, getContext()) {
+                            /**
+                             * {@inheritDoc}
+                             */
+                            @Override
+                            public void onOperationSuccess(final Void param) {
+                                Log.v(TAG, "Deck was removed");
+                            }
+                        });
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

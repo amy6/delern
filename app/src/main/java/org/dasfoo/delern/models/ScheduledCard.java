@@ -1,5 +1,7 @@
 package org.dasfoo.delern.models;
 
+import android.text.TextUtils;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,6 +23,8 @@ public class ScheduledCard {
     private static final String REPEAT_AT_FIELD = "repeatAt";
     @Exclude
     private static final String LEVEL_FIELD = "level";
+    @Exclude
+    private static final String DELIMITER = "/";
     @Exclude
     private String cId;
     private String level;
@@ -55,6 +59,21 @@ public class ScheduledCard {
         return FirebaseDatabase.getInstance().getReference()
                 .child(LEARNING).child(User.getCurrentUser().getUid());
         //databaseReference.keepSynced(true);
+    }
+
+    /**
+     * Gets learning node by deckId. learning/userId/deckId
+     *
+     * @param deckId id of deck.
+     * @return learning node of deck.
+     */
+    @Exclude
+    public static String getScheduledCardNodeByDeckId(final String deckId) {
+        return TextUtils.join(DELIMITER, new String[]{
+                LEARNING,
+                User.getCurrentUser().getUid(),
+                deckId,
+        });
     }
 
     /**

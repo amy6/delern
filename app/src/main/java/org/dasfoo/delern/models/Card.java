@@ -2,6 +2,7 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -39,6 +40,9 @@ public class Card implements Parcelable {
     private static final String CARDS = "cards";
 
     @Exclude
+    private static final String DELIMITER = "/";
+
+    @Exclude
     private String cId;
     private String back;
     private String front;
@@ -69,6 +73,20 @@ public class Card implements Parcelable {
                 .child(CARDS);
         // TODO(ksheremet): keep synced only cards of current user (after changing FB)
         //databaseReference.keepSynced(true);
+    }
+
+    /**
+     * Gets cards node by deckId. cards/deckId
+     *
+     * @param deckId id of deck.
+     * @return cards node of deck.
+     */
+    @Exclude
+    public static String getCardsNodeByDeckId(final String deckId) {
+        return TextUtils.join(DELIMITER, new String[]{
+                CARDS,
+                deckId,
+        });
     }
 
     /**

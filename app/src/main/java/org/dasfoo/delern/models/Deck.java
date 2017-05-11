@@ -170,24 +170,34 @@ public class Deck implements Parcelable {
      * Remove deck by ID.
      *
      * @param deckId deck ID for removing.
+     * @param listener listener handles on success and on failure results.
      */
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void deleteDeck(final String deckId) {
-        // TODO(ksheremet): delete in one operation to add listener
-        // Delete deck
-        getFirebaseDecksRef().child(deckId).removeValue();
-        // Delete cards. It must be run before deleting deckAccess. If user is not owner of cards,
-        // they won't be deleted.
-        Card.deleteCardsFromDeck(deckId);
-        DeckAccess.deleteDeckAccess(deckId);
-        ScheduledCard.deleteCardsByDeckId(deckId);
-        View.deleteViewsFromDeck(deckId);
+    public static void deleteDeck(final String deckId,
+                                  final AbstractOnFbOperationCompleteListener<Void> listener) {
+        // Values must be null. It is impossible with ConcurentHashMap. For deleting deck
+        // concurrent map is unused (always 1 flow).
+        Map<String, Object> removeDeck = new HashMap<>();
+        removeDeck.put(Deck.getDeckNodeById(deckId), null);
+        removeDeck.put(Card.getCardsNodeByDeckId(deckId), null);
+        removeDeck.put(ScheduledCard.getScheduledCardNodeByDeckId(deckId), null);
+        removeDeck.put(View.getViewsNodeByDeckId(deckId), null);
+        removeDeck.put(DeckAccess.getDeckAccessNodeByDeckId(deckId), null);
+
+        Log.v(TAG, removeDeck.toString());
+
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(removeDeck)
+                .addOnCompleteListener(listener);
     }
 
     /**
      * Renames deck.
      *
-     * @param deck deck to rename.
+     * @param deck     deck to rename.
      * @param listener listener for handling on success and failure.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
