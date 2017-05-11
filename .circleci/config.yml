@@ -73,14 +73,35 @@ jobs:
             emulator platform-tools
 
     - run:
+        name: "Assemble"
+        command: |
+          # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+          ./gradlew -PdisablePreDex \
+            lintNormalDebug \
+            testNormalDebugUnitTest \
+            assembleInstrumentedLocalRelease \
+            assembleInstrumentedLocalReleaseAndroidTest \
+            --console=plain
+
+    # Some packages are installed only during the lint/assemble step, we need to cache them as well.
+    - save_cache:
+        # Use different keys because caches are immutable.
+        key: v2-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        paths:
+        - ~/.gradle
+        # TODO(dotdoom): use environment variables once they are supported
+        - /opt/android-sdk-linux
+
+    - run:
         name: "Create Android Emulator"
         command: |
           echo no | "${ANDROID_HOME?}/tools/bin/avdmanager" create avd \
             --package "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
             --tag google_apis \
             --name test
-          echo 'hw.ramSize=1024' >>~/.android/avd/test.avd/config.ini
+          echo 'hw.ramSize=1536' >>~/.android/avd/test.avd/config.ini
 
+    # Starting the emulator before assemble may save time, but we have limited RAM.
     - run:
         name: "Start Android Emulator"
         background: true
@@ -89,24 +110,6 @@ jobs:
           LD_LIBRARY_PATH="${ANDROID_HOME?}/emulator/lib64/qt/lib" \
             "${ANDROID_HOME?}/emulator/emulator64-arm" \
             -avd test -no-window -no-audio
-
-    - run: |
-        # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
-        ./gradlew -PdisablePreDex \
-          lintNormalDebug \
-          testNormalDebugUnitTest \
-          assembleInstrumentedLocalRelease \
-          assembleInstrumentedLocalReleaseAndroidTest \
-          --console=plain
-
-    # Some packages are installed only during the previous step, we need to cache them as well.
-    - save_cache:
-        # Use different keys because caches are immutable.
-        key: v2-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-        paths:
-        - ~/.gradle
-        # TODO(dotdoom): use environment variables once they are supported
-        - /opt/android-sdk-linux
 
     - run:
         name: "Publish Lint results to CircleCI"
