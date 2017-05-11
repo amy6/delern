@@ -72,14 +72,16 @@ jobs:
             "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
             emulator platform-tools
 
-    - run: |
-        # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
-        ./gradlew -PdisablePreDex \
-          lintNormalDebug \
-          testNormalDebugUnitTest \
-          assembleInstrumentedLocalRelease \
-          assembleInstrumentedLocalReleaseAndroidTest \
-          --console=plain
+    - run:
+        name: "Assemble"
+        command: |
+          # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+          ./gradlew -PdisablePreDex \
+            lintNormalDebug \
+            testNormalDebugUnitTest \
+            assembleInstrumentedLocalRelease \
+            assembleInstrumentedLocalReleaseAndroidTest \
+            --console=plain
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
