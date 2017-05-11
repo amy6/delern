@@ -35,8 +35,9 @@ jobs:
         command: |
           curl -sL https://deb.nodesource.com/setup_6.x | bash -
           apt install -y nodejs
-          npm install --prefix=$PWD firebase-server
-          nodejs node_modules/.bin/firebase-server -p 5533 -v
+          npm install --prefix=$PWD firebase-server firebase-bolt
+          node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o firebase-rules.json
+          nodejs node_modules/.bin/firebase-server -r firebase-rules.json -p 5533 -v
 
     - restore_cache:
         keys:
