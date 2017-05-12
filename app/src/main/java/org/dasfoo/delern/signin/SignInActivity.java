@@ -61,18 +61,18 @@ public class SignInActivity extends AppCompatActivity
                 FirebaseUser user = User.getCurrentUser();
                 if (user == null) {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.v(TAG, "onAuthStateChanged:signed_out");
                 } else {
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.v(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     User changedUser = new User(user.getDisplayName(), user.getEmail(), null);
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
                     User.writeUser(changedUser,
-                            new AbstractOnFbOperationCompleteListener<String>(TAG, mContext) {
+                            new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
                                 @Override
-                                public void onOperationSuccess(final String param) {
-                                    Log.d(TAG, "Writing new  user to FB  was successful");
+                                public void onOperationSuccess(final Void param) {
+                                    Log.v(TAG, "Writing new  user to FB  was successful");
                                 }
                             });
                 }
@@ -81,7 +81,7 @@ public class SignInActivity extends AppCompatActivity
 
         // TODO(ksheremet): Move to instrumented flavour package
         if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
-            Log.d(TAG, " instrumented");
+            Log.e(TAG, " instrumented");
             // Force logging by using Log.e because ProGuard removes Log.w.
             Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this,
@@ -94,10 +94,10 @@ public class SignInActivity extends AppCompatActivity
                                         "http://example.com/anonymous");
                                 Log.e(TAG, "Instrumented user writes to FB");
                                 User.writeUser(changedUser,
-                                        new AbstractOnFbOperationCompleteListener<String>(TAG,
+                                        new AbstractOnFbOperationCompleteListener<Void>(TAG,
                                                 mContext) {
                                             @Override
-                                            public void onOperationSuccess(final String param) {
+                                            public void onOperationSuccess(final Void param) {
                                                 startActivity(new Intent(SignInActivity.this,
                                                         DelernMainActivity.class));
                                                 finish();

@@ -75,7 +75,7 @@ public final class User {
      */
     @Exclude
     public static void writeUser(final User user,
-                                 final AbstractOnFbOperationCompleteListener<String> listener) {
+                                 final AbstractOnFbOperationCompleteListener<Void> listener) {
         User.getFirebaseUserRef().setValue(user).addOnCompleteListener(listener);
     }
 
