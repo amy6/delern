@@ -154,15 +154,6 @@ jobs:
           # Kill running emulator to free up resources for e.g. Release build.
           "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
 
-    - store_test_results:
-        path: app/build/test-results
-    - store_test_results:
-        path: app/build/outputs/androidTest-results
-    - store_artifacts:
-        path: app/build/outputs
-    - store_artifacts:
-        path: app/build/reports
-
     - deploy:
         name: "Install Cloud SDK"
         # https://cloud.google.com/sdk/downloads#apt-get
@@ -214,6 +205,17 @@ jobs:
               app:firebaseUploadNormalReleaseProguardMapping \
               --console=plain
           fi
+
+    - store_test_results:
+        path: app/build/test-results
+    - store_test_results:
+        path: app/build/outputs/androidTest-results
+    - store_artifacts:
+        path: app/build/outputs
+    - store_artifacts:
+        path: app/build/reports
+    - store_artifacts:
+        path: app/src/main/play
 
 # A hack per https://discuss.circleci.com/t/git-tag-deploys-in-2-0/9493/8
 deployment:
