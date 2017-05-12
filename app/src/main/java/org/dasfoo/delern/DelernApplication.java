@@ -33,7 +33,8 @@ public class DelernApplication extends Application {
         /* Firebase apps automatically handle temporary network interruptions. Cached data will
         still be available while offline and your writes will be resent when network connectivity is
         recovered. Enabling disk persistence allows our app to also keep all of its state even after
-        an app restart. */
+        an app restart.
+        https://firebase.google.com/docs/database/android/offline-capabilities */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }

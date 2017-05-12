@@ -96,9 +96,12 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static DatabaseReference getFirebaseDecksRef() {
-        return FirebaseDatabase.getInstance().getReference()
+        DatabaseReference deckDatabaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(DECKS).child(User.getCurrentUser().getUid());
-        //databaseReference.keepSynced(true);
+        // keep sync special location for offline use
+        // https://firebase.google.com/docs/database/android/offline-capabilities
+        deckDatabaseReference.keepSynced(true);
+        return deckDatabaseReference;
     }
 
     /**
@@ -169,7 +172,7 @@ public class Deck implements Parcelable {
     /**
      * Remove deck by ID.
      *
-     * @param deckId deck ID for removing.
+     * @param deckId   deck ID for removing.
      * @param listener listener handles on success and on failure results.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")

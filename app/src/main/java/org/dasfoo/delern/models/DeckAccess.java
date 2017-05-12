@@ -40,7 +40,7 @@ public class DeckAccess {
     @Exclude
     public static String getDeckAccessNodeByDeckId(final String deckId) {
         return TextUtils.join("/", new String[]{DeckAccess.DECK_ACCESS, deckId,
-                User.getCurrentUser().getUid(), });
+                User.getCurrentUser().getUid(),});
     }
 
     /**
@@ -52,9 +52,13 @@ public class DeckAccess {
      */
     @Exclude
     public static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
-        return FirebaseDatabase.getInstance().getReference()
-                .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
-        //databaseReference.keepSynced(true);
+        DatabaseReference deckAccessDatabaseReference =
+                FirebaseDatabase.getInstance().getReference()
+                        .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
+        // keep sync special location for offline use
+        // https://firebase.google.com/docs/database/android/offline-capabilities
+        deckAccessDatabaseReference.keepSynced(true);
+        return deckAccessDatabaseReference;
     }
 
     /**

@@ -56,9 +56,12 @@ public class ScheduledCard {
      */
     @Exclude
     public static DatabaseReference getFirebaseScheduledCardRef() {
-        return FirebaseDatabase.getInstance().getReference()
+        DatabaseReference scheduledDatabaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(LEARNING).child(User.getCurrentUser().getUid());
-        //databaseReference.keepSynced(true);
+        // keep sync special location for offline use
+        // https://firebase.google.com/docs/database/android/offline-capabilities
+        scheduledDatabaseReference.keepSynced(true);
+        return scheduledDatabaseReference;
     }
 
     /**

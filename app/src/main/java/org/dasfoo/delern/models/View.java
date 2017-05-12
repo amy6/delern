@@ -44,8 +44,13 @@ public class View {
      */
     @Exclude
     public static DatabaseReference getViewDatabaseReference() {
-        return FirebaseDatabase.getInstance().getReference().child(VIEWS)
+        // keep sync special location for offline use
+        // https://firebase.google.com/docs/database/android/offline-capabilities
+        DatabaseReference viewDatabaseReference = FirebaseDatabase.getInstance().getReference()
+                .child(VIEWS)
                 .child(User.getCurrentUser().getUid());
+        viewDatabaseReference.keepSynced(true);
+        return viewDatabaseReference;
     }
 
     /**
