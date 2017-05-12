@@ -68,6 +68,7 @@ public class View {
      *
      * @param deckId id of deck.
      */
+    //TODO(ksheremet): Remove unused method
     @Exclude
     public static void deleteViewsFromDeck(final String deckId) {
         getViewDatabaseReference().child(deckId).removeValue();

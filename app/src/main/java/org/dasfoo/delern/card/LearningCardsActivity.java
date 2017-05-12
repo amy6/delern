@@ -1,6 +1,7 @@
 package org.dasfoo.delern.card;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.Query;
 
@@ -23,6 +25,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.handlers.OnLearningCardAvailable;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
@@ -50,7 +53,7 @@ public class LearningCardsActivity extends AppCompatActivity {
      * Key for saving onSaveInstanceState.
      */
     private static final String BACK_IS_SHOWN = "back";
-
+    private final Context mContext = this;
     private CardView mCardView;
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
@@ -122,6 +125,7 @@ public class LearningCardsActivity extends AppCompatActivity {
         getParameters();
         initViews();
 
+        //TODO(ksheremet): listener
         mLearningCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
         mLearningCard = new LearningCardListener(this, mDeck.getdId(), mCardAvailable);
     }
@@ -193,7 +197,17 @@ public class LearningCardsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         mBackIsShown = false;
-                        Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard());
+                        // TODO(ksheremet): delete if not owner
+                        Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
+                                new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
+                                    @Override
+                                    public void onOperationSuccess(final Void param) {
+                                        Toast.makeText(mContext,
+                                                R.string.card_deleted_successful_user_message,
+                                                Toast.LENGTH_SHORT)
+                                                .show();
+                                    }
+                                });
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

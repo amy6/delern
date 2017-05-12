@@ -93,10 +93,11 @@ public class Card implements Parcelable {
      * Creates new card in Firebase. Id adds time for next repetition and level of card
      * in learning/. Sets front, back and createdAt in cards/.
      *
-     * @param newCard card for writing to deck.
-     * @param deckId  deck ID where to create card.
+     * @param newCard       card for writing to deck.
+     * @param deckId        deck ID where to create card.
      * @param scheduledCard schedules next appearance and sets level of card.
-     * @param listener handles on success and on failure results. I can pass param through setter.
+     * @param listener      handles on success and on failure results. I can pass param
+     *                      through setter.
      */
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
@@ -135,8 +136,8 @@ public class Card implements Parcelable {
     /**
      * Updates card using deck ID. Card ID is the same.
      *
-     * @param card   new card
-     * @param deckId deck ID where to update card.
+     * @param card     new card
+     * @param deckId   deck ID where to update card.
      * @param listener handlers on success and on failure results.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -181,16 +182,29 @@ public class Card implements Parcelable {
      * Removes card from deck.
      *
      * @param deckId deck ID where to remove card.
-     * @param card   card to remove
+     * @param card   card to remove.
+     * @param listener handlers on success and on failure results.
      */
     @Exclude
-    public static void deleteCardFromDeck(final String deckId, final Card card) {
-        View.deleteViewById(deckId, card.getcId());
-        ScheduledCard.deleteCardbyId(deckId, card.getcId());
-        getFirebaseCardsRef()
-                .child(deckId)
-                .child(card.getcId())
-                .removeValue();
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    public static void deleteCardFromDeck(final String deckId, final Card card,
+                                          final AbstractOnFbOperationCompleteListener<Void>
+                                                  listener) {
+        Map<String, Object> deleteCard = new HashMap<>();
+        deleteCard.put(joinStrings(View.getViewsNodeByDeckId(deckId), card.getcId()), null);
+        deleteCard.put(joinStrings(ScheduledCard.getScheduledCardNodeByDeckId(deckId),
+                card.getcId()), null);
+        // TODO(ksheremet): Don't remove card if user is not owner
+        deleteCard.put(joinStrings(Card.getCardsNodeByDeckId(deckId), card.getcId()), null);
+        FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .updateChildren(deleteCard)
+                .addOnCompleteListener(listener);
+    }
+
+    private static String joinStrings(final String... args) {
+        return TextUtils.join(DELIMITER, args);
     }
 
     /**
@@ -301,9 +315,5 @@ public class Card implements Parcelable {
                 ", front='" + front + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
-    }
-
-    private static String joinStrings(final String... args) {
-        return TextUtils.join(DELIMITER, args);
     }
 }

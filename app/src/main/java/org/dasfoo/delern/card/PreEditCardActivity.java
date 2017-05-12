@@ -1,5 +1,6 @@
 package org.dasfoo.delern.card;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -14,14 +15,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
+import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Activity that shows the card before it is being edited.
@@ -44,6 +48,8 @@ public class PreEditCardActivity extends AppCompatActivity {
      */
     public static final String CARD_ID = "cardId";
 
+    private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
+
     private String mDeckId;
     private Card mCard;
     private ValueEventListener mCardValueEventListener;
@@ -52,6 +58,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     private Query mCardQuery;
     private String mLabel;
     private String mCardId;
+    private final Context mContext = this;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -162,7 +169,16 @@ public class PreEditCardActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                Card.deleteCardFromDeck(deckId, card);
+                Card.deleteCardFromDeck(deckId, card,
+                        new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
+                    @Override
+                    public void onOperationSuccess(final Void param) {
+                        Toast.makeText(mContext,
+                                R.string.card_deleted_successful_user_message,
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
                 finish();
             }
         });
