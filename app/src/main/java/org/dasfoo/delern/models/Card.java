@@ -137,17 +137,20 @@ public class Card implements Parcelable {
      *
      * @param card   new card
      * @param deckId deck ID where to update card.
+     * @param listener handlers on success and on failure results.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void updateCard(final Card card, final String deckId) {
+    public static void updateCard(final Card card, final String deckId,
+                                  final AbstractOnFbOperationCompleteListener<Void> listener) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("front", card.getFront());
         childUpdates.put("back", card.getBack());
         getFirebaseCardsRef()
                 .child(deckId)
                 .child(card.getcId())
-                .updateChildren(childUpdates);
+                .updateChildren(childUpdates)
+                .addOnCompleteListener(listener);
     }
 
     /**
@@ -167,6 +170,7 @@ public class Card implements Parcelable {
      *
      * @param deckId deck ID where to remove cards.
      */
+    // TODO(ksheremet): remove method
     @Exclude
     public static void deleteCardsFromDeck(final String deckId) {
         getFirebaseCardsRef()

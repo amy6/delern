@@ -41,13 +41,12 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     public static final String CARD = "card";
 
     private static final String TAG = LogUtil.tagFor(AddEditCardActivity.class);
-
+    private final Context mContext = this;
     private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
     private Card mCard;
     private CheckBox mAddReversedCardCheckbox;
-    private final Context mContext = this;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -93,9 +92,15 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
             } else {
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
-                Card.updateCard(mCard, mDeckId);
-                Toast.makeText(this, R.string.updated_card_user_message, Toast.LENGTH_SHORT).show();
-                finish();
+                Card.updateCard(mCard, mDeckId,
+                        new AbstractOnFbOperationCompleteListener<Void>(TAG, this) {
+                            @Override
+                            public void onOperationSuccess(final Void param) {
+                                Toast.makeText(mContext, R.string.updated_card_user_message,
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
             }
         }
     }
