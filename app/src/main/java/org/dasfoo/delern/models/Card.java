@@ -167,18 +167,6 @@ public class Card implements Parcelable {
     }
 
     /**
-     * Removes all cards from deck.
-     *
-     * @param deckId deck ID where to remove cards.
-     */
-    // TODO(ksheremet): remove method
-    @Exclude
-    public static void deleteCardsFromDeck(final String deckId) {
-        getFirebaseCardsRef()
-                .child(deckId).removeValue();
-    }
-
-    /**
      * Removes card from deck.
      *
      * @param deckId deck ID where to remove card.

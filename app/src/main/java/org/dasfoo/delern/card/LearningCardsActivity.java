@@ -125,7 +125,6 @@ public class LearningCardsActivity extends AppCompatActivity {
         getParameters();
         initViews();
 
-        //TODO(ksheremet): listener
         mLearningCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
         mLearningCard = new LearningCardListener(this, mDeck.getdId(), mCardAvailable);
     }

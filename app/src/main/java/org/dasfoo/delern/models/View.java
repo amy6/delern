@@ -64,28 +64,6 @@ public class View {
     }
 
     /**
-     * Deletes all views for given deck.
-     *
-     * @param deckId id of deck.
-     */
-    //TODO(ksheremet): Remove unused method
-    @Exclude
-    public static void deleteViewsFromDeck(final String deckId) {
-        getViewDatabaseReference().child(deckId).removeValue();
-    }
-
-    /**
-     * Deletes vies from Firebase using deck ID and card ID.
-     *
-     * @param deckId id of deck.
-     * @param cardId id of card.
-     */
-    @Exclude
-    public static void deleteViewById(final String deckId, final String cardId) {
-        getViewDatabaseReference().child(deckId).child(cardId).removeValue();
-    }
-
-    /**
      * Adds View to Firebase.
      * Path is views/userId/deckId/cardId.
      *

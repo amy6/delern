@@ -41,7 +41,6 @@ public class DeckAccess {
     public static String getDeckAccessNodeByDeckId(final String deckId) {
         return TextUtils.join("/", new String[]{DeckAccess.DECK_ACCESS, deckId,
                 User.getCurrentUser().getUid(), });
-        //return DeckAccess.DECK_ACCESS + "/" + deckId + "/" + User.getCurrentUser().getUid();
     }
 
     /**
@@ -52,19 +51,10 @@ public class DeckAccess {
      * @return reference to deck access for deck by deck id.
      */
     @Exclude
-    private static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
+    public static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
         return FirebaseDatabase.getInstance().getReference()
                 .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
         //databaseReference.keepSynced(true);
-    }
-
-    /**
-     * Removes information about deck access for deck by deck ID.
-     *
-     * @param deckId id of deck.
-     */
-    public static void deleteDeckAccess(final String deckId) {
-        getFirebaseDeckAccessRef(deckId).removeValue();
     }
 
     /**

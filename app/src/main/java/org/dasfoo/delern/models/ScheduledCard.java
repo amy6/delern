@@ -77,21 +77,6 @@ public class ScheduledCard {
     }
 
     /**
-     * Writes schedule for card for the next repetition.
-     *
-     * @param deckId id of deck.
-     * @param cardId id of card.
-     * @param scheduledCard schedule for card to repeat.
-     */
-    @Exclude
-    public static void writeScheduleForCard(final String deckId, final String cardId,
-                                            final ScheduledCard scheduledCard) {
-        DatabaseReference databaseReference = getFirebaseScheduledCardRef();
-        // TODO(ksheremet): Remove cardId.
-        databaseReference.child(deckId).child(cardId).setValue(scheduledCard);
-    }
-
-    /**
      * Method gets all cards to repeat calculating current time im milliseconds.
      *
      * @param deckId deck ID where to get cards.
@@ -116,29 +101,6 @@ public class ScheduledCard {
     @Exclude
     public static Query fetchCardsToRepeatWithLimit(final String deckId, final int limit) {
         return fetchCardsFromDeckToRepeat(deckId).limitToFirst(limit);
-    }
-
-    /**
-     * Deletes repetition schedule for all cards in given deck.
-     *
-     * @param deckId Id of deck.
-     */
-    @Exclude
-    public static void deleteCardsByDeckId(final String deckId) {
-        //TODO(ksheremet): Add listeners on success and failure
-        getFirebaseScheduledCardRef().child(deckId).removeValue();
-    }
-
-    /**
-     * Deletes repetition schedule for card from deck.
-     *
-     * @param deckId id of deck.
-     * @param cardId id of card.
-     */
-    @Exclude
-    public static void deleteCardbyId(final String deckId, final String cardId) {
-        //TODO(ksheremet): Add listeners on success and failure
-        getFirebaseScheduledCardRef().child(deckId).child(cardId).removeValue();
     }
 
     /**
