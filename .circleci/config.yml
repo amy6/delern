@@ -80,7 +80,7 @@ jobs:
             emulator platform-tools
 
     - run:
-        name: "Assemble"
+        name: "Lint and assemble"
         command: |
           # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
           ./gradlew -PdisablePreDex \
@@ -89,6 +89,17 @@ jobs:
             assembleInstrumentedLocalRelease \
             assembleInstrumentedLocalReleaseAndroidTest \
             --console=plain
+
+    - run:
+        name: "Publish Lint results to CircleCI"
+        environment:
+        - LINT_RESULTS_FILE: app/build/reports/lint-results-normalDebug.xml
+        command: |
+          if [ -r "${LINT_RESULTS_FILE?}" ]; then
+            mkdir -p app/build/test-results/lint
+            xsltproc app/config/lint-junit.xslt "${LINT_RESULTS_FILE?}" >app/build/test-results/lint/results.xml
+          fi
+        when: always
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
@@ -106,7 +117,8 @@ jobs:
             --package "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
             --tag google_apis \
             --name test
-          echo 'hw.ramSize=1536' >>~/.android/avd/test.avd/config.ini
+          echo 'hw.ramSize=2048' >>~/.android/avd/test.avd/config.ini
+          echo 'vm.heapSize=128' >>~/.android/avd/test.avd/config.ini
 
     # Starting the emulator before assemble may save time, but we have limited RAM.
     - run:
@@ -117,16 +129,6 @@ jobs:
           LD_LIBRARY_PATH="${ANDROID_HOME?}/emulator/lib64/qt/lib" \
             "${ANDROID_HOME?}/emulator/emulator64-arm" \
             -avd test -no-window -no-audio
-
-    - run:
-        name: "Publish Lint results to CircleCI"
-        environment:
-        - LINT_RESULTS_FILE: app/build/reports/lint-results-normalDebug.xml
-        command: |
-          if [ -r "${LINT_RESULTS_FILE?}" ]; then
-            mkdir -p app/build/test-results/lint
-            xsltproc app/config/lint-junit.xslt "${LINT_RESULTS_FILE?}" >app/build/test-results/lint/results.xml
-          fi
 
     - run:
         name: "Wait for Android Emulator to boot"
@@ -148,11 +150,15 @@ jobs:
 
     - run:
         name: "Run instrumented tests (Release-style optimizations, local Firebase)"
+        command: ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
+
+    - run:
+        name: "Save Android Emulator logs, cleanup"
         command: |
-          ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
           "${ANDROID_HOME?}/platform-tools/adb" logcat -d >app/build/outputs/logcat-test.txt
           # Kill running emulator to free up resources for e.g. Release build.
           "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
+        when: always
 
     - deploy:
         name: "Install Cloud SDK"
