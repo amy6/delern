@@ -49,7 +49,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     public static final String CARD_ID = "cardId";
 
     private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
-
+    private final Context mContext = this;
     private String mDeckId;
     private Card mCard;
     private ValueEventListener mCardValueEventListener;
@@ -58,7 +58,6 @@ public class PreEditCardActivity extends AppCompatActivity {
     private Query mCardQuery;
     private String mLabel;
     private String mCardId;
-    private final Context mContext = this;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -170,15 +169,15 @@ public class PreEditCardActivity extends AppCompatActivity {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 Card.deleteCardFromDeck(deckId, card,
-                        new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
-                    @Override
-                    public void onOperationSuccess(final Void param) {
-                        Toast.makeText(mContext,
-                                R.string.card_deleted_successful_user_message,
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+                        new AbstractOnFbOperationCompleteListener(TAG, mContext) {
+                            @Override
+                            public void onOperationSuccess() {
+                                Toast.makeText(mContext,
+                                        R.string.card_deleted_successful_user_message,
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        });
                 finish();
             }
         });

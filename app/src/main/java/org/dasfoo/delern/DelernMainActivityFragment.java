@@ -74,11 +74,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 DeckType.BASIC.name(), true);
                         // Set onComplete listener. If it is successful, start new activity.
                         Deck.createNewDeck(newDeck,
-                                new AbstractOnFbOperationCompleteListener<String>(TAG,
+                                new AbstractOnFbOperationCompleteListener(TAG,
                                         getContext()) {
                                     @Override
-                                    public void onOperationSuccess(final String param) {
-                                        startEditCardsActivity(param, newDeck.getName());
+                                    public void onOperationSuccess() {
+                                        startEditCardsActivity(getAddedKey(), newDeck.getName());
                                         mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                                     }
                                 });
@@ -161,14 +161,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString());
-                Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener<Void>(TAG,
+                Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener(TAG,
                         getContext()) {
 
                     /**
                      * {@inheritDoc}
                      */
                     @Override
-                    public void onOperationSuccess(final Void param) {
+                    public void onOperationSuccess() {
                         //Not implemented
                     }
                 });
@@ -198,12 +198,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final DialogInterface dialog, final int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
                 Deck.deleteDeck(deckId,
-                        new AbstractOnFbOperationCompleteListener<Void>(TAG, getContext()) {
+                        new AbstractOnFbOperationCompleteListener(TAG, getContext()) {
                             /**
                              * {@inheritDoc}
                              */
                             @Override
-                            public void onOperationSuccess(final Void param) {
+                            public void onOperationSuccess() {
                                 Log.v(TAG, "Deck was removed");
                             }
                         });
@@ -225,12 +225,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name());
-        Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener<Void>(TAG, getContext()) {
+        Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener(TAG, getContext()) {
             /**
              * {@inheritDoc}
              */
             @Override
-            public void onOperationSuccess(final Void param) {
+            public void onOperationSuccess() {
                 // Not implemented yet
             }
         });

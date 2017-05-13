@@ -70,12 +70,12 @@ public final class User {
     /**
      * Writes user data to firebase.
      *
-     * @param user user data.
+     * @param user     user data.
      * @param listener handler when operation was completed.
      */
     @Exclude
     public static void writeUser(final User user,
-                                 final AbstractOnFbOperationCompleteListener<Void> listener) {
+                                 final AbstractOnFbOperationCompleteListener listener) {
         User.getFirebaseUserRef().setValue(user).addOnCompleteListener(listener);
     }
 

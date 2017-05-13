@@ -102,7 +102,7 @@ public class Card implements Parcelable {
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
                                      final ScheduledCard scheduledCard,
-                                     final AbstractOnFbOperationCompleteListener<Void> listener) {
+                                     final AbstractOnFbOperationCompleteListener listener) {
         String cardKey = getFirebaseCardsRef()
                 .child(deckId)
                 .push()
@@ -143,7 +143,7 @@ public class Card implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void updateCard(final Card card, final String deckId,
-                                  final AbstractOnFbOperationCompleteListener<Void> listener) {
+                                  final AbstractOnFbOperationCompleteListener listener) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("front", card.getFront());
         childUpdates.put("back", card.getBack());
@@ -169,15 +169,14 @@ public class Card implements Parcelable {
     /**
      * Removes card from deck.
      *
-     * @param deckId deck ID where to remove card.
-     * @param card   card to remove.
+     * @param deckId   deck ID where to remove card.
+     * @param card     card to remove.
      * @param listener handlers on success and on failure results.
      */
     @Exclude
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     public static void deleteCardFromDeck(final String deckId, final Card card,
-                                          final AbstractOnFbOperationCompleteListener<Void>
-                                                  listener) {
+                                          final AbstractOnFbOperationCompleteListener listener) {
         Map<String, Object> deleteCard = new HashMap<>();
         deleteCard.put(joinStrings(View.getViewsNodeByDeckId(deckId), card.getcId()), null);
         deleteCard.put(joinStrings(ScheduledCard.getScheduledCardNodeByDeckId(deckId),

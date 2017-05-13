@@ -198,9 +198,9 @@ public class LearningCardsActivity extends AppCompatActivity {
                         mBackIsShown = false;
                         // TODO(ksheremet): delete if not owner
                         Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
-                                new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
+                                new AbstractOnFbOperationCompleteListener(TAG, mContext) {
                                     @Override
-                                    public void onOperationSuccess(final Void param) {
+                                    public void onOperationSuccess() {
                                         Toast.makeText(mContext,
                                                 R.string.card_deleted_successful_user_message,
                                                 Toast.LENGTH_SHORT)

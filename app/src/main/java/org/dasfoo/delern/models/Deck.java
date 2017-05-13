@@ -129,21 +129,15 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static String createNewDeck(final Deck deck,
-                                       final AbstractOnFbOperationCompleteListener<String>
-                                               listener) {
+                                       final AbstractOnFbOperationCompleteListener listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         String key = reference.getKey();
-        listener.setSavedParameter(key);
+        listener.setAddedKey(key);
         // Write deckAccess
         DeckAccess deckAccess = new DeckAccess("owner");
         Map<String, Object> newDeck = new ConcurrentHashMap<>();
         newDeck.put(DeckAccess.getDeckAccessNodeByDeckId(key), deckAccess.getAccess());
         newDeck.put(getDeckNodeById(key), deck);
-        /*String deckNode = getDeckNodeById(key);
-        newDeck.put(deckNode + "/name", deck.getName());
-        newDeck.put(deckNode + "/deckType", deck.getDeckType());
-        newDeck.put(deckNode + "/lastSyncAt", deck.getLastSyncAt());
-        newDeck.put(deckNode + "/accepted", deck.isAccepted());*/
 
         Log.d(TAG, newDeck.toString());
         FirebaseDatabase
@@ -178,7 +172,7 @@ public class Deck implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void deleteDeck(final String deckId,
-                                  final AbstractOnFbOperationCompleteListener<Void> listener) {
+                                  final AbstractOnFbOperationCompleteListener listener) {
         // Values must be null. It is impossible with ConcurentHashMap. For deleting deck
         // concurrent map is unused (always 1 flow).
         Map<String, Object> removeDeck = new HashMap<>();
@@ -205,7 +199,7 @@ public class Deck implements Parcelable {
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void updateDeck(final Deck deck, final AbstractOnFbOperationCompleteListener<Void>
+    public static void updateDeck(final Deck deck, final AbstractOnFbOperationCompleteListener
             listener) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(DELIMITER + deck.getdId(), deck);

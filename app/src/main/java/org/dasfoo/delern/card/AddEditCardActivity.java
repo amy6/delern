@@ -93,9 +93,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
                 Card.updateCard(mCard, mDeckId,
-                        new AbstractOnFbOperationCompleteListener<Void>(TAG, this) {
+                        new AbstractOnFbOperationCompleteListener(TAG, this) {
                             @Override
-                            public void onOperationSuccess(final Void param) {
+                            public void onOperationSuccess() {
                                 Toast.makeText(mContext, R.string.updated_card_user_message,
                                         Toast.LENGTH_SHORT).show();
                                 finish();
@@ -128,9 +128,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
                 System.currentTimeMillis());
         Card.createNewCard(newCard, mDeckId, scheduledCard,
-                new AbstractOnFbOperationCompleteListener<Void>(TAG, this) {
+                new AbstractOnFbOperationCompleteListener(TAG, this) {
                     @Override
-                    public void onOperationSuccess(final Void param) {
+                    public void onOperationSuccess() {
                         if (mAddReversedCardCheckbox.isChecked()) {
                             // TODO(ksheremet): Fix showing this message double times (2 card)
                             Toast.makeText(mContext, R.string.add_extra_reversed_card_message,

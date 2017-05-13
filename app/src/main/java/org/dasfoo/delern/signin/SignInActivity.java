@@ -42,12 +42,9 @@ public class SignInActivity extends AppCompatActivity
      */
     private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
-
-    private GoogleApiClient mGoogleApiClient;
-
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
     private final Context mContext = this;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -69,9 +66,9 @@ public class SignInActivity extends AppCompatActivity
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
                     User.writeUser(changedUser,
-                            new AbstractOnFbOperationCompleteListener<Void>(TAG, mContext) {
+                            new AbstractOnFbOperationCompleteListener(TAG, mContext) {
                                 @Override
-                                public void onOperationSuccess(final Void param) {
+                                public void onOperationSuccess() {
                                     Log.v(TAG, "Writing new  user to FB  was successful");
                                 }
                             });
@@ -94,10 +91,9 @@ public class SignInActivity extends AppCompatActivity
                                         "http://example.com/anonymous");
                                 Log.e(TAG, "Instrumented user writes to FB");
                                 User.writeUser(changedUser,
-                                        new AbstractOnFbOperationCompleteListener<Void>(TAG,
-                                                mContext) {
+                                        new AbstractOnFbOperationCompleteListener(TAG, mContext) {
                                             @Override
-                                            public void onOperationSuccess(final Void param) {
+                                            public void onOperationSuccess() {
                                                 startActivity(new Intent(SignInActivity.this,
                                                         DelernMainActivity.class));
                                                 finish();

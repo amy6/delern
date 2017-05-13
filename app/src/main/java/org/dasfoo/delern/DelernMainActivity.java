@@ -71,9 +71,9 @@ public class DelernMainActivity extends AppCompatActivity
                 User.getCurrentUser().isAnonymous()) {
             final User user = new User("anonymous",
                     "instrumented.test@example.com", "http://example.com/anonymous");
-            User.writeUser(user,  new AbstractOnFbOperationCompleteListener<Void>(TAG, this) {
+            User.writeUser(user, new AbstractOnFbOperationCompleteListener(TAG, this) {
                 @Override
-                public void onOperationSuccess(final Void param) {
+                public void onOperationSuccess() {
                     Log.e(TAG, "Writing user was successful");
                 }
             });

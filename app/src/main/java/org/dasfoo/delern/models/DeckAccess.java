@@ -39,8 +39,11 @@ public class DeckAccess {
      */
     @Exclude
     public static String getDeckAccessNodeByDeckId(final String deckId) {
-        return TextUtils.join("/", new String[]{DeckAccess.DECK_ACCESS, deckId,
-                User.getCurrentUser().getUid(),});
+        return TextUtils.join("/", new String[]{
+                DeckAccess.DECK_ACCESS,
+                deckId,
+                User.getCurrentUser().getUid(),
+        });
     }
 
     /**
