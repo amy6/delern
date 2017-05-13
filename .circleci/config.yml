@@ -117,7 +117,7 @@ jobs:
             --package "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
             --tag google_apis \
             --name test
-          echo 'hw.ramSize=1536' >>~/.android/avd/test.avd/config.ini
+          echo 'hw.ramSize=2048' >>~/.android/avd/test.avd/config.ini
 
     # Starting the emulator before assemble may save time, but we have limited RAM.
     - run:
