@@ -41,9 +41,9 @@ jobs:
         command: |
           curl -sL https://deb.nodesource.com/setup_6.x | bash -
           apt install -y nodejs
-          npm install --prefix=$PWD firebase-server firebase-bolt
+          npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
           node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o firebase-rules.json
-          nodejs node_modules/.bin/firebase-server -r firebase-rules.json -p 5533 -v
+          node_modules/.bin/firebase-server -r firebase-rules.json -p 5533 -v -n localhost
 
     - restore_cache:
         keys:
@@ -117,8 +117,10 @@ jobs:
             --package "system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
             --tag google_apis \
             --name test
-          echo 'hw.ramSize=2048' >>~/.android/avd/test.avd/config.ini
-          echo 'vm.heapSize=128' >>~/.android/avd/test.avd/config.ini
+          cat >>~/.android/avd/test.avd/config.ini <<'CONFIG'
+          hw.ramSize=2048
+          vm.heapSize=128
+          CONFIG
 
     # Starting the emulator before assemble may save time, but we have limited RAM.
     - run:
