@@ -1,11 +1,11 @@
 package org.dasfoo.delern.models;
 
-import android.text.TextUtils;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+
+import org.dasfoo.delern.util.StringUtil;
 
 /**
  * Created by katarina on 2/23/17.
@@ -15,8 +15,7 @@ import com.google.firebase.database.ServerValue;
 public class View {
     @Exclude
     private static final String VIEWS = "views";
-    @Exclude
-    private static final String DELIMITER = "/";
+
     @Exclude
     private String cardId;
     private String levelBefore;
@@ -61,11 +60,7 @@ public class View {
      */
     @Exclude
     public static String getViewsNodeByDeckId(final String deckId) {
-        return TextUtils.join(DELIMITER, new String[]{
-                VIEWS,
-                User.getCurrentUser().getUid(),
-                deckId,
-        });
+        return StringUtil.joinFirebasePath(VIEWS, User.getCurrentUser().getUid(), deckId);
     }
 
     /**

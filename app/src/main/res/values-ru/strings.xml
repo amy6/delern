@@ -43,7 +43,7 @@
     <string name="add_extra_reversed_card_message">2 карточки добавлены</string>
     <string name="deck">Список</string>
     <string name="delete_deck">Удалить все карточки в списке?</string>
-    <string name="card_deleted_successful_user_message">Карточка была удалена</string>
+    <string name="deleted_card_successful_user_message">Карточка была удалена</string>
 
 
     <!-- Cards type menu -->

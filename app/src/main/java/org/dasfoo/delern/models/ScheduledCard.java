@@ -1,11 +1,11 @@
 package org.dasfoo.delern.models;
 
-import android.text.TextUtils;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import org.dasfoo.delern.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,7 @@ public class ScheduledCard {
     private static final String REPEAT_AT_FIELD = "repeatAt";
     @Exclude
     private static final String LEVEL_FIELD = "level";
-    @Exclude
-    private static final String DELIMITER = "/";
+
     @Exclude
     private String cId;
     private String level;
@@ -72,11 +71,7 @@ public class ScheduledCard {
      */
     @Exclude
     public static String getScheduledCardNodeByDeckId(final String deckId) {
-        return TextUtils.join(DELIMITER, new String[]{
-                LEARNING,
-                User.getCurrentUser().getUid(),
-                deckId,
-        });
+        return StringUtil.joinFirebasePath(LEARNING, User.getCurrentUser().getUid(), deckId);
     }
 
     /**

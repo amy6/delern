@@ -38,7 +38,7 @@ public abstract class AbstractOnFbOperationCompleteListener implements OnComplet
         if (task.isSuccessful()) {
             onOperationSuccess();
         } else {
-            Log.e(mTag, "Operation is not completed:", task.getException());
+            Log.e(mTag, "Firebase operation is not completed:", task.getException());
             Toast.makeText(mContext, task.getException().getLocalizedMessage(),
                     Toast.LENGTH_LONG).show();
         }

@@ -43,7 +43,7 @@
     <string name="add_extra_reversed_card_message">2 cards are added</string>
     <string name="deck">Deck</string>
     <string name="delete_deck">Delete deck with all cards?</string>
-    <string name="card_deleted_successful_user_message">Card was deleted</string>
+    <string name="deleted_card_successful_user_message">Card was deleted</string>
 
     <!-- Cards type menu -->
     <string name="cards_type">Deck Type</string>

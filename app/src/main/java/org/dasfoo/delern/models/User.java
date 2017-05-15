@@ -16,23 +16,6 @@ import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public final class User {
-    /**
-     * User data field name in Firebase.
-     */
-    @Exclude
-    public static final String NAME = "name";
-
-    /**
-     * User data field email in Firebase.
-     */
-    @Exclude
-    public static final String EMAIL = "email";
-
-    /**
-     * User data field photoUrl in Firebase.
-     */
-    @Exclude
-    public static final String PHOTO_URL = "photoUrl";
 
     @Exclude
     private static final String USERS = "users";
@@ -40,6 +23,13 @@ public final class User {
     private String name;
     private String email;
     private String photoUrl;
+
+    /**
+     * The empty constructor is required for Firebase de-serialization.
+     */
+    public User() {
+        // This constructor is intentionally left empty.
+    }
 
     /**
      * Create user instance using name, email, photo url of user.

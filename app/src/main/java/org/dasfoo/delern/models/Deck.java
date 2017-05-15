@@ -2,7 +2,6 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
@@ -12,6 +11,7 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
+import org.dasfoo.delern.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +45,6 @@ public class Deck implements Parcelable {
     private static final String TAG = LogUtil.tagFor(Deck.class);
     @Exclude
     private static final String DECKS = "decks";
-    @Exclude
-    private static final String DELIMITER = "/";
 
     @Exclude
     private String dId;
@@ -112,7 +110,7 @@ public class Deck implements Parcelable {
     @Exclude
     public static Query getUsersDecks() {
         if (User.getCurrentUser() == null) {
-            Log.d(TAG, "User is not signed in");
+            Log.e(TAG, "User is not signed in");
             return null;
         } else {
             return getFirebaseDecksRef();
@@ -156,11 +154,7 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static String getDeckNodeById(final String deckId) {
-        return TextUtils.join(DELIMITER, new String[]{
-                Deck.DECKS,
-                User.getCurrentUser().getUid(),
-                deckId,
-        });
+        return StringUtil.joinFirebasePath(Deck.DECKS, User.getCurrentUser().getUid(), deckId);
     }
 
     /**
@@ -182,7 +176,7 @@ public class Deck implements Parcelable {
         removeDeck.put(View.getViewsNodeByDeckId(deckId), null);
         removeDeck.put(DeckAccess.getDeckAccessNodeByDeckId(deckId), null);
 
-        Log.v(TAG, removeDeck.toString());
+        Log.v(TAG, "Deck removal operation:" + removeDeck.toString());
 
         FirebaseDatabase
                 .getInstance()
@@ -202,8 +196,7 @@ public class Deck implements Parcelable {
     public static void updateDeck(final Deck deck, final AbstractOnFbOperationCompleteListener
             listener) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(DELIMITER + deck.getdId(), deck);
-        Log.v(TAG, childUpdates.toString());
+        childUpdates.put(deck.getdId(), deck);
         getFirebaseDecksRef().updateChildren(childUpdates).addOnCompleteListener(listener);
     }
 

@@ -173,7 +173,7 @@ public class PreEditCardActivity extends AppCompatActivity {
                             @Override
                             public void onOperationSuccess() {
                                 Toast.makeText(mContext,
-                                        R.string.card_deleted_successful_user_message,
+                                        R.string.deleted_card_successful_user_message,
                                         Toast.LENGTH_SHORT)
                                         .show();
                             }

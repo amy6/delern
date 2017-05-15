@@ -2,7 +2,6 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -10,10 +9,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by katarina on 10/4/16.
@@ -41,9 +40,6 @@ public class Card implements Parcelable {
     };
     @Exclude
     private static final String CARDS = "cards";
-
-    @Exclude
-    private static final String DELIMITER = "/";
 
     @Exclude
     private String cId;
@@ -86,7 +82,7 @@ public class Card implements Parcelable {
      */
     @Exclude
     public static String getCardsNodeByDeckId(final String deckId) {
-        return joinStrings(CARDS, deckId);
+        return StringUtil.joinFirebasePath(CARDS, deckId);
     }
 
     /**
@@ -99,6 +95,7 @@ public class Card implements Parcelable {
      * @param listener      handles on success and on failure results. I can pass param
      *                      through setter.
      */
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
                                      final ScheduledCard scheduledCard,
@@ -107,9 +104,12 @@ public class Card implements Parcelable {
                 .child(deckId)
                 .push()
                 .getKey();
-        Map<String, Object> createCard = new ConcurrentHashMap<>();
-        createCard.put(joinStrings(Card.getCardsNodeByDeckId(deckId), cardKey), newCard);
-        createCard.put(joinStrings(ScheduledCard.getScheduledCardNodeByDeckId(deckId), cardKey),
+        Map<String, Object> createCard = new HashMap<>();
+        createCard.put(StringUtil.joinFirebasePath(Card.getCardsNodeByDeckId(deckId), cardKey),
+                newCard);
+        createCard.put(StringUtil.joinFirebasePath(ScheduledCard
+                        .getScheduledCardNodeByDeckId(deckId),
+                cardKey),
                 scheduledCard);
         FirebaseDatabase
                 .getInstance()
@@ -178,20 +178,19 @@ public class Card implements Parcelable {
     public static void deleteCardFromDeck(final String deckId, final Card card,
                                           final AbstractOnFbOperationCompleteListener listener) {
         Map<String, Object> deleteCard = new HashMap<>();
-        deleteCard.put(joinStrings(View.getViewsNodeByDeckId(deckId), card.getcId()), null);
-        deleteCard.put(joinStrings(ScheduledCard.getScheduledCardNodeByDeckId(deckId),
+        deleteCard.put(StringUtil.joinFirebasePath(View.getViewsNodeByDeckId(deckId),
+                card.getcId()), null);
+        deleteCard.put(StringUtil.joinFirebasePath(ScheduledCard
+                        .getScheduledCardNodeByDeckId(deckId),
                 card.getcId()), null);
         // TODO(ksheremet): Don't remove card if user is not owner
-        deleteCard.put(joinStrings(Card.getCardsNodeByDeckId(deckId), card.getcId()), null);
+        deleteCard.put(StringUtil.joinFirebasePath(Card.getCardsNodeByDeckId(deckId),
+                card.getcId()), null);
         FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .updateChildren(deleteCard)
                 .addOnCompleteListener(listener);
-    }
-
-    private static String joinStrings(final String... args) {
-        return TextUtils.join(DELIMITER, args);
     }
 
     /**

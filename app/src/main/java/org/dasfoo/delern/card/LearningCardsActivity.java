@@ -71,6 +71,9 @@ public class LearningCardsActivity extends AppCompatActivity {
         @Override
         public void onNewCard() {
             showFrontSide();
+            // if user decided to edit card, a back side can be shown or not.
+            // After returning back it must show the same state (the same buttons
+            // and text) as before editing
             if (mBackIsShown) {
                 showBackSide();
             }
@@ -202,7 +205,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                                     @Override
                                     public void onOperationSuccess() {
                                         Toast.makeText(mContext,
-                                                R.string.card_deleted_successful_user_message,
+                                                R.string.deleted_card_successful_user_message,
                                                 Toast.LENGTH_SHORT)
                                                 .show();
                                     }

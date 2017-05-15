@@ -40,7 +40,8 @@ public abstract class AbstractUserMessageValueEventListener implements ValueEven
      */
     @Override
     public void onCancelled(final DatabaseError databaseError) {
-        Log.e(TAG, databaseError.getDetails());
+        Log.e(TAG, "ValueEventListener cancelled [" + databaseError.getMessage() + "]: " +
+                databaseError.getDetails());
         if (mContext != null) {
             Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
         }

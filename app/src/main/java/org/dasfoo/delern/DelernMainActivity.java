@@ -212,11 +212,10 @@ public class DelernMainActivity extends AppCompatActivity
              */
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
-                userName.setText(String.valueOf(dataSnapshot.child(User.NAME).getValue()));
-                userEmail.setText(String.valueOf(dataSnapshot.child(User.EMAIL).getValue()));
-                Glide.with(getContext())
-                        .load(String.valueOf(dataSnapshot.child(User.PHOTO_URL).getValue()))
-                        .into(profilePhoto);
+                User user = dataSnapshot.getValue(User.class);
+                userName.setText(user.getName());
+                userEmail.setText(user.getEmail());
+                Glide.with(getContext()).load(user.getPhotoUrl()).into(profilePhoto);
             }
         };
 

@@ -1,12 +1,11 @@
 package org.dasfoo.delern.models;
 
-import android.text.TextUtils;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.util.LogUtil;
+import org.dasfoo.delern.util.StringUtil;
 
 /**
  * Created by katarina on 2/22/17.
@@ -39,11 +38,9 @@ public class DeckAccess {
      */
     @Exclude
     public static String getDeckAccessNodeByDeckId(final String deckId) {
-        return TextUtils.join("/", new String[]{
-                DeckAccess.DECK_ACCESS,
-                deckId,
-                User.getCurrentUser().getUid(),
-        });
+        return StringUtil.joinFirebasePath(DeckAccess.DECK_ACCESS, deckId,
+                User.getCurrentUser().getUid()
+        );
     }
 
     /**

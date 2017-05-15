@@ -78,18 +78,19 @@ public class SignInActivity extends AppCompatActivity
 
         // TODO(ksheremet): Move to instrumented flavour package
         if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
-            Log.e(TAG, " instrumented");
             // Force logging by using Log.e because ProGuard removes Log.w.
             Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this,
                     new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull final Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                            if (!task.isSuccessful()) {
+                                Log.e(TAG, task.toString());
+                                return;
+                            }
                                 final User changedUser = new User("anonymous",
                                         "instrumented.test@example.com",
                                         "http://example.com/anonymous");
-                                Log.e(TAG, "Instrumented user writes to FB");
                                 User.writeUser(changedUser,
                                         new AbstractOnFbOperationCompleteListener(TAG, mContext) {
                                             @Override
@@ -99,7 +100,6 @@ public class SignInActivity extends AppCompatActivity
                                                 finish();
                                             }
                                         });
-                            }
                         }
                     });
             return;

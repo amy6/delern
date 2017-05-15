@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8BC34A</color>
-    <color name="colorPrimaryDark">#689F38</color>
-    <color name="colorAccent">#CDDC39</color>
-    <color name="colorPrimaryLight">#DCEDC8</color>
-    <color name="colorPrimaryText">#212121</color>
-    <color name="toolbarIconColor">#f7f7f7</color>
-    <color name="dontKnowButton">#F44336</color>
-    <color name="grey_tint">#787575</color>
-    <color name="feminine">#d1f2729b</color>
-    <color name="masculine">#d160c9fa</color>
-    <color name="neuter">#ede88e</color>
-    <color name="noGender">#DCEDC8</color>
+    <color name="colorPrimary">#FF8BC34A</color>
+    <color name="colorPrimaryDark">#FF689F38</color>
+    <color name="colorAccent">#FFCDDC39</color>
+    <color name="colorPrimaryLight">#FFDCEDC8</color>
+    <color name="colorPrimaryText">#FF212121</color>
+    <color name="toolbarIconColor">#FFF7F7F7</color>
+    <color name="dontKnowButton">#FFF44336</color>
+    <color name="grey_tint">#FF787575</color>
+    <color name="feminine">#D1F2729B</color>
+    <color name="masculine">#D160C9FA</color>
+    <color name="neuter">#FFEDE88E</color>
+    <color name="noGender">#FFDCEDC8</color>
 </resources>
