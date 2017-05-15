@@ -28,9 +28,13 @@ jobs:
           git tag -l | xargs git tag -d
           git fetch --tags
 
-    - run: |
-        apt update
-        apt install -y xsltproc
+    - run:
+        name: "Install system dependencies"
+        working_directory: ~/delern/app/build
+        command: |
+          curl -sL https://deb.nodesource.com/setup_6.x | bash -
+          apt install -y nodejs xsltproc
+          npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
 
     - run:
         # TODO(dotdoom): run this in a separate Docker container / nodejs image
@@ -39,9 +43,6 @@ jobs:
         background: true
         working_directory: ~/delern/app/build
         command: |
-          curl -sL https://deb.nodesource.com/setup_6.x | bash -
-          apt install -y nodejs
-          npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
           node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o firebase-rules.json
           node_modules/.bin/firebase-server -r firebase-rules.json -p 5533 -v -n localhost
 
