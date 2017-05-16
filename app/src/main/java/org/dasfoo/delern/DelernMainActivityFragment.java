@@ -153,7 +153,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnRenameMenuClick(final int position) {
         final Deck deck = getDeckFromAdapter(position);
-        Log.d(TAG, deck.toString());
+        Log.d(TAG, "Deck to rename: " + deck.toString());
         final EditText input = new EditText(getActivity());
         AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
         builder.setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {

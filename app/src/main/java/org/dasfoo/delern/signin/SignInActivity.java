@@ -189,7 +189,7 @@ public class SignInActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.e(TAG, "onConnectionFailed:" + connectionResult);
+        Log.e(TAG, "Google API is not available:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
