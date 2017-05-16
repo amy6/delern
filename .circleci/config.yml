@@ -43,8 +43,9 @@ jobs:
         background: true
         working_directory: ~/delern/app/build
         command: |
-          node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o firebase-rules.json
-          node_modules/.bin/firebase-server -r firebase-rules.json -p 5533 -v -n localhost
+          mkdir -p outputs
+          node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o outputs/firebase-rules.json
+          node_modules/.bin/firebase-server -r outputs/firebase-rules.json -p 5533 -v -n localhost
 
     - restore_cache:
         keys:
