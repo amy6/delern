@@ -100,7 +100,6 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                Log.v(TAG, "Progress bar");
                 mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                 if (!dataSnapshot.hasChildren()) {
                     mEmptyMessageTextView.setVisibility(TextView.VISIBLE);
@@ -154,7 +153,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void doOnRenameMenuClick(final int position) {
         final Deck deck = getDeckFromAdapter(position);
-        Log.v(TAG, deck.toString());
+        Log.d(TAG, deck.toString());
         final EditText input = new EditText(getActivity());
         AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
         builder.setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
@@ -204,7 +203,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                              */
                             @Override
                             public void onOperationSuccess() {
-                                Log.v(TAG, "Deck was removed");
+                                Log.i(TAG, "Deck was removed");
                             }
                         });
             }
@@ -279,7 +278,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         if (mIsListenersAttached) {
             mIsListenersAttached = false;
             if (mUsersDecksQuery == null) {
-                Log.v(TAG, "User is not signed in");
+                Log.w(TAG, "Cleanup listeners: User is not signed in");
             } else {
                 mUsersDecksQuery.removeEventListener(mProgressBarListener);
             }

@@ -58,9 +58,9 @@ public class SignInActivity extends AppCompatActivity
                 FirebaseUser user = User.getCurrentUser();
                 if (user == null) {
                     // User is signed out
-                    Log.v(TAG, "onAuthStateChanged:signed_out");
+                    Log.i(TAG, "onAuthStateChanged:signed_out");
                 } else {
-                    Log.v(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.i(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     User changedUser = new User(user.getDisplayName(), user.getEmail(), null);
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
@@ -69,7 +69,7 @@ public class SignInActivity extends AppCompatActivity
                             new AbstractOnFbOperationCompleteListener(TAG, mContext) {
                                 @Override
                                 public void onOperationSuccess() {
-                                    Log.v(TAG, "Writing new  user to FB  was successful");
+                                    Log.i(TAG, "Writing new  user to FB  was successful");
                                 }
                             });
                 }
@@ -133,7 +133,7 @@ public class SignInActivity extends AppCompatActivity
                 signIn();
                 break;
             default:
-                Log.v(TAG, "Button is not implemented yet");
+                Log.d(TAG, "Button is not implemented yet");
                 break;
         }
     }
@@ -159,13 +159,13 @@ public class SignInActivity extends AppCompatActivity
     }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        Log.i(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull final Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        Log.i(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -174,7 +174,7 @@ public class SignInActivity extends AppCompatActivity
                                     DelernMainActivity.class));
                             finish();
                         } else {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Log.e(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -189,7 +189,7 @@ public class SignInActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Log.e(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 

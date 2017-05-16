@@ -109,8 +109,9 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static Query getUsersDecks() {
+        // TODO(ksheremet): check whether this null is possible or not
         if (User.getCurrentUser() == null) {
-            Log.e(TAG, "User is not signed in");
+            Log.e(TAG, "getUsersDecks: User is not signed in");
             return null;
         } else {
             return getFirebaseDecksRef();

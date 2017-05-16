@@ -25,9 +25,9 @@ public class DelernFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         // Handle data payload of FCM messages.
-        Log.d(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
-        Log.d(TAG, "FCM Notification Message: " +
+        Log.i(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
+        Log.i(TAG, "FCM Notification Message: " +
                 remoteMessage.getNotification());
-        Log.d(TAG, "FCM Data Message: " + remoteMessage.getData());
+        Log.i(TAG, "FCM Data Message: " + remoteMessage.getData());
     }
 }

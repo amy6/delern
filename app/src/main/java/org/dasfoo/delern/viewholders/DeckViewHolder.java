@@ -169,11 +169,10 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 mOnViewClick.doOnDeckTypeClick(position, DeckType.GERMAN);
                 return true;
             case R.id.swissgerman_type:
-                Log.v(TAG, "Swiss deck");
                 mOnViewClick.doOnDeckTypeClick(position, DeckType.SWISS);
                 return true;
             default:
-                Log.v(TAG, "Menu Item is not implemented yet");
+                Log.i(TAG, "Menu Item is not implemented yet");
                 return false;
         }
     }
