@@ -1,6 +1,5 @@
 package org.dasfoo.delern.card;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -41,7 +40,6 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     public static final String CARD = "card";
 
     private static final String TAG = LogUtil.tagFor(AddEditCardActivity.class);
-    private final Context mContext = this;
     private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
@@ -96,7 +94,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                         new AbstractOnFbOperationCompleteListener(TAG, this) {
                             @Override
                             public void onOperationSuccess() {
-                                Toast.makeText(mContext, R.string.updated_card_user_message,
+                                Toast.makeText(AddEditCardActivity.this,
+                                        R.string.updated_card_user_message,
                                         Toast.LENGTH_SHORT).show();
                                 finish();
                             }
@@ -133,10 +132,12 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                     public void onOperationSuccess() {
                         if (mAddReversedCardCheckbox.isChecked()) {
                             // TODO(ksheremet): Fix showing this message double times (2 card)
-                            Toast.makeText(mContext, R.string.add_extra_reversed_card_message,
+                            Toast.makeText(AddEditCardActivity.this,
+                                    R.string.add_extra_reversed_card_message,
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(mContext, R.string.added_card_user_message,
+                            Toast.makeText(AddEditCardActivity.this,
+                                    R.string.added_card_user_message,
                                     Toast.LENGTH_SHORT).show();
                         }
                         cleanTextFields();

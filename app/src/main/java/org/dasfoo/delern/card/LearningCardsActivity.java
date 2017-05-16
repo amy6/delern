@@ -1,7 +1,6 @@
 package org.dasfoo.delern.card;
 
 import android.animation.Animator;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +52,6 @@ public class LearningCardsActivity extends AppCompatActivity {
      * Key for saving onSaveInstanceState.
      */
     private static final String BACK_IS_SHOWN = "back";
-    private final Context mContext = this;
     private CardView mCardView;
     private FloatingActionButton mKnowButton;
     private FloatingActionButton mRepeatButton;
@@ -201,10 +199,11 @@ public class LearningCardsActivity extends AppCompatActivity {
                         mBackIsShown = false;
                         // TODO(ksheremet): delete if not owner
                         Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
-                                new AbstractOnFbOperationCompleteListener(TAG, mContext) {
+                                new AbstractOnFbOperationCompleteListener(TAG,
+                                        LearningCardsActivity.this) {
                                     @Override
                                     public void onOperationSuccess() {
-                                        Toast.makeText(mContext,
+                                        Toast.makeText(LearningCardsActivity.this,
                                                 R.string.deleted_card_successful_user_message,
                                                 Toast.LENGTH_SHORT)
                                                 .show();

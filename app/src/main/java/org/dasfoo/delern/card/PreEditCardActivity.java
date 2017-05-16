@@ -1,6 +1,5 @@
 package org.dasfoo.delern.card;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -49,7 +48,6 @@ public class PreEditCardActivity extends AppCompatActivity {
     public static final String CARD_ID = "cardId";
 
     private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
-    private final Context mContext = this;
     private String mDeckId;
     private Card mCard;
     private ValueEventListener mCardValueEventListener;
@@ -169,10 +167,10 @@ public class PreEditCardActivity extends AppCompatActivity {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 Card.deleteCardFromDeck(deckId, card,
-                        new AbstractOnFbOperationCompleteListener(TAG, mContext) {
+                        new AbstractOnFbOperationCompleteListener(TAG, PreEditCardActivity.this) {
                             @Override
                             public void onOperationSuccess() {
-                                Toast.makeText(mContext,
+                                Toast.makeText(PreEditCardActivity.this,
                                         R.string.deleted_card_successful_user_message,
                                         Toast.LENGTH_SHORT)
                                         .show();
