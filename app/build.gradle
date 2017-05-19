@@ -49,7 +49,7 @@ ext {
     // Alternatively: grgit.log(includes:['HEAD']).size()
     gitVersionCode = git.tag.list().size() + 20
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
-    firebaseVersion = '10.0.1'
+    firebaseVersion = '10.2.6'
     sdkVersion = 25
     leakCanaryVersion = '1.5.1'
     supportVersion = "${sdkVersion}.3.1"
