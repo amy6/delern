@@ -79,11 +79,19 @@ public class DelernMainActivity extends AppCompatActivity
             });
         }
 
-        mListFragment = new DelernMainActivityFragment();
-        // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, mListFragment).commit();
+        // Android persists the Fragment layout and associated back stack when an Activity is
+        // restarted due to a configuration change. Check if fragment is created not to overlay.
+        // https://goo.gl/4Iib9d
+        mListFragment = (DelernMainActivityFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
 
+        if (mListFragment == null) {
+            mListFragment = new DelernMainActivityFragment();
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, mListFragment).commit();
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open,
