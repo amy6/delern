@@ -90,10 +90,13 @@ public class LearningCardsActivity extends AppCompatActivity {
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
+                    setClickableRepeatKnowButtons(false);
                     mLearningCard.viewedCard(LearningCardListener.KNOW_CARD);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
+                    setClickableRepeatKnowButtons(false);
+                    mRepeatButton.setClickable(false);
                     mLearningCard.viewedCard(LearningCardListener.DO_NOT_KNOW_CARD);
                     mBackIsShown = false;
                     break;
@@ -290,6 +293,7 @@ public class LearningCardsActivity extends AppCompatActivity {
             repeatButtonAnimation = Animation.appearanceAnimation(mRepeatButton);
             knowButtonAnimation = Animation.appearanceAnimation(mKnowButton);
         }
+        setClickableRepeatKnowButtons(true);
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
         if (repeatButtonAnimation != null) {
@@ -299,5 +303,16 @@ public class LearningCardsActivity extends AppCompatActivity {
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
         mBackIsShown = true;
+    }
+
+    /**
+     * Do buttons not clickable after first click to prevent double click and missing
+     * next card.
+     *
+     * @param isClickable whether buttons clickable or not
+     */
+    private void setClickableRepeatKnowButtons(final Boolean isClickable) {
+        mKnowButton.setClickable(isClickable);
+        mRepeatButton.setClickable(isClickable);
     }
 }
