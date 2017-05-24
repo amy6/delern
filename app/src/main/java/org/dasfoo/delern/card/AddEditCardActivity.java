@@ -106,6 +106,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
 
     private void cleanTextFields() {
         mFrontSideInputText.setText("");
+        mFrontSideInputText.requestFocus();
         mBackSideInputText.setText("");
     }
 
