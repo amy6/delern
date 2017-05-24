@@ -8,7 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,25 +69,31 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final View view) {
                 // Set up the input
                 final EditText input = new EditText(getActivity());
-                AlertDialog.Builder builder = newOrUpdateDeckDialog(new Deck(), input);
-                builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        final Deck newDeck = new Deck(input.getText().toString(),
-                                DeckType.BASIC.name(), true);
-                        // Set onComplete listener. If it is successful, start new activity.
-                        Deck.createNewDeck(newDeck,
-                                new AbstractOnFbOperationCompleteListener(TAG,
-                                        getContext()) {
-                                    @Override
-                                    public void onOperationSuccess() {
-                                        startEditCardsActivity(getAddedKey(), newDeck.getName());
-                                        mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
-                                    }
-                                });
-                    }
-                });
-                builder.show();
+                newOrUpdateDeckDialog(new Deck(), input, R.string.add,
+                        new DialogInterface.OnClickListener() {
+                            /**
+                             * {@inheritDoc}
+                             */
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                final Deck newDeck = new Deck(input.getText().toString().trim(),
+                                        DeckType.BASIC.name(), true);
+                                Deck.createNewDeck(newDeck,
+                                        new AbstractOnFbOperationCompleteListener(TAG,
+                                                getContext()) {
+                                            /**
+                                             * {@inheritDoc}
+                                             */
+                                            @Override
+                                            public void onOperationSuccess() {
+                                                startEditCardsActivity(getAddedKey(),
+                                                        newDeck.getName());
+                                                mEmptyMessageTextView
+                                                        .setVisibility(TextView.INVISIBLE);
+                                            }
+                                        });
+                            }
+                        });
             }
         });
         // TODO(ksheremet): Create base fragment for mProgressBar
@@ -155,25 +164,25 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         final Deck deck = getDeckFromAdapter(position);
         Log.d(TAG, "Deck to rename: " + deck.toString());
         final EditText input = new EditText(getActivity());
-        AlertDialog.Builder builder = newOrUpdateDeckDialog(deck, input);
-        builder.setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
+        newOrUpdateDeckDialog(deck, input, R.string.rename, new DialogInterface.OnClickListener() {
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                deck.setName(input.getText().toString());
+                deck.setName(input.getText().toString().trim());
                 Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener(TAG,
                         getContext()) {
-
                     /**
                      * {@inheritDoc}
                      */
                     @Override
                     public void onOperationSuccess() {
-                        //Not implemented
+                        //No implementation needed
                     }
                 });
             }
         });
-        builder.show();
     }
 
     /**
@@ -236,7 +245,10 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
 
-    private AlertDialog.Builder newOrUpdateDeckDialog(final Deck deck, final EditText input) {
+    private AlertDialog newOrUpdateDeckDialog(final Deck deck, final EditText input,
+                                              final int positiveButtonName,
+                                              final DialogInterface.OnClickListener
+                                                      positiveButtonListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.deck);
         // Specify the type of input expected
@@ -249,7 +261,36 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                 dialog.cancel();
             }
         });
-        return builder;
+        builder.setPositiveButton(positiveButtonName, positiveButtonListener);
+        final AlertDialog dialog = builder.create();
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count,
+                                          final int after) {
+                //No implementation needed
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, final int start, final int before,
+                                      final int count) {
+                //No implementation needed
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+                // Check if edittext is empty
+                if (TextUtils.isEmpty(s)) {
+                    // Disable positive button
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                } else {
+                    // Something into edit text. Enable the button.
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+            }
+        });
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        return dialog;
     }
 
     private void startEditCardsActivity(final String key, final String name) {
