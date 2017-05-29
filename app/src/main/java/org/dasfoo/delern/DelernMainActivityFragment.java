@@ -278,14 +278,10 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
 
             @Override
             public void afterTextChanged(final Editable s) {
-                // Check if edittext is empty
-                if (TextUtils.isEmpty(s)) {
-                    // Disable positive button
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                } else {
-                    // Something into edit text. Enable the button.
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                }
+                // Check if edittext is empty, disable button. Not allow deck that
+                // contains only spaces in name
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
         dialog.show();
