@@ -96,7 +96,6 @@ public class LearningCardsActivity extends AppCompatActivity {
                     break;
                 case R.id.to_repeat_button:
                     setClickableRepeatKnowButtons(false);
-                    mRepeatButton.setClickable(false);
                     mLearningCard.viewedCard(LearningCardListener.DO_NOT_KNOW_CARD);
                     mBackIsShown = false;
                     break;
