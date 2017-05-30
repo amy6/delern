@@ -1,48 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'com.github.triplet.play'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
-
-checkstyle {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
-    toolVersion '7.3'
-}
-
-pmd {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.PmdExtension.html
-    toolVersion '5.5.2'
-}
-
-// Have to create our own tasks because Android's sourceSets:
-// https://android.googlesource.com/platform/tools/build/+/master/gradle/src/main/groovy/com/android/build/gradle/internal/api/DefaultAndroidSourceSet.java
-// are not compatible with Gradle sourceSets:
-// https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/SourceSet.html
-// therefore checkstyle/pmd/etc constructors doesn't see them.
-
-// TODO(dotdoom): enable checkstyle and pmd for all Gradle projects
-
-task checkstyle(type: Checkstyle) {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
-    source android.sourceSets.main.getJavaDirectories()
-    classpath = files()
-    ignoreFailures = false
-}
-
-task pmd(type: Pmd) {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
-    source android.sourceSets.main.getJavaDirectories()
-    classpath = files()
-    ignoreFailures = false
-    ruleSetFiles = files('config/pmd/ruleset.xml')
-    consoleOutput = true
-}
-
-project.afterEvaluate {
-    tasks.withType(tasks['lint'].class) {
-        dependsOn 'checkstyle', 'pmd'
-    }
-}
+apply from: 'config/quality.gradle'
 
 ext {
     git = org.ajoberstar.grgit.Grgit.open()
@@ -134,11 +93,6 @@ android {
             variant.ignore = !variant.flavors*.name.contains('normal')
         }
     }
-    lintOptions {
-        // https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html
-        // Enable all warnings, even those disabled by default.
-        checkAllWarnings true
-    }
 }
 
 dependencies {
@@ -175,4 +129,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'net.ltgt.errorprone'

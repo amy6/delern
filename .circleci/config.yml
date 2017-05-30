@@ -33,6 +33,8 @@ jobs:
         working_directory: ~/delern/app/build
         command: |
           curl -sL https://deb.nodesource.com/setup_6.x | bash -
+          # TODO(dotdoom): move xsltproc to Gradle, we'll need it for findbugs anyway. Related:
+          # http://gradle.1045684.n5.nabble.com/Help-calling-Ant-task-in-Gradle-for-xslt-transform-td3337068.html
           apt install -y nodejs xsltproc
           npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
 
