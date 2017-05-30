@@ -25,6 +25,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     android:orientation="horizontal"
     android:weightSum="1">
 
+    <!-- Text should be not selectable. It prevents opening deck
+     with double click-->
     <TextView
         android:id="@+id/deck_text_view"
         style="@style/PrimaryText"
@@ -35,7 +37,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
         android:layout_weight="0.75"
-        android:textIsSelectable="true" />
+        tools:ignore="SelectableText" />
 
     <TextView
         tools:ignore="SelectableText"
