@@ -150,7 +150,7 @@ jobs:
           # Unlock the screen.
           "${ANDROID_HOME?}/platform-tools/adb" shell input keyevent 82
           # Save the "boot" log events for deeper investigation.
-          "${ANDROID_HOME?}/platform-tools/adb" logcat -d >app/build/outputs/logcat-boot.txt
+          "${ANDROID_HOME?}/platform-tools/adb" logcat -v threadtime -d >app/build/outputs/logcat-boot.txt
           # But keep the actual test run logcat clean.
           "${ANDROID_HOME?}/platform-tools/adb" logcat -c
 
@@ -161,7 +161,7 @@ jobs:
     - run:
         name: "Save Android Emulator logs, cleanup"
         command: |
-          "${ANDROID_HOME?}/platform-tools/adb" logcat -d >app/build/outputs/logcat-test.txt
+          "${ANDROID_HOME?}/platform-tools/adb" logcat -v threadtime -d >app/build/outputs/logcat-test.txt
           # Kill running emulator to free up resources for e.g. Release build.
           "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
         when: always
