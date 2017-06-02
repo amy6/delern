@@ -34,6 +34,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="delete">Удалить</string>
     <string name="cancel">Отменить</string>
     <string name="add">Добавить</string>
+    <string name="update">Обновить</string>
     <string name="deck_menu_description">Меню для операций со списками и карточками</string>
     <string name="invitation_failed_message">Ошибка при отправлении приглашения</string>
     <string name="save">Сохранить</string>
@@ -74,5 +75,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!--Feature is not implemented message -->
     <string name="not_implemented">Не реализовано</string>
+
+    <!-- Force update user messages  -->
+    <string name="new_app_version_dialog_title">Доступна новая верския приложения</string>
+    <string name="update_app_user_message">Пожалуйста, обновите Delern до новой версии.</string>
 
 </resources>

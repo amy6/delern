@@ -45,4 +45,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
 </resources>

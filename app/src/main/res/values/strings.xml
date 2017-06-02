@@ -34,6 +34,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
+    <string name="update">Update</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
     <string name="invitation_failed_message">Failed to send invitation</string>
     <string name="save">Save</string>
@@ -73,5 +74,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!--Feature is not implemented message -->
     <string name="not_implemented">Not implemented yet</string>
+
+    <!-- Force update user messages  -->
+    <string name="new_app_version_dialog_title">New version available</string>
+    <string name="update_app_user_message">Please, update Delern to new version.</string>
 
 </resources>
