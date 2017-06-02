@@ -119,13 +119,14 @@ public class SplashScreenActivity extends AppCompatActivity
                             public void onClick(final DialogInterface dialog, final int which) {
                                 redirectForUpdate(updateUrl);
                             }
-                        }).setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                finish();
-                            }
-                        }).create();
+                        })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(final DialogInterface dialog) {
+                        finish();
+                    }
+                })
+                .create();
         dialog.show();
     }
 
