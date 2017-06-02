@@ -39,7 +39,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:tint="@color/grey_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:rippleColor="@color/colorPrimaryDark"/>
 
     <include layout="@layout/toolbar" />
 

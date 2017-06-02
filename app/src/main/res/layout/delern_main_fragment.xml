@@ -43,6 +43,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:tint="@color/grey_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"
+        app:rippleColor="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_add_black_24dp" />
 
     <ProgressBar
