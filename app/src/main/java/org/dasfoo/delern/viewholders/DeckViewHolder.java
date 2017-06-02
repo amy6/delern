@@ -56,16 +56,16 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     /**
      * Constructor. It initializes variable that describe how to place deck.
      *
-     * @param v item view
+     * @param viewHolder item view
      */
-    public DeckViewHolder(final View v) {
-        super(v);
+    public DeckViewHolder(final View viewHolder) {
+        super(viewHolder);
         mDeckTextView = (TextView) itemView.findViewById(R.id.deck_text_view);
         mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
         // Set default mCountToLearnTextView to N/A
         mCountToLearnTextView.setText(R.string.n_a);
 
-        mDeckTextView.setOnClickListener(this);
+        viewHolder.setOnClickListener(this);
         ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
         popupMenuImageView.setOnClickListener(this);
     }
@@ -113,8 +113,8 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      * {@inheritDoc}
      */
     @Override
-    public void onClick(final View v) {
-        if (v.getId() == R.id.deck_text_view) {
+    public void onClick(final View view) {
+        if (view.getId() == R.id.deck_view_holder) {
             // if number of cards is 0, show message to user
             String cardCount = mCountToLearnTextView.getText().toString();
             if (NULL_CARDS.equals(cardCount)) {
@@ -122,12 +122,12 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             } else {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    mOnViewClick.doOnTextViewClick(position);
+                    mOnViewClick.doOnDeckClick(position);
                 }
             }
         }
-        if (v.getId() == R.id.deck_popup_menu) {
-            showPopup(v);
+        if (view.getId() == R.id.deck_popup_menu) {
+            showPopup(view);
         }
     }
 

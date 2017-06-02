@@ -28,11 +28,11 @@ import org.dasfoo.delern.models.DeckType;
 public interface OnDeckViewHolderClick {
 
     /**
-     * Manages text click on deck.
+     * Manages click on deck.
      *
      * @param position position of the clicked element in the list
      */
-    void doOnTextViewClick(int position);
+    void doOnDeckClick(int position);
 
     /**
      * "Rename" menu item of a deck.

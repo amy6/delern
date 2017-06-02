@@ -18,12 +18,15 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="1">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/deck_view_holder"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?selectableItemBackground"
+              android:clickable="true"
+              android:orientation="horizontal"
+              android:weightSum="1">
 
     <!-- Text should be not selectable. It prevents opening deck
      with double click-->
@@ -37,16 +40,16 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
         android:layout_weight="0.75"
-        tools:ignore="SelectableText" />
+        tools:ignore="SelectableText"/>
 
     <TextView
-        tools:ignore="SelectableText"
         android:id="@+id/count_to_learn_textview"
         style="@style/SecondaryText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.15" />
+        android:layout_weight="0.15"
+        tools:ignore="SelectableText"/>
 
     <ImageView
         android:id="@+id/deck_popup_menu"
@@ -54,8 +57,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="0.1"
+        android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/deck_menu_description"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+        app:srcCompat="@drawable/ic_more_vert_black_24dp"/>
 
 </LinearLayout>
 

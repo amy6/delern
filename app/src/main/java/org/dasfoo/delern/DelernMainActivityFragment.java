@@ -169,7 +169,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      * {@inheritDoc}
      */
     @Override
-    public void doOnTextViewClick(final int position) {
+    public void doOnDeckClick(final int position) {
         Deck deck = getDeckFromAdapter(position);
         startShowCardActivity(deck);
     }
