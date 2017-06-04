@@ -23,15 +23,19 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
@@ -78,7 +82,7 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         mAddReversedCardCheckbox = (CheckBox) findViewById(R.id.add_reversed_card_checkbox);
-        Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
+        final Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
         mAddCardToDbButton.setOnClickListener(this);
         if (mCard == null) {
             mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
@@ -88,6 +92,32 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
             mBackSideInputText.setText(mCard.getBack());
             mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
         }
+        mAddCardToDbButton.setEnabled(false);
+        final TextWatcherStub cardValid = new TextWatcherStub() {
+            @Override
+            public void afterTextChanged(final Editable s) {
+                boolean inputValid = true;
+                if (TextUtils.isEmpty(mFrontSideInputText.getText().toString().trim())) {
+                    inputValid = false;
+                }
+                if (mAddReversedCardCheckbox.isChecked() &&
+                        TextUtils.isEmpty(mBackSideInputText.getText().toString().trim())) {
+                    inputValid = false;
+                }
+                mAddCardToDbButton.setEnabled(inputValid);
+            }
+        };
+
+        mFrontSideInputText.addTextChangedListener(cardValid);
+        mBackSideInputText.addTextChangedListener(cardValid);
+        mAddReversedCardCheckbox
+                .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(final CompoundButton buttonView,
+                                                 final boolean isChecked) {
+                        cardValid.afterTextChanged(null);
+                    }
+                });
     }
 
     /**
