@@ -21,12 +21,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
 <defaultsMap>
     <entry>
-        <key>force_update_required</key>
-        <value>false</value>
-    </entry>
-    <entry>
-        <key>force_update_current_version</key>
-        <value>39</value>
+        <key>min_app_version</key>
+        <value>0</value>
     </entry>
     <entry>
         <key>force_update_store_url</key>

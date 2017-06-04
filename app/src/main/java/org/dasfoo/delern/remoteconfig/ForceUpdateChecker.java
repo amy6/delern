@@ -37,8 +37,7 @@ public class ForceUpdateChecker {
 
     private static final String TAG = LogUtil.tagFor(ForceUpdateChecker.class);
 
-    private static final String KEY_UPDATE_REQUIRED = "force_update_required";
-    private static final String KEY_CURRENT_VERSION = "force_update_current_version";
+    private static final String MIN_APP_VERSION = "min_app_version";
     private static final String KEY_UPDATE_URL = "force_update_store_url";
 
     private final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -59,16 +58,15 @@ public class ForceUpdateChecker {
     }
 
     /**
-     * Check whether app needs to be updated or not. Method compares remote version with
+     * Check whether app needs to be updated or not. Method compares min remote version with
      * current version of app.
      *
      * @return whether app needs an update or not.
      */
     public boolean updateIsNeeded() {
-        long currentVersion = mFirebaseRemoteConfig.getLong(KEY_CURRENT_VERSION);
+        long minAppVersion = mFirebaseRemoteConfig.getLong(MIN_APP_VERSION);
         long appVersion = getAppVersion(mContext);
-        return mFirebaseRemoteConfig.getBoolean(KEY_UPDATE_REQUIRED) &&
-                currentVersion != appVersion;
+        return minAppVersion > appVersion;
     }
 
     /**
