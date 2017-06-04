@@ -18,8 +18,10 @@
 
 package org.dasfoo.delern;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,21 +34,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
-import org.dasfoo.delern.remoteconfig.ForceUpdateChecker;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Splash Activity that check whether user needs force update of app or not.
  * If not, it starts DelernMainActivity.
  */
-public class SplashScreenActivity extends AppCompatActivity
-        implements ForceUpdateChecker.OnUpdateNeededListener {
+public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String TAG = LogUtil.tagFor(SplashScreenActivity.class);
     private static final long ONE_HOUR = 3600;
+    private static final String KEY_MIN_APP_VERSION = "min_app_version";
+    private static final String KEY_UPDATE_URL = "force_update_store_url";
 
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    // 1 hour in seconds.
+    // In seconds.
     private long mCacheExpirationSeconds = ONE_HOUR;
     private OnCompleteListener<Void> mFetchRemoteConfigListener;
 
@@ -68,10 +70,8 @@ public class SplashScreenActivity extends AppCompatActivity
 
         // If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
         // retrieve values from the service.
-        if (getApplicationContext().getPackageName().endsWith(".debug") &&
-                mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
             mCacheExpirationSeconds = 0;
-
         }
 
         mFetchRemoteConfigListener = new OnCompleteListener<Void>() {
@@ -83,9 +83,17 @@ public class SplashScreenActivity extends AppCompatActivity
                     // After config data is successfully fetched, it must be activated
                     // before newly fetched values are returned.
                     mFirebaseRemoteConfig.activateFetched();
+                    if (updateIsNeeded()) {
+                        update();
+                        return;
+                    }
                 } else {
                     Log.e(TAG, "Remote config error:", task.getException());
                 }
+                Intent intent = new Intent(SplashScreenActivity.this,
+                        DelernMainActivity.class);
+                startActivity(intent);
+                finish();
             }
         };
     }
@@ -95,21 +103,9 @@ public class SplashScreenActivity extends AppCompatActivity
         super.onResume();
         mFirebaseRemoteConfig.fetch(mCacheExpirationSeconds)
                 .addOnCompleteListener(mFetchRemoteConfigListener);
-        ForceUpdateChecker forceUpdateChecker = new ForceUpdateChecker(this, this);
-        if (forceUpdateChecker.updateIsNeeded()) {
-            forceUpdateChecker.update();
-        } else {
-            Intent intent = new Intent(this, DelernMainActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onUpdateNeeded(final String updateUrl) {
+    private void update() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.new_app_version_dialog_title)
                 .setMessage(R.string.update_app_user_message)
@@ -117,7 +113,7 @@ public class SplashScreenActivity extends AppCompatActivity
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
-                                redirectForUpdate(updateUrl);
+                                redirectForUpdate(mFirebaseRemoteConfig.getString(KEY_UPDATE_URL));
                             }
                         })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -134,5 +130,30 @@ public class SplashScreenActivity extends AppCompatActivity
         final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUrl));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * Check whether app needs to be updated or not. Method compares min remote version with
+     * current version of app.
+     *
+     * @return whether app needs an update or not.
+     */
+    private boolean updateIsNeeded() {
+        long minAppVersion = mFirebaseRemoteConfig.getLong(KEY_MIN_APP_VERSION);
+        long appVersion = getAppVersion(this);
+        return minAppVersion > appVersion;
+    }
+
+    private long getAppVersion(final Context context) {
+        long result = 0;
+        try {
+            result = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0)
+                    .versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "Package name not found:", e);
+        }
+
+        return result;
     }
 }
