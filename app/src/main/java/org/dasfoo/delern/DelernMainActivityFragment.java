@@ -29,7 +29,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +47,7 @@ import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
@@ -281,19 +281,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         });
         builder.setPositiveButton(positiveButtonName, positiveButtonListener);
         final AlertDialog dialog = builder.create();
-        input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(final CharSequence s, final int start, final int count,
-                                          final int after) {
-                //No implementation needed
-            }
-
-            @Override
-            public void onTextChanged(final CharSequence s, final int start, final int before,
-                                      final int count) {
-                //No implementation needed
-            }
-
+        input.addTextChangedListener(new TextWatcherStub() {
             @Override
             public void afterTextChanged(final Editable s) {
                 // Check if edittext is empty, disable button. Not allow deck that
