@@ -188,6 +188,13 @@ public class SignInActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (task.isSuccessful()) {
+                            /*
+                                The following lines will add PII to crash reports.
+                                Consider privacy issues before uncommenting them.
+                                Crashlytics.setUserIdentifier(acct.getId());
+                                Crashlytics.setUserEmail(acct.getEmail());
+                                Crashlytics.setUserName(acct.getDisplayName());
+                            */
                             startActivity(new Intent(SignInActivity.this,
                                     DelernMainActivity.class));
                             finish();

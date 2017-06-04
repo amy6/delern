@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.firebase-crash'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'io.fabric'
 apply from: 'config/quality.gradle'
 
 ext {
@@ -59,6 +60,9 @@ android {
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
+            // Make this build faster by asking Crashlytics to not attempt
+            // uploading the ProGuard mapping file.
+            ext.alwaysUpdateBuildId = false
         }
     }
     // Have to use flavors instead of buildTypes because testBuildType can only
@@ -76,6 +80,9 @@ android {
             signingConfig signingConfigs.debug
             applicationIdSuffix '.instrumented'
             versionNameSuffix '-instrumented-local'
+            // Don't enable Crashlytics as this will break Circle CI PR builds
+            // which don't have Crashlytics API key to upload ProGuard mapping.
+            ext.enableCrashlytics = false
         }
         instrumentedRemote {
             // A flavor for running instrumented tests in the Firebase Test Lab (which is only used
@@ -95,6 +102,10 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -111,7 +122,6 @@ dependencies {
     compile "com.google.firebase:firebase-messaging:$firebaseVersion"
     compile "com.google.android.gms:play-services-appinvite:$firebaseVersion"
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
-    compile "com.google.firebase:firebase-crash:$firebaseVersion"
     compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     compile 'com.firebaseui:firebase-ui-database:1.1.0'
@@ -127,6 +137,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
