@@ -102,7 +102,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                                 getContext()) {
                                             @Override
                                             public void onOperationSuccess() {
-
+                                                // No implementation is needed
                                             }
                                         },
                                         new AbstractOnDataChangeListener(TAG, getContext()) {
