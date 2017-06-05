@@ -36,7 +36,6 @@ import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
