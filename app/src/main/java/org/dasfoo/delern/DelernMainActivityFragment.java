@@ -46,6 +46,7 @@ import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
+import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
@@ -97,14 +98,14 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 final Deck newDeck = new Deck(input.getText().toString().trim(),
                                         DeckType.BASIC.name(), true);
                                 Deck.createNewDeck(newDeck,
-                                        new AbstractOnFbOperationCompleteListener(TAG,
-                                                getContext()) {
+                                        new AbstractOnDataChangeListener(TAG, getContext()) {
                                             /**
                                              * {@inheritDoc}
                                              */
                                             @Override
-                                            public void onOperationSuccess() {
-                                                startEditCardsActivity(getAddedKey(),
+                                            public void onDataChange(
+                                                    final DataSnapshot dataSnapshot) {
+                                                startEditCardsActivity(dataSnapshot.getKey(),
                                                         newDeck.getName());
                                                 mEmptyMessageTextView
                                                         .setVisibility(TextView.INVISIBLE);

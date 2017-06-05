@@ -27,6 +27,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.util.StringUtil;
@@ -142,14 +143,14 @@ public class Deck implements Parcelable {
      *
      * @param deck     new deck.
      * @param listener listener for handling onComplete.
-     * @return key of created deck.
      */
     @Exclude
-    public static String createNewDeck(final Deck deck,
-                                       final AbstractOnFbOperationCompleteListener listener) {
+    public static void createNewDeck(final Deck deck,
+                                       final AbstractOnDataChangeListener listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
+        reference.addListenerForSingleValueEvent(listener);
+
         String key = reference.getKey();
-        listener.setAddedKey(key);
         // Write deckAccess
         DeckAccess deckAccess = new DeckAccess("owner");
         Map<String, Object> newDeck = new ConcurrentHashMap<>();
@@ -160,9 +161,7 @@ public class Deck implements Parcelable {
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .updateChildren(newDeck)
-                .addOnCompleteListener(listener);
-        return key;
+                .updateChildren(newDeck);
     }
 
     /**
