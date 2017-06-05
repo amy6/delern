@@ -18,7 +18,7 @@ ext {
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion "${sdkVersion}.0.2"
-    testBuildType 'release'
+    testBuildType 'instrumented'
 
     signingConfigs {
         release {
@@ -42,67 +42,63 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
+            // Building a release to run Robo tests and publish to Google Play.
+            signingConfig signingConfigs.release
             play {
                 track = 'alpha'
                 jsonFile = file('play-store-service-account.json')
                 uploadImages = true
             }
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
+            manifestPlaceholders = [ appNameSuffix: '' ]
+
+            minifyEnabled true
+            // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
+        }
+        instrumented {
+            // Instrumented tests that require release-style optimizations.
+            initWith release
+            signingConfig signingConfigs.debug
+            // Use Anonymous auth to skip the login intent.
+            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
+            applicationIdSuffix '.instrumented'
+            manifestPlaceholders = [ appNameSuffix: ' TEST' ]
+
+            if (project.hasProperty('isolatedRun')) {
+                // When running instrumented tests for external Pull Request, none of the real
+                // Firebase projects are available. Therefore, we use local Firebase server and
+                // disable Crashlytics (which will otherwise fail ProGuard mapping upload).
+                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+                ext.enableCrashlytics = false
+                versionNameSuffix '-instrumented-local'
+                // Have to set it here to connect to local Firebase, but since resValue cannot
+                // override google-services.json, have to use it in all the other places.
+                resValue 'string', 'firebase_database_url', 'ws://10.0.2.2:5533'
+            } else {
+                // Running instrumented tests on a developer workstation on in the Firebase Test
+                // Lab. In both cases APK is signed by a key with an access to a real (but debug-only)
+                // Firebase project.
+                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+                versionNameSuffix '-instrumented-remote'
+                // Enabling Crashlytics makes debugging instrumented tests failures easier.
+                resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
+            }
         }
         debug {
-            signingConfig signingConfigs.debug
             // https://developers.google.com/android/guides/google-services-plugin
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
+            manifestPlaceholders = [ appNameSuffix: ' DEBUG' ]
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
             ext.enableCrashlytics = false
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-        }
-    }
-    // Have to use flavors instead of buildTypes because testBuildType can only
-    // be set to a single buildType, which fortunately can have multiple flavors.
-    productFlavors {
-        normal {
-            signingConfig signingConfigs.release
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-        }
-        instrumentedLocal {
-            // A flavor for running instrumented tests inside Circle CI, e.g. for external
-            // Pull Requests, where a real keystore is not available. APK is therefore signed
-            // by a key from a locally-generated debug.keystore, and doesn't have access to a real
-            // Firebase server. It will require a local Firebase to be running, the application
-            // should use Anonymous auth to skip the login intent.
-            signingConfig signingConfigs.debug
-            applicationIdSuffix '.instrumented'
-            versionNameSuffix '-instrumented-local'
-            // Don't enable Crashlytics as this will break Circle CI PR builds
-            // which don't have Crashlytics API key to upload ProGuard mapping.
-            ext.enableCrashlytics = false
-            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-        }
-        instrumentedRemote {
-            // A flavor for running instrumented tests in the Firebase Test Lab (which is only used
-            // on Release phase). APK is signed by a key with an access to a real (but debug-only)
-            // Firebase project, the application should use Anonymous auth to skip the login intent.
-            signingConfig signingConfigs.debug
-            applicationIdSuffix '.instrumented'
-            versionNameSuffix '-instrumented-remote'
-            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-        }
-    }
-    variantFilter { variant ->
-        if (variant.buildType.name == 'debug') {
-            // For "debug" we don't need instrumented flavors, because we want to run instrumented
-            // tests with ProGuard.
-            variant.ignore = !variant.flavors*.name.contains('normal')
+            resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
         }
     }
 }
@@ -136,6 +132,7 @@ dependencies {
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    instrumentedCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     testCompile 'junit:junit:4.12'

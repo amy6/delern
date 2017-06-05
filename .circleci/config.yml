@@ -85,14 +85,15 @@ jobs:
         name: "Lint and assemble"
         command: |
           # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
-          # Run lint over normalDebug (rather than instrumentedLocalRelease) to allow the tools
-          # to access non-optimized class data.
+          # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
+          # class data.
           ./gradlew -PdisablePreDex \
+            -PisolatedRun \
             --continue \
-            lintNormalDebug \
-            testNormalDebugUnitTest \
-            assembleInstrumentedLocalRelease \
-            assembleInstrumentedLocalReleaseAndroidTest \
+            lintDebug \
+            testDebugUnitTest \
+            assembleInstrumented \
+            assembleInstrumentedAndroidTest \
             --console=plain
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
@@ -145,8 +146,8 @@ jobs:
           "${ANDROID_HOME?}/platform-tools/adb" logcat -c
 
     - run:
-        name: "Run instrumented tests (Release-style optimizations, local Firebase)"
-        command: ./gradlew connectedInstrumentedLocalReleaseAndroidTest --console=plain --info --stacktrace
+        name: "Run instrumented tests (local Firebase)"
+        command: ./gradlew -PisolatedRun connectedInstrumentedAndroidTest --console=plain --info --stacktrace
 
     - run:
         name: "Save Android Emulator logs, cleanup"
@@ -188,22 +189,22 @@ jobs:
             gsutil cp gs://dasfoo-keystore/fabric.properties app
             # https://circleci.com/docs/firebase-test-lab/
             ./gradlew -PdisablePreDex \
-              assembleInstrumentedRemoteRelease \
-              assembleInstrumentedRemoteReleaseAndroidTest \
+              assembleInstrumented \
+              assembleInstrumentedAndroidTest \
               --console=plain
             # Run instrumented tests
             gcloud --project=delern-debug firebase test android run \
-              --app app/build/outputs/apk/app-instrumentedRemote-release.apk \
-              --test app/build/outputs/apk/app-instrumentedRemote-release-androidTest.apk \
+              --app app/build/outputs/apk/app-instrumented.apk \
+              --test app/build/outputs/apk/app-instrumented-androidTest.apk \
               --results-bucket delern-test-results
             # Also run Robo tests: https://firebase.google.com/docs/test-lab/robo-ux-test
             gsutil cp gs://dasfoo-keystore/delern.jks app
-            ./gradlew -PdisablePreDex lintNormalRelease assembleNormalRelease --console=plain
+            ./gradlew -PdisablePreDex lintRelease assembleRelease --console=plain
             gcloud --project=delern-e1b33 firebase test android run \
-              --app app/build/outputs/apk/app-normal-release.apk \
+              --app app/build/outputs/apk/app-release.apk \
               --results-bucket delern-test-results
             # Publish to Google Play
-            ./gradlew publishNormalRelease --console=plain
+            ./gradlew publishRelease --console=plain
           fi
 
     - store_test_results:
