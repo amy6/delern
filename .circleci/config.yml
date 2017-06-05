@@ -151,9 +151,13 @@ jobs:
     - run:
         name: "Save Android Emulator logs, cleanup"
         command: |
-          "${ANDROID_HOME?}/platform-tools/adb" logcat -v threadtime -d >app/build/outputs/logcat-test.txt
-          # Kill running emulator to free up resources for e.g. Release build.
-          "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
+          # Don't run adb unless we are sure that emulator has been started before failure.
+          # adb will wait indefinitely for the emulator to boot.
+          if [ -e /tmp/android.log ]; then
+              "${ANDROID_HOME?}/platform-tools/adb" logcat -v threadtime -d >app/build/outputs/logcat-test.txt
+              # Kill running emulator to free up resources for e.g. Release build.
+              "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
+          fi
         when: always
 
     - deploy:
