@@ -98,6 +98,13 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 final Deck newDeck = new Deck(input.getText().toString().trim(),
                                         DeckType.BASIC.name(), true);
                                 Deck.createNewDeck(newDeck,
+                                        new AbstractOnFbOperationCompleteListener(TAG,
+                                                getContext()) {
+                                            @Override
+                                            public void onOperationSuccess() {
+
+                                            }
+                                        },
                                         new AbstractOnDataChangeListener(TAG, getContext()) {
                                             /**
                                              * {@inheritDoc}

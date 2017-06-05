@@ -141,12 +141,14 @@ public class Deck implements Parcelable {
     /**
      * Creates new deck in Firebase.
      *
-     * @param deck     new deck.
-     * @param listener listener for handling onComplete.
+     * @param deck               new deck.
+     * @param onCompleteListener listener for handling onComplete.
+     * @param listener           handles on data change. It is needed for offline capabilities.
      */
     @Exclude
     public static void createNewDeck(final Deck deck,
-                                       final AbstractOnDataChangeListener listener) {
+                                     final AbstractOnFbOperationCompleteListener onCompleteListener,
+                                     final AbstractOnDataChangeListener listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.addListenerForSingleValueEvent(listener);
 
@@ -161,7 +163,8 @@ public class Deck implements Parcelable {
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .updateChildren(newDeck);
+                .updateChildren(newDeck)
+                .addOnCompleteListener(onCompleteListener);
     }
 
     /**

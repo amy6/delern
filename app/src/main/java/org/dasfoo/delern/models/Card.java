@@ -108,16 +108,18 @@ public class Card implements Parcelable {
      * Creates new card in Firebase. Id adds time for next repetition and level of card
      * in learning/. Sets front, back and createdAt in cards/.
      *
-     * @param newCard       card for writing to deck.
-     * @param deckId        deck ID where to create card.
-     * @param scheduledCard schedules next appearance and sets level of card.
-     * @param listener      handles on success and on failure results. I can pass param
-     *                      through setter.
+     * @param newCard            card for writing to deck.
+     * @param deckId             deck ID where to create card.
+     * @param scheduledCard      schedules next appearance and sets level of card.
+     * @param onCompleteListener handles on success and on failure results. I can pass param
+     *                           through setter.
+     * @param listener           handles on data change. It is needed for offline capabilities.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
                                      final ScheduledCard scheduledCard,
+                                     final AbstractOnFbOperationCompleteListener onCompleteListener,
                                      final AbstractOnDataChangeListener listener) {
         DatabaseReference cardDatabaseReference = getFirebaseCardsRef()
                 .child(deckId)
@@ -135,7 +137,8 @@ public class Card implements Parcelable {
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .updateChildren(createCard);
+                .updateChildren(createCard)
+                .addOnCompleteListener(onCompleteListener);
     }
 
     /**
@@ -158,11 +161,13 @@ public class Card implements Parcelable {
      *
      * @param card     new card
      * @param deckId   deck ID where to update card.
-     * @param listener handlers on success and on failure results.
+     * @param onCompleteListener handlers on success and on failure results.
+     * @param listener handles on data change. It is needed for offline capabilities.
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void updateCard(final Card card, final String deckId,
+                                  final AbstractOnFbOperationCompleteListener onCompleteListener,
                                   final AbstractOnDataChangeListener listener) {
         DatabaseReference cardDatabaseReference = getFirebaseCardsRef().child(deckId)
                 .child(card.getcId());
@@ -170,7 +175,8 @@ public class Card implements Parcelable {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("front", card.getFront());
         childUpdates.put("back", card.getBack());
-        cardDatabaseReference.updateChildren(childUpdates);
+        cardDatabaseReference.updateChildren(childUpdates)
+                .addOnCompleteListener(onCompleteListener);
     }
 
     /**
