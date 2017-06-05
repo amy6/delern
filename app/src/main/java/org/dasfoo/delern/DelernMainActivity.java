@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
@@ -43,7 +44,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -280,7 +280,7 @@ public class DelernMainActivity extends AppCompatActivity
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.e(TAG, "onConnectionFailed:" + connectionResult);
-        FirebaseCrash.logcat(Log.ERROR, TAG, connectionResult.getErrorMessage());
+        Crashlytics.log(Log.ERROR, TAG, connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 

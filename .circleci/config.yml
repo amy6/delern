@@ -87,6 +87,8 @@ jobs:
         name: "Lint and assemble"
         command: |
           # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
+          # Run lint over normalDebug (rather than instrumentedLocalRelease) to allow the tools
+          # to access non-optimized class data.
           ./gradlew -PdisablePreDex \
             lintNormalDebug \
             testNormalDebugUnitTest \
@@ -191,6 +193,7 @@ jobs:
             echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
             gcloud auth activate-service-account --key-file app/play-store-service-account.json
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
+            gsutil cp gs://dasfoo-keystore/fabric.properties app
             # https://circleci.com/docs/firebase-test-lab/
             ./gradlew -PdisablePreDex \
               assembleInstrumentedRemoteRelease \
@@ -207,15 +210,8 @@ jobs:
             gcloud --project=delern-e1b33 firebase test android run \
               --app app/build/outputs/apk/app-normal-release.apk \
               --results-bucket delern-test-results
-            # Publish to Google Play.
+            # Publish to Google Play
             ./gradlew publishNormalRelease --console=plain
-            # https://firebase.google.com/docs/crash/android#uploading_proguard_mapping_files_with_gradle
-            echo "${FIREBASE_SERVICE_KEY}" | base64 --decode > app/firebase-service-account.json
-            # This task requires app/google-services.json and will not recognize any other (build type of flavor) path.
-            ln -sf $PWD/app/src/normal/release/google-services.json app/google-services.json
-            ./gradlew -PFirebaseServiceAccountFilePath=$PWD/app/firebase-service-account.json \
-              app:firebaseUploadNormalReleaseProguardMapping \
-              --console=plain
           fi
 
     - store_test_results:

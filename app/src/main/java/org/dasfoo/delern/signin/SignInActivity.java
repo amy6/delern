@@ -42,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
@@ -95,7 +96,7 @@ public class SignInActivity extends AppCompatActivity
         };
 
         // TODO(ksheremet): Move to instrumented flavour package
-        if (getApplicationContext().getPackageName().endsWith(".instrumented")) {
+        if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
             // Force logging by using Log.e because ProGuard removes Log.w.
             Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(this,
@@ -188,6 +189,13 @@ public class SignInActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (task.isSuccessful()) {
+                            /*
+                                The following lines will add PII to crash reports.
+                                Consider privacy issues before uncommenting them.
+                                Crashlytics.setUserIdentifier(acct.getId());
+                                Crashlytics.setUserEmail(acct.getEmail());
+                                Crashlytics.setUserName(acct.getDisplayName());
+                            */
                             startActivity(new Intent(SignInActivity.this,
                                     DelernMainActivity.class));
                             finish();
