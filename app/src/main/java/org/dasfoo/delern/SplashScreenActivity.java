@@ -18,10 +18,8 @@
 
 package org.dasfoo.delern;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,11 +58,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Disable Crashlytics for instrumented builds (for CI).
-        // TODO(dotdoom): do not disable for instrumented-local (check version name).
-        Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().disabled(
-                        getApplicationContext().getPackageName().endsWith(".instrumented")
-                ).build())
+        Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
+                new CrashlyticsCore.Builder().disabled(BuildConfig.ENABLE_CRASHLYTICS).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
 
@@ -153,20 +148,7 @@ public class SplashScreenActivity extends AppCompatActivity {
      */
     private boolean updateIsNeeded() {
         long minAppVersion = mFirebaseRemoteConfig.getLong(KEY_MIN_APP_VERSION);
-        long appVersion = getAppVersion(this);
+        long appVersion = BuildConfig.VERSION_CODE;
         return minAppVersion > appVersion;
-    }
-
-    private long getAppVersion(final Context context) {
-        long result = 0;
-        try {
-            result = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0)
-                    .versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Package name not found:", e);
-        }
-
-        return result;
     }
 }

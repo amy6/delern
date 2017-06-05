@@ -60,9 +60,8 @@ android {
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
-            // Make this build faster by asking Crashlytics to not attempt
-            // uploading the ProGuard mapping file.
-            ext.alwaysUpdateBuildId = false
+            ext.enableCrashlytics = false
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
         }
     }
     // Have to use flavors instead of buildTypes because testBuildType can only
@@ -70,6 +69,8 @@ android {
     productFlavors {
         normal {
             signingConfig signingConfigs.release
+            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
         }
         instrumentedLocal {
             // A flavor for running instrumented tests inside Circle CI, e.g. for external
@@ -83,6 +84,8 @@ android {
             // Don't enable Crashlytics as this will break Circle CI PR builds
             // which don't have Crashlytics API key to upload ProGuard mapping.
             ext.enableCrashlytics = false
+            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
         }
         instrumentedRemote {
             // A flavor for running instrumented tests in the Firebase Test Lab (which is only used
@@ -91,6 +94,8 @@ android {
             signingConfig signingConfigs.debug
             applicationIdSuffix '.instrumented'
             versionNameSuffix '-instrumented-remote'
+            buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
         }
     }
     variantFilter { variant ->
