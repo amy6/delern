@@ -55,9 +55,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
 
-    @Rule
-    public ActivityTestRule<DelernMainActivity> mActivityRule = new ActivityTestRule<>(
-            DelernMainActivity.class);
+    //@Rule
+    //public ActivityTestRule<DelernMainActivity> mActivityRule = new ActivityTestRule<>(
+    //        DelernMainActivity.class);
 
     @Before
     public void setUp() {
@@ -86,7 +86,9 @@ public class ExampleInstrumentedTest {
                     if (currentActivity != null &&
                             currentActivity.getClass() != SignInActivity.class) {
                         mIsIdle = true;
-                        mResourceCallback.onTransitionToIdle();
+                        if (mResourceCallback != null) {
+                            mResourceCallback.onTransitionToIdle();
+                        }
                     }
                 }
                 return mIsIdle;
