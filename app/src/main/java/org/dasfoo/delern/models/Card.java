@@ -26,6 +26,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.util.StringUtil;
 
@@ -117,11 +118,13 @@ public class Card implements Parcelable {
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
                                      final ScheduledCard scheduledCard,
-                                     final AbstractOnFbOperationCompleteListener listener) {
-        String cardKey = getFirebaseCardsRef()
+                                     final AbstractOnDataChangeListener listener) {
+        DatabaseReference cardDatabaseReference = getFirebaseCardsRef()
                 .child(deckId)
-                .push()
-                .getKey();
+                .push();
+        cardDatabaseReference.addListenerForSingleValueEvent(listener);
+
+        String cardKey = cardDatabaseReference.getKey();
         Map<String, Object> createCard = new HashMap<>();
         createCard.put(StringUtil.joinFirebasePath(Card.getCardsNodeByDeckId(deckId), cardKey),
                 newCard);
@@ -132,8 +135,7 @@ public class Card implements Parcelable {
         FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .updateChildren(createCard)
-                .addOnCompleteListener(listener);
+                .updateChildren(createCard);
     }
 
     /**
@@ -161,15 +163,14 @@ public class Card implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void updateCard(final Card card, final String deckId,
-                                  final AbstractOnFbOperationCompleteListener listener) {
+                                  final AbstractOnDataChangeListener listener) {
+        DatabaseReference cardDatabaseReference = getFirebaseCardsRef().child(deckId)
+                .child(card.getcId());
+        cardDatabaseReference.addListenerForSingleValueEvent(listener);
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("front", card.getFront());
         childUpdates.put("back", card.getBack());
-        getFirebaseCardsRef()
-                .child(deckId)
-                .child(card.getcId())
-                .updateChildren(childUpdates)
-                .addOnCompleteListener(listener);
+        cardDatabaseReference.updateChildren(childUpdates);
     }
 
     /**

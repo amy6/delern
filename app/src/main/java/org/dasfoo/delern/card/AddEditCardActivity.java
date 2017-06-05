@@ -31,9 +31,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
 import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
@@ -139,9 +141,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
                 Card.updateCard(mCard, mDeckId,
-                        new AbstractOnFbOperationCompleteListener(TAG, this) {
+                        new AbstractOnDataChangeListener(TAG, this) {
                             @Override
-                            public void onOperationSuccess() {
+                            public void onDataChange(final DataSnapshot dataSnapshot) {
                                 Toast.makeText(AddEditCardActivity.this,
                                         R.string.updated_card_user_message,
                                         Toast.LENGTH_SHORT).show();
@@ -176,9 +178,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
                 System.currentTimeMillis());
         Card.createNewCard(newCard, mDeckId, scheduledCard,
-                new AbstractOnFbOperationCompleteListener(TAG, this) {
+                new AbstractOnDataChangeListener(TAG, this) {
                     @Override
-                    public void onOperationSuccess() {
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
                         if (mAddReversedCardCheckbox.isChecked()) {
                             // TODO(ksheremet): Fix showing this message double times (2 card)
                             Toast.makeText(AddEditCardActivity.this,
