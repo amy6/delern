@@ -33,9 +33,7 @@ jobs:
         working_directory: ~/delern/app/build
         command: |
           curl -sL https://deb.nodesource.com/setup_6.x | bash -
-          # TODO(dotdoom): move xsltproc to Gradle, we'll need it for findbugs anyway. Related:
-          # http://gradle.1045684.n5.nabble.com/Help-calling-Ant-task-in-Gradle-for-xslt-transform-td3337068.html
-          apt install -y nodejs xsltproc
+          apt install -y nodejs
           npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
 
     - run:
@@ -90,22 +88,12 @@ jobs:
           # Run lint over normalDebug (rather than instrumentedLocalRelease) to allow the tools
           # to access non-optimized class data.
           ./gradlew -PdisablePreDex \
+            --continue \
             lintNormalDebug \
             testNormalDebugUnitTest \
             assembleInstrumentedLocalRelease \
             assembleInstrumentedLocalReleaseAndroidTest \
             --console=plain
-
-    - run:
-        name: "Publish Lint results to CircleCI"
-        environment:
-        - LINT_RESULTS_FILE: app/build/reports/lint-results-normalDebug.xml
-        command: |
-          if [ -r "${LINT_RESULTS_FILE?}" ]; then
-            mkdir -p app/build/test-results/lint
-            xsltproc app/config/lint-junit.xslt "${LINT_RESULTS_FILE?}" >app/build/test-results/lint/results.xml
-          fi
-        when: always
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
