@@ -64,7 +64,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="deck">Список</string>
     <string name="delete_deck">Удалить все карточки в списке?</string>
     <string name="deleted_card_successful_user_message">Карточка была удалена</string>
-    <string name="not_empty_deck_name_user_message">Имя списка не может быть пустым</string>
 
 
     <!-- Cards type menu -->

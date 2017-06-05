@@ -19,7 +19,9 @@
 package org.dasfoo.delern.models.listener;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -30,6 +32,7 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.models.View;
+import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Created by katarina on 3/1/17.
@@ -48,6 +51,8 @@ public class LearningCardListener extends AbstractUserMessageValueEventListener 
      * Answer on card if user doesn't know it.
      */
     public static final String DO_NOT_KNOW_CARD = "N";
+
+    private static final String TAG = LogUtil.tagFor(LearningCardListener.class);
 
     private final String mDeckId;
     private final OnLearningCardAvailable mCardAvailable;
@@ -120,6 +125,10 @@ public class LearningCardListener extends AbstractUserMessageValueEventListener 
      * @param answer answer on viewed card (Y/N)
      */
     public void viewedCard(final String answer) {
+        if (mScheduledCard == null) {
+            Crashlytics.log(Log.ERROR, TAG, "Scheduled Card null in viewedCard");
+            return;
+        }
         String newCardLevel;
         if (KNOW_CARD.equals(answer)) {
             newCardLevel = Level.getNextLevel(mScheduledCard.getLevel());

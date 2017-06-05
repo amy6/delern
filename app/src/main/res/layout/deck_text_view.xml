@@ -23,7 +23,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
               android:id="@+id/deck_view_holder"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="?selectableItemBackground"
+              style="@style/RippleBackground"
               android:clickable="true"
               android:orientation="horizontal"
               android:weightSum="1">

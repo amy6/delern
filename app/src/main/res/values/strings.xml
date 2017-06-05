@@ -64,7 +64,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="deck">Deck</string>
     <string name="delete_deck">Delete deck with all cards?</string>
     <string name="deleted_card_successful_user_message">Card was deleted</string>
-    <string name="not_empty_deck_name_user_message">Name of deck cannot be empty</string>
 
     <!-- Cards type menu -->
     <string name="cards_type">Deck Type</string>
