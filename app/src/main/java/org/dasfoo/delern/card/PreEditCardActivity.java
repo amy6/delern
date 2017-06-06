@@ -32,7 +32,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
@@ -185,15 +184,7 @@ public class PreEditCardActivity extends AppCompatActivity {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 Card.deleteCardFromDeck(deckId, card,
-                        new OnFbOperationCompleteListener(TAG, PreEditCardActivity.this) {
-                            @Override
-                            public void onOperationSuccess() {
-                                Toast.makeText(PreEditCardActivity.this,
-                                        R.string.deleted_card_successful_user_message,
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        });
+                        new OnFbOperationCompleteListener(TAG, PreEditCardActivity.this));
                 finish();
             }
         });

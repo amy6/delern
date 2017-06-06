@@ -56,10 +56,8 @@ public class OnFbOperationCompleteListener implements OnCompleteListener<Void> {
         if (task.isSuccessful()) {
             onOperationSuccess();
         } else {
-            String message = "Firebase operation is not completed:";
-            Log.e(mTag, message, task.getException());
-            Crashlytics.log(Log.ERROR, mTag + message,
-                    task.getException().toString());
+            Log.e(mTag, "Firebase operation is not completed:", task.getException());
+            Crashlytics.logException(task.getException());
             Toast.makeText(mContext, task.getException().getLocalizedMessage(),
                     Toast.LENGTH_LONG).show();
         }

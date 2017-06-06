@@ -58,7 +58,7 @@ public abstract class AbstractOnDataChangeListener implements ValueEventListener
     @Override
     public void onCancelled(final DatabaseError databaseError) {
         Log.e(mTag, "Firebase operation is cancelled:", databaseError.toException());
-        Crashlytics.log(Log.ERROR, mTag, databaseError.toString());
+        Crashlytics.logException(databaseError.toException());
         Toast.makeText(mContext, databaseError.getMessage(),
                 Toast.LENGTH_LONG).show();
     }

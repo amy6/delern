@@ -34,7 +34,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.Query;
 
@@ -219,16 +218,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                         mBackIsShown = false;
                         // TODO(ksheremet): delete if not owner
                         Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
-                                new OnFbOperationCompleteListener(TAG,
-                                        LearningCardsActivity.this) {
-                                    @Override
-                                    public void onOperationSuccess() {
-                                        Toast.makeText(LearningCardsActivity.this,
-                                                R.string.deleted_card_successful_user_message,
-                                                Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
-                                });
+                                new OnFbOperationCompleteListener(TAG, LearningCardsActivity.this));
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

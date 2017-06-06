@@ -191,15 +191,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString().trim());
-                Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()) {
-                    /**
-                     * {@inheritDoc}
-                     */
-                    @Override
-                    public void onOperationSuccess() {
-                        //No implementation needed
-                    }
-                });
+                Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()));
             }
         });
     }
@@ -225,15 +217,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final DialogInterface dialog, final int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
                 Deck.deleteDeck(deckId,
-                        new OnFbOperationCompleteListener(TAG, getContext()) {
-                            /**
-                             * {@inheritDoc}
-                             */
-                            @Override
-                            public void onOperationSuccess() {
-                                Log.i(TAG, "Deck was removed");
-                            }
-                        });
+                        new OnFbOperationCompleteListener(TAG, getContext()));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -252,15 +236,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name());
-        Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()) {
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onOperationSuccess() {
-                // Not implemented yet
-            }
-        });
+        Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()));
     }
 
 
