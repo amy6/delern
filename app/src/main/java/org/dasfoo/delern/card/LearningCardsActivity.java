@@ -42,7 +42,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.handlers.OnLearningCardAvailable;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
@@ -219,7 +219,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                         mBackIsShown = false;
                         // TODO(ksheremet): delete if not owner
                         Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
-                                new AbstractOnFbOperationCompleteListener(TAG,
+                                new OnFbOperationCompleteListener(TAG,
                                         LearningCardsActivity.this) {
                                     @Override
                                     public void onOperationSuccess() {

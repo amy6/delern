@@ -22,6 +22,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -57,6 +58,7 @@ public abstract class AbstractOnDataChangeListener implements ValueEventListener
     @Override
     public void onCancelled(final DatabaseError databaseError) {
         Log.e(mTag, "Firebase operation is cancelled:", databaseError.toException());
+        Crashlytics.log(Log.ERROR, mTag, databaseError.toString());
         Toast.makeText(mContext, databaseError.getMessage(),
                 Toast.LENGTH_LONG).show();
     }

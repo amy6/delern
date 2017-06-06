@@ -36,7 +36,7 @@ import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
@@ -69,7 +69,6 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     private TextInputEditText mBackSideInputText;
     private Card mCard;
     private CheckBox mAddReversedCardCheckbox;
-    private AbstractOnFbOperationCompleteListener mOnCompleteListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -111,13 +110,6 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
             }
         };
 
-        mOnCompleteListener = new AbstractOnFbOperationCompleteListener(TAG, this) {
-            @Override
-            public void onOperationSuccess() {
-                // Implementation not needed
-            }
-        };
-
         mFrontSideInputText.addTextChangedListener(cardValid);
         mBackSideInputText.addTextChangedListener(cardValid);
         mAddReversedCardCheckbox
@@ -148,7 +140,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
             } else {
                 mCard.setFront(mFrontSideInputText.getText().toString());
                 mCard.setBack(mBackSideInputText.getText().toString());
-                Card.updateCard(mCard, mDeckId, mOnCompleteListener,
+                Card.updateCard(mCard, mDeckId,
+                        new OnFbOperationCompleteListener(TAG, this),
                         new AbstractOnDataChangeListener(TAG, this) {
                             @Override
                             public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -185,7 +178,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         newCard.setCreatedAt(ServerValue.TIMESTAMP);
         ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
                 System.currentTimeMillis());
-        Card.createNewCard(newCard, mDeckId, scheduledCard, mOnCompleteListener,
+        Card.createNewCard(newCard, mDeckId, scheduledCard,
+                new OnFbOperationCompleteListener(TAG, this),
                 new AbstractOnDataChangeListener(TAG, this) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {

@@ -27,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.util.StringUtil;
 
 import java.util.HashMap;
@@ -119,7 +119,7 @@ public class Card implements Parcelable {
     @Exclude
     public static void createNewCard(final Card newCard, final String deckId,
                                      final ScheduledCard scheduledCard,
-                                     final AbstractOnFbOperationCompleteListener onCompleteListener,
+                                     final OnFbOperationCompleteListener onCompleteListener,
                                      final AbstractOnDataChangeListener listener) {
         DatabaseReference cardDatabaseReference = getFirebaseCardsRef()
                 .child(deckId)
@@ -167,7 +167,7 @@ public class Card implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void updateCard(final Card card, final String deckId,
-                                  final AbstractOnFbOperationCompleteListener onCompleteListener,
+                                  final OnFbOperationCompleteListener onCompleteListener,
                                   final AbstractOnDataChangeListener listener) {
         DatabaseReference cardDatabaseReference = getFirebaseCardsRef().child(deckId)
                 .child(card.getcId());
@@ -201,7 +201,7 @@ public class Card implements Parcelable {
     @Exclude
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     public static void deleteCardFromDeck(final String deckId, final Card card,
-                                          final AbstractOnFbOperationCompleteListener listener) {
+                                          final OnFbOperationCompleteListener listener) {
         Map<String, Object> deleteCard = new HashMap<>();
         deleteCard.put(StringUtil.joinFirebasePath(View.getViewsNodeByDeckId(deckId),
                 card.getcId()), null);

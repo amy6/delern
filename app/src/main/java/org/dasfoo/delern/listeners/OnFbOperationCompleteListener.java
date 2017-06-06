@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -30,7 +31,7 @@ import com.google.android.gms.tasks.Task;
  * Created by katarina on 3/7/17.
  * Listeners whether operation in Firebase was completed. If not, writes log message.
  */
-public abstract class AbstractOnFbOperationCompleteListener implements OnCompleteListener<Void> {
+public class OnFbOperationCompleteListener implements OnCompleteListener<Void> {
 
     private final String mTag;
     private final Context mContext;
@@ -41,7 +42,7 @@ public abstract class AbstractOnFbOperationCompleteListener implements OnComplet
      * @param tag     tag for logging.
      * @param context context for writing user message.
      */
-    public AbstractOnFbOperationCompleteListener(final String tag, final Context context) {
+    public OnFbOperationCompleteListener(final String tag, final Context context) {
         this.mTag = tag;
         this.mContext = context;
     }
@@ -55,7 +56,10 @@ public abstract class AbstractOnFbOperationCompleteListener implements OnComplet
         if (task.isSuccessful()) {
             onOperationSuccess();
         } else {
-            Log.e(mTag, "Firebase operation is not completed:", task.getException());
+            String message = "Firebase operation is not completed:";
+            Log.e(mTag, message, task.getException());
+            Crashlytics.log(Log.ERROR, mTag + message,
+                    task.getException().toString());
             Toast.makeText(mContext, task.getException().getLocalizedMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -65,5 +69,7 @@ public abstract class AbstractOnFbOperationCompleteListener implements OnComplet
      * Handles operation on success result. It has parameter that can be needed for the next
      * operations.
      */
-    public abstract void onOperationSuccess();
+    public void onOperationSuccess() {
+        // Can be implemented in inherited class
+    }
 }

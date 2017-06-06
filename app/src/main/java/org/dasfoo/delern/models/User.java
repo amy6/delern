@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 
 
 /**
@@ -83,7 +83,7 @@ public final class User {
      */
     @Exclude
     public static void writeUser(final User user,
-                                 final AbstractOnFbOperationCompleteListener listener) {
+                                 final OnFbOperationCompleteListener listener) {
         User.getFirebaseUserRef().setValue(user).addOnCompleteListener(listener);
     }
 

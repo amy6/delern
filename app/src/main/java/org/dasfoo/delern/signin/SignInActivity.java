@@ -45,7 +45,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -85,7 +85,7 @@ public class SignInActivity extends AppCompatActivity
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
                     User.writeUser(changedUser,
-                            new AbstractOnFbOperationCompleteListener(TAG, mContext) {
+                            new OnFbOperationCompleteListener(TAG, mContext) {
                                 @Override
                                 public void onOperationSuccess() {
                                     Log.i(TAG, "Writing new  user to FB  was successful");
@@ -111,7 +111,7 @@ public class SignInActivity extends AppCompatActivity
                                         "instrumented.test@example.com",
                                         "http://example.com/anonymous");
                                 User.writeUser(changedUser,
-                                        new AbstractOnFbOperationCompleteListener(TAG, mContext) {
+                                        new OnFbOperationCompleteListener(TAG, mContext) {
                                             @Override
                                             public void onOperationSuccess() {
                                                 startActivity(new Intent(SignInActivity.this,

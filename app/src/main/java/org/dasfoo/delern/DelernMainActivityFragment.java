@@ -47,7 +47,7 @@ import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
@@ -98,13 +98,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 final Deck newDeck = new Deck(input.getText().toString().trim(),
                                         DeckType.BASIC.name(), true);
                                 Deck.createNewDeck(newDeck,
-                                        new AbstractOnFbOperationCompleteListener(TAG,
-                                                getContext()) {
-                                            @Override
-                                            public void onOperationSuccess() {
-                                                // No implementation is needed
-                                            }
-                                        },
+                                        new OnFbOperationCompleteListener(TAG, getContext()),
                                         new AbstractOnDataChangeListener(TAG, getContext()) {
                                             /**
                                              * {@inheritDoc}
@@ -197,8 +191,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString().trim());
-                Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener(TAG,
-                        getContext()) {
+                Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()) {
                     /**
                      * {@inheritDoc}
                      */
@@ -232,7 +225,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final DialogInterface dialog, final int which) {
                 final String deckId = mFirebaseAdapter.getRef(position).getKey();
                 Deck.deleteDeck(deckId,
-                        new AbstractOnFbOperationCompleteListener(TAG, getContext()) {
+                        new OnFbOperationCompleteListener(TAG, getContext()) {
                             /**
                              * {@inheritDoc}
                              */
@@ -259,7 +252,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name());
-        Deck.updateDeck(deck, new AbstractOnFbOperationCompleteListener(TAG, getContext()) {
+        Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()) {
             /**
              * {@inheritDoc}
              */

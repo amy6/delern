@@ -39,7 +39,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.util.LogUtil;
@@ -185,7 +185,7 @@ public class PreEditCardActivity extends AppCompatActivity {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 Card.deleteCardFromDeck(deckId, card,
-                        new AbstractOnFbOperationCompleteListener(TAG, PreEditCardActivity.this) {
+                        new OnFbOperationCompleteListener(TAG, PreEditCardActivity.this) {
                             @Override
                             public void onOperationSuccess() {
                                 Toast.makeText(PreEditCardActivity.this,

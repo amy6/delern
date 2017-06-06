@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.AbstractOnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.util.StringUtil;
 
@@ -147,7 +147,7 @@ public class Deck implements Parcelable {
      */
     @Exclude
     public static void createNewDeck(final Deck deck,
-                                     final AbstractOnFbOperationCompleteListener onCompleteListener,
+                                     final OnFbOperationCompleteListener onCompleteListener,
                                      final AbstractOnDataChangeListener listener) {
         DatabaseReference reference = getFirebaseDecksRef().push();
         reference.addListenerForSingleValueEvent(listener);
@@ -187,7 +187,7 @@ public class Deck implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
     public static void deleteDeck(final String deckId,
-                                  final AbstractOnFbOperationCompleteListener listener) {
+                                  final OnFbOperationCompleteListener listener) {
         // Values must be null. It is impossible with ConcurentHashMap. For deleting deck
         // concurrent map is unused (always 1 flow).
         Map<String, Object> removeDeck = new HashMap<>();
@@ -214,7 +214,7 @@ public class Deck implements Parcelable {
      */
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     @Exclude
-    public static void updateDeck(final Deck deck, final AbstractOnFbOperationCompleteListener
+    public static void updateDeck(final Deck deck, final OnFbOperationCompleteListener
             listener) {
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(deck.getdId(), deck);
