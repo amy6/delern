@@ -59,7 +59,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Disable Crashlytics for instrumented builds (for CI).
         Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
-                new CrashlyticsCore.Builder().disabled(BuildConfig.ENABLE_CRASHLYTICS).build())
+                new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
 

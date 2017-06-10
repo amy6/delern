@@ -116,11 +116,14 @@ dependencies {
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
 
+    // TODO(dotdoom): update Firebase to 11, fix local run, remove noinspection
+    //noinspection GradleDependency
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-messaging:$firebaseVersion"
+    //noinspection GradleDependency
     compile "com.google.android.gms:play-services-appinvite:$firebaseVersion"
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
     compile "com.google.firebase:firebase-config:$firebaseVersion"
