@@ -19,6 +19,7 @@
 			TODO(dotdoom): remove when Firebase crash reporting goes away.
 		-->
 		<ignore regexp="^The resource `R.string.google_crash_reporting_api_key` appears to be unused$"/>
+		<ignore regexp="^The resource `R.string.project_id` appears to be unused$"/>
 	</issue>
 	<!-- TODO(ksheremet): fix these issues -->
 	<issue id="GoogleAppIndexingWarning" severity="ignore"/>

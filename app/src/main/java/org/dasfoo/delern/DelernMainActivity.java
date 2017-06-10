@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -44,12 +45,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
 
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -69,8 +67,7 @@ public class DelernMainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Toolbar mToolbar;
     private DelernMainActivityFragment mListFragment;
-    private AbstractUserMessageValueEventListener mUserDataListener;
-    private DatabaseReference mUserDataReference;
+    private AbstractDataAvailableListener<User> mAbstractDataAvailableListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -87,15 +84,14 @@ public class DelernMainActivity extends AppCompatActivity
         // TODO(ksheremet): Move somewhere
         if (getApplicationContext().getPackageName().endsWith(".instrumented") &&
                 User.getCurrentUser().isAnonymous()) {
-            final User user = new User("anonymous",
-                    "instrumented.test@example.com", "http://example.com/anonymous");
-            User.writeUser(user, new OnFbOperationCompleteListener(TAG, this) {
-                @Override
-                public void onOperationSuccess() {
-                    Log.e(TAG, "Writing user was successful");
-                }
-            });
+            final User user = new User();
+            user.setName("anonymous");
+            user.setEmail("instrumented.test@example.com");
+            user.setPhotoUrl("http://example.com/anonymous");
+            user.save(null);
         }
+
+        Crashlytics.setUserIdentifier(User.getCurrentUser().getUid());
 
         // Android persists the Fragment layout and associated back stack when an Activity is
         // restarted due to a configuration change. Check if fragment is created not to overlay.
@@ -141,7 +137,7 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     private void removeListeners() {
-        mUserDataReference.removeEventListener(mUserDataListener);
+        mAbstractDataAvailableListener.clean();
     }
 
     /**
@@ -231,21 +227,25 @@ public class DelernMainActivity extends AppCompatActivity
                 (CircleImageView) hView.findViewById(R.id.profile_image);
         final TextView userName = (TextView) hView.findViewById(R.id.user_name);
         final TextView userEmail = (TextView) hView.findViewById(R.id.user_email);
-        mUserDataReference = User.getFirebaseUserRef();
-        mUserDataListener = new AbstractUserMessageValueEventListener(this) {
-            /**
-             * {@inheritDoc}
-             */
+
+        mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>(this) {
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                userName.setText(user.getName());
-                userEmail.setText(user.getEmail());
-                Glide.with(getContext()).load(user.getPhotoUrl()).into(profilePhoto);
+            public void onData(@Nullable final User user) {
+                Log.d(TAG, "Check if user null");
+                if (user == null) {
+                    Log.d(TAG, "Starting sign in");
+                    startSignIn();
+                    finish();
+                } else {
+                    userName.setText(user.getName());
+                    userEmail.setText(user.getEmail());
+                    Glide.with(DelernMainActivity.this).load(user.getPhotoUrl()).into(profilePhoto);
+                }
             }
         };
 
-        mUserDataReference.addValueEventListener(mUserDataListener);
+        User user = new User();
+        user.fetchChild(user.getReference(), User.class, mAbstractDataAvailableListener, true);
     }
 
     @Override

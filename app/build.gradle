@@ -96,6 +96,7 @@ android {
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
             ext.enableCrashlytics = false
+            // TODO(dotdoom): addConstant?
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
             resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
@@ -128,6 +129,7 @@ dependencies {
     compile "com.google.firebase:firebase-analytics:$firebaseVersion"
     compile "com.google.firebase:firebase-config:$firebaseVersion"
 
+    //noinspection NewerVersionAvailable
     compile 'com.firebaseui:firebase-ui-database:1.2.0'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'

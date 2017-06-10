@@ -39,6 +39,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
@@ -49,36 +50,30 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         SearchView.OnQueryTextListener {
 
     /**
-     * IntentExtra R.string title of the activity.
+     * IntentExtra deck to edit.
      */
-    public static final String LABEL = "label";
-
-    /**
-     * IntentExtra deck ID to edit.
-     */
-    public static final String DECK_ID = "deckId";
+    public static final String DECK = "deck";
 
     private static final String TAG = LogUtil.tagFor(EditCardListActivity.class);
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
     private Query mQuery;
 
-    private String mLabel;
-    private String mDeckId;
+    private Deck mDeck;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
-        getInputVariables();
-        this.setTitle(mLabel);
+        getParameters();
+        this.setTitle(mDeck.getName());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.f_add_card_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                startAddCardsActivity(mDeckId, R.string.add);
+                startAddCardsActivity();
             }
         });
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -88,7 +83,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mQuery = Card.fetchAllCardsForDeck(mDeckId);
+        mQuery = mDeck.getChildReference(Card.class);
     }
 
     @Override
@@ -126,16 +121,15 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         }
     }
 
-    private void getInputVariables() {
+    private void getParameters() {
         Intent intent = getIntent();
-        mLabel = intent.getStringExtra(LABEL);
-        mDeckId = intent.getStringExtra(DECK_ID);
+        mDeck = intent.getParcelableExtra(DECK);
     }
 
     private void configureFirebaseAdapter() {
         try {
             mFirebaseAdapter = new CardRecyclerViewAdapter.Builder(Card.class,
-                    R.layout.card_text_view_for_deck, CardViewHolder.class, mQuery)
+                    R.layout.card_text_view_for_deck, CardViewHolder.class, mQuery, mDeck)
                     .setOnClickListener(this)
                     .build();
         } catch (InstantiationException e) {
@@ -144,10 +138,10 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    private void startAddCardsActivity(final String key, final int label) {
+    private void startAddCardsActivity() {
         Intent intent = new Intent(this, AddEditCardActivity.class);
-        intent.putExtra(AddEditCardActivity.DECK_ID, key);
-        intent.putExtra(AddEditCardActivity.LABEL, label);
+        Card card = new Card(mDeck);
+        intent.putExtra(AddEditCardActivity.CARD, card);
         startActivity(intent);
     }
 
@@ -156,15 +150,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      */
     @Override
     public void onCardClick(final int position) {
-        Log.v(TAG, mFirebaseAdapter.getRef(position).getKey());
-        showCardBeforeEdit(mFirebaseAdapter.getRef(position).getKey());
+        showCardBeforeEdit(mFirebaseAdapter.getItem(position));
     }
 
-    private void showCardBeforeEdit(final String cardId) {
+    private void showCardBeforeEdit(final Card card) {
         Intent intent = new Intent(this, PreEditCardActivity.class);
-        intent.putExtra(PreEditCardActivity.LABEL, mLabel);
-        intent.putExtra(PreEditCardActivity.DECK_ID, mDeckId);
-        intent.putExtra(PreEditCardActivity.CARD_ID, cardId);
+        intent.putExtra(PreEditCardActivity.CARD, card);
         startActivity(intent);
     }
 
@@ -200,7 +191,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
                     // The \uf8ff character used in the query is a very high code point in
                     // the Unicode range. Because it is after most regular characters in Unicode,
                     // the query matches all values that start with a newText.
-                    mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"))
+                    mQuery.orderByChild("front").startAt(newText).endAt(newText + "\uf8ff"), mDeck)
                     .setOnClickListener(this)
                     .build();
         } catch (InstantiationException e) {

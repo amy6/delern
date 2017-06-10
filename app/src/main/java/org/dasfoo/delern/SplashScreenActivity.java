@@ -27,14 +27,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
-import io.fabric.sdk.android.Fabric;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -56,12 +53,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Disable Crashlytics for instrumented builds (for CI).
-        Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
-                new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
-                .build();
-        Fabric.with(this, crashlyticsKit);
 
         // Get Remote Config instance.
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();

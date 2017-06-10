@@ -18,73 +18,60 @@
 
 package org.dasfoo.delern.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
-
 
 /**
  * Created by katarina on 10/12/16.
- * Class keeps user information.
+ * Model class for users.
  */
-
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public final class User {
+public final class User extends AbstractModel implements Parcelable {
 
-    @Exclude
-    private static final String USERS = "users";
+    /**
+     * Classes implementing the Parcelable interface must also have a non-null static
+     * field called CREATOR of a type that implements the Parcelable.Creator interface.
+     * https://developer.android.com/reference/android/os/Parcelable.html
+     */
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(final Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(final int size) {
+            return new User[size];
+        }
+    };
 
     private String name;
     private String email;
     private String photoUrl;
 
     /**
-     * The empty constructor is required for Firebase de-serialization.
+     * An empty constructor is required for Firebase deserialization.
      */
     public User() {
-        // This constructor is intentionally left empty.
+        super(null);
     }
 
     /**
-     * Create user instance using name, email, photo url of user.
-     *
-     * @param name     name of user.
-     * @param email    email of user.
-     * @param photoUrl photo url of user.
+     * Parcelable deserializer.
+     * @param in parcel.
      */
-    public User(final String name, final String email, final String photoUrl) {
-        this.name = name;
-        this.email = email;
-        this.photoUrl = photoUrl;
-    }
-
-    /**
-     * Gets database reference in Firebase to current user.
-     *
-     * @return database reference to current user.
-     */
-    @Exclude
-    public static DatabaseReference getFirebaseUserRef() {
-        FirebaseUser user = getCurrentUser();
-        return FirebaseDatabase.getInstance().getReference()
-                .child(USERS)
-                .child(user.getUid());
-    }
-
-    /**
-     * Writes user data to firebase.
-     *
-     * @param user     user data.
-     * @param listener handler when operation was completed.
-     */
-    @Exclude
-    public static void writeUser(final User user,
-                                 final OnFbOperationCompleteListener listener) {
-        User.getFirebaseUserRef().setValue(user).addOnCompleteListener(listener);
+    protected User(final Parcel in) {
+        super(null);
+        setName(in.readString());
+        setEmail(in.readString());
+        setPhotoUrl(in.readString());
     }
 
     /**
@@ -95,8 +82,7 @@ public final class User {
      */
     @Exclude
     public static boolean isSignedIn() {
-        FirebaseUser user = getCurrentUser();
-        return user != null;
+        return getCurrentUser() != null;
     }
 
     /**
@@ -107,6 +93,15 @@ public final class User {
     @Exclude
     public static FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getKey() {
+        // TODO(refactoring): for sharing, should be actual key
+        return getCurrentUser().getUid();
     }
 
     /**
@@ -168,10 +163,55 @@ public final class User {
      */
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
+        return "User{" + super.toString() +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
                 '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        if (childClass == Deck.class) {
+            DatabaseReference decks = FirebaseDatabase.getInstance().getReference("/decks");
+            decks.keepSynced(true);
+            return decks.child(getKey());
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public DatabaseReference getReference() {
+        // TODO(refactoring): create Root model?
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference("/users")
+                .child(getKey());
+        user.keepSynced(true);
+        return user;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(getName());
+        dest.writeString(getEmail());
+        dest.writeString(getPhotoUrl());
     }
 }

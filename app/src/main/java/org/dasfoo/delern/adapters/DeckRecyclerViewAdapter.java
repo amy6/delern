@@ -19,20 +19,20 @@
 package org.dasfoo.delern.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by katarina on 11/19/16.
@@ -41,10 +41,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final int CARDS_COUNTER_LIMIT = 200;
-
+    private final List<AbstractDataAvailableListener> mAvailableListeners = new ArrayList<>();
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
     private Context mContext;
-    private final Map<Query, ValueEventListener> mQueryListenerMap = new ConcurrentHashMap<>();
 
     /**
      * @param modelClass      Firebase will marshall the data at a location into an instance
@@ -72,22 +71,28 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.setDeckCardType(deck.getDeckType());
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
         viewHolder.setContext(mContext);
-        ValueEventListener deckEventListener = new AbstractUserMessageValueEventListener(mContext) {
+        AbstractDataAvailableListener<Long> onCardsCountDataAvailableListener =
+                new AbstractDataAvailableListener<Long>(mContext) {
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                long cardsCount = dataSnapshot.getChildrenCount();
+            public void onData(@Nullable final Long cardsCount) {
                 if (cardsCount <= CARDS_COUNTER_LIMIT) {
                     viewHolder.getCountToLearnTextView().setText(String.valueOf(cardsCount));
                 } else {
-                    String toManyCards = CARDS_COUNTER_LIMIT + "+";
-                    viewHolder.getCountToLearnTextView().setText(toManyCards);
+                    String tooManyCards = CARDS_COUNTER_LIMIT + "+";
+                    viewHolder.getCountToLearnTextView().setText(tooManyCards);
                 }
             }
         };
-        Query query = ScheduledCard.fetchCardsToRepeatWithLimit(getRef(position).getKey(),
-                CARDS_COUNTER_LIMIT + 1);
-        query.addValueEventListener(deckEventListener);
-        mQueryListenerMap.put(query, deckEventListener);
+
+        Deck.fetchCount(
+                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1),
+                onCardsCountDataAvailableListener);
+    }
+
+    @Override
+    protected Deck parseSnapshot(final DataSnapshot snapshot) {
+        // TODO(refactoring): user should be available here
+        return Deck.fromSnapshot(snapshot, Deck.class, new User());
     }
 
     /**
@@ -96,10 +101,9 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @Override
     public void cleanup() {
         super.cleanup();
-        for (Map.Entry<Query, ValueEventListener> entry: mQueryListenerMap.entrySet()) {
-            entry.getKey().removeEventListener(entry.getValue());
+        for (final AbstractDataAvailableListener availableListener : mAvailableListeners) {
+            availableListener.clean();
         }
-        mQueryListenerMap.clear();
     }
 
     /**

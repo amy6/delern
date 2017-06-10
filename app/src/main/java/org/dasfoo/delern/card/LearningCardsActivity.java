@@ -35,18 +35,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.Query;
-
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
-import org.dasfoo.delern.handlers.OnLearningCardAvailable;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.models.listener.LearningCardListener;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -78,42 +73,41 @@ public class LearningCardsActivity extends AppCompatActivity {
     private View mDelimiter;
     private boolean mBackIsShown;
     private Deck mDeck;
-    private LearningCardListener mLearningCard;
-    private final OnLearningCardAvailable mCardAvailable = new OnLearningCardAvailable() {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onNewCard() {
-            showFrontSide();
-            // if user decided to edit card, a back side can be shown or not.
-            // After returning back it must show the same state (the same buttons
-            // and text) as before editing
-            if (mBackIsShown) {
-                showBackSide();
-            }
-        }
+    private Card mCard;
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void onNoCards() {
-            finish();
-        }
-    };
+    private final AbstractDataAvailableListener<Card> mCardAvailableListener =
+            new AbstractDataAvailableListener<Card>(this) {
+                @Override
+                public void onData(final Card data) {
+                    // TODO(refactoring): remove once it propagates correctly
+                    clean();
+                    if (data == null) {
+                        finish();
+                        return;
+                    }
+                    mCard = data;
+                    showFrontSide();
+                    // if user decided to edit card, a back side can be shown or not.
+                    // After returning back it must show the same state (the same buttons
+                    // and text) as before editing
+                    if (mBackIsShown) {
+                        showBackSide();
+                    }
+                }
+            };
+
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.to_know_button:
                     setClickableRepeatKnowButtons(false);
-                    mLearningCard.viewedCard(LearningCardListener.KNOW_CARD);
+                    mCard.answer(true);
                     mBackIsShown = false;
                     break;
                 case R.id.to_repeat_button:
                     setClickableRepeatKnowButtons(false);
-                    mLearningCard.viewedCard(LearningCardListener.DO_NOT_KNOW_CARD);
+                    mCard.answer(false);
                     mBackIsShown = false;
                     break;
                 case R.id.turn_card_button:
@@ -125,7 +119,6 @@ public class LearningCardsActivity extends AppCompatActivity {
             }
         }
     };
-    private Query mLearningCardQuery;
 
     /**
      * {@inheritDoc}
@@ -144,9 +137,6 @@ public class LearningCardsActivity extends AppCompatActivity {
         }
         getParameters();
         initViews();
-
-        mLearningCardQuery = ScheduledCard.fetchCardsToRepeatWithLimit(mDeck.getdId(), 1);
-        mLearningCard = new LearningCardListener(this, mDeck.getdId(), mCardAvailable);
     }
 
     /**
@@ -164,17 +154,13 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mLearningCardQuery.addValueEventListener(mLearningCard);
+        mDeck.startScheduledCardWatcher(mCardAvailableListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // Check if current card has already listener, remove it.
-        if (mLearningCardQuery != null) {
-            mLearningCard.clean();
-            mLearningCardQuery.removeEventListener(mLearningCard);
-        }
+        mCardAvailableListener.clean();
     }
 
     /**
@@ -204,9 +190,7 @@ public class LearningCardsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
                 Intent intentEdit = new Intent(this, AddEditCardActivity.class);
-                intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeck.getdId());
-                intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
-                intentEdit.putExtra(AddEditCardActivity.CARD, mLearningCard.getCurrentCard());
+                intentEdit.putExtra(AddEditCardActivity.CARD, mCard);
                 startActivity(intentEdit);
                 break;
             case R.id.delete_card_show_menu:
@@ -217,8 +201,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                     public void onClick(final DialogInterface dialog, final int which) {
                         mBackIsShown = false;
                         // TODO(ksheremet): delete if not owner
-                        Card.deleteCardFromDeck(mDeck.getdId(), mLearningCard.getCurrentCard(),
-                                new OnFbOperationCompleteListener(TAG, LearningCardsActivity.this));
+                        mCard.delete();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -263,7 +246,7 @@ public class LearningCardsActivity extends AppCompatActivity {
      */
     private void showFrontSide() {
         setBackgroundCardColor();
-        mFrontTextView.setText(mLearningCard.getCurrentCard().getFront());
+        mFrontTextView.setText(mCard.getFront());
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
@@ -279,8 +262,8 @@ public class LearningCardsActivity extends AppCompatActivity {
         GrammaticalGenderSpecifier.Gender gender;
         try {
             gender = GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mDeck.getDeckType()),
-                    mLearningCard.getCurrentCard().getBack());
+                    DeckType.valueOf(mCard.getDeck().getDeckType()),
+                    mCard.getBack());
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, e.getMessage());
@@ -293,7 +276,7 @@ public class LearningCardsActivity extends AppCompatActivity {
      * Shows back side of current card and appropriate buttons.
      */
     private void showBackSide() {
-        mBackTextView.setText(mLearningCard.getCurrentCard().getBack());
+        mBackTextView.setText(mCard.getBack());
         Animator repeatButtonAnimation = null;
         Animator knowButtonAnimation = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

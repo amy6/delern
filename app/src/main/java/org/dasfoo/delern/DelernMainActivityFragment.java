@@ -21,6 +21,7 @@ package org.dasfoo.delern;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -37,21 +38,17 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -68,10 +65,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     private ProgressBar mProgressBar;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
-    private ValueEventListener mProgressBarListener;
+    // TODO(refactoring): move setVisibility of this to RecyclerViewAdapter
     private TextView mEmptyMessageTextView;
-    private Query mUsersDecksQuery;
-    private boolean mIsListenersAttached = true;
+    private AbstractDataAvailableListener mUserHasDecksListener;
 
     /**
      * {@inheritDoc}
@@ -88,30 +84,25 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final View view) {
                 // Set up the input
                 final EditText input = new EditText(getActivity());
-                newOrUpdateDeckDialog(new Deck(), input, R.string.add,
+                // TODO(refactoring): user should be available here
+                newOrUpdateDeckDialog(new Deck(new User()), input, R.string.add,
                         new DialogInterface.OnClickListener() {
                             /**
                              * {@inheritDoc}
                              */
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
-                                final Deck newDeck = new Deck(input.getText().toString().trim(),
-                                        DeckType.BASIC.name(), true);
-                                Deck.createNewDeck(newDeck,
-                                        new OnFbOperationCompleteListener(TAG, getContext()),
-                                        new AbstractOnDataChangeListener(TAG, getContext()) {
-                                            /**
-                                             * {@inheritDoc}
-                                             */
-                                            @Override
-                                            public void onDataChange(
-                                                    final DataSnapshot dataSnapshot) {
-                                                startEditCardsActivity(dataSnapshot.getKey(),
-                                                        newDeck.getName());
-                                                mEmptyMessageTextView
-                                                        .setVisibility(TextView.INVISIBLE);
-                                            }
-                                        });
+                                final Deck newDeck = new Deck(new User());
+                                newDeck.setName(input.getText().toString().trim());
+                                newDeck.setDeckType(DeckType.BASIC.name());
+                                newDeck.setAccepted(true);
+                                newDeck.create(new AbstractDataAvailableListener<Deck>(
+                                        DelernMainActivityFragment.this.getContext()) {
+                                    @Override
+                                    public void onData(@Nullable final Deck deck) {
+                                        startEditCardsActivity(deck);
+                                    }
+                                });
                             }
                         });
             }
@@ -125,17 +116,18 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mProgressBarListener = new AbstractUserMessageValueEventListener(getContext()) {
+        mUserHasDecksListener = new AbstractDataAvailableListener<Long>(getContext()) {
+
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
+            public void onData(@Nullable final Long isUserHasDecks) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
-                if (!dataSnapshot.hasChildren()) {
+                if (isUserHasDecks == null || isUserHasDecks != 1) {
                     mEmptyMessageTextView.setVisibility(TextView.VISIBLE);
+                } else {
+                    mEmptyMessageTextView.setVisibility(TextView.INVISIBLE);
                 }
             }
         };
-        mUsersDecksQuery = Deck.getUsersDecks();
         return rootView;
     }
 
@@ -145,17 +137,17 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onStart() {
         super.onStart();
+        // TODO(refactoring): new User();
+        User user = new User();
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
-                DeckViewHolder.class, mUsersDecksQuery);
+                DeckViewHolder.class, user.getChildReference(Deck.class));
         mFirebaseAdapter.setContext(getContext());
         mFirebaseAdapter.setOnDeckViewHolderClick(mOnDeckViewHolderClick);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        if (mUsersDecksQuery != null) {
-            mUsersDecksQuery.addValueEventListener(mProgressBarListener);
-        }
-        mIsListenersAttached = true;
+        Deck.fetchCount(user.getChildReference(Deck.class).limitToFirst(1),
+                mUserHasDecksListener);
     }
 
     /**
@@ -191,7 +183,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 deck.setName(input.getText().toString().trim());
-                Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()));
+                deck.save(null);
             }
         });
     }
@@ -201,8 +193,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     @Override
     public void doOnEditMenuClick(final int position) {
-        startEditCardsActivity(mFirebaseAdapter.getRef(position).getKey(),
-                mFirebaseAdapter.getItem(position).getName());
+        startEditCardsActivity(mFirebaseAdapter.getItem(position));
     }
 
     /**
@@ -215,9 +206,8 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                final String deckId = mFirebaseAdapter.getRef(position).getKey();
-                Deck.deleteDeck(deckId,
-                        new OnFbOperationCompleteListener(TAG, getContext()));
+                Deck deck = mFirebaseAdapter.getItem(position);
+                deck.delete();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -236,7 +226,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     public void doOnDeckTypeClick(final int position, final DeckType deckType) {
         final Deck deck = getDeckFromAdapter(position);
         deck.setDeckType(deckType.name());
-        Deck.updateDeck(deck, new OnFbOperationCompleteListener(TAG, getContext()));
+        deck.save(null);
     }
 
 
@@ -272,10 +262,9 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         return dialog;
     }
 
-    private void startEditCardsActivity(final String key, final String name) {
+    private void startEditCardsActivity(final Deck deck) {
         Intent intent = new Intent(getActivity(), EditCardListActivity.class);
-        intent.putExtra(EditCardListActivity.DECK_ID, key);
-        intent.putExtra(EditCardListActivity.LABEL, name);
+        intent.putExtra(EditCardListActivity.DECK, deck);
         startActivity(intent);
     }
 
@@ -286,23 +275,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     }
 
     private Deck getDeckFromAdapter(final int position) {
-        final Deck deck = mFirebaseAdapter.getItem(position);
-        deck.setdId(mFirebaseAdapter.getRef(position).getKey());
-        return deck;
+        return mFirebaseAdapter.getItem(position);
     }
 
     /**
      * Removes listeners and cleans resources.
      */
     public void cleanup() {
-        if (mIsListenersAttached) {
-            mIsListenersAttached = false;
-            if (mUsersDecksQuery == null) {
-                Log.w(TAG, "Cleanup listeners: User is not signed in");
-            } else {
-                mUsersDecksQuery.removeEventListener(mProgressBarListener);
-            }
-            mFirebaseAdapter.cleanup();
-        }
+        mFirebaseAdapter.cleanup();
+        mUserHasDecksListener.clean();
+
     }
 }

@@ -20,63 +20,79 @@ package org.dasfoo.delern.models;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.dasfoo.delern.util.LogUtil;
-import org.dasfoo.delern.util.StringUtil;
 
 /**
  * Created by katarina on 2/22/17.
- * Model class for accessing deck_access/userId node.
+ * Model class for deck_access.
  */
-
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class DeckAccess {
-    @Exclude
-    private static final String TAG = LogUtil.tagFor(DeckAccess.class);
-    @Exclude
-    private static final String DECK_ACCESS = "deck_access";
-
+public class DeckAccess extends AbstractModel {
     private String access;
 
     /**
-     * Constructor for setting access for deck. Access for user can be owner, read or write
-     *
-     * @param acs sets access for deck.
+     * An empty constructor is required for Firebase deserialization.
      */
-    public DeckAccess(final String acs) {
-        this.access = acs;
+    private DeckAccess() {
+        super(null);
     }
 
     /**
-     * Gets deck_access node of user. deck_access/deckId/userId
-     *
-     * @param deckId id of deck.
-     * @return path to deck_access user node
+     * Create a DeckAccess object associated with a deck.
+     * @param deck Deck this DeckAccess belongs to.
      */
-    @Exclude
-    public static String getDeckAccessNodeByDeckId(final String deckId) {
-        return StringUtil.joinFirebasePath(DeckAccess.DECK_ACCESS, deckId,
-                User.getCurrentUser().getUid()
-        );
+    public DeckAccess(final Deck deck) {
+        super(deck);
     }
 
     /**
-     * References to deck_access by deck id for current user.
-     * deck_access/deckId/userId
-     *
-     * @param deckId id of deck.
-     * @return reference to deck access for deck by deck id.
+     * Get the Deck this DeckAccess is associated with.
+     * @return AbstractModel parent casted to Deck (if set).
      */
     @Exclude
-    public static DatabaseReference getFirebaseDeckAccessRef(final String deckId) {
-        DatabaseReference deckAccessDatabaseReference =
-                FirebaseDatabase.getInstance().getReference()
-                        .child(DECK_ACCESS).child(deckId).child(User.getCurrentUser().getUid());
-        // keep sync special location for offline use
-        // https://firebase.google.com/docs/database/android/offline-capabilities
-        deckAccessDatabaseReference.keepSynced(true);
-        return deckAccessDatabaseReference;
+    public Deck getDeck() {
+        return (Deck) getParent();
+    }
+
+    /**
+     * Get the key of this DeckAccess (based on the User ID who owns the deck).
+     * @return value of the key (usually a fairly random string).
+     */
+    @Exclude
+    @Override
+    public String getKey() {
+        return getDeck().getUser().getKey();
+    }
+
+    /**
+     * No-op. Throws an exception when trying to set a key that's different from the User ID this
+     * DeckAccess belongs to.
+     * @param key value of the key (usually a fairly random string).
+     */
+    @Exclude
+    @Override
+    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
+    public void setKey(final String key) {
+        if (!key.equals(getKey())) {
+            throw new RuntimeException("Attempt to set key to DeckAccess (always belongs to user");
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public Object getFirebaseValue() {
+        return getAccess();
     }
 
     /**
@@ -102,8 +118,8 @@ public class DeckAccess {
      */
     @Override
     public String toString() {
-        return "DeckAccess{" +
-                "access='" + access + '\'' +
+        return "DeckAccess{" + super.toString() +
+                ", access='" + access + '\'' +
                 '}';
     }
 }

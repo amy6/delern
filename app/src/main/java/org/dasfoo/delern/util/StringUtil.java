@@ -18,7 +18,13 @@
 
 package org.dasfoo.delern.util;
 
-import android.text.TextUtils;
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.database.DatabaseReference;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by katarina on 5/15/17.
@@ -26,19 +32,27 @@ import android.text.TextUtils;
 
 public final class StringUtil {
 
-    private static final String FIREBASE_NODE_DELIMITER = "/";
+    private static final String TAG = LogUtil.tagFor(StringUtil.class);
 
     private StringUtil() {
 
     }
 
+    // TODO(refactoring): move into AbstractModel.
+
     /**
-     * Joins Firebase children to create Firebase node path.
-     *
-     * @param children children of Firebase.
-     * @return path in Firebase.
+     * Get bare Firebase path (relative to the root) from the DatabaseReference.
+     * @param reference DatabaseReference to get the path for.
+     * @return toString() of the reference with protocol, hostname and port stripped.
      */
-    public static String joinFirebasePath(final String... children) {
-        return TextUtils.join(FIREBASE_NODE_DELIMITER, children);
+    public static String getFirebasePathFromReference(final DatabaseReference reference) {
+        try {
+            return new URI(reference.toString()).getPath();
+        } catch (URISyntaxException e) {
+            Crashlytics.logException(e);
+            Log.e(TAG, "Cannot parse FBD Uri", e);
+            // TODO(refactoring): make this all-writable for data recovery
+            return "trash";
+        }
     }
 }

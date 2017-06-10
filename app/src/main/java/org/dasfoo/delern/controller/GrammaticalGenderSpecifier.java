@@ -35,7 +35,7 @@ public final class GrammaticalGenderSpecifier {
      * It specifies gender of text. It currently can be SWISS or GERMAN for specifying gender.
      *
      * @param textType type of text.
-     * @param text text of content.
+     * @param text     text of content.
      * @return gender of content.
      */
     public static Gender specifyGender(final DeckType textType, final String text) {

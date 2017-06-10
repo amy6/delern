@@ -67,15 +67,6 @@ public enum Level {
     private static Level[] sValues = values();
 
     /**
-     * Returns next level by current in enum. If current level is L3, it returns L4.
-     *
-     * @return next level of card.
-     */
-    private Level next() {
-        return sValues[(this.ordinal() + 1) % sValues.length];
-    }
-
-    /**
      * Specifies next level in repetition intervals using current.
      *
      * @param currentLevel current level.
@@ -87,5 +78,14 @@ public enum Level {
             return Level.L7.name();
         }
         return cLevel.next().name();
+    }
+
+    /**
+     * Returns next level by current in enum. If current level is L3, it returns L4.
+     *
+     * @return next level of card.
+     */
+    private Level next() {
+        return sValues[(this.ordinal() + 1) % sValues.length];
     }
 }

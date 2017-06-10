@@ -20,28 +20,23 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
-import org.dasfoo.delern.util.LogUtil;
-import org.dasfoo.delern.util.StringUtil;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 /**
  * Created by katarina on 10/11/16.
- * Model class for accessing deck/userId node.
+ * Model class for deck.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Deck implements Parcelable {
+public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Classes implementing the Parcelable interface must also have a non-null static
@@ -60,13 +55,6 @@ public class Deck implements Parcelable {
         }
     };
 
-    @Exclude
-    private static final String TAG = LogUtil.tagFor(Deck.class);
-    @Exclude
-    private static final String DECKS = "decks";
-
-    @Exclude
-    private String dId;
     private String name;
     private String deckType;
     private String category;
@@ -75,28 +63,30 @@ public class Deck implements Parcelable {
     private boolean accepted;
 
     /**
-     * The empty constructor is required for Firebase de-serialization.
+     * An empty constructor is required for Firebase deserialization.
      */
-    public Deck() {
-        // This constructor is intentionally left empty.
+    private Deck() {
+        super(null);
     }
 
     /**
-     * Constructor for deck.
-     *
-     * @param name         name of deck.
-     * @param dType        sets type of deck from DeckType class.
-     * @param userAccepted whether user is accepted deck or not (for sharing).
+     * Create a deck object with User as a parent.
+     * @param parent User which this deck belongs to.
      */
-    public Deck(final String name, final String dType, final boolean userAccepted) {
-        this.name = name;
-        this.deckType = dType;
-        this.accepted = userAccepted;
-        this.lastSyncAt = System.currentTimeMillis();
+    public Deck(final User parent) {
+        super(parent);
+        lastSyncAt = System.currentTimeMillis();
     }
 
+    /**
+     * Parcelable deserializer.
+     * @param in parcel.
+     */
+    // TODO(refactoring): investigate the possible issues here
+    @SuppressWarnings({"PMD.UseProperClassLoader", "PMD.ConstructorCallsOverridableMethod"})
     protected Deck(final Parcel in) {
-        dId = in.readString();
+        super((User) in.readParcelable(User.class.getClassLoader()));
+        setKey(in.readString());
         name = in.readString();
         deckType = in.readString();
         category = in.readString();
@@ -107,138 +97,77 @@ public class Deck implements Parcelable {
     }
 
     /**
-     * Gets reference to decks in Firebase.
-     *
-     * @return firebase database reference.
+     * Get requested amount of cards for learning.
+     * @param limit maximum number of cards the query can return.
+     * @return a Query that will fetch ScheduledCards.
      */
     @Exclude
-    public static DatabaseReference getFirebaseDecksRef() {
-        DatabaseReference deckDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child(DECKS).child(User.getCurrentUser().getUid());
-        // keep sync special location for offline use
-        // https://firebase.google.com/docs/database/android/offline-capabilities
-        deckDatabaseReference.keepSynced(true);
-        return deckDatabaseReference;
+    public Query fetchCardsToRepeatWithLimitQuery(final int limit) {
+        long time = System.currentTimeMillis();
+        return getChildReference(ScheduledCard.class)
+                .orderByChild("repeatAt")
+                .endAt(time)
+                .limitToFirst(limit);
     }
 
     /**
-     * Returns decks of user.
-     *
-     * @return query decks of user.
+     * Create new deck with "owner" access.
+     * @param callback invoked when the deck is saved to the database, or immediately if offline.
      */
     @Exclude
-    public static Query getUsersDecks() {
-        // TODO(ksheremet): check whether this null is possible or not
-        if (User.getCurrentUser() == null) {
-            Log.e(TAG, "getUsersDecks: User is not signed in");
-            return null;
-        } else {
-            return getFirebaseDecksRef();
-        }
-
+    public void create(final AbstractDataAvailableListener<Deck> callback) {
+        DeckAccess deckAccess = new DeckAccess(this);
+        deckAccess.setKey(getUser().getKey());
+        deckAccess.setAccess("owner");
+        new MultiWrite()
+                .save(this, callback)
+                .save(deckAccess, null)
+                .write();
     }
 
     /**
-     * Creates new deck in Firebase.
-     *
-     * @param deck               new deck.
-     * @param onCompleteListener listener for handling onComplete.
-     * @param listener           handles on data change. It is needed for offline capabilities.
+     * Remove the current deck from the database, including Cards, ScheduledCards, Views and access.
      */
     @Exclude
-    public static void createNewDeck(final Deck deck,
-                                     final OnFbOperationCompleteListener onCompleteListener,
-                                     final AbstractOnDataChangeListener listener) {
-        DatabaseReference reference = getFirebaseDecksRef().push();
-        reference.addListenerForSingleValueEvent(listener);
-
-        String key = reference.getKey();
-        // Write deckAccess
-        DeckAccess deckAccess = new DeckAccess("owner");
-        Map<String, Object> newDeck = new ConcurrentHashMap<>();
-        newDeck.put(DeckAccess.getDeckAccessNodeByDeckId(key), deckAccess.getAccess());
-        newDeck.put(getDeckNodeById(key), deck);
-
-        Log.d(TAG, newDeck.toString());
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(newDeck)
-                .addOnCompleteListener(onCompleteListener);
+    public void delete() {
+        new MultiWrite()
+                .delete(this, null)
+                .delete(this.getChildReference(Card.class), null)
+                .delete(this.getChildReference(ScheduledCard.class), null)
+                .delete(this.getChildReference(View.class), null)
+                .delete(this.getChildReference(DeckAccess.class), null)
+                .write();
     }
 
     /**
-     * Gets deck node for the user. deck/userId/deckId
-     *
-     * @param deckId id of deck.
-     * @return deck node of the user.
+     * Start a watcher that will trigger for every top-1 card that needs to be learned, in sequence.
+     * @param callback called initially, and after each change to the current ScheduledCard. The
+     *                 parameter will be a Card associated with the ScheduledCard, and ScheduledCard
+     *                 will be set as its parent.
      */
     @Exclude
-    public static String getDeckNodeById(final String deckId) {
-        return StringUtil.joinFirebasePath(Deck.DECKS, User.getCurrentUser().getUid(), deckId);
-    }
+    public void startScheduledCardWatcher(final AbstractDataAvailableListener<Card> callback) {
+        Query query = fetchCardsToRepeatWithLimitQuery(1);
+        fetchChildren(query, ScheduledCard.class,
+                new AbstractDataAvailableListener<List<ScheduledCard>>(null) {
+                    // TODO(dotdoom): callback.clean() should call clean() from here
+                    @Override
+                    public void onData(final @Nullable List<ScheduledCard> data) {
+                        if (data != null && data.size() > 0) {
+                            ScheduledCard sc = data.get(0);
+                            sc.fetchChild(
+                                    Deck.this.getChildReference(Card.class, sc.getKey()),
+                                    Card.class, callback, false);
+                        } else {
+                            callback.onData(null);
+                        }
+                    }
 
-    /**
-     * Remove deck by ID.
-     *
-     * @param deckId   deck ID for removing.
-     * @param listener listener handles on success and on failure results.
-     */
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
-    @Exclude
-    public static void deleteDeck(final String deckId,
-                                  final OnFbOperationCompleteListener listener) {
-        // Values must be null. It is impossible with ConcurentHashMap. For deleting deck
-        // concurrent map is unused (always 1 flow).
-        Map<String, Object> removeDeck = new HashMap<>();
-        removeDeck.put(Deck.getDeckNodeById(deckId), null);
-        removeDeck.put(Card.getCardsNodeByDeckId(deckId), null);
-        removeDeck.put(ScheduledCard.getScheduledCardNodeByDeckId(deckId), null);
-        removeDeck.put(View.getViewsNodeByDeckId(deckId), null);
-        removeDeck.put(DeckAccess.getDeckAccessNodeByDeckId(deckId), null);
-
-        Log.v(TAG, "Deck removal operation:" + removeDeck.toString());
-
-        FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .updateChildren(removeDeck)
-                .addOnCompleteListener(listener);
-    }
-
-    /**
-     * Renames deck.
-     *
-     * @param deck     deck to rename.
-     * @param listener listener for handling on success and failure.
-     */
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
-    @Exclude
-    public static void updateDeck(final Deck deck, final OnFbOperationCompleteListener
-            listener) {
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(deck.getdId(), deck);
-        getFirebaseDecksRef().updateChildren(childUpdates).addOnCompleteListener(listener);
-    }
-
-    /**
-     * Getter for ID of deck.
-     *
-     * @return ID of deck.
-     */
-    @Exclude
-    public String getdId() {
-        return dId;
-    }
-
-    /**
-     * Setter for deck ID.
-     *
-     * @param dId ID of deck.
-     */
-    @Exclude
-    public void setdId(final String dId) {
-        this.dId = dId;
+                    @Override
+                    public void onError(final Exception e) {
+                        callback.onError(e);
+                    }
+                });
     }
 
     /**
@@ -319,6 +248,7 @@ public class Deck implements Parcelable {
      *
      * @return true if deck is accepted, otherwise false.
      */
+    // TODO(ksheremet): should this be named "getAccepted"?
     public boolean isAccepted() {
         return accepted;
     }
@@ -337,8 +267,7 @@ public class Deck implements Parcelable {
      */
     @Override
     public String toString() {
-        return "Deck{" +
-                "dId='" + dId + '\'' +
+        return "Deck{" + super.toString() +
                 ", name='" + name + '\'' +
                 ", deckType='" + deckType + '\'' +
                 ", category='" + category + '\'' +
@@ -359,8 +288,9 @@ public class Deck implements Parcelable {
      * {@inheritDoc}
      */
     @Override
-    public void writeToParcel(final Parcel parcel, final int i) {
-        parcel.writeString(this.dId);
+    public void writeToParcel(final Parcel parcel, final int flags) {
+        parcel.writeParcelable(getUser(), flags);
+        parcel.writeString(this.getKey());
         parcel.writeString(this.name);
         parcel.writeString(this.deckType);
         parcel.writeString(this.category);
@@ -370,5 +300,44 @@ public class Deck implements Parcelable {
         } else {
             parcel.writeByte((byte) 0);
         }
+    }
+
+    /**
+     * Get the User this Deck is associated with.
+     * @return AbstractModel parent casted to User (if set).
+     */
+    @Exclude
+    public User getUser() {
+        return (User) getParent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        if (childClass == Card.class) {
+            DatabaseReference cards = FirebaseDatabase.getInstance().getReference("/cards");
+            cards.keepSynced(true);
+            return cards.child(getKey());
+        }
+        if (childClass == ScheduledCard.class) {
+            DatabaseReference learning = FirebaseDatabase.getInstance().getReference("/learning");
+            learning.keepSynced(true);
+            return learning.child(getUser().getKey()).child(getKey());
+        }
+        if (childClass == View.class) {
+            // Intentionally not keeping views synced.
+            return FirebaseDatabase.getInstance().getReference("/views")
+                    .child(getUser().getKey())
+                    .child(getKey());
+        }
+        if (childClass == DeckAccess.class) {
+            // Intentionally not keeping deck access synced.
+            return FirebaseDatabase.getInstance().getReference("/deck_access")
+                    .child(getKey());
+        }
+        return null;
     }
 }

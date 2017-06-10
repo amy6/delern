@@ -18,11 +18,14 @@
 
 package org.dasfoo.delern.card;
 
+// TODO(refactoring): this class should be gone!
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -33,15 +36,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.listener.AbstractUserMessageValueEventListener;
-import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Activity that shows the card before it is being edited.
@@ -50,29 +47,14 @@ import org.dasfoo.delern.util.LogUtil;
 public class PreEditCardActivity extends AppCompatActivity {
 
     /**
-     * IntentExtra R.string title of the activity.
+     * IntentExtra card that is being edited.
      */
-    public static final String LABEL = "label";
+    public static final String CARD = "card";
 
-    /**
-     * IntentExtra deck ID that this card belongs to.
-     */
-    public static final String DECK_ID = "deckId";
-
-    /**
-     * IntentExtra card ID that is being edited.
-     */
-    public static final String CARD_ID = "cardId";
-
-    private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
-    private String mDeckId;
     private Card mCard;
-    private ValueEventListener mCardValueEventListener;
+    private AbstractDataAvailableListener<Card> mCardValueEventListener;
     private TextView mFrontPreview;
     private TextView mBackPreview;
-    private Query mCardQuery;
-    private String mLabel;
-    private String mCardId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -80,9 +62,8 @@ public class PreEditCardActivity extends AppCompatActivity {
         setContentView(R.layout.pre_edit_card_activity);
 
         configureToolbar();
-        getInputVariables();
-        mCardQuery = Card.getCardById(mDeckId, mCardId);
-        this.setTitle(mLabel);
+        getParameters();
+        this.setTitle(mCard.getDeck().getName());
         mFrontPreview = (TextView) findViewById(R.id.textFrontPreview);
         mBackPreview = (TextView) findViewById(R.id.textBackPreview);
 
@@ -95,11 +76,9 @@ public class PreEditCardActivity extends AppCompatActivity {
         });
     }
 
-    private void getInputVariables() {
+    private void getParameters() {
         Intent intent = getIntent();
-        mLabel = intent.getStringExtra(LABEL);
-        mDeckId = intent.getStringExtra(DECK_ID);
-        mCardId = intent.getStringExtra(CARD_ID);
+        mCard = intent.getParcelableExtra(CARD);
     }
 
     private void configureToolbar() {
@@ -113,32 +92,31 @@ public class PreEditCardActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mCardValueEventListener = new AbstractUserMessageValueEventListener(this) {
+        mFrontPreview.setText(mCard.getFront());
+        mBackPreview.setText(mCard.getBack());
+        mCardValueEventListener = new AbstractDataAvailableListener<Card>(this) {
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                Card card;
-                for (DataSnapshot cardSnapshot : dataSnapshot.getChildren()) {
-                    card = cardSnapshot.getValue(Card.class);
-                    card.setcId(cardSnapshot.getKey());
-                    mFrontPreview.setText(card.getFront());
-                    mBackPreview.setText(card.getBack());
+            public void onData(@Nullable final Card card) {
+                if (card != null) {
                     mCard = card;
+                    mFrontPreview.setText(mCard.getFront());
+                    mBackPreview.setText(mCard.getBack());
                 }
             }
         };
-        mCardQuery.addValueEventListener(mCardValueEventListener);
+        mCard.getDeck().fetchChild(
+                mCard.getReference(),
+                Card.class, mCardValueEventListener, false);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mCardQuery.removeEventListener(mCardValueEventListener);
+        mCardValueEventListener.clean();
     }
 
     private void editCardActivityStart() {
         Intent intentEdit = new Intent(this, AddEditCardActivity.class);
-        intentEdit.putExtra(AddEditCardActivity.DECK_ID, mDeckId);
-        intentEdit.putExtra(AddEditCardActivity.LABEL, R.string.edit);
         intentEdit.putExtra(AddEditCardActivity.CARD, mCard);
         startActivity(intentEdit);
     }
@@ -169,7 +147,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_card_menu:
-                deleteCard(mDeckId, mCard);
+                deleteCard();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -177,14 +155,13 @@ public class PreEditCardActivity extends AppCompatActivity {
         return true;
     }
 
-    private void deleteCard(final String deckId, final Card card) {
+    private void deleteCard() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_card_warning);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                Card.deleteCardFromDeck(deckId, card,
-                        new OnFbOperationCompleteListener(TAG, PreEditCardActivity.this));
+                mCard.delete();
                 finish();
             }
         });

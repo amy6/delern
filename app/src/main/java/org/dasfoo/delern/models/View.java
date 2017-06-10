@@ -19,83 +19,34 @@
 package org.dasfoo.delern.models;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-
-import org.dasfoo.delern.util.StringUtil;
 
 /**
  * Created by katarina on 2/23/17.
+ * Model class for view.
  */
-
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class View {
-    @Exclude
-    private static final String VIEWS = "views";
+public class View extends AbstractModel {
 
-    @Exclude
     private String cardId;
     private String levelBefore;
     private String reply;
-    private Object timestamp;
+    private long timestamp;
 
     /**
-     * Constructor for View.
-     *
-     * @param cardId id of card.
-     * @param levelBefore lever of card before learning.
-     * @param reply reply on card by learning (Y/N).
+     * An empty constructor is required for Firebase deserialization.
      */
-    public View(final String cardId, final String levelBefore, final String reply) {
-        this.cardId = cardId;
-        this.levelBefore = levelBefore;
-        this.reply = reply;
-        this.timestamp = ServerValue.TIMESTAMP;
+    private View() {
+        super(null);
     }
 
     /**
-     * Gets reference to views for current user. It is views/userId.
-     *
-     * @return reference to views for user.
+     * Create a view object associated with a Card.
+     * @param card Card which this View belongs to.
      */
-    @Exclude
-    public static DatabaseReference getViewDatabaseReference() {
-        // keep sync special location for offline use
-        // https://firebase.google.com/docs/database/android/offline-capabilities
-        DatabaseReference viewDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                .child(VIEWS)
-                .child(User.getCurrentUser().getUid());
-        viewDatabaseReference.keepSynced(true);
-        return viewDatabaseReference;
-    }
-
-    /**
-     * Gets views node by deckId. views/userId/deckId
-     *
-     * @param deckId id of deck.
-     * @return views node of deck.
-     */
-    @Exclude
-    public static String getViewsNodeByDeckId(final String deckId) {
-        return StringUtil.joinFirebasePath(VIEWS, User.getCurrentUser().getUid(), deckId);
-    }
-
-    /**
-     * Adds View to Firebase.
-     * Path is views/userId/deckId/cardId.
-     *
-     * @param deckId id of deck.
-     * @param view view object.
-     */
-    @Exclude
-    public static void addView(final String deckId, final View view) {
-        String key = getViewDatabaseReference()
-                .child(deckId)
-                .child(view.getCardId())
-                .push()
-                .getKey();
-        getViewDatabaseReference().child(deckId).child(view.getCardId()).child(key).setValue(view);
+    public View(final Card card) {
+        super(card);
+        this.cardId = card.getKey();
+        this.timestamp = System.currentTimeMillis();
     }
 
     /**
@@ -157,7 +108,7 @@ public class View {
      *
      * @return time
      */
-    public Object getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
@@ -166,7 +117,28 @@ public class View {
      *
      * @param timestamp time (ServerValue.Timestamt)
      */
-    public void setTimestamp(final Object timestamp) {
+    public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "View{" + super.toString() +
+                ", cardId='" + cardId + '\'' +
+                ", levelBefore='" + levelBefore + '\'' +
+                ", reply='" + reply + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }

@@ -16,35 +16,29 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.models.listener;
+package org.dasfoo.delern.listeners;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import org.dasfoo.delern.util.LogUtil;
-
 /**
- * Created by katarina on 3/1/17.
- * Abstract class that implement onCancel for all listeners.
+ * Listen data changes in Firebase node.
  */
-public abstract class AbstractUserMessageValueEventListener implements ValueEventListener {
-
-    private static final String TAG = LogUtil.tagFor(AbstractUserMessageValueEventListener.class);
-
-    private final Context mContext;
+public abstract class AbstractOnFBDataChangeListener implements ValueEventListener {
+    private final AbstractDataAvailableListener mOnCancelledListener;
 
     /**
-     * Constructor. Gets context to write message to user in case of error.
-     *
-     * @param context Context
+     * Constructor for listener on data change.
+     * If changes were cancelled, writes message to user.
+     * @param onCancelledListener callback to invoke when the listener fails.
      */
-    public AbstractUserMessageValueEventListener(final Context context) {
-        this.mContext = context;
+    public AbstractOnFBDataChangeListener(
+            final @NonNull AbstractDataAvailableListener onCancelledListener) {
+        mOnCancelledListener = onCancelledListener;
+        // TODO(refactoring): consider mOnCancelledListener.setListener(this);
     }
 
     /**
@@ -58,19 +52,6 @@ public abstract class AbstractUserMessageValueEventListener implements ValueEven
      */
     @Override
     public void onCancelled(final DatabaseError databaseError) {
-        Log.e(TAG, "ValueEventListener cancelled [" + databaseError.getMessage() + "]: " +
-                databaseError.getDetails());
-        if (mContext != null) {
-            Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Getter for context.
-     *
-     * @return context.
-     */
-    public Context getContext() {
-        return mContext;
+        mOnCancelledListener.onError(databaseError.toException());
     }
 }

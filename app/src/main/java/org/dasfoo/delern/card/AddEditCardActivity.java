@@ -20,6 +20,7 @@ package org.dasfoo.delern.card;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,17 +32,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ServerValue;
-
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractOnDataChangeListener;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.util.LogUtil;
 
 /**
  * Activity to edit or add a new card.
@@ -49,26 +45,16 @@ import org.dasfoo.delern.util.LogUtil;
 public class AddEditCardActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
-     * IntentExtra R.string for the title of this activity.
-     */
-    public static final String LABEL = "label";
-
-    /**
-     * IntentExtra Deck ID which this card belongs to.
-     */
-    public static final String DECK_ID = "mDeckId";
-
-    /**
      * IntentExtra Card ID being edited.
      */
     public static final String CARD = "card";
 
-    private static final String TAG = LogUtil.tagFor(AddEditCardActivity.class);
-    private String mDeckId;
     private TextInputEditText mFrontSideInputText;
     private TextInputEditText mBackSideInputText;
     private Card mCard;
     private CheckBox mAddReversedCardCheckbox;
+    private AbstractDataAvailableListener<Card> mOnCardAddedListener;
+    private AbstractDataAvailableListener<Card> mOnCardUpdatedListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -76,23 +62,21 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
         Intent intent = getIntent();
-        final int label = intent.getIntExtra(LABEL, 0);
-        mDeckId = intent.getStringExtra(DECK_ID);
         mCard = intent.getParcelableExtra(CARD);
-        this.setTitle(label);
+        this.setTitle(mCard.getDeck().getName());
 
         mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
         mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
         mAddReversedCardCheckbox = (CheckBox) findViewById(R.id.add_reversed_card_checkbox);
         final Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
         mAddCardToDbButton.setOnClickListener(this);
-        if (mCard == null) {
-            mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
-        } else {
+        if (mCard.exists()) {
             mAddCardToDbButton.setText(R.string.save);
             mFrontSideInputText.setText(mCard.getFront());
             mBackSideInputText.setText(mCard.getBack());
             mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
+        } else {
+            mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
         }
         mAddCardToDbButton.setEnabled(false);
         final TextWatcherStub cardValid = new TextWatcherStub() {
@@ -122,6 +106,52 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mCard.exists()) {
+            mOnCardUpdatedListener = new AbstractDataAvailableListener<Card>(this) {
+                @Override
+                public void onData(@Nullable final Card data) {
+                    Toast.makeText(AddEditCardActivity.this,
+                            R.string.updated_card_user_message,
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            };
+        } else {
+            mOnCardAddedListener = new AbstractDataAvailableListener<Card>(this) {
+                @Override
+                public void onData(@Nullable final Card data) {
+                    if (mAddReversedCardCheckbox.isChecked()) {
+                        // TODO(ksheremet): Fix showing this message double times (2 card)
+                        Toast.makeText(AddEditCardActivity.this,
+                                R.string.add_extra_reversed_card_message,
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddEditCardActivity.this,
+                                R.string.added_card_user_message,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    cleanTextFields();
+                    // Clean fields for the next new card
+                    mCard.setFront(null);
+                    mCard.setBack(null);
+                }
+            };
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mCard.exists()) {
+            mOnCardUpdatedListener.clean();
+        } else {
+            mOnCardAddedListener.clean();
+        }
+    }
+
     /**
      * Called when a view has been clicked.
      *
@@ -130,27 +160,17 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(final View v) {
         if (v.getId() == R.id.add_card_to_db) {
-            if (mCard == null) {
+            if (mCard.exists()) {
+                mCard.setFront(mFrontSideInputText.getText().toString());
+                mCard.setBack(mBackSideInputText.getText().toString());
+                mCard.save(mOnCardUpdatedListener);
+            } else {
                 String frontCardSide = mFrontSideInputText.getText().toString();
                 String backCardSide = mBackSideInputText.getText().toString();
                 addNewCard(frontCardSide, backCardSide);
                 if (mAddReversedCardCheckbox.isChecked()) {
                     addNewCard(backCardSide, frontCardSide);
                 }
-            } else {
-                mCard.setFront(mFrontSideInputText.getText().toString());
-                mCard.setBack(mBackSideInputText.getText().toString());
-                Card.updateCard(mCard, mDeckId,
-                        new OnFbOperationCompleteListener(TAG, this),
-                        new AbstractOnDataChangeListener(TAG, this) {
-                            @Override
-                            public void onDataChange(final DataSnapshot dataSnapshot) {
-                                Toast.makeText(AddEditCardActivity.this,
-                                        R.string.updated_card_user_message,
-                                        Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        });
             }
         }
     }
@@ -172,29 +192,18 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void addNewCard(final String frontSide, final String backSide) {
-        Card newCard = new Card();
+        // TODO(refactoring): move to Card?
+        ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
+        scheduledCard.setLevel(Level.L0.name());
+        scheduledCard.setRepeatAt(System.currentTimeMillis());
+
+        Card newCard = new Card(scheduledCard);
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
-        newCard.setCreatedAt(ServerValue.TIMESTAMP);
-        ScheduledCard scheduledCard = new ScheduledCard(Level.L0.name(),
-                System.currentTimeMillis());
-        Card.createNewCard(newCard, mDeckId, scheduledCard,
-                new OnFbOperationCompleteListener(TAG, this),
-                new AbstractOnDataChangeListener(TAG, this) {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        if (mAddReversedCardCheckbox.isChecked()) {
-                            // TODO(ksheremet): Fix showing this message double times (2 card)
-                            Toast.makeText(AddEditCardActivity.this,
-                                    R.string.add_extra_reversed_card_message,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(AddEditCardActivity.this,
-                                    R.string.added_card_user_message,
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        cleanTextFields();
-                    }
-                });
+
+        new Card.MultiWrite()
+                .save(newCard, mOnCardAddedListener)
+                .save(scheduledCard, null)
+                .write();
     }
 }

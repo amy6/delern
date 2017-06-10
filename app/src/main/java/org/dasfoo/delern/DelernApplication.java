@@ -20,8 +20,12 @@ package org.dasfoo.delern;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by katarina on 12/5/16.
@@ -54,5 +58,11 @@ public class DelernApplication extends Application {
         an app restart.
         https://firebase.google.com/docs/database/android/offline-capabilities */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        // Disable Crashlytics for instrumented builds (for CI).
+        Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
+                new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
+                .build();
+        Fabric.with(this, crashlyticsKit);
     }
 }

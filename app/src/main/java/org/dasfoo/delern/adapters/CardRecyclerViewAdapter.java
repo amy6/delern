@@ -21,10 +21,12 @@ package org.dasfoo.delern.adapters;
 import android.util.Log;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
@@ -38,6 +40,8 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
 
+    private final Deck mDeck;
+
     /**
      * Create a new FirebaseRecyclerAdapter.
      *
@@ -47,6 +51,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass,
                 builder.mNestedQuery);
         this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
+        this.mDeck = builder.mNestedDeck;
     }
 
     /**
@@ -61,6 +66,15 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
     }
 
     /**
+     * {@inheritDoc}
+     * Overriding to add key to the model.
+     */
+    @Override
+    protected Card parseSnapshot(final DataSnapshot snapshot) {
+        return Card.fromSnapshot(snapshot, Card.class, mDeck);
+    }
+
+    /**
      * Builder class for easy creation of CardRecyclerViewAdapter.
      */
     public static class Builder {
@@ -69,6 +83,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         private final Class<CardViewHolder> mNestedViewHolderClass;
         private final Query mNestedQuery;
         private OnCardViewHolderClick mNestedOnClickListener;
+        private final Deck mNestedDeck;
 
         /**
          * Constructor with required parameters.
@@ -77,13 +92,17 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
          * @param nestedLayout     ViewAdapter layout
          * @param nestedViewHolder ViewAdapter holder
          * @param nestedQuery      ViewAdapter query
+         * @param deck             deck from which cards are shown
          */
         public Builder(final Class<Card> nestedModelClass, final int nestedLayout,
-                       final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery) {
+                       final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery,
+                       final Deck deck) {
+            // TODO(refactoring): Review
             this.mNestedModelClass = nestedModelClass;
             this.mNestedLayout = nestedLayout;
             this.mNestedViewHolderClass = nestedViewHolder;
             this.mNestedQuery = nestedQuery;
+            this.mNestedDeck = deck;
         }
 
         /**

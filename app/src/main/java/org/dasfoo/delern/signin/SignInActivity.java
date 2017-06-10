@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.signin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,7 +44,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.OnFbOperationCompleteListener;
+import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -61,7 +60,6 @@ public class SignInActivity extends AppCompatActivity
      */
     private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
-    private final Context mContext = this;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -80,17 +78,14 @@ public class SignInActivity extends AppCompatActivity
                     Log.i(TAG, "onAuthStateChanged:signed_out");
                 } else {
                     Log.i(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    User changedUser = new User(user.getDisplayName(), user.getEmail(), null);
+                    // TODO(refactoring): model method to assign FB user
+                    User changedUser = new User();
+                    changedUser.setName(user.getDisplayName());
+                    changedUser.setEmail(user.getEmail());
                     if (user.getPhotoUrl() != null) {
                         changedUser.setPhotoUrl(user.getPhotoUrl().toString());
                     }
-                    User.writeUser(changedUser,
-                            new OnFbOperationCompleteListener(TAG, mContext) {
-                                @Override
-                                public void onOperationSuccess() {
-                                    Log.i(TAG, "Writing new  user to FB  was successful");
-                                }
-                            });
+                    changedUser.save(null);
                 }
             }
         };
@@ -107,18 +102,19 @@ public class SignInActivity extends AppCompatActivity
                                 Log.e(TAG, task.toString());
                                 return;
                             }
-                                final User changedUser = new User("anonymous",
-                                        "instrumented.test@example.com",
-                                        "http://example.com/anonymous");
-                                User.writeUser(changedUser,
-                                        new OnFbOperationCompleteListener(TAG, mContext) {
-                                            @Override
-                                            public void onOperationSuccess() {
-                                                startActivity(new Intent(SignInActivity.this,
-                                                        DelernMainActivity.class));
-                                                finish();
-                                            }
-                                        });
+                            final User changedUser = new User();
+                            changedUser.setName("anonymous");
+                            changedUser.setEmail("instrumented.test@example.com");
+                            changedUser.setPhotoUrl("http://example.com/anonymous");
+                            changedUser.save(
+                                    new AbstractDataAvailableListener<User>(SignInActivity.this) {
+                                        @Override
+                                        public void onData(final User user) {
+                                            startActivity(new Intent(SignInActivity.this,
+                                                    DelernMainActivity.class));
+                                            finish();
+                                        }
+                                    });
                         }
                     });
             return;
@@ -189,13 +185,6 @@ public class SignInActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (task.isSuccessful()) {
-                            /*
-                                The following lines will add PII to crash reports.
-                                Consider privacy issues before uncommenting them.
-                                Crashlytics.setUserIdentifier(acct.getId());
-                                Crashlytics.setUserEmail(acct.getEmail());
-                                Crashlytics.setUserName(acct.getDisplayName());
-                            */
                             startActivity(new Intent(SignInActivity.this,
                                     DelernMainActivity.class));
                             finish();

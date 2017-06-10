@@ -44,6 +44,7 @@ userExisted(userId) { prior(root.users[userId]) !== null }
 
 path /deck_access/{deckId} {
   read() { prior(deckAccess(deckId)) === "owner" }
+  delete() { prior(deckAccess(deckId)) === "owner" }
 }
 path /deck_access/{deckId}/{sharedWithUserId} is AccessString {
   read() { isCurrentUser(sharedWithUserId) }
@@ -162,4 +163,5 @@ path /learning/{userId} {
   write() { isCurrentUser(userId) }
 }
 path /learning/{userId}/{deckId}/{cardId} is ScheduledCard {
+  index() { "repeatAt" }
 }
