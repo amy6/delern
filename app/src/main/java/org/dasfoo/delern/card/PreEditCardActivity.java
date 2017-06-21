@@ -112,7 +112,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mCardValueEventListener.clean();
+        mCardValueEventListener.cleanup();
     }
 
     private void editCardActivityStart() {

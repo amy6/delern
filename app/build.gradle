@@ -95,8 +95,14 @@ android {
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
-            ext.enableCrashlytics = false
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+            if (project.hasProperty('isolatedRun')) {
+                ext.enableCrashlytics = false
+                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+            } else {
+                // Do not upload ProGuard mapping for debug (it's not obfuscated).
+                ext.alwaysUpdateBuildId = false
+                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+            }
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
             resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
         }
@@ -116,7 +122,7 @@ dependencies {
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
 
-    // TODO(dotdoom): update Firebase to 11, fix local run, remove noinspection
+    // TODO(dotdoom): once emulators pick up new Play Services, update Firebase to 11.0.1 (or later)
     //noinspection GradleDependency
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     //noinspection GradleDependency

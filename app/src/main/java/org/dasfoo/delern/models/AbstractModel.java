@@ -85,7 +85,7 @@ public abstract class AbstractModel {
      * Count the child nodes (non-recursively) returned by the query.
      * @param query a DatabaseReference or a specific query.
      * @param callback a callback to run when data is available and then every time the count
-     *                 changes. To stop the updates and save resources, call callback.clean().
+     *                 changes. To stop the updates and save resources, call callback.cleanup().
      */
     public static void fetchCount(final Query query,
                                   final AbstractDataAvailableListener<Long> callback) {
@@ -295,7 +295,7 @@ public abstract class AbstractModel {
                             @Override
                             public void onDataChange(final DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.getValue() != null) {
-                                    callback.clean();
+                                    callback.cleanup();
                                     // TODO(refactoring): if updateChildren below fails,
                                     // listener hangs forever
                                     // TODO(refactoring): set a timer?

@@ -82,7 +82,7 @@ public abstract class AbstractDataAvailableListener<T> {
     }
 
     /**
-     * For clean() only.
+     * For cleanup() only.
      * @param query query from which the listener should be removed (only useful with setListener).
      */
     public void setQuery(final Query query) {
@@ -94,7 +94,7 @@ public abstract class AbstractDataAvailableListener<T> {
     }
 
     /**
-     * For clean() only.
+     * For cleanup() only.
      * @param listener listener to be removed from query (only useful in couple with setQuery).
      * @return listener.
      */
@@ -110,7 +110,7 @@ public abstract class AbstractDataAvailableListener<T> {
     /**
      * Release resources and stop invoking this listener for future changes from now on.
      */
-    public void clean() {
+    public void cleanup() {
         if ((mQuery == null) != (mListener == null)) {
             // TODO(refactoring): log to Log.e?
             Crashlytics.log(Log.ASSERT, TAG, "Both Query and Listener must be set");

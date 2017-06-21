@@ -80,7 +80,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                 @Override
                 public void onData(final Card data) {
                     // TODO(refactoring): remove once it propagates correctly
-                    clean();
+                    cleanup();
                     if (data == null) {
                         finish();
                         return;
@@ -160,7 +160,7 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mCardAvailableListener.clean();
+        mCardAvailableListener.cleanup();
     }
 
     /**

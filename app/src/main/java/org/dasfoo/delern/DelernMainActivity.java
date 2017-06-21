@@ -137,7 +137,7 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     private void removeListeners() {
-        mAbstractDataAvailableListener.clean();
+        mAbstractDataAvailableListener.cleanup();
     }
 
     /**

@@ -283,7 +283,7 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
      */
     public void cleanup() {
         mFirebaseAdapter.cleanup();
-        mUserHasDecksListener.clean();
+        mUserHasDecksListener.cleanup();
 
     }
 }

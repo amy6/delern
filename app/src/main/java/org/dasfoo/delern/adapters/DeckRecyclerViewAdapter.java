@@ -102,7 +102,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     public void cleanup() {
         super.cleanup();
         for (final AbstractDataAvailableListener availableListener : mAvailableListeners) {
-            availableListener.clean();
+            availableListener.cleanup();
         }
     }
 

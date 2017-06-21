@@ -146,9 +146,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     protected void onStop() {
         super.onStop();
         if (mCard.exists()) {
-            mOnCardUpdatedListener.clean();
+            mOnCardUpdatedListener.cleanup();
         } else {
-            mOnCardAddedListener.clean();
+            mOnCardAddedListener.cleanup();
         }
     }
 

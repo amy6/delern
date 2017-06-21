@@ -150,7 +150,7 @@ public class Deck extends AbstractModel implements Parcelable {
         Query query = fetchCardsToRepeatWithLimitQuery(1);
         fetchChildren(query, ScheduledCard.class,
                 new AbstractDataAvailableListener<List<ScheduledCard>>(null) {
-                    // TODO(dotdoom): callback.clean() should call clean() from here
+                    // TODO(dotdoom): callback.cleanup() should call cleanup() from here
                     @Override
                     public void onData(final @Nullable List<ScheduledCard> data) {
                         if (data != null && data.size() > 0) {

@@ -97,7 +97,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         public Builder(final Class<Card> nestedModelClass, final int nestedLayout,
                        final Class<CardViewHolder> nestedViewHolder, final Query nestedQuery,
                        final Deck deck) {
-            // TODO(refactoring): Review
+            // TODO(refactoring): Review builder necessity.
             this.mNestedModelClass = nestedModelClass;
             this.mNestedLayout = nestedLayout;
             this.mNestedViewHolderClass = nestedViewHolder;
