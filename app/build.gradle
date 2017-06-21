@@ -96,8 +96,7 @@ android {
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
             ext.enableCrashlytics = false
-            // TODO(dotdoom): addConstant?
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
             resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
         }
