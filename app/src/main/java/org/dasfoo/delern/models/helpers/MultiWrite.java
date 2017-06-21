@@ -50,6 +50,7 @@ public class MultiWrite {
 
     /**
      * Initialize a listener for online/offline status, for correct operation of write() callback.
+     *
      * @param db DatabaseReference to the root of the database.
      */
     public static void initializeOfflineListener(final FirebaseDatabase db) {

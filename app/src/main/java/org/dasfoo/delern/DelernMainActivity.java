@@ -44,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -135,7 +134,7 @@ public class DelernMainActivity extends AppCompatActivity
                         this /* Activity */,
                         this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .addApi(AppInvite.API)
+                // TODO(ksheremet): see if we need .addApi(AppInvite.API)
                 .build();
     }
 

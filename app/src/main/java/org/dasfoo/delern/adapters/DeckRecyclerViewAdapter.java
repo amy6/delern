@@ -21,11 +21,11 @@ package org.dasfoo.delern.adapters;
 import android.support.annotation.Nullable;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -36,7 +36,6 @@ import org.dasfoo.delern.viewholders.DeckViewHolder;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final int CARDS_COUNTER_LIMIT = 200;
-    private final User mUser;
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
 
     /**
@@ -46,8 +45,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * @param user        Current user.
      */
     public DeckRecyclerViewAdapter(final int modelLayout, final User user) {
-        super(Deck.class, modelLayout, DeckViewHolder.class, user.getChildReference(Deck.class));
-        mUser = user;
+        super(new FirebaseSnapshotParser<>(Deck.class, user),
+                modelLayout, DeckViewHolder.class, user.getChildReference(Deck.class));
     }
 
     /**
@@ -76,11 +75,6 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1),
                 onCardsCountDataAvailableListener);
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
-    }
-
-    @Override
-    protected Deck parseSnapshot(final DataSnapshot snapshot) {
-        return Deck.fromSnapshot(snapshot, Deck.class, mUser);
     }
 
     /**

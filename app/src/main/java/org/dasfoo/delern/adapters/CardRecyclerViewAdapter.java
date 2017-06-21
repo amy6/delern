@@ -19,12 +19,12 @@
 package org.dasfoo.delern.adapters;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.CardViewHolder;
 
@@ -38,18 +38,17 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
 
-    private final Deck mDeck;
-
     /**
      * Create a new FirebaseRecyclerAdapter.
      *
      * @param builder inner class with all the properties
      */
     public CardRecyclerViewAdapter(final Builder builder) {
-        super(builder.mNestedModelClass, builder.mNestedLayout, builder.mNestedViewHolderClass,
+        super(new FirebaseSnapshotParser<>(builder.mNestedModelClass,
+                        builder.mNestedDeck),
+                builder.mNestedLayout, builder.mNestedViewHolderClass,
                 builder.mNestedQuery);
         this.mOnCardViewHolderClick = builder.mNestedOnClickListener;
-        this.mDeck = builder.mNestedDeck;
     }
 
     /**
@@ -61,15 +60,6 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         viewHolder.getFrontTextView().setText(card.getFront());
         viewHolder.getBackTextView().setText(card.getBack());
         viewHolder.setOnViewClick(mOnCardViewHolderClick);
-    }
-
-    /**
-     * {@inheritDoc}
-     * Overriding to add key to the model.
-     */
-    @Override
-    protected Card parseSnapshot(final DataSnapshot snapshot) {
-        return Card.fromSnapshot(snapshot, Card.class, mDeck);
     }
 
     /**
