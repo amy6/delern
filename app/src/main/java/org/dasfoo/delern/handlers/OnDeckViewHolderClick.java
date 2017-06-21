@@ -32,28 +32,28 @@ public interface OnDeckViewHolderClick {
      *
      * @param position position of the clicked element in the list
      */
-    void doOnDeckClick(int position);
+    void learnDeck(int position);
 
     /**
      * "Rename" menu item of a deck.
      *
      * @param position position of the element in the list
      */
-    void doOnRenameMenuClick(int position);
+    void renameDeck(int position, String newName);
 
     /**
      * "Edit" menu item of a deck.
      *
      * @param position position of the element in the list
      */
-    void doOnEditMenuClick(int position);
+    void editDeck(int position);
 
     /**
      * "Deletes" menu of deck.
      *
      * @param position position of the element in the list
      */
-    void doOnDeleteMenuClick(int position);
+    void deleteDeck(int position);
 
 
     /**
@@ -62,5 +62,5 @@ public interface OnDeckViewHolderClick {
      * @param position position of the element in the list
      * @param deckType type of deck
      */
-    void doOnDeckTypeClick(int position, DeckType deckType);
+    void changeDeckType(int position, DeckType deckType);
 }

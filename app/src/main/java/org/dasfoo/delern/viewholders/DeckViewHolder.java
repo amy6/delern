@@ -18,12 +18,17 @@
 
 package org.dasfoo.delern.viewholders;
 
-import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -31,6 +36,7 @@ import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
+import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -50,7 +56,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private final TextView mDeckTextView;
     private final TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
-    private Context mContext;
     private String mCheckedDeckType;
 
     /**
@@ -100,16 +105,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     /**
-     * Setter for context.
-     * Context is needed for creating popup menu for every deck.
-     *
-     * @param context context
-     */
-    public void setContext(final Context context) {
-        this.mContext = context;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -118,11 +113,12 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             // if number of cards is 0, show message to user
             String cardCount = mCountToLearnTextView.getText().toString();
             if (NULL_CARDS.equals(cardCount)) {
-                Toast.makeText(mContext, R.string.no_card_message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), R.string.no_card_message,
+                        Toast.LENGTH_SHORT).show();
             } else {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    mOnViewClick.doOnDeckClick(position);
+                    mOnViewClick.learnDeck(position);
                 }
             }
         }
@@ -132,7 +128,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     private void showPopup(final View v) {
-        PopupMenu popup = new PopupMenu(mContext, v);
+        PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
@@ -164,6 +160,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
+
         int position = getAdapterPosition();
         if (position == RecyclerView.NO_POSITION) {
             // ViewHolder was either removed or the view has been changed.
@@ -172,22 +169,22 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         }
         switch (item.getItemId()) {
             case R.id.rename_deck_menu:
-                mOnViewClick.doOnRenameMenuClick(position);
+                showRenameDialog();
                 return true;
             case R.id.edit_deck_menu:
-                mOnViewClick.doOnEditMenuClick(position);
+                mOnViewClick.editDeck(position);
                 return true;
             case R.id.delete_deck_menu:
-                mOnViewClick.doOnDeleteMenuClick(position);
+                showDeleteDialog();
                 return true;
             case R.id.basic_type:
-                mOnViewClick.doOnDeckTypeClick(position, DeckType.BASIC);
+                mOnViewClick.changeDeckType(position, DeckType.BASIC);
                 return true;
             case R.id.german_type:
-                mOnViewClick.doOnDeckTypeClick(position, DeckType.GERMAN);
+                mOnViewClick.changeDeckType(position, DeckType.GERMAN);
                 return true;
             case R.id.swissgerman_type:
-                mOnViewClick.doOnDeckTypeClick(position, DeckType.SWISS);
+                mOnViewClick.changeDeckType(position, DeckType.SWISS);
                 return true;
             default:
                 Log.i(TAG, "Menu Item is not implemented yet");
@@ -202,5 +199,62 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      */
     public void setDeckCardType(final String checkedDeckType) {
         this.mCheckedDeckType = checkedDeckType;
+    }
+
+    private void showDeleteDialog() {
+        new AlertDialog.Builder(getDeckTextView().getContext())
+                .setMessage(R.string.delete_deck)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        mOnViewClick.deleteDeck(getAdapterPosition());
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
+
+    private void showRenameDialog() {
+        final EditText input = new EditText(getDeckTextView().getContext());
+        // Specify the type of input expected
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(getDeckTextView().getText().toString());
+
+        final AlertDialog dialog = new AlertDialog.Builder(getDeckTextView().getContext())
+                .setTitle(R.string.deck)
+                .setView(input)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
+                    /**
+                     * {@inheritDoc}
+                     */
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        mOnViewClick.renameDeck(getAdapterPosition(),
+                                input.getText().toString().trim());
+                    }
+                })
+                .create();
+        input.addTextChangedListener(new TextWatcherStub() {
+            @Override
+            public void afterTextChanged(final Editable s) {
+                // Check if edittext is empty, disable button. Not allow deck that
+                // contains only spaces in name
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setEnabled(!TextUtils.isEmpty(s.toString().trim()));
+            }
+        });
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
 }

@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.adapters;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -39,26 +38,17 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     private static final int CARDS_COUNTER_LIMIT = 200;
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
-    private Context mContext;
-    private final User mUser;
 
     /**
-     * @param modelClass      Firebase will marshall the data at a location into an instance
-     *                        of a class that you provide
      * @param modelLayout     This is the layout used to represent a single item in the list.
      *                        You will be responsible for populating an instance of the
      *                        corresponding view with the data from an instance of modelClass.
-     * @param viewHolderClass The class that hold references to all sub-views in an instance
-     *                        modelLayout.
      * @param ref             The Firebase location to watch for data changes. Can also be a slice
      *                        of a location, using some.
      * @param user            Current user.
      */
-    public DeckRecyclerViewAdapter(final Class<Deck> modelClass, final int modelLayout,
-                                   final Class<DeckViewHolder> viewHolderClass, final Query ref,
-                                   final User user) {
-        super(modelClass, modelLayout, viewHolderClass, ref);
-        mUser = user;
+    public DeckRecyclerViewAdapter(final int modelLayout, final Query ref) {
+        super(Deck.class, modelLayout, DeckViewHolder.class, ref);
     }
 
     /**
@@ -69,10 +59,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setDeckCardType(deck.getDeckType());
-        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
-        viewHolder.setContext(mContext);
         AbstractDataAvailableListener<Long> onCardsCountDataAvailableListener =
-                new AbstractDataAvailableListener<Long>(mContext) {
+                new AbstractDataAvailableListener<Long>(null) {
             @Override
             public void onData(@Nullable final Long cardsCount) {
                 if (cardsCount <= CARDS_COUNTER_LIMIT) {
@@ -87,6 +75,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1),
                 onCardsCountDataAvailableListener);
+        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
     }
 
     @Override
@@ -94,21 +83,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         return Deck.fromSnapshot(snapshot, Deck.class, mUser);
     }
 
-    /**
-     * Set deck view holder click handler.
-     *
-     * @param onDeckViewHolderClick deck view holder click handler
-     */
     public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
         this.mOnDeckViewHolderClick = onDeckViewHolderClick;
-    }
-
-    /**
-     * Set context for the view holder.
-     *
-     * @param context context
-     */
-    public void setContext(final Context context) {
-        this.mContext = context;
     }
 }

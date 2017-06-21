@@ -18,14 +18,22 @@ package org.dasfoo.delern.views;
  */
 
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.User;
 
+/**
+ * Interface for DelernMainActivity that called from Presenter (DelernMainActivityPresenter).
+ *
+ */
 public interface IDelernMainView {
+
     /**
      *
      */
     void signIn();
 
-    void learnCardsInDeck(Deck deck);
+    void learnCardsInDeckClick(Deck deck);
+
+    void editCardsInDeckClick(Deck deck);
 
     void hideProgressBar();
 
@@ -33,4 +41,5 @@ public interface IDelernMainView {
 
     void noDecksMessage(Boolean noDecks);
 
+    void updateUserProfileInfo(User user);
 }
