@@ -145,6 +145,9 @@ jobs:
           # But keep the actual test run logcat clean.
           "${ANDROID_HOME?}/platform-tools/adb" logcat -c
 
+          "${ANDROID_HOME?}/platform-tools/adb" shell screencap -p /data/local/screen_before_test.png
+          "${ANDROID_HOME?}/platform-tools/adb" pull /data/local/screen_before_test.png app/build/outputs/
+
     - run:
         name: "Run instrumented tests (local Firebase)"
         command: ./gradlew -PisolatedRun connectedInstrumentedAndroidTest --console=plain --info --stacktrace
@@ -156,6 +159,10 @@ jobs:
           # adb will wait indefinitely for the emulator to boot.
           if [ -e /tmp/android.log ]; then
               "${ANDROID_HOME?}/platform-tools/adb" logcat -v threadtime -d >app/build/outputs/logcat-test.txt
+
+              "${ANDROID_HOME?}/platform-tools/adb" shell screencap -p /data/local/screen_after_test.png
+              "${ANDROID_HOME?}/platform-tools/adb" pull /data/local/screen_after_test.png app/build/outputs/
+
               # Kill running emulator to free up resources for e.g. Release build.
               "${ANDROID_HOME?}/platform-tools/adb" -s emulator-5554 emu kill
           fi
