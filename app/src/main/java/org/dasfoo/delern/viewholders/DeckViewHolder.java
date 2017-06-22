@@ -29,7 +29,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +39,10 @@ import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.LogUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by Katarina Sheremet on 9/22/16 1:11 AM.
  * Provide a reference to the views for each data item
@@ -47,14 +50,16 @@ import org.dasfoo.delern.util.LogUtil;
  * you provide access to all the views for a data item in a view holder
  */
 
-public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+public class DeckViewHolder extends RecyclerView.ViewHolder implements
         PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
     private static final String NULL_CARDS = "0";
 
-    private final TextView mDeckTextView;
-    private final TextView mCountToLearnTextView;
+    @BindView(R.id.deck_text_view)
+    TextView mDeckTextView;
+    @BindView(R.id.count_to_learn_textview)
+    TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
     private String mCheckedDeckType;
 
@@ -65,14 +70,8 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      */
     public DeckViewHolder(final View viewHolder) {
         super(viewHolder);
-        mDeckTextView = (TextView) itemView.findViewById(R.id.deck_text_view);
-        mCountToLearnTextView = (TextView) itemView.findViewById(R.id.count_to_learn_textview);
-        // Set default mCountToLearnTextView to N/A
+        ButterKnife.bind(this, viewHolder);
         mCountToLearnTextView.setText(R.string.n_a);
-
-        viewHolder.setOnClickListener(this);
-        ImageView popupMenuImageView = (ImageView) itemView.findViewById(R.id.deck_popup_menu);
-        popupMenuImageView.setOnClickListener(this);
     }
 
     /**
@@ -104,30 +103,23 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.mOnViewClick = onViewClick;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onClick(final View view) {
-        if (view.getId() == R.id.deck_view_holder) {
-            // if number of cards is 0, show message to user
-            String cardCount = mCountToLearnTextView.getText().toString();
-            if (NULL_CARDS.equals(cardCount)) {
-                Toast.makeText(view.getContext(), R.string.no_card_message,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    mOnViewClick.learnDeck(position);
-                }
+    @OnClick(R.id.deck_view_holder)
+    void onDeckClick(final View view) {
+        // if number of cards is 0, show message to user
+        String cardCount = mCountToLearnTextView.getText().toString();
+        if (NULL_CARDS.equals(cardCount)) {
+            Toast.makeText(view.getContext(), R.string.no_card_message,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                mOnViewClick.learnDeck(position);
             }
-        }
-        if (view.getId() == R.id.deck_popup_menu) {
-            showPopup(view);
         }
     }
 
-    private void showPopup(final View v) {
+    @OnClick(R.id.deck_popup_menu)
+    void showPopup(final View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();

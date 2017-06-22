@@ -35,7 +35,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
 
     private static final String TAG = LogUtil.tagFor(DelernMainActivityPresenter.class);
 
-    private IDelernMainView mDelernMainView;
+    private final IDelernMainView mDelernMainView;
     private AbstractDataAvailableListener mUserHasDecksListener;
     private AbstractDataAvailableListener<User> mAbstractDataAvailableListener;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
@@ -67,8 +67,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         if (mUser == null) {
             mUser = new User();
         }
-        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1),
-                mUserHasDecksListener);
+        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1), mUserHasDecksListener);
     }
 
     public void onStop() {
@@ -152,7 +151,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
             }
         };
 
-        User mUser = new User();
-        mUser.fetchChild(mUser.getReference(), User.class, mAbstractDataAvailableListener, true);
+        User user = new User();
+        user.fetchChild(user.getReference(), User.class, mAbstractDataAvailableListener, true);
     }
 }

@@ -22,7 +22,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -66,6 +65,9 @@ import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -78,27 +80,32 @@ public class DelernMainActivity extends AppCompatActivity
     private static final int REQUEST_INVITE = 1;
     private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
 
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.empty_recyclerview_message)
+    TextView mEmptyMessageTextView;
+    private TextView mUserNameTextView;
+    private TextView mUserEmailTextView;
+    private CircleImageView mProfilePhotoImageView;
     private DelernMainActivityPresenter mMainActivityPresenter =
             new DelernMainActivityPresenter(this);
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
-    private Toolbar mToolbar;
-    private ProgressBar mProgressBar;
-    private RecyclerView mRecyclerView;
-    private TextView mEmptyMessageTextView;
-    private TextView mUserNameTextView;
-    private TextView mUserEmailTextView;
-    private CircleImageView mProfilePhotoImageView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delern_main_activity);
+        ButterKnife.bind(this);
+        showProgressBar();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
         mMainActivityPresenter.onCreate();
 
-        Crashlytics.setUserIdentifier(User.getCurrentUser().getUid());
         initViews();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -108,39 +115,23 @@ public class DelernMainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .addApi(AppInvite.API)
                 .build();
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                createNewDeckDialog();
-
-            }
-        });
     }
 
     private void initViews() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = ButterKnife.findById(this, R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = ButterKnife.findById(this, R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
-        mProfilePhotoImageView = (CircleImageView) hView.findViewById(R.id.profile_image);
-        mUserNameTextView = (TextView) hView.findViewById(R.id.user_name);
-        mUserEmailTextView = (TextView) hView.findViewById(R.id.user_email);
+        mProfilePhotoImageView = ButterKnife.findById(hView, R.id.profile_image);
+        mUserNameTextView = ButterKnife.findById(hView, R.id.user_name);
+        mUserEmailTextView = ButterKnife.findById(hView, R.id.user_email);
         mMainActivityPresenter.getUserInfo();
-
-        mEmptyMessageTextView = (TextView) findViewById(R.id.empty_recyclerview_message);
-
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        showProgressBar();
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
 
@@ -234,7 +225,6 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     private void configureToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
@@ -279,8 +269,9 @@ public class DelernMainActivity extends AppCompatActivity
     /**
      * Shows user a dialog for creating deck. User should type name of deck.
      */
-    private void createNewDeckDialog() {
-        final EditText input = new EditText(DelernMainActivity.this);
+    @OnClick(R.id.fab)
+    void createNewDeckDialog() {
+        final EditText input = new EditText(this);
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
 
