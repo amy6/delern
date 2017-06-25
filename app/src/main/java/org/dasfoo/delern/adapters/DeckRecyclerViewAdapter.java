@@ -26,7 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.viewholders.DeckViewHolder;

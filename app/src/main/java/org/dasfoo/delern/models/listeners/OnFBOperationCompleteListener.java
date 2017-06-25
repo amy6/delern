@@ -16,7 +16,7 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.listeners;
+package org.dasfoo.delern.models.listeners;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

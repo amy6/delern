@@ -33,7 +33,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;

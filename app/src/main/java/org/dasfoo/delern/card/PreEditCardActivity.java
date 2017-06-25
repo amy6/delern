@@ -37,7 +37,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Card;
 
 /**

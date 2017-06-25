@@ -41,7 +41,7 @@ import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.DelernMainActivityFragment;
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 

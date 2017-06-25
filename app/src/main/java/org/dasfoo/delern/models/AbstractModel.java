@@ -26,9 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.listeners.AbstractOnFBDataChangeListener;
-import org.dasfoo.delern.listeners.OnFBOperationCompleteListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractOnFBDataChangeListener;
+import org.dasfoo.delern.models.listeners.OnFBOperationCompleteListener;
 import org.dasfoo.delern.util.StringUtil;
 
 import java.util.ArrayList;
