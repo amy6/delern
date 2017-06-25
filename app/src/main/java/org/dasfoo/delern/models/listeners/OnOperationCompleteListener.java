@@ -21,7 +21,6 @@ package org.dasfoo.delern.models.listeners;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,17 +39,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
     private static final OnOperationCompleteListener DEFAULT_INSTANCE =
             new OnOperationCompleteListener();
 
-    private AbstractDataAvailableListener mOnFailureListener;
     private Context mContext;
-
-    /**
-     * Create a listener which onError is bound to callback.onError.
-     * @param onFailureListener callback which onError will be invoked on failure.
-     */
-    public OnOperationCompleteListener(
-            @NonNull final AbstractDataAvailableListener onFailureListener) {
-        mOnFailureListener = onFailureListener;
-    }
 
     /**
      * Create a listener with onError implementation showing a Toast with context.
@@ -76,7 +65,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         if (task.isSuccessful()) {
             onSuccess();
         } else {
-            onError(task.getException());
+            AbstractDataAvailableListener.defaultOnError(task.getException(), mContext);
         }
     }
 
@@ -90,20 +79,8 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         if (databaseError == null) {
             onSuccess();
         } else {
-            onError(databaseError.toException());
+            AbstractDataAvailableListener.defaultOnError(databaseError.toException(), mContext);
         }
-    }
-
-    /**
-     * Invoke onError of the embedded callback, show a Toast or use default implementation.
-     * @param exception exception object or null for unknown error.
-     */
-    private void onError(@Nullable final Exception exception) {
-        if (mOnFailureListener != null) {
-            mOnFailureListener.onError(exception);
-            return;
-        }
-        AbstractDataAvailableListener.defaultOnError(exception, mContext);
     }
 
     /**

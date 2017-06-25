@@ -8,7 +8,6 @@ TODO:
 * "Delern DEBUG" in splash?
 * more indexes in Firebase?
 * memory leak with scheduledcardwatcher
-* better onComplete listeners
 * make sure all @Deprecated uses are alerted for (-deprecated compiler option)
-* make sure all compiler warnings are errors
+* make sure all compiler notes and warnings are errors
 * enable all compiler warnings
