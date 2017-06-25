@@ -12,7 +12,7 @@
 type User {
   email: String,
   name: String,
-  photoUrl: String,
+  photoUrl: String | Null,
 }
 
 isCurrentUser(uid) { auth !== null && auth.uid === uid }
