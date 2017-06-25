@@ -156,7 +156,7 @@ public class Deck extends AbstractModel implements Parcelable {
                             ScheduledCard sc = data.get(0);
                             sc.fetchChild(
                                     Deck.this.getChildReference(Card.class, sc.getKey()),
-                                    Card.class, callback, false);
+                                    Card.class, callback);
                         } else {
                             callback.onData(null);
                         }

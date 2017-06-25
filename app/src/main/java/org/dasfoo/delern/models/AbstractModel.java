@@ -214,22 +214,19 @@ public abstract class AbstractModel {
      * @param query      Firebase query returning a node to directly parse into the model.
      * @param cls        class of the model to parse the data into.
      * @param callback   callback when the data is first available or changed.
-     * @param ignoreNull do not invoke callback for null objects.
      * @param <T>        class of the model to parse the data into.
      */
     @Exclude
     public <T extends AbstractModel> void fetchChild(
-            final Query query, final Class<T> cls, final AbstractDataAvailableListener<T> callback,
-            final boolean ignoreNull) {
+            final Query query, final Class<T> cls,
+            final AbstractDataAvailableListener<T> callback) {
         callback.setQuery(query);
         query.addValueEventListener(callback.setListener(
                 new AbstractOnFBDataChangeListener(callback) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
-                        if (!ignoreNull || dataSnapshot.getValue() != null) {
-                            callback.onData(AbstractModel.fromSnapshot(
-                                    dataSnapshot, cls, AbstractModel.this));
-                        }
+                        callback.onData(AbstractModel.fromSnapshot(
+                                dataSnapshot, cls, AbstractModel.this));
                     }
                 }));
     }
