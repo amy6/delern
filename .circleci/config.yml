@@ -5,9 +5,6 @@ jobs:
     docker:
     - image: openjdk:8
     environment:
-    - ANDROID_EMULATOR_VERSION: 19
-    # https://d.android.com/studio/index.html#command-tools
-    - ANDROID_SDK_TOOLS_URL: https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
     - ANDROID_HOME: /opt/android-sdk-linux
     - TERM: dumb
     steps:
@@ -62,27 +59,9 @@ jobs:
           # Take this text from the Android SDK directory on your machine.
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
           ./gradlew dependencies --status
-#    - run:
-        #name: "Install / update Android Emulator"
-        ## TODO(dotdoom): use environment variables once they are supported
-        #working_directory: /opt/android-sdk-linux
-        #command: |
-          #if [ ! -d tools ]; then
-            #ls -lah
-            #wget -O tools.zip "${ANDROID_SDK_TOOLS_URL?}"
-            #unzip -q tools.zip
-          #fi
-          #tools/bin/sdkmanager --update
-          ## Cannot use x86 w/o HW acceleration, which is only provided by KVM. List of images:
-          ## $ANDROID_HOME/tools/bin/sdkmanager --list --verbose | egrep -x 'system-images;.*;armeabi-v7a'
-          ## platform-tools is required for lint to be able to detect deprecated API.
-          #tools/bin/sdkmanager \
-            #"platforms;android-${ANDROID_EMULATOR_VERSION?}" \
-            #"system-images;android-${ANDROID_EMULATOR_VERSION?};google_apis;armeabi-v7a" \
-            #emulator platform-tools
 
     - run:
-        name: "Lint and assemble"
+        name: "Lint, assemble and run unit tests"
         command: |
           # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
@@ -92,8 +71,6 @@ jobs:
             --continue \
             lintDebug \
             testDebugUnitTest \
-            assembleInstrumented \
-            assembleInstrumentedAndroidTest \
             --console=plain
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.

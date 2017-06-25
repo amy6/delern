@@ -49,9 +49,9 @@ android {
                 jsonFile = file('play-store-service-account.json')
                 uploadImages = true
             }
+            manifestPlaceholders = [ appName: 'Delern' ]
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
-            manifestPlaceholders = [ appName: 'Delern' ]
 
             minifyEnabled true
             // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
@@ -62,30 +62,12 @@ android {
             // Instrumented tests that require release-style optimizations.
             initWith release
             signingConfig signingConfigs.debug
+            applicationIdSuffix '.instrumented'
+            versionNameSuffix '-instrumented'
+            manifestPlaceholders = [ appName: 'Delern TEST' ]
             // Use Anonymous auth to skip the login intent.
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
-            applicationIdSuffix '.instrumented'
-            manifestPlaceholders = [ appName: 'Delern TEST' ]
-
-            if (project.hasProperty('isolatedRun')) {
-                // When running instrumented tests for external Pull Request, none of the real
-                // Firebase projects are available. Therefore, we use local Firebase server and
-                // disable Crashlytics (which will otherwise fail ProGuard mapping upload).
-                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-                ext.enableCrashlytics = false
-                versionNameSuffix '-instrumented-local'
-                // Have to set it here to connect to local Firebase, but since resValue cannot
-                // override google-services.json, have to use it in all the other places.
-                resValue 'string', 'firebase_database_url', 'ws://10.0.2.2:5533'
-            } else {
-                // Running instrumented tests on a developer workstation on in the Firebase Test
-                // Lab. In both cases APK is signed by a key with an access to a real (but debug-only)
-                // Firebase project.
-                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-                versionNameSuffix '-instrumented-remote'
-                // Enabling Crashlytics makes debugging instrumented tests failures easier.
-                resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
-            }
+            resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
         }
         debug {
             // https://developers.google.com/android/guides/google-services-plugin
@@ -98,13 +80,14 @@ android {
             if (project.hasProperty('isolatedRun')) {
                 ext.enableCrashlytics = false
                 buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+                resValue 'string', 'firebase_database_url', 'ws://127.0.0.1:5533'
             } else {
                 // Do not upload ProGuard mapping for debug (it's not obfuscated).
                 ext.alwaysUpdateBuildId = false
                 buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+                resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
             }
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
-            resValue 'string', 'firebase_database_url', 'https://delern-debug.firebaseio.com'
         }
     }
 }
