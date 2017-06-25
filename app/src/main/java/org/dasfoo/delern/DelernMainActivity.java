@@ -75,8 +75,7 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
 
-        // TODO(refactoring): get user from intent
-        if (!User.isSignedIn()) {
+        if (getIntent().getParcelableExtra(DelernMainActivityFragment.USER) == null) {
             startSignIn();
             return;
         }

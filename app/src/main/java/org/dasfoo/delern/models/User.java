@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 
 
@@ -106,32 +107,38 @@ public final class User extends AbstractModel implements Parcelable {
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    Crashlytics.setUserIdentifier(null);
-                    // Clear out existing object.
-                    CURRENT_USER.setKey(null);
-                    CURRENT_USER.setName("Signed Out");
-                    CURRENT_USER.setEmail(null);
-                    CURRENT_USER.setPhotoUrl(null);
-                } else {
-                    setCurrentUser(user);
-                }
+                setCurrentUser(firebaseAuth.getCurrentUser());
             }
         });
     }
 
-    private static void setCurrentUser(final FirebaseUser user) {
-        Crashlytics.setUserIdentifier(user.getUid());
-        CURRENT_USER.setKey(user.getUid());
-        CURRENT_USER.setName(user.getDisplayName());
-        CURRENT_USER.setEmail(user.getEmail());
-        if (user.getPhotoUrl() == null) {
+    private static void setCurrentUser(@Nullable final FirebaseUser user) {
+        if (user == null) {
+            Crashlytics.setUserIdentifier(null);
+            // Clear out existing object.
+            CURRENT_USER.setKey(null);
+            CURRENT_USER.setName("Signed Out");
+            CURRENT_USER.setEmail(null);
             CURRENT_USER.setPhotoUrl(null);
         } else {
-            CURRENT_USER.setPhotoUrl(user.getPhotoUrl().toString());
+            Crashlytics.setUserIdentifier(user.getUid());
+            CURRENT_USER.setKey(user.getUid());
+            if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
+                // Anonymous users don't have any data, which means saving them to Firebase creates
+                // an empty record, stripping the access and confusing the MainActivity. Fake it.
+                CURRENT_USER.setName("Anonymous User");
+                CURRENT_USER.setEmail("anonymous@example.com");
+            } else {
+                CURRENT_USER.setName(user.getDisplayName());
+                CURRENT_USER.setEmail(user.getEmail());
+                if (user.getPhotoUrl() == null) {
+                    CURRENT_USER.setPhotoUrl(null);
+                } else {
+                    CURRENT_USER.setPhotoUrl(user.getPhotoUrl().toString());
+                }
+            }
+            CURRENT_USER.save(null);
         }
-        CURRENT_USER.save(null);
     }
 
     /**
@@ -241,7 +248,6 @@ public final class User extends AbstractModel implements Parcelable {
      * @return User model with all the fields set if signed in, or exists() false if isn't.
      */
     public static User getCurrentUser() {
-
         return CURRENT_USER;
     }
 

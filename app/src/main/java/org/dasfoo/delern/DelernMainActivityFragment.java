@@ -147,6 +147,12 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
         super.onStart();
         Intent intent = getActivity().getIntent();
         mUser = intent.getParcelableExtra(USER);
+
+        if (mUser == null) {
+            // TODO(refactoring): this is not needed when fragment is gone.
+            return;
+        }
+
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
                 DeckViewHolder.class, mUser.getChildReference(Deck.class), mUser);
         mFirebaseAdapter.setContext(getContext());
