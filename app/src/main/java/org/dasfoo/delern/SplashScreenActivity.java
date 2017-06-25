@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -91,6 +92,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(SplashScreenActivity.this,
                         DelernMainActivity.class);
+                intent.putExtra(DelernMainActivityFragment.USER, User.getCurrentUser());
                 startActivity(intent);
                 finish();
             }

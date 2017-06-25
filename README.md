@@ -5,7 +5,6 @@
 TODO:
 
 * void AbstractModel.watchItself(listener) <-- for Card which is displayed
-* Root model to get User from
 * "Delern DEBUG" in splash?
 * more indexes in Firebase?
 * memory leak with scheduledcardwatcher

@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
@@ -318,26 +317,10 @@ public class Deck extends AbstractModel implements Parcelable {
     @Override
     public <T> DatabaseReference getChildReference(final Class<T> childClass) {
         if (childClass == Card.class) {
-            DatabaseReference cards = FirebaseDatabase.getInstance().getReference("/cards");
-            cards.keepSynced(true);
-            return cards.child(getKey());
+            DatabaseReference reference = getParent().getChildReference(childClass).child(getKey());
+            reference.keepSynced(true);
+            return reference;
         }
-        if (childClass == ScheduledCard.class) {
-            DatabaseReference learning = FirebaseDatabase.getInstance().getReference("/learning");
-            learning.keepSynced(true);
-            return learning.child(getUser().getKey()).child(getKey());
-        }
-        if (childClass == View.class) {
-            // Intentionally not keeping views synced.
-            return FirebaseDatabase.getInstance().getReference("/views")
-                    .child(getUser().getKey())
-                    .child(getKey());
-        }
-        if (childClass == DeckAccess.class) {
-            // Intentionally not keeping deck access synced.
-            return FirebaseDatabase.getInstance().getReference("/deck_access")
-                    .child(getKey());
-        }
-        return null;
+        return getParent().getChildReference(childClass).child(getKey());
     }
 }

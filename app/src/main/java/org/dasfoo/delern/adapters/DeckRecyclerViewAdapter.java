@@ -44,6 +44,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     private final List<AbstractDataAvailableListener> mAvailableListeners = new ArrayList<>();
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
     private Context mContext;
+    private final User mUser;
 
     /**
      * @param modelClass      Firebase will marshall the data at a location into an instance
@@ -54,11 +55,14 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * @param viewHolderClass The class that hold references to all sub-views in an instance
      *                        modelLayout.
      * @param ref             The Firebase location to watch for data changes. Can also be a slice
-     *                        of a location, using some
+     *                        of a location, using some.
+     * @param user            Current user.
      */
     public DeckRecyclerViewAdapter(final Class<Deck> modelClass, final int modelLayout,
-                                   final Class<DeckViewHolder> viewHolderClass, final Query ref) {
+                                   final Class<DeckViewHolder> viewHolderClass, final Query ref,
+                                   final User user) {
         super(modelClass, modelLayout, viewHolderClass, ref);
+        mUser = user;
     }
 
     /**
@@ -91,8 +95,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
 
     @Override
     protected Deck parseSnapshot(final DataSnapshot snapshot) {
-        // TODO(refactoring): user should be available here
-        return Deck.fromSnapshot(snapshot, Deck.class, new User());
+        return Deck.fromSnapshot(snapshot, Deck.class, mUser);
     }
 
     /**

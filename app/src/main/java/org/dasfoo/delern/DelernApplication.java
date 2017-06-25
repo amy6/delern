@@ -22,8 +22,9 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
+
+import org.dasfoo.delern.models.User;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -52,17 +53,13 @@ public class DelernApplication extends Application {
             return;
         }
         LeakCanary.install(this);
-        /* Firebase apps automatically handle temporary network interruptions. Cached data will
-        still be available while offline and your writes will be resent when network connectivity is
-        recovered. Enabling disk persistence allows our app to also keep all of its state even after
-        an app restart.
-        https://firebase.google.com/docs/database/android/offline-capabilities */
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         // Disable Crashlytics for instrumented builds (for CI).
         Crashlytics crashlyticsKit = new Crashlytics.Builder().core(
                 new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
+
+        User.initializeDatabase();
     }
 }

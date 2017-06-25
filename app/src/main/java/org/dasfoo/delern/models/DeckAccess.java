@@ -38,6 +38,7 @@ public class DeckAccess extends AbstractModel {
 
     /**
      * Create a DeckAccess object associated with a deck.
+     *
      * @param deck Deck this DeckAccess belongs to.
      */
     public DeckAccess(final Deck deck) {
@@ -46,6 +47,7 @@ public class DeckAccess extends AbstractModel {
 
     /**
      * Get the Deck this DeckAccess is associated with.
+     *
      * @return AbstractModel parent casted to Deck (if set).
      */
     @Exclude
@@ -55,6 +57,7 @@ public class DeckAccess extends AbstractModel {
 
     /**
      * Get the key of this DeckAccess (based on the User ID who owns the deck).
+     *
      * @return value of the key (usually a fairly random string).
      */
     @Exclude
@@ -66,6 +69,7 @@ public class DeckAccess extends AbstractModel {
     /**
      * No-op. Throws an exception when trying to set a key that's different from the User ID this
      * DeckAccess belongs to.
+     *
      * @param key value of the key (usually a fairly random string).
      */
     @Exclude
@@ -73,7 +77,7 @@ public class DeckAccess extends AbstractModel {
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public void setKey(final String key) {
         if (!key.equals(getKey())) {
-            throw new RuntimeException("Attempt to set key to DeckAccess (always belongs to user");
+            throw new RuntimeException("Attempt to set key to DeckAccess (always belongs to user)");
         }
     }
 

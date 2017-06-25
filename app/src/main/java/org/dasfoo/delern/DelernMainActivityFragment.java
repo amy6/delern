@@ -58,16 +58,23 @@ import org.dasfoo.delern.viewholders.DeckViewHolder;
 public class DelernMainActivityFragment extends Fragment implements OnDeckViewHolderClick {
 
     /**
+     * Intent field name for holding User model.
+     */
+    public static final String USER = "user";
+
+    /**
      * Class information for logging.
      */
     private static final String TAG = LogUtil.tagFor(DelernMainActivityFragment.class);
+
     private final OnDeckViewHolderClick mOnDeckViewHolderClick = this;
     private ProgressBar mProgressBar;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView mRecyclerView;
     // TODO(refactoring): move setVisibility of this to RecyclerViewAdapter
     private TextView mEmptyMessageTextView;
-    private AbstractDataAvailableListener mUserHasDecksListener;
+    private AbstractDataAvailableListener<Long> mUserHasDecksListener;
+    private User mUser;
 
     /**
      * {@inheritDoc}
@@ -84,15 +91,15 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
             public void onClick(final View view) {
                 // Set up the input
                 final EditText input = new EditText(getActivity());
-                // TODO(refactoring): user should be available here
-                newOrUpdateDeckDialog(new Deck(new User()), input, R.string.add,
+                // TODO(ksheremet): why create new deck twice?
+                newOrUpdateDeckDialog(new Deck(mUser), input, R.string.add,
                         new DialogInterface.OnClickListener() {
                             /**
                              * {@inheritDoc}
                              */
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
-                                final Deck newDeck = new Deck(new User());
+                                final Deck newDeck = new Deck(mUser);
                                 newDeck.setName(input.getText().toString().trim());
                                 newDeck.setDeckType(DeckType.BASIC.name());
                                 newDeck.setAccepted(true);
@@ -137,16 +144,16 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
     @Override
     public void onStart() {
         super.onStart();
-        // TODO(refactoring): new User();
-        User user = new User();
+        Intent intent = getActivity().getIntent();
+        mUser = intent.getParcelableExtra(USER);
         mFirebaseAdapter = new DeckRecyclerViewAdapter(Deck.class, R.layout.deck_text_view,
-                DeckViewHolder.class, user.getChildReference(Deck.class));
+                DeckViewHolder.class, mUser.getChildReference(Deck.class), mUser);
         mFirebaseAdapter.setContext(getContext());
         mFirebaseAdapter.setOnDeckViewHolderClick(mOnDeckViewHolderClick);
         mRecyclerView.setAdapter(mFirebaseAdapter);
         // Checks if the recyclerview is empty, ProgressBar is invisible
         // and writes message for user
-        Deck.fetchCount(user.getChildReference(Deck.class).limitToFirst(1),
+        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1),
                 mUserHasDecksListener);
     }
 

@@ -44,7 +44,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.User;
@@ -76,22 +75,11 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
 
+        // TODO(refactoring): get user from intent
         if (!User.isSignedIn()) {
             startSignIn();
             return;
         }
-
-        // TODO(ksheremet): Move somewhere
-        if (getApplicationContext().getPackageName().endsWith(".instrumented") &&
-                User.getCurrentUser().isAnonymous()) {
-            final User user = new User();
-            user.setName("anonymous");
-            user.setEmail("instrumented.test@example.com");
-            user.setPhotoUrl("http://example.com/anonymous");
-            user.save(null);
-        }
-
-        Crashlytics.setUserIdentifier(User.getCurrentUser().getUid());
 
         // Android persists the Fragment layout and associated back stack when an Activity is
         // restarted due to a configuration change. Check if fragment is created not to overlay.
@@ -200,7 +188,7 @@ public class DelernMainActivity extends AppCompatActivity
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
                 removeListeners();
-                FirebaseAuth.getInstance().signOut();
+                User.signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 startSignIn();
             }
@@ -244,8 +232,8 @@ public class DelernMainActivity extends AppCompatActivity
             }
         };
 
-        User user = new User();
-        user.fetchChild(user.getReference(), User.class, mAbstractDataAvailableListener, true);
+        ((User) getIntent().getParcelableExtra(DelernMainActivityFragment.USER))
+                .watch(mAbstractDataAvailableListener, User.class);
     }
 
     @Override
