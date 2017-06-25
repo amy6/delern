@@ -54,7 +54,7 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
     @Override
     public final void onComplete(@NonNull final Task task) {
         if (task.isSuccessful()) {
-            onOperationSuccess();
+            onSuccess();
         } else {
             if (mOnFailureListener == null) {
                 AbstractDataAvailableListener.defaultOnError(task.getException());
@@ -68,10 +68,10 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
      * {@inheritDoc}
      */
     @Override
-    public void onComplete(final DatabaseError databaseError,
+    public final void onComplete(final DatabaseError databaseError,
                            final DatabaseReference databaseReference) {
         if (databaseError == null) {
-            onOperationSuccess();
+            onSuccess();
         } else {
             if (mOnFailureListener == null) {
                 AbstractDataAvailableListener.defaultOnError(databaseError.toException());
@@ -85,7 +85,7 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
      * Handles operation on success result. It has parameter that can be needed for the next
      * operations.
      */
-    public void onOperationSuccess() {
+    public void onSuccess() {
         // Can be implemented in inherited class
     }
 
