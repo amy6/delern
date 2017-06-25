@@ -55,10 +55,7 @@ public abstract class AbstractDataAvailableListener<T> {
      * @param e error details if available, or null if no details are available.
      */
     public void onError(@Nullable final Exception e) {
-        defaultOnError(e);
-        if (mContext != null) {
-            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        defaultOnError(e, mContext);
     }
 
     /**
@@ -69,9 +66,11 @@ public abstract class AbstractDataAvailableListener<T> {
 
     /**
      * Default error handler which logs the exception and sends the crash report.
-     * @param e error details if available, or null .
+     * @param e       error details if available, or null.
+     * @param context context to show Toast with error message.
      */
-    public static void defaultOnError(@Nullable final Exception e) {
+    public static void defaultOnError(@Nullable final Exception e,
+                                      @Nullable final Context context) {
         Exception errorDetails = e;
         if (errorDetails == null) {
             // TODO(refactoring): add stack trace?
@@ -79,6 +78,10 @@ public abstract class AbstractDataAvailableListener<T> {
         }
         Log.e(TAG, "Database operation failed:", errorDetails);
         Crashlytics.logException(errorDetails);
+
+        if (context != null) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     /**

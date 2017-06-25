@@ -49,6 +49,7 @@ import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
@@ -103,11 +104,11 @@ public class DelernMainActivityFragment extends Fragment implements OnDeckViewHo
                                 newDeck.setName(input.getText().toString().trim());
                                 newDeck.setDeckType(DeckType.BASIC.name());
                                 newDeck.setAccepted(true);
-                                newDeck.create(new AbstractDataAvailableListener<Deck>(
+                                newDeck.create(new OnOperationCompleteListener(
                                         DelernMainActivityFragment.this.getContext()) {
                                     @Override
-                                    public void onData(@Nullable final Deck deck) {
-                                        startEditCardsActivity(deck);
+                                    public void onSuccess() {
+                                        startEditCardsActivity(newDeck);
                                     }
                                 });
                             }

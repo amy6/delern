@@ -27,6 +27,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 
 import java.util.List;
 
@@ -114,14 +115,14 @@ public class Deck extends AbstractModel implements Parcelable {
      * @param callback invoked when the deck is saved to the database, or immediately if offline.
      */
     @Exclude
-    public void create(final AbstractDataAvailableListener<Deck> callback) {
+    public void create(final OnOperationCompleteListener callback) {
         DeckAccess deckAccess = new DeckAccess(this);
         deckAccess.setKey(getUser().getKey());
         deckAccess.setAccess("owner");
         new MultiWrite()
-                .save(this, callback)
-                .save(deckAccess, null)
-                .write();
+                .save(this)
+                .save(deckAccess)
+                .write(callback);
     }
 
     /**
@@ -130,12 +131,12 @@ public class Deck extends AbstractModel implements Parcelable {
     @Exclude
     public void delete() {
         new MultiWrite()
-                .delete(this, null)
-                .delete(this.getChildReference(Card.class), null)
-                .delete(this.getChildReference(ScheduledCard.class), null)
-                .delete(this.getChildReference(View.class), null)
-                .delete(this.getChildReference(DeckAccess.class), null)
-                .write();
+                .delete(this)
+                .delete(this.getChildReference(Card.class))
+                .delete(this.getChildReference(ScheduledCard.class))
+                .delete(this.getChildReference(View.class))
+                .delete(this.getChildReference(DeckAccess.class))
+                .write(null);
     }
 
     /**

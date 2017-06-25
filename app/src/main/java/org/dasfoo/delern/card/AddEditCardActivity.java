@@ -20,7 +20,6 @@ package org.dasfoo.delern.card;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,11 +32,11 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
+import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 
 /**
  * Activity to edit or add a new card.
@@ -53,8 +52,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     private TextInputEditText mBackSideInputText;
     private Card mCard;
     private CheckBox mAddReversedCardCheckbox;
-    private AbstractDataAvailableListener<Card> mOnCardAddedListener;
-    private AbstractDataAvailableListener<Card> mOnCardUpdatedListener;
+    private OnOperationCompleteListener mOnCardAddedListener;
+    private OnOperationCompleteListener mOnCardUpdatedListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -110,9 +109,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     protected void onStart() {
         super.onStart();
         if (mCard.exists()) {
-            mOnCardUpdatedListener = new AbstractDataAvailableListener<Card>(this) {
+            mOnCardUpdatedListener = new OnOperationCompleteListener(this) {
                 @Override
-                public void onData(@Nullable final Card data) {
+                public void onSuccess() {
                     Toast.makeText(AddEditCardActivity.this,
                             R.string.updated_card_user_message,
                             Toast.LENGTH_SHORT).show();
@@ -120,9 +119,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                 }
             };
         } else {
-            mOnCardAddedListener = new AbstractDataAvailableListener<Card>(this) {
+            mOnCardAddedListener = new OnOperationCompleteListener(this) {
                 @Override
-                public void onData(@Nullable final Card data) {
+                public void onSuccess() {
                     if (mAddReversedCardCheckbox.isChecked()) {
                         // TODO(ksheremet): Fix showing this message double times (2 card)
                         Toast.makeText(AddEditCardActivity.this,
@@ -139,16 +138,6 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
                     mCard.setBack(null);
                 }
             };
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mCard.exists()) {
-            mOnCardUpdatedListener.cleanup();
-        } else {
-            mOnCardAddedListener.cleanup();
         }
     }
 
@@ -202,8 +191,8 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         newCard.setBack(backSide);
 
         new Card.MultiWrite()
-                .save(newCard, mOnCardAddedListener)
-                .save(scheduledCard, null)
-                .write();
+                .save(newCard)
+                .save(scheduledCard)
+                .write(mOnCardAddedListener);
     }
 }

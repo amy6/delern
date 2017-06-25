@@ -22,13 +22,16 @@ package org.dasfoo.delern.models;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.listeners.AbstractOnFBDataChangeListener;
-import org.dasfoo.delern.models.listeners.OnFBOperationCompleteListener;
+import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.util.StringUtil;
 
 import java.util.ArrayList;
@@ -42,6 +45,9 @@ import java.util.Map;
  * Base class for models, implementing Firebase functionality.
  */
 public abstract class AbstractModel {
+
+    @Exclude
+    private static boolean sConnected;
 
     @Exclude
     private String mKey;
@@ -100,6 +106,22 @@ public abstract class AbstractModel {
                         callback.onData(dataSnapshot.getChildrenCount());
                     }
                 }));
+    }
+
+    protected static void initializeOfflineListener(final FirebaseDatabase db) {
+        // TODO(refactoring): this method should go elsewhere (callback setter static class?)
+        db.getReference(".info/connected").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                sConnected = dataSnapshot.getValue(Boolean.class);
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError databaseError) {
+                // TODO(refactoring): log and crashlytics
+                initializeOfflineListener(db);
+            }
+        });
     }
 
     /**
@@ -203,8 +225,8 @@ public abstract class AbstractModel {
      * @param callback called when the operation completes, or immediately if offline.
      */
     @Exclude
-    public void save(@Nullable final AbstractDataAvailableListener callback) {
-        new MultiWrite().save(this, callback).write();
+    public void save(@Nullable final OnOperationCompleteListener callback) {
+        new MultiWrite().save(this).write(callback);
     }
 
     /**
@@ -303,7 +325,8 @@ public abstract class AbstractModel {
 
     /**
      * A helper for queueing multiple operations (add / update / delete) to the database and
-     * applying them at once.
+     * applying them at once. Use "save()" and "delete()" to populate; the data is not written to
+     * the database until "write()" is called.
      */
     public static class MultiWrite {
         @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -328,34 +351,15 @@ public abstract class AbstractModel {
          * Save (add or update) the model to the database.
          *
          * @param model    instance of model.
-         * @param callback invoked when the operation is completed, or immediately if offline.
          * @return "this" (for chained calls).
          */
-        public MultiWrite save(final AbstractModel model,
-                               @Nullable final AbstractDataAvailableListener callback) {
+        public MultiWrite save(final AbstractModel model) {
             DatabaseReference reference;
             if (model.exists()) {
                 reference = model.getReference();
             } else {
                 reference = model.getParent().getChildReference(model.getClass()).push();
                 model.setKey(reference.getKey());
-            }
-            if (callback != null) {
-                callback.setQuery(reference);
-                reference.addValueEventListener(
-                        callback.setListener(new AbstractOnFBDataChangeListener(callback) {
-                            @Override
-                            public void onDataChange(final DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() != null) {
-                                    callback.cleanup();
-                                    // TODO(refactoring): if updateChildren below fails,
-                                    // listener hangs forever
-                                    // TODO(refactoring): set a timer?
-                                    callback.onData(fromSnapshot(dataSnapshot, model.getClass(),
-                                            model.getParent()));
-                                }
-                            }
-                        }));
             }
             mData.put(StringUtil.getFirebasePathFromReference(reference), model.getFirebaseValue());
             setRootFrom(reference);
@@ -366,47 +370,38 @@ public abstract class AbstractModel {
          * Delete (assign null to the key) a model from the database.
          *
          * @param model    instance of model.
-         * @param callback invoked when the operation is completed, or immediately if offline.
          * @return "this" (for chained calls).
          */
-        public MultiWrite delete(final AbstractModel model,
-                                 @Nullable final AbstractDataAvailableListener callback) {
-            return delete(model.getReference(), callback);
+        public MultiWrite delete(final AbstractModel model) {
+            return delete(model.getReference());
         }
 
         /**
          * Delete (assign null to the key) data from the database.
          *
          * @param reference Firebase reference to write the null to.
-         * @param callback  invoked when the operation is completed, or immediately if offline.
          * @return "this" (for chained calls).
          */
-        public MultiWrite delete(final DatabaseReference reference,
-                                 @Nullable final AbstractDataAvailableListener callback) {
-            // TODO(refactoring): remove callback from delete()
-            if (callback != null) {
-                reference.addListenerForSingleValueEvent(
-                        new AbstractOnFBDataChangeListener(callback) {
-                            @Override
-                            public void onDataChange(final DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.getValue() == null) {
-                                    callback.onData(null);
-                                } else {
-                                    callback.onError(null);
-                                }
-                            }
-                        });
-            }
-            setRootFrom(reference);
+        public MultiWrite delete(final DatabaseReference reference) {
             mData.put(StringUtil.getFirebasePathFromReference(reference), null);
+            setRootFrom(reference);
             return this;
         }
 
         /**
          * Apply all the queued operations to the database.
+         * @param onCompleteListener invoked when the operation finishes; onSuccess is triggered
+         *                           immediately if database is offline.
          */
-        public void write() {
-            mRoot.updateChildren(mData, OnFBOperationCompleteListener.getDefaultInstance());
+        public void write(@Nullable final OnOperationCompleteListener onCompleteListener) {
+            OnOperationCompleteListener listenerOrDefault = onCompleteListener;
+            if (listenerOrDefault == null) {
+                listenerOrDefault = OnOperationCompleteListener.getDefaultInstance();
+            }
+            mRoot.updateChildren(mData, listenerOrDefault);
+            if (!sConnected) {
+                listenerOrDefault.onSuccess();
+            }
         }
     }
 }

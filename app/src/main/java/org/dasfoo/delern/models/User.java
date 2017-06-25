@@ -60,7 +60,7 @@ public final class User extends AbstractModel implements Parcelable {
             return new User[size];
         }
     };
-    
+
     private static final User CURRENT_USER = new User();
 
     private static FirebaseDatabase sDatabase;
@@ -100,6 +100,8 @@ public final class User extends AbstractModel implements Parcelable {
         an app restart.
         https://firebase.google.com/docs/database/android/offline-capabilities */
         sDatabase.setPersistenceEnabled(true);
+
+        AbstractModel.initializeOfflineListener(sDatabase);
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override

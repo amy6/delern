@@ -183,10 +183,10 @@ public class Card extends AbstractModel implements Parcelable {
                 .getNextTimeToRepeat(newCardLevel));
 
         new MultiWrite()
-                .save(this, null)
-                .save(v, null)
-                .save(sc, null)
-                .write();
+                .save(this)
+                .save(v)
+                .save(sc)
+                .write(null);
     }
 
     /**
@@ -196,10 +196,10 @@ public class Card extends AbstractModel implements Parcelable {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     public void delete() {
         new MultiWrite()
-                .delete(this, null)
-                .delete(getDeck().getChildReference(ScheduledCard.class, getKey()), null)
-                .delete(getChildReference(View.class, getKey()), null)
-                .write();
+                .delete(this)
+                .delete(getDeck().getChildReference(ScheduledCard.class, getKey()))
+                .delete(getChildReference(View.class, getKey()))
+                .write(null);
     }
 
     /**

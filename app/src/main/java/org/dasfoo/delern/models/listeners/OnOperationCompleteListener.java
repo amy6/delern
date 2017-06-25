@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.models.listeners;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -30,21 +32,39 @@ import com.google.firebase.database.DatabaseReference;
  * Created by katarina on 3/7/17.
  * Listeners whether operation in Firebase was completed. If not, writes log message.
  */
-public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
+public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         DatabaseReference.CompletionListener {
 
-    private static final OnFBOperationCompleteListener DEFAULT_INSTANCE =
-            new OnFBOperationCompleteListener(null);
+    // We don't store context in this instance (it's always null).
+    @SuppressLint("StaticFieldLeak")
+    private static final OnOperationCompleteListener DEFAULT_INSTANCE =
+            new OnOperationCompleteListener();
 
-    private final AbstractDataAvailableListener mOnFailureListener;
+    private AbstractDataAvailableListener mOnFailureListener;
+    private Context mContext;
 
     /**
-     * Constructor.
+     * Create a listener which onError is bound to callback.onError.
      * @param onFailureListener callback which onError will be invoked on failure.
      */
-    public OnFBOperationCompleteListener(
-            final @Nullable AbstractDataAvailableListener onFailureListener) {
+    public OnOperationCompleteListener(
+            @NonNull final AbstractDataAvailableListener onFailureListener) {
         mOnFailureListener = onFailureListener;
+    }
+
+    /**
+     * Create a listener with onError implementation showing a Toast with context.
+     * @param context used to show a Toast.
+     */
+    public OnOperationCompleteListener(@NonNull final Context context) {
+        mContext = context;
+    }
+
+    /**
+     * Create a listener with default onError implementation (see AbstractDataAvailableListener).
+     */
+    private OnOperationCompleteListener() {
+        // Intentionally left blank.
     }
 
     /**
@@ -56,16 +76,13 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
         if (task.isSuccessful()) {
             onSuccess();
         } else {
-            if (mOnFailureListener == null) {
-                AbstractDataAvailableListener.defaultOnError(task.getException());
-                return;
-            }
-            mOnFailureListener.onError(task.getException());
+            onError(task.getException());
         }
     }
 
     /**
      * {@inheritDoc}
+     * Writes log on failure. Logic for success must be implemented in inherited class.
      */
     @Override
     public final void onComplete(final DatabaseError databaseError,
@@ -73,12 +90,20 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
         if (databaseError == null) {
             onSuccess();
         } else {
-            if (mOnFailureListener == null) {
-                AbstractDataAvailableListener.defaultOnError(databaseError.toException());
-                return;
-            }
-            mOnFailureListener.onError(databaseError.toException());
+            onError(databaseError.toException());
         }
+    }
+
+    /**
+     * Invoke onError of the embedded callback, show a Toast or use default implementation.
+     * @param exception exception object or null for unknown error.
+     */
+    private void onError(@Nullable final Exception exception) {
+        if (mOnFailureListener != null) {
+            mOnFailureListener.onError(exception);
+            return;
+        }
+        AbstractDataAvailableListener.defaultOnError(exception, mContext);
     }
 
     /**
@@ -93,7 +118,7 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
      * Default instance.
      * @return default instance.
      */
-    public static OnFBOperationCompleteListener getDefaultInstance() {
+    public static OnOperationCompleteListener getDefaultInstance() {
         return DEFAULT_INSTANCE;
     }
 
