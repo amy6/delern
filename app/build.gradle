@@ -61,6 +61,20 @@ android {
         instrumented {
             // Instrumented tests that require release-style optimizations.
             initWith release
+
+            if (System.properties['idea.platform.prefix']) {
+                // Disable obfuscation (slow, strips logger), make debuggable under Android Studio.
+                useProguard false
+                minifyEnabled false
+                debuggable true
+
+                tasks.each { task ->
+                    if (task.group == 'verification') {
+                        task.enabled = false
+                    }
+                }
+            }
+
             signingConfig signingConfigs.debug
             applicationIdSuffix '.instrumented'
             versionNameSuffix '-instrumented'
