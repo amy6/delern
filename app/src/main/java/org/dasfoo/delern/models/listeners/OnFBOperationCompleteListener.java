@@ -34,7 +34,7 @@ public class OnFBOperationCompleteListener implements OnCompleteListener<Void>,
         DatabaseReference.CompletionListener {
 
     private static final OnFBOperationCompleteListener DEFAULT_INSTANCE =
-            OnFBOperationCompleteListener.getDefaultInstance();
+            new OnFBOperationCompleteListener(null);
 
     private final AbstractDataAvailableListener mOnFailureListener;
 
