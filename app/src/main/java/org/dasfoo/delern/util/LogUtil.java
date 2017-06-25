@@ -34,6 +34,7 @@ public final class LogUtil {
      * @param c class which methods will use the tag
      * @return tag name for Log.x() calls
      */
+    @SuppressWarnings("rawtypes")
     public static String tagFor(final Class c) {
         return c.getSimpleName();
     }

@@ -7,7 +7,3 @@ TODO:
 * void AbstractModel.watchItself(listener) <-- for Card which is displayed
 * "Delern DEBUG" in splash?
 * more indexes in Firebase?
-* memory leak with scheduledcardwatcher
-* make sure all @Deprecated uses are alerted for (-deprecated compiler option)
-* make sure all compiler notes and warnings are errors
-* enable all compiler warnings

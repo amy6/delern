@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * Listen data changes in Firebase node.
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractOnFBDataChangeListener implements ValueEventListener {
     private final AbstractDataAvailableListener mOnCancelledListener;
 

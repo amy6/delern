@@ -31,9 +31,6 @@ import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by katarina on 11/19/16.
  */
@@ -41,7 +38,6 @@ import java.util.List;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final int CARDS_COUNTER_LIMIT = 200;
-    private final List<AbstractDataAvailableListener> mAvailableListeners = new ArrayList<>();
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
     private Context mContext;
     private final User mUser;
@@ -96,17 +92,6 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @Override
     protected Deck parseSnapshot(final DataSnapshot snapshot) {
         return Deck.fromSnapshot(snapshot, Deck.class, mUser);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void cleanup() {
-        super.cleanup();
-        for (final AbstractDataAvailableListener availableListener : mAvailableListeners) {
-            availableListener.cleanup();
-        }
     }
 
     /**

@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
  * Created by katarina on 3/7/17.
  * Listeners whether operation in Firebase was completed. If not, writes log message.
  */
+@SuppressWarnings("rawtypes")
 public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         DatabaseReference.CompletionListener {
 

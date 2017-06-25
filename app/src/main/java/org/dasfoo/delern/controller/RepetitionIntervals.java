@@ -60,7 +60,7 @@ public final class RepetitionIntervals {
      *
      * @return period of time in milliseconds.
      */
-    private long getJitter() {
+    private static long getJitter() {
         // Random() method returns a random number between 0.0 and 0.999
         return (long) (Math.random() * 2 * ONE_HOUR + 1);
     }
