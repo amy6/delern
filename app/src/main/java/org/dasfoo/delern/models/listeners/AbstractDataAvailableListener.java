@@ -19,6 +19,7 @@
 package org.dasfoo.delern.models.listeners;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
@@ -80,32 +81,22 @@ public abstract class AbstractDataAvailableListener<T> {
         Crashlytics.logException(errorDetails);
 
         if (context != null) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, errorDetails.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
     /**
      * For cleanup() only.
      * @param query query from which the listener should be removed (only useful with setListener).
-     */
-    public void setQuery(final Query query) {
-        if (mQuery != null) {
-            // TODO(refactoring): log to Log.e?
-            Crashlytics.log(Log.ASSERT, TAG, "Query is overwritten");
-        }
-        mQuery = query;
-    }
-
-    /**
-     * For cleanup() only.
      * @param listener listener to be removed from query (only useful in couple with setQuery).
      * @return listener.
      */
-    public ValueEventListener setListener(final ValueEventListener listener) {
-        if (mListener != null) {
-            // TODO(refactoring): log to Log.e?
-            Crashlytics.log(Log.ASSERT, TAG, "Listener is overwritten");
+    public ValueEventListener setCleanupPair(@NonNull final Query query,
+                                             @NonNull final ValueEventListener listener) {
+        if (mQuery != null) {
+            Crashlytics.log(Log.ASSERT, TAG, "Cleanup Pair is overwritten!");
         }
+        mQuery = query;
         mListener = listener;
         return listener;
     }
@@ -114,10 +105,6 @@ public abstract class AbstractDataAvailableListener<T> {
      * Release resources and stop invoking this listener for future changes from now on.
      */
     public void cleanup() {
-        if ((mQuery == null) != (mListener == null)) {
-            // TODO(refactoring): log to Log.e?
-            Crashlytics.log(Log.ASSERT, TAG, "Both Query and Listener must be set");
-        }
         if (mQuery != null && mListener != null) {
             mQuery.removeEventListener(mListener);
             mQuery = null;

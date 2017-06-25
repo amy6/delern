@@ -79,8 +79,6 @@ public class LearningCardsActivity extends AppCompatActivity {
             new AbstractDataAvailableListener<Card>(this) {
                 @Override
                 public void onData(final Card data) {
-                    // TODO(refactoring): remove once it propagates correctly
-                    cleanup();
                     if (data == null) {
                         finish();
                         return;

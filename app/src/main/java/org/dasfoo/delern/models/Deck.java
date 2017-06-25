@@ -20,11 +20,13 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
@@ -150,21 +152,38 @@ public class Deck extends AbstractModel implements Parcelable {
         Query query = fetchCardsToRepeatWithLimitQuery(1);
         fetchChildren(query, ScheduledCard.class,
                 new AbstractDataAvailableListener<List<ScheduledCard>>(null) {
-                    // TODO(dotdoom): callback.cleanup() should call cleanup() from here
+                    @Override
+                    public ValueEventListener setCleanupPair(
+                            @NonNull final Query query,
+                            @NonNull final ValueEventListener listener) {
+                        return callback.setCleanupPair(query, listener);
+                    }
+
                     @Override
                     public void onData(final @Nullable List<ScheduledCard> data) {
                         if (data != null && data.size() > 0) {
                             ScheduledCard sc = data.get(0);
                             sc.fetchChild(
                                     Deck.this.getChildReference(Card.class, sc.getKey()),
-                                    Card.class, callback);
+                                    Card.class, new AbstractDataAvailableListener<Card>(null) {
+                                        @Override
+                                        public void onData(@Nullable final Card data) {
+                                            cleanup();
+                                            callback.onData(data);
+                                        }
+
+                                        @Override
+                                        public void onError(@Nullable final Exception e) {
+                                            callback.onError(e);
+                                        }
+                                    });
                         } else {
                             callback.onData(null);
                         }
                     }
 
                     @Override
-                    public void onError(final Exception e) {
+                    public void onError(@Nullable final Exception e) {
                         callback.onError(e);
                     }
                 });

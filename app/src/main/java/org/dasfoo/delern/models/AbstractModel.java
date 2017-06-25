@@ -97,9 +97,8 @@ public abstract class AbstractModel {
      */
     public static void fetchCount(final Query query,
                                   final AbstractDataAvailableListener<Long> callback) {
-        callback.setQuery(query);
         // TODO(refactoring): this should be childeventlistener, not valueeventlistener
-        query.addValueEventListener(callback.setListener(
+        query.addValueEventListener(callback.setCleanupPair(query,
                 new AbstractOnFBDataChangeListener(callback) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -242,8 +241,7 @@ public abstract class AbstractModel {
     public <T extends AbstractModel> void fetchChild(
             final Query query, final Class<T> cls,
             final AbstractDataAvailableListener<T> callback) {
-        callback.setQuery(query);
-        query.addValueEventListener(callback.setListener(
+        query.addValueEventListener(callback.setCleanupPair(query,
                 new AbstractOnFBDataChangeListener(callback) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -266,8 +264,7 @@ public abstract class AbstractModel {
     public <T extends AbstractModel> void watch(final AbstractDataAvailableListener<T> callback,
                                                 final Class<T> cls) {
         DatabaseReference selfReference = getReference();
-        callback.setQuery(selfReference);
-        selfReference.addValueEventListener(callback.setListener(
+        selfReference.addValueEventListener(callback.setCleanupPair(selfReference,
                 new AbstractOnFBDataChangeListener(callback) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
@@ -290,8 +287,7 @@ public abstract class AbstractModel {
     public <T extends AbstractModel> void fetchChildren(
             final Query query, final Class<T> cls,
             final AbstractDataAvailableListener<List<T>> callback) {
-        callback.setQuery(query);
-        query.addValueEventListener(callback.setListener(
+        query.addValueEventListener(callback.setCleanupPair(query,
                 new AbstractOnFBDataChangeListener(callback) {
                     @Override
                     public void onDataChange(final DataSnapshot dataSnapshot) {
