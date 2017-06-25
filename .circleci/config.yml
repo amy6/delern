@@ -63,10 +63,9 @@ jobs:
     - run:
         name: "Lint, assemble and run unit tests"
         command: |
-          # http://www.littlerobots.nl/blog/disable-android-pre-dexing-on-ci-builds/
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
-          ./gradlew -PdisablePreDex \
+          ./gradlew \
             -PisolatedRun \
             --continue \
             lintDebug \
@@ -83,25 +82,16 @@ jobs:
         - /opt/android-sdk-linux
 
     - deploy:
-        name: "Install Cloud SDK"
+        name: "Install Cloud SDK, run instrumented tests"
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
-          echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
-            >>/etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-          apt update
-          apt install -y google-cloud-sdk
+          if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
+            echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
+              >>/etc/apt/sources.list.d/google-cloud-sdk.list
+            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+            apt update
+            apt install -y google-cloud-sdk
 
-    - deploy:
-        name: "Build signed Release binary, run instrumented tests, publish to Google Play"
-        command: |
-         if [ -n "${CIRCLE_TAG}" ]; then
-            previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
-            git log "${previous_tag?}.." --format=%B | \
-              grep '^relnote: ' | \
-              grep -v -x 'relnote: none' | \
-              cut -b10- | \
-              cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
             # We use this account to access both Google Play account and GCS.
             # The former requires it to be in "app" subdirectory.
             echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
@@ -109,15 +99,27 @@ jobs:
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
             gsutil cp gs://dasfoo-keystore/fabric.properties app
             # https://circleci.com/docs/firebase-test-lab/
-            ./gradlew -PdisablePreDex \
+            ./gradlew \
               assembleInstrumented \
               assembleInstrumentedAndroidTest \
               --console=plain
-            # Run instrumented tests
+            # Run instrumented tests.
             gcloud --project=delern-debug firebase test android run \
               --app app/build/outputs/apk/app-instrumented.apk \
               --test app/build/outputs/apk/app-instrumented-androidTest.apk \
               --results-bucket delern-test-results
+          fi
+
+    - deploy:
+        name: "Build signed Release binary, run instrumented tests, publish to Google Play"
+        command: |
+          if [ -n "${CIRCLE_TAG}" ]; then
+            previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
+            git log "${previous_tag?}.." --format=%B | \
+              grep '^relnote: ' | \
+              grep -v -x 'relnote: none' | \
+              cut -b10- | \
+              cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
             gsutil cp gs://dasfoo-keystore/delern.jks app
             # Publish to Google Play (this also automatically runs Robo tests).
             ./gradlew lintRelease publishRelease --console=plain
