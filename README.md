@@ -4,6 +4,5 @@
 
 TODO:
 
-* void AbstractModel.watchItself(listener) <-- for Card which is displayed
 * "Delern DEBUG" in splash?
 * more indexes in Firebase?

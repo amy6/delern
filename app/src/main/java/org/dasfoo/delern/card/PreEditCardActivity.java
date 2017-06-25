@@ -104,7 +104,7 @@ public class PreEditCardActivity extends AppCompatActivity {
                 }
             }
         };
-        mCard.getDeck().fetchChild(mCard.getReference(), Card.class, mCardValueEventListener);
+        mCard.watch(mCardValueEventListener, Card.class);
     }
 
     @Override
