@@ -45,9 +45,11 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         this.mDelernMainView = delernMainView;
     }
 
-    public void onCreate() {
+    public boolean onCreate() {
         if (!User.isSignedIn()) {
+            Log.d(TAG, "User is not Signed In");
             mDelernMainView.signIn();
+            return false;
         }
         mUserHasDecksListener = new AbstractDataAvailableListener<Long>(null) {
 
@@ -61,6 +63,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
                 }
             }
         };
+        return true;
     }
 
     public void onStart() {

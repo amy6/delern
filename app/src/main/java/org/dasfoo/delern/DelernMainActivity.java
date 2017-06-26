@@ -57,6 +57,8 @@ import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
+import org.dasfoo.delern.di.components.DaggerDelernMainActivityComponent;
+import org.dasfoo.delern.di.modules.DelernMainActivityModule;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
@@ -64,6 +66,8 @@ import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,8 +95,8 @@ public class DelernMainActivity extends AppCompatActivity
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
     private CircleImageView mProfilePhotoImageView;
-    private DelernMainActivityPresenter mMainActivityPresenter =
-            new DelernMainActivityPresenter(this);
+    @Inject
+    DelernMainActivityPresenter mMainActivityPresenter;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
 
@@ -101,10 +105,15 @@ public class DelernMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delern_main_activity);
         ButterKnife.bind(this);
+        DelernApplication.getMainActivityInjector(this).inject(this);
+
         showProgressBar();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
-        mMainActivityPresenter.onCreate();
+        // TODO (ksheremet): finish doesn't call
+        if (!mMainActivityPresenter.onCreate()) {
+            return;
+        }
 
         initViews();
 
@@ -313,10 +322,11 @@ public class DelernMainActivity extends AppCompatActivity
     @Override
     public void signIn() {
         // Per https://goo.gl/qHTbjw and https://goo.gl/rnD2g3.
-        Intent signInIntent = new Intent(this, SignInActivity.class);
+        Intent signInIntent = new Intent(DelernMainActivity.this, SignInActivity.class);
         signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(signInIntent);
-        finish();
+        // TODO(ksheremet): finish() doesn't stop activity. It continues onCreate()
+        DelernMainActivity.this.finish();
     }
 
     @Override

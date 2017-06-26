@@ -25,6 +25,10 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.squareup.leakcanary.LeakCanary;
 
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.di.components.DaggerDelernMainActivityComponent;
+import org.dasfoo.delern.di.components.DelernMainActivityComponent;
+import org.dasfoo.delern.di.modules.DelernMainActivityModule;
+import org.dasfoo.delern.views.IDelernMainView;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -34,7 +38,6 @@ import io.fabric.sdk.android.Fabric;
  */
 
 public class DelernApplication extends Application {
-
     /**
      * Called when the application is starting, before any activity, service,
      * or receiver objects (excluding content providers) have been created.
@@ -61,5 +64,11 @@ public class DelernApplication extends Application {
         Fabric.with(this, crashlyticsKit);
 
         User.initializeDatabase();
+    }
+
+    public static DelernMainActivityComponent getMainActivityInjector(IDelernMainView view) {
+        return DaggerDelernMainActivityComponent
+                .builder()
+                .delernMainActivityModule(new DelernMainActivityModule(view)).build();
     }
 }
