@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,11 +51,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.listeners.TextWatcherStub;
@@ -79,24 +77,40 @@ public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, IDelernMainView {
 
+    /**
+     * IntentExtra user for showing user info and data.
+     */
+    public static final String USER = "user";
     private static final int REQUEST_INVITE = 1;
     private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
 
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    /* default */ Toolbar mToolbar;
     @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    /* default */ ProgressBar mProgressBar;
     @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    /* default */ RecyclerView mRecyclerView;
     @BindView(R.id.empty_recyclerview_message)
-    TextView mEmptyMessageTextView;
+    /* default */ TextView mEmptyMessageTextView;
     @Inject
-    DelernMainActivityPresenter mMainActivityPresenter;
+    /* default */ DelernMainActivityPresenter mMainActivityPresenter;
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * Method starts DelernMainActivity.
+     *
+     * @param context context of Activity that called this method.
+     * @param user current user that uses app.
+     */
+    public static void startActivity(final Context context, final User user) {
+        Intent intent = new Intent(context, DelernMainActivity.class);
+        intent.putExtra(DelernMainActivity.USER, user);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -108,8 +122,10 @@ public class DelernMainActivity extends AppCompatActivity
         showProgressBar();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
-        // TODO(ksheremet): finish doesn't call
-        if (!mMainActivityPresenter.onCreate()) {
+        Intent intent = getIntent();
+        User user = intent.getParcelableExtra(USER);
+        // TODO(ksheremet): finish isn't called
+        if (!mMainActivityPresenter.onCreate(user)) {
             return;
         }
 
@@ -277,7 +293,7 @@ public class DelernMainActivity extends AppCompatActivity
      * Shows user a dialog for creating deck. User should type name of deck.
      */
     @OnClick(R.id.fab)
-    void createNewDeckDialog() {
+    /* default */ void createNewDeckDialog() {
         final EditText input = new EditText(this);
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -297,7 +313,7 @@ public class DelernMainActivity extends AppCompatActivity
                      */
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
-                        mMainActivityPresenter.creteNewDeck(input.getText().toString().trim());
+                        mMainActivityPresenter.createNewDeck(input.getText().toString().trim());
                     }
                 })
                 .create();
@@ -321,29 +337,47 @@ public class DelernMainActivity extends AppCompatActivity
     public void signIn() {
         SignInActivity.startActivity(this);
         // TODO(ksheremet): finish() doesn't stop activity. It continues onCreate()
-        DelernMainActivity.this.finish();
+        finish();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void learnCardsInDeckClick(final Deck deck) {
         LearningCardsActivity.startActivity(this, deck);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void editCardsInDeckClick(final Deck deck) {
         EditCardListActivity.startActivity(this, deck);
     }
 
+    /**
+     * Callback method from Presenter to hide Progress Bar.
+     */
     @Override
     public void hideProgressBar() {
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 
+    /**
+     * Callback method from Presenter to show Progress Bar.
+     */
     @Override
     public void showProgressBar() {
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
     }
 
+    /**
+     * Callback method called from Presenter. If user doesn't have
+     * decks it shows message.
+     *
+     * @param noDecks boolean var whether user has decks or not
+     */
     @Override
     public void noDecksMessage(final Boolean noDecks) {
         if (noDecks) {
@@ -353,10 +387,15 @@ public class DelernMainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Updates user profile info in NavigationDrawer.
+     *
+     * @param user model User
+     */
     @Override
     public void updateUserProfileInfo(final User user) {
         mUserNameTextView.setText(user.getName());
         mUserEmailTextView.setText(user.getEmail());
-        Glide.with(DelernMainActivity.this).load(user.getPhotoUrl()).into(mProfilePhotoImageView);
+        Glide.with(this).load(user.getPhotoUrl()).into(mProfilePhotoImageView);
     }
 }

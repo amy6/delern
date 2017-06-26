@@ -24,33 +24,53 @@ import android.util.Log;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
 
+/**
+ * Presenter for DelernMainActivity. It implements OnDeckViewHolderClick to handle
+ * user clicks. Class calls activity callbacks to show changed user data.
+ */
 public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
 
     private static final String TAG = LogUtil.tagFor(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
-    private AbstractDataAvailableListener mUserHasDecksListener;
+    private AbstractDataAvailableListener<Long> mUserHasDecksListener;
     private AbstractDataAvailableListener<User> mAbstractDataAvailableListener;
     private DeckRecyclerViewAdapter mFirebaseAdapter;
     private User mUser;
 
+    /**
+     * Constructor for DelernMainActivityPresenter. It gets DelernMainActivity view to perform
+     * callbacks to Activity.
+     *
+     * @param delernMainView IDelernMainView for performing callbacks.
+     */
     public DelernMainActivityPresenter(final IDelernMainView delernMainView) {
         this.mDelernMainView = delernMainView;
     }
 
-    public boolean onCreate() {
+    /**
+     * Called from DelernMainActivity.onCreate(). Method checks whether user is signed in.
+     * If not, it notifies DelernMainActivity that onCreate is not performed.
+     * Method checks whether user has decks.
+     *
+     * @param user current user
+     * @return whether t
+     */
+    public boolean onCreate(final User user) {
         if (!User.isSignedIn()) {
             Log.d(TAG, "User is not Signed In");
             mDelernMainView.signIn();
             return false;
         }
+        mUser = user;
         mUserHasDecksListener = new AbstractDataAvailableListener<Long>(null) {
 
             @Override
@@ -66,31 +86,44 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         return true;
     }
 
+    /**
+     * Method is called in DelernMainActivity.onStart. It checks
+     * whether user has decks or not.
+     */
     public void onStart() {
-        if (mUser == null) {
-            mUser = new User();
-        }
         Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1), mUserHasDecksListener);
     }
 
+    /**
+     * Method is called in onStop in DelernMainActivity to release used resources.
+     */
     public void onStop() {
         cleanup();
     }
 
+    /**
+     * Method creates FirebaseRecyclerViewAdapter using View layout.
+     *
+     * @param layout view layout for adapter.
+     * @return DeckRecyclerViewAdapter that represents decks.
+     */
     public DeckRecyclerViewAdapter getAdapter(final int layout) {
-        if (mUser == null) {
-            mUser = new User();
-        }
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(layout, mUser.getChildReference(Deck.class));
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(layout, mUser);
         mFirebaseAdapter.setOnDeckViewHolderClick(this);
         return mFirebaseAdapter;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void learnDeck(final int position) {
         mDelernMainView.learnCardsInDeckClick(getDeckFromAdapter(position));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void renameDeck(final int position, final String newName) {
         Deck deck = getDeckFromAdapter(position);
@@ -98,17 +131,26 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         deck.save(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void editDeck(final int position) {
         mDelernMainView.editCardsInDeckClick(getDeckFromAdapter(position));
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteDeck(final int position) {
         getDeckFromAdapter(position).delete();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void changeDeckType(final int position, final DeckType deckType) {
         Deck deck = getDeckFromAdapter(position);
@@ -120,25 +162,37 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         return mFirebaseAdapter.getItem(position);
     }
 
+    /**
+     * Cleanup listeners and release resources.
+     */
     public void cleanup() {
         mUserHasDecksListener.cleanup();
         mFirebaseAdapter.cleanup();
         mAbstractDataAvailableListener.cleanup();
     }
 
-    public void creteNewDeck(final String deckName) {
+    /**
+     * Method creates new deck. It gets as parameter name of deck.
+     *
+     * @param deckName name of deck
+     */
+    public void createNewDeck(final String deckName) {
         final Deck newDeck = new Deck(new User());
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);
-        newDeck.create(new AbstractDataAvailableListener<Deck>(null) {
+        newDeck.create(new OnOperationCompleteListener() {
             @Override
-            public void onData(@Nullable final Deck deck) {
-                mDelernMainView.editCardsInDeckClick(deck);
+            public void onSuccess() {
+                mDelernMainView.editCardsInDeckClick(newDeck);
             }
         });
     }
 
+    /**
+     *Gets user data from FB Database. If user doesn't exist, calls sign in.
+     * Otherwise calls callback method to update user profile info.
+     */
     public void getUserInfo() {
         mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>(null) {
             @Override
@@ -153,8 +207,6 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
                 }
             }
         };
-
-        User user = new User();
-        user.fetchChild(user.getReference(), User.class, mAbstractDataAvailableListener, true);
+        mUser.watch(mAbstractDataAvailableListener, User.class);
     }
 }

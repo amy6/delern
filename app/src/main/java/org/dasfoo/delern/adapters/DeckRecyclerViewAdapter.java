@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
@@ -37,18 +36,18 @@ import org.dasfoo.delern.viewholders.DeckViewHolder;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final int CARDS_COUNTER_LIMIT = 200;
+    private final User mUser;
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
 
     /**
      * @param modelLayout     This is the layout used to represent a single item in the list.
      *                        You will be responsible for populating an instance of the
      *                        corresponding view with the data from an instance of modelClass.
-     * @param ref             The Firebase location to watch for data changes. Can also be a slice
-     *                        of a location, using some.
      * @param user            Current user.
      */
-    public DeckRecyclerViewAdapter(final int modelLayout, final Query ref) {
-        super(Deck.class, modelLayout, DeckViewHolder.class, ref);
+    public DeckRecyclerViewAdapter(final int modelLayout, final User user) {
+        super(Deck.class, modelLayout, DeckViewHolder.class, user.getChildReference(Deck.class));
+        mUser = user;
     }
 
     /**
@@ -83,6 +82,11 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         return Deck.fromSnapshot(snapshot, Deck.class, mUser);
     }
 
+    /**
+     * Sets on Deck menu clicks handler.
+     *
+     * @param onDeckViewHolderClick handler on recyclerview clicks
+     */
     public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
         this.mOnDeckViewHolderClick = onDeckViewHolderClick;
     }

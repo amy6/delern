@@ -53,7 +53,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
     /**
      * Create a listener with default onError implementation (see AbstractDataAvailableListener).
      */
-    private OnOperationCompleteListener() {
+    public OnOperationCompleteListener() {
         // Intentionally left blank.
     }
 

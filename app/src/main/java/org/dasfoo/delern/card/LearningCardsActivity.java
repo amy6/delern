@@ -39,10 +39,10 @@ import android.widget.TextView;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -75,13 +75,6 @@ public class LearningCardsActivity extends AppCompatActivity {
     private boolean mBackIsShown;
     private Deck mDeck;
     private Card mCard;
-
-    public static void startActivity(final Context context, final Deck deck) {
-        Intent intent = new Intent(context, LearningCardsActivity.class);
-        intent.putExtra(LearningCardsActivity.DECK, deck);
-        context.startActivity(intent);
-    }
-
     private final AbstractDataAvailableListener<Card> mCardAvailableListener =
             new AbstractDataAvailableListener<Card>(this) {
                 @Override
@@ -100,7 +93,6 @@ public class LearningCardsActivity extends AppCompatActivity {
                     }
                 }
             };
-
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -124,6 +116,12 @@ public class LearningCardsActivity extends AppCompatActivity {
             }
         }
     };
+
+    public static void startActivity(final Context context, final Deck deck) {
+        Intent intent = new Intent(context, LearningCardsActivity.class);
+        intent.putExtra(LearningCardsActivity.DECK, deck);
+        context.startActivity(intent);
+    }
 
     /**
      * {@inheritDoc}

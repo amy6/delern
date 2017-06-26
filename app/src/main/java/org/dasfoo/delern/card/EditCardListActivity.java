@@ -62,7 +62,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
     private Deck mDeck;
 
-    public static void startActivity(Context context, Deck deck) {
+    public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditCardListActivity.class);
         intent.putExtra(EditCardListActivity.DECK, deck);
         context.startActivity(intent);

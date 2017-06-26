@@ -24,16 +24,25 @@ import org.dasfoo.delern.views.IDelernMainView;
 import dagger.Module;
 import dagger.Provides;
 
+/**
+ * Dagger 2 class that says how to inject DelernMainActivity.
+ */
 @Module
 public class DelernMainActivityModule {
     private final IDelernMainView mView;
 
-    public DelernMainActivityModule (IDelernMainView view) {
+    /**
+     * Constructor. It gets interface as parameter that implemented in DelernMainActivity
+     * for callbacks from Presenter.
+     *
+     * @param view interface to init Presenter for callbacks.
+     */
+    public DelernMainActivityModule(final IDelernMainView view) {
         this.mView = view;
     }
 
     @Provides
-    DelernMainActivityPresenter providePresenter() {
+    /* default */ DelernMainActivityPresenter providePresenter() {
         return new DelernMainActivityPresenter(mView);
     }
 

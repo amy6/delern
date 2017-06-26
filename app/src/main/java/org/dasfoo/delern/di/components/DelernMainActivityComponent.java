@@ -25,8 +25,15 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
+/**
+ * It can be seen as an intermediate object which allows accessing to objects defined in
+ * Dagger modules. Interface describes for which types we want to use members injection
+ */
 @Singleton
 @Component(modules = DelernMainActivityModule.class)
 public interface DelernMainActivityComponent {
+    /**
+     * @param mainActivity sets type for injection
+     */
     void inject(DelernMainActivity mainActivity);
 }

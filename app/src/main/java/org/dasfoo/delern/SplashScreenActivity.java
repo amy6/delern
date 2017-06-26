@@ -90,10 +90,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } else {
                     Log.e(TAG, "Remote config error:", task.getException());
                 }
-                Intent intent = new Intent(SplashScreenActivity.this,
-                        DelernMainActivity.class);
-                intent.putExtra(DelernMainActivityFragment.USER, User.getCurrentUser());
-                startActivity(intent);
+                DelernMainActivity.startActivity(SplashScreenActivity.this, User.getCurrentUser());
                 finish();
             }
         };

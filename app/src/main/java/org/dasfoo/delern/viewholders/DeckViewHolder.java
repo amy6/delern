@@ -57,9 +57,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     private static final String NULL_CARDS = "0";
 
     @BindView(R.id.deck_text_view)
-    TextView mDeckTextView;
+    /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
-    TextView mCountToLearnTextView;
+    /* default */ TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
     private String mCheckedDeckType;
 
@@ -104,7 +104,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     }
 
     @OnClick(R.id.deck_view_holder)
-    void onDeckClick(final View view) {
+    /* default */ void onDeckClick(final View view) {
         // if number of cards is 0, show message to user
         String cardCount = mCountToLearnTextView.getText().toString();
         if (NULL_CARDS.equals(cardCount)) {
@@ -118,8 +118,14 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         }
     }
 
+    /**
+     * Method shows Popup menu on chosen deck menu.
+     * Access to method is package-private due to ButterKnife
+     *
+     * @param v clicked view
+     */
     @OnClick(R.id.deck_popup_menu)
-    void showPopup(final View v) {
+    /* default */ void showPopup(final View v) {
         PopupMenu popup = new PopupMenu(v.getContext(), v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();

@@ -40,7 +40,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
-import org.dasfoo.delern.DelernMainActivityFragment;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.User;
@@ -60,7 +59,12 @@ public class SignInActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
 
-    public static void startActivity(Context context) {
+    /**
+     * Method starts SignInActivity.
+     *
+     * @param context context of Activity from what method was called.
+     */
+    public static void startActivity(final Context context) {
         // Per https://goo.gl/qHTbjw and https://goo.gl/rnD2g3.
         Intent signInIntent = new Intent(context, SignInActivity.class);
         signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -82,7 +86,7 @@ public class SignInActivity extends AppCompatActivity
                 public void onData(@Nullable final User data) {
                     Intent intent = new Intent(SignInActivity.this,
                             DelernMainActivity.class);
-                    intent.putExtra(DelernMainActivityFragment.USER, data);
+                    intent.putExtra(DelernMainActivity.USER, data);
                     startActivity(intent);
                     finish();
                 }
@@ -151,7 +155,7 @@ public class SignInActivity extends AppCompatActivity
             public void onData(@Nullable final User data) {
                 Intent intent = new Intent(SignInActivity.this,
                         DelernMainActivity.class);
-                intent.putExtra(DelernMainActivityFragment.USER, data);
+                intent.putExtra(DelernMainActivity.USER, data);
                 startActivity(intent);
                 finish();
             }
