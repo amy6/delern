@@ -26,14 +26,15 @@ import dagger.Provides;
 
 @Module
 public class DelernMainActivityModule {
-    private final IDelernMainView view;
+    private final IDelernMainView mView;
 
     public DelernMainActivityModule (IDelernMainView view) {
-        this.view = view;
+        this.mView = view;
     }
 
     @Provides
     DelernMainActivityPresenter providePresenter() {
-        return new DelernMainActivityPresenter(view);}
+        return new DelernMainActivityPresenter(mView);
+    }
 
 }

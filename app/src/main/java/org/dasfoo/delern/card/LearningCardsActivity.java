@@ -19,6 +19,7 @@
 package org.dasfoo.delern.card;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,6 +75,12 @@ public class LearningCardsActivity extends AppCompatActivity {
     private boolean mBackIsShown;
     private Deck mDeck;
     private Card mCard;
+
+    public static void startActivity(final Context context, final Deck deck) {
+        Intent intent = new Intent(context, LearningCardsActivity.class);
+        intent.putExtra(LearningCardsActivity.DECK, deck);
+        context.startActivity(intent);
+    }
 
     private final AbstractDataAvailableListener<Card> mCardAvailableListener =
             new AbstractDataAvailableListener<Card>(this) {

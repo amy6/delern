@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.card;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -60,6 +61,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
     private Query mQuery;
 
     private Deck mDeck;
+
+    public static void startActivity(Context context, Deck deck) {
+        Intent intent = new Intent(context, EditCardListActivity.class);
+        intent.putExtra(EditCardListActivity.DECK, deck);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

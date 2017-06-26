@@ -57,8 +57,6 @@ import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
-import org.dasfoo.delern.di.components.DaggerDelernMainActivityComponent;
-import org.dasfoo.delern.di.modules.DelernMainActivityModule;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
@@ -92,11 +90,11 @@ public class DelernMainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @BindView(R.id.empty_recyclerview_message)
     TextView mEmptyMessageTextView;
+    @Inject
+    DelernMainActivityPresenter mMainActivityPresenter;
     private TextView mUserNameTextView;
     private TextView mUserEmailTextView;
     private CircleImageView mProfilePhotoImageView;
-    @Inject
-    DelernMainActivityPresenter mMainActivityPresenter;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
 
@@ -110,7 +108,7 @@ public class DelernMainActivity extends AppCompatActivity
         showProgressBar();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
-        // TODO (ksheremet): finish doesn't call
+        // TODO(ksheremet): finish doesn't call
         if (!mMainActivityPresenter.onCreate()) {
             return;
         }
@@ -321,26 +319,19 @@ public class DelernMainActivity extends AppCompatActivity
      */
     @Override
     public void signIn() {
-        // Per https://goo.gl/qHTbjw and https://goo.gl/rnD2g3.
-        Intent signInIntent = new Intent(DelernMainActivity.this, SignInActivity.class);
-        signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(signInIntent);
+        SignInActivity.startActivity(this);
         // TODO(ksheremet): finish() doesn't stop activity. It continues onCreate()
         DelernMainActivity.this.finish();
     }
 
     @Override
     public void learnCardsInDeckClick(final Deck deck) {
-        Intent intent = new Intent(this, LearningCardsActivity.class);
-        intent.putExtra(LearningCardsActivity.DECK, deck);
-        startActivity(intent);
+        LearningCardsActivity.startActivity(this, deck);
     }
 
     @Override
     public void editCardsInDeckClick(final Deck deck) {
-        Intent intent = new Intent(this, EditCardListActivity.class);
-        intent.putExtra(EditCardListActivity.DECK, deck);
-        startActivity(intent);
+        EditCardListActivity.startActivity(this, deck);
     }
 
     @Override

@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.signin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -58,6 +59,13 @@ public class SignInActivity extends AppCompatActivity
     private static final String TAG = LogUtil.tagFor(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
+
+    public static void startActivity(Context context) {
+        // Per https://goo.gl/qHTbjw and https://goo.gl/rnD2g3.
+        Intent signInIntent = new Intent(context, SignInActivity.class);
+        signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(signInIntent);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

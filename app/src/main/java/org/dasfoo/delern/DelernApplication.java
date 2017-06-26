@@ -66,7 +66,13 @@ public class DelernApplication extends Application {
         User.initializeDatabase();
     }
 
-    public static DelernMainActivityComponent getMainActivityInjector(IDelernMainView view) {
+    /**
+     * Method returns injector class.
+     *
+     * @param view build
+     * @return DelernMainActivityComponent.
+     */
+    public static DelernMainActivityComponent getMainActivityInjector(final IDelernMainView view) {
         return DaggerDelernMainActivityComponent
                 .builder()
                 .delernMainActivityModule(new DelernMainActivityModule(view)).build();
