@@ -46,6 +46,10 @@ import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.LogUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Activity for showing cards to learn.
  */
@@ -65,13 +69,20 @@ public class LearningCardsActivity extends AppCompatActivity {
      * Key for saving onSaveInstanceState.
      */
     private static final String BACK_IS_SHOWN = "back";
-    private CardView mCardView;
-    private FloatingActionButton mKnowButton;
-    private FloatingActionButton mRepeatButton;
-    private ImageView mTurnCardButton;
-    private TextView mFrontTextView;
-    private TextView mBackTextView;
-    private View mDelimiter;
+    @BindView(R.id.card_view)
+    /* default */ CardView mCardView;
+    @BindView(R.id.to_know_button)
+    /* default */ FloatingActionButton mKnowButton;
+    @BindView(R.id.to_repeat_button)
+    /* default */ FloatingActionButton mRepeatButton;
+    @BindView(R.id.turn_card_button)
+    /* default */ ImageView mTurnCardButton;
+    @BindView(R.id.textFrontCardView)
+    /* default */ TextView mFrontTextView;
+    @BindView(R.id.textBackCardView)
+    /* default */ TextView mBackTextView;
+    @BindView(R.id.delimeter)
+    /* default */ View mDelimiter;
     private boolean mBackIsShown;
     private Deck mDeck;
     private Card mCard;
@@ -93,30 +104,13 @@ public class LearningCardsActivity extends AppCompatActivity {
                     }
                 }
             };
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            switch (v.getId()) {
-                case R.id.to_know_button:
-                    setClickableRepeatKnowButtons(false);
-                    mCard.answer(true);
-                    mBackIsShown = false;
-                    break;
-                case R.id.to_repeat_button:
-                    setClickableRepeatKnowButtons(false);
-                    mCard.answer(false);
-                    mBackIsShown = false;
-                    break;
-                case R.id.turn_card_button:
-                    showBackSide();
-                    break;
-                default:
-                    Log.v(TAG, "Button is not implemented yet.");
-                    break;
-            }
-        }
-    };
 
+    /**
+     * Method starts LearningCardsActivity.
+     *
+     * @param context context to start Activity.
+     * @param deck    deck which cards to learn.
+     */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, LearningCardsActivity.class);
         intent.putExtra(LearningCardsActivity.DECK, deck);
@@ -133,13 +127,14 @@ public class LearningCardsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN);
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getParameters();
-        initViews();
+        ButterKnife.bind(this);
+        mDelimiter.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -164,6 +159,25 @@ public class LearningCardsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mCardAvailableListener.cleanup();
+    }
+
+    @OnClick(R.id.to_know_button)
+    /* default */ void userKnowCardButtonClick() {
+        setClickableRepeatKnowButtons(false);
+        mCard.answer(true);
+        mBackIsShown = false;
+    }
+
+    @OnClick(R.id.to_repeat_button)
+    /* default */ void userDontKnowCardButtonClick() {
+        setClickableRepeatKnowButtons(false);
+        mCard.answer(false);
+        mBackIsShown = false;
+    }
+
+    @OnClick(R.id.turn_card_button)
+    /* default */ void flipCardButtonClick() {
+        showBackSide();
     }
 
     /**
@@ -219,29 +233,6 @@ public class LearningCardsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
-
-    /**
-     * Initializes buttons and views.
-     * Sets click listeners.
-     */
-    private void initViews() {
-        mCardView = (CardView) findViewById(R.id.card_view);
-
-        mKnowButton = (FloatingActionButton) findViewById(R.id.to_know_button);
-        mKnowButton.setOnClickListener(mOnClickListener);
-
-        mRepeatButton = (FloatingActionButton) findViewById(R.id.to_repeat_button);
-        mRepeatButton.setOnClickListener(mOnClickListener);
-
-        mFrontTextView = (TextView) findViewById(R.id.textFrontCardView);
-        mBackTextView = (TextView) findViewById(R.id.textBackCardView);
-
-        mTurnCardButton = (ImageView) findViewById(R.id.turn_card_button);
-        mTurnCardButton.setOnClickListener(mOnClickListener);
-
-        mDelimiter = findViewById(R.id.delimeter);
-        mDelimiter.setVisibility(View.INVISIBLE);
     }
 
     /**

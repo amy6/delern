@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
@@ -232,10 +231,10 @@ public abstract class AbstractModel {
      * Fetch a single model from the database, and watch for changes until callback.cleanup() is
      * called. The model will have its parent set to "this" (receiver).
      *
-     * @param query      Firebase query returning a node to directly parse into the model.
-     * @param cls        class of the model to parse the data into.
-     * @param callback   callback when the data is first available or changed.
-     * @param <T>        class of the model to parse the data into.
+     * @param query    Firebase query returning a node to directly parse into the model.
+     * @param cls      class of the model to parse the data into.
+     * @param callback callback when the data is first available or changed.
+     * @param <T>      class of the model to parse the data into.
      */
     @Exclude
     public <T extends AbstractModel> void fetchChild(
@@ -346,7 +345,7 @@ public abstract class AbstractModel {
         /**
          * Save (add or update) the model to the database.
          *
-         * @param model    instance of model.
+         * @param model instance of model.
          * @return "this" (for chained calls).
          */
         public MultiWrite save(final AbstractModel model) {
@@ -365,7 +364,7 @@ public abstract class AbstractModel {
         /**
          * Delete (assign null to the key) a model from the database.
          *
-         * @param model    instance of model.
+         * @param model instance of model.
          * @return "this" (for chained calls).
          */
         public MultiWrite delete(final AbstractModel model) {
@@ -386,6 +385,7 @@ public abstract class AbstractModel {
 
         /**
          * Apply all the queued operations to the database.
+         *
          * @param onCompleteListener invoked when the operation finishes; onSuccess is triggered
          *                           immediately if database is offline.
          */

@@ -106,7 +106,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         }
 
         /**
-         * Sets the onClick listener of this view.
+         * Sets the onAddUpdateButtonClick listener of this view.
          *
          * @param nestedOnClickListener callback
          * @return this

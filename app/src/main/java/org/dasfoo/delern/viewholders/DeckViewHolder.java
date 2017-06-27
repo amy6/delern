@@ -71,7 +71,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     public DeckViewHolder(final View viewHolder) {
         super(viewHolder);
         ButterKnife.bind(this, viewHolder);
-        mCountToLearnTextView.setText(R.string.n_a);
     }
 
     /**
@@ -205,6 +204,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
+                        // TODO(ksheremet): adapter position may change while the dialog is open.
+                        //                  Check here for -1, or save before showing the dialog and
+                        //                  check here for being within range.
                         mOnViewClick.deleteDeck(getAdapterPosition());
                     }
                 })

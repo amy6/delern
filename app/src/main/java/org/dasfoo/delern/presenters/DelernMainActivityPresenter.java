@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.presenters;
 
-
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -107,7 +106,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      * @param layout view layout for adapter.
      * @return DeckRecyclerViewAdapter that represents decks.
      */
-    public DeckRecyclerViewAdapter getAdapter(final int layout) {
+    public DeckRecyclerViewAdapter createAdapter(final int layout) {
         mFirebaseAdapter = new DeckRecyclerViewAdapter(layout, mUser);
         mFirebaseAdapter.setOnDeckViewHolderClick(this);
         return mFirebaseAdapter;
@@ -177,7 +176,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      * @param deckName name of deck
      */
     public void createNewDeck(final String deckName) {
-        final Deck newDeck = new Deck(new User());
+        final Deck newDeck = new Deck(mUser);
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);

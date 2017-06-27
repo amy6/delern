@@ -62,6 +62,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
 
     private Deck mDeck;
 
+    /**
+     * Method starts EditCardListActivity.
+     *
+     * @param context context from where it was called.
+     * @param deck deck which cards to show.
+     */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditCardListActivity.class);
         intent.putExtra(EditCardListActivity.DECK, deck);
@@ -80,7 +86,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                startAddCardsActivity();
+                AddEditCardActivity.startAddCardActivity(EditCardListActivity.this, mDeck);
             }
         });
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -145,25 +151,12 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
-    private void startAddCardsActivity() {
-        Intent intent = new Intent(this, AddEditCardActivity.class);
-        Card card = new Card(mDeck);
-        intent.putExtra(AddEditCardActivity.CARD, card);
-        startActivity(intent);
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void onCardClick(final int position) {
-        showCardBeforeEdit(mFirebaseAdapter.getItem(position));
-    }
-
-    private void showCardBeforeEdit(final Card card) {
-        Intent intent = new Intent(this, PreEditCardActivity.class);
-        intent.putExtra(PreEditCardActivity.CARD, card);
-        startActivity(intent);
+        PreEditCardActivity.startActivity(this, mFirebaseAdapter.getItem(position));
     }
 
     /**

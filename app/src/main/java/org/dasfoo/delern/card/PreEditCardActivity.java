@@ -20,25 +20,28 @@ package org.dasfoo.delern.card;
 
 // TODO(refactoring): this class should be gone!
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Activity that shows the card before it is being edited.
@@ -51,10 +54,26 @@ public class PreEditCardActivity extends AppCompatActivity {
      */
     public static final String CARD = "card";
 
+    @BindView(R.id.textFrontPreview)
+    /* default */ TextView mFrontPreview;
+    @BindView(R.id.textBackPreview)
+    /* default */ TextView mBackPreview;
+
     private Card mCard;
     private AbstractDataAvailableListener<Card> mCardValueEventListener;
-    private TextView mFrontPreview;
-    private TextView mBackPreview;
+
+    /**
+     * Method starts PreEditCardActivity. It gets context from where it was called
+     * and card for preview.
+     *
+     * @param context context for starting activity.
+     * @param card    card for preview.
+     */
+    public static void startActivity(final Context context, final Card card) {
+        Intent intent = new Intent(context, PreEditCardActivity.class);
+        intent.putExtra(PreEditCardActivity.CARD, card);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,16 +83,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         configureToolbar();
         getParameters();
         this.setTitle(mCard.getDeck().getName());
-        mFrontPreview = (TextView) findViewById(R.id.textFrontPreview);
-        mBackPreview = (TextView) findViewById(R.id.textBackPreview);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                editCardActivityStart();
-            }
-        });
+        ButterKnife.bind(this);
     }
 
     private void getParameters() {
@@ -82,7 +92,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     }
 
     private void configureToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -113,10 +123,9 @@ public class PreEditCardActivity extends AppCompatActivity {
         mCardValueEventListener.cleanup();
     }
 
-    private void editCardActivityStart() {
-        Intent intentEdit = new Intent(this, AddEditCardActivity.class);
-        intentEdit.putExtra(AddEditCardActivity.CARD, mCard);
-        startActivity(intentEdit);
+    @OnClick(R.id.edit_card_button)
+    /* default */ void editCardActivityStart() {
+        AddEditCardActivity.startEditCardActivity(this, mCard);
     }
 
     /**

@@ -45,6 +45,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <TextView
         android:id="@+id/count_to_learn_textview"
         style="@style/SecondaryText"
+        android:text="@string/n_a"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

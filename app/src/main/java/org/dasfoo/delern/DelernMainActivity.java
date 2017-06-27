@@ -161,13 +161,12 @@ public class DelernMainActivity extends AppCompatActivity
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mRecyclerView.setAdapter(mMainActivityPresenter.getAdapter(R.layout.deck_text_view));
+        mRecyclerView.setAdapter(mMainActivityPresenter.createAdapter(R.layout.deck_text_view));
         mMainActivityPresenter.onStart();
     }
 

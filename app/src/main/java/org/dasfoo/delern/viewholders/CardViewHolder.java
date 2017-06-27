@@ -20,20 +20,25 @@ package org.dasfoo.delern.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Created by katarina on 11/14/16.
  * Describes an item view and metadata about its place within the RecyclerView.
  */
-public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class CardViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView mFrontTextView;
-    private final TextView mBackTextView;
+    @BindView(R.id.front_textview)
+    /* default */ TextView mFrontTextView;
+    @BindView(R.id.back_textview)
+    /* default */ TextView mBackTextView;
     private OnCardViewHolderClick mOnViewClick;
 
     /**
@@ -43,10 +48,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
      */
     public CardViewHolder(final View itemView) {
         super(itemView);
-        mFrontTextView = (TextView) itemView.findViewById(R.id.front_textview);
-        mBackTextView = (TextView) itemView.findViewById(R.id.back_textview);
-        LinearLayout linearLayout = (LinearLayout) itemView.findViewById(R.id.card_edit_click);
-        linearLayout.setOnClickListener(this);
+        ButterKnife.bind(this, itemView);
     }
 
     /**
@@ -77,14 +79,10 @@ public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
+     * Called when recyclerview card has been clicked.
      */
-    @Override
-    public void onClick(final View v) {
-        if (v.getId() == R.id.card_edit_click) {
-            mOnViewClick.onCardClick(getAdapterPosition());
-        }
+    @OnClick(R.id.card_edit_click)
+    public void onClick() {
+        mOnViewClick.onCardClick(getAdapterPosition());
     }
 }

@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.card;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -34,26 +35,59 @@ import android.widget.Toast;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Activity to edit or add a new card.
  */
-public class AddEditCardActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddEditCardActivity extends AppCompatActivity {
 
     /**
      * IntentExtra Card ID being edited.
      */
     public static final String CARD = "card";
 
-    private TextInputEditText mFrontSideInputText;
-    private TextInputEditText mBackSideInputText;
+    @BindView(R.id.front_side_text)
+    /* default */ TextInputEditText mFrontSideInputText;
+    @BindView(R.id.back_side_text)
+    /* default */ TextInputEditText mBackSideInputText;
+    @BindView(R.id.add_reversed_card_checkbox)
+    /* default */ CheckBox mAddReversedCardCheckbox;
     private Card mCard;
-    private CheckBox mAddReversedCardCheckbox;
     private OnOperationCompleteListener mOnCardAddedListener;
     private OnOperationCompleteListener mOnCardUpdatedListener;
+
+    /**
+     * Method starts activity for adding cards in deck.
+     *
+     * @param context context from activity where method was called.
+     * @param deck deck where to add cards.
+     */
+    public static void startAddCardActivity(final Context context, final Deck deck) {
+        Intent intent = new Intent(context, AddEditCardActivity.class);
+        Card card = new Card(deck);
+        intent.putExtra(AddEditCardActivity.CARD, card);
+        context.startActivity(intent);
+    }
+
+    /**
+     * Method starts AddEditCardActivity for editing card.
+     *
+     * @param context context from activity where method was called.
+     * @param card card to edit.
+     */
+    public static void startEditCardActivity(final Context context, final Card card) {
+        Intent intent = new Intent(context, AddEditCardActivity.class);
+        intent.putExtra(AddEditCardActivity.CARD, card);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -63,12 +97,9 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         mCard = intent.getParcelableExtra(CARD);
         this.setTitle(mCard.getDeck().getName());
+        ButterKnife.bind(this);
 
-        mFrontSideInputText = (TextInputEditText) findViewById(R.id.front_side_text);
-        mBackSideInputText = (TextInputEditText) findViewById(R.id.back_side_text);
-        mAddReversedCardCheckbox = (CheckBox) findViewById(R.id.add_reversed_card_checkbox);
-        final Button mAddCardToDbButton = (Button) findViewById(R.id.add_card_to_db);
-        mAddCardToDbButton.setOnClickListener(this);
+        final Button mAddCardToDbButton = ButterKnife.findById(this, R.id.add_card_to_db);
         if (mCard.exists()) {
             mAddCardToDbButton.setText(R.string.save);
             mFrontSideInputText.setText(mCard.getFront());
@@ -142,24 +173,20 @@ public class AddEditCardActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
+     * Called when user clicked on Save or Update button.
      */
-    @Override
-    public void onClick(final View v) {
-        if (v.getId() == R.id.add_card_to_db) {
-            if (mCard.exists()) {
-                mCard.setFront(mFrontSideInputText.getText().toString());
-                mCard.setBack(mBackSideInputText.getText().toString());
-                mCard.save(mOnCardUpdatedListener);
-            } else {
-                String frontCardSide = mFrontSideInputText.getText().toString();
-                String backCardSide = mBackSideInputText.getText().toString();
-                addNewCard(frontCardSide, backCardSide);
-                if (mAddReversedCardCheckbox.isChecked()) {
-                    addNewCard(backCardSide, frontCardSide);
-                }
+    @OnClick(R.id.add_card_to_db)
+    public void onAddUpdateButtonClick() {
+        if (mCard.exists()) {
+            mCard.setFront(mFrontSideInputText.getText().toString());
+            mCard.setBack(mBackSideInputText.getText().toString());
+            mCard.save(mOnCardUpdatedListener);
+        } else {
+            String frontCardSide = mFrontSideInputText.getText().toString();
+            String backCardSide = mBackSideInputText.getText().toString();
+            addNewCard(frontCardSide, backCardSide);
+            if (mAddReversedCardCheckbox.isChecked()) {
+                addNewCard(backCardSide, frontCardSide);
             }
         }
     }

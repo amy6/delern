@@ -32,7 +32,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <include layout="@layout/pre_edit_card_content" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/edit_card_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
