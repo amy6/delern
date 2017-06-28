@@ -36,10 +36,9 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.Level;
-import org.dasfoo.delern.models.ScheduledCard;
-import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
+import org.dasfoo.delern.views.IAddEditCardView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +47,7 @@ import butterknife.OnClick;
 /**
  * Activity to edit or add a new card.
  */
-public class AddEditCardActivity extends AppCompatActivity {
+public class AddEditCardActivity extends AppCompatActivity implements IAddEditCardView {
 
     /**
      * IntentExtra Card ID being edited.
@@ -61,9 +60,12 @@ public class AddEditCardActivity extends AppCompatActivity {
     /* default */ TextInputEditText mBackSideInputText;
     @BindView(R.id.add_reversed_card_checkbox)
     /* default */ CheckBox mAddReversedCardCheckbox;
-    private Card mCard;
+    @BindView(R.id.add_card_to_db)
+    /* default */ Button mAddCardToDbButton;
     private OnOperationCompleteListener mOnCardAddedListener;
     private OnOperationCompleteListener mOnCardUpdatedListener;
+
+    private final AddEditCardActivityPresenter mPresenter = new AddEditCardActivityPresenter(this);
 
     /**
      * Method starts activity for adding cards in deck.
@@ -96,19 +98,11 @@ public class AddEditCardActivity extends AppCompatActivity {
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
         Intent intent = getIntent();
-        mCard = intent.getParcelableExtra(CARD);
-        this.setTitle(mCard.getDeck().getName());
+        Card card = intent.getParcelableExtra(CARD);
+        this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
 
-        final Button mAddCardToDbButton = ButterKnife.findById(this, R.id.add_card_to_db);
-        if (mCard.exists()) {
-            mAddCardToDbButton.setText(R.string.save);
-            mFrontSideInputText.setText(mCard.getFront());
-            mBackSideInputText.setText(mCard.getBack());
-            mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
-        } else {
-            mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
-        }
+        mPresenter.onCreate(card);
         mAddCardToDbButton.setEnabled(false);
         final TextWatcherStub cardValid = new TextWatcherStub() {
             @Override
@@ -140,7 +134,7 @@ public class AddEditCardActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (mCard.exists()) {
+        if (mPresenter.cardExist()) {
             mOnCardUpdatedListener = new OnOperationCompleteListener(this) {
                 @Override
                 public void onSuccess() {
@@ -166,8 +160,7 @@ public class AddEditCardActivity extends AppCompatActivity {
                     }
                     cleanTextFields();
                     // Clean fields for the next new card
-                    mCard.setFront(null);
-                    mCard.setBack(null);
+                    mPresenter.cleanCardFields();
                 }
             };
         }
@@ -178,16 +171,15 @@ public class AddEditCardActivity extends AppCompatActivity {
      */
     @OnClick(R.id.add_card_to_db)
     public void onAddUpdateButtonClick() {
-        if (mCard.exists()) {
-            mCard.setFront(mFrontSideInputText.getText().toString());
-            mCard.setBack(mBackSideInputText.getText().toString());
-            mCard.save(mOnCardUpdatedListener);
+        if (mPresenter.cardExist()) {
+            mPresenter.update(mFrontSideInputText.getText().toString(),
+                    mBackSideInputText.getText().toString(), mOnCardUpdatedListener);
         } else {
             String frontCardSide = mFrontSideInputText.getText().toString();
             String backCardSide = mBackSideInputText.getText().toString();
-            addNewCard(frontCardSide, backCardSide);
+            mPresenter.add(frontCardSide, backCardSide, mOnCardAddedListener);
             if (mAddReversedCardCheckbox.isChecked()) {
-                addNewCard(backCardSide, frontCardSide);
+                mPresenter.add(backCardSide, frontCardSide, mOnCardAddedListener);
             }
         }
     }
@@ -208,19 +200,22 @@ public class AddEditCardActivity extends AppCompatActivity {
         }
     }
 
-    private void addNewCard(final String frontSide, final String backSide) {
-        // TODO(dotdoom): move to Card, make ScheduledCard private
-        ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
-        scheduledCard.setLevel(Level.L0.name());
-        scheduledCard.setRepeatAt(System.currentTimeMillis());
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initForAdd() {
+        mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
+    }
 
-        Card newCard = new Card(scheduledCard);
-        newCard.setFront(frontSide);
-        newCard.setBack(backSide);
-
-        new MultiWrite()
-                .save(newCard)
-                .save(scheduledCard)
-                .write(mOnCardAddedListener);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initForUpdate(final String front, final String back) {
+        mAddCardToDbButton.setText(R.string.save);
+        mFrontSideInputText.setText(front);
+        mBackSideInputText.setText(back);
+        mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
     }
 }
