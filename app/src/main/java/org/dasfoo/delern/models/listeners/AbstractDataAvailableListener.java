@@ -61,7 +61,6 @@ public abstract class AbstractDataAvailableListener<T> {
                                       @Nullable final Context context) {
         Exception errorDetails = e;
         if (errorDetails == null) {
-            // TODO(refactoring): add stack trace?
             errorDetails = new Exception("Unknown error");
         }
         LogUtil.error(TAG, "Database operation failed", errorDetails);

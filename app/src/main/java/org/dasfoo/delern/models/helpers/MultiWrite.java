@@ -53,7 +53,6 @@ public class MultiWrite {
      * @param db DatabaseReference to the root of the database.
      */
     public static void initializeOfflineListener(final FirebaseDatabase db) {
-        // TODO(refactoring): this method should go elsewhere (callback setter static class?)
         db.getReference(".info/connected").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
