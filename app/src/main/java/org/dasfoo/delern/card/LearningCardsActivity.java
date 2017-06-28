@@ -36,14 +36,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.controller.CardColor;
-import org.dasfoo.delern.controller.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.presenters.LearningCardsActivityPresenter;
 import org.dasfoo.delern.util.Animation;
-import org.dasfoo.delern.util.LogUtil;
+import org.dasfoo.delern.views.ILearningCardsView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +49,7 @@ import butterknife.OnClick;
 /**
  * Activity for showing cards to learn.
  */
-public class LearningCardsActivity extends AppCompatActivity {
+public class LearningCardsActivity extends AppCompatActivity implements ILearningCardsView {
 
     /**
      * IntentExtra deck for this activity.
@@ -60,14 +57,9 @@ public class LearningCardsActivity extends AppCompatActivity {
     public static final String DECK = "deck";
 
     /**
-     * Information about class for logging.
-     */
-    private static final String TAG = LogUtil.tagFor(LearningCardsActivity.class);
-
-    /**
      * Key for saving onSaveInstanceState.
      */
-    private static final String BACK_IS_SHOWN = "back";
+    private static final String BACK_IS_SHOWN_KEY = "back";
     @BindView(R.id.card_view)
     /* default */ CardView mCardView;
     @BindView(R.id.to_know_button)
@@ -82,27 +74,9 @@ public class LearningCardsActivity extends AppCompatActivity {
     /* default */ TextView mBackTextView;
     @BindView(R.id.delimeter)
     /* default */ View mDelimiter;
+    private final LearningCardsActivityPresenter mPresenter =
+            new LearningCardsActivityPresenter(this);
     private boolean mBackIsShown;
-    private Deck mDeck;
-    private Card mCard;
-    private final AbstractDataAvailableListener<Card> mCardAvailableListener =
-            new AbstractDataAvailableListener<Card>(this) {
-                @Override
-                public void onData(final Card data) {
-                    if (data == null) {
-                        finish();
-                        return;
-                    }
-                    mCard = data;
-                    showFrontSide();
-                    // if user decided to edit card, a back side can be shown or not.
-                    // After returning back it must show the same state (the same buttons
-                    // and text) as before editing
-                    if (mBackIsShown) {
-                        showBackSide();
-                    }
-                }
-            };
 
     /**
      * Method starts LearningCardsActivity.
@@ -124,14 +98,17 @@ public class LearningCardsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_cards_activity);
         if (savedInstanceState != null) {
-            mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN);
+            mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN_KEY);
         }
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        getParameters();
+        Intent intent = getIntent();
+        Deck deck = intent.getParcelableExtra(DECK);
+        this.setTitle(deck.getName());
+        mPresenter.onCreate(deck);
         ButterKnife.bind(this);
         mDelimiter.setVisibility(View.INVISIBLE);
     }
@@ -142,7 +119,7 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(BACK_IS_SHOWN, mBackIsShown);
+        outState.putBoolean(BACK_IS_SHOWN_KEY, mBackIsShown);
     }
 
     /**
@@ -151,41 +128,32 @@ public class LearningCardsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mDeck.startScheduledCardWatcher(mCardAvailableListener);
+        mPresenter.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mCardAvailableListener.cleanup();
+        mPresenter.onStop();
     }
 
     @OnClick(R.id.to_know_button)
     /* default */ void userKnowCardButtonClick() {
         setClickableRepeatKnowButtons(false);
-        mCard.answer(true);
+        mPresenter.userKnowCard();
         mBackIsShown = false;
     }
 
     @OnClick(R.id.to_repeat_button)
     /* default */ void userDontKnowCardButtonClick() {
         setClickableRepeatKnowButtons(false);
-        mCard.answer(false);
+        mPresenter.userDoNotKnowCard();
         mBackIsShown = false;
     }
 
     @OnClick(R.id.turn_card_button)
     /* default */ void flipCardButtonClick() {
-        showBackSide();
-    }
-
-    /**
-     * Gets parameters sent from previous Activity.
-     */
-    private void getParameters() {
-        Intent intent = getIntent();
-        mDeck = intent.getParcelableExtra(DECK);
-        this.setTitle(mDeck.getName());
+        mPresenter.flipCard();
     }
 
     /**
@@ -205,9 +173,7 @@ public class LearningCardsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
-                Intent intentEdit = new Intent(this, AddEditCardActivity.class);
-                intentEdit.putExtra(AddEditCardActivity.CARD, mCard);
-                startActivity(intentEdit);
+                mPresenter.startEditCard();
                 break;
             case R.id.delete_card_show_menu:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -216,8 +182,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         mBackIsShown = false;
-                        // TODO(ksheremet): delete if not owner
-                        mCard.delete();
+                        mPresenter.delete();
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -235,11 +200,13 @@ public class LearningCardsActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows front side of the current card and appropriate buttons.
+     * {@inheritDoc}
      */
-    private void showFrontSide() {
-        setBackgroundCardColor();
-        mFrontTextView.setText(mCard.getFront());
+    @Override
+    public void showFrontSide(final String front) {
+        mCardView.setCardBackgroundColor(ContextCompat
+                .getColor(this, mPresenter.setBackgroundCardColor()));
+        mFrontTextView.setText(front);
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
@@ -248,28 +215,11 @@ public class LearningCardsActivity extends AppCompatActivity {
     }
 
     /**
-     * Specifies grammatical gender of content.
-     * Sets background color for mCardView regarding gender.
+     * {@inheritDoc}
      */
-    private void setBackgroundCardColor() {
-        GrammaticalGenderSpecifier.Gender gender;
-        try {
-            gender = GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mCard.getDeck().getDeckType()),
-                    mCard.getBack());
-
-        } catch (IllegalArgumentException e) {
-            LogUtil.error(TAG, "Cannot detect gender: " + mCard.getBack(), e);
-            gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
-        }
-        mCardView.setCardBackgroundColor(ContextCompat.getColor(this, CardColor.getColor(gender)));
-    }
-
-    /**
-     * Shows back side of current card and appropriate buttons.
-     */
-    private void showBackSide() {
-        mBackTextView.setText(mCard.getBack());
+    @Override
+    public void showBackSide(final String back) {
+        mBackTextView.setText(back);
         Animator repeatButtonAnimation = null;
         Animator knowButtonAnimation = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -285,7 +235,31 @@ public class LearningCardsActivity extends AppCompatActivity {
         }
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
-        mBackIsShown = true;
+        this.mBackIsShown = true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startEditCardActivity(final Card card) {
+        AddEditCardActivity.startEditCardActivity(this, card);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void finishLearning() {
+        finish();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean backSideIsShown() {
+        return mBackIsShown;
     }
 
     /**
