@@ -33,8 +33,6 @@ import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO(refactoring): Review method visibility
-
 /**
  * Base class for models, implementing Firebase functionality.
  */
@@ -71,11 +69,10 @@ public abstract class AbstractModel {
                                                            final Class<T> cls,
                                                            final AbstractModel parent) {
         T model = snapshot.getValue(cls);
-        if (model == null) {
-            return null;
+        if (model != null) {
+            model.setKey(snapshot.getKey());
+            model.setParent(parent);
         }
-        model.setKey(snapshot.getKey());
-        model.setParent(parent);
         return model;
     }
 

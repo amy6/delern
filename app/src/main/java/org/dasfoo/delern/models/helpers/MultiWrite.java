@@ -80,7 +80,7 @@ public class MultiWrite {
             return new URI(reference.toString()).getPath();
         } catch (URISyntaxException e) {
             LogUtil.error(TAG, "Cannot parse Firebase Database URI: " + reference, e);
-            // TODO(refactoring): make this all-writable for data recovery
+            // TODO(dotdoom): make this all-writable for data recovery
             return "trash";
         }
     }

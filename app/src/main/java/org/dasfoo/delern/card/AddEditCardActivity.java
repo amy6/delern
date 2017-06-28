@@ -209,7 +209,7 @@ public class AddEditCardActivity extends AppCompatActivity {
     }
 
     private void addNewCard(final String frontSide, final String backSide) {
-        // TODO(refactoring): move to Card, make ScheduledCard private
+        // TODO(dotdoom): move to Card, make ScheduledCard private
         ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());

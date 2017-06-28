@@ -87,7 +87,7 @@ public class Deck extends AbstractModel implements Parcelable {
      *
      * @param in parcel.
      */
-    // TODO(refactoring): investigate the possible issues here
+    // TODO(dotdoom): investigate the possible issues here
     @SuppressWarnings({"PMD.UseProperClassLoader", "PMD.ConstructorCallsOverridableMethod"})
     protected Deck(final Parcel in) {
         super((User) in.readParcelable(User.class.getClassLoader()));

@@ -95,6 +95,7 @@ public abstract class AbstractDataAvailableListener<T> {
      */
     public ValueEventListener setCleanupPair(@NonNull final Query query,
                                              @NonNull final ValueEventListener listener) {
+        // TODO(dotdoom): consider creating an attach() method instead.
         if (mQuery != null) {
             LogUtil.error(TAG, "Data Available Listener cleanup pair is overwritten");
         }

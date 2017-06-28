@@ -40,7 +40,7 @@ public abstract class AbstractOnFBDataChangeListener implements ValueEventListen
     public AbstractOnFBDataChangeListener(
             final @NonNull AbstractDataAvailableListener onCancelledListener) {
         mOnCancelledListener = onCancelledListener;
-        // TODO(refactoring): consider mOnCancelledListener.setListener(this);
+        // TODO(dotdoom): consider mOnCancelledListener.setListener(this);
     }
 
     /**

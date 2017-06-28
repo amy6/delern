@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.card;
 
-// TODO(refactoring): this class should be gone!
+// TODO(ksheremet): this class should be gone!
 
 import android.content.Context;
 import android.content.DialogInterface;

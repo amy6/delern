@@ -47,6 +47,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
      *
      * @param context used to show a Toast.
      */
+    // TODO(dotdoom): replace context with some IUserNotifier.
     public OnOperationCompleteListener(@NonNull final Context context) {
         mContext = context;
     }

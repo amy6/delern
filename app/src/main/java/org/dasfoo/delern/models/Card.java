@@ -108,7 +108,7 @@ public class Card extends AbstractModel implements Parcelable {
      *
      * @param in parcel.
      */
-    // TODO(refactoring): investigate the possible issues here
+    // TODO(dotdoom): investigate the possible issues here
     @SuppressWarnings({"PMD.UseProperClassLoader", "PMD.ConstructorCallsOverridableMethod"})
     protected Card(final Parcel in) {
         super((Deck) in.readParcelable(Deck.class.getClassLoader()));
