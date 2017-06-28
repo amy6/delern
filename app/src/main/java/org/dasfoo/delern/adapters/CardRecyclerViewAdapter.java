@@ -124,7 +124,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
          */
         public CardRecyclerViewAdapter build() throws InstantiationException {
             if (this.mNestedOnClickListener == null) {
-                Log.e(TAG, "Set OnClickListener");
+                LogUtil.error(TAG, "Nested OnClickListener is null");
                 throw new InstantiationException("OnClickListener is required");
             }
             return new CardRecyclerViewAdapter(this);

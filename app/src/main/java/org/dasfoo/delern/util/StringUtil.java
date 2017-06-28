@@ -49,8 +49,7 @@ public final class StringUtil {
         try {
             return new URI(reference.toString()).getPath();
         } catch (URISyntaxException e) {
-            Crashlytics.logException(e);
-            Log.e(TAG, "Cannot parse FBD Uri", e);
+            LogUtil.error(TAG, "Cannot parse Firebase Database URI: " + reference, e);
             // TODO(refactoring): make this all-writable for data recovery
             return "trash";
         }

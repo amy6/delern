@@ -77,8 +77,7 @@ public abstract class AbstractDataAvailableListener<T> {
             // TODO(refactoring): add stack trace?
             errorDetails = new Exception("Unknown error");
         }
-        Log.e(TAG, "Database operation failed:", errorDetails);
-        Crashlytics.logException(errorDetails);
+        LogUtil.error(TAG, "Database operation failed", errorDetails);
 
         if (context != null) {
             Toast.makeText(context, errorDetails.getMessage(), Toast.LENGTH_LONG).show();
@@ -94,7 +93,7 @@ public abstract class AbstractDataAvailableListener<T> {
     public ValueEventListener setCleanupPair(@NonNull final Query query,
                                              @NonNull final ValueEventListener listener) {
         if (mQuery != null) {
-            Crashlytics.log(Log.ASSERT, TAG, "Cleanup Pair is overwritten!");
+            LogUtil.error(TAG, "Data Available Listener cleanup pair is overwritten");
         }
         mQuery = query;
         mListener = listener;

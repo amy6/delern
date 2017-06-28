@@ -260,7 +260,7 @@ public class LearningCardsActivity extends AppCompatActivity {
                     mCard.getBack());
 
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, e.getMessage());
+            LogUtil.error(TAG, "Cannot detect gender: " + mCard.getBack(), e);
             gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         }
         mCardView.setCardBackgroundColor(ContextCompat.getColor(this, CardColor.getColor(gender)));

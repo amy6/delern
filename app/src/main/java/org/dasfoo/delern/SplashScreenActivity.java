@@ -88,7 +88,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         return;
                     }
                 } else {
-                    Log.e(TAG, "Remote config error:", task.getException());
+                    LogUtil.error(TAG, "Remote config reading error", task.getException());
                 }
                 DelernMainActivity.startActivity(SplashScreenActivity.this, User.getCurrentUser());
                 finish();

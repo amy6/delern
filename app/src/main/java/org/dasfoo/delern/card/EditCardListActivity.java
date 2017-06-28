@@ -146,7 +146,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
                     .setOnClickListener(this)
                     .build();
         } catch (InstantiationException e) {
-            Log.e(TAG, e.getMessage());
+            LogUtil.error(TAG, "Cannot configure firebase adapter for card list", e);
         }
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
@@ -195,7 +195,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
                     .setOnClickListener(this)
                     .build();
         } catch (InstantiationException e) {
-            Log.e(TAG, e.getMessage());
+            LogUtil.error(TAG, "Cannot configure Firebase adapter for card list (on search)", e);
         }
         mRecyclerView.setAdapter(mFirebaseAdapter);
         return true;

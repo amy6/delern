@@ -78,8 +78,7 @@ public class SignInActivity extends AppCompatActivity
 
         // TODO(ksheremet): Move to instrumented flavour package
         if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
-            // Force logging by using Log.e because ProGuard removes Log.w.
-            Log.e(TAG, "Running from an instrumented test: forcing anonymous sign in");
+            Log.w(TAG, "Running from an instrumented test: forcing anonymous sign in");
 
             User.signIn(null, new AbstractDataAvailableListener<User>(this) {
                 @Override
@@ -141,8 +140,7 @@ public class SignInActivity extends AppCompatActivity
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                // Google Sign In failed
-                Log.e(TAG, "Google Sign In failed:" + result.getStatus());
+                LogUtil.error(TAG, "Google Sign In activity failed: " + result.getStatus());
             }
         }
     }
@@ -169,7 +167,7 @@ public class SignInActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.e(TAG, "Google API is not available:" + connectionResult);
+        LogUtil.error(TAG, "Google API is not available: " + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 

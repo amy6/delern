@@ -18,6 +18,10 @@
 
 package org.dasfoo.delern.util;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
+
 /**
  * Helper methods for Android Logging.
  */
@@ -37,6 +41,28 @@ public final class LogUtil {
     @SuppressWarnings("rawtypes")
     public static String tagFor(final Class c) {
         return c.getSimpleName();
+    }
+
+    /**
+     * Log error locally and to Crashlytics.
+     * @param tag log tag.
+     * @param msg log message.
+     */
+    public static void error(final String tag, final String msg) {
+        Log.e(tag, msg);
+        Crashlytics.log(Log.ERROR, tag, msg);
+    }
+
+    /**
+     * Log error locally and to Crashlytics.
+     * @param tag log tag.
+     * @param msg log message.
+     * @param e   exception.
+     */
+    public static void error(final String tag, final String msg, final Throwable e) {
+        Log.e(tag, msg, e);
+        Crashlytics.log(Log.ERROR, tag, msg);
+        Crashlytics.logException(e);
     }
 }
 

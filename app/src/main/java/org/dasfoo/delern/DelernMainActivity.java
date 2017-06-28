@@ -283,8 +283,8 @@ public class DelernMainActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        Log.e(TAG, "onConnectionFailed:" + connectionResult);
-        Crashlytics.log(Log.ERROR, TAG, connectionResult.getErrorMessage());
+        LogUtil.error(TAG, "Google Play Services connection failed: " +
+                connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
