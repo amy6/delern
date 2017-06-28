@@ -21,10 +21,8 @@ package org.dasfoo.delern.models.listeners;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -32,6 +30,7 @@ import org.dasfoo.delern.util.LogUtil;
 
 /**
  * A listener creating an additional, AbstractModel-friendly layer of ValueEventListener callbacks.
+ *
  * @param <T> a type of the value to be passed into onData callback.
  */
 public abstract class AbstractDataAvailableListener<T> {
@@ -44,6 +43,7 @@ public abstract class AbstractDataAvailableListener<T> {
 
     /**
      * Create a new listener.
+     *
      * @param context an Activity context for automatically displaying Toast to the user in case of
      *                failure.
      */
@@ -52,21 +52,8 @@ public abstract class AbstractDataAvailableListener<T> {
     }
 
     /**
-     * Callback invoked when data fetch has failed.
-     * @param e error details if available, or null if no details are available.
-     */
-    public void onError(@Nullable final Exception e) {
-        defaultOnError(e, mContext);
-    }
-
-    /**
-     * Callback invoked when data is available.
-     * @param data a data based on where this callback is invoked from.
-     */
-    public abstract void onData(@Nullable T data);
-
-    /**
      * Default error handler which logs the exception and sends the crash report.
+     *
      * @param e       error details if available, or null.
      * @param context context to show Toast with error message.
      */
@@ -85,8 +72,25 @@ public abstract class AbstractDataAvailableListener<T> {
     }
 
     /**
+     * Callback invoked when data fetch has failed.
+     *
+     * @param e error details if available, or null if no details are available.
+     */
+    public void onError(@Nullable final Exception e) {
+        defaultOnError(e, mContext);
+    }
+
+    /**
+     * Callback invoked when data is available.
+     *
+     * @param data a data based on where this callback is invoked from.
+     */
+    public abstract void onData(@Nullable T data);
+
+    /**
      * For cleanup() only.
-     * @param query query from which the listener should be removed (only useful with setListener).
+     *
+     * @param query    query from which the listener should be removed (only good with setListener).
      * @param listener listener to be removed from query (only useful in couple with setQuery).
      * @return listener.
      */

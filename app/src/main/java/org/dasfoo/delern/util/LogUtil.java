@@ -45,6 +45,7 @@ public final class LogUtil {
 
     /**
      * Log error locally and to Crashlytics.
+     *
      * @param tag log tag.
      * @param msg log message.
      */
@@ -55,6 +56,7 @@ public final class LogUtil {
 
     /**
      * Log error locally and to Crashlytics.
+     *
      * @param tag log tag.
      * @param msg log message.
      * @param e   exception.

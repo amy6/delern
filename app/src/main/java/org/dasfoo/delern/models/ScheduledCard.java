@@ -40,6 +40,7 @@ public class ScheduledCard extends AbstractModel {
 
     /**
      * Create a ScheduledCard object associated with a deck.
+     *
      * @param deck Deck this ScheduledCard belongs to.
      */
     public ScheduledCard(final Deck deck) {
@@ -48,6 +49,7 @@ public class ScheduledCard extends AbstractModel {
 
     /**
      * Get the Deck this ScheduledCard is associated with.
+     *
      * @return AbstractModel parent casted to Deck (if set).
      */
     @Exclude

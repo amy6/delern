@@ -23,10 +23,10 @@ import android.util.Log;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
@@ -189,7 +189,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
     }
 
     /**
-     *Gets user data from FB Database. If user doesn't exist, calls sign in.
+     * Gets user data from FB Database. If user doesn't exist, calls sign in.
      * Otherwise calls callback method to update user profile info.
      */
     public void getUserInfo() {

@@ -80,6 +80,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Create a card object with Deck as a parent.
+     *
      * @param parent Deck which this card belongs to.
      */
     public Card(final Deck parent) {
@@ -91,6 +92,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Create a card object with ScheduledCard as a parent.
+     *
      * @param parent ScheduledCard associated with this card.
      */
     public Card(final ScheduledCard parent) {
@@ -102,6 +104,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Parcelable deserializer.
+     *
      * @param in parcel.
      */
     // TODO(refactoring): investigate the possible issues here
@@ -119,6 +122,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Set the key for the card and associated ScheduledCard (for saving it later).
+     *
      * @param key value of the key (usually a fairly random string).
      */
     @Exclude
@@ -133,6 +137,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Get the Deck this Card belongs to, directly or via associated ScheduledCard.
+     *
      * @return AbstractModel parent casted to Deck (if set).
      */
     @Exclude
@@ -146,6 +151,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Get the ScheduledCard this Card is associated with.
+     *
      * @return AbstractModel parent casted to ScheduledCard (if set).
      */
     @Exclude
@@ -159,6 +165,7 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Update the ScheduledCard associated with this card and add a View (saves to the database).
+     *
      * @param knows whether the user replied with "I know" to the card.
      */
     @Exclude

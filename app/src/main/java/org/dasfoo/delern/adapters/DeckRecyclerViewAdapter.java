@@ -24,9 +24,9 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 /**
@@ -40,10 +40,10 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
 
     /**
-     * @param modelLayout     This is the layout used to represent a single item in the list.
-     *                        You will be responsible for populating an instance of the
-     *                        corresponding view with the data from an instance of modelClass.
-     * @param user            Current user.
+     * @param modelLayout This is the layout used to represent a single item in the list.
+     *                    You will be responsible for populating an instance of the
+     *                    corresponding view with the data from an instance of modelClass.
+     * @param user        Current user.
      */
     public DeckRecyclerViewAdapter(final int modelLayout, final User user) {
         super(Deck.class, modelLayout, DeckViewHolder.class, user.getChildReference(Deck.class));
@@ -60,16 +60,17 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.setDeckCardType(deck.getDeckType());
         AbstractDataAvailableListener<Long> onCardsCountDataAvailableListener =
                 new AbstractDataAvailableListener<Long>(null) {
-            @Override
-            public void onData(@Nullable final Long cardsCount) {
-                if (cardsCount <= CARDS_COUNTER_LIMIT) {
-                    viewHolder.getCountToLearnTextView().setText(String.valueOf(cardsCount));
-                } else {
-                    String tooManyCards = CARDS_COUNTER_LIMIT + "+";
-                    viewHolder.getCountToLearnTextView().setText(tooManyCards);
-                }
-            }
-        };
+                    @Override
+                    public void onData(@Nullable final Long cardsCount) {
+                        if (cardsCount <= CARDS_COUNTER_LIMIT) {
+                            viewHolder.getCountToLearnTextView().setText(
+                                    String.valueOf(cardsCount));
+                        } else {
+                            String tooManyCards = CARDS_COUNTER_LIMIT + "+";
+                            viewHolder.getCountToLearnTextView().setText(tooManyCards);
+                        }
+                    }
+                };
 
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1),

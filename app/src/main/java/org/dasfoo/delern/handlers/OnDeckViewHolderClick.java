@@ -38,7 +38,7 @@ public interface OnDeckViewHolderClick {
      * "Rename" menu item of a deck.
      *
      * @param position position of the element in the list
-     * @param newName new name of deck
+     * @param newName  new name of deck
      */
     void renameDeck(int position, String newName);
 

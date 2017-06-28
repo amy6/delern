@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.adapters;
 
-import android.util.Log;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.Query;
@@ -82,8 +80,8 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         private final int mNestedLayout;
         private final Class<CardViewHolder> mNestedViewHolderClass;
         private final Query mNestedQuery;
-        private OnCardViewHolderClick mNestedOnClickListener;
         private final Deck mNestedDeck;
+        private OnCardViewHolderClick mNestedOnClickListener;
 
         /**
          * Constructor with required parameters.

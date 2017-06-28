@@ -79,6 +79,7 @@ public final class User extends AbstractModel implements Parcelable {
 
     /**
      * Parcelable deserializer.
+     *
      * @param in parcel.
      */
     protected User(final Parcel in) {
@@ -112,6 +113,52 @@ public final class User extends AbstractModel implements Parcelable {
         });
     }
 
+    /**
+     * Sign in a Firebase user and populate the database.
+     *
+     * @param credential null for anonymous sign-in.
+     * @param callback   invoked when sign-in is finished, either successfully or with failure.
+     */
+    public static void signIn(@Nullable final AuthCredential credential,
+                              @Nullable final AbstractDataAvailableListener<User> callback) {
+        Task<AuthResult> task;
+        if (credential == null) {
+            task = FirebaseAuth.getInstance().signInAnonymously();
+        } else {
+            task = FirebaseAuth.getInstance().signInWithCredential(credential);
+        }
+        if (callback != null) {
+            task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull final Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // OnAuthStateChange may fire too late, override right here.
+                        setCurrentUser(task.getResult().getUser());
+                        callback.onData(getCurrentUser());
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Sign the user out using FirebaseAuth.getInstance().signOut().
+     */
+    public static void signOut() {
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    /**
+     * Get signed in User.
+     *
+     * @return User model with all the fields set if signed in, or exists() false if isn't.
+     */
+    public static User getCurrentUser() {
+        return CURRENT_USER;
+    }
+
     private static void setCurrentUser(@Nullable final FirebaseUser user) {
         if (user == null) {
             Crashlytics.setUserIdentifier(null);
@@ -139,6 +186,15 @@ public final class User extends AbstractModel implements Parcelable {
             }
             CURRENT_USER.save(null);
         }
+    }
+
+    /**
+     * CHeck if the user is signed in.
+     *
+     * @return true if the user is signed in (equal to getCurrentUser().exists()).
+     */
+    public static boolean isSignedIn() {
+        return getCurrentUser().exists();
     }
 
     /**
@@ -205,58 +261,6 @@ public final class User extends AbstractModel implements Parcelable {
                 ", email='" + email + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
                 '}';
-    }
-
-    /**
-     * Sign in a Firebase user and populate the database.
-     * @param credential null for anonymous sign-in.
-     * @param callback   invoked when sign-in is finished, either successfully or with failure.
-     */
-    public static void signIn(@Nullable final AuthCredential credential,
-                              @Nullable final AbstractDataAvailableListener<User> callback) {
-        Task<AuthResult> task;
-        if (credential == null) {
-            task = FirebaseAuth.getInstance().signInAnonymously();
-        } else {
-            task = FirebaseAuth.getInstance().signInWithCredential(credential);
-        }
-        if (callback != null) {
-            task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull final Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // OnAuthStateChange may fire too late, override right here.
-                        setCurrentUser(task.getResult().getUser());
-                        callback.onData(getCurrentUser());
-                    } else {
-                        callback.onError(task.getException());
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * Sign the user out using FirebaseAuth.getInstance().signOut().
-     */
-    public static void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
-
-    /**
-     * Get signed in User.
-     * @return User model with all the fields set if signed in, or exists() false if isn't.
-     */
-    public static User getCurrentUser() {
-        return CURRENT_USER;
-    }
-
-    /**
-     * CHeck if the user is signed in.
-     * @return true if the user is signed in (equal to getCurrentUser().exists()).
-     */
-    public static boolean isSignedIn() {
-        return getCurrentUser().exists();
     }
 
     /**

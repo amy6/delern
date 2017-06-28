@@ -28,7 +28,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +65,7 @@ public class EditCardListActivity extends AppCompatActivity implements OnCardVie
      * Method starts EditCardListActivity.
      *
      * @param context context from where it was called.
-     * @param deck deck which cards to show.
+     * @param deck    deck which cards to show.
      */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditCardListActivity.class);

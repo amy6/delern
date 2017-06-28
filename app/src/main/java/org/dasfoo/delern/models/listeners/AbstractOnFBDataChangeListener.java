@@ -34,6 +34,7 @@ public abstract class AbstractOnFBDataChangeListener implements ValueEventListen
     /**
      * Constructor for listener on data change.
      * If changes were cancelled, writes message to user.
+     *
      * @param onCancelledListener callback to invoke when the listener fails.
      */
     public AbstractOnFBDataChangeListener(

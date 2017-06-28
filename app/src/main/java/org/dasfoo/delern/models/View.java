@@ -41,6 +41,7 @@ public class View extends AbstractModel {
 
     /**
      * Create a view object associated with a Card.
+     *
      * @param card Card which this View belongs to.
      */
     public View(final Card card) {

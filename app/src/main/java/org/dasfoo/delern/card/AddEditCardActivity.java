@@ -68,7 +68,7 @@ public class AddEditCardActivity extends AppCompatActivity {
      * Method starts activity for adding cards in deck.
      *
      * @param context context from activity where method was called.
-     * @param deck deck where to add cards.
+     * @param deck    deck where to add cards.
      */
     public static void startAddCardActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, AddEditCardActivity.class);
@@ -81,7 +81,7 @@ public class AddEditCardActivity extends AppCompatActivity {
      * Method starts AddEditCardActivity for editing card.
      *
      * @param context context from activity where method was called.
-     * @param card card to edit.
+     * @param card    card to edit.
      */
     public static void startEditCardActivity(final Context context, final Card card) {
         Intent intent = new Intent(context, AddEditCardActivity.class);

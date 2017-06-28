@@ -18,9 +18,6 @@
 
 package org.dasfoo.delern.util;
 
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.DatabaseReference;
 
 import java.net.URI;
@@ -42,6 +39,7 @@ public final class StringUtil {
 
     /**
      * Get bare Firebase path (relative to the root) from the DatabaseReference.
+     *
      * @param reference DatabaseReference to get the path for.
      * @return toString() of the reference with protocol, hostname and port stripped.
      */

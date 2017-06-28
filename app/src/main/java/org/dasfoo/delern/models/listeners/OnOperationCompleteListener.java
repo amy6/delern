@@ -44,6 +44,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
 
     /**
      * Create a listener with onError implementation showing a Toast with context.
+     *
      * @param context used to show a Toast.
      */
     public OnOperationCompleteListener(@NonNull final Context context) {
@@ -55,6 +56,15 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
      */
     public OnOperationCompleteListener() {
         // Intentionally left blank.
+    }
+
+    /**
+     * Default instance.
+     *
+     * @return default instance.
+     */
+    public static OnOperationCompleteListener getDefaultInstance() {
+        return DEFAULT_INSTANCE;
     }
 
     /**
@@ -76,7 +86,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
      */
     @Override
     public final void onComplete(final DatabaseError databaseError,
-                           final DatabaseReference databaseReference) {
+                                 final DatabaseReference databaseReference) {
         if (databaseError == null) {
             onSuccess();
         } else {
@@ -90,14 +100,6 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
      */
     public void onSuccess() {
         // Can be implemented in inherited class
-    }
-
-    /**
-     * Default instance.
-     * @return default instance.
-     */
-    public static OnOperationCompleteListener getDefaultInstance() {
-        return DEFAULT_INSTANCE;
     }
 
 }

@@ -73,6 +73,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Create a deck object with User as a parent.
+     *
      * @param parent User which this deck belongs to.
      */
     public Deck(final User parent) {
@@ -82,6 +83,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Parcelable deserializer.
+     *
      * @param in parcel.
      */
     // TODO(refactoring): investigate the possible issues here
@@ -100,6 +102,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Get requested amount of cards for learning.
+     *
      * @param limit maximum number of cards the query can return.
      * @return a Query that will fetch ScheduledCards.
      */
@@ -114,6 +117,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Create new deck with "owner" access.
+     *
      * @param callback invoked when the deck is saved to the database, or immediately if offline.
      */
     @Exclude
@@ -143,6 +147,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Start a watcher that will trigger for every top-1 card that needs to be learned, in sequence.
+     *
      * @param callback called initially, and after each change to the current ScheduledCard. The
      *                 parameter will be a Card associated with the ScheduledCard, and ScheduledCard
      *                 will be set as its parent.
@@ -323,6 +328,7 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Get the User this Deck is associated with.
+     *
      * @return AbstractModel parent casted to User (if set).
      */
     @Exclude

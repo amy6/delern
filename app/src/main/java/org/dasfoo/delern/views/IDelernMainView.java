@@ -22,7 +22,6 @@ import org.dasfoo.delern.models.User;
 
 /**
  * Interface for DelernMainActivity that called from Presenter (DelernMainActivityPresenter).
- *
  */
 public interface IDelernMainView {
 

@@ -44,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
@@ -104,7 +103,7 @@ public class DelernMainActivity extends AppCompatActivity
      * Method starts DelernMainActivity.
      *
      * @param context context of Activity that called this method.
-     * @param user current user that uses app.
+     * @param user    current user that uses app.
      */
     public static void startActivity(final Context context, final User user) {
         Intent intent = new Intent(context, DelernMainActivity.class);
