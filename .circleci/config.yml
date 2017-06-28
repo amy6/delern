@@ -7,6 +7,7 @@ jobs:
     environment:
     - ANDROID_HOME: /opt/android-sdk-linux
     - TERM: dumb
+    - IDEA_VERSION: IC-2017.1.4-no-jdk
     steps:
     - checkout
     - run:
@@ -80,6 +81,33 @@ jobs:
         - ~/.gradle
         # TODO(dotdoom): use environment variables once they are supported
         - /opt/android-sdk-linux
+
+    - restore_cache:
+        keys:
+        # TODO(dotdoom): use environment variable once it's supported.
+        #                Currently only CircleCI built-in variables are supported.
+        - v1-idea
+
+    - run:
+        name: "Install IDEA"
+        command: |
+          if [ ! -d ~/idea ]; then
+            mkdir ~/idea
+            curl -sSL "https://download.jetbrains.com/idea/idea${IDEA_VERSION?}.tar.gz" |
+                tar -C ~/idea -x -z
+            mv ~/idea/* ~/idea/ide
+          fi
+
+    - save_cache:
+        key: v1-idea
+        paths:
+        - ~/idea
+
+    - run:
+        name: "Check code formatting"
+        command: |
+          ~/idea/ide/bin/format.sh -r app/src/main/java
+          git diff --stat --exit-code
 
     - deploy:
         name: "Install Cloud SDK, run instrumented tests"
