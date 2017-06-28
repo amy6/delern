@@ -24,11 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.squareup.leakcanary.LeakCanary;
 
-import org.dasfoo.delern.di.components.DaggerDelernMainActivityComponent;
-import org.dasfoo.delern.di.components.DelernMainActivityComponent;
-import org.dasfoo.delern.di.modules.DelernMainActivityModule;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.views.IDelernMainView;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -38,17 +34,6 @@ import io.fabric.sdk.android.Fabric;
  */
 
 public class DelernApplication extends Application {
-    /**
-     * Method returns injector class.
-     *
-     * @param view build
-     * @return DelernMainActivityComponent.
-     */
-    public static DelernMainActivityComponent getMainActivityInjector(final IDelernMainView view) {
-        return DaggerDelernMainActivityComponent
-                .builder()
-                .delernMainActivityModule(new DelernMainActivityModule(view)).build();
-    }
 
     /**
      * Called when the application is starting, before any activity, service,

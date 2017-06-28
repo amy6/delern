@@ -53,6 +53,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
@@ -115,7 +116,7 @@ public class DelernMainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delern_main_activity);
         ButterKnife.bind(this);
-        DelernApplication.getMainActivityInjector(this).inject(this);
+        Injector.getMainActivityInjector(this).inject(this);
 
         showProgressBar();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);

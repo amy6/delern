@@ -33,11 +33,14 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +65,8 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     @BindView(R.id.add_card_to_db)
     /* default */ Button mAddCardToDbButton;
 
-    private final AddEditCardActivityPresenter mPresenter = new AddEditCardActivityPresenter(this);
+    @Inject
+    /* default */ AddEditCardActivityPresenter mPresenter;
 
     /**
      * Method starts activity for adding cards in deck.
@@ -98,6 +102,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         Card card = intent.getParcelableExtra(CARD);
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
+        Injector.getAddEditActivityInjector(this).inject(this);
 
         mPresenter.onCreate(card);
         mAddCardToDbButton.setEnabled(false);

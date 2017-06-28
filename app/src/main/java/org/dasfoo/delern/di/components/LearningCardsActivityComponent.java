@@ -1,4 +1,3 @@
-package org.dasfoo.delern.views;
 /*
  * Copyright (C) 2017 Katarina Sheremet
  * This file is part of Delern.
@@ -17,25 +16,24 @@ package org.dasfoo.delern.views;
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.dasfoo.delern.models.Card;
+package org.dasfoo.delern.di.components;
+
+import org.dasfoo.delern.card.LearningCardsActivity;
+import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
- * Interface for callbacks from Presenter(PreEditCardActivityPresenter) to
- * View(PreEditCardActivity). Called from Presenter to update user view.
+ * It can be seen as an intermediate object which allows accessing to objects defined in
+ * Dagger modules. Interface describes for which types we want to use members injection
  */
-public interface IPreEditCardView {
+@Singleton
+@Component(modules = LearningCardsActivityModule.class)
+public interface LearningCardsActivityComponent {
     /**
-     * Perform showing card to user.
-     *
-     * @param front front side of card.
-     * @param back  back side of card.
+     * @param learningCardsActivity sets type for injection
      */
-    void showCard(String front, String back);
-
-    /**
-     * Starts Activity for editing card.
-     *
-     * @param card card to edit.
-     */
-    void startEditCardActivity(Card card);
+    void inject(LearningCardsActivity learningCardsActivity);
 }

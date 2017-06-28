@@ -108,7 +108,11 @@ public class EditCardListActivityPresenter implements OnCardViewHolderClick {
      * @param text text to be searched
      * @return Adapter with appropriate list of cards.
      */
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     public CardRecyclerViewAdapter search(final String text) {
-        return createAdapter(mQuery.orderByChild("front").startAt(text).endAt(text + "\uf8ff"));
+        if (mQuery != null) {
+            return createAdapter(mQuery.orderByChild("front").startAt(text).endAt(text + "\uf8ff"));
+        }
+        return createAdapter(null);
     }
 }

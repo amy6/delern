@@ -32,7 +32,7 @@ public interface IAddEditCardView {
      * Initialize view for updating card.
      *
      * @param front front side text for update.
-     * @param back back side text for update.
+     * @param back  back side text for update.
      */
     void initForUpdate(String front, String back);
 

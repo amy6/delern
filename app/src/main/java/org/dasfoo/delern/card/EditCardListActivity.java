@@ -33,10 +33,13 @@ import android.view.MenuItem;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.presenters.EditCardListActivityPresenter;
 import org.dasfoo.delern.views.IEditCardListView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,8 +59,8 @@ public class EditCardListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
 
-    private final EditCardListActivityPresenter mPresenter =
-            new EditCardListActivityPresenter(this);
+    @Inject
+    /* default */ EditCardListActivityPresenter mPresenter;
 
     /**
      * Method starts EditCardListActivity.
@@ -80,6 +83,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         Deck deck = intent.getParcelableExtra(DECK);
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
+        Injector.getEditCardListActivityInjector(this).inject(this);
 
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());

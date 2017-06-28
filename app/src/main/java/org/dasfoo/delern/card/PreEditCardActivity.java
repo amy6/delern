@@ -35,9 +35,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.presenters.PreEditCardActivityPresenter;
 import org.dasfoo.delern.views.IPreEditCardView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +61,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     /* default */ TextView mFrontPreview;
     @BindView(R.id.textBackPreview)
     /* default */ TextView mBackPreview;
-    private final PreEditCardActivityPresenter mPresenter = new PreEditCardActivityPresenter(this);
+    @Inject
+    /* default */ PreEditCardActivityPresenter mPresenter;
 
     /**
      * Method starts PreEditCardActivity. It gets context from where it was called
@@ -83,6 +87,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
         Card card = intent.getParcelableExtra(CARD);
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
+        Injector.getPreEditCardActivityInjector(this).inject(this);
         mPresenter.onCreate(card);
     }
 

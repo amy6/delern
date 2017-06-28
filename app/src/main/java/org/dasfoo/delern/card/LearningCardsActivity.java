@@ -36,11 +36,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.presenters.LearningCardsActivityPresenter;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.views.ILearningCardsView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,8 +77,9 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ TextView mBackTextView;
     @BindView(R.id.delimeter)
     /* default */ View mDelimiter;
-    private final LearningCardsActivityPresenter mPresenter =
-            new LearningCardsActivityPresenter(this);
+
+    @Inject
+    /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
 
     /**
@@ -108,6 +112,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         Intent intent = getIntent();
         Deck deck = intent.getParcelableExtra(DECK);
         this.setTitle(deck.getName());
+        Injector.getLearningCardsActivityInjector(this).inject(this);
         mPresenter.onCreate(deck);
         ButterKnife.bind(this);
         mDelimiter.setVisibility(View.INVISIBLE);

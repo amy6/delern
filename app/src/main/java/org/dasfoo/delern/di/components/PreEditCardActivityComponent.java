@@ -18,8 +18,13 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.DelernMainActivity;
-import org.dasfoo.delern.di.modules.DelernMainActivityModule;
+/**
+ * It can be seen as an intermediate object which allows accessing to objects defined in
+ * Dagger modules. Interface describes for which types we want to use members injection
+ */
+
+import org.dasfoo.delern.card.PreEditCardActivity;
+import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 
 import javax.inject.Singleton;
 
@@ -30,10 +35,10 @@ import dagger.Component;
  * Dagger modules. Interface describes for which types we want to use members injection
  */
 @Singleton
-@Component(modules = DelernMainActivityModule.class)
-public interface DelernMainActivityComponent {
+@Component(modules = PreEditCardActivityModule.class)
+public interface PreEditCardActivityComponent {
     /**
-     * @param mainActivity sets a type for injection
+     * @param preEditCardActivity sets type for injection
      */
-    void inject(DelernMainActivity mainActivity);
+    void inject(PreEditCardActivity preEditCardActivity);
 }

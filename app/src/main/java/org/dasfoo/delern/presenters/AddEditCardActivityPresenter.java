@@ -75,7 +75,7 @@ public class AddEditCardActivityPresenter {
      * Method updates existing card in FB.
      *
      * @param newFront new front side of card.
-     * @param newBack new back side of card.
+     * @param newBack  new back side of card.
      */
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
@@ -87,9 +87,10 @@ public class AddEditCardActivityPresenter {
      * Method for adding card to FB.
      *
      * @param front text on front side of card.
-     * @param back text on back side of card.
+     * @param back  text on back side of card.
      */
     private void add(final String front, final String back) {
+        // TODO(dotdoom): move to Card, make ScheduledCard private
         ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());
@@ -130,7 +131,7 @@ public class AddEditCardActivityPresenter {
      * Performs when user wants to add or update cards.
      *
      * @param front front side of card.
-     * @param back back side of card.
+     * @param back  back side of card.
      */
     public void onAddUpdate(final String front, final String back) {
         if (mCard.exists()) {

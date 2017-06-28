@@ -20,8 +20,10 @@ package org.dasfoo.delern.presenters;
 
 import android.support.annotation.Nullable;
 
+import org.dasfoo.delern.card.PreEditCardActivity;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IPreEditCardView;
 
 /**
@@ -30,9 +32,11 @@ import org.dasfoo.delern.views.IPreEditCardView;
  */
 public class PreEditCardActivityPresenter {
 
+    private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
+
+    private final IPreEditCardView mPreEditCardView;
     private Card mCard;
     private AbstractDataAvailableListener<Card> mCardValueEventListener;
-    private final IPreEditCardView mPreEditCardView;
 
     /**
      * Constructor for Presenter. It gets IPreEditCardView as parameter to manage
@@ -58,6 +62,10 @@ public class PreEditCardActivityPresenter {
      * It sets listener for monitoring updates.
      */
     public void onStart() {
+        if (mCard == null) {
+            LogUtil.error(TAG, "Tried to preview card which doesn't exist");
+            return;
+        }
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
         mCardValueEventListener = new AbstractDataAvailableListener<Card>(null) {
             @Override
@@ -71,11 +79,14 @@ public class PreEditCardActivityPresenter {
         mCard.watch(mCardValueEventListener, Card.class);
     }
 
+
     /**
      * Called from PreEditCardActivity.onStop(). It releases resources.
      */
     public void onStop() {
-        mCardValueEventListener.cleanup();
+        if (mCardValueEventListener != null) {
+            mCardValueEventListener.cleanup();
+        }
     }
 
     /**
@@ -89,6 +100,8 @@ public class PreEditCardActivityPresenter {
      * Deletes card.
      */
     public void deleteCard() {
-        mCard.delete();
+        if (mCard != null) {
+            mCard.delete();
+        }
     }
 }
