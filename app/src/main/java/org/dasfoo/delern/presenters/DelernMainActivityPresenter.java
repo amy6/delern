@@ -61,7 +61,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      * Method checks whether user has decks.
      *
      * @param user current user
-     * @return whether t
+     * @return whether onCreate() was performed or not.
      */
     public boolean onCreate(final User user) {
         if (!User.isSignedIn()) {

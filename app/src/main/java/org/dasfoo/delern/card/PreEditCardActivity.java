@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +36,8 @@ import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.presenters.PreEditCardActivityPresenter;
+import org.dasfoo.delern.views.IPreEditCardView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +47,7 @@ import butterknife.OnClick;
  * Activity that shows the card before it is being edited.
  * TODO(ksheremet): use existing showCardActivity for that?
  */
-public class PreEditCardActivity extends AppCompatActivity {
+public class PreEditCardActivity extends AppCompatActivity implements IPreEditCardView {
 
     /**
      * IntentExtra card that is being edited.
@@ -58,9 +58,7 @@ public class PreEditCardActivity extends AppCompatActivity {
     /* default */ TextView mFrontPreview;
     @BindView(R.id.textBackPreview)
     /* default */ TextView mBackPreview;
-
-    private Card mCard;
-    private AbstractDataAvailableListener<Card> mCardValueEventListener;
+    private final PreEditCardActivityPresenter mPresenter = new PreEditCardActivityPresenter(this);
 
     /**
      * Method starts PreEditCardActivity. It gets context from where it was called
@@ -81,14 +79,11 @@ public class PreEditCardActivity extends AppCompatActivity {
         setContentView(R.layout.pre_edit_card_activity);
 
         configureToolbar();
-        getParameters();
-        this.setTitle(mCard.getDeck().getName());
-        ButterKnife.bind(this);
-    }
-
-    private void getParameters() {
         Intent intent = getIntent();
-        mCard = intent.getParcelableExtra(CARD);
+        Card card = intent.getParcelableExtra(CARD);
+        this.setTitle(card.getDeck().getName());
+        ButterKnife.bind(this);
+        mPresenter.onCreate(card);
     }
 
     private void configureToolbar() {
@@ -102,30 +97,19 @@ public class PreEditCardActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mFrontPreview.setText(mCard.getFront());
-        mBackPreview.setText(mCard.getBack());
-        mCardValueEventListener = new AbstractDataAvailableListener<Card>(this) {
-            @Override
-            public void onData(@Nullable final Card card) {
-                if (card != null) {
-                    mCard = card;
-                    mFrontPreview.setText(mCard.getFront());
-                    mBackPreview.setText(mCard.getBack());
-                }
-            }
-        };
-        mCard.watch(mCardValueEventListener, Card.class);
+        mPresenter.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mCardValueEventListener.cleanup();
+        mPresenter.onStop();
     }
 
     @OnClick(R.id.edit_card_button)
     /* default */ void editCardActivityStart() {
-        AddEditCardActivity.startEditCardActivity(this, mCard);
+        mPresenter.editCard();
+
     }
 
     /**
@@ -168,7 +152,7 @@ public class PreEditCardActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(final DialogInterface dialog, final int which) {
-                mCard.delete();
+                mPresenter.deleteCard();
                 finish();
             }
         });
@@ -179,5 +163,22 @@ public class PreEditCardActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showCard(final String front, final String back) {
+        mFrontPreview.setText(front);
+        mBackPreview.setText(back);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startEditCardActivity(final Card card) {
+        AddEditCardActivity.startEditCardActivity(this, card);
     }
 }
