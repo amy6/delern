@@ -35,4 +35,22 @@ public interface IAddEditCardView {
      * @param back back side text for update.
      */
     void initForUpdate(String front, String back);
+
+    /**
+     * Handle updating card user message.
+     */
+    void cardUpdated();
+
+    /**
+     * Handle adding card user message.
+     */
+    void cardAdded();
+
+
+    /**
+     * Checks whether reversed card should be added or not.
+     *
+     * @return true if add reversed card, false if not.
+     */
+    boolean addReversedCard();
 }

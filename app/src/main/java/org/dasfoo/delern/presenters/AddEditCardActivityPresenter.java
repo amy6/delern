@@ -33,6 +33,8 @@ public class AddEditCardActivityPresenter {
 
     private final IAddEditCardView mAddEditCardView;
     private Card mCard;
+    private OnOperationCompleteListener mOnCardAddedListener;
+    private OnOperationCompleteListener mOnCardUpdatedListener;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
@@ -70,39 +72,24 @@ public class AddEditCardActivityPresenter {
     }
 
     /**
-     * Method check where it is new card or card is already exists.
-     *
-     * @return true if card exists, false if card is new.
-     */
-    public boolean cardExist() {
-        return mCard.exists();
-    }
-
-    /**
-     * Method updates existing card in FB. It is called from AddEditCardActivity
-     * on user interaction.
+     * Method updates existing card in FB.
      *
      * @param newFront new front side of card.
      * @param newBack new back side of card.
-     * @param onUpdateListener listener on operation completion.
      */
-    public void update(final String newFront, final String newBack,
-                       final OnOperationCompleteListener onUpdateListener) {
+    private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save(onUpdateListener);
+        mCard.save(mOnCardUpdatedListener);
     }
 
     /**
-     * Method for adding card to FB. Method is called from AddEditCardActivity
-     * on user interaction.
+     * Method for adding card to FB.
      *
      * @param front text on front side of card.
      * @param back text on back side of card.
-     * @param onAddListener listener on operation completion.
      */
-    public void add(final String front, final String back,
-                    final OnOperationCompleteListener onAddListener) {
+    private void add(final String front, final String back) {
         ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());
@@ -114,6 +101,45 @@ public class AddEditCardActivityPresenter {
         new MultiWrite()
                 .save(newCard)
                 .save(scheduledCard)
-                .write(onAddListener);
+                .write(mOnCardAddedListener);
+    }
+
+    /**
+     * Called from AddEditCardActivity.onStart(). Initialize listeners for updating or
+     * adding card.
+     */
+    public void onStart() {
+        if (mCard.exists()) {
+            mOnCardUpdatedListener = new OnOperationCompleteListener() {
+                @Override
+                public void onSuccess() {
+                    mAddEditCardView.cardUpdated();
+                }
+            };
+        } else {
+            mOnCardAddedListener = new OnOperationCompleteListener() {
+                @Override
+                public void onSuccess() {
+                    mAddEditCardView.cardAdded();
+                }
+            };
+        }
+    }
+
+    /**
+     * Performs when user wants to add or update cards.
+     *
+     * @param front front side of card.
+     * @param back back side of card.
+     */
+    public void onAddUpdate(final String front, final String back) {
+        if (mCard.exists()) {
+            update(front, back);
+        } else {
+            add(front, back);
+            if (mAddEditCardView.addReversedCard()) {
+                add(front, back);
+            }
+        }
     }
 }

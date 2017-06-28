@@ -36,7 +36,6 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
@@ -62,8 +61,6 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     /* default */ CheckBox mAddReversedCardCheckbox;
     @BindView(R.id.add_card_to_db)
     /* default */ Button mAddCardToDbButton;
-    private OnOperationCompleteListener mOnCardAddedListener;
-    private OnOperationCompleteListener mOnCardUpdatedListener;
 
     private final AddEditCardActivityPresenter mPresenter = new AddEditCardActivityPresenter(this);
 
@@ -134,36 +131,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     @Override
     protected void onStart() {
         super.onStart();
-        if (mPresenter.cardExist()) {
-            mOnCardUpdatedListener = new OnOperationCompleteListener(this) {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(AddEditCardActivity.this,
-                            R.string.updated_card_user_message,
-                            Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            };
-        } else {
-            mOnCardAddedListener = new OnOperationCompleteListener(this) {
-                @Override
-                public void onSuccess() {
-                    if (mAddReversedCardCheckbox.isChecked()) {
-                        // TODO(ksheremet): Fix showing this message double times (2 card)
-                        Toast.makeText(AddEditCardActivity.this,
-                                R.string.add_extra_reversed_card_message,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddEditCardActivity.this,
-                                R.string.added_card_user_message,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    cleanTextFields();
-                    // Clean fields for the next new card
-                    mPresenter.cleanCardFields();
-                }
-            };
-        }
+        mPresenter.onStart();
     }
 
     /**
@@ -171,17 +139,8 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
      */
     @OnClick(R.id.add_card_to_db)
     public void onAddUpdateButtonClick() {
-        if (mPresenter.cardExist()) {
-            mPresenter.update(mFrontSideInputText.getText().toString(),
-                    mBackSideInputText.getText().toString(), mOnCardUpdatedListener);
-        } else {
-            String frontCardSide = mFrontSideInputText.getText().toString();
-            String backCardSide = mBackSideInputText.getText().toString();
-            mPresenter.add(frontCardSide, backCardSide, mOnCardAddedListener);
-            if (mAddReversedCardCheckbox.isChecked()) {
-                mPresenter.add(backCardSide, frontCardSide, mOnCardAddedListener);
-            }
-        }
+        mPresenter.onAddUpdate(mFrontSideInputText.getText().toString(),
+                mBackSideInputText.getText().toString());
     }
 
     private void cleanTextFields() {
@@ -217,5 +176,39 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         mFrontSideInputText.setText(front);
         mBackSideInputText.setText(back);
         mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cardUpdated() {
+        Toast.makeText(this, R.string.updated_card_user_message, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cardAdded() {
+        if (mAddReversedCardCheckbox.isChecked()) {
+            // TODO(ksheremet): Fix showing this message double times (2 card)
+            Toast.makeText(this, R.string.add_extra_reversed_card_message,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.added_card_user_message, Toast.LENGTH_SHORT).show();
+        }
+        cleanTextFields();
+        // Clean fields for the next new card
+        mPresenter.cleanCardFields();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean addReversedCard() {
+        return mAddReversedCardCheckbox.isChecked();
     }
 }
