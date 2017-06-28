@@ -35,6 +35,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.BuildConfig;
+import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 
 
@@ -103,7 +104,7 @@ public final class User extends AbstractModel implements Parcelable {
         https://firebase.google.com/docs/database/android/offline-capabilities */
         sDatabase.setPersistenceEnabled(true);
 
-        AbstractModel.initializeOfflineListener(sDatabase);
+        MultiWrite.initializeOfflineListener(sDatabase);
 
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override

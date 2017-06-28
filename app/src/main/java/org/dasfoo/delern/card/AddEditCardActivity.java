@@ -38,6 +38,7 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
+import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 
 import butterknife.BindView;
@@ -208,7 +209,7 @@ public class AddEditCardActivity extends AppCompatActivity {
     }
 
     private void addNewCard(final String frontSide, final String backSide) {
-        // TODO(refactoring): move to Card?
+        // TODO(refactoring): move to Card, make ScheduledCard private
         ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());
@@ -217,7 +218,7 @@ public class AddEditCardActivity extends AppCompatActivity {
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
 
-        new Card.MultiWrite()
+        new MultiWrite()
                 .save(newCard)
                 .save(scheduledCard)
                 .write(mOnCardAddedListener);

@@ -21,22 +21,17 @@ package org.dasfoo.delern.models;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
+import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.listeners.AbstractOnFBDataChangeListener;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
-import org.dasfoo.delern.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // TODO(refactoring): Review method visibility
 
@@ -44,9 +39,6 @@ import java.util.Map;
  * Base class for models, implementing Firebase functionality.
  */
 public abstract class AbstractModel {
-
-    @Exclude
-    private static boolean sConnected;
 
     @Exclude
     private String mKey;
@@ -106,22 +98,6 @@ public abstract class AbstractModel {
                 }));
     }
 
-    protected static void initializeOfflineListener(final FirebaseDatabase db) {
-        // TODO(refactoring): this method should go elsewhere (callback setter static class?)
-        db.getReference(".info/connected").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                sConnected = dataSnapshot.getValue(Boolean.class);
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                // TODO(refactoring): log and crashlytics
-                initializeOfflineListener(db);
-            }
-        });
-    }
-
     /**
      * Get the key assigned when fetching from or saving to the database.
      *
@@ -141,7 +117,7 @@ public abstract class AbstractModel {
      * @param key value of the key (usually a fairly random string).
      */
     @Exclude
-    protected void setKey(final String key) {
+    public void setKey(final String key) {
         this.mKey = key;
     }
 
@@ -163,7 +139,7 @@ public abstract class AbstractModel {
      * @return AbstractModel
      */
     @Exclude
-    protected AbstractModel getParent() {
+    public AbstractModel getParent() {
         return mParent;
     }
 
@@ -186,7 +162,7 @@ public abstract class AbstractModel {
      * @return value to be written by Firebase to getKey() location/
      */
     @Exclude
-    protected Object getFirebaseValue() {
+    public Object getFirebaseValue() {
         return this;
     }
 
@@ -318,86 +294,4 @@ public abstract class AbstractModel {
         return "parent=" + getParent() + ", key='" + getKey() + '\'';
     }
 
-    /**
-     * A helper for queueing multiple operations (add / update / delete) to the database and
-     * applying them at once. Use "save()" and "delete()" to populate; the data is not written to
-     * the database until "write()" is called.
-     */
-    public static class MultiWrite {
-        @SuppressWarnings("PMD.UseConcurrentHashMap")
-        private final Map<String, Object> mData = new HashMap<>();
-        private DatabaseReference mRoot;
-
-        @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
-        private void setRootFrom(final DatabaseReference reference) {
-            final DatabaseReference newRoot = reference.getRoot();
-            if (mRoot == null) {
-                mRoot = newRoot;
-            } else {
-                if (!mRoot.toString().equals(newRoot.toString())) {
-                    throw new RuntimeException(String.format(
-                            "Attempt to write multiple values to different roots: %s and %s",
-                            mRoot, newRoot));
-                }
-            }
-        }
-
-        /**
-         * Save (add or update) the model to the database.
-         *
-         * @param model instance of model.
-         * @return "this" (for chained calls).
-         */
-        public MultiWrite save(final AbstractModel model) {
-            DatabaseReference reference;
-            if (model.exists()) {
-                reference = model.getReference();
-            } else {
-                reference = model.getParent().getChildReference(model.getClass()).push();
-                model.setKey(reference.getKey());
-            }
-            mData.put(StringUtil.getFirebasePathFromReference(reference), model.getFirebaseValue());
-            setRootFrom(reference);
-            return this;
-        }
-
-        /**
-         * Delete (assign null to the key) a model from the database.
-         *
-         * @param model instance of model.
-         * @return "this" (for chained calls).
-         */
-        public MultiWrite delete(final AbstractModel model) {
-            return delete(model.getReference());
-        }
-
-        /**
-         * Delete (assign null to the key) data from the database.
-         *
-         * @param reference Firebase reference to write the null to.
-         * @return "this" (for chained calls).
-         */
-        public MultiWrite delete(final DatabaseReference reference) {
-            mData.put(StringUtil.getFirebasePathFromReference(reference), null);
-            setRootFrom(reference);
-            return this;
-        }
-
-        /**
-         * Apply all the queued operations to the database.
-         *
-         * @param onCompleteListener invoked when the operation finishes; onSuccess is triggered
-         *                           immediately if database is offline.
-         */
-        public void write(@Nullable final OnOperationCompleteListener onCompleteListener) {
-            OnOperationCompleteListener listenerOrDefault = onCompleteListener;
-            if (listenerOrDefault == null) {
-                listenerOrDefault = OnOperationCompleteListener.getDefaultInstance();
-            }
-            mRoot.updateChildren(mData, listenerOrDefault);
-            if (!sConnected) {
-                listenerOrDefault.onSuccess();
-            }
-        }
-    }
 }
