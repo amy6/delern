@@ -22,6 +22,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/card_edit_click"
+              style="@style/RippleBackground"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:clickable="true"
