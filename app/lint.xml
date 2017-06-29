@@ -23,5 +23,4 @@
 	</issue>
 	<!-- TODO(ksheremet): fix these issues -->
 	<issue id="GoogleAppIndexingWarning" severity="ignore"/>
-	<issue id="AllowBackup" severity="ignore"/>
 </lint>

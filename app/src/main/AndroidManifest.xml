@@ -20,9 +20,16 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.dasfoo.delern">
 
+    <!-- Some Chromebooks don't support touch. Although not essential,
+         it's a good idea to explicitly include this declaration.
+          https://developer.android.com/topic/arc/index.html-->
+    <uses-feature android:name="android.hardware.touchscreen"
+                  android:required="false" />
+
     <application
         android:name=".DelernApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
         android:supportsRtl="true"
