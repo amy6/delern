@@ -43,6 +43,14 @@ public final class Animation {
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Animator appearanceAnimation(final View view) {
+        // Check on null
+        if (view == null) {
+            return null;
+        }
+        // Check whether view is attached
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && view.isTemporarilyDetached()) {
+            return null;
+        }
         // get the center for the clipping circle
         int cx = view.getWidth() / 2;
         int cy = view.getHeight() / 2;

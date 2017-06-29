@@ -234,7 +234,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         setClickableRepeatKnowButtons(true);
         mRepeatButton.setVisibility(View.VISIBLE);
         mKnowButton.setVisibility(View.VISIBLE);
-        if (repeatButtonAnimation != null) {
+        if (repeatButtonAnimation != null && knowButtonAnimation != null) {
             repeatButtonAnimation.start();
             knowButtonAnimation.start();
         }
