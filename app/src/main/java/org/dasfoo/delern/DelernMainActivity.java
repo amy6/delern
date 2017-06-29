@@ -194,18 +194,7 @@ public class DelernMainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.nav_import) {
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_export) {
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_share) {
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_send) {
-            Toast.makeText(this, R.string.not_implemented, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_invite) {
+        if (id == R.id.nav_invite) {
             sendInvitation();
         } else if (id == R.id.nav_sign_out) {
             signOut();

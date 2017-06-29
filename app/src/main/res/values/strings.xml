@@ -41,12 +41,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="import_menu">Import</string>
-    <string name="export_menu">Export</string>
-    <string name="tools_menu">Tools</string>
     <string name="communicate_menu">Communicate</string>
-    <string name="share_menu">Share</string>
-    <string name="send_feedback_menu">Send Feedback</string>
 
     <!-- User messages, including warnins dialogs and toasts -->
     <string name="delete_card_warning">Delete card?</string>
@@ -67,9 +62,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="basic_cards_type">Basic</string>
     <string name="german_cards_type">German</string>
     <string name="swissgerman_cards_type">Swiss</string>
-
-    <!--Feature is not implemented message -->
-    <string name="not_implemented">Not implemented yet</string>
 
     <!-- Force update user messages  -->
     <string name="new_app_version_dialog_title">New version available</string>

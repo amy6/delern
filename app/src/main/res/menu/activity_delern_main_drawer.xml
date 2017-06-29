@@ -23,18 +23,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_import"
-            android:icon="@drawable/ic_file_download_black_24dp"
-            android:title="@string/import_menu" />
-        <item
-            android:id="@+id/nav_export"
-            android:icon="@drawable/ic_file_upload_black_24dp"
-            android:title="@string/export_menu" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_build_black_24dp"
-            android:title="@string/tools_menu" />
-        <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_person_outline_black_24dp"
             android:title="@string/sign_out" />
@@ -43,17 +31,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <item android:title="@string/communicate_menu">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_share_black_24dp"
-                android:title="@string/share_menu" />
-            <item
                 android:id="@+id/nav_invite"
                 android:icon="@drawable/ic_contact_mail_black_24dp"
                 android:title="@string/invite_menu_label" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_send_black_24dp"
-                android:title="@string/send_feedback_menu" />
         </menu>
     </item>
 
