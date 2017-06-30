@@ -35,7 +35,7 @@ public class ScheduledCard extends AbstractModel {
      * An empty constructor is required for Firebase deserialization.
      */
     private ScheduledCard() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ScheduledCard extends AbstractModel {
      * @param deck Deck this ScheduledCard belongs to.
      */
     public ScheduledCard(final Deck deck) {
-        super(deck);
+        super(deck, null);
     }
 
     /**

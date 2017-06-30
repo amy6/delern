@@ -33,7 +33,7 @@ public class DeckAccess extends AbstractModel {
      * An empty constructor is required for Firebase deserialization.
      */
     private DeckAccess() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -42,7 +42,7 @@ public class DeckAccess extends AbstractModel {
      * @param deck Deck this DeckAccess belongs to.
      */
     public DeckAccess(final Deck deck) {
-        super(deck);
+        super(deck, null);
     }
 
     /**

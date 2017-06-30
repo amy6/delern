@@ -133,6 +133,7 @@ public class AddEditCardActivityPresenter {
      * @param front front side of card.
      * @param back  back side of card.
      */
+    @SuppressWarnings({"ArgumentParameterSwap", "ArgumentParameterMismatch"})
     public void onAddUpdate(final String front, final String back) {
         if (mCard.exists()) {
             update(front, back);

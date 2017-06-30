@@ -76,7 +76,7 @@ public class Card extends AbstractModel implements Parcelable {
      * An empty constructor is required for Firebase deserialization.
      */
     private Card() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -85,7 +85,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @param parent Deck which this card belongs to.
      */
     public Card(final Deck parent) {
-        super(parent);
+        super(parent, null);
         // This field is used to sync other people's decks, so must be the server value
         // at the time this reaches Firebase server.
         this.createdAt = ServerValue.TIMESTAMP;
@@ -97,7 +97,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @param parent ScheduledCard associated with this card.
      */
     public Card(final ScheduledCard parent) {
-        super(parent);
+        super(parent, null);
         // This field is used to sync other people's decks, so must be the server value
         // at the time this reaches Firebase server.
         this.createdAt = ServerValue.TIMESTAMP;
@@ -109,11 +109,9 @@ public class Card extends AbstractModel implements Parcelable {
      * @param in parcel.
      */
     // TODO(dotdoom): investigate the possible issues here
-    @SuppressWarnings({"PMD.UseProperClassLoader", "PMD.ConstructorCallsOverridableMethod",
-            "ConstructorInvokesOverridable"})
+    @SuppressWarnings("PMD.UseProperClassLoader")
     protected Card(final Parcel in) {
-        super((Deck) in.readParcelable(Deck.class.getClassLoader()));
-        setKey(in.readString());
+        super((Deck) in.readParcelable(Deck.class.getClassLoader()), in.readString());
         back = in.readString();
         front = in.readString();
         createdAt = in.readLong();

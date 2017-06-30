@@ -75,7 +75,7 @@ public final class User extends AbstractModel implements Parcelable {
      * Create a new user to save to the database later.
      */
     public User() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -84,8 +84,7 @@ public final class User extends AbstractModel implements Parcelable {
      * @param in parcel.
      */
     protected User(final Parcel in) {
-        super(null);
-        setKey(in.readString());
+        super(null, in.readString());
         setName(in.readString());
         setEmail(in.readString());
         setPhotoUrl(in.readString());

@@ -36,7 +36,7 @@ public class View extends AbstractModel {
      * An empty constructor is required for Firebase deserialization.
      */
     private View() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -44,8 +44,10 @@ public class View extends AbstractModel {
      *
      * @param card Card which this View belongs to.
      */
+    // False positive: in "card.getKey()" card is fully initialized.
+    @SuppressWarnings("ConstructorInvokesOverridable")
     public View(final Card card) {
-        super(card);
+        super(card, null);
         this.cardId = card.getKey();
         this.timestamp = System.currentTimeMillis();
     }
@@ -116,7 +118,7 @@ public class View extends AbstractModel {
     /**
      * Sets time to View when user looked at card.
      *
-     * @param timestamp time (ServerValue.Timestamt)
+     * @param timestamp time (ServerValue.TIMESTAMP)
      */
     public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;

@@ -51,9 +51,11 @@ public abstract class AbstractModel {
      *               are expected as parents, it's usually seen in custom getXXX methods.
      *               This parameter must not be null unless called in a form of super(null) from a
      *               private parameterless constructor used by Firebase.
+     * @param key    a unique key assigned to the object by Firebase, or null if not yet assigned.
      */
-    protected AbstractModel(final AbstractModel parent) {
+    protected AbstractModel(@Nullable final AbstractModel parent, @Nullable final String key) {
         mParent = parent;
+        mKey = key;
     }
 
     /**

@@ -69,7 +69,7 @@ public class Deck extends AbstractModel implements Parcelable {
      * An empty constructor is required for Firebase deserialization.
      */
     private Deck() {
-        super(null);
+        super(null, null);
     }
 
     /**
@@ -78,7 +78,7 @@ public class Deck extends AbstractModel implements Parcelable {
      * @param parent User which this deck belongs to.
      */
     public Deck(final User parent) {
-        super(parent);
+        super(parent, null);
         lastSyncAt = System.currentTimeMillis();
     }
 
@@ -88,10 +88,9 @@ public class Deck extends AbstractModel implements Parcelable {
      * @param in parcel.
      */
     // TODO(dotdoom): investigate the possible issues here
-    @SuppressWarnings({"PMD.UseProperClassLoader", "PMD.ConstructorCallsOverridableMethod"})
+    @SuppressWarnings("PMD.UseProperClassLoader")
     protected Deck(final Parcel in) {
-        super((User) in.readParcelable(User.class.getClassLoader()));
-        setKey(in.readString());
+        super((User) in.readParcelable(User.class.getClassLoader()), in.readString());
         name = in.readString();
         deckType = in.readString();
         category = in.readString();
