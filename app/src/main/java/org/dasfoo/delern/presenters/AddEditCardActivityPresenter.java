@@ -139,7 +139,7 @@ public class AddEditCardActivityPresenter {
         } else {
             add(front, back);
             if (mAddEditCardView.addReversedCard()) {
-                add(front, back);
+                add(back, front);
             }
         }
     }
