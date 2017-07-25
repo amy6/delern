@@ -212,7 +212,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
 
     /**
      * Getter for current user.
-     * 
+     *
      * @return current user
      */
     public User getUser() {
