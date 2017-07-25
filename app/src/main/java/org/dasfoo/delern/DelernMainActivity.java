@@ -122,7 +122,13 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
         Intent intent = getIntent();
-        User user = intent.getParcelableExtra(USER);
+        User user;
+        if (savedInstanceState == null) {
+            // If activity was restored parameter from intent is null
+            user = intent.getParcelableExtra(USER);
+        } else {
+            user = savedInstanceState.getParcelable(USER);
+        }
         // TODO(ksheremet): finish isn't called
         if (!mMainActivityPresenter.onCreate(user)) {
             return;
@@ -137,6 +143,12 @@ public class DelernMainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 // TODO(ksheremet): see if we need .addApi(AppInvite.API)
                 .build();
+    }
+
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(USER, mMainActivityPresenter.getUser());
     }
 
     private void initViews() {
@@ -195,7 +207,12 @@ public class DelernMainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_invite) {
-            sendInvitation();
+            Intent intent = new AppInviteInvitation
+                    .IntentBuilder(getString(R.string.invitation_title))
+                    .setMessage(getString(R.string.invitation_message))
+                    .setCallToActionText(getString(R.string.invitation_cta))
+                    .build();
+            startActivityForResult(intent, REQUEST_INVITE);
         } else if (id == R.id.nav_sign_out) {
             signOut();
         }
@@ -203,14 +220,6 @@ public class DelernMainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void sendInvitation() {
-        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage(getString(R.string.invitation_message))
-                .setCallToActionText(getString(R.string.invitation_cta))
-                .build();
-        startActivityForResult(intent, REQUEST_INVITE);
     }
 
     private void signOut() {

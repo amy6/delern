@@ -31,6 +31,7 @@ import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
 
+
 /**
  * Presenter for DelernMainActivity. It implements OnDeckViewHolderClick to handle
  * user clicks. Class calls activity callbacks to show changed user data.
@@ -207,5 +208,14 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
             }
         };
         mUser.watch(mAbstractDataAvailableListener, User.class);
+    }
+
+    /**
+     * Getter for current user.
+     * 
+     * @return current user
+     */
+    public User getUser() {
+        return mUser;
     }
 }
