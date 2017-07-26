@@ -141,7 +141,6 @@ public class DelernMainActivity extends AppCompatActivity
                         this /* Activity */,
                         this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
-                // TODO(ksheremet): see if we need .addApi(AppInvite.API)
                 .build();
     }
 
@@ -209,8 +208,9 @@ public class DelernMainActivity extends AppCompatActivity
         if (id == R.id.nav_invite) {
             Intent intent = new AppInviteInvitation
                     .IntentBuilder(getString(R.string.invitation_title))
+                    .setEmailHtmlContent(getString(R.string.invitation_email_html_content))
+                    .setEmailSubject(getString(R.string.invitation_title))
                     .setMessage(getString(R.string.invitation_message))
-                    .setCallToActionText(getString(R.string.invitation_cta))
                     .build();
             startActivityForResult(intent, REQUEST_INVITE);
         } else if (id == R.id.nav_sign_out) {
