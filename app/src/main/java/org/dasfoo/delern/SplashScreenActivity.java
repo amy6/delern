@@ -34,6 +34,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 
 /**
@@ -91,7 +92,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } else {
                     LogUtil.error(TAG, "Remote config reading error", task.getException());
                 }
-                DelernMainActivity.startActivity(SplashScreenActivity.this, User.getCurrentUser());
+                if (User.isSignedIn()) {
+                    DelernMainActivity.startActivity(SplashScreenActivity.this,
+                            User.getCurrentUser());
+                } else {
+                    SignInActivity.startActivity(SplashScreenActivity.this);
+                }
                 finish();
             }
         };
