@@ -9,15 +9,12 @@ ext {
     // Alternatively: grgit.log(includes:['HEAD']).size()
     gitVersionCode = git.tag.list().size() + 20
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
-    firebaseVersion = '11.0.4'
-    sdkVersion = 25
     leakCanaryVersion = '1.5.1'
-    supportVersion = "${sdkVersion}.4.0"
 }
 
 android {
     compileSdkVersion sdkVersion
-    buildToolsVersion "${sdkVersion}.0.2"
+    buildToolsVersion toolsVersion
     testBuildType 'instrumented'
 
     signingConfigs {
@@ -106,11 +103,6 @@ android {
     }
 }
 
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://maven.google.com" }
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -154,6 +146,8 @@ dependencies {
     // Dagger2
     compile 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+
+    compile project(path: ':models'/*, configuration: 'debug'*/)
 }
 
 apply plugin: 'com.google.gms.google-services'
