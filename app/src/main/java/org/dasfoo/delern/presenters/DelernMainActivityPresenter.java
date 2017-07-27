@@ -209,13 +209,4 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         };
         mUser.watch(mAbstractDataAvailableListener, User.class);
     }
-
-    /**
-     * Getter for current user.
-     *
-     * @return current user
-     */
-    public User getUser() {
-        return mUser;
-    }
 }

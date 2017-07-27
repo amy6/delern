@@ -58,7 +58,6 @@ import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
-import org.dasfoo.delern.signin.SignInActivity;
 import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
 
@@ -122,13 +121,7 @@ public class DelernMainActivity extends AppCompatActivity
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         configureToolbar();
         Intent intent = getIntent();
-        User user;
-        if (savedInstanceState == null) {
-            // If activity was restored parameter from intent is null
-            user = intent.getParcelableExtra(USER);
-        } else {
-            user = savedInstanceState.getParcelable(USER);
-        }
+        User user = intent.getParcelableExtra(USER);
         // TODO(ksheremet): finish isn't called
         if (!mMainActivityPresenter.onCreate(user)) {
             return;
@@ -142,12 +135,6 @@ public class DelernMainActivity extends AppCompatActivity
                         this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-    }
-
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(USER, mMainActivityPresenter.getUser());
     }
 
     private void initViews() {
@@ -327,11 +314,11 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     /**
-     * Method  starts SignInActivity if user is not Signed In.
+     * Method  starts SplashScreeActivity if user is not Signed In.
      */
     @Override
     public void signIn() {
-        SignInActivity.startActivity(this);
+        SplashScreenActivity.startActivity(this);
         // TODO(ksheremet): finish() doesn't stop activity. It continues onCreate()
         finish();
     }

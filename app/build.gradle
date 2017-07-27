@@ -119,7 +119,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
-    
+
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
