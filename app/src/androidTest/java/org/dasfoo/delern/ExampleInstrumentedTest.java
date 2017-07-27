@@ -81,7 +81,8 @@ public class ExampleInstrumentedTest {
                 if (!mIsIdle) {
                     Activity currentActivity = getCurrentActivity();
                     if (currentActivity != null &&
-                            currentActivity.getClass() != SignInActivity.class) {
+                            currentActivity.getClass() != SignInActivity.class &&
+                            currentActivity.getClass() != SplashScreenActivity.class) {
                         mIsIdle = true;
                         if (mResourceCallback != null) {
                             mResourceCallback.onTransitionToIdle();
