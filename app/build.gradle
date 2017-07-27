@@ -6,8 +6,7 @@ apply from: 'config/quality.gradle'
 
 ext {
     git = org.ajoberstar.grgit.Grgit.open()
-    // Alternatively: grgit.log(includes:['HEAD']).size()
-    gitVersionCode = git.tag.list().size() + 20
+    gitVersionCode = git.log(includes:['HEAD']).size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     leakCanaryVersion = '1.5.1'
 }
