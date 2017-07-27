@@ -9,7 +9,7 @@ ext {
     // Alternatively: grgit.log(includes:['HEAD']).size()
     gitVersionCode = git.tag.list().size() + 20
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
-    firebaseVersion = '11.0.2'
+    firebaseVersion = '11.0.4'
     sdkVersion = 25
     leakCanaryVersion = '1.5.1'
     supportVersion = "${sdkVersion}.4.0"
@@ -119,7 +119,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
-
+    
     compile "com.google.android.gms:play-services-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
