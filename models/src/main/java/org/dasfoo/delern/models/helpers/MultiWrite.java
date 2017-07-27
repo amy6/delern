@@ -28,12 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.models.AbstractModel;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
-import org.dasfoo.delern.util.LogUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A helper for queueing multiple operations (add / update / delete) to the database and
@@ -41,7 +42,7 @@ import java.util.Map;
  * the database until "write()" is called.
  */
 public class MultiWrite {
-    private static final String TAG = LogUtil.tagFor(MultiWrite.class);
+    private static final Logger LOGGER = Logger.getLogger(MultiWrite.class.getName());
     private static boolean sConnected;
 
     @SuppressWarnings("PMD.UseConcurrentHashMap")
@@ -62,7 +63,7 @@ public class MultiWrite {
 
             @Override
             public void onCancelled(final DatabaseError databaseError) {
-                LogUtil.error(TAG, "Offline status listener has been cancelled, re-starting",
+                LOGGER.log(Level.SEVERE, "Offline status listener has been cancelled, re-starting",
                         databaseError.toException());
                 initializeOfflineListener(db);
             }
@@ -79,7 +80,7 @@ public class MultiWrite {
         try {
             return new URI(reference.toString()).getPath();
         } catch (URISyntaxException e) {
-            LogUtil.error(TAG, "Cannot parse Firebase Database URI: " + reference, e);
+            LOGGER.log(Level.SEVERE, "Cannot parse Firebase Database URI: " + reference, e);
             // TODO(dotdoom): make this all-writable for data recovery
             return "trash";
         }
