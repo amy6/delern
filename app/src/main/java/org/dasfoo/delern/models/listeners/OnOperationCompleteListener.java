@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models.listeners;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,29 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         DatabaseReference.CompletionListener {
 
-    // We don't store context in this instance (it's always null).
-    @SuppressLint("StaticFieldLeak")
     private static final OnOperationCompleteListener DEFAULT_INSTANCE =
             new OnOperationCompleteListener();
-
-    private Context mContext;
-
-    /**
-     * Create a listener with onError implementation showing a Toast with context.
-     *
-     * @param context used to show a Toast.
-     */
-    // TODO(dotdoom): replace context with some IUserNotifier.
-    public OnOperationCompleteListener(@NonNull final Context context) {
-        mContext = context;
-    }
-
-    /**
-     * Create a listener with default onError implementation (see AbstractDataAvailableListener).
-     */
-    public OnOperationCompleteListener() {
-        // Intentionally left blank.
-    }
 
     /**
      * Default instance.
@@ -77,7 +54,7 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         if (task.isSuccessful()) {
             onSuccess();
         } else {
-            AbstractDataAvailableListener.defaultOnError(task.getException(), mContext);
+            AbstractDataAvailableListener.defaultOnError(task.getException());
         }
     }
 
@@ -91,7 +68,8 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
         if (databaseError == null) {
             onSuccess();
         } else {
-            AbstractDataAvailableListener.defaultOnError(databaseError.toException(), mContext);
+            // TODO(dotdoom): propagade this upstream to show an error (e.g. Toast)
+            AbstractDataAvailableListener.defaultOnError(databaseError.toException());
         }
     }
 

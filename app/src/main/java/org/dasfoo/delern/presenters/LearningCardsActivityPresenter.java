@@ -40,7 +40,7 @@ public class LearningCardsActivityPresenter {
     private Card mCard;
 
     private final AbstractDataAvailableListener<Card> mCardAvailableListener =
-            new AbstractDataAvailableListener<Card>(null) {
+            new AbstractDataAvailableListener<Card>() {
                 @Override
                 public void onData(final Card data) {
                     if (data == null) {

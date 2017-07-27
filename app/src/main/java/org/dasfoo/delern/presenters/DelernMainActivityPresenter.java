@@ -71,7 +71,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
             return false;
         }
         mUser = user;
-        mUserHasDecksListener = new AbstractDataAvailableListener<Long>(null) {
+        mUserHasDecksListener = new AbstractDataAvailableListener<Long>() {
 
             @Override
             public void onData(@Nullable final Long isUserHasDecks) {
@@ -194,7 +194,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      * Otherwise calls callback method to update user profile info.
      */
     public void getUserInfo() {
-        mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>(null) {
+        mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>() {
             @Override
             public void onData(@Nullable final User user) {
                 Log.d(TAG, "Check if user null");

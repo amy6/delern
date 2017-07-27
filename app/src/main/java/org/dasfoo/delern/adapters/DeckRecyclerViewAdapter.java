@@ -58,7 +58,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
         viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setDeckCardType(deck.getDeckType());
         AbstractDataAvailableListener<Long> onCardsCountDataAvailableListener =
-                new AbstractDataAvailableListener<Long>(null) {
+                new AbstractDataAvailableListener<Long>() {
                     @Override
                     public void onData(@Nullable final Long cardsCount) {
                         if (cardsCount <= CARDS_COUNTER_LIMIT) {

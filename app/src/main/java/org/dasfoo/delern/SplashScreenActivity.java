@@ -53,6 +53,16 @@ public class SplashScreenActivity extends AppCompatActivity {
     private long mCacheExpirationSeconds = ONE_HOUR;
     private OnCompleteListener<Void> mFetchRemoteConfigListener;
 
+    /**
+     * Starts SplashScreenActivity using context.
+     *
+     * @param context context from method that called this Activity.
+     */
+    public static void startActivity(final Context context) {
+        Intent intent = new Intent(context, SplashScreenActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,15 +157,5 @@ public class SplashScreenActivity extends AppCompatActivity {
         long minAppVersion = mFirebaseRemoteConfig.getLong(KEY_MIN_APP_VERSION);
         long appVersion = BuildConfig.VERSION_CODE;
         return minAppVersion > appVersion;
-    }
-
-    /**
-     * Starts SplashScreenActivity using context.
-     *
-     * @param context context from method that called this Activity.
-     */
-    public static void startActivity(final Context context) {
-        Intent intent = new Intent(context, SplashScreenActivity.class);
-        context.startActivity(intent);
     }
 }

@@ -80,7 +80,7 @@ public class SignInActivity extends AppCompatActivity
         if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
             Log.w(TAG, "Running from an instrumented test: forcing anonymous sign in");
 
-            User.signIn(null, new AbstractDataAvailableListener<User>(this) {
+            User.signIn(null, new AbstractDataAvailableListener<User>() {
                 @Override
                 public void onData(@Nullable final User data) {
                     Intent intent = new Intent(SignInActivity.this,
@@ -148,7 +148,7 @@ public class SignInActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.i(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        User.signIn(credential, new AbstractDataAvailableListener<User>(this) {
+        User.signIn(credential, new AbstractDataAvailableListener<User>() {
             @Override
             public void onData(@Nullable final User data) {
                 Intent intent = new Intent(SignInActivity.this,

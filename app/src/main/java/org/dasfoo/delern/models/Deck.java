@@ -156,7 +156,7 @@ public class Deck extends AbstractModel implements Parcelable {
     public void startScheduledCardWatcher(final AbstractDataAvailableListener<Card> callback) {
         Query query = fetchCardsToRepeatWithLimitQuery(1);
         fetchChildren(query, ScheduledCard.class,
-                new AbstractDataAvailableListener<List<ScheduledCard>>(null) {
+                new AbstractDataAvailableListener<List<ScheduledCard>>() {
                     @Override
                     public ValueEventListener setCleanupPair(
                             @NonNull final Query query,
@@ -170,7 +170,7 @@ public class Deck extends AbstractModel implements Parcelable {
                             ScheduledCard sc = data.get(0);
                             sc.fetchChild(
                                     Deck.this.getChildReference(Card.class, sc.getKey()),
-                                    Card.class, new AbstractDataAvailableListener<Card>(null) {
+                                    Card.class, new AbstractDataAvailableListener<Card>() {
                                         @Override
                                         public void onData(@Nullable final Card data) {
                                             cleanup();

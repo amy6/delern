@@ -18,10 +18,8 @@
 
 package org.dasfoo.delern.models.listeners;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -37,37 +35,23 @@ public abstract class AbstractDataAvailableListener<T> {
 
     private static final String TAG = LogUtil.tagFor(AbstractDataAvailableListener.class);
 
-    private final Context mContext;
     private Query mQuery;
     private ValueEventListener mListener;
 
-    /**
-     * Create a new listener.
-     *
-     * @param context an Activity context for automatically displaying Toast to the user in case of
-     *                failure.
-     */
-    public AbstractDataAvailableListener(@Nullable final Context context) {
-        mContext = context;
-    }
+    // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
+    //                toast on error.
 
     /**
      * Default error handler which logs the exception and sends the crash report.
      *
-     * @param e       error details if available, or null.
-     * @param context context to show Toast with error message.
+     * @param e error details if available, or null.
      */
-    public static void defaultOnError(@Nullable final Exception e,
-                                      @Nullable final Context context) {
+    public static void defaultOnError(@Nullable final Exception e) {
         Exception errorDetails = e;
         if (errorDetails == null) {
             errorDetails = new Exception("Unknown error");
         }
         LogUtil.error(TAG, "Database operation failed", errorDetails);
-
-        if (context != null) {
-            Toast.makeText(context, errorDetails.getMessage(), Toast.LENGTH_LONG).show();
-        }
     }
 
     /**
@@ -76,7 +60,7 @@ public abstract class AbstractDataAvailableListener<T> {
      * @param e error details if available, or null if no details are available.
      */
     public void onError(@Nullable final Exception e) {
-        defaultOnError(e, mContext);
+        defaultOnError(e);
     }
 
     /**

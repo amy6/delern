@@ -67,7 +67,9 @@ public class PreEditCardActivityPresenter {
             return;
         }
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
-        mCardValueEventListener = new AbstractDataAvailableListener<Card>(null) {
+        // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
+        //                toast on error.
+        mCardValueEventListener = new AbstractDataAvailableListener<Card>() {
             @Override
             public void onData(@Nullable final Card card) {
                 if (card != null) {
