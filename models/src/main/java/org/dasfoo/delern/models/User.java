@@ -78,8 +78,9 @@ public final class User extends AbstractModel implements Parcelable {
 
     /**
      * Get database reference, enable persistence, set necessary listeners.
+     * @param persistenceEnabled enable persistence (only available on certain platforms).
      */
-    public static void initializeDatabase(boolean persistenceEnabled) {
+    public static void initializeDatabase(final boolean persistenceEnabled) {
         sDatabase = FirebaseDatabase.getInstance();
 
         /* Firebase apps automatically handle temporary network interruptions. Cached data will
