@@ -17,9 +17,12 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:$supportVersion"
 
-    //compile "com.google.android.gms:play-services-auth:$firebaseVersion"
-    //compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    debugCompile 'com.google.firebase:firebase-admin:5.2.0', {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+        //exclude group: 'org.json', module: 'json'
+    }
+    releaseCompile "com.google.firebase:firebase-database:$firebaseVersion"
 
     testCompile 'junit:junit:4.12'
 }
