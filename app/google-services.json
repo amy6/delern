@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "90374592783",
+    "firebase_url": "https://delern-debug.firebaseio.com",
     "project_id": "delern-debug",
     "storage_bucket": "delern-debug.appspot.com"
   },
@@ -14,11 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "90374592783-tmjt26u5g54pem8t0h4f1lcc8mv5ltlf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.debug",
+            "certificate_hash": "94c94fe64978b9fff4b8dc0175eeeb86e960c603"
+          }
+        },
+        {
           "client_id": "90374592783-h4brnp3b5vl9br1dk2js2oiv54ck7nf6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern.debug",
-            "certificate_hash": "B9AED4717D63C42C4F99E39DAF0501F6F2E37F68"
+            "certificate_hash": "b9aed4717d63c42c4f99e39daf0501f6f2e37f68"
           }
         },
         {
@@ -26,7 +35,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern.debug",
-            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
+            "certificate_hash": "017c804e0e6130f4d6b9285f28bdaec37a4e9a0a"
           }
         },
         {
@@ -66,11 +75,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "90374592783-vkpfhvm32kvelptr69c4cmsc890bb4g3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.dasfoo.delern.instrumented",
+            "certificate_hash": "94c94fe64978b9fff4b8dc0175eeeb86e960c603"
+          }
+        },
+        {
           "client_id": "90374592783-40vcud523tulat61m2cuhc1aeu3hs44g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern.instrumented",
-            "certificate_hash": "017C804E0E6130F4D6B9285F28BDAEC37A4E9A0A"
+            "certificate_hash": "017c804e0e6130f4d6b9285f28bdaec37a4e9a0a"
           }
         },
         {
@@ -78,7 +95,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern.instrumented",
-            "certificate_hash": "B9AED4717D63C42C4F99E39DAF0501F6F2E37F68"
+            "certificate_hash": "b9aed4717d63c42c4f99e39daf0501f6f2e37f68"
           }
         },
         {
@@ -86,7 +103,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "org.dasfoo.delern.instrumented",
-            "certificate_hash": "1A9E4CB3B8509A41C26A5025A76CEF55293CAD51"
+            "certificate_hash": "1a9e4cb3b8509a41c26a5025a76cef55293cad51"
           }
         },
         {
