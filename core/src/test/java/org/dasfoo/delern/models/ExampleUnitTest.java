@@ -29,6 +29,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class ExampleUnitTest {
 
+    static final String US_ASCII_ENCODING = "US-ASCII";
+
     final User currentUser = new User();
 
     @Before
@@ -38,13 +40,15 @@ public class ExampleUnitTest {
         final JSONObject token = new JSONObject();
         token.put("sub", userId);
         token.put("iat", currentTime / 1000 - TimeUnit.SECONDS.convert(1, TimeUnit.HOURS));
+        final String tokenString =
+                Base64.encodeBase64String("{}".getBytes(US_ASCII_ENCODING)) + "." +
+                        Base64.encodeBase64String(token.toString().getBytes(US_ASCII_ENCODING)) +
+                        ".";
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredential(new FirebaseCredential() {
                     @Override
                     public Task<GoogleOAuthAccessToken> getAccessToken() {
-                        return Tasks.forResult(new GoogleOAuthAccessToken(
-                                Base64.encodeBase64String("{}".getBytes()) + "." +
-                                Base64.encodeBase64String(token.toString().getBytes()) + ".",
+                        return Tasks.forResult(new GoogleOAuthAccessToken(tokenString,
                                 currentTime + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
                         ));
                     }
