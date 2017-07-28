@@ -79,7 +79,7 @@ public final class User extends AbstractModel implements Parcelable {
     /**
      * Get database reference, enable persistence, set necessary listeners.
      */
-    public static void initializeDatabase() {
+    public static void initializeDatabase(boolean persistenceEnabled) {
         sDatabase = FirebaseDatabase.getInstance();
 
         /* Firebase apps automatically handle temporary network interruptions. Cached data will
@@ -87,7 +87,7 @@ public final class User extends AbstractModel implements Parcelable {
         recovered. Enabling disk persistence allows our app to also keep all of its state even after
         an app restart.
         https://firebase.google.com/docs/database/android/offline-capabilities */
-        sDatabase.setPersistenceEnabled(true);
+        sDatabase.setPersistenceEnabled(persistenceEnabled);
 
         MultiWrite.initializeOfflineListener(sDatabase);
     }

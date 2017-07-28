@@ -65,7 +65,7 @@ public class DelernApplication extends Application {
                 .build();
         Fabric.with(this, crashlyticsKit);
 
-        User.initializeDatabase();
+        User.initializeDatabase(true);
         Auth.initializeCurrentUser();
     }
 }
