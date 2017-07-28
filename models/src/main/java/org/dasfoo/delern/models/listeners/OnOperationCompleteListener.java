@@ -18,10 +18,6 @@
 
 package org.dasfoo.delern.models.listeners;
 
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
@@ -30,8 +26,7 @@ import com.google.firebase.database.DatabaseReference;
  * Listeners whether operation in Firebase was completed. If not, writes log message.
  */
 @SuppressWarnings("rawtypes")
-public class OnOperationCompleteListener implements OnCompleteListener<Void>,
-        DatabaseReference.CompletionListener {
+public class OnOperationCompleteListener implements DatabaseReference.CompletionListener {
 
     private static final OnOperationCompleteListener DEFAULT_INSTANCE =
             new OnOperationCompleteListener();
@@ -43,19 +38,6 @@ public class OnOperationCompleteListener implements OnCompleteListener<Void>,
      */
     public static OnOperationCompleteListener getDefaultInstance() {
         return DEFAULT_INSTANCE;
-    }
-
-    /**
-     * {@inheritDoc}
-     * Writes log on failure. Logic for success must be implemented in inherited class.
-     */
-    @Override
-    public final void onComplete(@NonNull final Task task) {
-        if (task.isSuccessful()) {
-            onSuccess();
-        } else {
-            AbstractDataAvailableListener.defaultOnError(task.getException());
-        }
     }
 
     /**
