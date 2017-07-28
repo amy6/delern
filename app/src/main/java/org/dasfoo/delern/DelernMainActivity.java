@@ -216,7 +216,7 @@ public class DelernMainActivity extends AppCompatActivity
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
                         mMainActivityPresenter.cleanup();
-                        User.signOut();
+                        org.dasfoo.delern.models.Auth.signOut();
                         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                         signIn();
                     }

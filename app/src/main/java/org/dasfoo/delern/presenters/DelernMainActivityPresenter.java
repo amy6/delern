@@ -65,7 +65,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      * @return whether onCreate() was performed or not.
      */
     public boolean onCreate(final User user) {
-        if (!User.isSignedIn()) {
+        if (user == null || !user.exists()) {
             Log.d(TAG, "User is not Signed In");
             mDelernMainView.signIn();
             return false;

@@ -24,6 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.squareup.leakcanary.LeakCanary;
 
+import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.util.LogUtil;
 
@@ -65,5 +66,6 @@ public class DelernApplication extends Application {
         Fabric.with(this, crashlyticsKit);
 
         User.initializeDatabase();
+        Auth.initializeCurrentUser();
     }
 }
