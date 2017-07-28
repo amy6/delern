@@ -18,9 +18,14 @@
 
 package org.dasfoo.delern.util;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+
+import java.util.logging.Handler;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 
 /**
  * Helper methods for Android Logging.
@@ -50,8 +55,7 @@ public final class LogUtil {
      * @param msg log message.
      */
     public static void error(final String tag, final String msg) {
-        Log.e(tag, msg);
-        Crashlytics.log(Log.ERROR, tag, msg);
+        error(tag, msg, null);
     }
 
     /**
@@ -61,10 +65,39 @@ public final class LogUtil {
      * @param msg log message.
      * @param e   exception.
      */
-    public static void error(final String tag, final String msg, final Throwable e) {
+    public static void error(final String tag, final String msg, @Nullable final Throwable e) {
         Log.e(tag, msg, e);
         Crashlytics.log(Log.ERROR, tag, msg);
-        Crashlytics.logException(e);
+        if (e != null) {
+            Crashlytics.logException(e);
+        }
+    }
+
+    /**
+     * Add java.util.logging handler which logs errors to Android log and Crashlytics.
+     */
+    public static void addLogHandler() {
+        LogManager.getLogManager().getLogger("").addHandler(new Handler() {
+            @Override
+            public void publish(final LogRecord record) {
+                if (record.getLevel().intValue() >=
+                        java.util.logging.Level.WARNING.intValue()) {
+                    error(record.getLoggerName(), record.getMessage(),
+                            record.getThrown());
+                }
+            }
+
+            @Override
+            public void flush() {
+                // This method is not supported in Android or Crashlytics.
+            }
+
+            @Override
+            public void close() {
+                // This method is not supported in Android or Crashlytics.
+            }
+        });
+
     }
 }
 
