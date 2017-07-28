@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
-import org.dasfoo.delern.controller.RepetitionIntervals;
 import org.dasfoo.delern.models.helpers.MultiWrite;
 
 /**

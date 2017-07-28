@@ -16,9 +16,7 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.controller;
-
-import org.dasfoo.delern.models.Level;
+package org.dasfoo.delern.models;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
