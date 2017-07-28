@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO(dotdoom): move this, along with ProGuard, into shared repository -->
+<!-- https://developer.android.com/studio/write/lint.html#config -->
+<lint>
+	<!-- We don't use this in our project, but lint is confused. -->
+	<issue id="TrustAllX509TrustManager" severity="ignore"/>
+</lint>
