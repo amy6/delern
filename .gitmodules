@@ -1,6 +1,6 @@
 [submodule "app/config"]
 	path = app/config
 	url = git@github.com:dasfoo/java-android.git
-[submodule "models/config"]
-	path = models/config
+[submodule "core/config"]
+	path = core/config
 	url = git@github.com:dasfoo/java-android.git

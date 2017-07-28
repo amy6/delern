@@ -144,7 +144,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
     // TODO(dotdoom): xxxCompile(..., configuration: 'xxx')
-    compile project(path: ':models'/*, configuration: 'debug'*/)
+    compile project(path: ':core'/*, configuration: 'debug'*/)
 }
 
 apply plugin: 'com.google.gms.google-services'
