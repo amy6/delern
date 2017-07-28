@@ -43,7 +43,9 @@ jobs:
         command: |
           mkdir -p outputs
           node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o outputs/firebase-rules.json
-          node_modules/.bin/firebase-server -r outputs/firebase-rules.json -p 5533 -v -n localhost
+          # TODO(dotdoom): re-enable security rules when firebase-server processes updates correctly.
+          #node_modules/.bin/firebase-server -r outputs/firebase-rules.json -p 5533 -v -n localhost
+          node_modules/.bin/firebase-server -p 5533 -v -n localhost
 
     - restore_cache:
         keys:
@@ -69,6 +71,7 @@ jobs:
           ./gradlew \
             -PisolatedRun \
             --continue \
+            --info \
             lintDebug \
             testDebugUnitTest \
             --console=plain
