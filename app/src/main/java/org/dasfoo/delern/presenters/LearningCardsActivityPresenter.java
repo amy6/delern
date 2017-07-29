@@ -24,8 +24,9 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.ILearningCardsView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Presenter for LearningCardsActivity. It performs logic with model and
@@ -33,7 +34,8 @@ import org.dasfoo.delern.views.ILearningCardsView;
  */
 public class LearningCardsActivityPresenter {
 
-    private static final String TAG = LogUtil.tagFor(LearningCardsActivityPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            LearningCardsActivityPresenter.class);
 
     private final ILearningCardsView mLearningCardView;
     private Deck mDeck;
@@ -127,7 +129,7 @@ public class LearningCardsActivityPresenter {
                     mCard.getBack());
 
         } catch (IllegalArgumentException e) {
-            LogUtil.error(TAG, "Cannot detect gender: " + mCard.getBack(), e);
+            LOGGER.error("Cannot detect gender: {}", mCard.getBack(), e);
             gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         }
         return CardColor.getColor(gender);

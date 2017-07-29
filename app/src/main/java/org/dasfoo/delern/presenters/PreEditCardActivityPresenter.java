@@ -23,8 +23,9 @@ import android.support.annotation.Nullable;
 import org.dasfoo.delern.card.PreEditCardActivity;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IPreEditCardView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Presenter for PreEditCardActivity. It performs logic with model and
@@ -32,7 +33,7 @@ import org.dasfoo.delern.views.IPreEditCardView;
  */
 public class PreEditCardActivityPresenter {
 
-    private static final String TAG = LogUtil.tagFor(PreEditCardActivity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PreEditCardActivity.class);
 
     private final IPreEditCardView mPreEditCardView;
     private Card mCard;
@@ -63,7 +64,7 @@ public class PreEditCardActivityPresenter {
      */
     public void onStart() {
         if (mCard == null) {
-            LogUtil.error(TAG, "Tried to preview card which doesn't exist");
+            LOGGER.error("Tried to preview card which doesn't exist");
             return;
         }
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());

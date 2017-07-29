@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,7 +34,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.signin.SignInActivity;
-import org.dasfoo.delern.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Splash Activity that check whether user needs force update of app or not.
@@ -43,7 +43,7 @@ import org.dasfoo.delern.util.LogUtil;
  */
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private static final String TAG = LogUtil.tagFor(SplashScreenActivity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SplashScreenActivity.class);
     private static final long ONE_HOUR = 3600;
     private static final String KEY_MIN_APP_VERSION = "min_app_version";
     private static final String KEY_UPDATE_URL = "force_update_store_url";
@@ -91,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull final Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Log.d(TAG, "remote config is fetched.");
+                    LOGGER.debug("remote config is fetched.");
                     // After config data is successfully fetched, it must be activated
                     // before newly fetched values are returned.
                     mFirebaseRemoteConfig.activateFetched();
@@ -100,7 +100,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         return;
                     }
                 } else {
-                    LogUtil.error(TAG, "Remote config reading error", task.getException());
+                    LOGGER.error("Remote config reading error", task.getException());
                 }
                 if (Auth.isSignedIn()) {
                     DelernMainActivity.startActivity(SplashScreenActivity.this,

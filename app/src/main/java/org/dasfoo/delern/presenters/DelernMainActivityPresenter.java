@@ -19,7 +19,6 @@
 package org.dasfoo.delern.presenters;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
@@ -28,8 +27,9 @@ import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
-import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ import org.dasfoo.delern.views.IDelernMainView;
  */
 public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
 
-    private static final String TAG = LogUtil.tagFor(DelernMainActivityPresenter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
     private AbstractDataAvailableListener<Long> mUserHasDecksListener;
@@ -66,7 +66,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
      */
     public boolean onCreate(final User user) {
         if (user == null || !user.exists()) {
-            Log.d(TAG, "User is not Signed In");
+            LOGGER.debug("User is not Signed In");
             mDelernMainView.signIn();
             return false;
         }
@@ -197,9 +197,9 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>() {
             @Override
             public void onData(@Nullable final User user) {
-                Log.d(TAG, "Check if user null");
+                LOGGER.debug("Check if user null");
                 if (user == null) {
-                    Log.d(TAG, "Starting sign in");
+                    LOGGER.debug("Starting sign in");
                     mDelernMainView.signIn();
                 } else {
                     mUser = user;

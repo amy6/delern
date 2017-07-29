@@ -18,12 +18,11 @@
 
 package org.dasfoo.delern.notifications;
 
-import android.util.Log;
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.dasfoo.delern.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by katarina on 10/7/16.
@@ -35,7 +34,8 @@ public class DelernFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Class information for logging.
      */
-    private static final String TAG = LogUtil.tagFor(DelernFirebaseMessagingService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            DelernFirebaseMessagingService.class);
 
     /**
      * {@inheritDoc}
@@ -43,9 +43,8 @@ public class DelernFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
         // Handle data payload of FCM messages.
-        Log.i(TAG, "FCM Message Id: " + remoteMessage.getMessageId());
-        Log.i(TAG, "FCM Notification Message: " +
-                remoteMessage.getNotification());
-        Log.i(TAG, "FCM Data Message: " + remoteMessage.getData());
+        LOGGER.info("FCM Message Id: {}", remoteMessage.getMessageId());
+        LOGGER.info("FCM Notification Message: {}", remoteMessage.getNotification());
+        LOGGER.info("FCM Data Message: {}", remoteMessage.getData());
     }
 }

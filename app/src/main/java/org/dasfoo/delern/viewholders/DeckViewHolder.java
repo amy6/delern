@@ -24,7 +24,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +36,8 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +53,7 @@ import butterknife.OnClick;
 public class DeckViewHolder extends RecyclerView.ViewHolder implements
         PopupMenu.OnMenuItemClickListener {
 
-    private static final String TAG = LogUtil.tagFor(DeckViewHolder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeckViewHolder.class);
     private static final String NULL_CARDS = "0";
 
     @BindView(R.id.deck_text_view)
@@ -184,7 +184,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 mOnViewClick.changeDeckType(position, DeckType.SWISS);
                 return true;
             default:
-                Log.i(TAG, "Menu Item is not implemented yet");
+                LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
                 return false;
         }
     }

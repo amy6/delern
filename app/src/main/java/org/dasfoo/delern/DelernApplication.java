@@ -26,7 +26,6 @@ import com.squareup.leakcanary.LeakCanary;
 
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.util.LogUtil;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -54,8 +53,6 @@ public class DelernApplication extends Application {
             // You should not init your app in this process.
             return;
         }
-
-        LogUtil.addLogHandler();
 
         LeakCanary.install(this);
 

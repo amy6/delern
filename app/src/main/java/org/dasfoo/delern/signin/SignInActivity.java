@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,7 +42,8 @@ import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Activity that perform SignIn for user using GoogleApiClient and FirebaseAuth.
@@ -55,7 +55,7 @@ public class SignInActivity extends AppCompatActivity
     /**
      * Class information for logging.
      */
-    private static final String TAG = LogUtil.tagFor(SignInActivity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignInActivity.class);
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
 
@@ -78,7 +78,7 @@ public class SignInActivity extends AppCompatActivity
 
         // TODO(ksheremet): Move to instrumented flavour package
         if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
-            Log.w(TAG, "Running from an instrumented test: forcing anonymous sign in");
+            LOGGER.warn("Running from an instrumented test: forcing anonymous sign in");
 
             org.dasfoo.delern.models.Auth.signIn(null, new AbstractDataAvailableListener<User>() {
                 @Override
@@ -121,7 +121,7 @@ public class SignInActivity extends AppCompatActivity
                 signIn();
                 break;
             default:
-                Log.d(TAG, "Button is not implemented yet");
+                LOGGER.debug("Button {} is not implemented yet", v.getId());
                 break;
         }
     }
@@ -140,13 +140,13 @@ public class SignInActivity extends AppCompatActivity
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
-                LogUtil.error(TAG, "Google Sign In activity failed: " + result.getStatus());
+                LOGGER.error("Google Sign In activity failed: {}", result.getStatus());
             }
         }
     }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
-        Log.i(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        LOGGER.info("firebaseAuthWithGoogle: {}", acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         org.dasfoo.delern.models.Auth.signIn(credential, new AbstractDataAvailableListener<User>() {
             @Override
@@ -167,7 +167,7 @@ public class SignInActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        LogUtil.error(TAG, "Google API is not available: " + connectionResult);
+        LOGGER.error("Google API is not available: {}", connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 

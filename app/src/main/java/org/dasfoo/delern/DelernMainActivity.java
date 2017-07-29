@@ -35,7 +35,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -58,8 +57,9 @@ import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
-import org.dasfoo.delern.util.LogUtil;
 import org.dasfoo.delern.views.IDelernMainView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -80,7 +80,7 @@ public class DelernMainActivity extends AppCompatActivity
      */
     public static final String USER = "user";
     private static final int REQUEST_INVITE = 1;
-    private static final String TAG = LogUtil.tagFor(DelernMainActivity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivity.class);
 
     @BindView(R.id.toolbar)
     /* default */ Toolbar mToolbar;
@@ -240,7 +240,7 @@ public class DelernMainActivity extends AppCompatActivity
     protected void onActivityResult(final int requestCode, final int resultCode,
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        LOGGER.debug("onActivityResult: requestCode={}, resultCode={}", requestCode, resultCode);
 
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == RESULT_OK) {
@@ -267,7 +267,7 @@ public class DelernMainActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
-        LogUtil.error(TAG, "Google Play Services connection failed: " +
+        LOGGER.error("Google Play Services connection failed: {}",
                 connectionResult.getErrorMessage());
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
