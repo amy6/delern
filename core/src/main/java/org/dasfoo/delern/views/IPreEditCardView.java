@@ -1,4 +1,3 @@
-package org.dasfoo.delern.views;
 /*
  * Copyright (C) 2017 Katarina Sheremet
  * This file is part of Delern.
@@ -16,6 +15,8 @@ package org.dasfoo.delern.views;
  * You should have received a copy of the GNU General Public License
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package org.dasfoo.delern.views;
 
 import org.dasfoo.delern.models.Card;
 
