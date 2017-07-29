@@ -16,7 +16,7 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.controller;
+package org.dasfoo.delern.presenters.helpers;
 
 import org.dasfoo.delern.models.DeckType;
 

@@ -16,9 +16,10 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.controller;
+package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

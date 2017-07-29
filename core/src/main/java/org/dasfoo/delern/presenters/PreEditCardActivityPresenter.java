@@ -20,7 +20,6 @@ package org.dasfoo.delern.presenters;
 
 import android.support.annotation.Nullable;
 
-import org.dasfoo.delern.card.PreEditCardActivity;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.views.IPreEditCardView;
@@ -33,7 +32,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PreEditCardActivityPresenter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PreEditCardActivity.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            PreEditCardActivityPresenter.class);
 
     private final IPreEditCardView mPreEditCardView;
     private Card mCard;

@@ -19,6 +19,7 @@
 package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
