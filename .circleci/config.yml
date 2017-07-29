@@ -71,10 +71,19 @@ jobs:
           ./gradlew \
             -PisolatedRun \
             --continue \
-            --info \
             lintDebug \
             testDebugUnitTest \
             --console=plain
+
+    - run:
+        name: "Re-run Unit Tests with INFO level"
+        command: |
+          ./gradlew \
+            -PisolatedRun \
+            --info \
+            testDebugUnitTest \
+            --console=plain
+        when: on_fail
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
