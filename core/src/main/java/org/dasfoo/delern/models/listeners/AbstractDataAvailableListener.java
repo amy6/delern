@@ -24,8 +24,8 @@ import android.support.annotation.Nullable;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A listener creating an additional, AbstractModel-friendly layer of ValueEventListener callbacks.
@@ -34,8 +34,8 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractDataAvailableListener<T> {
 
-    private static final Logger LOGGER = Logger.getLogger(
-            AbstractDataAvailableListener.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            AbstractDataAvailableListener.class);
 
     private Query mQuery;
     private ValueEventListener mListener;
@@ -53,7 +53,7 @@ public abstract class AbstractDataAvailableListener<T> {
         if (errorDetails == null) {
             errorDetails = new Exception("Unknown error");
         }
-        LOGGER.log(Level.SEVERE, "Database operation failed", errorDetails);
+        LOGGER.error("Database operation failed", errorDetails);
     }
 
     /**
@@ -83,8 +83,8 @@ public abstract class AbstractDataAvailableListener<T> {
                                              @NonNull final ValueEventListener listener) {
         // TODO(dotdoom): consider creating an attach() method instead.
         if (mQuery != null) {
-            LOGGER.log(Level.SEVERE, "Data Available Listener cleanup pair is overwritten, " +
-                    "currently has " + mQuery.toString());
+            LOGGER.error("Data Available Listener cleanup pair is overwritten, {} with {}", mQuery,
+                    query);
         }
         mQuery = query;
         mListener = listener;
