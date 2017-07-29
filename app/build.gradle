@@ -120,8 +120,9 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.8.0'
+
     //noinspection NewerVersionAvailable
-    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"

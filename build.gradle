@@ -36,4 +36,5 @@ ext {
     sdkVersion = 25
     supportVersion = "${sdkVersion}.4.0"
     toolsVersion = "${sdkVersion}.0.2"
+    slf4jVersion = '1.7.25'
 }

@@ -17,7 +17,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //noinspection NewerVersionAvailable
-    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+
     compile "com.android.support:appcompat-v7:$supportVersion"
 
     debugCompile 'com.google.firebase:firebase-admin:5.2.0', {
