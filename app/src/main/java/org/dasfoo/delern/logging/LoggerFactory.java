@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * A simple logger factory to create org.dasfoo.delern.logging.Logger for slf4j.
  */
+@SuppressWarnings("PMD.MoreThanOneLogger")
 public class LoggerFactory implements ILoggerFactory {
     private final ConcurrentHashMap<String, Logger> mLoggers = new ConcurrentHashMap<>();
 
@@ -33,10 +34,12 @@ public class LoggerFactory implements ILoggerFactory {
      * {@inheritDoc}
      */
     @Override
-    public synchronized Logger getLogger(final String name) {
-        if (mLoggers.containsKey(name)) {
-            return mLoggers.get(name);
+    public Logger getLogger(final String name) {
+        Logger newLogger = new org.dasfoo.delern.logging.Logger(name);
+        Logger oldLogger = mLoggers.putIfAbsent(name, newLogger);
+        if (oldLogger == null) {
+            return newLogger;
         }
-        return mLoggers.put(name, new org.dasfoo.delern.logging.Logger(name));
+        return oldLogger;
     }
 }

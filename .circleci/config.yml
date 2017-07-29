@@ -118,7 +118,7 @@ jobs:
     - run:
         name: "Check code formatting"
         command: |
-          ~/idea/ide/bin/format.sh -r app/src/main/java
+          ~/idea/ide/bin/format.sh -m '*.java' -r */src
           git diff --stat --exit-code
 
     - deploy:

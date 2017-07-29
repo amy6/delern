@@ -29,6 +29,17 @@ public class StaticLoggerBinder implements LoggerFactoryBinder {
 
     private static final ILoggerFactory LOGGER_FACTORY = new LoggerFactory();
     private static final String LOGGER_FACTORY_STR = LOGGER_FACTORY.getClass().getName();
+    private static final StaticLoggerBinder SINGLETON = new StaticLoggerBinder();
+
+    /**
+     * Return the singleton of this class.
+     * This method is not in the interface, but is required by slf4j.
+     *
+     * @return the StaticLoggerBinder singleton.
+     */
+    public static StaticLoggerBinder getSingleton() {
+        return SINGLETON;
+    }
 
     /**
      * {@inheritDoc}
