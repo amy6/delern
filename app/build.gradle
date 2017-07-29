@@ -120,6 +120,8 @@ dependencies {
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.8.0'
+    //noinspection NewerVersionAvailable
+    compile 'org.slf4j:slf4j-api:1.7.25'
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
@@ -143,8 +145,7 @@ dependencies {
     compile 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
-    // TODO(dotdoom): xxxCompile(..., configuration: 'xxx')
-    compile project(path: ':core'/*, configuration: 'debug'*/)
+    compile project(path: ':core')
 }
 
 apply plugin: 'com.google.gms.google-services'
