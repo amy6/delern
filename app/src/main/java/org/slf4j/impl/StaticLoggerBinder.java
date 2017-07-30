@@ -27,6 +27,17 @@ import org.slf4j.spi.LoggerFactoryBinder;
  */
 public class StaticLoggerBinder implements LoggerFactoryBinder {
 
+    /**
+     * Declare the version of the SLF4J API this implementation is compiled
+     * against. The value of this field is usually modified with each release.
+     */
+    // to avoid constant folding by the compiler, this field must *not* be final
+    @SuppressWarnings({
+            "checkstyle:StaticVariableName", "checkstyle:VisibilityModifier",
+            "PMD.VariableNamingConventions", "PMD.SuspiciousConstantFieldName",
+            "PMD.VariableNamingConventions"})
+    public static String REQUESTED_API_VERSION = "1.7.25";
+
     private static final ILoggerFactory LOGGER_FACTORY = new LoggerFactory();
     private static final String LOGGER_FACTORY_STR = LOGGER_FACTORY.getClass().getName();
     private static final StaticLoggerBinder SINGLETON = new StaticLoggerBinder();

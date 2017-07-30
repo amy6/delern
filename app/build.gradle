@@ -77,6 +77,11 @@ android {
             manifestPlaceholders = [ appName: 'Delern TEST' ]
             // Use Anonymous auth to skip the login intent.
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
+
+            // We want to build instrumented to verify ProGuard config.
+            if (project.hasProperty('isolatedRun')) {
+                ext.enableCrashlytics = false
+            }
         }
         debug {
             // https://developers.google.com/android/guides/google-services-plugin
