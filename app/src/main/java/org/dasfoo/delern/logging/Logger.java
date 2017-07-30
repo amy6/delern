@@ -36,7 +36,7 @@ class Logger extends MarkerIgnoringBase {
     Logger(final String name) {
         super();
         String simpleClassName = name.substring(name.indexOf('.') + 1);
-        mTag = simpleClassName.substring(0, Math.min(name.length(), MAX_TAG_LENGTH) - 1);
+        mTag = simpleClassName.substring(0, Math.min(simpleClassName.length(), MAX_TAG_LENGTH) - 1);
     }
 
     @Override
