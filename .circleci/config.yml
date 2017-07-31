@@ -26,27 +26,6 @@ jobs:
           git tag -l | xargs git tag -d
           git fetch --tags
 
-    - run:
-        name: "Install system dependencies"
-        working_directory: ~/delern/app/build
-        command: |
-          curl -sL https://deb.nodesource.com/setup_6.x | bash -
-          apt install -y nodejs
-          npm install --prefix=$PWD git+https://git@github.com/urish/firebase-server.git firebase-bolt
-
-    - run:
-        # TODO(dotdoom): run this in a separate Docker container / nodejs image
-        #                once checkout step is available there.
-        name: "Start a local Firebase server (for isolated tests)"
-        background: true
-        working_directory: ~/delern/app/build
-        command: |
-          mkdir -p outputs
-          node_modules/.bin/firebase-bolt ../../firebase/rules.bolt -o outputs/firebase-rules.json
-          # TODO(dotdoom): re-enable security rules when firebase-server processes updates correctly.
-          #node_modules/.bin/firebase-server -r outputs/firebase-rules.json -p 5533 -v -n localhost
-          node_modules/.bin/firebase-server -p 5533 -v -n localhost
-
     - restore_cache:
         keys:
         - v3-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
