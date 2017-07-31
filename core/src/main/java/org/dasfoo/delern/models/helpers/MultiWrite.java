@@ -43,7 +43,9 @@ import java.util.Map;
  */
 public class MultiWrite {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
-    private static boolean sConnected;
+
+    // Default to "true" in case we don't want an offline listener.
+    private static boolean sConnected = true;
 
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     private final Map<String, Object> mData = new HashMap<>();
