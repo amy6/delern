@@ -22,10 +22,11 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
 
 import org.dasfoo.delern.models.Auth;
-import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.MultiWrite;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -62,7 +63,14 @@ public class DelernApplication extends Application {
                 .build();
         Fabric.with(this, crashlyticsKit);
 
-        User.initializeDatabase(true);
-        Auth.initializeCurrentUser();
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        /* Firebase apps automatically handle temporary network interruptions. Cached data will
+        still be available while offline and your writes will be resent when network connectivity is
+        recovered. Enabling disk persistence allows our app to also keep all of its state even after
+        an app restart.
+        https://firebase.google.com/docs/database/android/offline-capabilities */
+        db.setPersistenceEnabled(true);
+        MultiWrite.initializeOfflineListener(db);
+        Auth.initializeCurrentUser(db);
     }
 }

@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 
@@ -35,7 +36,9 @@ import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
  * A class to handle authentication with Firebase.
  */
 public final class Auth {
-    private static final User CURRENT_USER = new User();
+
+    // TODO(dotdoom): make it mCurrentUser, non-static methods, and create once: in SplashActivity
+    private static User sCurrentUser;
 
     /**
      * Hide utility class default constructor.
@@ -45,8 +48,12 @@ public final class Auth {
 
     /**
      * Initialize a listener to set current user.
+     *
+     * @param db Firebase database instance to fetch current user for.
      */
-    public static void initializeCurrentUser() {
+    public static void initializeCurrentUser(final FirebaseDatabase db) {
+        sCurrentUser = new User(db);
+
         // TODO(dotdoom): refactor into a non-static method?
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -99,35 +106,35 @@ public final class Auth {
      * @return User model with all the fields set if signed in, or exists() false if isn't.
      */
     public static User getCurrentUser() {
-        return CURRENT_USER;
+        return sCurrentUser;
     }
 
     private static void setCurrentUser(@Nullable final FirebaseUser user) {
         if (user == null) {
             Crashlytics.setUserIdentifier(null);
             // Clear out existing object.
-            CURRENT_USER.setKey(null);
-            CURRENT_USER.setName("Signed Out");
-            CURRENT_USER.setEmail(null);
-            CURRENT_USER.setPhotoUrl(null);
+            sCurrentUser.setKey(null);
+            sCurrentUser.setName("Signed Out");
+            sCurrentUser.setEmail(null);
+            sCurrentUser.setPhotoUrl(null);
         } else {
             Crashlytics.setUserIdentifier(user.getUid());
-            CURRENT_USER.setKey(user.getUid());
+            sCurrentUser.setKey(user.getUid());
             if (org.dasfoo.delern.BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
-                CURRENT_USER.setName("Anonymous User");
-                CURRENT_USER.setEmail("anonymous@example.com");
+                sCurrentUser.setName("Anonymous User");
+                sCurrentUser.setEmail("anonymous@example.com");
             } else {
-                CURRENT_USER.setName(user.getDisplayName());
-                CURRENT_USER.setEmail(user.getEmail());
+                sCurrentUser.setName(user.getDisplayName());
+                sCurrentUser.setEmail(user.getEmail());
                 if (user.getPhotoUrl() == null) {
-                    CURRENT_USER.setPhotoUrl(null);
+                    sCurrentUser.setPhotoUrl(null);
                 } else {
-                    CURRENT_USER.setPhotoUrl(user.getPhotoUrl().toString());
+                    sCurrentUser.setPhotoUrl(user.getPhotoUrl().toString());
                 }
             }
-            CURRENT_USER.save(null);
+            sCurrentUser.save(null);
         }
     }
 

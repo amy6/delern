@@ -25,8 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.models.helpers.MultiWrite;
-
 /**
  * Created by katarina on 10/12/16.
  * Model class for users.
@@ -51,7 +49,8 @@ public final class User extends AbstractModel implements Parcelable {
         }
     };
 
-    private static FirebaseDatabase sDatabase;
+    @Exclude
+    private FirebaseDatabase mDatabase;
 
     private String name;
     private String email;
@@ -59,9 +58,12 @@ public final class User extends AbstractModel implements Parcelable {
 
     /**
      * Create a new user to save to the database later.
+     *
+     * @param db Firebase database instance this user (and its child models) are bound to.
      */
-    public User() {
+    public User(final FirebaseDatabase db) {
         super(null, null);
+        mDatabase = db;
     }
 
     /**
@@ -74,24 +76,6 @@ public final class User extends AbstractModel implements Parcelable {
         setName(in.readString());
         setEmail(in.readString());
         setPhotoUrl(in.readString());
-    }
-
-    /**
-     * Get database reference, enable persistence, set necessary listeners.
-     *
-     * @param persistenceEnabled enable persistence (only available on certain platforms).
-     */
-    public static void initializeDatabase(final boolean persistenceEnabled) {
-        sDatabase = FirebaseDatabase.getInstance();
-
-        /* Firebase apps automatically handle temporary network interruptions. Cached data will
-        still be available while offline and your writes will be resent when network connectivity is
-        recovered. Enabling disk persistence allows our app to also keep all of its state even after
-        an app restart.
-        https://firebase.google.com/docs/database/android/offline-capabilities */
-        sDatabase.setPersistenceEnabled(persistenceEnabled);
-
-        MultiWrite.initializeOfflineListener(sDatabase);
     }
 
     /**
@@ -166,7 +150,7 @@ public final class User extends AbstractModel implements Parcelable {
     @Exclude
     @Override
     public DatabaseReference getReference() {
-        DatabaseReference reference = sDatabase.getReference("users").child(getKey());
+        DatabaseReference reference = mDatabase.getReference("users").child(getKey());
         reference.keepSynced(true);
         return reference;
     }
@@ -180,25 +164,25 @@ public final class User extends AbstractModel implements Parcelable {
         if (childClass == Card.class) {
             // We skip User key in Card (they belong directly to decks), and therefore do not keep
             // them synced at this level.
-            return sDatabase.getReference().child("cards");
+            return mDatabase.getReference().child("cards");
         }
         if (childClass == DeckAccess.class) {
             // DeckAccess has Deck key first and then User (which is built into DeckAccess), so
             // we also skip the key and do not keep them synced to save space.
-            return sDatabase.getReference().child("deck_access");
+            return mDatabase.getReference().child("deck_access");
         }
         if (childClass == View.class) {
             // Intentionally not keeping views synced to save space and bandwidth.
-            return sDatabase.getReference().child("views").child(getKey());
+            return mDatabase.getReference().child("views").child(getKey());
         }
 
         if (childClass == Deck.class) {
-            DatabaseReference reference = sDatabase.getReference().child("decks").child(getKey());
+            DatabaseReference reference = mDatabase.getReference().child("decks").child(getKey());
             reference.keepSynced(true);
             return reference;
         }
         if (childClass == ScheduledCard.class) {
-            DatabaseReference reference = sDatabase.getReference().child("learning")
+            DatabaseReference reference = mDatabase.getReference().child("learning")
                     .child(getKey());
             reference.keepSynced(true);
             return reference;
