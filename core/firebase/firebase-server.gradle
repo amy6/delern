@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    dependencies {
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+    }
+}
+apply plugin: com.moowork.gradle.node.NodePlugin
+// TODO(dotdoom): replace 'buildscript' and 'apply' above with just
+// plugins {
+//     id 'gradle-node-plugin' version '1.2.0'
+// }
+// once https://docs.gradle.org/2.9/userguide/plugins.html#N11AC8 happens.
+
+ext {
+    firebaseDir = file("${project.projectDir}/firebase")
+}
+
+node {
+    download = true
+    nodeModulesDir = firebaseDir
+}
+
+task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
+    workingDir = firebaseDir
+    script = file("${node.nodeModulesDir}/node_modules/.bin/firebase-bolt")
+    args = ['rules.bolt', '-o', 'rules.json']
+}
+
+afterEvaluate {
+    prepareDebugUnitTestDependencies.dependsOn(convertBoltToFirebaseRules)
+}
