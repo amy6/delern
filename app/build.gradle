@@ -124,6 +124,8 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-database:2.1.0'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    // TODO(ksheremet): http://bumptech.github.io/glide/doc/migrating.html
+    //noinspection NewerVersionAvailable
     compile 'com.github.bumptech.glide:glide:3.8.0'
 
     //noinspection NewerVersionAvailable
