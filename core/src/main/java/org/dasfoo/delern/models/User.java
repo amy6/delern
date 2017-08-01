@@ -76,6 +76,16 @@ public final class User extends AbstractModel implements Parcelable {
         setName(in.readString());
         setEmail(in.readString());
         setPhotoUrl(in.readString());
+        // Hack: when User is deserialized from a parcel, we know that we are running in an
+        // Android app, and therefore bound to the default database.
+        mDatabase = FirebaseDatabase.getInstance();
+    }
+
+    /**
+     * An empty constructor is required for Firebase deserialization.
+     */
+    private User() {
+        super(null, null);
     }
 
     /**
@@ -208,5 +218,13 @@ public final class User extends AbstractModel implements Parcelable {
         dest.writeString(getName());
         dest.writeString(getEmail());
         dest.writeString(getPhotoUrl());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void setReference(final DatabaseReference ref) {
+        mDatabase = ref.getDatabase();
     }
 }

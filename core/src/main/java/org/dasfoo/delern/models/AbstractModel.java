@@ -74,6 +74,7 @@ public abstract class AbstractModel {
         if (model != null) {
             model.setKey(snapshot.getKey());
             model.setParent(parent);
+            model.setReference(snapshot.getRef());
         }
         return model;
     }
@@ -283,6 +284,18 @@ public abstract class AbstractModel {
     @Exclude
     public DatabaseReference getReference() {
         return getParent().getChildReference(this.getClass(), this.getKey());
+    }
+
+    /**
+     * Set the Firebase database reference for this instance (if they want to keep it). The only
+     * legitimate usage is deserialization within AbstractModel.
+     *
+     * @param ref Database reference used to provide the snapshot this model has been parsed from.
+     */
+    @Exclude
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    protected void setReference(final DatabaseReference ref) {
+        // This method can be overridden in child classes.
     }
 
     /**
