@@ -65,6 +65,12 @@ jobs:
             --console=plain
         when: on_fail
 
+    - run:
+        name: "Generate and upload test coverage"
+        command: |
+          ./gradlew core:jacocoTestDebugUnitTestReport --console=plain
+          bash <(curl -s https://codecov.io/bash)
+
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
         # Use different keys because caches are immutable.
