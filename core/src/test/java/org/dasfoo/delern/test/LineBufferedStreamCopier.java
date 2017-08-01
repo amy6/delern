@@ -42,7 +42,7 @@ class LineBufferedStreamCopier extends Thread {
         try {
             r = new InputStreamReader(mInput, ENCODING);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            e.printStackTrace(mOutput);
             return;
         }
 
@@ -53,7 +53,7 @@ class LineBufferedStreamCopier extends Thread {
                 mOutput.println(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(mOutput);
         }
     }
 }
