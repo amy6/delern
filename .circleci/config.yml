@@ -112,6 +112,10 @@ jobs:
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
           if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
+            # These two packages are normally already available, but we deal with some extremely minimalistic Docker image.
+            apt update
+            apt install -y lsb-release apt-transport-https
+
             echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
               >>/etc/apt/sources.list.d/google-cloud-sdk.list
             curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
