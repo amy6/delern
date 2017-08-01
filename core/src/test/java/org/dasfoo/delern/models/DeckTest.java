@@ -34,7 +34,7 @@ public class DeckTest extends FirebaseServerUnitTest {
 
     @Test
     public void decks_createdAndFetched() throws Exception {
-        final User user = signIn(null);
+        final User user = signIn();
         user.save(new OnOperationCompleteListener() {
             @Override
             public void onSuccess() {
@@ -52,7 +52,7 @@ public class DeckTest extends FirebaseServerUnitTest {
                                             testSucceeded();
                                         }
                                     }
-                        });
+                                });
                     }
                 });
             }

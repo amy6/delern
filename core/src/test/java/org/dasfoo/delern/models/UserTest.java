@@ -29,7 +29,7 @@ public class UserTest extends FirebaseServerUnitTest {
 
     @Test
     public void save_succeeds() throws Exception {
-        signIn(null).save(new OnOperationCompleteListener() {
+        signIn().save(new OnOperationCompleteListener() {
             @Override
             public void onSuccess() {
                 testSucceeded();

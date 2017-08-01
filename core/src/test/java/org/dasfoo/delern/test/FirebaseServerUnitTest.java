@@ -46,7 +46,6 @@ public class FirebaseServerUnitTest {
 
     private static final int PORT = 5533;
     private static final String HOST = "localhost";
-    private static final String US_ASCII_ENCODING = "US-ASCII";
 
     private static String mNode;
     private static String mServer;
@@ -101,16 +100,16 @@ public class FirebaseServerUnitTest {
         try {
             assertTrue("Timed out waiting for the test (did you forget to call testSucceeded()?)",
                     mTestLatch.await(5, TimeUnit.SECONDS));
+            for (FirebaseApp app : FirebaseApp.getApps()) {
+                app.delete();
+            }
         } finally {
             mFirebaseServer.stop();
         }
     }
 
-    public User signIn(final String id) throws Exception {
-        String userId = id;
-        if (id == null) {
-            userId = UUID.randomUUID().toString();
-        }
+    public User signIn() throws Exception {
+        String userId = UUID.randomUUID().toString();
 
         final String token = Jwts.builder().setSubject(userId).setIssuedAt(new Date()).compact();
         FirebaseOptions options = new FirebaseOptions.Builder()
@@ -126,15 +125,11 @@ public class FirebaseServerUnitTest {
                 .setDatabaseUrl(new URI("ws", null, HOST, PORT, null, null, null).toString())
                 .build();
 
-        User user;
-        if (id == null) {
-            user = new User(FirebaseDatabase.getInstance(FirebaseApp.initializeApp(options)));
-            user.setName("Bob");
-            user.setEmail("bob@example.com");
-        } else {
-            user = new User(FirebaseDatabase.getInstance(FirebaseApp.initializeApp(options, id)));
-        }
+        User user = new User(FirebaseDatabase.getInstance(FirebaseApp.initializeApp(options,
+                userId)));
         user.setKey(userId);
+        user.setName("Bob " + userId);
+        user.setEmail("bob-" + userId + "@example.com");
         return user;
     }
 }
