@@ -126,13 +126,14 @@ public class FirebaseServerUnitTest {
                 .setDatabaseUrl(new URI("ws", null, HOST, PORT, null, null, null).toString())
                 .build();
 
-        FirebaseApp app;
+        User user;
         if (id == null) {
-            app = FirebaseApp.initializeApp(options);
+            user = new User(FirebaseDatabase.getInstance(FirebaseApp.initializeApp(options)));
+            user.setName("Bob");
+            user.setEmail("bob@example.com");
         } else {
-            app = FirebaseApp.initializeApp(options, id);
+            user = new User(FirebaseDatabase.getInstance(FirebaseApp.initializeApp(options, id)));
         }
-        User user = new User(FirebaseDatabase.getInstance(app));
         user.setKey(userId);
         return user;
     }
