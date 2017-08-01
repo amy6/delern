@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.test;
 
-import com.google.api.client.util.Base64;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseCredential;
@@ -28,16 +27,18 @@ import com.google.firebase.tasks.Task;
 import com.google.firebase.tasks.Tasks;
 
 import org.dasfoo.delern.models.User;
-import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import io.jsonwebtoken.Jwts;
 
 import static org.junit.Assert.assertTrue;
 
@@ -50,7 +51,9 @@ public class FirebaseServerUnitTest {
     private static String mNode;
     private static String mServer;
     private static String mRules;
+
     private FirebaseServerRunner mFirebaseServer;
+    private CountDownLatch mTestLatch;
 
     @BeforeClass
     public static void findDependencies() {
@@ -79,73 +82,13 @@ public class FirebaseServerUnitTest {
     }
 
     @Before
-    public void startFirebaseServer() throws Exception {
+    public void createLatchAndStartServer() throws Exception {
         // Add setVerbose() before start() to get more logs.
         mFirebaseServer = new FirebaseServerRunner(mNode, mServer)
                 .setHost(HOST)
                 .setPort(String.valueOf(PORT))
                 // TODO(dotdoom): once firebase-server is fixed: .setRules(mRules)
                 .start();
-    }
-
-
-    private static String createJWT(final String subject, final long issuedAt) throws Exception {
-        final JSONObject token = new JSONObject();
-        token.put("sub", subject);
-        token.put("iat", issuedAt);
-        return Base64.encodeBase64String("{}".getBytes(US_ASCII_ENCODING)) + "." +
-                Base64.encodeBase64String(token.toString().getBytes(US_ASCII_ENCODING)) + ".";
-    }
-
-    public String initializeAndAuth(final String id) throws Exception {
-        String userId = id;
-        if (id == null) {
-            userId = UUID.randomUUID().toString();
-        }
-
-        final long currentTime = System.currentTimeMillis();
-        final String token = createJWT(userId,
-                currentTime / 1000 - TimeUnit.SECONDS.convert(1, TimeUnit.HOURS));
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredential(new FirebaseCredential() {
-                    @Override
-                    public Task<GoogleOAuthAccessToken> getAccessToken() {
-                        return Tasks.forResult(new GoogleOAuthAccessToken(token,
-                                currentTime + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
-                        ));
-                    }
-                })
-                .setDatabaseUrl(new URI("ws", null, HOST, PORT, null, null, null).toString())
-                .build();
-        if (id == null) {
-            FirebaseApp.initializeApp(options);
-        } else {
-            FirebaseApp.initializeApp(options, id);
-        }
-
-        return userId;
-    }
-
-    private User mCurrentUser;
-
-    @Before
-    public void initializeCurrentUser() throws Exception {
-        String userId = initializeAndAuth(null);
-        mCurrentUser = new User(FirebaseDatabase.getInstance());
-        mCurrentUser.setKey(userId);
-        mCurrentUser.setEmail("alice@example.com");
-        mCurrentUser.setName("Alice Test");
-    }
-
-    protected User currentUser() {
-        return mCurrentUser;
-    }
-
-    private CountDownLatch mTestLatch;
-
-    @Before
-    public void installLatch() {
         mTestLatch = new CountDownLatch(1);
     }
 
@@ -155,8 +98,42 @@ public class FirebaseServerUnitTest {
 
     @After
     public void waitLatchAndStopServer() throws Exception {
-        assertTrue("Timed out waiting for the test (did you forget to call testSucceeded()?)",
-                mTestLatch.await(5, TimeUnit.SECONDS));
-        mFirebaseServer.stop();
+        try {
+            assertTrue("Timed out waiting for the test (did you forget to call testSucceeded()?)",
+                    mTestLatch.await(5, TimeUnit.SECONDS));
+        } finally {
+            mFirebaseServer.stop();
+        }
+    }
+
+    public User signIn(final String id) throws Exception {
+        String userId = id;
+        if (id == null) {
+            userId = UUID.randomUUID().toString();
+        }
+
+        final String token = Jwts.builder().setSubject(userId).setIssuedAt(new Date()).compact();
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredential(new FirebaseCredential() {
+                    @Override
+                    public Task<GoogleOAuthAccessToken> getAccessToken() {
+                        return Tasks.forResult(new GoogleOAuthAccessToken(token,
+                                System.currentTimeMillis() +
+                                        TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
+                        ));
+                    }
+                })
+                .setDatabaseUrl(new URI("ws", null, HOST, PORT, null, null, null).toString())
+                .build();
+
+        FirebaseApp app;
+        if (id == null) {
+            app = FirebaseApp.initializeApp(options);
+        } else {
+            app = FirebaseApp.initializeApp(options, id);
+        }
+        User user = new User(FirebaseDatabase.getInstance(app));
+        user.setKey(userId);
+        return user;
     }
 }

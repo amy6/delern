@@ -31,4 +31,5 @@ dependencies {
     releaseCompile "com.google.firebase:firebase-database:$firebaseVersion"
 
     testCompile 'junit:junit:4.12'
+    testCompile 'io.jsonwebtoken:jjwt:0.7.0'
 }

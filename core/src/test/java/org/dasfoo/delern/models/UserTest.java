@@ -23,15 +23,13 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Test;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.cgom/tools/testing">Testing documentation</a>
+ * Test for User model.
  */
 public class UserTest extends FirebaseServerUnitTest {
 
     @Test
     public void save_succeeds() throws Exception {
-        currentUser().save(new OnOperationCompleteListener() {
+        signIn(null).save(new OnOperationCompleteListener() {
             @Override
             public void onSuccess() {
                 testSucceeded();
