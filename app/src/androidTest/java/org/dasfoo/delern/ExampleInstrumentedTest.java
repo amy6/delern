@@ -112,7 +112,8 @@ public class ExampleInstrumentedTest {
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView("Espresso"), closeSoftKeyboard());
         onView(withText(R.string.add)).perform(click());
-        onView(withId(R.id.f_add_card_button)).check(matches(isDisplayed()));
+        onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        pressBack();
         pressBack();
         onView(withId(R.id.fab)).check(matches(isDisplayed()));
     }
