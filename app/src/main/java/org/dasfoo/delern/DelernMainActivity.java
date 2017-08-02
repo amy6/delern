@@ -50,11 +50,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
+import org.dasfoo.delern.card.AddEditCardActivity;
 import org.dasfoo.delern.card.EditCardListActivity;
 import org.dasfoo.delern.card.LearningCardsActivity;
 import org.dasfoo.delern.di.Injector;
+import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
 import org.dasfoo.delern.views.IDelernMainView;
@@ -71,9 +75,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Main activity of the application, containing decks and menu.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, IDelernMainView {
+        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
 
     /**
      * IntentExtra user for showing user info and data.
@@ -97,6 +102,7 @@ public class DelernMainActivity extends AppCompatActivity
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
+    private DeckRecyclerViewAdapter mFirebaseAdapter;
 
     /**
      * Method starts DelernMainActivity.
@@ -117,9 +123,11 @@ public class DelernMainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         Injector.getMainActivityInjector(this).inject(this);
 
-        showProgressBar();
+        showProgressBar(true);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        configureToolbar();
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+        }
         Intent intent = getIntent();
         User user = intent.getParcelableExtra(USER);
         // TODO(ksheremet): finish isn't called
@@ -163,14 +171,18 @@ public class DelernMainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mRecyclerView.setAdapter(mMainActivityPresenter.createAdapter(R.layout.deck_text_view));
         mMainActivityPresenter.onStart();
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(R.layout.deck_text_view,
+                mMainActivityPresenter.getUser());
+        mFirebaseAdapter.setOnDeckViewHolderClick(this);
+        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mMainActivityPresenter.onStop();
+        mFirebaseAdapter.cleanup();
     }
 
     /**
@@ -215,6 +227,7 @@ public class DelernMainActivity extends AppCompatActivity
                 .setPositiveButton(R.string.sign_out, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
+                        mFirebaseAdapter.cleanup();
                         mMainActivityPresenter.cleanup();
                         org.dasfoo.delern.models.Auth.signOut();
                         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
@@ -228,12 +241,6 @@ public class DelernMainActivity extends AppCompatActivity
                     }
                 })
                 .show();
-    }
-
-    private void configureToolbar() {
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-        }
     }
 
     @Override
@@ -324,35 +331,17 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     /**
-     * {@inheritDoc}
+     * Callback method from Presenter to show/hide Progress Bar.
+     *
+     * @param toShow true if to show. Otherwise false.
      */
     @Override
-    public void learnCardsInDeckClick(final Deck deck) {
-        LearningCardsActivity.startActivity(this, deck);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void editCardsInDeckClick(final Deck deck) {
-        EditCardListActivity.startActivity(this, deck);
-    }
-
-    /**
-     * Callback method from Presenter to hide Progress Bar.
-     */
-    @Override
-    public void hideProgressBar() {
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-    }
-
-    /**
-     * Callback method from Presenter to show Progress Bar.
-     */
-    @Override
-    public void showProgressBar() {
-        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+    public void showProgressBar(final Boolean toShow) {
+        if (toShow) {
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        }
     }
 
     /**
@@ -380,5 +369,55 @@ public class DelernMainActivity extends AppCompatActivity
         mUserNameTextView.setText(user.getName());
         mUserEmailTextView.setText(user.getEmail());
         Glide.with(this).load(user.getPhotoUrl()).into(mProfilePhotoImageView);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addCardsToDeck(final Deck deck) {
+        AddEditCardActivity.startAddCardActivity(this, deck);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("PMD.TooManyMethods")
+    @Override
+    public void learnDeck(final int position) {
+        LearningCardsActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void renameDeck(final int position, final String newName) {
+        mMainActivityPresenter.renameDeck(mFirebaseAdapter.getItem(position), newName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("PMD.TooManyMethods")
+    @Override
+    public void editDeck(final int position) {
+        EditCardListActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteDeck(final int position) {
+        mMainActivityPresenter.deleteDeck(mFirebaseAdapter.getItem(position));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeDeckType(final int position, final DeckType deckType) {
+        mMainActivityPresenter.changeDeckType(mFirebaseAdapter.getItem(position), deckType);
     }
 }

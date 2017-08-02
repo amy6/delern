@@ -20,8 +20,6 @@ package org.dasfoo.delern.presenters;
 
 import android.support.annotation.Nullable;
 
-import org.dasfoo.delern.adapters.DeckRecyclerViewAdapter;
-import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
@@ -36,14 +34,13 @@ import org.slf4j.LoggerFactory;
  * Presenter for DelernMainActivity. It implements OnDeckViewHolderClick to handle
  * user clicks. Class calls activity callbacks to show changed user data.
  */
-public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
+public class DelernMainActivityPresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
     private AbstractDataAvailableListener<Long> mUserHasDecksListener;
     private AbstractDataAvailableListener<User> mAbstractDataAvailableListener;
-    private DeckRecyclerViewAdapter mFirebaseAdapter;
     private User mUser;
 
     /**
@@ -75,7 +72,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
 
             @Override
             public void onData(@Nullable final Long isUserHasDecks) {
-                mDelernMainView.hideProgressBar();
+                mDelernMainView.showProgressBar(false);
                 if (isUserHasDecks == null || isUserHasDecks != 1) {
                     mDelernMainView.noDecksMessage(true);
                 } else {
@@ -102,72 +99,42 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
     }
 
     /**
-     * Method creates FirebaseRecyclerViewAdapter using View layout.
+     * Method renames deck.
      *
-     * @param layout view layout for adapter.
-     * @return DeckRecyclerViewAdapter that represents decks.
+     * @param deck deck to rename.
+     * @param newName new name for deck.
      */
-    public DeckRecyclerViewAdapter createAdapter(final int layout) {
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(layout, mUser);
-        mFirebaseAdapter.setOnDeckViewHolderClick(this);
-        return mFirebaseAdapter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void learnDeck(final int position) {
-        mDelernMainView.learnCardsInDeckClick(getDeckFromAdapter(position));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void renameDeck(final int position, final String newName) {
-        Deck deck = getDeckFromAdapter(position);
+    public void renameDeck(final Deck deck, final String newName) {
         deck.setName(newName);
         deck.save(null);
     }
 
     /**
-     * {@inheritDoc}
+     * Method deletes deck.
+     *
+     * @param deck deck to delete.
      */
-    @Override
-    public void editDeck(final int position) {
-        mDelernMainView.editCardsInDeckClick(getDeckFromAdapter(position));
-
+    public void deleteDeck(final Deck deck) {
+        deck.delete();
     }
 
     /**
-     * {@inheritDoc}
+     * Method changes type of deck.
+     *
+     * @param deck deck type of which to change.
+     * @param deckType new type of deck.
      */
-    @Override
-    public void deleteDeck(final int position) {
-        getDeckFromAdapter(position).delete();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeDeckType(final int position, final DeckType deckType) {
-        Deck deck = getDeckFromAdapter(position);
+    public void changeDeckType(final Deck deck, final DeckType deckType) {
         deck.setDeckType(deckType.name());
         deck.save(null);
     }
 
-    private Deck getDeckFromAdapter(final int position) {
-        return mFirebaseAdapter.getItem(position);
-    }
 
     /**
      * Cleanup listeners and release resources.
      */
     public void cleanup() {
         mUserHasDecksListener.cleanup();
-        mFirebaseAdapter.cleanup();
         mAbstractDataAvailableListener.cleanup();
     }
 
@@ -184,7 +151,7 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
         newDeck.create(new OnOperationCompleteListener() {
             @Override
             public void onSuccess() {
-                mDelernMainView.editCardsInDeckClick(newDeck);
+                mDelernMainView.addCardsToDeck(newDeck);
             }
         });
     }
@@ -208,5 +175,14 @@ public class DelernMainActivityPresenter implements OnDeckViewHolderClick {
             }
         };
         mUser.watch(mAbstractDataAvailableListener, User.class);
+    }
+
+    /**
+     * Getter for user.
+     *
+     * @return user.
+     */
+    public User getUser() {
+        return mUser;
     }
 }

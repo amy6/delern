@@ -32,28 +32,11 @@ public interface IDelernMainView {
     void signIn();
 
     /**
-     * Handles when user is going to learn cards.
-     *
-     * @param deck deck where to learn cards.
-     */
-    void learnCardsInDeckClick(Deck deck);
-
-    /**
-     * Handles when user is going to edit cards in deck.
-     *
-     * @param deck deck to edit.
-     */
-    void editCardsInDeckClick(Deck deck);
-
-    /**
-     * Handles hiding Progress Bar.
-     */
-    void hideProgressBar();
-
-    /**
      * Handles showing Progress Bar.
+     *
+     * @param toShow boolean parameter that says whether show Progress Bar or not.
      */
-    void showProgressBar();
+    void showProgressBar(Boolean toShow);
 
     /**
      * If user doesn't have decks it shows message.
@@ -62,11 +45,17 @@ public interface IDelernMainView {
      */
     void noDecksMessage(Boolean noDecks);
 
-
     /**
      * Updates user profile info if information about user changed.
      *
      * @param user User model.
      */
     void updateUserProfileInfo(User user);
+
+    /**
+     * Handles adding cards to deck.
+     *
+     * @param deck deck to add cards
+     */
+    void addCardsToDeck(Deck deck);
 }
