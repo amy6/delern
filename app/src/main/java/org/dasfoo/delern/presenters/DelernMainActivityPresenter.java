@@ -101,7 +101,7 @@ public class DelernMainActivityPresenter {
     /**
      * Method renames deck.
      *
-     * @param deck deck to rename.
+     * @param deck    deck to rename.
      * @param newName new name for deck.
      */
     public void renameDeck(final Deck deck, final String newName) {
@@ -121,7 +121,7 @@ public class DelernMainActivityPresenter {
     /**
      * Method changes type of deck.
      *
-     * @param deck deck type of which to change.
+     * @param deck     deck type of which to change.
      * @param deckType new type of deck.
      */
     public void changeDeckType(final Deck deck, final DeckType deckType) {

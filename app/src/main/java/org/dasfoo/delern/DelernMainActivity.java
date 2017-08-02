@@ -76,6 +76,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Main activity of the application, containing decks and menu.
  */
 @SuppressWarnings("PMD.TooManyMethods")
+// TODO(ksheremet): fix too many methods
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
@@ -382,7 +383,6 @@ public class DelernMainActivity extends AppCompatActivity
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.TooManyMethods")
     @Override
     public void learnDeck(final int position) {
         LearningCardsActivity.startActivity(this, mFirebaseAdapter.getItem(position));
@@ -399,7 +399,6 @@ public class DelernMainActivity extends AppCompatActivity
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("PMD.TooManyMethods")
     @Override
     public void editDeck(final int position) {
         EditCardListActivity.startActivity(this, mFirebaseAdapter.getItem(position));

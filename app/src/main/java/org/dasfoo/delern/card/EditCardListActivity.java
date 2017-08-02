@@ -21,6 +21,7 @@ package org.dasfoo.delern.card;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,14 +31,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.database.Query;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.di.Injector;
-import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.presenters.EditCardListActivityPresenter;
-import org.dasfoo.delern.views.IEditCardListView;
 
 import javax.inject.Inject;
 
@@ -49,7 +51,7 @@ import butterknife.OnClick;
  * Activity to view and edit all cards in the deck.
  */
 public class EditCardListActivity extends AppCompatActivity implements
-        SearchView.OnQueryTextListener, IEditCardListView {
+        SearchView.OnQueryTextListener, OnCardViewHolderClick {
 
     /**
      * IntentExtra deck to edit.
@@ -61,6 +63,8 @@ public class EditCardListActivity extends AppCompatActivity implements
 
     @Inject
     /* default */ EditCardListActivityPresenter mPresenter;
+
+    private CardRecyclerViewAdapter mFirebaseAdapter;
 
     /**
      * Method starts EditCardListActivity.
@@ -83,7 +87,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         Deck deck = intent.getParcelableExtra(DECK);
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
-        Injector.getEditCardListActivityInjector(this).inject(this);
+        Injector.getEditCardListActivityInjector().inject(this);
 
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
@@ -101,13 +105,13 @@ public class EditCardListActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        mRecyclerView.setAdapter(mPresenter.getAdapter());
+        mRecyclerView.setAdapter(createAdapter(null));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.onStop();
+        mFirebaseAdapter.cleanup();
     }
 
     /**
@@ -131,14 +135,6 @@ public class EditCardListActivity extends AppCompatActivity implements
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCardPreview(final Card card) {
-        PreEditCardActivity.startActivity(this, card);
     }
 
     /**
@@ -167,8 +163,41 @@ public class EditCardListActivity extends AppCompatActivity implements
     @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     @Override
     public boolean onQueryTextChange(final String newText) {
-        mRecyclerView.setAdapter(mPresenter.search(newText));
+        mRecyclerView.setAdapter(search(newText));
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onCardClick(final int position) {
+        PreEditCardActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    }
+
+    private CardRecyclerViewAdapter createAdapter(@Nullable final Query query) {
+        if (query == null) {
+            mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(),
+                    mPresenter.getQuery(), this);
+        } else {
+            mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this);
+        }
+        return mFirebaseAdapter;
+    }
+
+    /**
+     * Called when user searches in list of cards.
+     *
+     * @param text text to be searched
+     * @return Adapter with appropriate list of cards.
+     */
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
+    private CardRecyclerViewAdapter search(final String text) {
+        if (mPresenter.getQuery() != null) {
+            return createAdapter(mPresenter.getQuery().orderByChild("front").startAt(text)
+                    .endAt(text + "\uf8ff"));
+        }
+        return createAdapter(null);
     }
 }
 

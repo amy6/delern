@@ -19,11 +19,11 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.controller.CardColor;
-import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

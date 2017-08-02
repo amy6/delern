@@ -35,7 +35,6 @@ import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.dasfoo.delern.views.IDelernMainView;
-import org.dasfoo.delern.views.IEditCardListView;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.dasfoo.delern.views.IPreEditCardView;
 
@@ -76,14 +75,12 @@ public final class Injector {
     /**
      * Method returns injector class.
      *
-     * @param view view to init Presenter for callbacks.
      * @return EditCardListActivityComponent.
      */
-    public static EditCardListActivityComponent getEditCardListActivityInjector(
-            final IEditCardListView view) {
+    public static EditCardListActivityComponent getEditCardListActivityInjector() {
         return DaggerEditCardListActivityComponent
                 .builder()
-                .editCardListActivityModule(new EditCardListActivityModule(view)).build();
+                .editCardListActivityModule(new EditCardListActivityModule()).build();
     }
 
     /**

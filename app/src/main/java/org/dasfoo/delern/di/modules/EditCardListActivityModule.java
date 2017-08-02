@@ -19,7 +19,6 @@
 package org.dasfoo.delern.di.modules;
 
 import org.dasfoo.delern.presenters.EditCardListActivityPresenter;
-import org.dasfoo.delern.views.IEditCardListView;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,20 +28,9 @@ import dagger.Provides;
  */
 @Module
 public class EditCardListActivityModule {
-    private final IEditCardListView mView;
-
-    /**
-     * Constructor. It gets interface as parameter that implemented in EditCardListActivity
-     * for callbacks from Presenter.
-     *
-     * @param view interface to init Presenter for callbacks.
-     */
-    public EditCardListActivityModule(final IEditCardListView view) {
-        this.mView = view;
-    }
 
     @Provides
     /* default */ EditCardListActivityPresenter providePresenter() {
-        return new EditCardListActivityPresenter(mView);
+        return new EditCardListActivityPresenter();
     }
 }
