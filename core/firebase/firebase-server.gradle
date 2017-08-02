@@ -28,6 +28,8 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     args = ['rules.bolt', '-o', 'rules.json']
 }
 
-afterEvaluate {
-    prepareDebugUnitTestDependencies.dependsOn(convertBoltToFirebaseRules)
+tasks.whenTaskAdded { task ->
+    if (task.name == 'prepareDebugUnitTestDependencies') {
+        task.dependsOn convertBoltToFirebaseRules
+    }
 }
