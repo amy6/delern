@@ -164,9 +164,11 @@ jobs:
     - store_artifacts:
         path: app/src/main/play
 
-# A hack per https://discuss.circleci.com/t/git-tag-deploys-in-2-0/9493/8
-deployment:
-  fake_deploy_for_cci2:
-    tag: /v[0-9]+(\.[0-9]+)*/
-    commands:
-    - echo this is only a trigger
+workflows:
+  version: 2
+  build-workflow:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*/
