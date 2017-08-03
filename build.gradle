@@ -10,7 +10,6 @@ buildscript {
         // TODO(dotodoom): Move these into module-specific build.gradle and use new Gradle syntax.
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
-        classpath 'com.google.firebase:firebase-plugins:1.0.5'
         classpath 'com.google.gms:google-services:3.1.0'
         classpath 'org.ajoberstar:grgit:1.7.1'
         classpath 'io.fabric.tools:gradle:1.22.1'
