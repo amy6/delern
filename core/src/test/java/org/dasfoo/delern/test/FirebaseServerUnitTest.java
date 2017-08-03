@@ -70,7 +70,7 @@ public class FirebaseServerUnitTest {
                 if (f.getName().equals("node") && f.canExecute()) {
                     mNode = f.getAbsolutePath();
                 }
-                if (f.getName().equals("rules.json")) {
+                if (f.getName().equals("delern-rules.json")) {
                     mRules = f.getAbsolutePath();
                 }
             }

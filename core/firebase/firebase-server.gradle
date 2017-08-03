@@ -25,7 +25,7 @@ node {
 task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     workingDir = firebaseDir
     script = file("${node.nodeModulesDir}/node_modules/.bin/firebase-bolt")
-    args = ['rules.bolt', '-o', 'rules.json']
+    args = ['rules.bolt', '-o', 'delern-rules.json']
 }
 
 tasks.whenTaskAdded { task ->
