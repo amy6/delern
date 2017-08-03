@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
@@ -210,7 +211,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     public void showFrontSide(final String front) {
         mCardView.setCardBackgroundColor(ContextCompat
-                .getColor(this, mPresenter.setBackgroundCardColor()));
+                .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
         mFrontTextView.setText(front);
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);

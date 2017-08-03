@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.presenters;
 
-import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
@@ -117,11 +116,10 @@ public class LearningCardsActivityPresenter {
 
     /**
      * Specifies grammatical gender of content.
-     * Define background color regarding gender.
      *
-     * @return id of background color.
+     * @return gender of content.
      */
-    public int setBackgroundCardColor() {
+    public GrammaticalGenderSpecifier.Gender specifyContentGender() {
         GrammaticalGenderSpecifier.Gender gender;
         try {
             gender = GrammaticalGenderSpecifier.specifyGender(
@@ -132,7 +130,7 @@ public class LearningCardsActivityPresenter {
             LOGGER.error("Cannot detect gender: {}", mCard.getBack(), e);
             gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
         }
-        return CardColor.getColor(gender);
+        return gender;
     }
 
     /**
