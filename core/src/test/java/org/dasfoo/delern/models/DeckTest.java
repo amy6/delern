@@ -40,7 +40,8 @@ public class DeckTest extends FirebaseServerUnitTest {
             public void onSuccess() {
                 Deck deck = new Deck(user);
                 deck.setName("My Deck");
-                deck.save(new OnOperationCompleteListener() {
+                deck.setAccepted(true);
+                deck.create(new OnOperationCompleteListener() {
                     @Override
                     public void onSuccess() {
                         user.fetchChildren(user.getChildReference(Deck.class), Deck.class,

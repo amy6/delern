@@ -86,7 +86,7 @@ public class FirebaseServerUnitTest {
         mFirebaseServer = new FirebaseServerRunner(mNode, mServer)
                 .setHost(HOST)
                 .setPort(String.valueOf(PORT))
-                // TODO(dotdoom): once firebase-server is fixed: .setRules(mRules)
+                .setRules(mRules)
                 .start();
         mTestLatch = new CountDownLatch(1);
     }
