@@ -48,6 +48,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invitation_failed_message">Ошибка при отправлении приглашения</string>
     <string name="save">Сохранить</string>
     <string name="flip_the_card_message">Перевернуть карточку</string>
+    <string name="total_cards">Всего карточек:</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
@@ -77,5 +78,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Force update user messages  -->
     <string name="new_app_version_dialog_title">Доступна новая верския приложения</string>
     <string name="update_app_user_message">Пожалуйста, обновите Delern до новой версии.</string>
+
 
 </resources>

@@ -20,14 +20,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="org.dasfoo.delern.card.EditCardListActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="true"
+                                                 tools:context="org.dasfoo.delern.card.EditCardListActivity">
 
-    <include layout="@layout/show_deck_content" />
+    <include layout="@layout/show_deck_content"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/f_add_card_button"
@@ -39,9 +39,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:tint="@color/grey_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        app:rippleColor="@color/colorPrimaryDark"/>
+        app:rippleColor="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_add_black_24dp"/>
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
 </android.support.design.widget.CoordinatorLayout>

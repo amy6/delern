@@ -30,6 +30,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.database.Query;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -61,10 +62,14 @@ public class EditCardListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
 
+    @BindView(R.id.total_number_of_cards)
+    /* default */ TextView mTotalNumberOfCards;
+
     @Inject
     /* default */ EditCardListActivityPresenter mPresenter;
 
     private CardRecyclerViewAdapter mFirebaseAdapter;
+    private RecyclerView.AdapterDataObserver mFirebaseAdapterDataObserver;
 
     /**
      * Method starts EditCardListActivity.
@@ -94,6 +99,20 @@ public class EditCardListActivity extends AppCompatActivity implements
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        // For better performance
+        // https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
+        mRecyclerView.hasFixedSize();
+        // The FirebaseRecyclerAdapter asynchronously synchronizes data from the database.
+        // To know whenever the data in an adapter changes, you can register an AdapterDataObserver.
+        // https://stackoverflow.com/questions/37937497/getitemcount-on-adapter-is-returning-0
+        mFirebaseAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
+
+            @Override
+            public void onItemRangeInserted(final int positionStart, final int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                mTotalNumberOfCards.setText(String.valueOf(mFirebaseAdapter.getItemCount()));
+            }
+        };
         mPresenter.onCreate(deck);
     }
 
@@ -111,6 +130,11 @@ public class EditCardListActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
+        cleanup();
+    }
+
+    private void cleanup() {
+        mFirebaseAdapter.unregisterAdapterDataObserver(mFirebaseAdapterDataObserver);
         mFirebaseAdapter.cleanup();
     }
 
@@ -176,12 +200,20 @@ public class EditCardListActivity extends AppCompatActivity implements
     }
 
     private CardRecyclerViewAdapter createAdapter(@Nullable final Query query) {
+        // Before creating new Adapter, check whether we have previous one.
+        // If Adapter already exists, unregister DataObserver and clean listener.
+        if (mFirebaseAdapter != null) {
+            cleanup();
+        }
+
         if (query == null) {
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(),
                     mPresenter.getQuery(), this);
         } else {
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this);
         }
+
+        mFirebaseAdapter.registerAdapterDataObserver(mFirebaseAdapterDataObserver);
         return mFirebaseAdapter;
     }
 
