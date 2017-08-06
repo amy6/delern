@@ -41,7 +41,7 @@ import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,9 +80,9 @@ public class SignInActivity extends AppCompatActivity
         if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
             LOGGER.warn("Running from an instrumented test: forcing anonymous sign in");
 
-            org.dasfoo.delern.models.Auth.signIn(null, new AbstractDataAvailableListener<User>() {
+            org.dasfoo.delern.models.Auth.signIn(null, new AbstractTrackingProcedure<User>() {
                 @Override
-                public void onData(@Nullable final User data) {
+                public void call(@Nullable final User data) {
                     Intent intent = new Intent(SignInActivity.this,
                             DelernMainActivity.class);
                     intent.putExtra(DelernMainActivity.USER, data);
@@ -148,9 +148,9 @@ public class SignInActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         LOGGER.info("firebaseAuthWithGoogle: {}", acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        org.dasfoo.delern.models.Auth.signIn(credential, new AbstractDataAvailableListener<User>() {
+        org.dasfoo.delern.models.Auth.signIn(credential, new AbstractTrackingProcedure<User>() {
             @Override
-            public void onData(@Nullable final User data) {
+            public void call(@Nullable final User data) {
                 Intent intent = new Intent(SignInActivity.this,
                         DelernMainActivity.class);
                 intent.putExtra(DelernMainActivity.USER, data);

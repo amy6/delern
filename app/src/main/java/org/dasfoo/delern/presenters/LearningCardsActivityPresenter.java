@@ -22,7 +22,7 @@ import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.slf4j.Logger;
@@ -41,10 +41,10 @@ public class LearningCardsActivityPresenter {
     private Deck mDeck;
     private Card mCard;
 
-    private final AbstractDataAvailableListener<Card> mCardAvailableListener =
-            new AbstractDataAvailableListener<Card>() {
+    private final AbstractTrackingProcedure<Card> mCardAvailableListener =
+            new AbstractTrackingProcedure<Card>() {
                 @Override
-                public void onData(final Card data) {
+                public void call(final Card data) {
                     if (data == null) {
                         mLearningCardView.finishLearning();
                         return;
@@ -84,7 +84,7 @@ public class LearningCardsActivityPresenter {
      * for available cards to learn.
      */
     public void onStart() {
-        mDeck.startScheduledCardWatcher(mCardAvailableListener);
+        mDeck.startScheduledCardWatcher().onResult(mCardAvailableListener);
     }
 
     /**

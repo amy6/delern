@@ -23,8 +23,7 @@ import android.support.annotation.Nullable;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +38,8 @@ public class DelernMainActivityPresenter {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
-    private AbstractDataAvailableListener<Long> mUserHasDecksListener;
-    private AbstractDataAvailableListener<User> mAbstractDataAvailableListener;
+    private AbstractTrackingProcedure<Long> mUserHasDecksListener;
+    private AbstractTrackingProcedure<User> mAbstractDataAvailableListener;
     private User mUser;
 
     /**
@@ -68,10 +67,10 @@ public class DelernMainActivityPresenter {
             return false;
         }
         mUser = user;
-        mUserHasDecksListener = new AbstractDataAvailableListener<Long>() {
+        mUserHasDecksListener = new AbstractTrackingProcedure<Long>() {
 
             @Override
-            public void onData(@Nullable final Long isUserHasDecks) {
+            public void call(@Nullable final Long isUserHasDecks) {
                 mDelernMainView.showProgressBar(false);
                 if (isUserHasDecks == null || isUserHasDecks != 1) {
                     mDelernMainView.noDecksMessage(true);
@@ -88,7 +87,8 @@ public class DelernMainActivityPresenter {
      * whether user has decks or not.
      */
     public void onStart() {
-        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1), mUserHasDecksListener);
+        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1)).onResult(
+                mUserHasDecksListener);
     }
 
     /**
@@ -106,7 +106,7 @@ public class DelernMainActivityPresenter {
      */
     public void renameDeck(final Deck deck, final String newName) {
         deck.setName(newName);
-        deck.save(null);
+        deck.save();
     }
 
     /**
@@ -126,7 +126,7 @@ public class DelernMainActivityPresenter {
      */
     public void changeDeckType(final Deck deck, final DeckType deckType) {
         deck.setDeckType(deckType.name());
-        deck.save(null);
+        deck.save();
     }
 
 
@@ -148,9 +148,9 @@ public class DelernMainActivityPresenter {
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);
-        newDeck.create(new OnOperationCompleteListener() {
+        newDeck.create().onResult(new AbstractTrackingProcedure<Void>() {
             @Override
-            public void onSuccess() {
+            public void call(final Void parameter) {
                 mDelernMainView.addCardsToDeck(newDeck);
             }
         });
@@ -161,9 +161,9 @@ public class DelernMainActivityPresenter {
      * Otherwise calls callback method to update user profile info.
      */
     public void getUserInfo() {
-        mAbstractDataAvailableListener = new AbstractDataAvailableListener<User>() {
+        mAbstractDataAvailableListener = new AbstractTrackingProcedure<User>() {
             @Override
-            public void onData(@Nullable final User user) {
+            public void call(@Nullable final User user) {
                 LOGGER.debug("Check if user null");
                 if (user == null) {
                     LOGGER.debug("Starting sign in");
@@ -174,7 +174,7 @@ public class DelernMainActivityPresenter {
                 }
             }
         };
-        mUser.watch(mAbstractDataAvailableListener, User.class);
+        mUser.watch(User.class).onResult(mAbstractDataAvailableListener);
     }
 
     /**

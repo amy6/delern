@@ -192,7 +192,7 @@ public class Card extends AbstractModel implements Parcelable {
                 .save(this)
                 .save(v)
                 .save(sc)
-                .write(null);
+                .write();
     }
 
     /**
@@ -205,7 +205,7 @@ public class Card extends AbstractModel implements Parcelable {
                 .delete(this)
                 .delete(getDeck().getChildReference(ScheduledCard.class, getKey()))
                 .delete(getChildReference(View.class, getKey()))
-                .write(null);
+                .write();
     }
 
     /**

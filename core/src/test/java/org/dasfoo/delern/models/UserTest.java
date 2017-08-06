@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Test;
 
@@ -29,9 +29,9 @@ public class UserTest extends FirebaseServerUnitTest {
 
     @Test
     public void save_succeeds() throws Exception {
-        signIn().save(new OnOperationCompleteListener() {
+        signIn().save().onResult(new AbstractTrackingProcedure<Void>() {
             @Override
-            public void onSuccess() {
+            public void call(Void parameter) {
                 testSucceeded();
             }
         });

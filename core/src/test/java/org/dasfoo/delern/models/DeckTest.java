@@ -18,10 +18,9 @@
 
 package org.dasfoo.delern.models;
 
-import android.support.annotation.Nullable;
-
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Test;
 
@@ -35,29 +34,26 @@ public class DeckTest extends FirebaseServerUnitTest {
     @Test
     public void decks_createdAndFetched() throws Exception {
         final User user = signIn();
-        user.save(new OnOperationCompleteListener() {
+        user.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
             @Override
-            public void onSuccess() {
+            public TaskAdapter<Void> call(Void parameter) {
                 Deck deck = new Deck(user);
                 deck.setName("My Deck");
                 deck.setAccepted(true);
-                deck.create(new OnOperationCompleteListener() {
-                    @Override
-                    public void onSuccess() {
-                        user.fetchChildren(user.getChildReference(Deck.class), Deck.class,
-                                new AbstractDataAvailableListener<List<Deck>>() {
-                                    @Override
-                                    public void onData(@Nullable List<Deck> data) {
-                                        if (data.size() == 1 &&
-                                                data.get(0).getName().equals("My Deck")) {
-                                            testSucceeded();
-                                        }
-                                    }
-                                });
-                    }
-                });
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return user.fetchChildren(user.getChildReference(Deck.class), Deck.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
+            @Override
+            public void call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("My Deck")) {
+                    testSucceeded();
+                }
             }
         });
     }
-
 }

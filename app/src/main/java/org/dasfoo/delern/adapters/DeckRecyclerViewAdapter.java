@@ -25,8 +25,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
 import org.dasfoo.delern.viewholders.DeckViewHolder;
 
 /**
@@ -57,10 +57,11 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setDeckCardType(deck.getDeckType());
-        AbstractDataAvailableListener<Long> onCardsCountDataAvailableListener =
-                new AbstractDataAvailableListener<Long>() {
+        AbstractTrackingProcedure<Long> onCardsCountDataAvailableListener =
+                new AbstractTrackingProcedure<Long>() {
                     @Override
-                    public void onData(@Nullable final Long cardsCount) {
+                    public void call(@Nullable final Long cardsCount) {
+                        // TODO(ksheremet): handle null (same as 0)
                         if (cardsCount <= CARDS_COUNTER_LIMIT) {
                             viewHolder.getCountToLearnTextView().setText(
                                     String.valueOf(cardsCount));
@@ -71,9 +72,10 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                     }
                 };
 
+        // TODO(ksheremet): remove listener when deck is removed
         Deck.fetchCount(
-                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1),
-                onCardsCountDataAvailableListener);
+                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
+                .onResult(onCardsCountDataAvailableListener);
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);
     }
 

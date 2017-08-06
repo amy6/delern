@@ -18,10 +18,8 @@
 
 package org.dasfoo.delern.presenters;
 
-import android.support.annotation.Nullable;
-
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.views.IPreEditCardView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,7 @@ public class PreEditCardActivityPresenter {
 
     private final IPreEditCardView mPreEditCardView;
     private Card mCard;
-    private AbstractDataAvailableListener<Card> mCardValueEventListener;
+    private AbstractTrackingProcedure<Card> mCardValueEventListener;
 
     /**
      * Constructor for Presenter. It gets IPreEditCardView as parameter to manage
@@ -70,18 +68,17 @@ public class PreEditCardActivityPresenter {
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
         // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
         //                toast on error.
-        mCardValueEventListener = new AbstractDataAvailableListener<Card>() {
+        mCardValueEventListener = new AbstractTrackingProcedure<Card>() {
             @Override
-            public void onData(@Nullable final Card card) {
+            public void call(final Card card) {
                 if (card != null) {
                     mCard = card;
                     mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
                 }
             }
         };
-        mCard.watch(mCardValueEventListener, Card.class);
+        mCard.watch(Card.class).onResult(mCardValueEventListener);
     }
-
 
     /**
      * Called from PreEditCardActivity.onStop(). It releases resources.

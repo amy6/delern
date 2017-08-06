@@ -134,8 +134,11 @@ public class EditCardListActivity extends AppCompatActivity implements
     }
 
     private void cleanup() {
-        mFirebaseAdapter.unregisterAdapterDataObserver(mFirebaseAdapterDataObserver);
-        mFirebaseAdapter.cleanup();
+        if (mFirebaseAdapter != null) {
+            mFirebaseAdapter.unregisterAdapterDataObserver(mFirebaseAdapterDataObserver);
+            mFirebaseAdapter.cleanup();
+            mFirebaseAdapter = null;
+        }
     }
 
     /**
@@ -202,9 +205,7 @@ public class EditCardListActivity extends AppCompatActivity implements
     private CardRecyclerViewAdapter createAdapter(@Nullable final Query query) {
         // Before creating new Adapter, check whether we have previous one.
         // If Adapter already exists, unregister DataObserver and clean listener.
-        if (mFirebaseAdapter != null) {
-            cleanup();
-        }
+        cleanup();
 
         if (query == null) {
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(),

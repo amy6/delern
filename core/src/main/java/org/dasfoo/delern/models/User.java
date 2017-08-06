@@ -168,6 +168,14 @@ public final class User extends AbstractModel implements Parcelable {
     /**
      * {@inheritDoc}
      */
+    @Override
+    protected void setReference(final DatabaseReference ref) {
+        mDatabase = ref.getDatabase();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Exclude
     @Override
     public <T> DatabaseReference getChildReference(final Class<T> childClass) {
@@ -218,13 +226,5 @@ public final class User extends AbstractModel implements Parcelable {
         dest.writeString(getName());
         dest.writeString(getEmail());
         dest.writeString(getPhotoUrl());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setReference(final DatabaseReference ref) {
-        mDatabase = ref.getDatabase();
     }
 }

@@ -21,8 +21,8 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Level;
 import org.dasfoo.delern.models.ScheduledCard;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 /**
@@ -33,8 +33,8 @@ public class AddEditCardActivityPresenter {
 
     private final IAddEditCardView mAddEditCardView;
     private Card mCard;
-    private OnOperationCompleteListener mOnCardAddedListener;
-    private OnOperationCompleteListener mOnCardUpdatedListener;
+    private AbstractTrackingProcedure<Void> mOnCardAddedListener;
+    private AbstractTrackingProcedure<Void> mOnCardUpdatedListener;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
@@ -80,7 +80,7 @@ public class AddEditCardActivityPresenter {
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save(mOnCardUpdatedListener);
+        mCard.save().onResult(mOnCardUpdatedListener);
     }
 
     /**
@@ -102,7 +102,7 @@ public class AddEditCardActivityPresenter {
         new MultiWrite()
                 .save(newCard)
                 .save(scheduledCard)
-                .write(mOnCardAddedListener);
+                .write().onResult(mOnCardAddedListener);
     }
 
     /**
@@ -111,16 +111,16 @@ public class AddEditCardActivityPresenter {
      */
     public void onStart() {
         if (mCard.exists()) {
-            mOnCardUpdatedListener = new OnOperationCompleteListener() {
+            mOnCardUpdatedListener = new AbstractTrackingProcedure<Void>() {
                 @Override
-                public void onSuccess() {
+                public void call(final Void parameter) {
                     mAddEditCardView.cardUpdated();
                 }
             };
         } else {
-            mOnCardAddedListener = new OnOperationCompleteListener() {
+            mOnCardAddedListener = new AbstractTrackingProcedure<Void>() {
                 @Override
-                public void onSuccess() {
+                public void call(final Void parameter) {
                     mAddEditCardView.cardAdded();
                 }
             };

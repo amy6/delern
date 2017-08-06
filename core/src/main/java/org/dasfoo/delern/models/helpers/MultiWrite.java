@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models.helpers;
 
-import android.support.annotation.Nullable;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.models.AbstractModel;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,19 +143,21 @@ public class MultiWrite {
     /**
      * Apply all the queued operations to the database.
      *
-     * @param onCompleteListener invoked when the operation finishes; onSuccess is triggered
-     *                           immediately if database is offline.
+     * @return FirebaseTaskAdapter, either immediately complete (when offline) or triggered on
+     * Firebase event.
      */
-    public void write(@Nullable final OnOperationCompleteListener onCompleteListener) {
-        if (sConnected && onCompleteListener != null) {
-            mRoot.updateChildren(mData, onCompleteListener);
+    public TaskAdapter<Void> write() {
+        FirebaseTaskAdapter<Void> task = new FirebaseTaskAdapter<>(mRoot.updateChildren(mData))
+                .onFailure(new AbstractTrackingProcedure<Exception>() {
+                    @Override
+                    public void call(final Exception parameter) {
+                        LOGGER.error("Failed to save {}", mData, parameter);
+                    }
+                });
+        if (sConnected) {
+            return task;
         } else {
-            // If offline, we install default listener to log any errors when we are back online.
-            // But we don't want this behavior for normal operation, because it breaks the workflow.
-            mRoot.updateChildren(mData, OnOperationCompleteListener.getDefaultInstance());
-            if (onCompleteListener != null) {
-                onCompleteListener.onSuccess();
-            }
+            return new NoopTaskAdapter<>(null);
         }
     }
 }

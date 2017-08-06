@@ -25,10 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
+import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
+import org.dasfoo.delern.models.helpers.DataTaskAdapter;
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.models.listeners.AbstractOnFBDataChangeListener;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,20 +82,17 @@ public abstract class AbstractModel {
     /**
      * Count the child nodes (non-recursively) returned by the query.
      *
-     * @param query    a DatabaseReference or a specific query.
-     * @param callback a callback to run when data is available and then every time the count
-     *                 changes. To stop the updates and save resources, call callback.cleanup().
+     * @param query a DatabaseReference or a specific query.
+     * @return Multi-shot TaskAdapter (call stop() to remove the listener).
      */
-    public static void fetchCount(final Query query,
-                                  final AbstractDataAvailableListener<Long> callback) {
+    public static DataTaskAdapter<Long> fetchCount(final Query query) {
         // TODO(refactoring): this should be childeventlistener, not valueeventlistener
-        query.addValueEventListener(callback.setCleanupPair(query,
-                new AbstractOnFBDataChangeListener(callback) {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        callback.onData(dataSnapshot.getChildrenCount());
-                    }
-                }));
+        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, Long>() {
+            @Override
+            public Long call(final DataSnapshot dataSnapshot) {
+                return dataSnapshot.getChildrenCount();
+            }
+        });
     }
 
     /**
@@ -196,34 +193,31 @@ public abstract class AbstractModel {
     /**
      * Write the current model to the database, creating a new node if it doesn't exist.
      *
-     * @param callback called when the operation completes, or immediately if offline.
+     * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public void save(@Nullable final OnOperationCompleteListener callback) {
-        new MultiWrite().save(this).write(callback);
+    public TaskAdapter<Void> save() {
+        return new MultiWrite().save(this).write();
     }
 
     /**
      * Fetch a single model from the database, and watch for changes until callback.cleanup() is
      * called. The model will have its parent set to "this" (receiver).
      *
-     * @param query    Firebase query returning a node to directly parse into the model.
-     * @param cls      class of the model to parse the data into.
-     * @param callback callback when the data is first available or changed.
-     * @param <T>      class of the model to parse the data into.
+     * @param query Firebase query returning a node to directly parse into the model.
+     * @param cls   class of the model to parse the data into.
+     * @param <T>   class of the model to parse the data into.
+     * @return Multi-shot TaskAdapter (use stop() to remove the listener).
      */
     @Exclude
-    public <T extends AbstractModel> void fetchChild(
-            final Query query, final Class<T> cls,
-            final AbstractDataAvailableListener<T> callback) {
-        query.addValueEventListener(callback.setCleanupPair(query,
-                new AbstractOnFBDataChangeListener(callback) {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        callback.onData(AbstractModel.fromSnapshot(
-                                dataSnapshot, cls, AbstractModel.this));
-                    }
-                }));
+    public <T extends AbstractModel> DataTaskAdapter<T> fetchChild(
+            final Query query, final Class<T> cls) {
+        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, T>() {
+            @Override
+            public T call(final DataSnapshot dataSnapshot) {
+                return AbstractModel.fromSnapshot(dataSnapshot, cls, AbstractModel.this);
+            }
+        });
     }
 
     /**
@@ -231,49 +225,44 @@ public abstract class AbstractModel {
      * called. With every change a new object will be created, the fields won't be updated in place.
      * The model will have its parent set to the same as before.
      *
-     * @param callback callback when the data is first available or changed.
-     * @param cls      class of the model which is being watched.
-     * @param <T>      AbstractModel.
+     * @param cls class of the model which is being watched.
+     * @param <T> AbstractModel.
+     * @return Multi-shot TaskAdapter (use stop() to remove the listener).
      */
     @Exclude
-    public <T extends AbstractModel> void watch(final AbstractDataAvailableListener<T> callback,
-                                                final Class<T> cls) {
-        DatabaseReference selfReference = getReference();
-        selfReference.addValueEventListener(callback.setCleanupPair(selfReference,
-                new AbstractOnFBDataChangeListener(callback) {
+    public <T extends AbstractModel> DataTaskAdapter<T> watch(final Class<T> cls) {
+        return new DataTaskAdapter<>(getReference(),
+                new AbstractTrackingFunction<DataSnapshot, T>() {
                     @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        callback.onData(AbstractModel.fromSnapshot(dataSnapshot, cls,
-                                getParent()));
+                    public T call(final DataSnapshot dataSnapshot) {
+                        return AbstractModel.fromSnapshot(dataSnapshot, cls, getParent());
                     }
-                }));
+                });
     }
 
     /**
      * Similar to fetchChild, but iterates over the objects pointed to by query and invokes callback
      * with a List.
      *
-     * @param query    see fetchChild.
-     * @param cls      see fetchChild.
-     * @param callback see fetchChild.
-     * @param <T>      see fetchChild.
+     * @param query see fetchChild.
+     * @param cls   see fetchChild.
+     * @param <T>   see fetchChild.
+     * @return see fetchChild.
      */
     @Exclude
-    public <T extends AbstractModel> void fetchChildren(
-            final Query query, final Class<T> cls,
-            final AbstractDataAvailableListener<List<T>> callback) {
-        query.addValueEventListener(callback.setCleanupPair(query,
-                new AbstractOnFBDataChangeListener(callback) {
-                    @Override
-                    public void onDataChange(final DataSnapshot dataSnapshot) {
-                        List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
-                        for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                            items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,
-                                    AbstractModel.this));
-                        }
-                        callback.onData(items);
-                    }
-                }));
+    public <T extends AbstractModel> DataTaskAdapter<List<T>> fetchChildren(
+            final Query query, final Class<T> cls) {
+        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, List<T>>() {
+            @Override
+            public List<T> call(final DataSnapshot dataSnapshot) {
+                List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
+                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                    items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,
+                            AbstractModel.this));
+                }
+                return items;
+            }
+        });
     }
 
     /**

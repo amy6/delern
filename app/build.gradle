@@ -145,7 +145,10 @@ dependencies {
     }
 
     // ButterKnife
+    // TODO(ksheremet): 8.8.0
+    //noinspection NewerVersionAvailable
     compile 'com.jakewharton:butterknife:8.7.0'
+    //noinspection NewerVersionAvailable
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 
     // Dagger2

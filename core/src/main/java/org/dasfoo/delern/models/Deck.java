@@ -20,17 +20,14 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
-import org.dasfoo.delern.models.listeners.OnOperationCompleteListener;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 
 import java.util.List;
 
@@ -118,17 +115,17 @@ public class Deck extends AbstractModel implements Parcelable {
     /**
      * Create new deck with "owner" access.
      *
-     * @param callback invoked when the deck is saved to the database, or immediately if offline.
+     * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public void create(final OnOperationCompleteListener callback) {
+    public TaskAdapter<Void> create() {
         DeckAccess deckAccess = new DeckAccess(this);
         deckAccess.setKey(getUser().getKey());
         deckAccess.setAccess("owner");
-        new MultiWrite()
+        return new MultiWrite()
                 .save(this)
                 .save(deckAccess)
-                .write(callback);
+                .write();
     }
 
     /**
@@ -142,56 +139,45 @@ public class Deck extends AbstractModel implements Parcelable {
                 .delete(this.getChildReference(ScheduledCard.class))
                 .delete(this.getChildReference(View.class))
                 .delete(this.getChildReference(DeckAccess.class))
-                .write(null);
+                .write();
     }
 
     /**
      * Start a watcher that will trigger for every top-1 card that needs to be learned, in sequence.
      *
-     * @param callback called initially, and after each change to the current ScheduledCard. The
-     *                 parameter will be a Card associated with the ScheduledCard, and ScheduledCard
-     *                 will be set as its parent.
+     * @return Multi-shot TaskAdapter, called initially and after each change to ScheduledCard. The
+     * parameter will be a Card associated with the ScheduledCard, and ScheduledCard will be
+     * set as its parent.
      */
     @Exclude
-    public void startScheduledCardWatcher(final AbstractDataAvailableListener<Card> callback) {
-        Query query = fetchCardsToRepeatWithLimitQuery(1);
-        fetchChildren(query, ScheduledCard.class,
-                new AbstractDataAvailableListener<List<ScheduledCard>>() {
+    public TaskAdapter<Card> startScheduledCardWatcher() {
+        final TaskAdapter<Card> proxyCardFetcher = new TaskAdapter<>();
+        final TaskAdapter<List<ScheduledCard>> scheduledCardsFetcher =
+                fetchChildren(fetchCardsToRepeatWithLimitQuery(1), ScheduledCard.class);
+        scheduledCardsFetcher.onResult(
+                new AbstractTrackingProcedure<List<ScheduledCard>>() {
                     @Override
-                    public ValueEventListener setCleanupPair(
-                            @NonNull final Query query,
-                            @NonNull final ValueEventListener listener) {
-                        return callback.setCleanupPair(query, listener);
-                    }
-
-                    @Override
-                    public void onData(final @Nullable List<ScheduledCard> data) {
+                    public void call(final List<ScheduledCard> data) {
                         if (data != null && data.size() > 0) {
                             ScheduledCard sc = data.get(0);
-                            sc.fetchChild(
+                            final TaskAdapter<Card> cardFetcher = sc.fetchChild(
                                     Deck.this.getChildReference(Card.class, sc.getKey()),
-                                    Card.class, new AbstractDataAvailableListener<Card>() {
-                                        @Override
-                                        public void onData(@Nullable final Card data) {
-                                            cleanup();
-                                            callback.onData(data);
-                                        }
-
-                                        @Override
-                                        public void onError(@Nullable final Exception e) {
-                                            callback.onError(e);
-                                        }
-                                    });
+                                    Card.class);
+                            proxyCardFetcher
+                                    .forwardFrom(cardFetcher)
+                                    .setDependentAdapter(scheduledCardsFetcher);
+                            cardFetcher.onResult(new AbstractTrackingProcedure<Card>() {
+                                @Override
+                                public void call(final Card parameter) {
+                                    cardFetcher.stop();
+                                }
+                            });
                         } else {
-                            callback.onData(null);
+                            proxyCardFetcher.triggerOnResult(null);
                         }
                     }
-
-                    @Override
-                    public void onError(@Nullable final Exception e) {
-                        callback.onError(e);
-                    }
                 });
+        return proxyCardFetcher;
     }
 
     /**

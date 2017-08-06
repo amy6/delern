@@ -30,12 +30,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.models.listeners.AbstractDataAvailableListener;
+import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class to handle authentication with Firebase.
  */
 public final class Auth {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Auth.class);
 
     // TODO(dotdoom): make it mCurrentUser, non-static methods, and create once: in SplashActivity
     private static User sCurrentUser;
@@ -70,7 +73,7 @@ public final class Auth {
      * @param callback   invoked when sign-in is finished, either successfully or with failure.
      */
     public static void signIn(@Nullable final AuthCredential credential,
-                              @Nullable final AbstractDataAvailableListener<User> callback) {
+                              @Nullable final AbstractTrackingProcedure<User> callback) {
         Task<AuthResult> task;
         if (credential == null) {
             task = FirebaseAuth.getInstance().signInAnonymously();
@@ -84,9 +87,9 @@ public final class Auth {
                     if (task.isSuccessful()) {
                         // OnAuthStateChange may fire too late, override right here.
                         setCurrentUser(task.getResult().getUser());
-                        callback.onData(getCurrentUser());
+                        callback.call(getCurrentUser());
                     } else {
-                        callback.onError(task.getException());
+                        LOGGER.error("Failed to sign in with {}", credential, task.getException());
                     }
                 }
             });
@@ -134,7 +137,7 @@ public final class Auth {
                     sCurrentUser.setPhotoUrl(user.getPhotoUrl().toString());
                 }
             }
-            sCurrentUser.save(null);
+            sCurrentUser.save();
         }
     }
 
