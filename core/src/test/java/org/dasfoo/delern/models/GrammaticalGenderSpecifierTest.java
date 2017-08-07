@@ -73,8 +73,20 @@ public class GrammaticalGenderSpecifierTest {
     }
 
     @Test
-    public void noGenderGermanSpecifier() throws Exception {
+    public void noGenderGermanSpecifierWithArticle() throws Exception {
         assertEquals(GrammaticalGenderSpecifier.specifyGender(DeckType.GERMAN, "die Frau, der Man"),
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
+    }
+
+    @Test
+    public void noGenderGermanSpecifierWithoutArticle() throws Exception {
+        assertEquals(GrammaticalGenderSpecifier.specifyGender(DeckType.GERMAN, "Frau und  Man"),
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
+    }
+
+    @Test
+    public void noGenderBasicSpecifier() throws Exception {
+        assertEquals(GrammaticalGenderSpecifier.specifyGender(DeckType.BASIC, "Basic deckType"),
                 GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
 }
