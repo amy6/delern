@@ -130,10 +130,12 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Remove the current deck from the database, including Cards, ScheduledCards, Views and access.
+     *
+     * @return FirebaseTaskAdapter for the delete operation.
      */
     @Exclude
-    public void delete() {
-        new MultiWrite()
+    public TaskAdapter<Void> delete() {
+        return new MultiWrite()
                 .delete(this)
                 .delete(this.getChildReference(Card.class))
                 .delete(this.getChildReference(ScheduledCard.class))

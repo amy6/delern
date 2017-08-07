@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class DeckTest extends FirebaseServerUnitTest {
 
-    private static User mUser;
+    private User mUser;
 
     @Before
     public void createUser() throws Exception {
@@ -58,6 +58,152 @@ public class DeckTest extends FirebaseServerUnitTest {
             @Override
             public void call(List<Deck> data) {
                 if (data.size() == 1 && data.get(0).getName().equals("My Deck")) {
+                    testSucceeded();
+                }
+            }
+        });
+    }
+
+    @Test
+    public void decks_renamed() {
+        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(Void parameter) {
+                Deck deck = new Deck(mUser);
+                deck.setName("ToRename");
+                deck.setAccepted(true);
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("ToRename")) {
+                    Deck fetchedDeck = data.get(0);
+                    fetchedDeck.setName("Renamed");
+                    return fetchedDeck.save();
+                }
+                return null;
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
+            @Override
+            public void call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("Renamed")) {
+                    testSucceeded();
+                }
+            }
+        });
+    }
+
+    @Test
+    public void decks_changedDeckType() {
+        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(Void parameter) {
+                Deck deck = new Deck(mUser);
+                deck.setName("DeckType");
+                deck.setAccepted(true);
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("DeckType")) {
+                    Deck fetchedDeck = data.get(0);
+                    fetchedDeck.setDeckType(DeckType.SWISS.name());
+                    return fetchedDeck.save();
+                }
+                return null;
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
+            @Override
+            public void call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getDeckType().equals(DeckType.SWISS.name())) {
+                    testSucceeded();
+                }
+            }
+        });
+    }
+
+    @Test
+    public void decks_checkedUserDeck() {
+        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(Void parameter) {
+                Deck deck = new Deck(mUser);
+                deck.setName("UsersDeck");
+                deck.setAccepted(true);
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
+            @Override
+            public void call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("UsersDeck") &&
+                        data.get(0).getUser() == mUser) {
+                    testSucceeded();
+                }
+            }
+        });
+    }
+
+    @Test
+    public void decks_createdAndDeleted() throws Exception {
+        final Deck deck = new Deck(mUser);
+        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(Void parameter) {
+                deck.setName("Created");
+                deck.setAccepted(true);
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("Created")) {
+                    Deck fetchedDeck = data.get(0);
+                    return fetchedDeck.delete();
+                }
+                return null;
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                System.out.println("Fetching decks again");
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
+            @Override
+            public void call(List<Deck> data) {
+                if (data.size() == 0) {
                     testSucceeded();
                 }
             }
