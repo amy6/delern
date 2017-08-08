@@ -197,7 +197,6 @@ public class DeckTest extends FirebaseServerUnitTest {
         }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
             @Override
             public TaskAdapter<List<Deck>> call(Void parameter) {
-                System.out.println("Fetching decks again");
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
         }).onResult(new AbstractTrackingProcedure<List<Deck>>() {

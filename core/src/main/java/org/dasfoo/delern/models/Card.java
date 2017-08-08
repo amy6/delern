@@ -190,6 +190,7 @@ public class Card extends AbstractModel implements Parcelable {
      * Update the ScheduledCard associated with this card and add a View (saves to the database).
      *
      * @param knows whether the user replied with "I know" to the card.
+     * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
     public TaskAdapter<Void> answer(final boolean knows) {
@@ -221,6 +222,8 @@ public class Card extends AbstractModel implements Parcelable {
 
     /**
      * Removes the Card, ScheduledCard and Views from the database.
+     *
+     * @return FirebaseTaskAdapter for the delete operation.
      */
     @Exclude
     @SuppressWarnings("PMD.UseConcurrentHashMap")

@@ -23,16 +23,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * TaskAdapter for Firebase data available events.
  *
  * @param <T> parsed type (usually a model) that onResult/continueWith will receive.
  */
 public class DataTaskAdapter<T> extends TaskAdapter<T> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataTaskAdapter.class);
 
     private final Query mQuery;
     private final ValueEventListener mValueEventListener;
@@ -55,7 +51,6 @@ public class DataTaskAdapter<T> extends TaskAdapter<T> {
 
             @Override
             public void onCancelled(final DatabaseError error) {
-                LOGGER.error("Listener at {} has been cancelled", mQuery, error.toException());
                 triggerOnFailure(error.toException());
             }
         });
