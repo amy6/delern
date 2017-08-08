@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @param <T> Task result type.
  */
-@SuppressWarnings({"checkstyle:IllegalCatchCheck", "PMD.AvoidCatchingGenericException"})
+@SuppressWarnings({"checkstyle:IllegalCatch", "PMD.AvoidCatchingGenericException"})
 public class TaskAdapter<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskAdapter.class);
 
@@ -108,7 +108,11 @@ public class TaskAdapter<T> {
      */
     public void triggerOnResult(final T result) {
         for (AbstractTrackingProcedure<T> callback : mOnResultQueue) {
-            callback.call(result);
+            try {
+                callback.call(result);
+            } catch (Exception e) {
+                LOGGER.error("Exception in onResult handler", e);
+            }
         }
     }
 
@@ -126,7 +130,11 @@ public class TaskAdapter<T> {
     protected void triggerOnFailure(final Exception error) {
         LOGGER.error("Error triggered for TaskAdapter", error);
         for (AbstractTrackingProcedure<Exception> callback : mOnFailureQueue) {
-            callback.call(error);
+            try {
+                callback.call(error);
+            } catch (Exception e) {
+                LOGGER.error("Exception in onFailure handler", e);
+            }
         }
     }
 
