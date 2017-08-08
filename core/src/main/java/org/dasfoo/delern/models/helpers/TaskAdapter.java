@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 /**
  * TaskAdapter is a wrapper around firebase.Task and android.Task which both are functionally
@@ -34,10 +35,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TaskAdapter<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskAdapter.class);
 
-    private final Queue<AbstractTrackingProcedure<T>> mOnResultQueue =
-            new ConcurrentLinkedQueue<>();
-    private final Queue<AbstractTrackingProcedure<Exception>> mOnFailureQueue =
-            new ConcurrentLinkedQueue<>();
+    private final Queue<Consumer<T>> mOnResultQueue = new ConcurrentLinkedQueue<>();
+    private final Queue<Consumer<Exception>> mOnFailureQueue = new ConcurrentLinkedQueue<>();
 
     @SuppressWarnings("rawtypes")
     private TaskAdapter mDependentAdapter;
@@ -66,14 +65,11 @@ public class TaskAdapter<T> {
             final AbstractTrackingFunction<T, TaskAdapter<R>> continuation,
             final boolean stopAfterFirstResult) {
         final TaskAdapter<R> proxyAdapter = new TaskAdapter<>();
-        onResult(new AbstractTrackingProcedure<T>() {
-            @Override
-            public void call(final T parameter) {
-                if (stopAfterFirstResult) {
-                    stop();
-                }
-                proxyAdapter.forwardFrom(continuation.call(parameter));
+        onResult((final T parameter) -> {
+            if (stopAfterFirstResult) {
+                stop();
             }
+            proxyAdapter.forwardFrom(continuation.call(parameter));
         });
         return proxyAdapter;
     }
@@ -86,17 +82,7 @@ public class TaskAdapter<T> {
      */
     public TaskAdapter<T> forwardFrom(final TaskAdapter<T> source) {
         setDependentAdapter(source);
-        source.onResult(new AbstractTrackingProcedure<T>() {
-            @Override
-            public void call(final T parameter) {
-                triggerOnResult(parameter);
-            }
-        }).onFailure(new AbstractTrackingProcedure<Exception>() {
-            @Override
-            public void call(final Exception parameter) {
-                triggerOnFailure(parameter);
-            }
-        });
+        source.onResult(this::triggerOnResult).onFailure(this::triggerOnFailure);
         return this;
     }
 
@@ -107,9 +93,9 @@ public class TaskAdapter<T> {
      * @param result result to be sent to listeners.
      */
     public void triggerOnResult(final T result) {
-        for (AbstractTrackingProcedure<T> callback : mOnResultQueue) {
+        for (Consumer<T> callback : mOnResultQueue) {
             try {
-                callback.call(result);
+                callback.accept(result);
             } catch (Exception e) {
                 LOGGER.error("Exception in onResult handler", e);
             }
@@ -122,16 +108,16 @@ public class TaskAdapter<T> {
      * @param callback function to be called with task result.
      * @return this.
      */
-    public TaskAdapter<T> onResult(final AbstractTrackingProcedure<T> callback) {
-        mOnResultQueue.add(callback.setCaller(this));
+    public TaskAdapter<T> onResult(final Consumer<T> callback) {
+        mOnResultQueue.add(callback);
         return this;
     }
 
     protected void triggerOnFailure(final Exception error) {
         LOGGER.error("Error triggered for TaskAdapter", error);
-        for (AbstractTrackingProcedure<Exception> callback : mOnFailureQueue) {
+        for (Consumer<Exception> callback : mOnFailureQueue) {
             try {
-                callback.call(error);
+                callback.accept(error);
             } catch (Exception e) {
                 LOGGER.error("Exception in onFailure handler", e);
             }
@@ -144,8 +130,8 @@ public class TaskAdapter<T> {
      * @param callback function to be called with task error.
      * @return this.
      */
-    public TaskAdapter<T> onFailure(final AbstractTrackingProcedure<Exception> callback) {
-        mOnFailureQueue.add(callback.setCaller(this));
+    public TaskAdapter<T> onFailure(final Consumer<Exception> callback) {
+        mOnFailureQueue.add(callback);
         return this;
     }
 

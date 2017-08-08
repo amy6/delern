@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -41,7 +40,6 @@ import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,15 +78,11 @@ public class SignInActivity extends AppCompatActivity
         if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
             LOGGER.warn("Running from an instrumented test: forcing anonymous sign in");
 
-            org.dasfoo.delern.models.Auth.signIn(null, new AbstractTrackingProcedure<User>() {
-                @Override
-                public void call(@Nullable final User data) {
-                    Intent intent = new Intent(SignInActivity.this,
-                            DelernMainActivity.class);
-                    intent.putExtra(DelernMainActivity.USER, data);
-                    startActivity(intent);
-                    finish();
-                }
+            org.dasfoo.delern.models.Auth.signIn(null, (final User data) -> {
+                Intent intent = new Intent(this, DelernMainActivity.class);
+                intent.putExtra(DelernMainActivity.USER, data);
+                startActivity(intent);
+                finish();
             });
             return;
         }
@@ -148,15 +142,11 @@ public class SignInActivity extends AppCompatActivity
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         LOGGER.info("firebaseAuthWithGoogle: {}", acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        org.dasfoo.delern.models.Auth.signIn(credential, new AbstractTrackingProcedure<User>() {
-            @Override
-            public void call(@Nullable final User data) {
-                Intent intent = new Intent(SignInActivity.this,
-                        DelernMainActivity.class);
-                intent.putExtra(DelernMainActivity.USER, data);
-                startActivity(intent);
-                finish();
-            }
+        org.dasfoo.delern.models.Auth.signIn(credential, (final User data) -> {
+            Intent intent = new Intent(this, DelernMainActivity.class);
+            intent.putExtra(DelernMainActivity.USER, data);
+            startActivity(intent);
+            finish();
         });
     }
 

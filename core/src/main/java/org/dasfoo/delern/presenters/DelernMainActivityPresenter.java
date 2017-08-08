@@ -18,12 +18,10 @@
 
 package org.dasfoo.delern.presenters;
 
-import android.support.annotation.Nullable;
-
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +36,8 @@ public class DelernMainActivityPresenter {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
-    private AbstractTrackingProcedure<Long> mUserHasDecksListener;
-    private AbstractTrackingProcedure<User> mAbstractDataAvailableListener;
+    private TaskAdapter<Long> mUserHasDecksListener;
+    private TaskAdapter<User> mAbstractDataAvailableListener;
     private User mUser;
 
     /**
@@ -67,18 +65,6 @@ public class DelernMainActivityPresenter {
             return false;
         }
         mUser = user;
-        mUserHasDecksListener = new AbstractTrackingProcedure<Long>() {
-
-            @Override
-            public void call(@Nullable final Long isUserHasDecks) {
-                mDelernMainView.showProgressBar(false);
-                if (isUserHasDecks == null || isUserHasDecks != 1) {
-                    mDelernMainView.noDecksMessage(true);
-                } else {
-                    mDelernMainView.noDecksMessage(false);
-                }
-            }
-        };
         return true;
     }
 
@@ -87,8 +73,15 @@ public class DelernMainActivityPresenter {
      * whether user has decks or not.
      */
     public void onStart() {
-        Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1)).onResult(
-                mUserHasDecksListener);
+        mUserHasDecksListener = Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1))
+                .onResult((final Long isUserHasDecks) -> {
+                    mDelernMainView.showProgressBar(false);
+                    if (isUserHasDecks == null || isUserHasDecks != 1) {
+                        mDelernMainView.noDecksMessage(true);
+                    } else {
+                        mDelernMainView.noDecksMessage(false);
+                    }
+                });
     }
 
     /**
@@ -134,8 +127,12 @@ public class DelernMainActivityPresenter {
      * Cleanup listeners and release resources.
      */
     public void cleanup() {
-        mUserHasDecksListener.cleanup();
-        mAbstractDataAvailableListener.cleanup();
+        if (mUserHasDecksListener != null) {
+            mUserHasDecksListener.stop();
+        }
+        if (mAbstractDataAvailableListener != null) {
+            mAbstractDataAvailableListener.stop();
+        }
     }
 
     /**
@@ -148,12 +145,7 @@ public class DelernMainActivityPresenter {
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);
-        newDeck.create().onResult(new AbstractTrackingProcedure<Void>() {
-            @Override
-            public void call(final Void parameter) {
-                mDelernMainView.addCardsToDeck(newDeck);
-            }
-        });
+        newDeck.create().onResult((final Void p) -> mDelernMainView.addCardsToDeck(newDeck));
     }
 
     /**
@@ -161,20 +153,16 @@ public class DelernMainActivityPresenter {
      * Otherwise calls callback method to update user profile info.
      */
     public void getUserInfo() {
-        mAbstractDataAvailableListener = new AbstractTrackingProcedure<User>() {
-            @Override
-            public void call(@Nullable final User user) {
-                LOGGER.debug("Check if user null");
-                if (user == null) {
-                    LOGGER.debug("Starting sign in");
-                    mDelernMainView.signIn();
-                } else {
-                    mUser = user;
-                    mDelernMainView.updateUserProfileInfo(user);
-                }
+        mAbstractDataAvailableListener = mUser.watch(User.class).onResult((final User user) -> {
+            LOGGER.debug("Check if user null");
+            if (user == null) {
+                LOGGER.debug("Starting sign in");
+                mDelernMainView.signIn();
+            } else {
+                mUser = user;
+                mDelernMainView.updateUserProfileInfo(user);
             }
-        };
-        mUser.watch(User.class).onResult(mAbstractDataAvailableListener);
+        });
     }
 
     /**

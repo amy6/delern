@@ -18,12 +18,12 @@
 
 package org.dasfoo.delern.models.helpers;
 
-import com.google.firebase.tasks.OnFailureListener;
-import com.google.firebase.tasks.OnSuccessListener;
 import com.google.firebase.tasks.Task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
 
 /**
  * This class is mirrored in "release" version: please update both for feature parity.
@@ -38,33 +38,19 @@ public class FirebaseTaskAdapter<T> extends TaskAdapter<T> {
 
     public FirebaseTaskAdapter(final Task<T> task) {
         mTask = task;
-        mTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(final Exception e) {
-                LOGGER.error("Failure in FirebaseTaskAdapter", e);
-            }
-        });
+        mTask.addOnFailureListener((final Exception e) ->
+                LOGGER.error("Failure in FirebaseTaskAdapter", e));
     }
 
     @Override
-    public TaskAdapter<T> onResult(final AbstractTrackingProcedure<T> callback) {
-        mTask.addOnSuccessListener(new OnSuccessListener<T>() {
-            @Override
-            public void onSuccess(final T result) {
-                callback.call(result);
-            }
-        });
+    public TaskAdapter<T> onResult(final Consumer<T> callback) {
+        mTask.addOnSuccessListener((final T result) -> callback.accept(result));
         return this;
     }
 
     @Override
-    public FirebaseTaskAdapter<T> onFailure(final AbstractTrackingProcedure<Exception> callback) {
-        mTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(final Exception e) {
-                callback.call(e);
-            }
-        });
+    public FirebaseTaskAdapter<T> onFailure(final Consumer<Exception> callback) {
+        mTask.addOnFailureListener((final Exception e) -> callback.accept(e));
         return this;
     }
 }

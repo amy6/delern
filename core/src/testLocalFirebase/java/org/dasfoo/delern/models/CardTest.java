@@ -19,7 +19,6 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Before;
@@ -65,13 +64,10 @@ public class CardTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Card>> call(final Void parameter) {
                 return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Card>>() {
-            @Override
-            public void call(final List<Card> data) {
-                if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                        data.get(0).getBack().equals("backSide")) {
-                    testSucceeded();
-                }
+        }).onResult((final List<Card> data) -> {
+            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
+                    data.get(0).getBack().equals("backSide")) {
+                testSucceeded();
             }
         });
     }
@@ -119,12 +115,9 @@ public class CardTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Card>> call(final Void parameter) {
                 return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Card>>() {
-            @Override
-            public void call(final List<Card> data) {
-                if (data.size() == 0) {
-                    testSucceeded();
-                }
+        }).onResult((final List<Card> data) -> {
+            if (data.size() == 0) {
+                testSucceeded();
             }
         });
     }
@@ -174,13 +167,10 @@ public class CardTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Card>> call(final Void parameter) {
                 return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Card>>() {
-            @Override
-            public void call(final List<Card> data) {
-                if (data.size() == 1 && data.get(0).getFront().equals("frontSide2") &&
-                        data.get(0).getBack().equals("backSide2")) {
-                    testSucceeded();
-                }
+        }).onResult((final List<Card> data) -> {
+            if (data.size() == 1 && data.get(0).getFront().equals("frontSide2") &&
+                    data.get(0).getBack().equals("backSide2")) {
+                testSucceeded();
             }
         });
     }
@@ -225,13 +215,10 @@ public class CardTest extends FirebaseServerUnitTest {
                 return deck.fetchChildren(deck.getChildReference(ScheduledCard.class),
                         ScheduledCard.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<ScheduledCard>>() {
-            @Override
-            public void call(final List<ScheduledCard> data) {
-                if (data.size() == 1
-                        && data.get(0).getLevel().equals(Level.L1.name())) {
-                    testSucceeded();
-                }
+        }).onResult((final List<ScheduledCard> data) -> {
+            if (data.size() == 1
+                    && data.get(0).getLevel().equals(Level.L1.name())) {
+                testSucceeded();
             }
         });
     }
@@ -276,13 +263,10 @@ public class CardTest extends FirebaseServerUnitTest {
                 return deck.fetchChildren(deck.getChildReference(ScheduledCard.class),
                         ScheduledCard.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<ScheduledCard>>() {
-            @Override
-            public void call(final List<ScheduledCard> data) {
-                if (data.size() == 1
-                        && data.get(0).getLevel().equals(Level.L0.name())) {
-                    testSucceeded();
-                }
+        }).onResult((final List<ScheduledCard> data) -> {
+            if (data.size() == 1
+                    && data.get(0).getLevel().equals(Level.L0.name())) {
+                testSucceeded();
             }
         });
     }

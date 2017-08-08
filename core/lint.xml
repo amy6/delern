@@ -4,4 +4,6 @@
 <lint>
 	<!-- We don't use this in our project, but lint is confused. -->
 	<issue id="TrustAllX509TrustManager" severity="ignore"/>
+	<!-- TODO(dotdoom): investigate why lambdas are not available for Lint -->
+	<issue id="NewApi" severity="ignore"/>
 </lint>

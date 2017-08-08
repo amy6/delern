@@ -21,7 +21,7 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.slf4j.Logger;
@@ -40,24 +40,7 @@ public class LearningCardsActivityPresenter {
     private Deck mDeck;
     private Card mCard;
 
-    private final AbstractTrackingProcedure<Card> mCardAvailableListener =
-            new AbstractTrackingProcedure<Card>() {
-                @Override
-                public void call(final Card data) {
-                    if (data == null) {
-                        mLearningCardView.finishLearning();
-                        return;
-                    }
-                    mCard = data;
-                    mLearningCardView.showFrontSide(mCard.getFront());
-                    // if user decided to edit card, a back side can be shown or not.
-                    // After returning back it must show the same state (the same buttons
-                    // and text) as before editing
-                    if (mLearningCardView.backSideIsShown()) {
-                        mLearningCardView.showBackSide(mCard.getBack());
-                    }
-                }
-            };
+    private TaskAdapter<Card> mCardAvailableListener;
 
     /**
      * Constructor. It gets reference to View as parameter for performing callbacks.
@@ -83,14 +66,27 @@ public class LearningCardsActivityPresenter {
      * for available cards to learn.
      */
     public void onStart() {
-        mDeck.startScheduledCardWatcher().onResult(mCardAvailableListener);
+        mCardAvailableListener = mDeck.startScheduledCardWatcher().onResult((final Card data) -> {
+            if (data == null) {
+                mLearningCardView.finishLearning();
+                return;
+            }
+            mCard = data;
+            mLearningCardView.showFrontSide(mCard.getFront());
+            // if user decided to edit card, a back side can be shown or not.
+            // After returning back it must show the same state (the same buttons
+            // and text) as before editing
+            if (mLearningCardView.backSideIsShown()) {
+                mLearningCardView.showBackSide(mCard.getBack());
+            }
+        });
     }
 
     /**
      * Called from LearningCardsActivity.onStop(). It releases resources.
      */
     public void onStop() {
-        mCardAvailableListener.cleanup();
+        mCardAvailableListener.stop();
     }
 
     /**

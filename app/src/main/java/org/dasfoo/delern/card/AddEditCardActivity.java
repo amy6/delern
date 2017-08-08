@@ -133,12 +133,6 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
                 });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
     /**
      * Called when user clicked on Save or Update button.
      */

@@ -82,6 +82,11 @@ public class FirebaseServerUnitTest {
 
     @Before
     public void createLatchAndStartServer() throws Exception {
+        if (mNode == null || mServer == null || mRules == null) {
+            throw new RuntimeException("Cannot find dependencies: node=" + mNode + ", server=" +
+                    mServer + ", rules=" + mRules);
+        }
+
         // Add setVerbose() before start() to get more logs.
         mFirebaseServer = new FirebaseServerRunner(mNode, mServer)
                 .setHost(HOST)

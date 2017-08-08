@@ -30,9 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
 
 /**
  * A class to handle authentication with Firebase.
@@ -70,7 +71,7 @@ public final class Auth {
      * @param callback   invoked when sign-in is finished, either successfully or with failure.
      */
     public static void signIn(@Nullable final AuthCredential credential,
-                              @Nullable final AbstractTrackingProcedure<User> callback) {
+                              @Nullable final Consumer<User> callback) {
         Task<AuthResult> task;
         if (credential == null) {
             task = FirebaseAuth.getInstance().signInAnonymously();
@@ -84,7 +85,7 @@ public final class Auth {
                     if (task.isSuccessful()) {
                         // OnAuthStateChange may fire too late, override right here.
                         setCurrentUser(task.getResult().getUser());
-                        callback.call(getCurrentUser());
+                        callback.accept(getCurrentUser());
                     } else {
                         LOGGER.error("Failed to sign in with {}", credential, task.getException());
                     }

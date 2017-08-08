@@ -19,7 +19,6 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 /**
@@ -30,8 +29,6 @@ public class AddEditCardActivityPresenter {
 
     private final IAddEditCardView mAddEditCardView;
     private Card mCard;
-    private AbstractTrackingProcedure<Void> mOnCardAddedListener;
-    private AbstractTrackingProcedure<Void> mOnCardUpdatedListener;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
@@ -77,7 +74,7 @@ public class AddEditCardActivityPresenter {
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save().onResult(mOnCardUpdatedListener);
+        mCard.save().onResult((final Void p) -> mAddEditCardView.cardUpdated());
     }
 
     /**
@@ -87,29 +84,7 @@ public class AddEditCardActivityPresenter {
      * @param back  text on back side of card.
      */
     private void add(final String front, final String back) {
-        mCard.create(front, back).onResult(mOnCardAddedListener);
-    }
-
-    /**
-     * Called from AddEditCardActivity.onStart(). Initialize listeners for updating or
-     * adding card.
-     */
-    public void onStart() {
-        if (mCard.exists()) {
-            mOnCardUpdatedListener = new AbstractTrackingProcedure<Void>() {
-                @Override
-                public void call(final Void parameter) {
-                    mAddEditCardView.cardUpdated();
-                }
-            };
-        } else {
-            mOnCardAddedListener = new AbstractTrackingProcedure<Void>() {
-                @Override
-                public void call(final Void parameter) {
-                    mAddEditCardView.cardAdded();
-                }
-            };
-        }
+        mCard.create(front, back).onResult((final Void p) -> mAddEditCardView.cardAdded());
     }
 
     /**

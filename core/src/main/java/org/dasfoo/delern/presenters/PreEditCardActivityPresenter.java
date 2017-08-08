@@ -19,7 +19,7 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.views.IPreEditCardView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class PreEditCardActivityPresenter {
 
     private final IPreEditCardView mPreEditCardView;
     private Card mCard;
-    private AbstractTrackingProcedure<Card> mCardValueEventListener;
+    private TaskAdapter<Card> mCardValueEventListener;
 
     /**
      * Constructor for Presenter. It gets IPreEditCardView as parameter to manage
@@ -68,16 +68,12 @@ public class PreEditCardActivityPresenter {
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
         // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
         //                toast on error.
-        mCardValueEventListener = new AbstractTrackingProcedure<Card>() {
-            @Override
-            public void call(final Card card) {
-                if (card != null) {
-                    mCard = card;
-                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
-                }
+        mCardValueEventListener = mCard.watch(Card.class).onResult((final Card card) -> {
+            if (card != null) {
+                mCard = card;
+                mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
             }
-        };
-        mCard.watch(Card.class).onResult(mCardValueEventListener);
+        });
     }
 
     /**
@@ -85,7 +81,7 @@ public class PreEditCardActivityPresenter {
      */
     public void onStop() {
         if (mCardValueEventListener != null) {
-            mCardValueEventListener.cleanup();
+            mCardValueEventListener.stop();
         }
     }
 

@@ -19,7 +19,6 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Before;
@@ -54,12 +53,9 @@ public class DeckTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Deck>> call(Void parameter) {
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
-            @Override
-            public void call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("My Deck")) {
-                    testSucceeded();
-                }
+        }).onResult((List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("My Deck")) {
+                testSucceeded();
             }
         });
     }
@@ -94,12 +90,9 @@ public class DeckTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Deck>> call(Void parameter) {
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
-            @Override
-            public void call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("Renamed")) {
-                    testSucceeded();
-                }
+        }).onResult((List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("Renamed")) {
+                testSucceeded();
             }
         });
     }
@@ -134,12 +127,9 @@ public class DeckTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Deck>> call(Void parameter) {
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
-            @Override
-            public void call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getDeckType().equals(DeckType.SWISS.name())) {
-                    testSucceeded();
-                }
+        }).onResult((List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getDeckType().equals(DeckType.SWISS.name())) {
+                testSucceeded();
             }
         });
     }
@@ -159,13 +149,10 @@ public class DeckTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Deck>> call(Void parameter) {
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
-            @Override
-            public void call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("UsersDeck") &&
-                        data.get(0).getUser() == mUser) {
-                    testSucceeded();
-                }
+        }).onResult((List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("UsersDeck") &&
+                    data.get(0).getUser() == mUser) {
+                testSucceeded();
             }
         });
     }
@@ -199,12 +186,9 @@ public class DeckTest extends FirebaseServerUnitTest {
             public TaskAdapter<List<Deck>> call(Void parameter) {
                 return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
             }
-        }).onResult(new AbstractTrackingProcedure<List<Deck>>() {
-            @Override
-            public void call(List<Deck> data) {
-                if (data.size() == 0) {
-                    testSucceeded();
-                }
+        }).onResult((List<Deck> data) -> {
+            if (data.size() == 0) {
+                testSucceeded();
             }
         });
     }

@@ -148,12 +148,8 @@ public class MultiWrite {
      */
     public TaskAdapter<Void> write() {
         FirebaseTaskAdapter<Void> task = new FirebaseTaskAdapter<>(mRoot.updateChildren(mData))
-                .onFailure(new AbstractTrackingProcedure<Exception>() {
-                    @Override
-                    public void call(final Exception parameter) {
-                        LOGGER.error("Failed to save {}", mData, parameter);
-                    }
-                });
+                .onFailure((final Exception parameter) ->
+                        LOGGER.error("Failed to save {}", mData, parameter));
         if (sConnected) {
             return task;
         } else {

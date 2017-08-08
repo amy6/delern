@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
 import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.helpers.TaskAdapter;
 
@@ -156,29 +155,20 @@ public class Deck extends AbstractModel implements Parcelable {
         final TaskAdapter<Card> proxyCardFetcher = new TaskAdapter<>();
         final TaskAdapter<List<ScheduledCard>> scheduledCardsFetcher =
                 fetchChildren(fetchCardsToRepeatWithLimitQuery(1), ScheduledCard.class);
-        scheduledCardsFetcher.onResult(
-                new AbstractTrackingProcedure<List<ScheduledCard>>() {
-                    @Override
-                    public void call(final List<ScheduledCard> data) {
-                        if (data != null && data.size() > 0) {
-                            ScheduledCard sc = data.get(0);
-                            final TaskAdapter<Card> cardFetcher = sc.fetchChild(
-                                    Deck.this.getChildReference(Card.class, sc.getKey()),
-                                    Card.class);
-                            proxyCardFetcher
-                                    .forwardFrom(cardFetcher)
-                                    .setDependentAdapter(scheduledCardsFetcher);
-                            cardFetcher.onResult(new AbstractTrackingProcedure<Card>() {
-                                @Override
-                                public void call(final Card parameter) {
-                                    cardFetcher.stop();
-                                }
-                            });
-                        } else {
-                            proxyCardFetcher.triggerOnResult(null);
-                        }
-                    }
-                });
+        scheduledCardsFetcher.onResult((final List<ScheduledCard> data) -> {
+            if (data != null && data.size() > 0) {
+                ScheduledCard sc = data.get(0);
+                final TaskAdapter<Card> cardFetcher = sc.fetchChild(
+                        getChildReference(Card.class, sc.getKey()),
+                        Card.class);
+                proxyCardFetcher
+                        .forwardFrom(cardFetcher)
+                        .setDependentAdapter(scheduledCardsFetcher);
+                cardFetcher.onResult((final Card p) -> cardFetcher.stop());
+            } else {
+                proxyCardFetcher.triggerOnResult(null);
+            }
+        });
         return proxyCardFetcher;
     }
 

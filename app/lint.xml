@@ -25,4 +25,6 @@
 	<issue id="GoogleAppIndexingWarning" severity="ignore"/>
 	<issue id="MissingRegistered" severity="ignore"/>
 	<issue id="KeyboardInaccessibleWidget" severity="ignore"/>
+	<!-- TODO(dotdoom): investigate why lambdas are not available for Lint -->
+	<issue id="NewApi" severity="ignore"/>
 </lint>
