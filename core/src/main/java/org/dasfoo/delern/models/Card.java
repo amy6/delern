@@ -26,6 +26,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.dasfoo.delern.models.helpers.TaskAdapter;
 
 /**
  * Created by katarina on 10/4/16.
@@ -149,6 +150,29 @@ public class Card extends AbstractModel implements Parcelable {
     }
 
     /**
+     * Method for adding card to FB.
+     *
+     * @param front text on front side of card.
+     * @param back  text on back side of card.
+     * @return FirebaseTaskAdapter for the write operation.
+     */
+    @Exclude
+    public TaskAdapter<Void> create(final String front, final String back) {
+        ScheduledCard scheduledCard = new ScheduledCard(this.getDeck());
+        scheduledCard.setLevel(Level.L0.name());
+        scheduledCard.setRepeatAt(System.currentTimeMillis());
+
+        Card newCard = new Card(scheduledCard);
+        newCard.setFront(front);
+        newCard.setBack(back);
+
+        return new MultiWrite()
+                .save(newCard)
+                .save(scheduledCard)
+                .write();
+    }
+
+    /**
      * Get the ScheduledCard this Card is associated with.
      *
      * @return AbstractModel parent casted to ScheduledCard (if set).
@@ -168,7 +192,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @param knows whether the user replied with "I know" to the card.
      */
     @Exclude
-    public void answer(final boolean knows) {
+    public TaskAdapter<Void> answer(final boolean knows) {
         String newCardLevel;
         String reply;
         ScheduledCard sc = getScheduledCard();
@@ -188,7 +212,7 @@ public class Card extends AbstractModel implements Parcelable {
         sc.setRepeatAt(RepetitionIntervals.getInstance()
                 .getNextTimeToRepeat(newCardLevel));
 
-        new MultiWrite()
+        return new MultiWrite()
                 .save(this)
                 .save(v)
                 .save(sc)
@@ -200,8 +224,8 @@ public class Card extends AbstractModel implements Parcelable {
      */
     @Exclude
     @SuppressWarnings("PMD.UseConcurrentHashMap")
-    public void delete() {
-        new MultiWrite()
+    public TaskAdapter<Void> delete() {
+        return new MultiWrite()
                 .delete(this)
                 .delete(getDeck().getChildReference(ScheduledCard.class, getKey()))
                 .delete(getChildReference(View.class, getKey()))

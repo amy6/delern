@@ -19,10 +19,7 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.Level;
-import org.dasfoo.delern.models.ScheduledCard;
 import org.dasfoo.delern.models.helpers.AbstractTrackingProcedure;
-import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 /**
@@ -90,19 +87,7 @@ public class AddEditCardActivityPresenter {
      * @param back  text on back side of card.
      */
     private void add(final String front, final String back) {
-        // TODO(dotdoom): move to Card, make ScheduledCard private
-        ScheduledCard scheduledCard = new ScheduledCard(mCard.getDeck());
-        scheduledCard.setLevel(Level.L0.name());
-        scheduledCard.setRepeatAt(System.currentTimeMillis());
-
-        Card newCard = new Card(scheduledCard);
-        newCard.setFront(front);
-        newCard.setBack(back);
-
-        new MultiWrite()
-                .save(newCard)
-                .save(scheduledCard)
-                .write().onResult(mOnCardAddedListener);
+        mCard.create(front, back).onResult(mOnCardAddedListener);
     }
 
     /**
