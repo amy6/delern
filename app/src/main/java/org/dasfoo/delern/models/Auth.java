@@ -58,12 +58,9 @@ public final class Auth {
         sCurrentUser = new User(db);
 
         // TODO(dotdoom): refactor into a non-static method?
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
-                setCurrentUser(firebaseAuth.getCurrentUser());
-            }
-        });
+        FirebaseAuth.getInstance().addAuthStateListener(
+                (@NonNull final FirebaseAuth firebaseAuth) ->
+                        setCurrentUser(firebaseAuth.getCurrentUser()));
     }
 
     /**

@@ -18,16 +18,16 @@
 
 package org.dasfoo.delern.models.helpers;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.tasks.OnFailureListener;
+import com.google.firebase.tasks.OnSuccessListener;
+import com.google.firebase.tasks.Task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is mirrored in "debug" version: please update both for feature parity.
- * https://developers.google.com/android/reference/com/google/android/gms/tasks/Task
+ * This class is mirrored in "release" version: please update both for feature parity.
+ * https://firebase.google.com/docs/reference/admin/java/reference/com/google/firebase/tasks/Task
  *
  * @param <T> task result type.
  */

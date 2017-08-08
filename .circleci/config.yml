@@ -51,8 +51,9 @@ jobs:
             -PisolatedRun \
             --continue \
             lintDebug \
-            testDebugUnitTest \
-            assembleInstrumented \
+            :app:testDebugUnitTest \
+            :core:testLocalFirebaseUnitTest \
+            :app:assembleInstrumented \
             --console=plain
 
     - run:
@@ -61,7 +62,8 @@ jobs:
           ./gradlew \
             -PisolatedRun \
             --info \
-            testDebugUnitTest \
+            :app:testDebugUnitTest \
+            :core:testLocalFirebaseUnitTest \
             --console=plain
         when: on_fail
 

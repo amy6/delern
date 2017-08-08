@@ -1,0 +1,24 @@
+/**
+ * The whole purpose of this file is to package firebase-admin statically linked to org.json and
+ * other dependencies. When org.json appears as a dependency in an Android project, the component
+ * selector bails out.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java-library'
+
+dependencies {
+    runtime 'com.google.firebase:firebase-admin:5.2.0'
+    // Have to do this because otherwise an outdated version of Jackson gets pulled in, which
+    // JWT (see :core project) is not compatible with.
+    runtime 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr4'
+}

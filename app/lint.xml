@@ -23,4 +23,6 @@
 	</issue>
 	<!-- TODO(ksheremet): fix these issues -->
 	<issue id="GoogleAppIndexingWarning" severity="ignore"/>
+	<issue id="MissingRegistered" severity="ignore"/>
+	<issue id="KeyboardInaccessibleWidget" severity="ignore"/>
 </lint>

@@ -29,7 +29,7 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name == 'prepareDebugUnitTestDependencies') {
+    if (task.name == 'processDebugResources') {
         task.dependsOn convertBoltToFirebaseRules
     }
 }

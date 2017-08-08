@@ -2,13 +2,13 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://maven.google.com' }
     }
     dependencies {
         // TODO(dotodoom): Move these into module-specific build.gradle and use new Gradle syntax.
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta1'
         classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
         classpath 'com.google.gms:google-services:3.1.0'
         classpath 'org.ajoberstar:grgit:1.7.1'
@@ -22,9 +22,9 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://maven.google.com' }
     }
 }
 
@@ -34,8 +34,9 @@ task clean(type: Delete) {
 
 ext {
     firebaseVersion = '11.0.4'
-    sdkVersion = 25
-    supportVersion = "${sdkVersion}.4.0"
-    toolsVersion = "${sdkVersion}.0.2"
+    sdkVersion = 26
+    supportVersion = "${sdkVersion}.0.1"
+    toolsVersion = "${sdkVersion}.0.1"
     slf4jVersion = '1.7.25'
+    isIDE = System.properties['idea.platform.prefix']
 }

@@ -6,6 +6,7 @@ apply from: 'firebase/firebase-server.gradle'
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion toolsVersion
+    testBuildType 'localFirebase'
 
     defaultConfig {
         minSdkVersion 15
@@ -13,24 +14,32 @@ android {
 
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
+
+    buildTypes {
+        localFirebase {
+            initWith debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //noinspection NewerVersionAvailable
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
 
-    compile "com.android.support:appcompat-v7:$supportVersion"
+    implementation "com.android.support:appcompat-v7:$supportVersion"
 
-    debugCompile 'com.google.firebase:firebase-admin:5.2.0', {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-        exclude group: 'com.google.guava', module: 'guava-jdk5'
-        //exclude group: 'org.json', module: 'json'
-    }
-    releaseCompile "com.google.firebase:firebase-database:$firebaseVersion"
+    debugImplementation "com.google.firebase:firebase-database:$firebaseVersion"
+    releaseImplementation "com.google.firebase:firebase-database:$firebaseVersion"
+    localFirebaseImplementation project(path: ':firebase-admin', configuration: 'shadow')
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'io.jsonwebtoken:jjwt:0.7.0'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'io.jsonwebtoken:jjwt:0.7.0'
 }
