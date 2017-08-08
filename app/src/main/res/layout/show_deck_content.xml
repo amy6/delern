@@ -43,7 +43,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             style="@style/SecondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/total_cards"
+            android:text="@string/number_of_cards"
             tools:ignore="SelectableText"/>
 
         <TextView
