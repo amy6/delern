@@ -236,4 +236,55 @@ public class CardTest extends FirebaseServerUnitTest {
         });
     }
 
+    @Test
+    public void cards_createdAndAnsweredFalse() {
+        final Deck deck = new Deck(mUser);
+        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(final Void parameter) {
+                deck.setName("TestAnswer");
+                deck.setAccepted(true);
+                return deck.create();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
+            @Override
+            public TaskAdapter<List<Deck>> call(Void parameter) {
+                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(List<Deck> data) {
+                if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
+                    Card newCard = new Card(data.get(0));
+                    return newCard.create("frontSide", "backSide");
+                }
+                return null;
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Card>>() {
+            @Override
+            public TaskAdapter<Card> call(final Void parameter) {
+                return deck.startScheduledCardWatcher();
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Card, TaskAdapter<Void>>() {
+            @Override
+            public TaskAdapter<Void> call(final Card card) {
+                return card.answer(false);
+            }
+        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<ScheduledCard>>>() {
+            @Override
+            public TaskAdapter<List<ScheduledCard>> call(final Void parameter) {
+                return deck.fetchChildren(deck.getChildReference(ScheduledCard.class),
+                        ScheduledCard.class);
+            }
+        }).onResult(new AbstractTrackingProcedure<List<ScheduledCard>>() {
+            @Override
+            public void call(final List<ScheduledCard> data) {
+                if (data.size() == 1
+                        && data.get(0).getLevel().equals(Level.L0.name())) {
+                    testSucceeded();
+                }
+            }
+        });
+    }
+
 }
