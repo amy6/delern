@@ -61,8 +61,8 @@ public class EditCardListActivity extends AppCompatActivity implements
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
 
-    @BindView(R.id.total_number_of_cards)
-    /* default */ TextView mTotalNumberOfCards;
+    @BindView(R.id.number_of_cards)
+    /* default */ TextView mNumberOfCards;
 
     @Inject
     /* default */ EditCardListActivityPresenter mPresenter;
@@ -109,7 +109,8 @@ public class EditCardListActivity extends AppCompatActivity implements
             @Override
             public void onItemRangeInserted(final int positionStart, final int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                mTotalNumberOfCards.setText(String.valueOf(mFirebaseAdapter.getItemCount()));
+                mNumberOfCards.setText(String.format(getString(R.string.number_of_cards),
+                        mFirebaseAdapter.getItemCount()));
             }
         };
         mPresenter.onCreate(deck);

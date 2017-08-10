@@ -48,7 +48,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invitation_failed_message">Ошибка при отправлении приглашения</string>
     <string name="save">Сохранить</string>
     <string name="flip_the_card_message">Перевернуть карточку</string>
-    <string name="number_of_cards">Количество карточек:</string>
+    <string name="number_of_cards">Количество карточек: %d</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
