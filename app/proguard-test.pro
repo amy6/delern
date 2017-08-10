@@ -3,3 +3,4 @@
 -dontwarn org.junit.**
 -dontwarn org.hamcrest.**
 -dontwarn android.test.**
+-dontwarn com.google.devtools.build.android.desugar.runtime.**
