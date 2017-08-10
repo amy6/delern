@@ -49,6 +49,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="save">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
     <string name="number_of_cards">Number of cards: %d</string>
+    <string name="card_watched_text">Watched: %d</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

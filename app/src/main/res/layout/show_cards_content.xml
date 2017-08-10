@@ -104,8 +104,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:paddingStart="40dp"
             android:visibility="invisible"
             app:backgroundTint="@color/dontKnowButton"
-            app:rippleColor="@color/redRipple"
             app:fabSize="normal"
+            app:rippleColor="@color/redRipple"
             app:pressedTranslationZ="12dp"
             app:srcCompat="@drawable/ic_close_black_24dp"/>
 
@@ -121,10 +121,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             app:srcCompat="@drawable/ic_cached_black_36dp"/>
 
         <android.support.design.widget.FloatingActionButton
+            android:layout_height="match_parent"
             android:id="@+id/to_know_button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:rippleColor="@color/colorPrimaryDark"
             android:elevation="6dp"
             android:paddingEnd="40dp"
             android:paddingLeft="40dp"
@@ -133,8 +132,17 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:visibility="invisible"
             app:fabSize="normal"
             app:pressedTranslationZ="12dp"
+            app:rippleColor="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_check_black_24dp"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/learned_in_session"
+        style="@style/SecondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        tools:ignore="SelectableText" />
 
 </LinearLayout>

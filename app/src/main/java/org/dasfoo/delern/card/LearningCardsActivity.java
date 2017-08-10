@@ -63,6 +63,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      * Key for saving onSaveInstanceState.
      */
     private static final String BACK_IS_SHOWN_KEY = "back";
+    /**
+     * Number of learned cards for saving onSaveInstanceState.
+     */
+    private static final String LEARNED_CARDS_KEY = "count";
     @BindView(R.id.card_view)
     /* default */ CardView mCardView;
     @BindView(R.id.to_know_button)
@@ -77,10 +81,13 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ TextView mBackTextView;
     @BindView(R.id.delimeter)
     /* default */ View mDelimiter;
+    @BindView(R.id.learned_in_session)
+    /* default */ TextView mLearnedInSessionCards;
 
     @Inject
     /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
+    private int mLearnedCardsCount;
 
     /**
      * Method starts LearningCardsActivity.
@@ -101,8 +108,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_cards_activity);
+        mLearnedCardsCount = 0;
         if (savedInstanceState != null) {
             mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN_KEY);
+            mLearnedCardsCount = savedInstanceState.getInt(LEARNED_CARDS_KEY);
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -125,6 +134,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(BACK_IS_SHOWN_KEY, mBackIsShown);
+        outState.putInt(LEARNED_CARDS_KEY, mLearnedCardsCount);
     }
 
     /**
@@ -134,6 +144,8 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     protected void onStart() {
         super.onStart();
         mPresenter.onStart();
+        mLearnedInSessionCards.setText(String.format(getString(R.string.card_watched_text),
+                mLearnedCardsCount));
     }
 
     @Override
@@ -147,6 +159,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         setClickableRepeatKnowButtons(false);
         mPresenter.userKnowCard();
         mBackIsShown = false;
+        increaseNumberOfShowedCards();
     }
 
     @OnClick(R.id.to_repeat_button)
@@ -154,6 +167,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         setClickableRepeatKnowButtons(false);
         mPresenter.userDoNotKnowCard();
         mBackIsShown = false;
+        increaseNumberOfShowedCards();
     }
 
     @OnClick(R.id.turn_card_button)
@@ -269,5 +283,11 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     private void setClickableRepeatKnowButtons(final Boolean isClickable) {
         mKnowButton.setClickable(isClickable);
         mRepeatButton.setClickable(isClickable);
+    }
+
+    private void increaseNumberOfShowedCards() {
+        mLearnedCardsCount++;
+        mLearnedInSessionCards.setText(String.format(getString(R.string.card_watched_text),
+                mLearnedCardsCount));
     }
 }
