@@ -105,7 +105,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         if (savedInstanceState != null) {
             mBackIsShown = savedInstanceState.getBoolean(BACK_IS_SHOWN_KEY);
         }
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -147,19 +147,19 @@ public class DelernMainActivity extends AppCompatActivity
     }
 
     private void initViews() {
-        DrawerLayout drawer = ButterKnife.findById(this, R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = ButterKnife.findById(this, R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
-        mProfilePhotoImageView = ButterKnife.findById(hView, R.id.profile_image);
-        mUserNameTextView = ButterKnife.findById(hView, R.id.user_name);
-        mUserEmailTextView = ButterKnife.findById(hView, R.id.user_email);
+        mProfilePhotoImageView = hView.findViewById(R.id.profile_image);
+        mUserNameTextView = hView.findViewById(R.id.user_name);
+        mUserEmailTextView = hView.findViewById(R.id.user_email);
         mMainActivityPresenter.getUserInfo();
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());

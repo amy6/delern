@@ -160,11 +160,8 @@ dependencies {
     }
 
     // ButterKnife
-    // TODO(ksheremet): 8.8.0
-    //noinspection NewerVersionAvailable
-    implementation 'com.jakewharton:butterknife:8.7.0'
-    //noinspection NewerVersionAvailable
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // Dagger2
     implementation 'com.google.dagger:dagger:2.11'

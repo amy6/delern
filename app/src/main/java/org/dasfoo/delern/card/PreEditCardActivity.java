@@ -92,7 +92,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     }
 
     private void configureToolbar() {
-        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
