@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.Consumer;
+import org.dasfoo.delern.java.util.function.Consumer;
 
 /**
  * This class is mirrored in "debug" version: please update both for feature parity.

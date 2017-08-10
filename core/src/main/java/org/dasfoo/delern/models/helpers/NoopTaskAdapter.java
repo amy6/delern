@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.models.helpers;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import org.dasfoo.delern.java.util.function.Consumer;
+import org.dasfoo.delern.java.util.function.Function;
 
 /**
  * TaskAdapter for a fake task, when result is already available.

@@ -18,13 +18,13 @@
 
 package org.dasfoo.delern.models.helpers;
 
+import org.dasfoo.delern.java.util.function.Consumer;
+import org.dasfoo.delern.java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * TaskAdapter is a wrapper around firebase.Task and android.Task which both are functionally

@@ -23,7 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.function.Function;
+import org.dasfoo.delern.java.util.function.Function;
 
 /**
  * TaskAdapter for Firebase data available events.

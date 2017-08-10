@@ -23,7 +23,7 @@ import com.google.firebase.tasks.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.Consumer;
+import org.dasfoo.delern.java.util.function.Consumer;
 
 /**
  * This class is mirrored in "release" version: please update both for feature parity.
