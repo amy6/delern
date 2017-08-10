@@ -160,6 +160,8 @@ jobs:
 
     - store_test_results:
         path: app/build/test-results
+    - store_test_results:
+        path: core/build/test-results
     - store_artifacts:
         path: app/build/outputs
     - store_artifacts:
