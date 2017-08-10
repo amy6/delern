@@ -141,15 +141,13 @@ dependencies {
     //noinspection NewerVersionAvailable
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
-    // TODO(dotdoom): update
+    // TODO(dotdoom): update once https://github.com/square/leakcanary/issues/815 is fixed.
     //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
     instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    //noinspection NewerVersionAvailable
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
