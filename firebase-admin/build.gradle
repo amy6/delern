@@ -18,6 +18,8 @@ apply plugin: 'java-library'
 
 dependencies {
     runtime 'com.google.firebase:firebase-admin:5.2.0'
+    // Export firebase-admin classes for Android Studio indexer.
+    api 'com.google.firebase:firebase-admin:5.2.0@jar'
     // Have to do this because otherwise an outdated version of Jackson gets pulled in, which
     // JWT (see :core project) is not compatible with.
     runtime 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr4'
