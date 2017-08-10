@@ -26,6 +26,11 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <uses-feature android:name="android.hardware.touchscreen"
                   android:required="false" />
 
+    <!-- Required permission for App measurement(Firebase Analytics) to run. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".DelernApplication"
         android:allowBackup="true"
