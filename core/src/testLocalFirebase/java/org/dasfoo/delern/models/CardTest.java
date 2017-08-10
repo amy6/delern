@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,33 +36,21 @@ public class CardTest extends FirebaseServerUnitTest {
     @Test
     public void cards_createdAndFetched() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Void parameter) {
-                deck.setName("CreateCards");
-                deck.setAccepted(true);
-                return deck.create();
+        mUser.save().continueWithOnce((final Void parameter) -> {
+            deck.setName("CreateCards");
+            deck.setAccepted(true);
+            return deck.create();
+        }).continueWithOnce((final Void parameter) ->
+                mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+        ).continueWithOnce((final List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("CreateCards")) {
+                Card newCard = new Card(data.get(0));
+                return newCard.create("frontSide", "backSide");
             }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
-            @Override
-            public TaskAdapter<List<Deck>> call(Void parameter) {
-                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("CreateCards")) {
-                    Card newCard = new Card(data.get(0));
-                    return newCard.create("frontSide", "backSide");
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Card>>>() {
-            @Override
-            public TaskAdapter<List<Card>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
-            }
-        }).onResult((final List<Card> data) -> {
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+        ).onResult((final List<Card> data) -> {
             if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
                     data.get(0).getBack().equals("backSide")) {
                 testSucceeded();
@@ -75,47 +61,29 @@ public class CardTest extends FirebaseServerUnitTest {
     @Test
     public void cards_createdAndDeleted() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Void parameter) {
-                deck.setName("TestDelete");
-                deck.setAccepted(true);
-                return deck.create();
+        mUser.save().continueWithOnce((final Void parameter) -> {
+            deck.setName("TestDelete");
+            deck.setAccepted(true);
+            return deck.create();
+        }).continueWithOnce((final Void parameter) ->
+                mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+        ).continueWithOnce((final List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("TestDelete")) {
+                Card newCard = new Card(data.get(0));
+                return newCard.create("frontSide", "backSide");
             }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
-            @Override
-            public TaskAdapter<List<Deck>> call(Void parameter) {
-                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+        ).continueWithOnce((final List<Card> data) -> {
+            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
+                    data.get(0).getBack().equals("backSide")) {
+                return data.get(0).delete();
             }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("TestDelete")) {
-                    Card newCard = new Card(data.get(0));
-                    return newCard.create("frontSide", "backSide");
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Card>>>() {
-            @Override
-            public TaskAdapter<List<Card>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Card>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final List<Card> data) {
-                if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                        data.get(0).getBack().equals("backSide")) {
-                    return data.get(0).delete();
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Card>>>() {
-            @Override
-            public TaskAdapter<List<Card>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
-            }
-        }).onResult((final List<Card> data) -> {
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+        ).onResult((final List<Card> data) -> {
             if (data.size() == 0) {
                 testSucceeded();
             }
@@ -125,49 +93,31 @@ public class CardTest extends FirebaseServerUnitTest {
     @Test
     public void cards_createdAndEdited() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Void parameter) {
-                deck.setName("TestRename");
-                deck.setAccepted(true);
-                return deck.create();
+        mUser.save().continueWithOnce((final Void parameter) -> {
+            deck.setName("TestRename");
+            deck.setAccepted(true);
+            return deck.create();
+        }).continueWithOnce((final Void parameter) ->
+                mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+        ).continueWithOnce((final List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("TestRename")) {
+                Card newCard = new Card(data.get(0));
+                return newCard.create("frontSide", "backSide");
             }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
-            @Override
-            public TaskAdapter<List<Deck>> call(Void parameter) {
-                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+        ).continueWithOnce((final List<Card> data) -> {
+            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
+                    data.get(0).getBack().equals("backSide")) {
+                data.get(0).setFront("frontSide2");
+                data.get(0).setBack("backSide2");
+                return data.get(0).save();
             }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("TestRename")) {
-                    Card newCard = new Card(data.get(0));
-                    return newCard.create("frontSide", "backSide");
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Card>>>() {
-            @Override
-            public TaskAdapter<List<Card>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Card>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final List<Card> data) {
-                if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                        data.get(0).getBack().equals("backSide")) {
-                    data.get(0).setFront("frontSide2");
-                    data.get(0).setBack("backSide2");
-                    return data.get(0).save();
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Card>>>() {
-            @Override
-            public TaskAdapter<List<Card>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(Card.class), Card.class);
-            }
-        }).onResult((final List<Card> data) -> {
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+        ).onResult((final List<Card> data) -> {
             if (data.size() == 1 && data.get(0).getFront().equals("frontSide2") &&
                     data.get(0).getBack().equals("backSide2")) {
                 testSucceeded();
@@ -178,44 +128,25 @@ public class CardTest extends FirebaseServerUnitTest {
     @Test
     public void cards_createdAndAnsweredTrue() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Void parameter) {
-                deck.setName("TestAnswer");
-                deck.setAccepted(true);
-                return deck.create();
+        mUser.save().continueWithOnce((final Void parameter) -> {
+            deck.setName("TestAnswer");
+            deck.setAccepted(true);
+            return deck.create();
+        }).continueWithOnce((final Void parameter) ->
+                mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+        ).continueWithOnce((final List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
+                Card newCard = new Card(data.get(0));
+                return newCard.create("frontSide", "backSide");
             }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
-            @Override
-            public TaskAdapter<List<Deck>> call(Void parameter) {
-                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
-                    Card newCard = new Card(data.get(0));
-                    return newCard.create("frontSide", "backSide");
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Card>>() {
-            @Override
-            public TaskAdapter<Card> call(final Void parameter) {
-                return deck.startScheduledCardWatcher();
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Card, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Card card) {
-                return card.answer(true);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<ScheduledCard>>>() {
-            @Override
-            public TaskAdapter<List<ScheduledCard>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(ScheduledCard.class),
-                        ScheduledCard.class);
-            }
-        }).onResult((final List<ScheduledCard> data) -> {
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.startScheduledCardWatcher()
+        ).continueWithOnce((final Card card) ->
+                card.answer(true)
+        ).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(ScheduledCard.class), ScheduledCard.class)
+        ).onResult((final List<ScheduledCard> data) -> {
             if (data.size() == 1
                     && data.get(0).getLevel().equals(Level.L1.name())) {
                 testSucceeded();
@@ -226,44 +157,25 @@ public class CardTest extends FirebaseServerUnitTest {
     @Test
     public void cards_createdAndAnsweredFalse() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Void parameter) {
-                deck.setName("TestAnswer");
-                deck.setAccepted(true);
-                return deck.create();
+        mUser.save().continueWithOnce((final Void parameter) -> {
+            deck.setName("TestAnswer");
+            deck.setAccepted(true);
+            return deck.create();
+        }).continueWithOnce((final Void parameter) ->
+                mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+        ).continueWithOnce((final List<Deck> data) -> {
+            if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
+                Card newCard = new Card(data.get(0));
+                return newCard.create("frontSide", "backSide");
             }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<Deck>>>() {
-            @Override
-            public TaskAdapter<List<Deck>> call(Void parameter) {
-                return mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<List<Deck>, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(List<Deck> data) {
-                if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
-                    Card newCard = new Card(data.get(0));
-                    return newCard.create("frontSide", "backSide");
-                }
-                return null;
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<Card>>() {
-            @Override
-            public TaskAdapter<Card> call(final Void parameter) {
-                return deck.startScheduledCardWatcher();
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Card, TaskAdapter<Void>>() {
-            @Override
-            public TaskAdapter<Void> call(final Card card) {
-                return card.answer(false);
-            }
-        }).continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<List<ScheduledCard>>>() {
-            @Override
-            public TaskAdapter<List<ScheduledCard>> call(final Void parameter) {
-                return deck.fetchChildren(deck.getChildReference(ScheduledCard.class),
-                        ScheduledCard.class);
-            }
-        }).onResult((final List<ScheduledCard> data) -> {
+            return null;
+        }).continueWithOnce((final Void parameter) ->
+                deck.startScheduledCardWatcher()
+        ).continueWithOnce((final Card card) ->
+                card.answer(false)
+        ).continueWithOnce((final Void parameter) ->
+                deck.fetchChildren(deck.getChildReference(ScheduledCard.class), ScheduledCard.class)
+        ).onResult((final List<ScheduledCard> data) -> {
             if (data.size() == 1
                     && data.get(0).getLevel().equals(Level.L0.name())) {
                 testSucceeded();

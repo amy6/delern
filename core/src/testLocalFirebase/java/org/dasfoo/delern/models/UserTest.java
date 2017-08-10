@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,12 +41,9 @@ public class UserTest extends FirebaseServerUnitTest {
 
     @Test
     public void user_savedAndFetched() throws Exception {
-        mUser.save().continueWithOnce(new AbstractTrackingFunction<Void, TaskAdapter<User>>() {
-            @Override
-            public TaskAdapter<User> call(Void parameter) {
-                return mUser.watch(User.class);
-            }
-        }).onResult((final User user) -> {
+        mUser.save().continueWithOnce((final Void parameter) ->
+                mUser.watch(User.class)
+        ).onResult((final User user) -> {
             if (user.getName().startsWith("Bob ") && user.getEmail().startsWith("bob-")) {
                 testSucceeded();
             }

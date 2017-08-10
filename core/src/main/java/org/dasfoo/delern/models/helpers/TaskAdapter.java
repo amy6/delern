@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * TaskAdapter is a wrapper around firebase.Task and android.Task which both are functionally
@@ -48,8 +49,7 @@ public class TaskAdapter<T> {
      * @param <R>          see continueWith().
      * @return see continueWith().
      */
-    public <R> TaskAdapter<R> continueWithOnce(
-            final AbstractTrackingFunction<T, TaskAdapter<R>> continuation) {
+    public <R> TaskAdapter<R> continueWithOnce(final Function<T, TaskAdapter<R>> continuation) {
         return continueWith(continuation, true);
     }
 
@@ -61,15 +61,14 @@ public class TaskAdapter<T> {
      * @param <R>                  result type for continuation.
      * @return TaskAdapter wrapping around continuation.
      */
-    public <R> TaskAdapter<R> continueWith(
-            final AbstractTrackingFunction<T, TaskAdapter<R>> continuation,
-            final boolean stopAfterFirstResult) {
+    public <R> TaskAdapter<R> continueWith(final Function<T, TaskAdapter<R>> continuation,
+                                           final boolean stopAfterFirstResult) {
         final TaskAdapter<R> proxyAdapter = new TaskAdapter<>();
         onResult((final T parameter) -> {
             if (stopAfterFirstResult) {
                 stop();
             }
-            proxyAdapter.forwardFrom(continuation.call(parameter));
+            proxyAdapter.forwardFrom(continuation.apply(parameter));
         });
         return proxyAdapter;
     }

@@ -19,6 +19,7 @@
 package org.dasfoo.delern.models.helpers;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * TaskAdapter for a fake task, when result is already available.
@@ -42,10 +43,9 @@ public class NoopTaskAdapter<T> extends TaskAdapter<T> {
      * {@inheritDoc}
      */
     @Override
-    public <R> TaskAdapter<R> continueWith(
-            final AbstractTrackingFunction<T, TaskAdapter<R>> continuation,
-            final boolean stopAfterFirstResult) {
-        return continuation.call(mResult);
+    public <R> TaskAdapter<R> continueWith(final Function<T, TaskAdapter<R>> continuation,
+                                           final boolean stopAfterFirstResult) {
+        return continuation.apply(mResult);
     }
 
     /**

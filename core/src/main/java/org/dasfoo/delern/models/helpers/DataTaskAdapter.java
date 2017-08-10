@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.function.Function;
+
 /**
  * TaskAdapter for Firebase data available events.
  *
@@ -39,14 +41,13 @@ public class DataTaskAdapter<T> extends TaskAdapter<T> {
      * @param query     Firebase query to fetch values from.
      * @param converter mapper from DataSnapshot into T.
      */
-    public DataTaskAdapter(final Query query,
-                           final AbstractTrackingFunction<DataSnapshot, T> converter) {
+    public DataTaskAdapter(final Query query, final Function<DataSnapshot, T> converter) {
         super();
         mQuery = query;
         mValueEventListener = mQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot snapshot) {
-                triggerOnResult(converter.call(snapshot));
+                triggerOnResult(converter.apply(snapshot));
             }
 
             @Override

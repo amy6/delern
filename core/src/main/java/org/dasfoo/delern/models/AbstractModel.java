@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.models.helpers.AbstractTrackingFunction;
 import org.dasfoo.delern.models.helpers.DataTaskAdapter;
 import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.models.helpers.TaskAdapter;
@@ -87,12 +86,8 @@ public abstract class AbstractModel {
      */
     public static DataTaskAdapter<Long> fetchCount(final Query query) {
         // TODO(refactoring): this should be childeventlistener, not valueeventlistener
-        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, Long>() {
-            @Override
-            public Long call(final DataSnapshot dataSnapshot) {
-                return dataSnapshot.getChildrenCount();
-            }
-        });
+        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) ->
+                dataSnapshot.getChildrenCount());
     }
 
     /**
@@ -212,12 +207,9 @@ public abstract class AbstractModel {
     @Exclude
     public <T extends AbstractModel> DataTaskAdapter<T> fetchChild(
             final Query query, final Class<T> cls) {
-        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, T>() {
-            @Override
-            public T call(final DataSnapshot dataSnapshot) {
-                return AbstractModel.fromSnapshot(dataSnapshot, cls, AbstractModel.this);
-            }
-        });
+        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) ->
+                AbstractModel.fromSnapshot(dataSnapshot, cls, this)
+        );
     }
 
     /**
@@ -231,13 +223,9 @@ public abstract class AbstractModel {
      */
     @Exclude
     public <T extends AbstractModel> DataTaskAdapter<T> watch(final Class<T> cls) {
-        return new DataTaskAdapter<>(getReference(),
-                new AbstractTrackingFunction<DataSnapshot, T>() {
-                    @Override
-                    public T call(final DataSnapshot dataSnapshot) {
-                        return AbstractModel.fromSnapshot(dataSnapshot, cls, getParent());
-                    }
-                });
+        return new DataTaskAdapter<>(getReference(), (final DataSnapshot dataSnapshot) ->
+                AbstractModel.fromSnapshot(dataSnapshot, cls, getParent())
+        );
     }
 
     /**
@@ -252,16 +240,13 @@ public abstract class AbstractModel {
     @Exclude
     public <T extends AbstractModel> DataTaskAdapter<List<T>> fetchChildren(
             final Query query, final Class<T> cls) {
-        return new DataTaskAdapter<>(query, new AbstractTrackingFunction<DataSnapshot, List<T>>() {
-            @Override
-            public List<T> call(final DataSnapshot dataSnapshot) {
-                List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
-                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                    items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,
-                            AbstractModel.this));
-                }
-                return items;
+        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) -> {
+            List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
+            for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,
+                        this));
             }
+            return items;
         });
     }
 
