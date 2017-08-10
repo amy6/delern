@@ -48,7 +48,8 @@ android {
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
 
-            minifyEnabled true
+            // TODO(dotdoom): fix ProGuard, switch to true
+            minifyEnabled false
             // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
