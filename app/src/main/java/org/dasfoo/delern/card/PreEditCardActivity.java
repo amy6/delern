@@ -21,7 +21,6 @@ package org.dasfoo.delern.card;
 // TODO(ksheremet): this class should be gone!
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -154,19 +153,11 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     private void deleteCard() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_card_warning);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                mPresenter.deleteCard();
-                finish();
-            }
+        builder.setPositiveButton(R.string.delete, (dialogDelete, which) -> {
+            mPresenter.deleteCard();
+            finish();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialogCancel, which) -> dialogCancel.cancel());
         builder.show();
     }
 

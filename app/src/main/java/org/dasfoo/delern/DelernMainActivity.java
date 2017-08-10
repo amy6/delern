@@ -19,7 +19,6 @@
 package org.dasfoo.delern;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -225,22 +224,14 @@ public class DelernMainActivity extends AppCompatActivity
     private void signOut() {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.sign_out_warning)
-                .setPositiveButton(R.string.sign_out, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        mFirebaseAdapter.cleanup();
-                        mMainActivityPresenter.cleanup();
-                        org.dasfoo.delern.models.Auth.signOut();
-                        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                        signIn();
-                    }
+                .setPositiveButton(R.string.sign_out, (dialog, which) -> {
+                    mFirebaseAdapter.cleanup();
+                    mMainActivityPresenter.cleanup();
+                    org.dasfoo.delern.models.Auth.signOut();
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                    signIn();
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .show();
     }
 
@@ -292,21 +283,9 @@ public class DelernMainActivity extends AppCompatActivity
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.deck)
                 .setView(input)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-                    /**
-                     * {@inheritDoc}
-                     */
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        mMainActivityPresenter.createNewDeck(input.getText().toString().trim());
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialogCancel, which) -> dialogCancel.cancel())
+                .setPositiveButton(R.string.add, (dialogCreate, which) ->
+                        mMainActivityPresenter.createNewDeck(input.getText().toString().trim()))
                 .create();
         input.addTextChangedListener(new TextWatcherStub() {
             @Override

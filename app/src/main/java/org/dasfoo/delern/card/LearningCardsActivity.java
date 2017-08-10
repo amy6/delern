@@ -20,7 +20,6 @@ package org.dasfoo.delern.card;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -184,19 +183,12 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             case R.id.delete_card_show_menu:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.delete_card_warning);
-                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        mBackIsShown = false;
-                        mPresenter.delete();
-                    }
+                builder.setPositiveButton(R.string.delete, (dialogDelete, which) -> {
+                    mBackIsShown = false;
+                    mPresenter.delete();
                 });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                });
+                builder.setNegativeButton(R.string.cancel, (dialogCancel, which) ->
+                        dialogCancel.cancel());
                 builder.show();
                 break;
             default:

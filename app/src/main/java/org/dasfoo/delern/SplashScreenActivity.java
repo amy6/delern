@@ -19,16 +19,13 @@
 package org.dasfoo.delern;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -86,30 +83,25 @@ public class SplashScreenActivity extends AppCompatActivity {
             mCacheExpirationSeconds = 0;
         }
 
-        mFetchRemoteConfigListener = new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull final Task<Void> task) {
-                if (task.isSuccessful()) {
-                    LOGGER.debug("remote config is fetched.");
-                    // After config data is successfully fetched, it must be activated
-                    // before newly fetched values are returned.
-                    mFirebaseRemoteConfig.activateFetched();
-                    if (updateIsNeeded()) {
-                        update();
-                        return;
-                    }
-                } else {
-                    LOGGER.error("Remote config reading error", task.getException());
+        mFetchRemoteConfigListener = task -> {
+            if (task.isSuccessful()) {
+                LOGGER.debug("remote config is fetched.");
+                // After config data is successfully fetched, it must be activated
+                // before newly fetched values are returned.
+                mFirebaseRemoteConfig.activateFetched();
+                if (updateIsNeeded()) {
+                    update();
+                    return;
                 }
-                if (Auth.isSignedIn()) {
-                    DelernMainActivity.startActivity(SplashScreenActivity.this,
-                            Auth.getCurrentUser());
-                } else {
-                    SignInActivity.startActivity(SplashScreenActivity.this);
-                }
-                finish();
+            } else {
+                LOGGER.error("Remote config reading error", task.getException());
             }
+            if (Auth.isSignedIn()) {
+                DelernMainActivity.startActivity(this, Auth.getCurrentUser());
+            } else {
+                SignInActivity.startActivity(this);
+            }
+            finish();
         };
     }
 
@@ -125,18 +117,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .setTitle(R.string.new_app_version_dialog_title)
                 .setMessage(R.string.update_app_user_message)
                 .setPositiveButton(R.string.update,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                redirectForUpdate(mFirebaseRemoteConfig.getString(KEY_UPDATE_URL));
-                            }
-                        })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(final DialogInterface dialog) {
-                        finish();
-                    }
-                })
+                        (dialogUpdate, which) ->
+                                redirectForUpdate(mFirebaseRemoteConfig.getString(KEY_UPDATE_URL)))
+                .setOnCancelListener(dialogCancel -> finish())
                 .create();
         dialog.show();
     }

@@ -29,7 +29,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
@@ -124,13 +123,8 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         mFrontSideInputText.addTextChangedListener(cardValid);
         mBackSideInputText.addTextChangedListener(cardValid);
         mAddReversedCardCheckbox
-                .setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(final CompoundButton buttonView,
-                                                 final boolean isChecked) {
-                        cardValid.afterTextChanged(null);
-                    }
-                });
+                .setOnCheckedChangeListener((buttonView, isChecked) ->
+                        cardValid.afterTextChanged(null));
     }
 
     /**
