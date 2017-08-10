@@ -149,7 +149,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     }
 
     private void configureToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
