@@ -21,21 +21,29 @@ package org.dasfoo.delern.models;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import org.dasfoo.delern.models.helpers.DataTaskAdapter;
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.functions.Function;
 
 /**
  * Base class for models, implementing Firebase functionality.
  */
 public abstract class AbstractModel {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
 
     @Exclude
     private String mKey;
@@ -78,15 +86,51 @@ public abstract class AbstractModel {
         return model;
     }
 
+    private static <T> Observable<T> observableForQuery(
+            final Query query, final Function<DataSnapshot, T> converter) {
+        return Observable.create((ObservableEmitter<T> emitter) -> {
+            ValueEventListener listener = query.addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        @SuppressWarnings({"checkstyle:IllegalCatch",
+                                "PMD.AvoidCatchingGenericException"})
+                        public void onDataChange(final DataSnapshot dataSnapshot) {
+                            try {
+                                T data = converter.apply(dataSnapshot);
+                                if (data == null) {
+                                    // Can't emit null with RxJava2. Just complete it.
+                                    emitter.onComplete();
+                                } else {
+                                    emitter.onNext(data);
+                                }
+                            } catch (Exception e) {
+                                LOGGER.error("Failed to convert data at {}: {}", query,
+                                        dataSnapshot.getValue(), e);
+                                emitter.onError(e);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(final DatabaseError databaseError) {
+                            // On DatabaseError (e.g. permission no longer there) this isn't called.
+                            LOGGER.error("Listener at {} has been cancelled", query,
+                                    databaseError.toException());
+                            emitter.onError(databaseError.toException());
+                        }
+                    });
+            emitter.setCancellable(() -> query.removeEventListener(listener));
+        });
+    }
+
     /**
      * Count the child nodes (non-recursively) returned by the query.
      *
      * @param query a DatabaseReference or a specific query.
-     * @return Multi-shot TaskAdapter (call stop() to remove the listener).
+     * @return Multi-shot Observable.
      */
-    public static DataTaskAdapter<Long> fetchCount(final Query query) {
+    public static Observable<Long> fetchCount(final Query query) {
         // TODO(refactoring): this should be childeventlistener, not valueeventlistener
-        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) ->
+        return observableForQuery(query, (final DataSnapshot dataSnapshot) ->
                 dataSnapshot.getChildrenCount());
     }
 
@@ -191,7 +235,7 @@ public abstract class AbstractModel {
      * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public TaskAdapter<Void> save() {
+    public Completable save() {
         return new MultiWrite().save(this).write();
     }
 
@@ -205,9 +249,9 @@ public abstract class AbstractModel {
      * @return Multi-shot TaskAdapter (use stop() to remove the listener).
      */
     @Exclude
-    public <T extends AbstractModel> DataTaskAdapter<T> fetchChild(
+    public <T extends AbstractModel> Observable<T> fetchChild(
             final Query query, final Class<T> cls) {
-        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) ->
+        return observableForQuery(query, (final DataSnapshot dataSnapshot) ->
                 AbstractModel.fromSnapshot(dataSnapshot, cls, this)
         );
     }
@@ -219,13 +263,12 @@ public abstract class AbstractModel {
      *
      * @param cls class of the model which is being watched.
      * @param <T> AbstractModel.
-     * @return Multi-shot TaskAdapter (use stop() to remove the listener).
+     * @return Multi-shot Observable.
      */
     @Exclude
-    public <T extends AbstractModel> DataTaskAdapter<T> watch(final Class<T> cls) {
-        return new DataTaskAdapter<>(getReference(), (final DataSnapshot dataSnapshot) ->
-                AbstractModel.fromSnapshot(dataSnapshot, cls, getParent())
-        );
+    public <T extends AbstractModel> Observable<T> watch(final Class<T> cls) {
+        return observableForQuery(getReference(), (final DataSnapshot dataSnapshot) ->
+                AbstractModel.fromSnapshot(dataSnapshot, cls, getParent()));
     }
 
     /**
@@ -238,9 +281,9 @@ public abstract class AbstractModel {
      * @return see fetchChild.
      */
     @Exclude
-    public <T extends AbstractModel> DataTaskAdapter<List<T>> fetchChildren(
+    public <T extends AbstractModel> Observable<List<T>> fetchChildren(
             final Query query, final Class<T> cls) {
-        return new DataTaskAdapter<>(query, (final DataSnapshot dataSnapshot) -> {
+        return observableForQuery(query, (final DataSnapshot dataSnapshot) -> {
             List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
             for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
                 items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,

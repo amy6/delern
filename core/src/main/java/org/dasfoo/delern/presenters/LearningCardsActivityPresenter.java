@@ -21,11 +21,12 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.reactivex.disposables.Disposable;
 
 /**
  * Presenter for LearningCardsActivity. It performs logic with model and
@@ -40,7 +41,7 @@ public class LearningCardsActivityPresenter {
     private Deck mDeck;
     private Card mCard;
 
-    private TaskAdapter<Card> mCardAvailableListener;
+    private Disposable mCardAvailableListener;
 
     /**
      * Constructor. It gets reference to View as parameter for performing callbacks.
@@ -66,27 +67,30 @@ public class LearningCardsActivityPresenter {
      * for available cards to learn.
      */
     public void onStart() {
-        mCardAvailableListener = mDeck.startScheduledCardWatcher().onResult((final Card data) -> {
-            if (data == null) {
-                mLearningCardView.finishLearning();
-                return;
-            }
-            mCard = data;
-            mLearningCardView.showFrontSide(mCard.getFront());
-            // if user decided to edit card, a back side can be shown or not.
-            // After returning back it must show the same state (the same buttons
-            // and text) as before editing
-            if (mLearningCardView.backSideIsShown()) {
-                mLearningCardView.showBackSide(mCard.getBack());
-            }
-        });
+        mCardAvailableListener = mDeck.startScheduledCardWatcher().subscribe(
+                card -> {
+                    mCard = card;
+                    mLearningCardView.showFrontSide(mCard.getFront());
+                    // if user decided to edit card, a back side can be shown or not.
+                    // After returning back it must show the same state (the same buttons
+                    // and text) as before editing
+                    if (mLearningCardView.backSideIsShown()) {
+                        mLearningCardView.showBackSide(mCard.getBack());
+                    }
+                },
+                error -> {
+                    LOGGER.error("Failed to fetch next card", error);
+                    mLearningCardView.finishLearning();
+                },
+                () -> mLearningCardView.finishLearning()
+        );
     }
 
     /**
      * Called from LearningCardsActivity.onStop(). It releases resources.
      */
     public void onStop() {
-        mCardAvailableListener.stop();
+        mCardAvailableListener.dispose();
     }
 
     /**
@@ -107,6 +111,7 @@ public class LearningCardsActivityPresenter {
      * Flip card.
      */
     public void flipCard() {
+        // TODO(ksheremet): if card is not loaded yet (e.g. slow database), mCard is null.
         mLearningCardView.showBackSide(mCard.getBack());
     }
 

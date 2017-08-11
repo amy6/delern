@@ -71,10 +71,11 @@ public class AddEditCardActivityPresenter {
      * @param newFront new front side of card.
      * @param newBack  new back side of card.
      */
+    @SuppressWarnings("CheckReturnValue")
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save().onResult((final Void p) -> mAddEditCardView.cardUpdated());
+        mCard.save().subscribe(() -> mAddEditCardView.cardUpdated());
     }
 
     /**
@@ -83,8 +84,9 @@ public class AddEditCardActivityPresenter {
      * @param front text on front side of card.
      * @param back  text on back side of card.
      */
+    @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
-        mCard.create(front, back).onResult((final Void p) -> mAddEditCardView.cardAdded());
+        mCard.create(front, back).subscribe(() -> mAddEditCardView.cardAdded());
     }
 
     /**

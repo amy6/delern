@@ -27,8 +27,11 @@ import com.squareup.leakcanary.LeakCanary;
 
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.plugins.RxJavaPlugins;
 
 /**
  * Created by katarina on 12/5/16.
@@ -36,6 +39,7 @@ import io.fabric.sdk.android.Fabric;
  */
 
 public class DelernApplication extends Application {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DelernApplication.class);
 
     /**
      * Called when the application is starting, before any activity, service,
@@ -62,6 +66,8 @@ public class DelernApplication extends Application {
                 new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
+
+        RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         /* Firebase apps automatically handle temporary network interruptions. Cached data will

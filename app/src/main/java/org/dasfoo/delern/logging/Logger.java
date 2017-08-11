@@ -26,7 +26,7 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
-@SuppressWarnings({"serial", "PMD.TooManyMethods"})
+@SuppressWarnings({"serial", "PMD.TooManyMethods", "checkstyle:NoAndroidLog"})
 class Logger extends MarkerIgnoringBase {
 
     private static final int MAX_TAG_LENGTH = 23;
@@ -59,7 +59,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg);
         Crashlytics.log(Log.VERBOSE, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.VERBOSE, ft.getThrowable());
         }
     }
 
@@ -69,6 +69,7 @@ class Logger extends MarkerIgnoringBase {
         Crashlytics.log(Log.VERBOSE, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
             Crashlytics.logException(ft.getThrowable());
+            exception(Log.VERBOSE, ft.getThrowable());
         }
     }
 
@@ -77,7 +78,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.arrayFormat(format, arguments);
         Crashlytics.log(Log.VERBOSE, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.VERBOSE, ft.getThrowable());
         }
     }
 
@@ -85,7 +86,7 @@ class Logger extends MarkerIgnoringBase {
     public void trace(final String msg, final Throwable t) {
         Crashlytics.log(Log.VERBOSE, mTag, msg);
         if (t != null) {
-            Crashlytics.logException(t);
+            exception(Log.VERBOSE, t);
         }
     }
 
@@ -104,7 +105,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg);
         Crashlytics.log(Log.DEBUG, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.DEBUG, ft.getThrowable());
         }
     }
 
@@ -113,7 +114,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
         Crashlytics.log(Log.DEBUG, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.DEBUG, ft.getThrowable());
         }
     }
 
@@ -122,7 +123,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.arrayFormat(format, arguments);
         Crashlytics.log(Log.DEBUG, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.DEBUG, ft.getThrowable());
         }
     }
 
@@ -130,7 +131,7 @@ class Logger extends MarkerIgnoringBase {
     public void debug(final String msg, final Throwable t) {
         Crashlytics.log(Log.DEBUG, mTag, msg);
         if (t != null) {
-            Crashlytics.logException(t);
+            exception(Log.DEBUG, t);
         }
     }
 
@@ -149,7 +150,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg);
         Crashlytics.log(Log.INFO, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.INFO, ft.getThrowable());
         }
     }
 
@@ -158,7 +159,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
         Crashlytics.log(Log.INFO, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.INFO, ft.getThrowable());
         }
     }
 
@@ -167,7 +168,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.arrayFormat(format, arguments);
         Crashlytics.log(Log.INFO, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.INFO, ft.getThrowable());
         }
     }
 
@@ -175,7 +176,7 @@ class Logger extends MarkerIgnoringBase {
     public void info(final String msg, final Throwable t) {
         Crashlytics.log(Log.INFO, mTag, msg);
         if (t != null) {
-            Crashlytics.logException(t);
+            exception(Log.INFO, t);
         }
     }
 
@@ -194,7 +195,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg);
         Crashlytics.log(Log.WARN, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.WARN, ft.getThrowable());
         }
     }
 
@@ -203,7 +204,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
         Crashlytics.log(Log.WARN, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.WARN, ft.getThrowable());
         }
     }
 
@@ -212,7 +213,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arguments);
         Crashlytics.log(Log.WARN, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.WARN, ft.getThrowable());
         }
     }
 
@@ -221,6 +222,7 @@ class Logger extends MarkerIgnoringBase {
         Crashlytics.log(Log.WARN, mTag, msg);
         if (t != null) {
             Crashlytics.logException(t);
+            exception(Log.WARN, t);
         }
     }
 
@@ -239,7 +241,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg);
         Crashlytics.log(Log.ERROR, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.ERROR, ft.getThrowable());
         }
     }
 
@@ -248,7 +250,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.format(format, arg1, arg2);
         Crashlytics.log(Log.ERROR, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.ERROR, ft.getThrowable());
         }
     }
 
@@ -257,7 +259,7 @@ class Logger extends MarkerIgnoringBase {
         final FormattingTuple ft = MessageFormatter.arrayFormat(format, arguments);
         Crashlytics.log(Log.ERROR, mTag, ft.getMessage());
         if (ft.getThrowable() != null) {
-            Crashlytics.logException(ft.getThrowable());
+            exception(Log.ERROR, ft.getThrowable());
         }
     }
 
@@ -265,7 +267,14 @@ class Logger extends MarkerIgnoringBase {
     public void error(final String msg, final Throwable t) {
         Crashlytics.log(Log.ERROR, mTag, msg);
         if (t != null) {
-            Crashlytics.logException(t);
+            exception(Log.ERROR, t);
+        }
+    }
+
+    private void exception(final int level, final Throwable t) {
+        Crashlytics.logException(t);
+        if (Log.isLoggable(mTag, level)) {
+            Log.println(level, mTag, "Exception: " + Log.getStackTraceString(t));
         }
     }
 }

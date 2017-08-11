@@ -19,17 +19,17 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
-import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Before;
+//import org.junit.Test;
 
-import java.util.List;
+//import java.util.List;
 
 /**
  * Test for Deck model.
  */
 public class DeckTest extends FirebaseServerUnitTest {
 
-    private User mUser;
+   /* private User mUser;
 
     @Before
     public void createUser() throws Exception {
@@ -141,5 +141,5 @@ public class DeckTest extends FirebaseServerUnitTest {
                 testSucceeded();
             }
         });
-    }
+    }*/
 }

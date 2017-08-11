@@ -21,10 +21,11 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -36,8 +37,8 @@ public class DelernMainActivityPresenter {
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivityPresenter.class);
 
     private final IDelernMainView mDelernMainView;
-    private TaskAdapter<Long> mUserHasDecksListener;
-    private TaskAdapter<User> mAbstractDataAvailableListener;
+    private Disposable mUserHasDecksListener;
+    private Disposable mAbstractDataAvailableListener;
     private User mUser;
 
     /**
@@ -74,7 +75,7 @@ public class DelernMainActivityPresenter {
      */
     public void onStart() {
         mUserHasDecksListener = Deck.fetchCount(mUser.getChildReference(Deck.class).limitToFirst(1))
-                .onResult((final Long isUserHasDecks) -> {
+                .subscribe((final Long isUserHasDecks) -> {
                     mDelernMainView.showProgressBar(false);
                     if (isUserHasDecks == null || isUserHasDecks != 1) {
                         mDelernMainView.noDecksMessage(true);
@@ -127,11 +128,12 @@ public class DelernMainActivityPresenter {
      * Cleanup listeners and release resources.
      */
     public void cleanup() {
+        // TODO(ksheremet): make these 2 one, by combining into a single disposable.
         if (mUserHasDecksListener != null) {
-            mUserHasDecksListener.stop();
+            mUserHasDecksListener.dispose();
         }
         if (mAbstractDataAvailableListener != null) {
-            mAbstractDataAvailableListener.stop();
+            mAbstractDataAvailableListener.dispose();
         }
     }
 
@@ -140,12 +142,13 @@ public class DelernMainActivityPresenter {
      *
      * @param deckName name of deck
      */
+    @SuppressWarnings("CheckReturnValue")
     public void createNewDeck(final String deckName) {
         final Deck newDeck = new Deck(mUser);
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);
-        newDeck.create().onResult((final Void p) -> mDelernMainView.addCardsToDeck(newDeck));
+        newDeck.create().subscribe(() -> mDelernMainView.addCardsToDeck(newDeck));
     }
 
     /**
@@ -153,7 +156,7 @@ public class DelernMainActivityPresenter {
      * Otherwise calls callback method to update user profile info.
      */
     public void getUserInfo() {
-        mAbstractDataAvailableListener = mUser.watch(User.class).onResult((final User user) -> {
+        mAbstractDataAvailableListener = mUser.watch(User.class).subscribe((final User user) -> {
             LOGGER.debug("Check if user null");
             if (user == null) {
                 LOGGER.debug("Starting sign in");

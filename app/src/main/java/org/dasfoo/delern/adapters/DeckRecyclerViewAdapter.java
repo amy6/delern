@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.adapters;
 
-import android.support.annotation.Nullable;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
@@ -52,16 +50,15 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("CheckReturnValue")
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
         viewHolder.setDeckCardType(deck.getDeckType());
 
-        // TODO(ksheremet): remove listener when deck is removed
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
-                .onResult((@Nullable final Long cardsCount) -> {
-                    // TODO(ksheremet): handle null (same as 0)
+                .subscribe((final Long cardsCount) -> {
                     if (cardsCount <= CARDS_COUNTER_LIMIT) {
                         viewHolder.getCountToLearnTextView().setText(
                                 String.valueOf(cardsCount));

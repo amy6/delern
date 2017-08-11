@@ -26,9 +26,11 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 
 import java.util.List;
+
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 
 /**
  * Created by katarina on 10/11/16.
@@ -117,7 +119,7 @@ public class Deck extends AbstractModel implements Parcelable {
      * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public TaskAdapter<Void> create() {
+    public Completable create() {
         DeckAccess deckAccess = new DeckAccess(this);
         deckAccess.setKey(getUser().getKey());
         deckAccess.setAccess("owner");
@@ -133,7 +135,7 @@ public class Deck extends AbstractModel implements Parcelable {
      * @return FirebaseTaskAdapter for the delete operation.
      */
     @Exclude
-    public TaskAdapter<Void> delete() {
+    public Completable delete() {
         return new MultiWrite()
                 .delete(this)
                 .delete(this.getChildReference(Card.class))
@@ -151,25 +153,17 @@ public class Deck extends AbstractModel implements Parcelable {
      * set as its parent.
      */
     @Exclude
-    public TaskAdapter<Card> startScheduledCardWatcher() {
-        final TaskAdapter<Card> proxyCardFetcher = new TaskAdapter<>();
-        final TaskAdapter<List<ScheduledCard>> scheduledCardsFetcher =
-                fetchChildren(fetchCardsToRepeatWithLimitQuery(1), ScheduledCard.class);
-        scheduledCardsFetcher.onResult((final List<ScheduledCard> data) -> {
-            if (data != null && data.size() > 0) {
-                ScheduledCard sc = data.get(0);
-                final TaskAdapter<Card> cardFetcher = sc.fetchChild(
-                        getChildReference(Card.class, sc.getKey()),
-                        Card.class);
-                proxyCardFetcher
-                        .forwardFrom(cardFetcher)
-                        .setDependentAdapter(scheduledCardsFetcher);
-                cardFetcher.onResult((final Card p) -> cardFetcher.stop());
-            } else {
-                proxyCardFetcher.triggerOnResult(null);
-            }
-        });
-        return proxyCardFetcher;
+    public Observable<Card> startScheduledCardWatcher() {
+        return fetchChildren(fetchCardsToRepeatWithLimitQuery(1), ScheduledCard.class)
+                .takeUntil((final List<ScheduledCard> scs) -> scs.isEmpty())
+                .flatMap(scs -> {
+                    if (scs.isEmpty()) {
+                        return Completable.complete().toObservable();
+                    }
+                    ScheduledCard sc = scs.get(0);
+                    return sc.fetchChild(getChildReference(Card.class, sc.getKey()), Card.class)
+                            .firstOrError().toObservable();
+                });
     }
 
     /**

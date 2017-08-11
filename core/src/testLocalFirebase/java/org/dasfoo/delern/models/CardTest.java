@@ -24,6 +24,11 @@ import org.junit.Test;
 
 import java.util.List;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.ObservableSource;
+
+import static org.junit.Assert.assertTrue;
+
 public class CardTest extends FirebaseServerUnitTest {
 
     private User mUser;
@@ -34,153 +39,138 @@ public class CardTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void cards_createdAndFetched() {
+    public void cards_createdAndFetched() throws Exception {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Card> cards = mUser.save().andThen((final CompletableObserver cs) -> {
             deck.setName("CreateCards");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("CreateCards")) {
-                Card newCard = new Card(data.get(0));
-                return newCard.create("frontSide", "backSide");
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("CreateCards"));
+            Card newCard = new Card(data.get(0));
+            return newCard.create("frontSide", "backSide");
+        }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-        ).onResult((final List<Card> data) -> {
-            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                    data.get(0).getBack().equals("backSide")) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(cards.size() == 1 && cards.get(0).getFront().equals("frontSide") &&
+                cards.get(0).getBack().equals("backSide"));
     }
 
     @Test
     public void cards_createdAndDeleted() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Card> cards = mUser.save().andThen((final CompletableObserver cs) -> {
             deck.setName("TestDelete");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("TestDelete")) {
-                Card newCard = new Card(data.get(0));
-                return newCard.create("frontSide", "backSide");
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("TestDelete"));
+            Card newCard = new Card(data.get(0));
+            return newCard.create("frontSide", "backSide");
+        }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-        ).continueWithOnce((final List<Card> data) -> {
-            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                    data.get(0).getBack().equals("backSide")) {
-                return data.get(0).delete();
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
+                    data.get(0).getBack().equals("backSide"));
+            return data.get(0).delete();
+        }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-        ).onResult((final List<Card> data) -> {
-            if (data.size() == 0) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(cards.size() == 0);
     }
 
     @Test
     public void cards_createdAndEdited() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Card> cards = mUser.save().andThen((final CompletableObserver cs) -> {
             deck.setName("TestRename");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("TestRename")) {
-                Card newCard = new Card(data.get(0));
-                return newCard.create("frontSide", "backSide");
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("TestRename"));
+            Card newCard = new Card(data.get(0));
+            return newCard.create("frontSide", "backSide");
+        }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-        ).continueWithOnce((final List<Card> data) -> {
-            if (data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
-                    data.get(0).getBack().equals("backSide")) {
-                data.get(0).setFront("frontSide2");
-                data.get(0).setBack("backSide2");
-                return data.get(0).save();
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue((data.size() == 1 && data.get(0).getFront().equals("frontSide") &&
+                    data.get(0).getBack().equals("backSide")));
+            data.get(0).setFront("frontSide2");
+            data.get(0).setBack("backSide2");
+            return data.get(0).save();
+        }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-        ).onResult((final List<Card> data) -> {
-            if (data.size() == 1 && data.get(0).getFront().equals("frontSide2") &&
-                    data.get(0).getBack().equals("backSide2")) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(cards.size() == 1 && cards.get(0).getFront().equals("frontSide2") &&
+                cards.get(0).getBack().equals("backSide2"));
     }
+
+    // TODO(ksheremet): add test for "solve card 1", "solve card 2", end.
 
     @Test
     public void cards_createdAndAnsweredTrue() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<ScheduledCard> scs = mUser.save().andThen((final CompletableObserver cs) -> {
             deck.setName("TestAnswer");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
-                Card newCard = new Card(data.get(0));
-                return newCard.create("frontSide", "backSide");
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
-                deck.startScheduledCardWatcher()
-        ).continueWithOnce((final Card card) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable((final List<Deck> data) -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("TestAnswer"));
+            Card newCard = new Card(data.get(0));
+            return newCard.create("frontSide", "backSide");
+        }).andThen((ObservableSource<Card>) observer ->
+                deck.startScheduledCardWatcher().subscribe(observer)
+        ).firstOrError().flatMapCompletable((final Card card) ->
                 card.answer(true)
-        ).continueWithOnce((final Void parameter) ->
+        ).andThen((ObservableSource<List<ScheduledCard>>) observer ->
                 deck.fetchChildren(deck.getChildReference(ScheduledCard.class), ScheduledCard.class)
-        ).onResult((final List<ScheduledCard> data) -> {
-            if (data.size() == 1
-                    && data.get(0).getLevel().equals(Level.L1.name())) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(scs.size() == 1
+                && scs.get(0).getLevel().equals(Level.L1.name()));
     }
 
     @Test
     public void cards_createdAndAnsweredFalse() {
         final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<ScheduledCard> scs = mUser.save().andThen((final CompletableObserver cs) -> {
             deck.setName("TestAnswer");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("TestAnswer")) {
-                Card newCard = new Card(data.get(0));
-                return newCard.create("frontSide", "backSide");
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
-                deck.startScheduledCardWatcher()
-        ).continueWithOnce((final Card card) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable((final List<Deck> data) -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("TestAnswer"));
+            Card newCard = new Card(data.get(0));
+            return newCard.create("frontSide", "backSide");
+        }).andThen((ObservableSource<Card>) observer ->
+                deck.startScheduledCardWatcher().subscribe(observer)
+        ).firstOrError().flatMapCompletable((final Card card) ->
                 card.answer(false)
-        ).continueWithOnce((final Void parameter) ->
+        ).andThen((ObservableSource<List<ScheduledCard>>) observer ->
                 deck.fetchChildren(deck.getChildReference(ScheduledCard.class), ScheduledCard.class)
-        ).onResult((final List<ScheduledCard> data) -> {
-            if (data.size() == 1
-                    && data.get(0).getLevel().equals(Level.L0.name())) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(scs.size() == 1
+                && scs.get(0).getLevel().equals(Level.L0.name()));
     }
 
 }

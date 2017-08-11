@@ -19,10 +19,11 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
 import org.dasfoo.delern.views.IPreEditCardView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.reactivex.disposables.Disposable;
 
 /**
  * Presenter for PreEditCardActivity. It performs logic with model and
@@ -35,7 +36,7 @@ public class PreEditCardActivityPresenter {
 
     private final IPreEditCardView mPreEditCardView;
     private Card mCard;
-    private TaskAdapter<Card> mCardValueEventListener;
+    private Disposable mCardValueEventListener;
 
     /**
      * Constructor for Presenter. It gets IPreEditCardView as parameter to manage
@@ -68,7 +69,7 @@ public class PreEditCardActivityPresenter {
         mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
         // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
         //                toast on error.
-        mCardValueEventListener = mCard.watch(Card.class).onResult((final Card card) -> {
+        mCardValueEventListener = mCard.watch(Card.class).subscribe((final Card card) -> {
             if (card != null) {
                 mCard = card;
                 mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
@@ -81,7 +82,8 @@ public class PreEditCardActivityPresenter {
      */
     public void onStop() {
         if (mCardValueEventListener != null) {
-            mCardValueEventListener.stop();
+            mCardValueEventListener.dispose();
+            mCardValueEventListener = null;
         }
     }
 

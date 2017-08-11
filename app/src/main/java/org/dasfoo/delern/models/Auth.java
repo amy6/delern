@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -30,9 +29,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.dasfoo.delern.java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * A class to handle authentication with Firebase.
@@ -69,6 +69,7 @@ public final class Auth {
      * @param credential null for anonymous sign-in.
      * @param callback   invoked when sign-in is finished, either successfully or with failure.
      */
+    @SuppressWarnings({"checkstyle:IllegalCatch", "PMD.AvoidCatchingGenericException"})
     public static void signIn(@Nullable final AuthCredential credential,
                               @Nullable final Consumer<User> callback) {
         Task<AuthResult> task;
@@ -78,16 +79,17 @@ public final class Auth {
             task = FirebaseAuth.getInstance().signInWithCredential(credential);
         }
         if (callback != null) {
-            task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull final Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        // OnAuthStateChange may fire too late, override right here.
-                        setCurrentUser(task.getResult().getUser());
+            task.addOnCompleteListener(actualTask -> {
+                if (actualTask.isSuccessful()) {
+                    // OnAuthStateChange may fire too late, override right here.
+                    setCurrentUser(actualTask.getResult().getUser());
+                    try {
                         callback.accept(getCurrentUser());
-                    } else {
-                        LOGGER.error("Failed to sign in with {}", credential, task.getException());
+                    } catch (Exception e) {
+                        LOGGER.error("Failed to continue after signing in", e);
                     }
+                } else {
+                    LOGGER.error("Failed to sign in", actualTask.getException());
                 }
             });
         }

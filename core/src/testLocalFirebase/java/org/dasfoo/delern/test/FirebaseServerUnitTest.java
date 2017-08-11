@@ -20,29 +20,28 @@ package org.dasfoo.delern.test;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseCredential;
 import com.google.firebase.auth.GoogleOAuthAccessToken;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.tasks.Task;
 import com.google.firebase.tasks.Tasks;
 
 import org.dasfoo.delern.models.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import io.jsonwebtoken.Jwts;
-
-import static org.junit.Assert.assertTrue;
+import io.reactivex.plugins.RxJavaPlugins;
 
 public class FirebaseServerUnitTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseServerUnitTest.class);
 
     private static final int PORT = 5533;
     private static final String HOST = "localhost";
@@ -52,11 +51,11 @@ public class FirebaseServerUnitTest {
     private static String mRules;
 
     private FirebaseServerRunner mFirebaseServer;
-    private CountDownLatch mTestLatch;
 
     @BeforeClass
     public static void findDependencies() {
         findDependencies(new File(System.getProperty("user.dir")));
+        RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
     }
 
     private static void findDependencies(File directory) {
@@ -81,7 +80,7 @@ public class FirebaseServerUnitTest {
     }
 
     @Before
-    public void createLatchAndStartServer() throws Exception {
+    public void startServer() throws Exception {
         if (mNode == null || mServer == null || mRules == null) {
             throw new RuntimeException("Cannot find dependencies: node=" + mNode + ", server=" +
                     mServer + ", rules=" + mRules);
@@ -93,18 +92,11 @@ public class FirebaseServerUnitTest {
                 .setPort(String.valueOf(PORT))
                 .setRules(mRules)
                 .start();
-        mTestLatch = new CountDownLatch(1);
-    }
-
-    protected void testSucceeded() {
-        mTestLatch.countDown();
     }
 
     @After
-    public void waitLatchAndStopServer() throws Exception {
+    public void stopServer() throws Exception {
         try {
-            assertTrue("Timed out waiting for the test (did you forget to call testSucceeded()?)",
-                    mTestLatch.await(5, TimeUnit.SECONDS));
             for (FirebaseApp app : FirebaseApp.getApps()) {
                 app.delete();
             }
@@ -118,15 +110,11 @@ public class FirebaseServerUnitTest {
 
         final String token = Jwts.builder().setSubject(userId).setIssuedAt(new Date()).compact();
         FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredential(new FirebaseCredential() {
-                    @Override
-                    public Task<GoogleOAuthAccessToken> getAccessToken() {
-                        return Tasks.forResult(new GoogleOAuthAccessToken(token,
+                .setCredential(() ->
+                        Tasks.forResult(new GoogleOAuthAccessToken(token,
                                 System.currentTimeMillis() +
                                         TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
-                        ));
-                    }
-                })
+                        )))
                 .setDatabaseUrl(new URI("ws", null, HOST, PORT, null, null, null).toString())
                 .build();
 

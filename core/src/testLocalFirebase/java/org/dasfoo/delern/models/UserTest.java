@@ -19,15 +19,15 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
-import org.junit.Before;
-import org.junit.Test;
+//import org.junit.Before;
+//import org.junit.Test;
 
 /**
  * Test for User model.
  */
 public class UserTest extends FirebaseServerUnitTest {
 
-    private User mUser;
+    /*private User mUser;
 
     @Before
     public void createUser() throws Exception {
@@ -48,5 +48,5 @@ public class UserTest extends FirebaseServerUnitTest {
                 testSucceeded();
             }
         });
-    }
+    }*/
 }

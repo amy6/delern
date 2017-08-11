@@ -26,7 +26,8 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.dasfoo.delern.models.helpers.TaskAdapter;
+
+import io.reactivex.Completable;
 
 /**
  * Created by katarina on 10/4/16.
@@ -157,7 +158,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public TaskAdapter<Void> create(final String front, final String back) {
+    public Completable create(final String front, final String back) {
         ScheduledCard scheduledCard = new ScheduledCard(this.getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());
@@ -193,7 +194,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public TaskAdapter<Void> answer(final boolean knows) {
+    public Completable answer(final boolean knows) {
         String newCardLevel;
         String reply;
         ScheduledCard sc = getScheduledCard();
@@ -226,8 +227,7 @@ public class Card extends AbstractModel implements Parcelable {
      * @return FirebaseTaskAdapter for the delete operation.
      */
     @Exclude
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
-    public TaskAdapter<Void> delete() {
+    public Completable delete() {
         return new MultiWrite()
                 .delete(this)
                 .delete(getDeck().getChildReference(ScheduledCard.class, getKey()))

@@ -33,6 +33,9 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Completable;
+import io.reactivex.subjects.CompletableSubject;
+
 /**
  * A helper for queueing multiple operations (add / update / delete) to the database and
  * applying them at once. Use "save()" and "delete()" to populate; the data is not written to
@@ -143,17 +146,24 @@ public class MultiWrite {
     /**
      * Apply all the queued operations to the database.
      *
-     * @return FirebaseTaskAdapter, either immediately complete (when offline) or triggered on
-     * Firebase event.
+     * @return Observable, either immediately available (when offline) or triggered on
+     * Firebase success/failure event.
      */
-    public TaskAdapter<Void> write() {
-        FirebaseTaskAdapter<Void> task = new FirebaseTaskAdapter<>(mRoot.updateChildren(mData))
-                .onFailure((final Exception parameter) ->
-                        LOGGER.error("Failed to save {}", mData, parameter));
+    public Completable write() {
+        CompletableSubject subject = CompletableSubject.create();
+        mRoot.updateChildren(mData)
+                .addOnSuccessListener((final Void p) -> {
+                    subject.onComplete();
+                })
+                .addOnFailureListener((final Exception e) -> {
+                    LOGGER.error("Failed to save {}", mData, e);
+                    subject.onError(e);
+                });
+
         if (sConnected) {
-            return task;
+            return subject;
         } else {
-            return new NoopTaskAdapter<>(null);
+            return Completable.complete();
         }
     }
 }
