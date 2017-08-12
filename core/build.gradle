@@ -6,13 +6,10 @@ apply from: 'firebase/firebase-server.gradle'
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion toolsVersion
-    testBuildType 'localFirebase'
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion sdkVersion
-
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     buildTypes {
