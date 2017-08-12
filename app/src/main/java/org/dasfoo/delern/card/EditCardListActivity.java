@@ -39,6 +39,7 @@ import org.dasfoo.delern.adapters.CardRecyclerViewAdapter;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.handlers.OnCardViewHolderClick;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.presenters.EditCardListActivityPresenter;
 
 import javax.inject.Inject;
@@ -78,7 +79,7 @@ public class EditCardListActivity extends AppCompatActivity implements
      */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditCardListActivity.class);
-        intent.putExtra(EditCardListActivity.DECK, deck);
+        intent.putExtra(EditCardListActivity.DECK, new ParcelableDeck(deck));
         context.startActivity(intent);
     }
 
@@ -88,7 +89,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
         Intent intent = getIntent();
-        Deck deck = intent.getParcelableExtra(DECK);
+        Deck deck = ((ParcelableDeck) intent.getParcelableExtra(DECK)).get();
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
         Injector.getEditCardListActivityInjector().inject(this);

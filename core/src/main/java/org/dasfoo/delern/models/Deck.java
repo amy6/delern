@@ -18,9 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
@@ -37,24 +34,7 @@ import io.reactivex.Observable;
  * Model class for deck.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Deck extends AbstractModel implements Parcelable {
-
-    /**
-     * Classes implementing the Parcelable interface must also have a non-null static
-     * field called CREATOR of a type that implements the Parcelable.Creator interface.
-     * https://developer.android.com/reference/android/os/Parcelable.html
-     */
-    public static final Creator<Deck> CREATOR = new Creator<Deck>() {
-        @Override
-        public Deck createFromParcel(final Parcel in) {
-            return new Deck(in);
-        }
-
-        @Override
-        public Deck[] newArray(final int size) {
-            return new Deck[size];
-        }
-    };
+public class Deck extends AbstractModel {
 
     private String name;
     private String deckType;
@@ -78,24 +58,6 @@ public class Deck extends AbstractModel implements Parcelable {
     public Deck(final User parent) {
         super(parent, null);
         lastSyncAt = System.currentTimeMillis();
-    }
-
-    /**
-     * Parcelable deserializer.
-     *
-     * @param in parcel.
-     */
-    // TODO(dotdoom): investigate the possible issues here
-    @SuppressWarnings("PMD.UseProperClassLoader")
-    protected Deck(final Parcel in) {
-        super((User) in.readParcelable(User.class.getClassLoader()), in.readString());
-        name = in.readString();
-        deckType = in.readString();
-        category = in.readString();
-        lastSyncAt = in.readLong();
-        // Reading and writing boolean for parceable
-        // https://goo.gl/PLRLWY
-        accepted = in.readByte() != 0;
     }
 
     /**
@@ -208,7 +170,7 @@ public class Deck extends AbstractModel implements Parcelable {
     /**
      * Getter for time when deck was synced.
      *
-     * @return time when deck was synced.
+     * @return time when ScheduledCards of this deck were last synced.
      */
     public long getLastSyncAt() {
         return lastSyncAt;
@@ -216,9 +178,11 @@ public class Deck extends AbstractModel implements Parcelable {
 
     /**
      * Update time when deck was synced to current.
+     *
+     * @param lastSyncAt time when ScheduledCards of this deck were last synced.
      */
-    public void setLastSyncAt() {
-        this.lastSyncAt = System.currentTimeMillis();
+    public void setLastSyncAt(final long lastSyncAt) {
+        this.lastSyncAt = lastSyncAt;
     }
 
     /**
@@ -270,32 +234,6 @@ public class Deck extends AbstractModel implements Parcelable {
                 ", accepted='" + accepted + '\'' +
                 ", lastSyncAt='" + lastSyncAt + '\'' +
                 '}';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void writeToParcel(final Parcel parcel, final int flags) {
-        parcel.writeParcelable(getUser(), flags);
-        parcel.writeString(this.getKey());
-        parcel.writeString(this.name);
-        parcel.writeString(this.deckType);
-        parcel.writeString(this.category);
-        parcel.writeLong(this.lastSyncAt);
-        if (accepted) {
-            parcel.writeByte((byte) 1);
-        } else {
-            parcel.writeByte((byte) 0);
-        }
     }
 
     /**

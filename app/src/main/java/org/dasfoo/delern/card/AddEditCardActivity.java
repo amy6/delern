@@ -36,6 +36,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.ParcelableCard;
 import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
@@ -76,7 +77,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     public static void startAddCardActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, AddEditCardActivity.class);
         Card card = new Card(deck);
-        intent.putExtra(AddEditCardActivity.CARD, card);
+        intent.putExtra(AddEditCardActivity.CARD, new ParcelableCard(card));
         context.startActivity(intent);
     }
 
@@ -88,7 +89,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
      */
     public static void startEditCardActivity(final Context context, final Card card) {
         Intent intent = new Intent(context, AddEditCardActivity.class);
-        intent.putExtra(AddEditCardActivity.CARD, card);
+        intent.putExtra(AddEditCardActivity.CARD, new ParcelableCard(card));
         context.startActivity(intent);
     }
 
@@ -98,7 +99,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
         Intent intent = getIntent();
-        Card card = intent.getParcelableExtra(CARD);
+        Card card = ((ParcelableCard) intent.getParcelableExtra(CARD)).get();
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
         Injector.getAddEditActivityInjector(this).inject(this);

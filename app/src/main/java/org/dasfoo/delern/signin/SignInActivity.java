@@ -39,6 +39,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.DelernMainActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +80,9 @@ public class SignInActivity extends AppCompatActivity
             LOGGER.warn("Running from an instrumented test: forcing anonymous sign in");
 
             org.dasfoo.delern.models.Auth.signIn(null, (final User data) -> {
+                // TODO(ksheremet): this should be a method of MainActivity
                 Intent intent = new Intent(this, DelernMainActivity.class);
-                intent.putExtra(DelernMainActivity.USER, data);
+                intent.putExtra(DelernMainActivity.USER, new ParcelableUser(data));
                 startActivity(intent);
                 finish();
             });
@@ -143,8 +145,9 @@ public class SignInActivity extends AppCompatActivity
         LOGGER.info("firebaseAuthWithGoogle: {}", acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         org.dasfoo.delern.models.Auth.signIn(credential, (final User data) -> {
+            // TODO(ksheremet): this should be a method of MainActivity
             Intent intent = new Intent(this, DelernMainActivity.class);
-            intent.putExtra(DelernMainActivity.USER, data);
+            intent.putExtra(DelernMainActivity.USER, new ParcelableUser(data));
             startActivity(intent);
             finish();
         });

@@ -18,9 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
@@ -34,24 +31,7 @@ import io.reactivex.Completable;
  * Model class for card.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Card extends AbstractModel implements Parcelable {
-
-    /**
-     * Classes implementing the Parcelable interface must also have a non-null static
-     * field called CREATOR of a type that implements the Parcelable.Creator interface.
-     * https://developer.android.com/reference/android/os/Parcelable.html
-     */
-    public static final Creator<Card> CREATOR = new Creator<Card>() {
-        @Override
-        public Card createFromParcel(final Parcel in) {
-            return new Card(in);
-        }
-
-        @Override
-        public Card[] newArray(final int size) {
-            return new Card[size];
-        }
-    };
+public class Card extends AbstractModel {
 
     /**
      * Answer on card if user knows it.
@@ -62,12 +42,6 @@ public class Card extends AbstractModel implements Parcelable {
      * Answer on card if user doesn't know it.
      */
     private static final String DO_NOT_KNOW_CARD = "N";
-
-    /**
-     * A special value which, when stored in a Parcel, indicates that it should be a Firebase
-     * special value ServerValue.TIMESTAMP (which is a Map and can't be serialized into parcelable).
-     */
-    private static final long PARCEL_SERVER_VALUE_TIMESTAMP = 0;
 
     private String back;
     private String front;
@@ -102,23 +76,6 @@ public class Card extends AbstractModel implements Parcelable {
         // This field is used to sync other people's decks, so must be the server value
         // at the time this reaches Firebase server.
         this.createdAt = ServerValue.TIMESTAMP;
-    }
-
-    /**
-     * Parcelable deserializer.
-     *
-     * @param in parcel.
-     */
-    // TODO(dotdoom): investigate the possible issues here
-    @SuppressWarnings("PMD.UseProperClassLoader")
-    protected Card(final Parcel in) {
-        super((Deck) in.readParcelable(Deck.class.getClassLoader()), in.readString());
-        back = in.readString();
-        front = in.readString();
-        createdAt = in.readLong();
-        if ((Long) createdAt == PARCEL_SERVER_VALUE_TIMESTAMP) {
-            createdAt = ServerValue.TIMESTAMP;
-        }
     }
 
     /**
@@ -287,31 +244,6 @@ public class Card extends AbstractModel implements Parcelable {
      */
     public void setCreatedAt(final Object createdAt) {
         this.createdAt = createdAt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeParcelable(getDeck(), flags);
-        dest.writeString(this.getKey());
-        dest.writeString(this.back);
-        dest.writeString(this.front);
-        if (createdAt instanceof Long) {
-            dest.writeLong((Long) createdAt);
-        } else {
-            // null will also end up here.
-            dest.writeLong(PARCEL_SERVER_VALUE_TIMESTAMP);
-        }
     }
 
     /**

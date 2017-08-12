@@ -58,6 +58,7 @@ import org.dasfoo.delern.handlers.OnDeckViewHolderClick;
 import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
 import org.dasfoo.delern.views.IDelernMainView;
@@ -112,7 +113,7 @@ public class DelernMainActivity extends AppCompatActivity
      */
     public static void startActivity(final Context context, final User user) {
         Intent intent = new Intent(context, DelernMainActivity.class);
-        intent.putExtra(DelernMainActivity.USER, user);
+        intent.putExtra(DelernMainActivity.USER, new ParcelableUser(user));
         context.startActivity(intent);
     }
 
@@ -129,7 +130,7 @@ public class DelernMainActivity extends AppCompatActivity
             setSupportActionBar(mToolbar);
         }
         Intent intent = getIntent();
-        User user = intent.getParcelableExtra(USER);
+        User user = ((ParcelableUser) intent.getParcelableExtra(USER)).get();
         // TODO(ksheremet): finish isn't called
         if (!mMainActivityPresenter.onCreate(user)) {
             return;

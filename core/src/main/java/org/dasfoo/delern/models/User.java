@@ -18,9 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
@@ -30,24 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Model class for users.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public final class User extends AbstractModel implements Parcelable {
-
-    /**
-     * Classes implementing the Parcelable interface must also have a non-null static
-     * field called CREATOR of a type that implements the Parcelable.Creator interface.
-     * https://developer.android.com/reference/android/os/Parcelable.html
-     */
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(final Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(final int size) {
-            return new User[size];
-        }
-    };
+public final class User extends AbstractModel {
 
     @Exclude
     private FirebaseDatabase mDatabase;
@@ -64,21 +44,6 @@ public final class User extends AbstractModel implements Parcelable {
     public User(final FirebaseDatabase db) {
         super(null, null);
         mDatabase = db;
-    }
-
-    /**
-     * Parcelable deserializer.
-     *
-     * @param in parcel.
-     */
-    protected User(final Parcel in) {
-        super(null, in.readString());
-        setName(in.readString());
-        setEmail(in.readString());
-        setPhotoUrl(in.readString());
-        // Hack: when User is deserialized from a parcel, we know that we are running in an
-        // Android app, and therefore bound to the default database.
-        mDatabase = FirebaseDatabase.getInstance();
     }
 
     /**
@@ -207,24 +172,5 @@ public final class User extends AbstractModel implements Parcelable {
         }
 
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(getKey());
-        dest.writeString(getName());
-        dest.writeString(getEmail());
-        dest.writeString(getPhotoUrl());
     }
 }

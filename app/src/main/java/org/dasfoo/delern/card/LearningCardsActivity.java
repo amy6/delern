@@ -39,6 +39,7 @@ import org.dasfoo.delern.controller.CardColor;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.presenters.LearningCardsActivityPresenter;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.views.ILearningCardsView;
@@ -97,7 +98,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, LearningCardsActivity.class);
-        intent.putExtra(LearningCardsActivity.DECK, deck);
+        intent.putExtra(LearningCardsActivity.DECK, new ParcelableDeck(deck));
         context.startActivity(intent);
     }
 
@@ -119,7 +120,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        Deck deck = intent.getParcelableExtra(DECK);
+        Deck deck = ((ParcelableDeck) intent.getParcelableExtra(DECK)).get();
         this.setTitle(deck.getName());
         Injector.getLearningCardsActivityInjector(this).inject(this);
         mPresenter.onCreate(deck);

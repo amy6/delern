@@ -36,6 +36,7 @@ import android.widget.TextView;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.ParcelableCard;
 import org.dasfoo.delern.presenters.PreEditCardActivityPresenter;
 import org.dasfoo.delern.views.IPreEditCardView;
 
@@ -72,7 +73,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
      */
     public static void startActivity(final Context context, final Card card) {
         Intent intent = new Intent(context, PreEditCardActivity.class);
-        intent.putExtra(PreEditCardActivity.CARD, card);
+        intent.putExtra(PreEditCardActivity.CARD, new ParcelableCard(card));
         context.startActivity(intent);
     }
 
@@ -83,7 +84,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
 
         configureToolbar();
         Intent intent = getIntent();
-        Card card = intent.getParcelableExtra(CARD);
+        Card card = ((ParcelableCard) intent.getParcelableExtra(CARD)).get();
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
         Injector.getPreEditCardActivityInjector(this).inject(this);
