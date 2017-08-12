@@ -61,9 +61,8 @@ public class ParcelableDeck implements Parcelable {
      * @param in parcel.
      */
     protected ParcelableDeck(final Parcel in) {
-        mDeck = new Deck(
-                ((ParcelableUser) in.readParcelable(Thread.currentThread().getContextClassLoader()))
-                        .get());
+        mDeck = new Deck(ParcelableUser.get(in.readParcelable(
+                Thread.currentThread().getContextClassLoader())));
         mDeck.setKey(in.readString());
         mDeck.setName(in.readString());
         mDeck.setDeckType(in.readString());
@@ -72,6 +71,19 @@ public class ParcelableDeck implements Parcelable {
         // Reading and writing boolean for parcelable
         // https://goo.gl/PLRLWY
         mDeck.setAccepted(in.readByte() != 0);
+    }
+
+    /**
+     * Cast parcel to object.
+     *
+     * @param parcel getParcelableExtra() / readParcelable() return value.
+     * @return casted object.
+     */
+    public static Deck get(final Object parcel) {
+        if (parcel == null) {
+            return null;
+        }
+        return ((ParcelableDeck) parcel).mDeck;
     }
 
     /**
@@ -98,14 +110,5 @@ public class ParcelableDeck implements Parcelable {
         } else {
             parcel.writeByte((byte) 0);
         }
-    }
-
-    /**
-     * Extract wrapped Deck.
-     *
-     * @return Deck.
-     */
-    public final Deck get() {
-        return mDeck;
     }
 }

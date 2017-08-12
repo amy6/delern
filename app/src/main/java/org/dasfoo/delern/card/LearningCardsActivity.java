@@ -120,7 +120,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        Deck deck = ((ParcelableDeck) intent.getParcelableExtra(DECK)).get();
+        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(deck.getName());
         Injector.getLearningCardsActivityInjector(this).inject(this);
         mPresenter.onCreate(deck);

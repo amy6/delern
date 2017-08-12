@@ -89,7 +89,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
         Intent intent = getIntent();
-        Deck deck = ((ParcelableDeck) intent.getParcelableExtra(DECK)).get();
+        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
         Injector.getEditCardListActivityInjector().inject(this);

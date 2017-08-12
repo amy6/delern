@@ -45,7 +45,6 @@ public class ParcelableUser implements Parcelable {
                     return new ParcelableUser[size];
                 }
             };
-
     private final User mUser;
 
     /**
@@ -71,6 +70,19 @@ public class ParcelableUser implements Parcelable {
     }
 
     /**
+     * Cast parcel to object.
+     *
+     * @param parcel getParcelableExtra() / readParcelable() return value.
+     * @return casted object.
+     */
+    public static User get(final Object parcel) {
+        if (parcel == null) {
+            return null;
+        }
+        return ((ParcelableUser) parcel).mUser;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -87,14 +99,5 @@ public class ParcelableUser implements Parcelable {
         dest.writeString(mUser.getName());
         dest.writeString(mUser.getEmail());
         dest.writeString(mUser.getPhotoUrl());
-    }
-
-    /**
-     * Extract wrapped User.
-     *
-     * @return User.
-     */
-    public final User get() {
-        return mUser;
     }
 }

@@ -99,7 +99,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         setContentView(R.layout.add_edit_card_activity);
         configureToolbar();
         Intent intent = getIntent();
-        Card card = ((ParcelableCard) intent.getParcelableExtra(CARD)).get();
+        Card card = ParcelableCard.get(intent.getParcelableExtra(CARD));
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
         Injector.getAddEditActivityInjector(this).inject(this);

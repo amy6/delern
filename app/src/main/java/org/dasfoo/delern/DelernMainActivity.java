@@ -130,7 +130,7 @@ public class DelernMainActivity extends AppCompatActivity
             setSupportActionBar(mToolbar);
         }
         Intent intent = getIntent();
-        User user = ((ParcelableUser) intent.getParcelableExtra(USER)).get();
+        User user = ParcelableUser.get(intent.getParcelableExtra(USER));
         // TODO(ksheremet): finish isn't called
         if (!mMainActivityPresenter.onCreate(user)) {
             return;

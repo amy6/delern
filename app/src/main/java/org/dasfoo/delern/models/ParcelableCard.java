@@ -45,13 +45,11 @@ public class ParcelableCard implements Parcelable {
                     return new ParcelableCard[size];
                 }
             };
-
     /**
      * A special value which, when stored in a Parcel, indicates that it should be a Firebase
      * special value ServerValue.TIMESTAMP (which is a Map and can't be serialized into parcelable).
      */
     private static final long PARCEL_SERVER_VALUE_TIMESTAMP = 0;
-
     private final Card mCard;
 
     /**
@@ -69,9 +67,8 @@ public class ParcelableCard implements Parcelable {
      * @param in parcel.
      */
     protected ParcelableCard(final Parcel in) {
-        mCard = new Card(
-                ((ParcelableDeck) in.readParcelable(Thread.currentThread().getContextClassLoader()))
-                        .get());
+        mCard = new Card(ParcelableDeck.get(in.readParcelable(
+                Thread.currentThread().getContextClassLoader())));
         mCard.setKey(in.readString());
         mCard.setBack(in.readString());
         mCard.setFront(in.readString());
@@ -81,6 +78,19 @@ public class ParcelableCard implements Parcelable {
         } else {
             mCard.setCreatedAt(createdAt);
         }
+    }
+
+    /**
+     * Cast parcel to object.
+     *
+     * @param parcel getParcelableExtra() / readParcelable() return value.
+     * @return casted object.
+     */
+    public static Card get(final Object parcel) {
+        if (parcel == null) {
+            return null;
+        }
+        return ((ParcelableCard) parcel).mCard;
     }
 
     /**
@@ -106,14 +116,5 @@ public class ParcelableCard implements Parcelable {
             // null will also end up here.
             parcel.writeLong(PARCEL_SERVER_VALUE_TIMESTAMP);
         }
-    }
-
-    /**
-     * Extract wrapped Card.
-     *
-     * @return Card.
-     */
-    public final Card get() {
-        return mCard;
     }
 }

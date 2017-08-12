@@ -84,7 +84,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
 
         configureToolbar();
         Intent intent = getIntent();
-        Card card = ((ParcelableCard) intent.getParcelableExtra(CARD)).get();
+        Card card = ParcelableCard.get(intent.getParcelableExtra(CARD));
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
         Injector.getPreEditCardActivityInjector(this).inject(this);
