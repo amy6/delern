@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import android.support.annotation.Nullable;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,7 +58,7 @@ public abstract class AbstractModel {
      *               private parameterless constructor used by Firebase.
      * @param key    a unique key assigned to the object by Firebase, or null if not yet assigned.
      */
-    protected AbstractModel(@Nullable final AbstractModel parent, @Nullable final String key) {
+    protected AbstractModel(final AbstractModel parent, final String key) {
         mParent = parent;
         mKey = key;
     }
