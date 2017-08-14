@@ -7,12 +7,10 @@
 
 # Add any project specific keep options here:
 
-# Disable logging below "warning" (assuming this rule set is only enabled on Release).
--assumenosideeffects class android.util.Log {
-    public static boolean isLoggable(java.lang.String, int);
-    public static int d(...);
-    public static int v(...);
-    public static int i(...);
+# Disable logging below "info" (assuming this rule set is only enabled on Release).
+-assumenosideeffects interface org.slf4j.Logger {
+  public void debug(...);
+  public void trace(...);
 }
 
 # If your project uses WebView with JS, uncomment the following
