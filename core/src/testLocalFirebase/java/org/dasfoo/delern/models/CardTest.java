@@ -120,7 +120,6 @@ public class CardTest extends FirebaseServerUnitTest {
     }
 
     // TODO(ksheremet): add test for "solve card 1", "solve card 2", end.
-
     @Test
     public void cards_createdAndAnsweredTrue() {
         final Deck deck = new Deck(mUser);

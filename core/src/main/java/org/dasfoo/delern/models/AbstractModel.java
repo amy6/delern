@@ -232,7 +232,7 @@ public abstract class AbstractModel {
     /**
      * Write the current model to the database, creating a new node if it doesn't exist.
      *
-     * @return FirebaseTaskAdapter for the write operation.
+     * @return Completable(completion or exception) for the write operation.
      */
     @Exclude
     public Completable save() {

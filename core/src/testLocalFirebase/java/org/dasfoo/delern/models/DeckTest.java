@@ -19,17 +19,22 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
-//import org.junit.Before;
-//import org.junit.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-//import java.util.List;
+import java.util.List;
+
+import io.reactivex.CompletableObserver;
+import io.reactivex.ObservableSource;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for Deck model.
  */
 public class DeckTest extends FirebaseServerUnitTest {
 
-   /* private User mUser;
+    private User mUser;
 
     @Before
     public void createUser() throws Exception {
@@ -38,108 +43,96 @@ public class DeckTest extends FirebaseServerUnitTest {
 
     @Test
     public void decks_createdAndFetched() throws Exception {
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Deck> data = mUser.save().andThen((final CompletableObserver cs) -> {
             Deck deck = new Deck(mUser);
             deck.setName("My Deck");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).onResult((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("My Deck")) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(data.size() == 1 && data.get(0).getName().equals("My Deck"));
     }
 
     @Test
     public void decks_renamed() {
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Deck> renamedData = mUser.save().andThen((final CompletableObserver cs) -> {
             Deck deck = new Deck(mUser);
             deck.setName("ToRename");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("ToRename")) {
-                Deck fetchedDeck = data.get(0);
-                fetchedDeck.setName("Renamed");
-                return fetchedDeck.save();
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("ToRename"));
+            Deck fetchedDeck = data.get(0);
+            fetchedDeck.setName("Renamed");
+            return fetchedDeck.save();
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).onResult((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("Renamed")) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(renamedData.size() == 1 && renamedData.get(0).getName()
+                .equals("Renamed"));
     }
 
     @Test
     public void decks_changedDeckType() {
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Deck> deckTypeData = mUser.save().andThen((final CompletableObserver cs) -> {
             Deck deck = new Deck(mUser);
             deck.setName("DeckType");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("DeckType")) {
-                Deck fetchedDeck = data.get(0);
-                fetchedDeck.setDeckType(DeckType.SWISS.name());
-                return fetchedDeck.save();
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("DeckType"));
+            Deck fetchedDeck = data.get(0);
+            fetchedDeck.setDeckType(DeckType.SWISS.name());
+            return fetchedDeck.save();
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).onResult((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getDeckType().equals(DeckType.SWISS.name())) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(deckTypeData.size() == 1 && deckTypeData.get(0).getDeckType()
+                .equals(DeckType.SWISS.name()));
     }
 
     @Test
     public void decks_checkedUserDeck() {
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Deck> userDeck = mUser.save().andThen((final CompletableObserver cs) -> {
             Deck deck = new Deck(mUser);
             deck.setName("UsersDeck");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).onResult((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("UsersDeck") &&
-                    data.get(0).getUser() == mUser) {
-                testSucceeded();
-            }
-        });
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(userDeck.size() == 1 && userDeck.get(0).getName().equals("UsersDeck") &&
+                userDeck.get(0).getUser() == mUser);
     }
 
     @Test
     public void decks_createdAndDeleted() throws Exception {
-        final Deck deck = new Deck(mUser);
-        mUser.save().continueWithOnce((final Void parameter) -> {
+        List<Deck> deletedDeck = mUser.save().andThen((final CompletableObserver cs) -> {
+            Deck deck = new Deck(mUser);
             deck.setName("Created");
             deck.setAccepted(true);
-            return deck.create();
-        }).continueWithOnce((final Void parameter) ->
+            deck.create().subscribe(cs);
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).continueWithOnce((final List<Deck> data) -> {
-            if (data.size() == 1 && data.get(0).getName().equals("Created")) {
-                Deck fetchedDeck = data.get(0);
-                return fetchedDeck.delete();
-            }
-            return null;
-        }).continueWithOnce((final Void parameter) ->
+                        .subscribe(observer)
+        ).firstOrError().flatMapCompletable(data -> {
+            assertTrue(data.size() == 1 && data.get(0).getName().equals("Created"));
+            return data.get(0).delete();
+        }).andThen((ObservableSource<List<Deck>>) observer ->
                 mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-        ).onResult((final List<Deck> data) -> {
-            if (data.size() == 0) {
-                testSucceeded();
-            }
-        });
-    }*/
+                        .subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(deletedDeck.size() == 0);
+    }
 }

@@ -19,15 +19,19 @@
 package org.dasfoo.delern.models;
 
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
-//import org.junit.Before;
-//import org.junit.Test;
+import org.junit.Before;
+import org.junit.Test;
+
+import io.reactivex.ObservableSource;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for User model.
  */
 public class UserTest extends FirebaseServerUnitTest {
 
-    /*private User mUser;
+    private User mUser;
 
     @Before
     public void createUser() throws Exception {
@@ -35,18 +39,11 @@ public class UserTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void save_succeeds() throws Exception {
-        signIn().save().onResult((Void p) -> testSucceeded());
-    }
-
-    @Test
     public void user_savedAndFetched() throws Exception {
-        mUser.save().continueWithOnce((final Void parameter) ->
-                mUser.watch(User.class)
-        ).onResult((final User user) -> {
-            if (user.getName().startsWith("Bob ") && user.getEmail().startsWith("bob-")) {
-                testSucceeded();
-            }
-        });
-    }*/
+        User user = mUser.save().andThen((ObservableSource<User>) observer ->
+                mUser.watch(User.class).subscribe(observer)
+        ).firstOrError().blockingGet();
+        assertTrue(user.getName().startsWith("Bob ")
+                && user.getEmail().startsWith("bob-"));
+    }
 }

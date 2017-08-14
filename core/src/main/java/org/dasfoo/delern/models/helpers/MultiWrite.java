@@ -152,9 +152,7 @@ public class MultiWrite {
     public Completable write() {
         CompletableSubject subject = CompletableSubject.create();
         mRoot.updateChildren(mData)
-                .addOnSuccessListener((final Void p) -> {
-                    subject.onComplete();
-                })
+                .addOnSuccessListener((final Void p) -> subject.onComplete())
                 .addOnFailureListener((final Exception e) -> {
                     LOGGER.error("Failed to save {}", mData, e);
                     subject.onError(e);
