@@ -210,6 +210,7 @@ public abstract class AbstractModel {
      * @param <T>        class of the child model.
      * @return DatabaseReference pointing to the root of all child nodes (recursively).
      */
+    @Exclude
     public abstract <T> DatabaseReference getChildReference(Class<T> childClass);
 
     /**
@@ -222,6 +223,7 @@ public abstract class AbstractModel {
      * @param <T>        class of the child model.
      * @return DatabaseReference pointing to a specific child node or a root of child nodes.
      */
+    @Exclude
     public <T> DatabaseReference getChildReference(final Class<T> childClass,
                                                    final String key) {
         return getChildReference(childClass).child(key);
