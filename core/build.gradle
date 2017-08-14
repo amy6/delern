@@ -40,4 +40,5 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'io.jsonwebtoken:jjwt:0.7.0'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
 }

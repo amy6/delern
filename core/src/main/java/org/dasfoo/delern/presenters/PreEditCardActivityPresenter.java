@@ -66,7 +66,6 @@ public class PreEditCardActivityPresenter {
             LOGGER.error("Tried to preview card which doesn't exist");
             return;
         }
-        mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
         // TODO(dotdoom): create a wrapper around AbstractDataAvailableListener that would show a
         //                toast on error.
         mCardValueEventListener = mCard.watch(Card.class).subscribe((final Card card) -> {

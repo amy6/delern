@@ -75,7 +75,7 @@ public class AddEditCardActivityPresenter {
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save().subscribe(() -> mAddEditCardView.cardUpdated());
+        mCard.save().subscribe(mAddEditCardView::cardUpdated);
     }
 
     /**
@@ -86,7 +86,7 @@ public class AddEditCardActivityPresenter {
      */
     @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
-        mCard.create(front, back).subscribe(() -> mAddEditCardView.cardAdded());
+        mCard.create(front, back).subscribe(mAddEditCardView::cardAdded);
     }
 
     /**
