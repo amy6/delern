@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -54,7 +55,6 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    //@SuppressWarnings("CheckReturnValue")
     public void createDeck() throws Exception {
         mUser.save().blockingAwait();
         mPresenter.onCreate(mUser);
@@ -95,7 +95,7 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         mUser.save().blockingAwait();
         mPresenter.onCreate(mUser);
         mPresenter.getUserInfo();
-        verify(mDelernMainView, timeout(TIMEOUT)).updateUserProfileInfo(any(User.class));
+        verify(mDelernMainView, timeout(TIMEOUT)).updateUserProfileInfo(eq(mUser));
     }
 
     @Test

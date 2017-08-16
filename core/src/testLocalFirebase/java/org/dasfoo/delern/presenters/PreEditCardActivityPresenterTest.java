@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -55,6 +55,8 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Test
     public void checkShowCardCallback() throws Exception {
+        String frontSide = "frontSide";
+        String backSide = "backSide";
         User user = signIn();
         Deck deck = new Deck(user);
 
@@ -66,19 +68,19 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         deck.create().blockingAwait();
 
         Card newCard = new Card(deck);
-        newCard.create("frontSide", "backSide").blockingAwait();
+        newCard.create(frontSide, backSide).blockingAwait();
 
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
 
         mPresenter.onCreate(mCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(any(String.class), any(String.class));
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
     }
 
     @Test
     public void checkEditCardActivity() {
         mPresenter.editCard();
-        verify(mPreEditCardView).startEditCardActivity(any(Card.class));
+        verify(mPreEditCardView).startEditCardActivity(eq(mCard));
     }
 }

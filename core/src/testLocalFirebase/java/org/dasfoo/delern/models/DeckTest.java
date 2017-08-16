@@ -113,7 +113,7 @@ public class DeckTest extends FirebaseServerUnitTest {
                         .subscribe(observer)
         ).firstOrError().blockingGet();
         assertTrue(userDeck.size() == 1 && userDeck.get(0).getName().equals("UsersDeck") &&
-                userDeck.get(0).getUser() == mUser);
+                mUser.equals(userDeck.get(0).getUser()));
     }
 
     @Test

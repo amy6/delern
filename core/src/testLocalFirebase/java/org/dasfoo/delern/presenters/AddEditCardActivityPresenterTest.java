@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -71,8 +70,10 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     public void onCreateForExistingCard() {
         Card card = new Card(mDeck);
         card.setKey("exist");
+        card.setFront("front");
+        card.setBack("back");
         mPresenter.onCreate(card);
-        verify(mAddEditCardView).initForUpdate(any(String.class), any(String.class));
+        verify(mAddEditCardView).initForUpdate("front", "back");
     }
 
     @Test
@@ -87,14 +88,14 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     @Test
     public void updateCard() {
         Card card = new Card(mDeck);
-        card.setFront("testfront");
-        card.setBack("testback");
+        card.setFront("to_update_front");
+        card.setBack("to_update_back");
         card.save().blockingAwait();
         card = mDeck.fetchChildren(mDeck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
 
         mPresenter.onCreate(card);
-        verify(mAddEditCardView).initForUpdate(any(String.class), any(String.class));
+        verify(mAddEditCardView).initForUpdate("to_update_front", "to_update_back");
         mPresenter.onAddUpdate("front", "back");
         verify(mAddEditCardView, timeout(TIMEOUT)).cardUpdated();
     }

@@ -27,17 +27,21 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
 
-    private final static int TIMEOUT = 5000;
+    private static final int TIMEOUT = 5000;
+    private static final String FRONT_SIDE_CARD = "frontSide";
+    private static final String BACK_SIDE_CARD = "backSide";
+
 
     @Mock
     private ILearningCardsView mLearningCardView;
@@ -66,30 +70,30 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         mDeck.create().blockingAwait();
 
         Card newCard = new Card(mDeck);
-        newCard.create("frontSide", "backSide").blockingAwait();
+        newCard.create(FRONT_SIDE_CARD, BACK_SIDE_CARD).blockingAwait();
     }
 
     @Test
     public void checkStartLearning() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(any(String.class));
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
     }
 
     @Test
     public void cardIsFlipped() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(any(String.class));
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
         mPresenter.flipCard();
-        verify(mLearningCardView).showBackSide(any(String.class));
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
     }
 
     @Test
     public void specifyGender() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(any(String.class));
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
         GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
         assertEquals(gender, GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
@@ -98,8 +102,16 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     public void startEditCardCallbackCheck() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(any(String.class));
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
         mPresenter.startEditCard();
-        verify(mLearningCardView).startEditCardActivity(any(Card.class));
+        //verify(mLearningCardView).startEditCardActivity(any(Card.class));
+        verify(mLearningCardView).startEditCardActivity(argThat(new ArgumentMatcher<Card>() {
+            @Override
+            public boolean matches(Object argument) {
+                Card card = ((Card) argument);
+                return (FRONT_SIDE_CARD.equals(card.getFront()))
+                        && (BACK_SIDE_CARD.equals(card.getBack()));
+            }
+        }));
     }
 }

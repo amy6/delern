@@ -173,4 +173,44 @@ public final class User extends AbstractModel {
 
         return null;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        if (!name.equals(user.name)) {
+            return false;
+        }
+        if (!email.equals(user.email)) {
+            return false;
+        }
+        if (photoUrl != null) {
+            return photoUrl.equals(user.photoUrl);
+        }
+        return user.photoUrl == null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Exclude
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + email.hashCode();
+        if (photoUrl != null) {
+            result = 31 * result + photoUrl.hashCode();
+        }
+        return result;
+    }
 }
