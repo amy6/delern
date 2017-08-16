@@ -57,15 +57,6 @@ public class AddEditCardActivityPresenter {
     }
 
     /**
-     * Method sets front and back sides of card to null. It is needed
-     * for adding new cards.
-     */
-    public void cleanCardFields() {
-        mCard.setFront(null);
-        mCard.setBack(null);
-    }
-
-    /**
      * Method updates existing card in FB.
      *
      * @param newFront new front side of card.

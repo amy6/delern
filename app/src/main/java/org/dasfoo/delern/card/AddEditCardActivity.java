@@ -194,8 +194,6 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
             Toast.makeText(this, R.string.added_card_user_message, Toast.LENGTH_SHORT).show();
         }
         cleanTextFields();
-        // Clean fields for the next new card
-        mPresenter.cleanCardFields();
     }
 
     /**
