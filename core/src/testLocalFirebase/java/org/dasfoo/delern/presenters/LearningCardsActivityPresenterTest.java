@@ -27,12 +27,12 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -45,8 +45,9 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Mock
     private ILearningCardsView mLearningCardView;
-
+    @InjectMocks
     private LearningCardsActivityPresenter mPresenter;
+
     private Deck mDeck;
 
     @Before
@@ -54,9 +55,6 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
-
-        // Get a reference to the class under test
-        mPresenter = new LearningCardsActivityPresenter(mLearningCardView);
 
         // Create data for testing
         User user = signIn();
@@ -104,14 +102,9 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
         mPresenter.startEditCard();
-        //verify(mLearningCardView).startEditCardActivity(any(Card.class));
-        verify(mLearningCardView).startEditCardActivity(argThat(new ArgumentMatcher<Card>() {
-            @Override
-            public boolean matches(Object argument) {
-                Card card = ((Card) argument);
-                return (FRONT_SIDE_CARD.equals(card.getFront()))
-                        && (BACK_SIDE_CARD.equals(card.getBack()));
-            }
-        }));
+        ArgumentCaptor<Card> argument = ArgumentCaptor.forClass(Card.class);
+        verify(mLearningCardView).startEditCardActivity(argument.capture());
+        assertEquals(argument.getValue().getFront(), FRONT_SIDE_CARD);
+        assertEquals(argument.getValue().getBack(), BACK_SIDE_CARD);
     }
 }

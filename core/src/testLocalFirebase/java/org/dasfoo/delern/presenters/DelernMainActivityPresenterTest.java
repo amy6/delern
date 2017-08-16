@@ -24,6 +24,7 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -39,8 +40,9 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Mock
     private IDelernMainView mDelernMainView;
-
+    @InjectMocks
     private DelernMainActivityPresenter mPresenter;
+
     private User mUser;
 
     @Before
@@ -49,8 +51,6 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
 
-        // Get a reference to the class under test
-        mPresenter = new DelernMainActivityPresenter(mDelernMainView);
         mUser = signIn();
     }
 

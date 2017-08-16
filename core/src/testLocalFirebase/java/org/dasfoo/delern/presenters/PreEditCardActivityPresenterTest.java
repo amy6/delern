@@ -26,6 +26,7 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IPreEditCardView;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -39,8 +40,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Mock
     private IPreEditCardView mPreEditCardView;
-
+    @InjectMocks
     private PreEditCardActivityPresenter mPresenter;
+
     private Card mCard;
 
     @Before
@@ -48,9 +50,6 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
-
-        // Get a reference to the class under test
-        mPresenter = new PreEditCardActivityPresenter(mPreEditCardView);
     }
 
     @Test

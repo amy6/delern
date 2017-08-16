@@ -25,6 +25,7 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -37,8 +38,9 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Mock
     private IAddEditCardView mAddEditCardView;
-
+    @InjectMocks
     private AddEditCardActivityPresenter mPresenter;
+
     private Deck mDeck;
 
     @Before
@@ -47,10 +49,7 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
 
-        // Get a reference to the class under test
-        mPresenter = new AddEditCardActivityPresenter(mAddEditCardView);
         User mUser = signIn();
-
         //Create user and deck for testing
         mUser.save().blockingAwait();
         mDeck = new Deck(mUser);
