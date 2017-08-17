@@ -24,6 +24,7 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -77,18 +78,20 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
     }
 
-    //TODO(ksheremet) verify called asynchronously.
-    /*@Test
+    @Test
     public void checkUserHasDecks() {
+        ArgumentCaptor<Deck> deckArgumentCaptor = ArgumentCaptor.forClass(Deck.class);
         mUser.save().blockingAwait();
         mPresenter.onCreate(mUser);
         mPresenter.onStart();
-        verify(mDelernMainView).showProgressBar(Boolean.FALSE);
-        verify(mDelernMainView).noDecksMessage(Boolean.TRUE);
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
         mPresenter.createNewDeck("test");
-        verify(mDelernMainView, timeout(TIMEOUT)).addCardsToDeck(any(Deck.class));
-        verify(mDelernMainView).noDecksMessage(Boolean.FALSE);
-    }*/
+        // Called 2 times: onStart and after deck was created.
+        verify(mDelernMainView, timeout(TIMEOUT).times(2)).showProgressBar(Boolean.FALSE);
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
+        verify(mDelernMainView, timeout(TIMEOUT)).addCardsToDeck(deckArgumentCaptor.capture());
+        assertEquals("test", deckArgumentCaptor.getValue().getName());
+    }
 
     @Test
     public void getUserInfo() {
