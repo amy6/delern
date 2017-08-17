@@ -25,10 +25,6 @@ import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
@@ -38,14 +34,8 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     private static int TIMEOUT = 5000;
 
-    @Mock
-    private IAddEditCardView mAddEditCardView;
-    @Spy
-    private Card mCard;
-    @InjectMocks
-    private AddEditCardActivityPresenter mPresenter;
-
     private Deck mDeck;
+    private Card mCard;
 
     @Before
     public void setupParamPresenter() throws Exception {
@@ -56,58 +46,60 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         mDeck.setName("test");
         mDeck.setAccepted(true);
         mDeck.create().blockingAwait();
+        mCard = new Card(mDeck);
     }
 
     @Test
     public void onCreateForNewCard() {
-        mCard = new Card(mDeck);
-        // inject the mocks with new card.
-        MockitoAnnotations.initMocks(this);
-        mPresenter.onCreate();
-        verify(mAddEditCardView).initForAdd();
+        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
+        AddEditCardActivityPresenter presenter =
+                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
+        presenter.onCreate();
+        verify(iAddEditCardView).initForAdd();
     }
 
     @Test
     public void onCreateForExistingCard() {
-        mCard = new Card(mDeck);
         mCard.setKey("exist");
         mCard.setFront("front");
         mCard.setBack("back");
-        // inject the mocks with existing card.
-        MockitoAnnotations.initMocks(this);
-        mPresenter.onCreate();
-        verify(mAddEditCardView).initForUpdate("front", "back");
+        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
+        AddEditCardActivityPresenter presenter =
+                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
+        presenter.onCreate();
+        verify(iAddEditCardView).initForUpdate("front", "back");
     }
 
     @Test
     public void addCard() {
-        mCard = new Card(mDeck);
         // inject the mocks with new card.
-        MockitoAnnotations.initMocks(this);
-        mPresenter.onCreate();
-        verify(mAddEditCardView).initForAdd();
-        mPresenter.onAddUpdate("front", "back");
-        verify(mAddEditCardView, timeout(TIMEOUT)).cardAdded();
+        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
+        AddEditCardActivityPresenter presenter =
+                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
+        presenter.onCreate();
+        verify(iAddEditCardView).initForAdd();
+        presenter.onAddUpdate("front", "back");
+        verify(iAddEditCardView, timeout(TIMEOUT)).cardAdded();
     }
 
     @Test
     public void updateCard() {
-        Card card = new Card(mDeck);
-        card.setFront("to_update_front");
-        card.setBack("to_update_back");
-        card.save().blockingAwait();
-        mCard = mDeck.fetchChildren(mDeck.getChildReference(Card.class), Card.class)
+        mCard.setFront("to_update_front");
+        mCard.setBack("to_update_back");
+        mCard.save().blockingAwait();
+        Card fetchedCard = mDeck.fetchChildren(mDeck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
         // It is needed to inject Presenter with one mock and one real object.
         // By using @Spy it throws NullPointerException in Deck.getChildReference
         // because @Spy creates object instance of Card$$EnhancerByMockitoWithCGLIB$$5b16c521.
         // We need exactly Card.class
-        mAddEditCardView = mock(IAddEditCardView.class);
-        mPresenter = new AddEditCardActivityPresenter(mAddEditCardView, mCard);
-        mPresenter.onCreate();
-        verify(mAddEditCardView).initForUpdate("to_update_front", "to_update_back");
-        mPresenter.onAddUpdate("front", "back");
-        verify(mAddEditCardView, timeout(TIMEOUT)).cardUpdated();
+        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
+        AddEditCardActivityPresenter presenter =
+                new AddEditCardActivityPresenter(iAddEditCardView, fetchedCard);
+        presenter.onCreate();
+        verify(iAddEditCardView).initForUpdate("to_update_front", "to_update_back");
+        presenter.onAddUpdate("front", "back");
+        verify(iAddEditCardView, timeout(TIMEOUT)).cardUpdated();
     }
 
 }
