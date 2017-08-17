@@ -28,7 +28,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -38,6 +40,8 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Mock
     private IAddEditCardView mAddEditCardView;
+    @Spy
+    private Card mCard;
     @InjectMocks
     private AddEditCardActivityPresenter mPresenter;
 
@@ -45,10 +49,6 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Before
     public void setupParamPresenter() throws Exception {
-        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
-        // inject the mocks in the test the initMocks method needs to be called.
-        MockitoAnnotations.initMocks(this);
-
         User mUser = signIn();
         //Create user and deck for testing
         mUser.save().blockingAwait();
@@ -60,25 +60,31 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Test
     public void onCreateForNewCard() {
-        Card card = new Card(mDeck);
-        mPresenter.onCreate(card);
+        mCard = new Card(mDeck);
+        // inject the mocks with new card.
+        MockitoAnnotations.initMocks(this);
+        mPresenter.onCreate();
         verify(mAddEditCardView).initForAdd();
     }
 
     @Test
     public void onCreateForExistingCard() {
-        Card card = new Card(mDeck);
-        card.setKey("exist");
-        card.setFront("front");
-        card.setBack("back");
-        mPresenter.onCreate(card);
+        mCard = new Card(mDeck);
+        mCard.setKey("exist");
+        mCard.setFront("front");
+        mCard.setBack("back");
+        // inject the mocks with existing card.
+        MockitoAnnotations.initMocks(this);
+        mPresenter.onCreate();
         verify(mAddEditCardView).initForUpdate("front", "back");
     }
 
     @Test
     public void addCard() {
-        Card card = new Card(mDeck);
-        mPresenter.onCreate(card);
+        mCard = new Card(mDeck);
+        // inject the mocks with new card.
+        MockitoAnnotations.initMocks(this);
+        mPresenter.onCreate();
         verify(mAddEditCardView).initForAdd();
         mPresenter.onAddUpdate("front", "back");
         verify(mAddEditCardView, timeout(TIMEOUT)).cardAdded();
@@ -90,10 +96,15 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         card.setFront("to_update_front");
         card.setBack("to_update_back");
         card.save().blockingAwait();
-        card = mDeck.fetchChildren(mDeck.getChildReference(Card.class), Card.class)
+        mCard = mDeck.fetchChildren(mDeck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
-
-        mPresenter.onCreate(card);
+        // It is needed to inject Presenter with one mock and one real object.
+        // By using @Spy it throws NullPointerException in Deck.getChildReference
+        // because @Spy creates object instance of Card$$EnhancerByMockitoWithCGLIB$$5b16c521.
+        // We need exactly Card.class
+        mAddEditCardView = mock(IAddEditCardView.class);
+        mPresenter = new AddEditCardActivityPresenter(mAddEditCardView, mCard);
+        mPresenter.onCreate();
         verify(mAddEditCardView).initForUpdate("to_update_front", "to_update_back");
         mPresenter.onAddUpdate("front", "back");
         verify(mAddEditCardView, timeout(TIMEOUT)).cardUpdated();

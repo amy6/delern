@@ -102,9 +102,9 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         Card card = ParcelableCard.get(intent.getParcelableExtra(CARD));
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
-        Injector.getAddEditActivityInjector(this).inject(this);
+        Injector.getAddEditActivityInjector(this, card).inject(this);
 
-        mPresenter.onCreate(card);
+        mPresenter.onCreate();
         mAddCardToDbButton.setEnabled(false);
         final TextWatcherStub cardValid = new TextWatcherStub() {
             @Override

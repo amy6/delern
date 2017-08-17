@@ -28,27 +28,26 @@ import org.dasfoo.delern.views.IAddEditCardView;
 public class AddEditCardActivityPresenter {
 
     private final IAddEditCardView mAddEditCardView;
-    private Card mCard;
+    private final Card mCard;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
      * in Activity to do callbacks.
      *
      * @param addEditCardView interface for performing callbacks.
+     * @param card            card for updating or empty for adding.
      */
-    public AddEditCardActivityPresenter(final IAddEditCardView addEditCardView) {
+    public AddEditCardActivityPresenter(final IAddEditCardView addEditCardView, final Card card) {
         this.mAddEditCardView = addEditCardView;
+        this.mCard = card;
     }
 
     /**
      * OnCreate method that called from AddEditCardActivity.onCreate.
      * It checks whether user is going to add new cards or update existing cards.
      * It calls callback method in AddEditCardActivity to initialize views accordingly.
-     *
-     * @param card new card for adding or existing for updating.
      */
-    public void onCreate(final Card card) {
-        mCard = card;
+    public void onCreate() {
         if (mCard.exists()) {
             mAddEditCardView.initForUpdate(mCard.getFront(), mCard.getBack());
         } else {

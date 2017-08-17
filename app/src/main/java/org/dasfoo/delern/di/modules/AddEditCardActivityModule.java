@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.di.modules;
 
+import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
@@ -30,20 +31,24 @@ import dagger.Provides;
 @Module
 public class AddEditCardActivityModule {
     private final IAddEditCardView mView;
+    private final Card mCard;
 
     /**
      * Constructor. It gets interface as parameter that implemented in DelernMainActivity
      * for callbacks from Presenter.
      *
      * @param view interface to init Presenter for callbacks.
+     * @param card card to init Presenter. It helps to know where to add new cards or update
+     *             existing.
      */
-    public AddEditCardActivityModule(final IAddEditCardView view) {
+    public AddEditCardActivityModule(final IAddEditCardView view, final Card card) {
         this.mView = view;
+        this.mCard = card;
     }
 
     @Provides
     /* default */ AddEditCardActivityPresenter providePresenter() {
-        return new AddEditCardActivityPresenter(mView);
+        return new AddEditCardActivityPresenter(mView, mCard);
     }
 
 }
