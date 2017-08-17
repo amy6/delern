@@ -202,7 +202,6 @@ public final class User extends AbstractModel {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("checkstyle:magicnumber")
     @Exclude
     @Override
     public int hashCode() {

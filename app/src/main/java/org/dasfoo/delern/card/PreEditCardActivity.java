@@ -107,8 +107,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
 
     @Override
     protected void onStop() {
-        super.onStop();
         mPresenter.onStop();
+        super.onStop();
     }
 
     @OnClick(R.id.edit_card_button)

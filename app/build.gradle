@@ -62,12 +62,6 @@ android {
                 useProguard false
                 minifyEnabled false
                 debuggable true
-
-                tasks.each { task ->
-                    if (task.group == 'verification') {
-                        task.enabled = false
-                    }
-                }
             }
 
             signingConfig signingConfigs.debug

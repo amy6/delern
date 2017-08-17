@@ -133,9 +133,9 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      */
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean(BACK_IS_SHOWN_KEY, mBackIsShown);
         outState.putInt(LEARNED_CARDS_KEY, mLearnedCardsCount);
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -151,8 +151,8 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
 
     @Override
     protected void onStop() {
-        super.onStop();
         mPresenter.onStop();
+        super.onStop();
     }
 
     @OnClick(R.id.to_know_button)

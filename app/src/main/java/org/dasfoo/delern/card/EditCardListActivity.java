@@ -101,7 +101,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         mRecyclerView.setLayoutManager(mLayoutManager);
         // For better performance
         // https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
-        mRecyclerView.hasFixedSize();
+        mRecyclerView.setHasFixedSize(true);
         // The FirebaseRecyclerAdapter asynchronously synchronizes data from the database.
         // To know whenever the data in an adapter changes, you can register an AdapterDataObserver.
         // https://stackoverflow.com/questions/37937497/getitemcount-on-adapter-is-returning-0
@@ -130,8 +130,8 @@ public class EditCardListActivity extends AppCompatActivity implements
 
     @Override
     protected void onStop() {
-        super.onStop();
         cleanup();
+        super.onStop();
     }
 
     private void cleanup() {

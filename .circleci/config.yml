@@ -50,7 +50,7 @@ jobs:
           ./gradlew \
             -PisolatedRun \
             --continue \
-            lintDebug \
+            checkQualityDebug \
             :app:testDebugUnitTest \
             :core:testLocalFirebaseUnitTest \
             :app:assembleInstrumented \

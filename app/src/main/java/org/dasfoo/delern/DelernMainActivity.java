@@ -181,9 +181,9 @@ public class DelernMainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
         mMainActivityPresenter.onStop();
         mFirebaseAdapter.cleanup();
+        super.onStop();
     }
 
     /**
