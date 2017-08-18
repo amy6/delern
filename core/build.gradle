@@ -1,44 +1,43 @@
-apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
-apply from: 'config/quality.gradle'
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java-library'
+    id 'jacoco'
+}
+apply from: 'config/quality-java.gradle'
 apply from: 'firebase/firebase-server.gradle'
 
-android {
-    compileSdkVersion sdkVersion
-    buildToolsVersion toolsVersion
+shadowJar {
+    relocate 'com.google.firebase.tasks', 'com.google.android.gms.tasks'
+}
 
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion sdkVersion
-    }
-
-    buildTypes {
-        localFirebase {
-            initWith debug
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+jacoco {
+    toolVersion '0.7.9'
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
+    testCompile "org.slf4j:slf4j-api:$slf4jVersion"
 
-    //noinspection NewerVersionAvailable
-    implementation "org.slf4j:slf4j-api:$slf4jVersion"
-    testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
+    compileOnly "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    testCompile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-    implementation "com.android.support:appcompat-v7:$supportVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    compileOnly 'com.google.firebase:firebase-admin:5.2.0', {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+    }
+    testCompile 'com.google.firebase:firebase-admin:5.2.0', {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+    }
 
-    debugImplementation "com.google.firebase:firebase-database:$firebaseVersion"
-    releaseImplementation "com.google.firebase:firebase-database:$firebaseVersion"
-    localFirebaseImplementation project(path: ':firebase-admin', configuration: 'shadow')
-
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'io.jsonwebtoken:jjwt:0.7.0'
-    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testCompile 'junit:junit:4.12'
+    testCompile 'io.jsonwebtoken:jjwt:0.7.0'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
 }
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

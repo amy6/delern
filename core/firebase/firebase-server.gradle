@@ -28,8 +28,4 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     args = ['rules.bolt', '-o', 'delern-rules.json']
 }
 
-tasks.whenTaskAdded { task ->
-    if (task.name == 'processDebugResources') {
-        task.dependsOn convertBoltToFirebaseRules
-    }
-}
+testClasses.dependsOn convertBoltToFirebaseRules

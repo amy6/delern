@@ -50,9 +50,12 @@ jobs:
           ./gradlew \
             -PisolatedRun \
             --continue \
-            checkQualityDebug \
+            :app:checkQualityDebug \
             :app:testDebugUnitTest \
-            :core:testLocalFirebaseUnitTest \
+            :core:test \
+            :core:checkstyleMain \
+            :core:findbugsMain \
+            :core:pmdMain \
             :app:assembleInstrumented \
             --console=plain
 
@@ -71,7 +74,7 @@ jobs:
     - run:
         name: "Generate and upload test coverage"
         command: |
-          ./gradlew core:jacocoTestLocalFirebaseUnitTestReport --console=plain
+          ./gradlew core:jacocoTestReport --console=plain
           bash <(curl -s https://codecov.io/bash)
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.

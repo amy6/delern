@@ -160,7 +160,7 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
-    implementation project(path: ':core')
+    implementation project(path: ':core', configuration: 'shadow')
 }
 
 apply plugin: 'com.google.gms.google-services'
