@@ -85,7 +85,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         mFetchRemoteConfigListener = task -> {
             if (task.isSuccessful()) {
-                LOGGER.debug("remote config is fetched.");
+                LOGGER.info("remote config is fetched.");
                 // After config data is successfully fetched, it must be activated
                 // before newly fetched values are returned.
                 mFirebaseRemoteConfig.activateFetched();
@@ -97,8 +97,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 LOGGER.error("Remote config reading error", task.getException());
             }
             if (Auth.isSignedIn()) {
+                LOGGER.info("Redirecting to main activity");
                 DelernMainActivity.startActivity(this, Auth.getCurrentUser());
             } else {
+                LOGGER.info("Redirecting to singIn");
                 SignInActivity.startActivity(this);
             }
             finish();
@@ -108,6 +110,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        LOGGER.info("Fetching remote config");
         mFirebaseRemoteConfig.fetch(mCacheExpirationSeconds)
                 .addOnCompleteListener(mFetchRemoteConfigListener);
     }
