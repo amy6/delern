@@ -12,6 +12,11 @@
   public void debug(...);
   public void trace(...);
 }
+-assumenosideeffects class android.util.Log {
+  public static boolean isLoggable(java.lang.String, int);
+  public static int d(...);
+  public static int v(...);
+}
 
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
