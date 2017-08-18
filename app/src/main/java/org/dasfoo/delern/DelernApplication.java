@@ -70,6 +70,10 @@ public class DelernApplication extends Application {
         RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
 
         FirebaseDatabase db = FirebaseDatabase.getInstance();
+
+        if (BuildConfig.DEBUG) {
+            db.setLogLevel(com.google.firebase.database.Logger.Level.DEBUG);
+        }
         /* Firebase apps automatically handle temporary network interruptions. Cached data will
         still be available while offline and your writes will be resent when network connectivity is
         recovered. Enabling disk persistence allows our app to also keep all of its state even after
