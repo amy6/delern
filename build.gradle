@@ -14,7 +14,7 @@ buildscript {
         classpath 'org.ajoberstar:grgit:2.0.0'
         // Pick the latest from https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
         classpath 'io.fabric.tools:gradle:1.24.0'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
