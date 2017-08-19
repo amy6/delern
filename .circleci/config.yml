@@ -70,11 +70,14 @@ jobs:
             --console=plain
         when: on_fail
 
-    # TODO(dotdoom): collect coverage from other targets, too
     - run:
         name: "Generate and upload test coverage"
         command: |
-          ./gradlew core:jacocoTestReport --console=plain
+          ./gradlew \
+            -PisolatedRun \
+            core:jacocoTestReport \
+            app:jacocoTestDebugUnitTestReport \
+            --console=plain
           bash <(curl -s https://codecov.io/bash)
 
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
