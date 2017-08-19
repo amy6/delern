@@ -3,7 +3,7 @@ plugins {
     id 'java-library'
     id 'jacoco'
 }
-apply from: 'config/quality-java.gradle'
+apply from: "$rootDir/quality/quality-java.gradle"
 apply from: 'firebase/firebase-server.gradle'
 
 shadowJar {

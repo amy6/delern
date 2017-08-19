@@ -1,6 +1,3 @@
-[submodule "app/config"]
-	path = app/config
-	url = git@github.com:dasfoo/java-android.git
-[submodule "core/config"]
-	path = core/config
-	url = git@github.com:dasfoo/java-android.git
+[submodule "quality"]
+	path = quality
+	url = https://github.com/dasfoo/quality.git
