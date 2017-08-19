@@ -71,6 +71,7 @@ android {
                 useProguard false
                 minifyEnabled false
                 debuggable true
+                testCoverageEnabled true
             }
 
             signingConfig signingConfigs.debug
@@ -79,6 +80,12 @@ android {
             manifestPlaceholders = [ appName: 'Delern TEST' ]
             // Use Anonymous auth to skip the login intent.
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'true'
+
+            // Minify and ProGuard don't work with coverage.
+            if (project.hasProperty('coverageRun')) {
+                testCoverageEnabled true
+                minifyEnabled false
+            }
 
             // We want to build instrumented to verify ProGuard config.
             if (project.hasProperty('isolatedRun')) {
