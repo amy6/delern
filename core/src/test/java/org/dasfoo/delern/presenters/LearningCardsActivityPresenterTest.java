@@ -35,6 +35,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
 
@@ -72,10 +73,19 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void checkStartLearning() {
+    public void testStartLearning() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+    }
+
+    @Test
+    public void testBackSideWasShown() {
+        when(mLearningCardView.backSideIsShown()).thenReturn(true);
+        mPresenter.onCreate(mDeck);
+        mPresenter.onStart();
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showBackSide(BACK_SIDE_CARD);
     }
 
     @Test
