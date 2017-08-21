@@ -29,6 +29,7 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
@@ -80,6 +81,19 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         verify(iAddEditCardView).initForAdd();
         presenter.onAddUpdate("front", "back");
         verify(iAddEditCardView, timeout(TIMEOUT)).cardAdded();
+    }
+
+    @Test
+    public void addReversedCard() {
+        // inject the mocks with new card.
+        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
+        when(iAddEditCardView.addReversedCard()).then(invocation -> true);
+        AddEditCardActivityPresenter presenter =
+                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
+        presenter.onCreate();
+        verify(iAddEditCardView).initForAdd();
+        presenter.onAddUpdate("front", "back");
+        verify(iAddEditCardView, timeout(TIMEOUT).times(2)).cardAdded();
     }
 
     @Test
