@@ -36,7 +36,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'io.jsonwebtoken:jjwt:0.7.0'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
+    testCompile "uk.org.lidalia:slf4j-test:1.2.0"
 }
 
 sourceCompatibility = "1.8"

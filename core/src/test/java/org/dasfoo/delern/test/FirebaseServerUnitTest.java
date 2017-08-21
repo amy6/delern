@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.jsonwebtoken.Jwts;
 import io.reactivex.plugins.RxJavaPlugins;
+import uk.org.lidalia.slf4jext.Level;
+import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 public class FirebaseServerUnitTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseServerUnitTest.class);
@@ -56,6 +58,8 @@ public class FirebaseServerUnitTest {
     public static void findDependencies() {
         findDependencies(new File(System.getProperty("user.dir")));
         RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
+
+        TestLoggerFactory.getInstance().setPrintLevel(Level.DEBUG);
     }
 
     private static void findDependencies(File directory) {
@@ -92,6 +96,8 @@ public class FirebaseServerUnitTest {
                 .setPort(String.valueOf(PORT))
                 .setRules(mRules)
                 .start();
+
+        TestLoggerFactory.clear();
     }
 
     @After

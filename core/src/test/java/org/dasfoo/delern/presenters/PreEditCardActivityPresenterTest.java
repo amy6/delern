@@ -29,16 +29,17 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import uk.org.lidalia.slf4jtest.TestLogger;
+import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static uk.org.lidalia.slf4jtest.LoggingEvent.error;
+
 
 public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
@@ -49,15 +50,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     @InjectMocks
     private PreEditCardActivityPresenter mPresenter;
 
-    private Card mCard;
+    private TestLogger logger = TestLoggerFactory.getTestLogger(PreEditCardActivityPresenter.class);
 
-    private static void setFinalStatic(Field field, Object newValue) throws Exception {
-        field.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        field.set(null, newValue);
-    }
+    private Card mCard;
 
     @Before
     public void setupParamPresenter() throws Exception {
@@ -99,11 +94,10 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     @Test
     public void testCardNull() throws Exception {
-        Logger logger = mock(Logger.class);
-        setFinalStatic(PreEditCardActivityPresenter.class.getDeclaredField("LOGGER"), logger);
         mPresenter.onCreate(null);
         mPresenter.onStart();
-        verify(logger).error(anyString());
+        assertTrue(logger.getLoggingEvents().contains(
+                error("Tried to preview card which doesn't exist")));
     }
 
     @Test
