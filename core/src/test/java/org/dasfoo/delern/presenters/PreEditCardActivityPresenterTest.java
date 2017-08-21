@@ -51,6 +51,14 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     private Card mCard;
 
+    private static void setFinalStatic(Field field, Object newValue) throws Exception {
+        field.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        field.set(null, newValue);
+    }
+
     @Before
     public void setupParamPresenter() throws Exception {
         // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
@@ -59,7 +67,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void checkShowCardCallback() throws Exception {
+    public void testShowCardCallback() throws Exception {
         String frontSide = "frontSide";
         String backSide = "backSide";
         User user = signIn();
@@ -84,13 +92,13 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void checkEditCardActivity() {
+    public void testEditCardActivity() {
         mPresenter.editCard();
         verify(mPreEditCardView).startEditCardActivity(eq(mCard));
     }
 
     @Test
-    public void checkCardNull() throws Exception {
+    public void testCardNull() throws Exception {
         Logger logger = mock(Logger.class);
         setFinalStatic(PreEditCardActivityPresenter.class.getDeclaredField("LOGGER"), logger);
         mPresenter.onCreate(null);
@@ -98,11 +106,11 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         verify(logger).error(anyString());
     }
 
-    private static void setFinalStatic(Field field, Object newValue) throws Exception {
-        field.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        field.set(null, newValue);
+    @Test
+    public void testDeleteCard() {
+        Card card = mock(Card.class);
+        mPresenter.onCreate(card);
+        mPresenter.deleteCard();
+        verify(card).delete();
     }
 }
