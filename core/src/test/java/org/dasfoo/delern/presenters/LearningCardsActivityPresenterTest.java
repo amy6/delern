@@ -109,6 +109,17 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
+    public void testFinishLearningByUserDoNotKnowCard() {
+        mPresenter.onCreate(mDeck);
+        mPresenter.onStart();
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        mPresenter.flipCard();
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        mPresenter.userDoNotKnowCard();
+        verify(mLearningCardView, timeout(TIMEOUT)).finishLearning();
+    }
+
+    @Test
     public void specifyGender() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
