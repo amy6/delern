@@ -19,6 +19,7 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IDelernMainView;
@@ -113,5 +114,21 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         mPresenter.onCreate(mUser);
         User user = mPresenter.getUser();
         assertEquals(mUser, user);
+    }
+
+    @Test
+    public void testDeleteDeck() {
+        mUser.save().blockingAwait();
+        Deck newDeck = new Deck(mUser);
+        newDeck.setName("test");
+        newDeck.setDeckType(DeckType.BASIC.name());
+        newDeck.setAccepted(true);
+        newDeck.create().blockingAwait();
+        mPresenter.onCreate(mUser);
+        mPresenter.onStart();
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
+        mPresenter.deleteDeck(newDeck);
+        verify(mDelernMainView, timeout(TIMEOUT).times(2)).showProgressBar(Boolean.FALSE);
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
     }
 }
