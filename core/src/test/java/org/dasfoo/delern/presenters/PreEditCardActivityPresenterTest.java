@@ -29,8 +29,14 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
@@ -81,5 +87,22 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     public void checkEditCardActivity() {
         mPresenter.editCard();
         verify(mPreEditCardView).startEditCardActivity(eq(mCard));
+    }
+
+    @Test
+    public void checkCardNull() throws Exception {
+        Logger logger = mock(Logger.class);
+        setFinalStatic(PreEditCardActivityPresenter.class.getDeclaredField("LOGGER"), logger);
+        mPresenter.onCreate(null);
+        mPresenter.onStart();
+        verify(logger).error(anyString());
+    }
+
+    private static void setFinalStatic(Field field, Object newValue) throws Exception {
+        field.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        field.set(null, newValue);
     }
 }
