@@ -98,7 +98,7 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testFinishLearning() {
+    public void testFinishLearningByUserKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
@@ -127,5 +127,16 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         verify(mLearningCardView).startEditCardActivity(argument.capture());
         assertEquals(argument.getValue().getFront(), FRONT_SIDE_CARD);
         assertEquals(argument.getValue().getBack(), BACK_SIDE_CARD);
+    }
+
+    @Test
+    public void testFinishLearningByDeletingCard() {
+        mPresenter.onCreate(mDeck);
+        mPresenter.onStart();
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        mPresenter.flipCard();
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        mPresenter.delete();
+        verify(mLearningCardView, timeout(TIMEOUT)).finishLearning();
     }
 }
