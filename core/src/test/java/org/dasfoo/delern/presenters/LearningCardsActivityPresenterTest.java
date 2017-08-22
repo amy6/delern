@@ -73,14 +73,14 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testStartLearning() {
+    public void startLearning() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
     }
 
     @Test
-    public void testBackSideWasShown() {
+    public void backSideWasShown() {
         when(mLearningCardView.backSideIsShown()).thenReturn(true);
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
@@ -98,7 +98,7 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testFinishLearningByUserKnowCard() {
+    public void finishLearningByUserKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
@@ -109,7 +109,7 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testFinishLearningByUserDoNotKnowCard() {
+    public void finishLearningByUserDoNotKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
@@ -141,7 +141,7 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testFinishLearningByDeletingCard() {
+    public void finishLearningByDeletingCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
         verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);

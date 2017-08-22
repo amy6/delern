@@ -67,20 +67,20 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testSignInCallbackOnNullUser() {
+    public void signInCallbackOnNullUser() {
         mPresenter.onCreate(null);
         verify(mDelernMainView).signIn();
     }
 
     @Test
-    public void testSignInCallbackOnNotExistingUser() {
+    public void signInCallbackOnNotExistingUser() {
         User user = new User(null);
         mPresenter.onCreate(user);
         verify(mDelernMainView).signIn();
     }
 
     @Test
-    public void testNoDecksUserMessage() {
+    public void noDecksUserMessage() {
         mUser.save().blockingAwait();
         mPresenter.onCreate(mUser);
         mPresenter.onStart();
@@ -89,7 +89,7 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testUserHasDecks() {
+    public void userHasDecks() {
         ArgumentCaptor<Deck> deckArgumentCaptor = ArgumentCaptor.forClass(Deck.class);
         mUser.save().blockingAwait();
         mPresenter.onCreate(mUser);
@@ -119,7 +119,7 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testDeleteDeck() {
+    public void deleteDeck() {
         mUser.save().blockingAwait();
         Deck newDeck = new Deck(mUser);
         newDeck.setName("test");
