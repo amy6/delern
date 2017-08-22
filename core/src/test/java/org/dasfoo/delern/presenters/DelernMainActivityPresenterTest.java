@@ -152,4 +152,23 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
                 .blockingFirst();
         assertEquals("newTest", deckList.get(0).getName());
     }
+
+    @Test
+    public void changeDeckType() {
+        mUser.save().blockingAwait();
+        Deck deck = new Deck(mUser);
+        deck.setName("test");
+        deck.setDeckType(DeckType.BASIC.name());
+        deck.setAccepted(true);
+        deck.create().blockingAwait();
+
+        mPresenter.onCreate(mUser);
+        mPresenter.onStart();
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
+        mPresenter.changeDeckType(deck, DeckType.SWISS);
+
+        List<Deck> deckList = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .blockingFirst();
+        assertEquals(DeckType.SWISS.name(), deckList.get(0).getDeckType());
+    }
 }
