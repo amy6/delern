@@ -37,6 +37,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
 
@@ -119,7 +120,7 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void deleteDeck() {
+    public void deleteDeckWithListener() {
         mUser.save().blockingAwait();
         Deck newDeck = new Deck(mUser);
         newDeck.setName("test");
@@ -132,6 +133,23 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         mPresenter.deleteDeck(newDeck);
         verify(mDelernMainView, timeout(TIMEOUT).times(2)).showProgressBar(Boolean.FALSE);
         verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
+    }
+
+    @Test
+    public void deleteDeckWithoutListener() {
+        mUser.save().blockingAwait();
+        Deck newDeck = new Deck(mUser);
+        newDeck.setName("test");
+        newDeck.setDeckType(DeckType.BASIC.name());
+        newDeck.setAccepted(true);
+        newDeck.create().blockingAwait();
+        mPresenter.onCreate(mUser);
+        mPresenter.onStart();
+        verify(mDelernMainView, timeout(TIMEOUT)).showProgressBar(Boolean.FALSE);
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
+        mPresenter.onStop();
+        mPresenter.deleteDeck(newDeck);
+        verifyNoMoreInteractions(mDelernMainView);
     }
 
     @Test
