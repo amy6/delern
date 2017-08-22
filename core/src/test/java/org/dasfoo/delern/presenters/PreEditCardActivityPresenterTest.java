@@ -38,6 +38,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static uk.org.lidalia.slf4jtest.LoggingEvent.error;
 
 
@@ -106,5 +107,68 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         mPresenter.onCreate(card);
         mPresenter.deleteCard();
         verify(card).delete();
+    }
+
+    @Test
+    public void cardWasUpdatedAndListened() throws Exception {
+        String frontSide = "frontSide";
+        String backSide = "backSide";
+        User user = signIn();
+        Deck deck = new Deck(user);
+
+        //Create user, deck and card for testing
+        user.save().blockingAwait();
+
+        deck.setName("CreateCard");
+        deck.setAccepted(true);
+        deck.create().blockingAwait();
+
+        Card newCard = new Card(deck);
+        newCard.create(frontSide, backSide).blockingAwait();
+
+        mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+                .firstOrError().blockingGet().get(0);
+
+        mPresenter.onCreate(mCard);
+        mPresenter.onStart();
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
+        String frontSideNew = "frontSide2";
+        String backSideNew = "backSide2";
+        mCard.setFront(frontSideNew);
+        mCard.setBack(backSideNew);
+        mCard.save();
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSideNew, backSideNew);
+    }
+
+    @Test
+    public void cardWasUpdatedAndNodListened() throws Exception {
+        String frontSide = "frontSide";
+        String backSide = "backSide";
+        User user = signIn();
+        Deck deck = new Deck(user);
+
+        //Create user, deck and card for testing
+        user.save().blockingAwait();
+
+        deck.setName("CreateCard");
+        deck.setAccepted(true);
+        deck.create().blockingAwait();
+
+        Card newCard = new Card(deck);
+        newCard.create(frontSide, backSide).blockingAwait();
+
+        mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
+                .firstOrError().blockingGet().get(0);
+
+        mPresenter.onCreate(mCard);
+        mPresenter.onStart();
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
+        mPresenter.onStop();
+        String frontSideNew = "frontSide2";
+        String backSideNew = "backSide2";
+        mCard.setFront(frontSideNew);
+        mCard.setBack(backSideNew);
+        mCard.save();
+        verifyNoMoreInteractions(mPreEditCardView);
     }
 }
