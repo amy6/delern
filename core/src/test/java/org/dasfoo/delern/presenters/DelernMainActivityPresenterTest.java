@@ -30,6 +30,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -130,5 +132,24 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         mPresenter.deleteDeck(newDeck);
         verify(mDelernMainView, timeout(TIMEOUT).times(2)).showProgressBar(Boolean.FALSE);
         verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
+    }
+
+    @Test
+    public void renameDeck() {
+        mUser.save().blockingAwait();
+        Deck deck = new Deck(mUser);
+        deck.setName("test");
+        deck.setDeckType(DeckType.BASIC.name());
+        deck.setAccepted(true);
+        deck.create().blockingAwait();
+
+        mPresenter.onCreate(mUser);
+        mPresenter.onStart();
+        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
+        mPresenter.renameDeck(deck, "newTest");
+
+        List<Deck> deckList = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .blockingFirst();
+        assertEquals("newTest", deckList.get(0).getName());
     }
 }

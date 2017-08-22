@@ -63,7 +63,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testShowCardCallback() throws Exception {
+    public void showCardCallback() throws Exception {
         String frontSide = "frontSide";
         String backSide = "backSide";
         User user = signIn();
@@ -88,13 +88,13 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testEditCardActivity() {
+    public void editCardActivity() {
         mPresenter.editCard();
         verify(mPreEditCardView).startEditCardActivity(eq(mCard));
     }
 
     @Test
-    public void testCardNull() throws Exception {
+    public void cardIsNull() throws Exception {
         mPresenter.onCreate(null);
         mPresenter.onStart();
         assertTrue(logger.getLoggingEvents().contains(
@@ -102,7 +102,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void testDeleteCard() {
+    public void deleteCard() {
         Card card = mock(Card.class);
         mPresenter.onCreate(card);
         mPresenter.deleteCard();
