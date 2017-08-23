@@ -16,6 +16,14 @@ android {
     buildToolsVersion toolsVersion
     testBuildType 'instrumented'
 
+    sourceSets {
+        main {
+            // An ugly, but necessary hack. Adding full-fledged Android (AAR)
+            // dependencies to :core wasts too much effort on compatibility.
+            java.srcDirs += ['../core/src/main/java']
+        }
+    }
+
     signingConfigs {
         release {
             storeFile file('delern.jks')
@@ -160,8 +168,6 @@ dependencies {
     // Dagger2
     implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-
-    implementation project(path: ':core', configuration: 'shadow')
 }
 
 apply plugin: 'com.google.gms.google-services'

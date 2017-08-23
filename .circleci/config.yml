@@ -144,7 +144,6 @@ jobs:
               --console=plain
             # Run instrumented tests.
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5 \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
               --results-bucket delern-test-results

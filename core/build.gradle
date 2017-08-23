@@ -1,14 +1,9 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'java-library'
     id 'jacoco'
 }
 apply from: "$rootDir/quality/quality-java.gradle"
 apply from: 'firebase/firebase-server.gradle'
-
-shadowJar {
-    relocate 'com.google.firebase.tasks', 'com.google.android.gms.tasks'
-}
 
 jacoco {
     toolVersion '0.7.9'
@@ -20,16 +15,9 @@ jacocoTestReport {
 }
 
 dependencies {
-    compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
-    testCompile "org.slf4j:slf4j-api:$slf4jVersion"
-
-    compileOnly "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    testCompile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-
-    compileOnly 'com.google.firebase:firebase-admin:5.2.0', {
-        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
-    }
-    testCompile 'com.google.firebase:firebase-admin:5.2.0', {
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    compile 'com.google.firebase:firebase-admin:5.2.0', {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
     }
 
