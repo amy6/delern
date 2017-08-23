@@ -77,7 +77,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         deck.create().blockingAwait();
 
         Card newCard = new Card(deck);
-        newCard.create(frontSide, backSide).blockingAwait();
+        newCard.setFront(frontSide);
+        newCard.setBack(backSide);
+        newCard.create().blockingAwait();
 
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
@@ -124,7 +126,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         deck.create().blockingAwait();
 
         Card newCard = new Card(deck);
-        newCard.create(frontSide, backSide).blockingAwait();
+        newCard.setFront(frontSide);
+        newCard.setBack(backSide);
+        newCard.create().blockingAwait();
 
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
@@ -155,7 +159,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         deck.create().blockingAwait();
 
         Card newCard = new Card(deck);
-        newCard.create(frontSide, backSide).blockingAwait();
+        newCard.setFront(frontSide);
+        newCard.setBack(backSide);
+        newCard.create().blockingAwait();
 
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);

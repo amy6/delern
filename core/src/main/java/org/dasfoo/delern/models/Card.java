@@ -110,22 +110,17 @@ public class Card extends AbstractModel {
     /**
      * Method for adding card to FB.
      *
-     * @param front text on front side of card.
-     * @param back  text on back side of card.
      * @return FirebaseTaskAdapter for the write operation.
      */
     @Exclude
-    public Completable create(final String front, final String back) {
-        ScheduledCard scheduledCard = new ScheduledCard(this.getDeck());
+    public Completable create() {
+        ScheduledCard scheduledCard = new ScheduledCard(getDeck());
         scheduledCard.setLevel(Level.L0.name());
         scheduledCard.setRepeatAt(System.currentTimeMillis());
-
-        Card newCard = new Card(scheduledCard);
-        newCard.setFront(front);
-        newCard.setBack(back);
+        setParent(scheduledCard);
 
         return new MultiWrite()
-                .save(newCard)
+                .save(this)
                 .save(scheduledCard)
                 .write();
     }

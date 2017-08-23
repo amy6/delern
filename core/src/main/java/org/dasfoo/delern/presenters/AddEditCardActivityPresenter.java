@@ -24,11 +24,13 @@ import org.dasfoo.delern.views.IAddEditCardView;
 /**
  * Presenter for AddEditCardActivity. It handles adding and updating card logic
  * and calls callbacks methods to update view for user.
+ * TODO(ksheremet): split into 2 different classes; perhaps even 2 interfaces for a view
+ * (can still be a single Activity implementing 2 interfaces)
  */
 public class AddEditCardActivityPresenter {
 
     private final IAddEditCardView mAddEditCardView;
-    private final Card mCard;
+    private Card mCard;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
@@ -76,7 +78,9 @@ public class AddEditCardActivityPresenter {
      */
     @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
-        mCard.create(front, back).subscribe(mAddEditCardView::cardAdded);
+        mCard.setFront(front);
+        mCard.setBack(back);
+        mCard.create().subscribe(mAddEditCardView::cardAdded);
     }
 
     /**
@@ -92,6 +96,10 @@ public class AddEditCardActivityPresenter {
         } else {
             add(front, back);
             if (mAddEditCardView.addReversedCard()) {
+                Card card = new Card(mCard.getDeck());
+                card.setFront(back);
+                card.setBack(front);
+                mCard = card;
                 add(back, front);
             }
         }

@@ -69,7 +69,9 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         mDeck.create().blockingAwait();
 
         Card newCard = new Card(mDeck);
-        newCard.create(FRONT_SIDE_CARD, BACK_SIDE_CARD).blockingAwait();
+        newCard.setFront(FRONT_SIDE_CARD);
+        newCard.setBack(BACK_SIDE_CARD);
+        newCard.create().blockingAwait();
     }
 
     @Test

@@ -51,7 +51,9 @@ public class CardTest extends FirebaseServerUnitTest {
         ).firstOrError().flatMapCompletable(data -> {
             assertTrue(data.size() == 1 && data.get(0).getName().equals("CreateCards"));
             Card newCard = new Card(data.get(0));
-            return newCard.create("frontSide", "backSide");
+            newCard.setFront("frontSide");
+            newCard.setBack("backSide");
+            return newCard.create();
         }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                         .subscribe(observer)
@@ -73,7 +75,9 @@ public class CardTest extends FirebaseServerUnitTest {
         ).firstOrError().flatMapCompletable(data -> {
             assertTrue(data.size() == 1 && data.get(0).getName().equals("TestDelete"));
             Card newCard = new Card(data.get(0));
-            return newCard.create("frontSide", "backSide");
+            newCard.setFront("frontSide");
+            newCard.setBack("backSide");
+            return newCard.create();
         }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                         .subscribe(observer)
@@ -101,7 +105,9 @@ public class CardTest extends FirebaseServerUnitTest {
         ).firstOrError().flatMapCompletable(data -> {
             assertTrue(data.size() == 1 && data.get(0).getName().equals("TestRename"));
             Card newCard = new Card(data.get(0));
-            return newCard.create("frontSide", "backSide");
+            newCard.setFront("frontSide");
+            newCard.setBack("backSide");
+            return newCard.create();
         }).andThen((ObservableSource<List<Card>>) observer ->
                 deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                         .subscribe(observer)
@@ -133,7 +139,9 @@ public class CardTest extends FirebaseServerUnitTest {
         ).firstOrError().flatMapCompletable((final List<Deck> data) -> {
             assertTrue(data.size() == 1 && data.get(0).getName().equals("TestAnswer"));
             Card newCard = new Card(data.get(0));
-            return newCard.create("frontSide", "backSide");
+            newCard.setFront("frontSide");
+            newCard.setBack("backSide");
+            return newCard.create();
         }).andThen((ObservableSource<Card>) observer ->
                 deck.startScheduledCardWatcher().subscribe(observer)
         ).firstOrError().flatMapCompletable((final Card card) ->
@@ -159,7 +167,9 @@ public class CardTest extends FirebaseServerUnitTest {
         ).firstOrError().flatMapCompletable((final List<Deck> data) -> {
             assertTrue(data.size() == 1 && data.get(0).getName().equals("TestAnswer"));
             Card newCard = new Card(data.get(0));
-            return newCard.create("frontSide", "backSide");
+            newCard.setFront("frontSide");
+            newCard.setBack("backSide");
+            return newCard.create();
         }).andThen((ObservableSource<Card>) observer ->
                 deck.startScheduledCardWatcher().subscribe(observer)
         ).firstOrError().flatMapCompletable((final Card card) ->
