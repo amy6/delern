@@ -81,10 +81,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         newCard.setBack(backSide);
         newCard.create().blockingAwait();
 
-        mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
-                .firstOrError().blockingGet().get(0);
-
-        mPresenter.onCreate(mCard);
+        mPresenter.onCreate(newCard);
         mPresenter.onStart();
         verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
     }
@@ -129,7 +126,10 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
         newCard.create().blockingAwait();
-
+        // It is needed to fetch a card if it will be updated. Card has a createdAt field that is
+        // timestamp. If a card wasn't fetched before update, it isn't known the time when it
+        // was created. It keeps timestamp field. For update it is needed to have actual date when
+        // it was created.
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
 
@@ -163,6 +163,10 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         newCard.setBack(backSide);
         newCard.create().blockingAwait();
 
+        // It is needed to fetch a card if it will be updated. Card has a createdAt field that is
+        // timestamp. If a card wasn't fetched before update, it isn't known the time when it
+        // was created. It keeps timestamp field. For update it is needed to have actual date when
+        // it was created.
         mCard = deck.fetchChildren(deck.getChildReference(Card.class), Card.class)
                 .firstOrError().blockingGet().get(0);
 
