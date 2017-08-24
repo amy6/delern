@@ -53,7 +53,9 @@ public class AddCardActivityPresenter implements IAddUpdatePresenter {
     @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
         Card card = new Card(mDeck);
-        card.create(front, back).subscribe(mAddEditCardView::cardAdded);
+        card.setFront(front);
+        card.setBack(back);
+        card.create().subscribe(mAddEditCardView::cardAdded);
     }
 
     /**

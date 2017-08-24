@@ -21,6 +21,7 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
 import org.dasfoo.delern.test.FirebaseServerUnitTest;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.junit.Before;
@@ -29,9 +30,12 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
+
+/**
+ * Tests UpdateCardActivityPresenter.
+ */
+public class UpdateCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     private static int TIMEOUT = 5000;
 
@@ -51,52 +55,6 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     }
 
     @Test
-    public void onCreateForNewCard() {
-        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
-        AddEditCardActivityPresenter presenter =
-                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
-        presenter.onCreate();
-        verify(iAddEditCardView).initForAdd();
-    }
-
-    @Test
-    public void onCreateForExistingCard() {
-        mCard.setKey("exist");
-        mCard.setFront("front");
-        mCard.setBack("back");
-        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
-        AddEditCardActivityPresenter presenter =
-                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
-        presenter.onCreate();
-        verify(iAddEditCardView).initForUpdate("front", "back");
-    }
-
-    @Test
-    public void addCard() {
-        // inject the mocks with new card.
-        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
-        AddEditCardActivityPresenter presenter =
-                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
-        presenter.onCreate();
-        verify(iAddEditCardView).initForAdd();
-        presenter.onAddUpdate("front", "back");
-        verify(iAddEditCardView, timeout(TIMEOUT)).cardAdded();
-    }
-
-    @Test
-    public void addReversedCard() {
-        // inject the mocks with new card.
-        IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
-        when(iAddEditCardView.addReversedCard()).then(invocation -> true);
-        AddEditCardActivityPresenter presenter =
-                new AddEditCardActivityPresenter(iAddEditCardView, mCard);
-        presenter.onCreate();
-        verify(iAddEditCardView).initForAdd();
-        presenter.onAddUpdate("front", "back");
-        verify(iAddEditCardView, timeout(TIMEOUT).times(2)).cardAdded();
-    }
-
-    @Test
     public void updateCard() {
         mCard.setFront("to_update_front");
         mCard.setBack("to_update_back");
@@ -108,12 +66,9 @@ public class AddEditCardActivityPresenterTest extends FirebaseServerUnitTest {
         // because @Spy creates object instance of Card$$EnhancerByMockitoWithCGLIB$$5b16c521.
         // We need exactly Card.class
         IAddEditCardView iAddEditCardView = mock(IAddEditCardView.class);
-        AddEditCardActivityPresenter presenter =
-                new AddEditCardActivityPresenter(iAddEditCardView, fetchedCard);
-        presenter.onCreate();
-        verify(iAddEditCardView).initForUpdate("to_update_front", "to_update_back");
+        IAddUpdatePresenter presenter =
+                new UpdateCardActivityPresenter(iAddEditCardView, fetchedCard);
         presenter.onAddUpdate("front", "back");
         verify(iAddEditCardView, timeout(TIMEOUT)).cardUpdated();
     }
-
 }
