@@ -45,7 +45,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add">Добавить</string>
     <string name="update">Обновить</string>
     <string name="deck_menu_description">Меню для операций со списками и карточками</string>
-    <string name="invitation_failed_message">Ошибка при отправлении приглашения</string>
+    <string name="invitation_failed_message">Приглашение не было отправлено</string>
     <string name="save">Сохранить</string>
     <string name="flip_the_card_message">Перевернуть карточку</string>
     <string name="number_of_cards">Количество карточек: %d</string>
