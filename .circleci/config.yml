@@ -41,6 +41,10 @@ jobs:
           # Take this text from the Android SDK directory on your machine.
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
           ./gradlew dependencies --status
+          # TODO(dotdoom): have NodeJS/npm install binaries instead.
+          # These two packages are normally already available, but we deal with some extremely minimalistic Docker image.
+          apt update
+          apt install -y lsb-release apt-transport-https g++ build-essential
 
     - run:
         name: "Lint, assemble and run unit tests"
@@ -66,7 +70,7 @@ jobs:
             -PisolatedRun \
             --info \
             :app:testDebugUnitTest \
-            :core:testLocalFirebaseUnitTest \
+            :core:test \
             --console=plain
         when: on_fail
 
@@ -121,9 +125,7 @@ jobs:
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
           if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
-            # These two packages are normally already available, but we deal with some extremely minimalistic Docker image.
-            apt update
-            apt install -y lsb-release apt-transport-https
+            ./gradlew core:deployFirebase
 
             echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
               >>/etc/apt/sources.list.d/google-cloud-sdk.list

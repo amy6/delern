@@ -1,0 +1,8 @@
+{
+	"hosting": {
+		"public": "www"
+	},
+	"database": {
+		"rules": "delern-rules.json"
+	}
+}

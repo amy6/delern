@@ -28,4 +28,11 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     args = ['rules.bolt', '-o', 'delern-rules.json']
 }
 
+task deployFirebase(type: NodeTask, dependsOn: convertBoltToFirebaseRules) {
+    workingDir = firebaseDir
+    script = file("${node.nodeModulesDir}/node_modules/.bin/firebase")
+    // TODO(dotdoom): read from system property
+    args = ['-P', 'delern-e1b33', 'deploy']
+}
+
 testClasses.dependsOn convertBoltToFirebaseRules
