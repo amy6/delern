@@ -104,11 +104,12 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         ButterKnife.bind(this);
         if (card.exists()) {
             Injector.getUpdateActivityInjector(this, card).inject(this);
+            initForUpdate(card.getFront(), card.getBack());
         } else {
             Injector.getAddActivityInjector(this, card.getDeck()).inject(this);
+            initForAdd();
         }
 
-        mPresenter.onCreate();
         mAddCardToDbButton.setEnabled(false);
         final TextWatcherStub cardValid = new TextWatcherStub() {
             @Override
@@ -158,17 +159,18 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     }
 
     /**
-     * {@inheritDoc}
+     * Initialize view for adding cards.
      */
-    @Override
     public void initForAdd() {
         mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
     }
 
     /**
-     * {@inheritDoc}
+     * Initialize view for updating card.
+     *
+     * @param front front side text for update.
+     * @param back  back side text for update.
      */
-    @Override
     public void initForUpdate(final String front, final String back) {
         mAddCardToDbButton.setText(R.string.save);
         mFrontSideInputText.setText(front);

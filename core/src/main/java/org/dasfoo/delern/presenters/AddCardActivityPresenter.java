@@ -45,14 +45,6 @@ public class AddCardActivityPresenter implements IAddUpdatePresenter {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onCreate() {
-        mAddEditCardView.initForAdd();
-    }
-
-    /**
      * Method for adding card to FB.
      *
      * @param front text on front side of card.

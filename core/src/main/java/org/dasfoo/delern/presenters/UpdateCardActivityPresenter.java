@@ -31,7 +31,7 @@ import org.dasfoo.delern.views.IAddEditCardView;
 public class UpdateCardActivityPresenter implements IAddUpdatePresenter {
 
     private final IAddEditCardView mAddEditCardView;
-    private Card mCard;
+    private final Card mCard;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
