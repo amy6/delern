@@ -58,11 +58,8 @@ public class UpdateCardActivityPresenter implements IAddUpdatePresenter {
         mCard.save().subscribe(mAddEditCardView::cardUpdated);
     }
 
-    /*
-     * Performs when user wants to add or update cards.
-     *
-     * @param front front side of card.
-     * @param back  back side of card.
+    /**
+     * {@inheritDoc}
      */
     @Override
     @SuppressWarnings({"ArgumentParameterSwap", "ArgumentParameterMismatch"})

@@ -19,6 +19,7 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
@@ -29,24 +30,22 @@ import org.dasfoo.delern.views.IAddEditCardView;
 public class AddCardActivityPresenter implements IAddUpdatePresenter {
 
     private final IAddEditCardView mAddEditCardView;
-    private final Card mCard;
+    private final Deck mDeck;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
      * in Activity to do callbacks.
      *
      * @param addEditCardView interface for performing callbacks.
-     * @param card            card for updating or empty for adding.
+     * @param deck            deck where to add cards.
      */
-    public AddCardActivityPresenter(final IAddEditCardView addEditCardView, final Card card) {
+    public AddCardActivityPresenter(final IAddEditCardView addEditCardView, final Deck deck) {
         this.mAddEditCardView = addEditCardView;
-        this.mCard = card;
+        this.mDeck = deck;
     }
 
     /**
-     * OnCreate method that called from AddEditCardActivity.onCreate.
-     * It checks whether user is going to add new cards or update existing cards.
-     * It calls callback method in AddEditCardActivity to initialize views accordingly.
+     * {@inheritDoc}
      */
     @Override
     public void onCreate() {
@@ -61,14 +60,12 @@ public class AddCardActivityPresenter implements IAddUpdatePresenter {
      */
     @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
-        mCard.create(front, back).subscribe(mAddEditCardView::cardAdded);
+        Card card = new Card(mDeck);
+        card.create(front, back).subscribe(mAddEditCardView::cardAdded);
     }
 
     /**
-     * Performs when user wants to add or update cards.
-     *
-     * @param front front side of card.
-     * @param back  back side of card.
+     * {@inheritDoc}
      */
     @Override
     public void onAddUpdate(final String front, final String back) {

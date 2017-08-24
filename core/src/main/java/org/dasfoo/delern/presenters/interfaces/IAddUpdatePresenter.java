@@ -18,11 +18,17 @@
 
 package org.dasfoo.delern.presenters.interfaces;
 
-/**
- * Created by katarina on 8/24/17.
- */
 
+/**
+ * Interface that AddEditCardActivity's Presenters must implement.
+ */
 public interface IAddUpdatePresenter {
-    void onCreate();
-    void onAddUpdate(final String front, final String back);
+
+    /**
+     * Performs when user wants to add or update cards.
+     *
+     * @param front front side of card.
+     * @param back  back side of card.
+     */
+    void onAddUpdate(String front, String back);
 }

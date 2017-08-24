@@ -105,7 +105,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         if (card.exists()) {
             Injector.getUpdateActivityInjector(this, card).inject(this);
         } else {
-            Injector.getAddActivityInjector(this, card).inject(this);
+            Injector.getAddActivityInjector(this, card.getDeck()).inject(this);
         }
 
         mPresenter.onCreate();
