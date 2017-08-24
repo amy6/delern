@@ -19,18 +19,17 @@
 package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 /**
- * Presenter for AddEditCardActivity. It handles adding and updating card logic
+ * Presenter for AddEditCardActivity. It handles adding logic
  * and calls callbacks methods to update view for user.
- * TODO(ksheremet): split into 2 different classes; perhaps even 2 interfaces for a view
- * (can still be a single Activity implementing 2 interfaces)
  */
-public class AddEditCardActivityPresenter {
+public class AddCardActivityPresenter implements IAddUpdatePresenter {
 
     private final IAddEditCardView mAddEditCardView;
-    private Card mCard;
+    private final Card mCard;
 
     /**
      * Constructor for Presenter. It gets interface as parameter that implemented
@@ -39,7 +38,7 @@ public class AddEditCardActivityPresenter {
      * @param addEditCardView interface for performing callbacks.
      * @param card            card for updating or empty for adding.
      */
-    public AddEditCardActivityPresenter(final IAddEditCardView addEditCardView, final Card card) {
+    public AddCardActivityPresenter(final IAddEditCardView addEditCardView, final Card card) {
         this.mAddEditCardView = addEditCardView;
         this.mCard = card;
     }
@@ -49,25 +48,9 @@ public class AddEditCardActivityPresenter {
      * It checks whether user is going to add new cards or update existing cards.
      * It calls callback method in AddEditCardActivity to initialize views accordingly.
      */
+    @Override
     public void onCreate() {
-        if (mCard.exists()) {
-            mAddEditCardView.initForUpdate(mCard.getFront(), mCard.getBack());
-        } else {
-            mAddEditCardView.initForAdd();
-        }
-    }
-
-    /**
-     * Method updates existing card in FB.
-     *
-     * @param newFront new front side of card.
-     * @param newBack  new back side of card.
-     */
-    @SuppressWarnings("CheckReturnValue")
-    private void update(final String newFront, final String newBack) {
-        mCard.setFront(newFront);
-        mCard.setBack(newBack);
-        mCard.save().subscribe(mAddEditCardView::cardUpdated);
+        mAddEditCardView.initForAdd();
     }
 
     /**
@@ -78,9 +61,7 @@ public class AddEditCardActivityPresenter {
      */
     @SuppressWarnings("CheckReturnValue")
     private void add(final String front, final String back) {
-        mCard.setFront(front);
-        mCard.setBack(back);
-        mCard.create().subscribe(mAddEditCardView::cardAdded);
+        mCard.create(front, back).subscribe(mAddEditCardView::cardAdded);
     }
 
     /**
@@ -89,19 +70,11 @@ public class AddEditCardActivityPresenter {
      * @param front front side of card.
      * @param back  back side of card.
      */
-    @SuppressWarnings({"ArgumentParameterSwap", "ArgumentParameterMismatch"})
+    @Override
     public void onAddUpdate(final String front, final String back) {
-        if (mCard.exists()) {
-            update(front, back);
-        } else {
-            add(front, back);
-            if (mAddEditCardView.addReversedCard()) {
-                Card card = new Card(mCard.getDeck());
-                card.setFront(back);
-                card.setBack(front);
-                mCard = card;
-                add(back, front);
-            }
+        add(front, back);
+        if (mAddEditCardView.addReversedCard()) {
+            add(back, front);
         }
     }
 }

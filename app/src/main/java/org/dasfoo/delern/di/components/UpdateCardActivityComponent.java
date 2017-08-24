@@ -19,7 +19,7 @@
 package org.dasfoo.delern.di.components;
 
 import org.dasfoo.delern.card.AddEditCardActivity;
-import org.dasfoo.delern.di.modules.AddEditCardActivityModule;
+import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
 
 import javax.inject.Singleton;
 
@@ -30,8 +30,8 @@ import dagger.Component;
  * Dagger modules. Interface describes for which types we want to use members injection
  */
 @Singleton
-@Component(modules = AddEditCardActivityModule.class)
-public interface AddEditCardActivityComponent {
+@Component(modules = UpdateCardActivityModule.class)
+public interface UpdateCardActivityComponent {
     /**
      * @param addEditCardActivity sets type for injection
      */

@@ -19,17 +19,18 @@
 package org.dasfoo.delern.di.modules;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
+import org.dasfoo.delern.presenters.UpdateCardActivityPresenter;
+import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Dagger 2 class that says how to inject AddEditCardActivity.
+ * Dagger 2 class that says how to inject AddEditCardActivity for updating a card.
  */
 @Module
-public class AddEditCardActivityModule {
+public class UpdateCardActivityModule {
     private final IAddEditCardView mView;
     private final Card mCard;
 
@@ -41,14 +42,13 @@ public class AddEditCardActivityModule {
      * @param card card to init Presenter. It helps to know where to add new cards or update
      *             existing.
      */
-    public AddEditCardActivityModule(final IAddEditCardView view, final Card card) {
+    public UpdateCardActivityModule(final IAddEditCardView view, final Card card) {
         this.mView = view;
         this.mCard = card;
     }
 
     @Provides
-    /* default */ AddEditCardActivityPresenter providePresenter() {
-        return new AddEditCardActivityPresenter(mView, mCard);
+    /* default */ IAddUpdatePresenter providePresenter() {
+        return new UpdateCardActivityPresenter(mView, mCard);
     }
-
 }

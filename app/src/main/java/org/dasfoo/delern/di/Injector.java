@@ -18,21 +18,24 @@
 
 package org.dasfoo.delern.di;
 
-import org.dasfoo.delern.di.components.AddEditCardActivityComponent;
-import org.dasfoo.delern.di.components.DaggerAddEditCardActivityComponent;
+import org.dasfoo.delern.di.components.AddCardActivityComponent;
+import org.dasfoo.delern.di.components.DaggerAddCardActivityComponent;
 import org.dasfoo.delern.di.components.DaggerDelernMainActivityComponent;
 import org.dasfoo.delern.di.components.DaggerEditCardListActivityComponent;
 import org.dasfoo.delern.di.components.DaggerLearningCardsActivityComponent;
 import org.dasfoo.delern.di.components.DaggerPreEditCardActivityComponent;
+import org.dasfoo.delern.di.components.DaggerUpdateCardActivityComponent;
 import org.dasfoo.delern.di.components.DelernMainActivityComponent;
 import org.dasfoo.delern.di.components.EditCardListActivityComponent;
 import org.dasfoo.delern.di.components.LearningCardsActivityComponent;
 import org.dasfoo.delern.di.components.PreEditCardActivityComponent;
-import org.dasfoo.delern.di.modules.AddEditCardActivityModule;
+import org.dasfoo.delern.di.components.UpdateCardActivityComponent;
+import org.dasfoo.delern.di.modules.AddCardActivityModule;
 import org.dasfoo.delern.di.modules.DelernMainActivityModule;
 import org.dasfoo.delern.di.modules.EditCardListActivityModule;
 import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
+import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.dasfoo.delern.views.IDelernMainView;
@@ -67,11 +70,25 @@ public final class Injector {
      * @param card card to init Presenter.
      * @return AddEditCardActivityComponent.
      */
-    public static AddEditCardActivityComponent getAddEditActivityInjector(
+    public static AddCardActivityComponent getAddActivityInjector(
             final IAddEditCardView view, final Card card) {
-        return DaggerAddEditCardActivityComponent
+        return DaggerAddCardActivityComponent
                 .builder()
-                .addEditCardActivityModule(new AddEditCardActivityModule(view, card)).build();
+                .addCardActivityModule(new AddCardActivityModule(view, card)).build();
+    }
+
+    /**
+     * Method returns injector class.
+     *
+     * @param view view to init Presenter for callbacks.
+     * @param card card to init Presenter.
+     * @return AddEditCardActivityComponent.
+     */
+    public static UpdateCardActivityComponent getUpdateActivityInjector(
+            final IAddEditCardView view, final Card card) {
+        return DaggerUpdateCardActivityComponent
+                .builder()
+                .updateCardActivityModule(new UpdateCardActivityModule(view, card)).build();
     }
 
     /**

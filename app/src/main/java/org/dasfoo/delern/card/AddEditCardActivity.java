@@ -37,7 +37,7 @@ import org.dasfoo.delern.listeners.TextWatcherStub;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
-import org.dasfoo.delern.presenters.AddEditCardActivityPresenter;
+import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
 import org.dasfoo.delern.views.IAddEditCardView;
 
 import javax.inject.Inject;
@@ -66,7 +66,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     /* default */ Button mAddCardToDbButton;
 
     @Inject
-    /* default */ AddEditCardActivityPresenter mPresenter;
+    /* default */ IAddUpdatePresenter mPresenter;
 
     /**
      * Method starts activity for adding cards in deck.
@@ -102,7 +102,11 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         Card card = ParcelableCard.get(intent.getParcelableExtra(CARD));
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
-        Injector.getAddEditActivityInjector(this, card).inject(this);
+        if (card.exists()) {
+            Injector.getUpdateActivityInjector(this, card).inject(this);
+        } else {
+            Injector.getAddActivityInjector(this, card).inject(this);
+        }
 
         mPresenter.onCreate();
         mAddCardToDbButton.setEnabled(false);
