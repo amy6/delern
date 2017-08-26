@@ -34,7 +34,7 @@ import io.reactivex.Observable;
  * Model class for deck.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Deck extends AbstractModel {
+public class Deck extends Model {
 
     private String name;
     private String deckType;
@@ -239,7 +239,7 @@ public class Deck extends AbstractModel {
     /**
      * Get the User this Deck is associated with.
      *
-     * @return AbstractModel parent casted to User (if set).
+     * @return Model parent casted to User (if set).
      */
     @Exclude
     public User getUser() {

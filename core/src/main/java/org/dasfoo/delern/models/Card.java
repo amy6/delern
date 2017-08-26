@@ -31,7 +31,7 @@ import io.reactivex.Completable;
  * Model class for card.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class Card extends AbstractModel {
+public class Card extends Model {
 
     /**
      * Answer on card if user knows it.
@@ -96,11 +96,11 @@ public class Card extends AbstractModel {
     /**
      * Get the Deck this Card belongs to, directly or via associated ScheduledCard.
      *
-     * @return AbstractModel parent casted to Deck (if set).
+     * @return Model parent casted to Deck (if set).
      */
     @Exclude
     public Deck getDeck() {
-        AbstractModel parent = getParent();
+        Model parent = getParent();
         if (parent instanceof Deck) {
             return (Deck) parent;
         }
@@ -128,11 +128,11 @@ public class Card extends AbstractModel {
     /**
      * Get the ScheduledCard this Card is associated with.
      *
-     * @return AbstractModel parent casted to ScheduledCard (if set).
+     * @return Model parent casted to ScheduledCard (if set).
      */
     @Exclude
     public ScheduledCard getScheduledCard() {
-        AbstractModel parent = getParent();
+        Model parent = getParent();
         if (parent instanceof ScheduledCard) {
             return (ScheduledCard) parent;
         }

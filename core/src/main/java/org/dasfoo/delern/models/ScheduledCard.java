@@ -26,7 +26,7 @@ import com.google.firebase.database.Exclude;
  * Model class for learning.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class ScheduledCard extends AbstractModel {
+public class ScheduledCard extends Model {
 
     private String level;
     private long repeatAt;
@@ -50,7 +50,7 @@ public class ScheduledCard extends AbstractModel {
     /**
      * Get the Deck this ScheduledCard is associated with.
      *
-     * @return AbstractModel parent casted to Deck (if set).
+     * @return Model parent casted to Deck (if set).
      */
     @Exclude
     public Deck getDeck() {

@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.dasfoo.delern.models.AbstractModel;
+import org.dasfoo.delern.models.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +108,7 @@ public class MultiWrite {
      * @param model instance of model.
      * @return "this" (for chained calls).
      */
-    public MultiWrite save(final AbstractModel model) {
+    public MultiWrite save(final Model model) {
         DatabaseReference reference;
         if (model.exists()) {
             reference = model.getReference();
@@ -127,7 +127,7 @@ public class MultiWrite {
      * @param model instance of model.
      * @return "this" (for chained calls).
      */
-    public MultiWrite delete(final AbstractModel model) {
+    public MultiWrite delete(final Model model) {
         return delete(model.getReference());
     }
 

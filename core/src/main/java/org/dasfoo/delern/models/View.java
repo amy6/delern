@@ -23,7 +23,7 @@ package org.dasfoo.delern.models;
  * Model class for view.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class View extends AbstractModel {
+public class View extends Model {
 
     private String cardId;
     private String levelBefore;

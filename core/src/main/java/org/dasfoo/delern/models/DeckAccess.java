@@ -25,7 +25,7 @@ import com.google.firebase.database.Exclude;
  * Model class for deck_access.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public class DeckAccess extends AbstractModel {
+public class DeckAccess extends Model {
     private String access;
 
     /**
@@ -47,7 +47,7 @@ public class DeckAccess extends AbstractModel {
     /**
      * Get the Deck this DeckAccess is associated with.
      *
-     * @return AbstractModel parent casted to Deck (if set).
+     * @return Model parent casted to Deck (if set).
      */
     @Exclude
     public Deck getDeck() {

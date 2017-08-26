@@ -40,14 +40,14 @@ import io.reactivex.functions.Function;
 /**
  * Base class for models, implementing Firebase functionality.
  */
-public abstract class AbstractModel {
+public class Model {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
 
     @Exclude
     private String mKey;
 
     @Exclude
-    private AbstractModel mParent;
+    private Model mParent;
 
     /**
      * The only constructor.
@@ -58,7 +58,7 @@ public abstract class AbstractModel {
      *               private parameterless constructor used by Firebase.
      * @param key    a unique key assigned to the object by Firebase, or null if not yet assigned.
      */
-    protected AbstractModel(final AbstractModel parent, final String key) {
+    protected Model(final Model parent, final String key) {
         mParent = parent;
         mKey = key;
     }
@@ -68,13 +68,13 @@ public abstract class AbstractModel {
      *
      * @param snapshot a snapshot pointing to model data (not the list of models).
      * @param cls      a model class, e.g. Card.class or card.getClass().
-     * @param parent   a parent model. See AbstractModel constructor for limitations.
-     * @param <T>      an AbstractModel subclass.
+     * @param parent   a parent model. See Model constructor for limitations.
+     * @param <T>      an Model subclass.
      * @return an instance of T with key and parent set, or null.
      */
-    public static <T extends AbstractModel> T fromSnapshot(final DataSnapshot snapshot,
-                                                           final Class<T> cls,
-                                                           final AbstractModel parent) {
+    public static <T extends Model> T fromSnapshot(final DataSnapshot snapshot,
+                                                   final Class<T> cls,
+                                                   final Model parent) {
         T model = snapshot.getValue(cls);
         if (model != null) {
             model.setKey(snapshot.getKey());
@@ -143,7 +143,7 @@ public abstract class AbstractModel {
     }
 
     /**
-     * Set the known key for the model. This may be used internally by AbstractModel when saving
+     * Set the known key for the model. This may be used internally by Model when saving
      * the new value to the database, or externally when unpacking the value from Parcel.
      * Another use case is when child model would set the key to a parent model when they share
      * the same key.
@@ -168,12 +168,12 @@ public abstract class AbstractModel {
     /**
      * Get a parent model assigned when this object is created, or by fromSnapshot when restoring
      * from the database. This method is usually overridden in subclasses to provide a fine-grained
-     * parent access (i.e. with a specific class rather than just AbstractModel).
+     * parent access (i.e. with a specific class rather than just Model).
      *
-     * @return AbstractModel
+     * @return Model
      */
     @Exclude
-    public AbstractModel getParent() {
+    public Model getParent() {
         return mParent;
     }
 
@@ -185,7 +185,7 @@ public abstract class AbstractModel {
      * @param parent parent model which is deserializing the value in fromSnapshot().
      */
     @Exclude
-    protected void setParent(final AbstractModel parent) {
+    protected void setParent(final Model parent) {
         mParent = parent;
     }
 
@@ -252,10 +252,10 @@ public abstract class AbstractModel {
      * @return Multi-shot TaskAdapter (use stop() to remove the listener).
      */
     @Exclude
-    public <T extends AbstractModel> Observable<T> fetchChild(
+    public <T extends Model> Observable<T> fetchChild(
             final Query query, final Class<T> cls) {
         return observableForQuery(query, (final DataSnapshot dataSnapshot) ->
-                AbstractModel.fromSnapshot(dataSnapshot, cls, this)
+                Model.fromSnapshot(dataSnapshot, cls, this)
         );
     }
 
@@ -265,13 +265,13 @@ public abstract class AbstractModel {
      * The model will have its parent set to the same as before.
      *
      * @param cls class of the model which is being watched.
-     * @param <T> AbstractModel.
+     * @param <T> Model.
      * @return Multi-shot Observable.
      */
     @Exclude
-    public <T extends AbstractModel> Observable<T> watch(final Class<T> cls) {
+    public <T extends Model> Observable<T> watch(final Class<T> cls) {
         return observableForQuery(getReference(), (final DataSnapshot dataSnapshot) ->
-                AbstractModel.fromSnapshot(dataSnapshot, cls, getParent()));
+                Model.fromSnapshot(dataSnapshot, cls, getParent()));
     }
 
     /**
@@ -284,12 +284,12 @@ public abstract class AbstractModel {
      * @return see fetchChild.
      */
     @Exclude
-    public <T extends AbstractModel> Observable<List<T>> fetchChildren(
+    public <T extends Model> Observable<List<T>> fetchChildren(
             final Query query, final Class<T> cls) {
         return observableForQuery(query, (final DataSnapshot dataSnapshot) -> {
             List<T> items = new ArrayList<>((int) dataSnapshot.getChildrenCount());
             for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
-                items.add(AbstractModel.fromSnapshot(itemSnapshot, cls,
+                items.add(Model.fromSnapshot(itemSnapshot, cls,
                         this));
             }
             return items;
@@ -308,7 +308,7 @@ public abstract class AbstractModel {
 
     /**
      * Set the Firebase database reference for this instance (if they want to keep it). The only
-     * legitimate usage is deserialization within AbstractModel.
+     * legitimate usage is deserialization within Model.
      *
      * @param ref Database reference used to provide the snapshot this model has been parsed from.
      */

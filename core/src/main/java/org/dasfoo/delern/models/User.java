@@ -27,7 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Model class for users.
  */
 @SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
-public final class User extends AbstractModel {
+public final class User extends Model {
 
     @Exclude
     private FirebaseDatabase mDatabase;

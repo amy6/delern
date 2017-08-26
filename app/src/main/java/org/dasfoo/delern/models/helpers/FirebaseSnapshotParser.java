@@ -21,18 +21,18 @@ package org.dasfoo.delern.models.helpers;
 import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.DataSnapshot;
 
-import org.dasfoo.delern.models.AbstractModel;
+import org.dasfoo.delern.models.Model;
 
 /**
- * Snapshot parser into AbstractModel, for FirebaseRecyclerAdapter.
+ * Snapshot parser into Model, for FirebaseRecyclerAdapter.
  *
  * @param <T> class of the model.
  */
-public class FirebaseSnapshotParser<T extends AbstractModel>
+public class FirebaseSnapshotParser<T extends Model>
         implements SnapshotParser<T> {
 
     private final Class<T> mClass;
-    private final AbstractModel mParent;
+    private final Model mParent;
 
     /**
      * Create a new instance of the parser.
@@ -40,7 +40,7 @@ public class FirebaseSnapshotParser<T extends AbstractModel>
      * @param cls    getClass() of the model.
      * @param parent parent to be assigned when parsing the snapshot.
      */
-    public FirebaseSnapshotParser(final Class<T> cls, final AbstractModel parent) {
+    public FirebaseSnapshotParser(final Class<T> cls, final Model parent) {
         mClass = cls;
         mParent = parent;
     }
@@ -50,6 +50,6 @@ public class FirebaseSnapshotParser<T extends AbstractModel>
      */
     @Override
     public T parseSnapshot(final DataSnapshot snapshot) {
-        return AbstractModel.fromSnapshot(snapshot, mClass, mParent);
+        return Model.fromSnapshot(snapshot, mClass, mParent);
     }
 }
