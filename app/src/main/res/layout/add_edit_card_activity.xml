@@ -65,7 +65,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/elemets_marging"
-                android:text="@string/add" />
+                android:text="@string/add"
+                android:elevation="2dp"/>
 
         </LinearLayout>
 

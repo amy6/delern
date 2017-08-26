@@ -27,16 +27,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
@@ -49,14 +53,103 @@ public class ExampleInstrumentedTest {
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
     @Test
-    public void addDeck() {
-        onView(withId(R.id.fab)).perform(click());
-        onView(withInputType(InputType.TYPE_CLASS_TEXT))
-                .perform(typeTextIntoFocusedView("Espresso"), closeSoftKeyboard());
-        onView(withText(R.string.add)).perform(click());
-        onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+    public void addEmptyDeckAndDelete() {
+        waitView(withId(R.id.fab)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView("Empty"), closeSoftKeyboard());
+        waitView(withText(R.string.add)).perform(click());
+        waitView(withId(R.id.add_card_to_db))
+                .check(matches(isDisplayed()))
+                .perform(closeSoftKeyboard());
         pressBack();
+        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        // Check that deck was created with 0 cards
+        waitView(withText("Empty")).check(matches(hasSibling(withText("0"))));
+        deleteDeck("Empty");
+    }
+
+    @Test
+    public void createDeckWithCardAndDelete() {
+        waitView(withId(R.id.fab)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView("Learn"), closeSoftKeyboard());
+        waitView(withText(R.string.add)).perform(click());
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
+        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        waitView(withId(R.id.add_card_to_db)).perform(click());
         pressBack();
-        onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        // Check that deck with 1 card was created
+        waitView(withText("Learn")).check(matches(hasSibling(withText("1"))));
+        deleteDeck("Learn");
+    }
+
+    @Test
+    public void createDeckWithCardToLearnAndDelete() {
+        waitView(withId(R.id.fab)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView("Learn"), closeSoftKeyboard());
+        waitView(withText(R.string.add)).perform(click());
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
+        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        waitView(withId(R.id.add_card_to_db)).perform(click());
+        pressBack();
+        // Start Learning Activity
+        waitView(allOf(withText("Learn"), hasSibling(withText("1"))))
+                .perform(click());
+        // Check that front side is correct
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText("front")));
+        // Flip card
+        waitView(withId(R.id.turn_card_button)).perform(click());
+        // Check back side of card
+        waitView(withId(R.id.textBackCardView)).check(matches(withText("back")));
+        pressBack();
+        deleteDeck("Learn");
+    }
+
+    @Test
+    public void createDeckToRenameAndDelete() {
+        waitView(withId(R.id.fab)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView("Created"), closeSoftKeyboard());
+        waitView(withText(R.string.add)).perform(click());
+        waitView(withId(R.id.add_card_to_db))
+                .check(matches(isDisplayed()))
+                .perform(closeSoftKeyboard());
+        pressBack();
+        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText("Created"))))
+                .perform(click());
+        waitView(withText(R.string.rename)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(replaceText("Renamed"), closeSoftKeyboard());
+        waitView(withText(R.string.rename)).perform(click());
+        waitView(withText("Renamed")).check(matches(hasSibling(withText("0"))));
+        deleteDeck("Renamed");
+    }
+
+    @Test
+    public void createDeckWithReversedCardAndDelete() {
+        waitView(withId(R.id.fab)).perform(click());
+        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView("Reversed"), closeSoftKeyboard());
+        waitView(withText(R.string.add)).perform(click());
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
+        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        waitView(withId(R.id.add_reversed_card_checkbox)).perform(click());
+        waitView(withId(R.id.add_card_to_db)).perform(click());
+        pressBack();
+        // Check that deck with 2 card was created
+        waitView(withText("Reversed")).check(matches(hasSibling(withText("2"))));
+        deleteDeck("Reversed");
+    }
+
+    private static void deleteDeck(final String deckName) {
+        waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
+                .perform(click());
+        waitView(withText(R.string.delete)).perform(click());
+        waitView(withText(R.string.delete)).perform(click());
     }
 }
