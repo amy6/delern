@@ -116,6 +116,6 @@ public class ScheduledCard extends AbstractModel {
         if (childClass == View.class) {
             return getDeck().getChildReference(View.class, getKey());
         }
-        return null;
+        return super.getChildReference(childClass);
     }
 }

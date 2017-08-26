@@ -171,7 +171,7 @@ public final class User extends AbstractModel {
             return reference;
         }
 
-        return null;
+        return super.getChildReference(childClass);
     }
 
     /**

@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
 /**
@@ -79,15 +78,6 @@ public class DeckAccess extends AbstractModel {
         if (!key.equals(getKey())) {
             throw new RuntimeException("Attempt to set key to DeckAccess (always belongs to user)");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Exclude
-    @Override
-    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
-        return null;
     }
 
     /**

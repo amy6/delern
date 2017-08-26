@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import com.google.firebase.database.DatabaseReference;
-
 /**
  * Created by katarina on 2/23/17.
  * Model class for view.
@@ -122,14 +120,6 @@ public class View extends AbstractModel {
      */
     public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
-        return null;
     }
 
     /**

@@ -211,7 +211,10 @@ public abstract class AbstractModel {
      * @return DatabaseReference pointing to the root of all child nodes (recursively).
      */
     @Exclude
-    public abstract <T> DatabaseReference getChildReference(Class<T> childClass);
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        throw new IllegalArgumentException(this + " doesn't recognize " + childClass +
+                " as a child class");
+    }
 
     /**
      * Get a DatabaseReference pointing to a specific child node, or root of indirect child nodes
