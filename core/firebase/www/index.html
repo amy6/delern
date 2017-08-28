@@ -1,1 +1,91 @@
-<h1>Welcome to Delern Web!</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/__/firebase/4.2.0/firebase-app.js"></script>
+  <script src="/__/firebase/4.2.0/firebase-auth.js"></script>
+  <script src="/__/firebase/4.2.0/firebase-database.js"></script>
+
+  <script src="/__/firebase/init.js"></script>
+  <title>Delern</title>
+
+ <script>
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var database = firebase.database();
+      var userId = firebase.auth().currentUser.uid;
+      firebase.database().ref('/decks/' + userId).on('value', function(snapshot) {
+        var decks = snapshot.val();
+        var div = document.getElementById("decks");
+        div.innerHTML = "";
+        for (var deckId in decks) {
+          var btn = document.createElement("button"); // Create a <button> element
+          btn.setAttribute("firebase-deckId", deckId);
+          var t = document.createTextNode(decks[deckId].name); // Create a text node
+          btn.onclick = function(e) {
+            console.log(e.target.getAttribute("firebase-deckId"));
+            var frontSide = prompt("Enter front side", "");
+            var backSide  =  prompt("Enter back side", "");
+
+            var card = {
+              front: frontSide,
+              back: backSide,
+              createdAt: firebase.database.ServerValue.TIMESTAMP,
+            };
+
+            var scheduled = {
+              level: "L0",
+              repeatAt: (new Date()).getTime(),
+            }
+
+            var newCardKey = firebase.database().ref().child('cards').child(deckId).push().key;
+            console.log("New Card Kew" + newCardKey);
+            console.log(card);
+            console.log(scheduled);
+
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+            var updates = {};
+            updates['/cards/' + e.target.getAttribute("firebase-deckId") +'/' + newCardKey] = card;
+            updates['/learning/' + userId + '/' + e.target.getAttribute("firebase-deckId") + '/' + newCardKey] = scheduled;
+
+            return firebase.database().ref().update(updates);
+          }
+          btn.appendChild(t);                                // Append the text to <button>
+          div.appendChild(btn);  
+        }
+
+      });
+    } else {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // ...
+        alert(user);
+      }).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        alert(errorMessage);
+      });
+    }
+  });
+  </script>
+ 
+
+
+</head>
+<body>
+
+<div id="decks">
+</div>
+
+</body>
+</html>
+
