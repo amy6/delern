@@ -36,6 +36,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -297,6 +298,10 @@ public class DelernMainActivity extends AppCompatActivity
                         .setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
+        if (dialog.getWindow() != null) {
+            dialog.getWindow()
+                    .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
