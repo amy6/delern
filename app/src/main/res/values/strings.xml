@@ -69,6 +69,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add_extra_reversed_card_message">2 cards are added</string>
     <string name="deck">Deck</string>
     <string name="delete_deck">Delete deck with all cards?</string>
+    <string name="back_side_card_hint">Back Side</string>
+    <string name="front_side_card_hint">Front side</string>
+
 
     <!-- Cards type menu -->
     <string name="cards_type">Deck Type</string>
