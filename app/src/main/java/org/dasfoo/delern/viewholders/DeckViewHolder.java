@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -201,21 +202,13 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     private void showDeleteDialog() {
         new AlertDialog.Builder(getDeckTextView().getContext())
                 .setMessage(R.string.delete_deck)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        // TODO(ksheremet): adapter position may change while the dialog is open.
-                        //                  Check here for -1, or save before showing the dialog and
-                        //                  check here for being within range.
-                        mOnViewClick.deleteDeck(getAdapterPosition());
-                    }
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    // TODO(ksheremet): adapter position may change while the dialog is open.
+                    //                  Check here for -1, or save before showing the dialog and
+                    //                  check here for being within range.
+                    mOnViewClick.deleteDeck(getAdapterPosition());
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .show();
     }
 
@@ -228,12 +221,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         final AlertDialog dialog = new AlertDialog.Builder(getDeckTextView().getContext())
                 .setTitle(R.string.deck)
                 .setView(input)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.cancel();
-                    }
-                })
+                .setNegativeButton(R.string.cancel, (dialog1, which) -> dialog1.cancel())
                 .setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
                     /**
                      * {@inheritDoc}
@@ -254,6 +242,10 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                         .setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
+        if (dialog.getWindow() != null) {
+            dialog.getWindow()
+                    .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
