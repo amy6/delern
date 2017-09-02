@@ -128,7 +128,6 @@ jobs:
             echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
             gcloud auth activate-service-account --key-file app/play-store-service-account.json
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
-            gsutil cp gs://dasfoo-keystore/fabric.properties app
 
             # Run instrumented tests (for coverage).
             ./gradlew \
