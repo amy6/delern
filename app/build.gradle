@@ -112,12 +112,6 @@ android {
         }
     }
 
-    if (isIDE) {
-        buildTypeMatching 'instrumented', 'debug'
-    } else {
-        buildTypeMatching 'instrumented', 'release'
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
