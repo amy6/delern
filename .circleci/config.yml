@@ -28,10 +28,10 @@ jobs:
 
     - restore_cache:
         keys:
-        - v3-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-        - v3-android-{{ .Branch }}-{{ checksum "build.gradle" }}-
-        - v3-android-{{ .Branch }}-
-        - v3-android-master-
+        - v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        - v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-
+        - v4-android-{{ .Branch }}-
+        - v4-android-master-
 
     - run:
         name: "Install Android SDK"
@@ -75,8 +75,9 @@ jobs:
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v3-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        key: v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
         paths:
+        - core/firebase/node_modules
         - ~/.gradle
         # TODO(dotdoom): use environment variables once they are supported
         - /opt/android-sdk-linux
