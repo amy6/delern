@@ -18,8 +18,9 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
@@ -32,13 +33,16 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test for Deck model.
  */
-public class DeckTest extends FirebaseServerUnitTest {
+public class DeckTest {
 
     private User mUser;
 
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
+
     @Before
     public void createUser() throws Exception {
-        mUser = signIn();
+        mUser = mFirebaseServer.signIn();
     }
 
     @Test

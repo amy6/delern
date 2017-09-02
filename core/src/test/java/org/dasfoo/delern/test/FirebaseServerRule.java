@@ -25,13 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.tasks.Tasks;
 
 import org.dasfoo.delern.models.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.rules.ExternalResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
@@ -42,27 +41,26 @@ import io.reactivex.plugins.RxJavaPlugins;
 import uk.org.lidalia.slf4jext.Level;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
-public class FirebaseServerUnitTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseServerUnitTest.class);
+public class FirebaseServerRule extends ExternalResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseServerRule.class);
 
     private static final int PORT = 5533;
     private static final String HOST = "localhost";
 
-    private static String mNode;
-    private static String mServer;
-    private static String mRules;
+    private String mNode;
+    private String mServer;
+    private String mRules;
 
     private FirebaseServerRunner mFirebaseServer;
 
-    @BeforeClass
-    public static void findDependencies() {
+    public FirebaseServerRule() {
+        super();
         findDependencies(new File(System.getProperty("user.dir")));
         RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
-
         TestLoggerFactory.getInstance().setPrintLevel(Level.DEBUG);
     }
 
-    private static void findDependencies(File directory) {
+    private void findDependencies(File directory) {
         for (File f : directory.listFiles()) {
             if (f.isDirectory()) {
                 findDependencies(f);
@@ -83,8 +81,8 @@ public class FirebaseServerUnitTest {
         }
     }
 
-    @Before
-    public void startServer() throws Exception {
+    @Override
+    protected void before() throws Throwable {
         if (mNode == null || mServer == null || mRules == null) {
             throw new RuntimeException("Cannot find dependencies: node=" + mNode + ", server=" +
                     mServer + ", rules=" + mRules);
@@ -100,14 +98,18 @@ public class FirebaseServerUnitTest {
         TestLoggerFactory.clear();
     }
 
-    @After
-    public void stopServer() throws Exception {
+    @Override
+    protected void after() {
         try {
             for (FirebaseApp app : FirebaseApp.getApps()) {
                 app.delete();
             }
         } finally {
-            mFirebaseServer.stop();
+            try {
+                mFirebaseServer.stop();
+            } catch (IOException e) {
+                LOGGER.error("Failed to stop firebase-server", e);
+            }
         }
     }
 

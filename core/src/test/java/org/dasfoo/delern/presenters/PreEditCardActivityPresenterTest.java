@@ -22,9 +22,10 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.dasfoo.delern.views.IPreEditCardView;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static uk.org.lidalia.slf4jtest.LoggingEvent.error;
 
 
-public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
+public class PreEditCardActivityPresenterTest {
 
     private static int TIMEOUT = 5000;
 
@@ -55,6 +56,9 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
 
     private Card mCard;
 
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
+
     @Before
     public void setupParamPresenter() throws Exception {
         // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
@@ -66,7 +70,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     public void showCardCallback() throws Exception {
         String frontSide = "frontSide";
         String backSide = "backSide";
-        User user = signIn();
+        User user = mFirebaseServer.signIn();
         Deck deck = new Deck(user);
 
         //Create user, deck and card for testing
@@ -112,7 +116,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     public void cardWasUpdatedAndListened() throws Exception {
         String frontSide = "frontSide";
         String backSide = "backSide";
-        User user = signIn();
+        User user = mFirebaseServer.signIn();
         Deck deck = new Deck(user);
 
         //Create user, deck and card for testing
@@ -148,7 +152,7 @@ public class PreEditCardActivityPresenterTest extends FirebaseServerUnitTest {
     public void cardWasUpdatedAndNodListened() throws Exception {
         String frontSide = "frontSide";
         String backSide = "backSide";
-        User user = signIn();
+        User user = mFirebaseServer.signIn();
         Deck deck = new Deck(user);
 
         //Create user, deck and card for testing

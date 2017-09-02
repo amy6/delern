@@ -21,9 +21,10 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.dasfoo.delern.views.IDelernMainView;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -39,9 +40,12 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
+public class DelernMainActivityPresenterTest {
 
     private final static int TIMEOUT = 5000;
+
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
 
     @Mock
     private IDelernMainView mDelernMainView;
@@ -56,7 +60,7 @@ public class DelernMainActivityPresenterTest extends FirebaseServerUnitTest {
         // inject the mocks in the test the initMocks method needs to be called.
         MockitoAnnotations.initMocks(this);
 
-        mUser = signIn();
+        mUser = mFirebaseServer.signIn();
     }
 
     @Test

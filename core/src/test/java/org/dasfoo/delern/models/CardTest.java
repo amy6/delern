@@ -18,8 +18,9 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.List;
@@ -29,13 +30,16 @@ import io.reactivex.ObservableSource;
 
 import static org.junit.Assert.assertTrue;
 
-public class CardTest extends FirebaseServerUnitTest {
+public class CardTest {
+
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
 
     private User mUser;
 
     @Before
     public void createUser() throws Exception {
-        mUser = signIn();
+        mUser = mFirebaseServer.signIn();
     }
 
     @Test

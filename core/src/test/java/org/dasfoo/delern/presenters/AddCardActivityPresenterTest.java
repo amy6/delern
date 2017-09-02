@@ -21,9 +21,10 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.dasfoo.delern.views.IAddEditCardView;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests AddCardActivityPresenter.
  */
-public class AddCardActivityPresenterTest extends FirebaseServerUnitTest {
+public class AddCardActivityPresenterTest {
 
     private static int TIMEOUT = 5000;
 
@@ -43,9 +44,12 @@ public class AddCardActivityPresenterTest extends FirebaseServerUnitTest {
     private Deck mDeck;
     private IAddEditCardView mAddEditCardView;
 
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
+
     @Before
     public void setupParamPresenter() throws Exception {
-        User mUser = signIn();
+        User mUser = mFirebaseServer.signIn();
         //Create user and deck for testing
         mUser.save().blockingAwait();
         mDeck = new Deck(mUser);

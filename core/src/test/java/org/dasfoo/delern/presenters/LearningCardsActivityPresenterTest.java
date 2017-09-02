@@ -23,9 +23,10 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
-import org.dasfoo.delern.test.FirebaseServerUnitTest;
+import org.dasfoo.delern.test.FirebaseServerRule;
 import org.dasfoo.delern.views.ILearningCardsView;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -37,12 +38,14 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
+public class LearningCardsActivityPresenterTest {
 
     private static final int TIMEOUT = 5000;
     private static final String FRONT_SIDE_CARD = "frontSide";
     private static final String BACK_SIDE_CARD = "backSide";
 
+    @Rule
+    public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
 
     @Mock
     private ILearningCardsView mLearningCardView;
@@ -58,7 +61,7 @@ public class LearningCardsActivityPresenterTest extends FirebaseServerUnitTest {
         MockitoAnnotations.initMocks(this);
 
         // Create data for testing
-        User user = signIn();
+        User user = mFirebaseServer.signIn();
         mDeck = new Deck(user);
 
         //Create user, deck and card for testing
