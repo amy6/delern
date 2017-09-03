@@ -18,25 +18,14 @@
 
 package org.dasfoo.delern;
 
-import android.app.Activity;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingPolicies;
-import android.support.test.espresso.IdlingResource;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
 import android.text.InputType;
 
-import org.dasfoo.delern.signin.SignInActivity;
-import org.junit.After;
-import org.junit.Before;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.TimeUnit;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -56,55 +45,8 @@ public class ExampleInstrumentedTest {
     public ActivityTestRule<DelernMainActivity> mActivityRule = new ActivityTestRule<>(
             DelernMainActivity.class);
 
-    @Before
-    public void setUp() {
-        // Raise Idling policy timeout because CI emulator can be really slow.
-        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
-        IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
-
-        Espresso.registerIdlingResources(new IdlingResource() {
-            private ResourceCallback mResourceCallback;
-            private boolean mIsIdle = false;
-
-            private Activity getCurrentActivity() {
-                return Iterables.getFirst(ActivityLifecycleMonitorRegistry.getInstance()
-                        .getActivitiesInStage(Stage.RESUMED), null);
-            }
-
-            @Override
-            public String getName() {
-                return "Sign In";
-            }
-
-            @Override
-            public boolean isIdleNow() {
-                if (!mIsIdle) {
-                    Activity currentActivity = getCurrentActivity();
-                    if (currentActivity != null &&
-                            currentActivity.getClass() != SignInActivity.class &&
-                            currentActivity.getClass() != SplashScreenActivity.class) {
-                        mIsIdle = true;
-                        if (mResourceCallback != null) {
-                            mResourceCallback.onTransitionToIdle();
-                        }
-                    }
-                }
-                return mIsIdle;
-            }
-
-            @Override
-            public void registerIdleTransitionCallback(final ResourceCallback callback) {
-                mResourceCallback = callback;
-            }
-        });
-    }
-
-    @After
-    public void tearDown() {
-        for (IdlingResource rc : Espresso.getIdlingResources()) {
-            Espresso.unregisterIdlingResources(rc);
-        }
-    }
+    @Rule
+    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
     @Test
     public void addDeck() {

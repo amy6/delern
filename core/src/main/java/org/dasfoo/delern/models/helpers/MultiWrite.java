@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Completable;
 import io.reactivex.subjects.CompletableSubject;
@@ -43,6 +44,7 @@ import io.reactivex.subjects.CompletableSubject;
  */
 public class MultiWrite {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
+    private static final AtomicInteger OPERATIONS_IN_FLIGHT = new AtomicInteger();
 
     // Default to "true" in case we don't want an offline listener.
     private static boolean sConnected = true;
@@ -70,6 +72,15 @@ public class MultiWrite {
                 initializeOfflineListener(db);
             }
         });
+    }
+
+    /**
+     * Gets the number of currently unfinished *online* write() operations.
+     *
+     * @return the number of in-flight write() operations.
+     */
+    public static int getOperationsInFlight() {
+        return OPERATIONS_IN_FLIGHT.get();
     }
 
     /**
@@ -151,12 +162,15 @@ public class MultiWrite {
      */
     public Completable write() {
         CompletableSubject subject = CompletableSubject.create();
+
+        OPERATIONS_IN_FLIGHT.incrementAndGet();
         mRoot.updateChildren(mData)
                 .addOnSuccessListener((final Void p) -> subject.onComplete())
                 .addOnFailureListener((final Exception e) -> {
                     LOGGER.error("Failed to save {}", mData, e);
                     subject.onError(e);
-                });
+                })
+                .addOnCompleteListener(t -> OPERATIONS_IN_FLIGHT.decrementAndGet());
 
         if (sConnected) {
             return subject;
