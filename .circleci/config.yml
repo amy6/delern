@@ -15,8 +15,8 @@ jobs:
         command: |
           # --invert-grep appeared only in Git 2.4
           if git log --format=%H "origin/master.." |
-              grep -x -v -f <(git log --format=%H "origin/master.." --grep '^relnote: '); then
-            echo "Found commits without Release Notes, aborting"
+              grep -x -v -f <(git log --format=%H "origin/master.." -E --grep '^relnote: (.*[.]|none[.]?)$'); then
+            echo "Found commits without (or with invalid) Release Notes, aborting"
             exit 1
           fi
           git submodule sync
@@ -146,9 +146,9 @@ jobs:
             storage_path="gs://$(sed -n -r 's|.*storage/browser/(.*)\]|\1|p' <app/build/gcloud.txt | head -1)"
             gsutil cp "${storage_path}*/artifacts/coverage.ec" app/build/outputs/code-coverage/connected/coverage.ec
             ./gradlew -PcoverageRun -x app:connectedInstrumentedAndroidTest app:createInstrumentedAndroidTestCoverageReport
+
             # Run instrumented test (for ProGuard).
             ./gradlew \
-              clean \
               assembleInstrumented \
               assembleInstrumentedAndroidTest \
               --console=plain
@@ -173,11 +173,22 @@ jobs:
         name: "Build signed Release binary, run instrumented tests, publish to Google Play"
         command: |
           if [ -n "${CIRCLE_TAG}" ]; then
+            # Run instrumented test (on hardware).
+            ./gradlew \
+              clean \
+              assembleInstrumented \
+              assembleInstrumentedAndroidTest \
+              --console=plain
+            gcloud --project=delern-debug firebase test android run \
+              --app app/build/outputs/apk/instrumented/app-instrumented.apk \
+              --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+            # Build relnote.
             previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
             git log "${previous_tag?}.." --format=%B | \
               grep '^relnote: ' | \
-              grep -v -x 'relnote: none' | \
+              grep -E -v -x 'relnote: none[.]?' | \
               cut -b10- | \
+              awk '!a[$0]++' | \
               cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
             gsutil cp gs://dasfoo-keystore/delern.jks app
             # Publish to Google Play (this also automatically runs Robo tests).
