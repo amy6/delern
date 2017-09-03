@@ -59,6 +59,7 @@ jobs:
             :core:findbugsMain \
             :core:pmdMain \
             :app:assembleInstrumented \
+            :app:assembleInstrumentedAndroidTest \
             --console=plain
 
     - run:

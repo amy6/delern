@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.test;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingPolicies;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
@@ -62,11 +62,11 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
         // Raise Idling policy timeout because emulator or network can be really slow.
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
         IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
-        Espresso.registerIdlingResources(mFirebaseOperationIdlingResource);
+        IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
     }
 
     @Override
     protected void after() {
-        Espresso.unregisterIdlingResources(mFirebaseOperationIdlingResource);
+        IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
     }
 }
