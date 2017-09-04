@@ -34,7 +34,10 @@
 
 # Keep ViewHolder classes because Firebase uses reflection on them:
 # https://github.com/firebase/FirebaseUI-Android/issues/46#issuecomment-247516749
--keep class org.dasfoo.delern.viewholders.** {
+-keep class org.dasfoo.delern.listcards.CardViewHolder {
+  *;
+}
+-keep class org.dasfoo.delern.listdecks.DeckViewHolder {
   *;
 }
 
