@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.card.LearningCardsActivity;
+import org.dasfoo.delern.learncards.LearningCardsActivity;
 import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
 
 import javax.inject.Singleton;

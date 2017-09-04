@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.signin.SignInActivity;
 import org.slf4j.Logger;

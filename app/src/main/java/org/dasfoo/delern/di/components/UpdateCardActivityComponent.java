@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.card.AddEditCardActivity;
+import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
 
 import javax.inject.Singleton;

@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.modules;
 
-import org.dasfoo.delern.presenters.LearningCardsActivityPresenter;
-import org.dasfoo.delern.views.ILearningCardsView;
+import org.dasfoo.delern.learncards.LearningCardsActivityPresenter;
+import org.dasfoo.delern.learncards.ILearningCardsView;
 
 import dagger.Module;
 import dagger.Provides;

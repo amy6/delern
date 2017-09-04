@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.models;
 
-import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

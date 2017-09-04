@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.modules;
 
-import org.dasfoo.delern.presenters.DelernMainActivityPresenter;
-import org.dasfoo.delern.views.IDelernMainView;
+import org.dasfoo.delern.listdecks.DelernMainActivityPresenter;
+import org.dasfoo.delern.listdecks.IDelernMainView;
 
 import dagger.Module;
 import dagger.Provides;

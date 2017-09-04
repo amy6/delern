@@ -37,7 +37,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.BuildConfig;
-import org.dasfoo.delern.DelernMainActivity;
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;

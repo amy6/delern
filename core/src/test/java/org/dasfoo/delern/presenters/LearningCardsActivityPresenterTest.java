@@ -19,12 +19,13 @@
 package org.dasfoo.delern.presenters;
 
 
+import org.dasfoo.delern.learncards.LearningCardsActivityPresenter;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.test.FirebaseServerRule;
-import org.dasfoo.delern.views.ILearningCardsView;
+import org.dasfoo.delern.learncards.ILearningCardsView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

@@ -38,10 +38,10 @@ import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.views.IAddEditCardView;
-import org.dasfoo.delern.views.IDelernMainView;
-import org.dasfoo.delern.views.ILearningCardsView;
-import org.dasfoo.delern.views.IPreEditCardView;
+import org.dasfoo.delern.addupdatecard.IAddEditCardView;
+import org.dasfoo.delern.listdecks.IDelernMainView;
+import org.dasfoo.delern.learncards.ILearningCardsView;
+import org.dasfoo.delern.previewcard.IPreEditCardView;
 
 /**
  * Initialize components for creating class.

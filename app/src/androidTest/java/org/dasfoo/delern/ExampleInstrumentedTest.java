@@ -22,6 +22,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.junit.Rule;
 import org.junit.Test;

@@ -19,7 +19,8 @@
 package org.dasfoo.delern.controller;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.presenters.helpers.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.CardColor;
 import org.junit.Assert;
 import org.junit.Test;
 

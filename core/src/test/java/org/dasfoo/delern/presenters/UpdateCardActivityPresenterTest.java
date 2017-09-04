@@ -18,12 +18,13 @@
 
 package org.dasfoo.delern.presenters;
 
+import org.dasfoo.delern.addupdatecard.UpdateCardActivityPresenter;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.presenters.interfaces.IAddUpdatePresenter;
+import org.dasfoo.delern.addupdatecard.IAddUpdatePresenter;
 import org.dasfoo.delern.test.FirebaseServerRule;
-import org.dasfoo.delern.views.IAddEditCardView;
+import org.dasfoo.delern.addupdatecard.IAddEditCardView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

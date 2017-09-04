@@ -30,7 +30,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.dasfoo.delern.card.EditCardListActivity"
+    tools:context="org.dasfoo.delern.listcards.EditCardListActivity"
     tools:showIn="@layout/show_deck_activity">
 
     <TextView

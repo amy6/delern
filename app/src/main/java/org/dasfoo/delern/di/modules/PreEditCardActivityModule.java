@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.modules;
 
-import org.dasfoo.delern.presenters.PreEditCardActivityPresenter;
-import org.dasfoo.delern.views.IPreEditCardView;
+import org.dasfoo.delern.previewcard.PreEditCardActivityPresenter;
+import org.dasfoo.delern.previewcard.IPreEditCardView;
 
 import dagger.Module;
 import dagger.Provides;

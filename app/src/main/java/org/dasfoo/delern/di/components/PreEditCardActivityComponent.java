@@ -23,7 +23,7 @@ package org.dasfoo.delern.di.components;
  * Dagger modules. Interface describes for which types we want to use members injection
  */
 
-import org.dasfoo.delern.card.PreEditCardActivity;
+import org.dasfoo.delern.previewcard.PreEditCardActivity;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 
 import javax.inject.Singleton;

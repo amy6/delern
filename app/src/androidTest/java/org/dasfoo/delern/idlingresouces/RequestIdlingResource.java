@@ -8,10 +8,10 @@ import android.support.test.runner.lifecycle.Stage;
 import android.support.v7.widget.AppCompatButton;
 import android.widget.Button;
 
-import org.dasfoo.delern.DelernMainActivity;
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.SplashScreenActivity;
-import org.dasfoo.delern.card.AddEditCardActivity;
+import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.signin.SignInActivity;
 
 /**

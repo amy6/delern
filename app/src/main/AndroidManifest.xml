@@ -40,7 +40,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DelernMainActivity"
+            android:name=".listdecks.DelernMainActivity"
             android:label="${appName}"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -64,39 +64,39 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         </service>
 
         <activity
-            android:name=".card.EditCardListActivity"
+            android:name=".listcards.EditCardListActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".DelernMainActivity"
+            android:parentActivityName=".listdecks.DelernMainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.DelernMainActivity"/>
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity"/>
         </activity>
         <activity
-            android:name=".card.AddEditCardActivity"
-            android:parentActivityName=".card.EditCardListActivity"
+            android:name=".addupdatecard.AddEditCardActivity"
+            android:parentActivityName=".listcards.EditCardListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.card.EditCardListActivity"/>
+                android:value="org.dasfoo.delern.listcards.EditCardListActivity"/>
         </activity>
         <activity
-            android:name=".card.PreEditCardActivity"
+            android:name=".previewcard.PreEditCardActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".card.EditCardListActivity"
+            android:parentActivityName=".listcards.EditCardListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.card.EditCardListActivity"/>
+                android:value="org.dasfoo.delern.listcards.EditCardListActivity"/>
         </activity>
         <activity
-            android:name=".card.LearningCardsActivity"
+            android:name=".learncards.LearningCardsActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".DelernMainActivity"
+            android:parentActivityName=".listdecks.DelernMainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.DelernMainActivity"/>
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity"/>
         </activity>
         <activity
             android:name=".SplashScreenActivity"

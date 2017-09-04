@@ -18,7 +18,7 @@
 
 package org.dasfoo.delern.di.modules;
 
-import org.dasfoo.delern.presenters.EditCardListActivityPresenter;
+import org.dasfoo.delern.listcards.EditCardListActivityPresenter;
 
 import dagger.Module;
 import dagger.Provides;

@@ -18,11 +18,12 @@
 
 package org.dasfoo.delern.presenters;
 
+import org.dasfoo.delern.listdecks.DelernMainActivityPresenter;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.test.FirebaseServerRule;
-import org.dasfoo.delern.views.IDelernMainView;
+import org.dasfoo.delern.listdecks.IDelernMainView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

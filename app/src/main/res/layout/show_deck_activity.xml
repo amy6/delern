@@ -25,7 +25,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true"
-                                                 tools:context="org.dasfoo.delern.card.EditCardListActivity">
+                                                 tools:context="org.dasfoo.delern.listcards.EditCardListActivity">
 
     <include layout="@layout/show_deck_content"/>
 

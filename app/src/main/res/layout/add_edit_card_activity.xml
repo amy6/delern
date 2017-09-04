@@ -24,7 +24,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.dasfoo.delern.card.AddEditCardActivity">
+    tools:context="org.dasfoo.delern.addupdatecard.AddEditCardActivity">
 
     <include layout="@layout/toolbar" />
 
