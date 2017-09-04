@@ -70,22 +70,6 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void createDeckWithCardAndDelete() {
-        waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
-                .perform(typeTextIntoFocusedView("Learn"), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
-        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
-        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
-        pressBack();
-        // Check that deck with 1 card was created
-        waitView(withText("Learn")).check(matches(hasSibling(withText("1"))));
-        deleteDeck("Learn");
-    }
-
-    @Test
     public void createDeckWithCardToLearnAndDelete() {
         waitView(withId(R.id.fab)).perform(click());
         waitView(withInputType(InputType.TYPE_CLASS_TEXT))
@@ -128,23 +112,6 @@ public class ExampleInstrumentedTest {
         waitView(withText(R.string.rename)).perform(click());
         waitView(withText("Renamed")).check(matches(hasSibling(withText("0"))));
         deleteDeck("Renamed");
-    }
-
-    @Test
-    public void createDeckWithReversedCardAndDelete() {
-        waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
-                .perform(typeTextIntoFocusedView("Reversed"), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
-        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
-        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        waitView(withId(R.id.add_reversed_card_checkbox)).perform(click());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
-        pressBack();
-        // Check that deck with 2 card was created
-        waitView(withText("Reversed")).check(matches(hasSibling(withText("2"))));
-        deleteDeck("Reversed");
     }
 
     private static void deleteDeck(final String deckName) {
