@@ -28,6 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -41,10 +42,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class DeckOperationsTest {
 
     @Rule
     public ActivityTestRule<DelernMainActivity> mActivityRule = new ActivityTestRule<>(
@@ -53,6 +55,12 @@ public class ExampleInstrumentedTest {
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
+    @Test
+    public void noDecksMessageShown() {
+        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(allOf(withId(R.id.empty_recyclerview_message),
+                withText(R.string.empty_decks_message))).check(matches(isDisplayed()));
+    }
     @Test
     public void addEmptyDeckAndDelete() {
         waitView(withId(R.id.fab)).perform(click());
@@ -66,6 +74,7 @@ public class ExampleInstrumentedTest {
         waitView(withId(R.id.fab)).check(matches(isDisplayed()));
         // Check that deck was created with 0 cards
         waitView(withText("Empty")).check(matches(hasSibling(withText("0"))));
+        onView(withId(R.id.empty_recyclerview_message)).check(matches(not(isDisplayed())));
         deleteDeck("Empty");
     }
 
