@@ -142,9 +142,10 @@ jobs:
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
               --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
               --directories-to-pull /sdcard/coverage \
-              --results-bucket delern-test-results |& tee app/build/gcloud.txt
-            storage_path="gs://$(sed -n -r 's|.*storage/browser/(.*)\]|\1|p' <app/build/gcloud.txt | head -1)"
-            gsutil cp "${storage_path}*/artifacts/coverage.ec" app/build/outputs/code-coverage/connected/coverage.ec
+              --results-bucket delern-test-results \
+              --results-dir "circle-${CIRCLE_BUILD_NUM}"
+            gsutil cp "gs://delern-test-results/circle-${CIRCLE_BUILD_NUM}/*/artifacts/coverage.ec" \
+              app/build/outputs/code-coverage/connected/coverage.ec
             ./gradlew -PcoverageRun -x app:connectedInstrumentedAndroidTest app:createInstrumentedAndroidTestCoverageReport
 
             # Run instrumented test (for ProGuard).
