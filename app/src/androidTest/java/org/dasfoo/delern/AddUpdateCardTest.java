@@ -6,6 +6,7 @@ import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.util.DeckPostfix;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,10 +44,11 @@ public class AddUpdateCardTest {
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
-    private final String mDeckName = "TestAddUpdate";
+    private String mDeckName;
 
     @Before
     public void createDeck() {
+        mDeckName = "TestAddUpdate" + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
