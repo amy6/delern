@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -47,20 +48,20 @@ public class AddUpdateCardTest {
     @Before
     public void createDeck() {
         waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
+        onView(withText(R.string.add)).perform(click());
     }
 
     @Test
     public void createCard() {
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
-        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
-        //Check that fields are empty after adding card
+        onView(withId(R.id.front_side_text)).perform(typeText("front"));
+        onView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
         waitView(withId(R.id.front_side_text)).check(matches(withText("")));
-        waitView(withId(R.id.back_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
         pressBack();
         // Check that deck with 1 card was created
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("1"))));
@@ -69,10 +70,13 @@ public class AddUpdateCardTest {
     @Test
     public void createReversedCard() {
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
-        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        waitView(withId(R.id.add_reversed_card_checkbox)).perform(click());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.front_side_text)).perform(typeText("front"));
+        onView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        onView(withId(R.id.add_reversed_card_checkbox)).perform(click());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
         pressBack();
         // Check that deck with 2 card was created
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("2"))));
@@ -83,25 +87,28 @@ public class AddUpdateCardTest {
         String frontCard = "front";
         String backCard = "back";
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText(frontCard));
-        waitView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
         pressBack();
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("1"))));
-        waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        waitView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit)).perform(click());
         waitView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
         waitView(withId(R.id.textFrontPreview)).check(matches(withText(frontCard)));
-        waitView(withId(R.id.textBackPreview)).check(matches(withText(backCard)));
-        waitView(withId(R.id.edit_card_button)).check(matches(isDisplayed())).perform(click());
+        onView(withId(R.id.textBackPreview)).check(matches(withText(backCard)));
+        onView(withId(R.id.edit_card_button)).check(matches(isDisplayed())).perform(click());
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
                 .perform(replaceText("front2"));
-        waitView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
+        onView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
                 .perform(replaceText("back2"));
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.add_card_to_db)).perform(click());
         waitView(withId(R.id.textFrontPreview)).check(matches(withText("front2")));
-        waitView(withId(R.id.textBackPreview)).check(matches(withText("back2")));
+        onView(withId(R.id.textBackPreview)).check(matches(withText("back2")));
         pressBack();
         pressBack();
     }
@@ -111,9 +118,12 @@ public class AddUpdateCardTest {
         String frontCard = "front";
         String backCard = "back";
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText(frontCard));
-        waitView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
         pressBack();
         // Start Learning Activity
         waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
@@ -124,10 +134,10 @@ public class AddUpdateCardTest {
         // Open the options menu OR open the overflow menu, depending on whether
         // the device has a hardware or software overflow menu button.
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        waitView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit)).perform(click());
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
                 .perform(replaceText("front2"));
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.add_card_to_db)).perform(click());
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         pressBack();
@@ -138,9 +148,9 @@ public class AddUpdateCardTest {
         String frontCard = "front";
         String backCard = "back";
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText(frontCard));
-        waitView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
         pressBack();
         // Start Learning Activity
         waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
@@ -148,22 +158,22 @@ public class AddUpdateCardTest {
         // Check that front side is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontCard)));
         // Flip card
-        waitView(withId(R.id.turn_card_button)).perform(click());
+        onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
-        waitView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
+        onView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
         // Open the options menu OR open the overflow menu, depending on whether
         // the device has a hardware or software overflow menu button.
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        waitView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit)).perform(click());
 
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
                 .perform(replaceText("front2"));
-        waitView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
+        onView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
                 .perform(replaceText("back2"));
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.add_card_to_db)).perform(click());
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
-        waitView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
+        onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
         pressBack();
     }
 
@@ -171,7 +181,7 @@ public class AddUpdateCardTest {
     public void deleteDeck() {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        waitView(withText(R.string.delete)).perform(click());
-        waitView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.delete)).perform(click());
     }
 }

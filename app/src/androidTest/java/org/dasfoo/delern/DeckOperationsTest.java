@@ -64,11 +64,10 @@ public class DeckOperationsTest {
     @Test
     public void addEmptyDeckAndDelete() {
         waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView("Empty"), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
-        waitView(withId(R.id.add_card_to_db))
-                .check(matches(isDisplayed()))
+        onView(withText(R.string.add)).perform(click());
+        onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()))
                 .perform(closeSoftKeyboard());
         pressBack();
         waitView(withId(R.id.fab)).check(matches(isDisplayed()));
@@ -81,13 +80,13 @@ public class DeckOperationsTest {
     @Test
     public void createDeckWithCardToLearnAndDelete() {
         waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView("Learn"), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
+        onView(withText(R.string.add)).perform(click());
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
-        waitView(withId(R.id.front_side_text)).perform(typeText("front"));
-        waitView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        waitView(withId(R.id.add_card_to_db)).perform(click());
+        onView(withId(R.id.front_side_text)).perform(typeText("front"));
+        onView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
         pressBack();
         // Start Learning Activity
         waitView(allOf(withText("Learn"), hasSibling(withText("1"))))
@@ -95,9 +94,9 @@ public class DeckOperationsTest {
         // Check that front side is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front")));
         // Flip card
-        waitView(withId(R.id.turn_card_button)).perform(click());
+        onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
-        waitView(withId(R.id.textBackCardView)).check(matches(withText("back")));
+        onView(withId(R.id.textBackCardView)).check(matches(withText("back")));
         pressBack();
         deleteDeck("Learn");
     }
@@ -105,9 +104,9 @@ public class DeckOperationsTest {
     @Test
     public void createDeckToRenameAndDelete() {
         waitView(withId(R.id.fab)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView("Created"), closeSoftKeyboard());
-        waitView(withText(R.string.add)).perform(click());
+        onView(withText(R.string.add)).perform(click());
         waitView(withId(R.id.add_card_to_db))
                 .check(matches(isDisplayed()))
                 .perform(closeSoftKeyboard());
@@ -115,10 +114,10 @@ public class DeckOperationsTest {
         waitView(withId(R.id.fab)).check(matches(isDisplayed()));
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText("Created"))))
                 .perform(click());
-        waitView(withText(R.string.rename)).perform(click());
-        waitView(withInputType(InputType.TYPE_CLASS_TEXT))
+        onView(withText(R.string.rename)).perform(click());
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(replaceText("Renamed"), closeSoftKeyboard());
-        waitView(withText(R.string.rename)).perform(click());
+        onView(withText(R.string.rename)).perform(click());
         waitView(withText("Renamed")).check(matches(hasSibling(withText("0"))));
         deleteDeck("Renamed");
     }
@@ -126,7 +125,7 @@ public class DeckOperationsTest {
     private static void deleteDeck(final String deckName) {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click());
-        waitView(withText(R.string.delete)).perform(click());
-        waitView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.delete)).perform(click());
     }
 }
