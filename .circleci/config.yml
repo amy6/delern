@@ -147,6 +147,14 @@ jobs:
             gsutil cp "gs://delern-test-results/circle-${CIRCLE_BUILD_NUM}/*/artifacts/coverage.ec" \
               app/build/outputs/code-coverage/connected/coverage.ec
             ./gradlew -PcoverageRun -x app:connectedInstrumentedAndroidTest app:createInstrumentedAndroidTestCoverageReport
+            # The code in "app" can only be covered by Android on-device tests,
+            # therefore PR builds will always report false negatives.
+            ./gradlew \
+              -PisolatedRun \
+              core:jacocoTestReport \
+              app:jacocoTestDebugUnitTestReport \
+              --console=plain
+            bash <(curl -s https://codecov.io/bash)
 
             # Run instrumented test (for ProGuard).
             ./gradlew \
@@ -159,16 +167,6 @@ jobs:
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
           fi
-
-    - run:
-        name: "Generate and upload test coverage"
-        command: |
-          ./gradlew \
-            -PisolatedRun \
-            core:jacocoTestReport \
-            app:jacocoTestDebugUnitTestReport \
-            --console=plain
-          bash <(curl -s https://codecov.io/bash)
 
     - deploy:
         name: "Build signed Release binary, run instrumented tests, publish to Google Play"
