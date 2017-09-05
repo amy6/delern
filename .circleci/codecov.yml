@@ -1,0 +1,10 @@
+# Completely disable comments and commit status reporting. The code in "app"
+# can only be covered by Android on-device tests, which are not executed
+# during regular branch or PR builds. Therefore the status will always be
+# falsely negative.
+comment: false
+coverage:
+  status:
+    project: false
+    patch: false
+    changes: false
