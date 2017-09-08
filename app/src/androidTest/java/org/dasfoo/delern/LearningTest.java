@@ -21,6 +21,7 @@ package org.dasfoo.delern;
 import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.InputType;
 import android.view.View;
@@ -284,7 +285,7 @@ public class LearningTest {
         @Override
         public boolean matches(Object item) {
             Context context = ((View) item).getContext();
-            int settingsColor = context.getColor(this.matchColor);
+            int settingsColor = ContextCompat.getColor(context, this.matchColor);
             return settingsColor == ((CardView) item).getCardBackgroundColor().getDefaultColor();
         }
 
