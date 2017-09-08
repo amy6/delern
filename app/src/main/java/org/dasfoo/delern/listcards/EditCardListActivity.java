@@ -215,6 +215,10 @@ public class EditCardListActivity extends AppCompatActivity implements
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this);
         }
 
+        // If it was got 0 cards, AdapterDataObserver won't run. Therefore it will be shown
+        // the previous value.
+        mNumberOfCards.setText(String.format(getString(R.string.number_of_cards),
+                mFirebaseAdapter.getItemCount()));
         mFirebaseAdapter.registerAdapterDataObserver(mFirebaseAdapterDataObserver);
         return mFirebaseAdapter;
     }
