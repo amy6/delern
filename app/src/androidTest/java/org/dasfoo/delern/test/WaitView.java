@@ -29,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 
 public final class WaitView {
@@ -58,7 +56,7 @@ public final class WaitView {
     }
 
     /**
-     * Like onView, but waits for a view to appear.
+     * Like onView, but waits for a view matcher to trigger.
      *
      * @param viewMatcher matcher for onView()
      * @return see onView()
@@ -69,8 +67,11 @@ public final class WaitView {
         while (true) {
             try {
                 LOGGER.info("Attempting to locate View {}", viewMatcher);
-                vi.check(matches(isDisplayed()));
-                return vi;
+                return vi.check((targetView, missingViewException) -> {
+                    if (targetView == null) {
+                        throw missingViewException;
+                    }
+                });
             } catch (NoMatchingViewException e) {
                 if (startTime + TIMEOUT >= System.currentTimeMillis()) {
                     sleep(POLL_INTERVAL);
