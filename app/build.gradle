@@ -70,6 +70,7 @@ android {
                 minifyEnabled false
                 debuggable true
                 testCoverageEnabled true
+                ext.enableCrashlytics = false
             }
 
             signingConfig signingConfigs.debug
@@ -135,9 +136,9 @@ dependencies {
     //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    instrumentedImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
-    instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     testImplementation 'junit:junit:4.12'
     //Espresso
