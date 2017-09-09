@@ -26,15 +26,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A class to handle authentication with Firebase.
  */
 public final class Auth {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Auth.class);
-
     // TODO(dotdoom): make it mCurrentUser, non-static methods, and create once: in SplashActivity
     private static User sCurrentUser;
 
