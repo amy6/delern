@@ -27,7 +27,7 @@ import android.text.InputType;
 import android.view.View;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.test.EmulatorTestsRule;
 import org.dasfoo.delern.util.DeckPostfix;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -67,7 +67,7 @@ public class LearningTest {
             DelernMainActivity.class);
 
     @Rule
-    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
+    public EmulatorTestsRule mFirebaseRule = new EmulatorTestsRule();
 
     private String mDeckName;
 
