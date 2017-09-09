@@ -60,7 +60,7 @@ public class DelernApplication extends Application {
 
         LeakCanary.install(this);
 
-        Fabric.with(this, new Crashlytics.Builder().build());
+        Fabric.with(this, new Crashlytics());
 
         RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
 

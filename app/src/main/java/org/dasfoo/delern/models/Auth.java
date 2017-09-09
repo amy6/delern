@@ -22,17 +22,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.reactivex.functions.Consumer;
 
 /**
  * A class to handle authentication with Firebase.
@@ -64,38 +59,6 @@ public final class Auth {
     }
 
     /**
-     * Sign in a Firebase user and populate the database.
-     *
-     * @param credential null for anonymous sign-in.
-     * @param callback   invoked when sign-in is finished, either successfully or with failure.
-     */
-    @SuppressWarnings({"checkstyle:IllegalCatch", "PMD.AvoidCatchingGenericException"})
-    public static void signIn(@Nullable final AuthCredential credential,
-                              @Nullable final Consumer<User> callback) {
-        Task<AuthResult> task;
-        if (credential == null) {
-            task = FirebaseAuth.getInstance().signInAnonymously();
-        } else {
-            task = FirebaseAuth.getInstance().signInWithCredential(credential);
-        }
-        if (callback != null) {
-            task.addOnCompleteListener(actualTask -> {
-                if (actualTask.isSuccessful()) {
-                    // OnAuthStateChange may fire too late, override right here.
-                    setCurrentUser(actualTask.getResult().getUser());
-                    try {
-                        callback.accept(getCurrentUser());
-                    } catch (Exception e) {
-                        LOGGER.error("Failed to continue after signing in", e);
-                    }
-                } else {
-                    LOGGER.error("Failed to sign in", actualTask.getException());
-                }
-            });
-        }
-    }
-
-    /**
      * Sign the user out using FirebaseAuth.getInstance().signOut().
      */
     public static void signOut() {
@@ -111,7 +74,13 @@ public final class Auth {
         return sCurrentUser;
     }
 
-    private static void setCurrentUser(@Nullable final FirebaseUser user) {
+    /**
+     * Set FirebaseUser as the current signed in user. Except for situations where timing is
+     * critical, the code should rely on auth listener built into this class.
+     *
+     * @param user FirebaseUser currently logged in.
+     */
+    public static void setCurrentUser(@Nullable final FirebaseUser user) {
         if (user == null) {
             Crashlytics.setUserIdentifier(null);
             // Clear out existing object.
@@ -122,7 +91,7 @@ public final class Auth {
         } else {
             Crashlytics.setUserIdentifier(user.getUid());
             sCurrentUser.setKey(user.getUid());
-            if (org.dasfoo.delern.BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
+            if (user.isAnonymous()) {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
                 sCurrentUser.setName("Anonymous User");

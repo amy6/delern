@@ -23,33 +23,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import org.dasfoo.delern.BuildConfig;
-import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.ParcelableUser;
-import org.dasfoo.delern.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Activity that perform SignIn for user using GoogleApiClient and FirebaseAuth.
  * Sign In is implemented using Google.
  */
 public class SignInActivity extends AppCompatActivity
-        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+        implements GoogleApiClient.OnConnectionFailedListener {
 
     /**
      * Class information for logging.
@@ -75,24 +73,6 @@ public class SignInActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
 
-        // TODO(ksheremet): Move to instrumented flavour package
-        if (BuildConfig.ENABLE_ANONYMOUS_SIGNIN) {
-            LOGGER.warn("Running from an instrumented test: forcing anonymous sign in");
-
-            org.dasfoo.delern.models.Auth.signIn(null, (final User data) -> {
-                // TODO(ksheremet): this should be a method of MainActivity
-                Intent intent = new Intent(this, DelernMainActivity.class);
-                intent.putExtra(DelernMainActivity.USER, new ParcelableUser(data));
-                startActivity(intent);
-                finish();
-            });
-            return;
-        }
-
-        // Assign fields
-        SignInButton mSignInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        // Set click listeners
-        mSignInButton.setOnClickListener(this);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -105,21 +85,21 @@ public class SignInActivity extends AppCompatActivity
                         this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onClick(final View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                signIn();
-                break;
-            default:
-                LOGGER.debug("Button {} is not implemented yet", v.getId());
-                break;
-        }
+        FirebaseAuth.getInstance().addAuthStateListener(auth -> {
+            // TODO(ksheremet): this should be a method of MainActivity
+            org.dasfoo.delern.models.Auth.setCurrentUser(auth.getCurrentUser());
+            if (org.dasfoo.delern.models.Auth.isSignedIn()) {
+                Intent intent = new Intent(this, DelernMainActivity.class);
+                intent.putExtra(DelernMainActivity.USER, new ParcelableUser(
+                        org.dasfoo.delern.models.Auth.getCurrentUser()
+                ));
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        ButterKnife.bind(this);
     }
 
     /**
@@ -132,25 +112,12 @@ public class SignInActivity extends AppCompatActivity
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                FirebaseAuth.getInstance().signInWithCredential(GoogleAuthProvider.getCredential(
+                        result.getSignInAccount().getIdToken(), null));
             } else {
                 LOGGER.error("Google Sign In activity failed: {}", result.getStatus());
             }
         }
-    }
-
-    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
-        LOGGER.info("firebaseAuthWithGoogle: {}", acct.getId());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        org.dasfoo.delern.models.Auth.signIn(credential, (final User data) -> {
-            // TODO(ksheremet): this should be a method of MainActivity
-            Intent intent = new Intent(this, DelernMainActivity.class);
-            intent.putExtra(DelernMainActivity.USER, new ParcelableUser(data));
-            startActivity(intent);
-            finish();
-        });
     }
 
     /**
@@ -164,7 +131,8 @@ public class SignInActivity extends AppCompatActivity
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
-    private void signIn() {
+    @OnClick(R.id.sign_in_button)
+    /* default */ void signInClick() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
