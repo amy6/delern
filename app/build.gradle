@@ -54,7 +54,6 @@ android {
                 uploadImages = true
             }
             manifestPlaceholders = [ appName: 'Delern' ]
-            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
 
             minifyEnabled true
@@ -86,11 +85,6 @@ android {
                 testCoverageEnabled true
                 minifyEnabled false
             }
-
-            // We want to build instrumented to verify ProGuard config.
-            if (project.hasProperty('isolatedRun')) {
-                ext.enableCrashlytics = false
-            }
         }
         debug {
             // https://developers.google.com/android/guides/google-services-plugin
@@ -100,14 +94,8 @@ android {
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
-            if (project.hasProperty('isolatedRun')) {
-                ext.enableCrashlytics = false
-                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-            } else {
-                // Do not upload ProGuard mapping for debug (it's not obfuscated).
-                ext.alwaysUpdateBuildId = false
-                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-            }
+            // Do not upload ProGuard mapping for debug (it's not obfuscated).
+            ext.alwaysUpdateBuildId = false
             buildConfigField 'boolean', 'ENABLE_ANONYMOUS_SIGNIN', 'false'
         }
     }

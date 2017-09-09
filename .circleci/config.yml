@@ -50,7 +50,6 @@ jobs:
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
           ./gradlew \
-            -PisolatedRun \
             --continue \
             :app:checkQualityDebug \
             :app:testDebugUnitTest \
@@ -60,7 +59,6 @@ jobs:
             --console=plain
           # Assemble instrumented to check ProGuard configuration and warnings.
           ./gradlew \
-            -PisolatedRun \
             --continue \
             :app:assembleInstrumented \
             :app:assembleInstrumentedAndroidTest \
@@ -71,7 +69,6 @@ jobs:
         name: "Re-run unit tests with INFO level"
         command: |
           ./gradlew \
-            -PisolatedRun \
             --info \
             :app:testDebugUnitTest \
             :core:test \
@@ -156,7 +153,6 @@ jobs:
             # The code in "app" can only be covered by Android on-device tests,
             # therefore PR builds will always report false negatives.
             ./gradlew \
-              -PisolatedRun \
               core:jacocoTestReport \
               app:jacocoTestDebugUnitTestReport \
               --console=plain
