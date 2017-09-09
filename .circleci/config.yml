@@ -139,7 +139,7 @@ jobs:
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5,version=23 \
+              --device model=Nexus5 \
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
@@ -160,12 +160,13 @@ jobs:
 
             # Run instrumented test (for ProGuard).
             ./gradlew \
+              clean \
               assembleInstrumented \
               assembleInstrumentedAndroidTest \
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5,version=23 \
+              --device model=Nexus5 \
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
