@@ -142,7 +142,8 @@ jobs:
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5 \
+              --device model=Nexus5,version=19 \
+              --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
               --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
@@ -168,7 +169,8 @@ jobs:
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5 \
+              --device model=Nexus5,version=19 \
+              --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
           fi
