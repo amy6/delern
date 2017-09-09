@@ -78,12 +78,13 @@ public class EmulatorTestsRule implements TestRule {
                         base.evaluate();
                         break;
                     } catch (Throwable t) {
-                        IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
                         if (i == RETRY_COUNT) {
                             throw t;
                         }
                         LOGGER.error("Test {} failed ({} / {}), retrying",
                                 description.getDisplayName(), i, RETRY_COUNT, t);
+                    } finally {
+                        IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
                     }
                 }
             }
