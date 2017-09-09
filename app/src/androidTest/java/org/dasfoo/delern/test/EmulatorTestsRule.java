@@ -71,6 +71,7 @@ public class EmulatorTestsRule implements TestRule {
                 // Raise Idling policy timeout because emulator or network can be really slow.
                 IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
                 IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
+                // Retry failing tests because com.google.android.gms auto-updates kill the app.
                 for (int i = 0; ; ++i) {
                     try {
                         IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
