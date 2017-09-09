@@ -54,12 +54,11 @@ jobs:
             --continue \
             :app:checkQualityDebug \
             :app:testDebugUnitTest \
+            :core:checkQualityMain \
             :core:test \
-            :core:checkstyleMain \
-            :core:findbugsMain \
-            :core:pmdMain \
             :app:assembleInstrumented \
             :app:assembleInstrumentedAndroidTest \
+            --quiet \
             --console=plain
 
     - run:
