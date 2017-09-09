@@ -23,6 +23,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.dasfoo.delern.util.MarkdownParser;
 
 import io.reactivex.Completable;
 import io.reactivex.annotations.Nullable;
@@ -199,6 +200,16 @@ public class Card extends Model {
     }
 
     /**
+     * Non-caching converter of Markdown to HTML for back side of card.
+     *
+     * @return back of card in HTML.
+     */
+    @Exclude
+    public String getBackHtml() {
+        return MarkdownParser.INSTANCE.toHtml(back);
+    }
+
+    /**
      * Setter for back side of card.
      *
      * @param backSide back of card.
@@ -214,6 +225,16 @@ public class Card extends Model {
      */
     public String getFront() {
         return front;
+    }
+
+    /**
+     * Non-caching converter of Markdown to HTML for front side of card.
+     *
+     * @return front of card in HTML.
+     */
+    @Exclude
+    public String getFrontHtml() {
+        return MarkdownParser.INSTANCE.toHtml(front);
     }
 
     /**

@@ -17,6 +17,11 @@ jacocoTestReport {
 dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+
+    // Markdown
+    compile "com.atlassian.commonmark:commonmark:$commonmarkVersion"
+    compile "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
+
     compile 'com.google.firebase:firebase-admin:5.2.0', {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
     }

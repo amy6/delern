@@ -148,6 +148,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             }
         };
         mDeckNameEditText.addTextChangedListener(deckNameChanged);
+        mOnOfSwitch.setChecked(mDeck.isMarkdown());
         mOnOfSwitch.setOnCheckedChangeListener(mCheckedChangeListener);
     }
 
@@ -213,7 +214,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             String newDeckName = mDeckNameEditText.getText().toString().trim();
             mDeck.setName(newDeckName);
         }
-        mPresenter.updateDeck(mDeck, mInputValid);
+        mPresenter.updateDeck(mDeck);
     }
 
     /**

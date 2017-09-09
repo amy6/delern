@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         // TODO(dotodoom): Move these into module-specific build.gradle and use new Gradle syntax.
         classpath 'com.android.tools.build:gradle:3.0.0-beta6'
+
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.google.gms:google-services:3.1.0'
         classpath 'org.ajoberstar:grgit:2.0.0'
@@ -40,5 +41,6 @@ ext {
     toolsVersion = "${sdkVersion}.0.1"
     slf4jVersion = '1.7.25'
     rxJavaVersion = '2.1.2'
+    commonmarkVersion = '0.9.0'
     isIDE = System.properties['idea.platform.prefix']
 }

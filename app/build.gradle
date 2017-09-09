@@ -150,6 +150,7 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     testImplementation 'junit:junit:4.12'
+
     //Espresso
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -169,6 +170,10 @@ dependencies {
     // Dagger2
     implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+
+    // Markdown
+    compile "com.atlassian.commonmark:commonmark:$commonmarkVersion"
+    compile "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'

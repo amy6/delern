@@ -30,11 +30,8 @@ public class EditDeckActivityPresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EditDeckActivityPresenter.class);
 
-
     private final IEditDeckView mView;
     private final Deck mDeck;
-    private String mNewDeckType;
-    private boolean mMarkdown;
 
     /**
      * Constructor initialize presenter.
@@ -45,8 +42,6 @@ public class EditDeckActivityPresenter {
     public EditDeckActivityPresenter(final IEditDeckView view, final Deck deck) {
         this.mView = view;
         this.mDeck = deck;
-        this.mNewDeckType = mDeck.getDeckType();
-        this.mMarkdown = mDeck.isMarkdown();
     }
 
 
@@ -62,16 +57,10 @@ public class EditDeckActivityPresenter {
     /**
      * Method renames deck or changes type of deck.
      *
-     * @param newDeck     updated deck.
-     * @param nameChanged whether name of deck changed or not.
+     * @param newDeck updated deck.
      */
-    public void updateDeck(final Deck newDeck, final boolean nameChanged) {
-        if (!mNewDeckType.equals(mDeck.getDeckType()) || nameChanged ||
-                mMarkdown != mDeck.isMarkdown()) {
-            newDeck.setDeckType(mNewDeckType);
-            newDeck.setMarkdown(mMarkdown);
-            newDeck.save();
-        }
+    public void updateDeck(final Deck newDeck) {
+        newDeck.save();
     }
 
     /**
@@ -81,20 +70,16 @@ public class EditDeckActivityPresenter {
      */
     public void selectDeckType(final int position) {
         if (DeckType.values().length < position) {
-            mNewDeckType = mDeck.getDeckType();
             mView.showDeckTypeNotExistUserMessage();
             LOGGER.error("the selected item number is {}", position,
                     new IndexOutOfBoundsException());
             return;
         }
-        if (position == -1) {
-            if (mDeck.getDeckType() == null) {
-                mNewDeckType = DeckType.BASIC.name();
-            } else {
-                mNewDeckType = mDeck.getDeckType();
-            }
+        if (position == -1 && mDeck.getDeckType() == null) {
+            mDeck.setDeckType(DeckType.BASIC.name());
+            return;
         }
-        mNewDeckType = DeckType.values()[position].name();
+        mDeck.setDeckType(DeckType.values()[position].name());
     }
 
     /**
@@ -121,6 +106,6 @@ public class EditDeckActivityPresenter {
      * @param isMarkdown whether enable markdown or not.
      */
     public void setMarkdown(final boolean isMarkdown) {
-        mMarkdown = isMarkdown;
+        mDeck.setMarkdown(isMarkdown);
     }
 }

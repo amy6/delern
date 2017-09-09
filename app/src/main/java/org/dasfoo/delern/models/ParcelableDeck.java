@@ -72,6 +72,7 @@ public class ParcelableDeck implements Parcelable {
         // Reading and writing boolean for parcelable
         // https://goo.gl/PLRLWY
         mDeck.setAccepted(in.readByte() != 0);
+        mDeck.setMarkdown(in.readByte() != 0);
     }
 
     /**
@@ -108,6 +109,11 @@ public class ParcelableDeck implements Parcelable {
         parcel.writeString(mDeck.getCategory());
         parcel.writeLong(mDeck.getLastSyncAt());
         if (mDeck.isAccepted()) {
+            parcel.writeByte((byte) 1);
+        } else {
+            parcel.writeByte((byte) 0);
+        }
+        if (mDeck.isMarkdown()) {
             parcel.writeByte((byte) 1);
         } else {
             parcel.writeByte((byte) 0);

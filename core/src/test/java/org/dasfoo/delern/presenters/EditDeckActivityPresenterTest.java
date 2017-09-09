@@ -73,7 +73,7 @@ public class EditDeckActivityPresenterTest {
     @Test
     public void updateDeckName() {
         mDeck.setName("test2");
-        mPresenter.updateDeck(mDeck, true);
+        mPresenter.updateDeck(mDeck);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && "test2".equals(updated.get(0).getName()));
@@ -82,7 +82,7 @@ public class EditDeckActivityPresenterTest {
     @Test
     public void updateDeckType() {
         mPresenter.selectDeckType(DeckType.GERMAN.ordinal());
-        mPresenter.updateDeck(mDeck, false);
+        mPresenter.updateDeck(mDeck);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && DeckType.GERMAN.name()
@@ -93,7 +93,7 @@ public class EditDeckActivityPresenterTest {
     public void updateNameDeckType() {
         mDeck.setName("test2");
         mPresenter.selectDeckType(DeckType.SWISS.ordinal());
-        mPresenter.updateDeck(mDeck, true);
+        mPresenter.updateDeck(mDeck);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && DeckType.SWISS.name()

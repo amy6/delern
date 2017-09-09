@@ -69,12 +69,20 @@ public class LearningCardsActivityPresenter {
         mCardAvailableListener = mDeck.startScheduledCardWatcher().subscribe(
                 card -> {
                     mCard = card;
-                    mLearningCardView.showFrontSide(mCard.getFront());
+                    if (mDeck.isMarkdown()) {
+                        mLearningCardView.showFrontSide(mCard.getFrontHtml());
+                    } else {
+                        mLearningCardView.showFrontSide(mCard.getFront());
+                    }
                     // if user decided to edit card, a back side can be shown or not.
                     // After returning back it must show the same state (the same buttons
                     // and text) as before editing
                     if (mLearningCardView.backSideIsShown()) {
-                        mLearningCardView.showBackSide(mCard.getBack());
+                        if (mDeck.isMarkdown()) {
+                            mLearningCardView.showBackSide(mCard.getBackHtml());
+                        } else {
+                            mLearningCardView.showBackSide(mCard.getBack());
+                        }
                     }
                 },
                 error -> {
@@ -111,7 +119,11 @@ public class LearningCardsActivityPresenter {
      */
     public void flipCard() {
         // TODO(ksheremet): if card is not loaded yet (e.g. slow database), mCard is null.
-        mLearningCardView.showBackSide(mCard.getBack());
+        if (mDeck.isMarkdown()) {
+            mLearningCardView.showBackSide(mCard.getBackHtml());
+        } else {
+            mLearningCardView.showBackSide(mCard.getBack());
+        }
     }
 
     /**

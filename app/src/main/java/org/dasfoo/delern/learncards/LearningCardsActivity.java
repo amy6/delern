@@ -28,6 +28,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,6 +89,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
+    private Deck mDeck;
 
     /**
      * Method starts LearningCardsActivity.
@@ -119,10 +121,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(deck.getName());
+        mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
+        this.setTitle(mDeck.getName());
         Injector.getLearningCardsActivityInjector(this).inject(this);
-        mPresenter.onCreate(deck);
+        mPresenter.onCreate(mDeck);
         ButterKnife.bind(this);
         mDelimiter.setVisibility(View.INVISIBLE);
     }
@@ -215,10 +217,15 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void showFrontSide(final String front) {
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
-        mFrontTextView.setText(front);
+        if (mDeck.isMarkdown()) {
+            mFrontTextView.setText(Html.fromHtml(front));
+        } else {
+            mFrontTextView.setText(front);
+        }
         mBackTextView.setText("");
         mRepeatButton.setVisibility(View.INVISIBLE);
         mKnowButton.setVisibility(View.INVISIBLE);
@@ -230,8 +237,13 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void showBackSide(final String back) {
-        mBackTextView.setText(back);
+        if (mDeck.isMarkdown()) {
+            mBackTextView.setText(Html.fromHtml(back));
+        } else {
+            mBackTextView.setText(back);
+        }
         Animator repeatButtonAnimation = null;
         Animator knowButtonAnimation = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {

@@ -28,6 +28,7 @@ import java.util.List;
 import io.reactivex.CompletableObserver;
 import io.reactivex.ObservableSource;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CardTest {
@@ -186,4 +187,24 @@ public class CardTest {
                 && scs.get(0).getLevel().equals(Level.L0.name()));
     }
 
+    @Test
+    public void frontMarkdownCorrect() {
+        String[][] markdownToHtml = {
+                {"test", "<p>test</p>\n"},
+                {"**bold**", "<p><strong>bold</strong></p>\n"},
+                {"*italic*", "<p><em>italic</em></p>\n"},
+                {"hello\nKitty", "<p>hello\nKitty</p>\n"},
+                {"# Hello", "<h1>Hello</h1>\n"},
+                {"[test](http://site/path)", "<p><a href=\"http://site/path\">test</a></p>\n"},
+                {"| a | b | c |\n|---|---|---|\n| x | y | z |", "<table>\n" +
+                        "<thead>\n<tr><th>a</th><th>b</th><th>c</th></tr>\n</thead>\n" +
+                        "<tbody>\n<tr><td>x</td><td>y</td><td>z</td></tr>\n</tbody>\n" +
+                        "</table>\n"},
+        };
+        Card c = new Card((Deck) null);
+        for (String[] testCase : markdownToHtml) {
+            c.setFront(testCase[0]);
+            assertEquals(testCase[1], c.getFrontHtml());
+        }
+    }
 }
