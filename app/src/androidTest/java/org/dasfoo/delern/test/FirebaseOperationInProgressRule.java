@@ -23,17 +23,11 @@ import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.rules.ExternalResource;
 
 import java.util.concurrent.TimeUnit;
 
-public class EmulatorTestsRule implements TestRule {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmulatorTestsRule.class);
-    private static final int RETRY_COUNT = 4;
+public class FirebaseOperationInProgressRule extends ExternalResource {
 
     private final IdlingResource mFirebaseOperationIdlingResource = new IdlingResource() {
         private ResourceCallback mResourceCallback;
@@ -64,30 +58,15 @@ public class EmulatorTestsRule implements TestRule {
     };
 
     @Override
-    public Statement apply(Statement base, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                // Raise Idling policy timeout because emulator or network can be really slow.
-                IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
-                IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
-                // Retry failing tests because com.google.android.gms auto-updates kill the app.
-                for (int i = 0; ; ++i) {
-                    try {
-                        IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
-                        base.evaluate();
-                        break;
-                    } catch (Throwable t) {
-                        if (i == RETRY_COUNT) {
-                            throw t;
-                        }
-                        LOGGER.error("Test {} failed ({} / {}), retrying",
-                                description.getDisplayName(), i, RETRY_COUNT, t);
-                    } finally {
-                        IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
-                    }
-                }
-            }
-        };
+    protected void before() throws Throwable {
+        // Raise Idling policy timeout because emulator or network can be really slow.
+        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
+        IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
+        IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
+    }
+
+    @Override
+    protected void after() {
+        IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
     }
 }

@@ -23,7 +23,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.EmulatorTestsRule;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.util.DeckPostfix;
 import org.junit.After;
 import org.junit.Before;
@@ -60,7 +60,7 @@ public class AddUpdateCardTest {
             DelernMainActivity.class);
 
     @Rule
-    public EmulatorTestsRule mFirebaseRule = new EmulatorTestsRule();
+    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
     private String mDeckName;
 

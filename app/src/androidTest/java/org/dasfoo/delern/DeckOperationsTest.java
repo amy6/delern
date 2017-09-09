@@ -23,7 +23,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.EmulatorTestsRule;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.util.DeckPostfix;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public class DeckOperationsTest {
             DelernMainActivity.class);
 
     @Rule
-    public EmulatorTestsRule mFirebaseRule = new EmulatorTestsRule();
+    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
     private static void deleteDeck(final String deckName) {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
