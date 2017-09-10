@@ -21,6 +21,7 @@ package org.dasfoo.delern;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -60,7 +61,9 @@ public class DelernApplication extends Application {
 
         LeakCanary.install(this);
 
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics.Builder().core(
+                new CrashlyticsCore.Builder().disabled(!BuildConfig.ENABLE_CRASHLYTICS).build())
+                .build());
 
         RxJavaPlugins.setErrorHandler(e -> LOGGER.error("Undeliverable RxJava error", e));
 

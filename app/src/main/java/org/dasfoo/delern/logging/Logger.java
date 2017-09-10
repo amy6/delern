@@ -272,7 +272,8 @@ class Logger extends MarkerIgnoringBase {
     }
 
     private void exception(final int level, final Throwable t) {
-        Crashlytics.logException(t);
+        // Wrap t into another throwable to preserve both current and exception stack traces.
+        Crashlytics.logException(new Throwable(t));
         if (Log.isLoggable(mTag, level)) {
             Log.println(level, mTag, "Exception: " + Log.getStackTraceString(t));
         }
