@@ -140,7 +140,7 @@ type CardReply extends String {
 
 type View {
   // TODO(dotdoom): why is cardId duplicated?
-  cardId: String,
+  cardId: String | Null,
   levelBefore: CardLevel,
   reply: CardReply,
   timestamp: Number,
