@@ -7,7 +7,7 @@ jobs:
     environment:
     - ANDROID_HOME: /opt/android-sdk-linux
     - TERM: dumb
-    - IDEA_VERSION: IC-2017.1.4-no-jdk
+    - IDEA_VERSION: IC-2017.2.3-no-jdk
     steps:
     - checkout
     - run:
@@ -25,11 +25,12 @@ jobs:
           # (aka removed and re-added) do not count twice.
           git tag -l | xargs git tag -d
           git fetch --tags
+          find . -name package.json -o -name '*.gradle' -type f -print0 | xargs -0 cat >/tmp/dependencies
+          echo "${IDEA_VERSION}" >>/tmp/dependencies
 
     - restore_cache:
         keys:
-        - v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-        - v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-
+        - v4-android-{{ .Branch }}-{{ checksum "/tmp/dependencies" }}
         - v4-android-{{ .Branch }}-
         - v4-android-master-
 
@@ -43,10 +44,20 @@ jobs:
           # These two packages are normally already available, but we deal with some extremely minimalistic Docker image.
           apt update
           apt install -y lsb-release apt-transport-https build-essential
+          if [ ! -d "/opt/idea/${IDEA_VERSION}" ]; then
+            rm -rf /opt/idea
+            mkdir /opt/idea
+            curl -sSL "https://download.jetbrains.com/idea/idea${IDEA_VERSION?}.tar.gz" |
+                tar -C /opt/idea -x -z
+            mv /opt/idea/* "/opt/idea/${IDEA_VERSION}"
+          fi
 
     - run:
         name: "Lint, assemble and run unit tests"
         command: |
+          # Check formatting
+          "/opt/idea/${IDEA_VERSION}/bin/format.sh" -m '*.java' -r */src >/dev/null
+          git diff --stat --exit-code
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
           ./gradlew \
@@ -63,7 +74,7 @@ jobs:
             :app:assembleInstrumented \
             :app:assembleInstrumentedAndroidTest \
             --quiet \
-            --console=plain
+            --console=plain >/dev/null
 
     - run:
         name: "Re-run unit tests with INFO level"
@@ -78,39 +89,14 @@ jobs:
     # Some packages are installed only during the lint/assemble step, we need to cache them as well.
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v4-android-{{ .Branch }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+        key: v4-android-{{ .Branch }}-{{ checksum "/tmp/dependencies" }}
         paths:
         - core/firebase/node_modules
         - ~/.gradle
         # TODO(dotdoom): use environment variables once they are supported
-        - /opt/android-sdk-linux
-
-    - restore_cache:
-        keys:
-        # TODO(dotdoom): use environment variable once it's supported.
         #                Currently only CircleCI built-in variables are supported.
-        - v1-idea
-
-    - run:
-        name: "Install IDEA"
-        command: |
-          if [ ! -d ~/idea ]; then
-            mkdir ~/idea
-            curl -sSL "https://download.jetbrains.com/idea/idea${IDEA_VERSION?}.tar.gz" |
-                tar -C ~/idea -x -z
-            mv ~/idea/* ~/idea/ide
-          fi
-
-    - save_cache:
-        key: v1-idea
-        paths:
-        - ~/idea
-
-    - run:
-        name: "Check code formatting"
-        command: |
-          ~/idea/ide/bin/format.sh -m '*.java' -r */src
-          git diff --stat --exit-code
+        - /opt/android-sdk-linux
+        - /opt/idea
 
     - deploy:
         name: "Install Cloud SDK, run instrumented tests"
@@ -170,6 +156,9 @@ jobs:
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+
+            # Assemble Release APK (to store in artifacts).
+            ./gradlew assembleRelease
           fi
 
     - deploy:
