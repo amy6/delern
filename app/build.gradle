@@ -135,8 +135,9 @@ dependencies {
     // TODO(dotdoom): update once https://github.com/square/leakcanary/issues/815 is fixed.
     //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // TODO(dotdoom): use instrumented once https://github.com/square/leakcanary/pull/633 goes in.
     //noinspection NewerVersionAvailable
-    instrumentedImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
