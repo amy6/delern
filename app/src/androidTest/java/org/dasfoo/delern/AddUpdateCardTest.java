@@ -134,6 +134,31 @@ public class AddUpdateCardTest {
     }
 
     @Test
+    public void createCardFromCardsList() {
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        pressBack();
+        pressBack();
+        waitView(withText(mDeckName)).check(matches(hasSibling(withText("0"))));
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.edit)).perform(click());
+        waitView(withId(R.id.f_add_card_button)).perform(click());
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        String frontCard = "front";
+        String backCard = "back";
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
+        pressBack();
+        waitView(withText(frontCard)).check(matches(hasSibling(withText(backCard))));
+        pressBack();
+    }
+
+
+    @Test
     public void createCardToUpdateFromLearningShowingFront() {
         String frontCard = "front";
         String backCard = "back";
