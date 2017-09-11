@@ -247,6 +247,7 @@ public class DelernMainActivity extends AppCompatActivity
                 payload.putString(FirebaseAnalytics.Param.VALUE, "sent");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
                         payload);
+                Toast.makeText(this, R.string.invitation_sent_message, Toast.LENGTH_SHORT).show();
             } else {
                 Bundle payload = new Bundle();
                 payload.putString(FirebaseAnalytics.Param.VALUE, "not sent");

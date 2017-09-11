@@ -37,6 +37,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         После <a href="https://play.google.com/apps/testing/org.dasfoo.delern">Установите Delern</a>
     </body>
 </html>]]></string>
+    <string name="invitation_failed_message">Приглашение не было отправлено</string>
+    <string name="invitation_sent_message">Приглашение отправлено</string>
+
 
     <string name="rename">Переименовать</string>
     <string name="edit">Редактировать</string>
@@ -45,7 +48,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add">Добавить</string>
     <string name="update">Обновить</string>
     <string name="deck_menu_description">Меню для операций со списками и карточками</string>
-    <string name="invitation_failed_message">Приглашение не было отправлено</string>
     <string name="save">Сохранить</string>
     <string name="flip_the_card_message">Перевернуть карточку</string>
     <string name="number_of_cards">Количество карточек: %d</string>

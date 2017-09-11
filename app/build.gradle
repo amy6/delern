@@ -6,7 +6,7 @@ apply from: "$rootDir/quality/quality-android.gradle"
 
 ext {
     git = org.ajoberstar.grgit.Grgit.open()
-    gitVersionCode = git.log(includes:['HEAD']).size()
+    gitVersionCode = git.log(includes: ['HEAD']).size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     leakCanaryVersion = '1.5.1'
 }
@@ -53,7 +53,7 @@ android {
                 jsonFile = file('play-store-service-account.json')
                 uploadImages = true
             }
-            manifestPlaceholders = [ appName: 'Delern' ]
+            manifestPlaceholders = [appName: 'Delern']
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
 
             minifyEnabled true
@@ -78,7 +78,7 @@ android {
             signingConfig signingConfigs.debug
             applicationIdSuffix '.instrumented'
             versionNameSuffix '-instrumented'
-            manifestPlaceholders = [ appName: 'Delern TEST' ]
+            manifestPlaceholders = [appName: 'Delern TEST']
 
             // Minify and ProGuard don't work with coverage.
             if (project.hasProperty('coverageRun')) {
@@ -90,7 +90,7 @@ android {
             // https://developers.google.com/android/guides/google-services-plugin
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
-            manifestPlaceholders = [ appName: 'Delern DEBUG' ]
+            manifestPlaceholders = [appName: 'Delern DEBUG']
             // To apply Proguard (e.g. to test the configuration), simply copy over
             // minifyEnabled and proguardFiles from "release" build type and add:
             //   debuggable false
@@ -151,6 +151,7 @@ dependencies {
     })
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true

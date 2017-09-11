@@ -37,6 +37,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         After joining <a href="https://play.google.com/apps/testing/org.dasfoo.delern">Install Delern</a>
     </body>
 </html>]]></string>
+    <string name="invitation_failed_message">The invitation was not sent</string>
+    <string name="invitation_sent_message">The invitation was sent</string>
 
     <string name="rename">Rename</string>
     <string name="edit">Edit</string>
@@ -45,7 +47,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
-    <string name="invitation_failed_message">The invitation was not sent</string>
     <string name="save">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
     <string name="number_of_cards">Number of cards: %d</string>
