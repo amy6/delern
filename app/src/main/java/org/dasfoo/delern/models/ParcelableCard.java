@@ -20,6 +20,7 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.ServerValue;
 
@@ -86,6 +87,7 @@ public class ParcelableCard implements Parcelable {
      * @param parcel getParcelableExtra() / readParcelable() return value.
      * @return casted object.
      */
+    @Nullable
     public static Card get(final Object parcel) {
         if (parcel == null) {
             return null;

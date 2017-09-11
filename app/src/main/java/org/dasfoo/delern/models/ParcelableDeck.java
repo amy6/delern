@@ -20,6 +20,7 @@ package org.dasfoo.delern.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 /**
  * Parcelable wrapper.
@@ -79,6 +80,7 @@ public class ParcelableDeck implements Parcelable {
      * @param parcel getParcelableExtra() / readParcelable() return value.
      * @return casted object.
      */
+    @Nullable
     public static Deck get(final Object parcel) {
         if (parcel == null) {
             return null;

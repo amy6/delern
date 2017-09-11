@@ -25,6 +25,7 @@ import com.google.firebase.database.ServerValue;
 import org.dasfoo.delern.models.helpers.MultiWrite;
 
 import io.reactivex.Completable;
+import io.reactivex.annotations.Nullable;
 
 /**
  * Created by katarina on 10/4/16.
@@ -131,6 +132,7 @@ public class Card extends Model {
      * @return Model parent casted to ScheduledCard (if set).
      */
     @Exclude
+    @Nullable
     public ScheduledCard getScheduledCard() {
         Model parent = getParent();
         if (parent instanceof ScheduledCard) {

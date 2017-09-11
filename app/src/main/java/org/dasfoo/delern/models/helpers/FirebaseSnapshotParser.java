@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.models.helpers;
 
+import android.support.annotation.Nullable;
+
 import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.DataSnapshot;
 
@@ -49,6 +51,7 @@ public class FirebaseSnapshotParser<T extends Model>
      * {@inheritDoc}
      */
     @Override
+    @Nullable
     public T parseSnapshot(final DataSnapshot snapshot) {
         return Model.fromSnapshot(snapshot, mClass, mParent);
     }

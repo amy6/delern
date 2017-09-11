@@ -35,6 +35,7 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.functions.Function;
 
 /**
@@ -72,6 +73,7 @@ public class Model {
      * @param <T>      an Model subclass.
      * @return an instance of T with key and parent set, or null.
      */
+    @Nullable
     public static <T extends Model> T fromSnapshot(final DataSnapshot snapshot,
                                                    final Class<T> cls,
                                                    final Model parent) {

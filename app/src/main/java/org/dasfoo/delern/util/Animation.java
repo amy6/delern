@@ -20,6 +20,7 @@ package org.dasfoo.delern.util;
 
 import android.animation.Animator;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -42,6 +43,7 @@ public final class Animation {
      * @return animation for view
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Nullable
     public static Animator appearanceAnimation(final View view) {
         // Check on null
         if (view == null) {
