@@ -136,7 +136,7 @@ dependencies {
     // FIXME(https://github.com/square/leakcanary/issues/815): broken version
     //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    // TODO(dotdoom): use instrumented once https://github.com/square/leakcanary/pull/633 goes in.
+    // FIXME(https://github.com/square/leakcanary/pull/633): use instrumental
     //noinspection NewerVersionAvailable
     instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     //noinspection NewerVersionAvailable
