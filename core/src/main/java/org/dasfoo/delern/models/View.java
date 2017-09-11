@@ -22,15 +22,9 @@ package org.dasfoo.delern.models;
  * Created by katarina on 2/23/17.
  * Model class for view.
  */
-// FIXME(https://github.com/google/error-prone/issues/659):
-// ConstructorInvokesOverridable: false positive for card.getKey().
-// FIXME(https://github.com/google/error-prone/issues/656):
-// ConstructorInvokesOverridable: must be applied to the whole class.
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField",
-        "ConstructorInvokesOverridable"})
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class View extends Model {
 
-    private String cardId;
     private String levelBefore;
     private String reply;
     private long timestamp;
@@ -49,26 +43,7 @@ public class View extends Model {
      */
     public View(final Card card) {
         super(card, null);
-        this.cardId = card.getKey();
         this.timestamp = System.currentTimeMillis();
-    }
-
-    /**
-     * Getter for card Id.
-     *
-     * @return id of card.
-     */
-    public String getCardId() {
-        return cardId;
-    }
-
-    /**
-     * Setter for card Id.
-     *
-     * @param cardId id of card.
-     */
-    public void setCardId(final String cardId) {
-        this.cardId = cardId;
     }
 
     /**
@@ -131,7 +106,6 @@ public class View extends Model {
     @Override
     public String toString() {
         return "View{" + super.toString() +
-                ", cardId='" + cardId + '\'' +
                 ", levelBefore='" + levelBefore + '\'' +
                 ", reply='" + reply + '\'' +
                 ", timestamp=" + timestamp +

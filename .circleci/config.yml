@@ -103,7 +103,7 @@ jobs:
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
           if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
-            ./gradlew core:deployFirebase
+            ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
 
             echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
               >>/etc/apt/sources.list.d/google-cloud-sdk.list

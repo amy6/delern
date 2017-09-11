@@ -1,3 +1,8 @@
+// FIXME(https://docs.gradle.org/4.1-rc-2/userguide/plugins.html#sec:build_scripts_only):
+// Replace buildscript+apply with just
+// plugins {
+//     id 'gradle-node-plugin' version '1.2.0'
+// }
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -7,11 +12,6 @@ buildscript {
     }
 }
 apply plugin: com.moowork.gradle.node.NodePlugin
-// TODO(dotdoom): replace 'buildscript' and 'apply' above with just
-// plugins {
-//     id 'gradle-node-plugin' version '1.2.0'
-// }
-// once https://docs.gradle.org/2.9/userguide/plugins.html#N11AC8 happens.
 
 ext {
     firebaseDir = file("${project.projectDir}/firebase")
@@ -28,11 +28,12 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     args = ['rules.bolt', '-o', 'delern-rules.json']
 }
 
-task deployFirebase(type: NodeTask, dependsOn: convertBoltToFirebaseRules) {
-    workingDir = firebaseDir
-    script = file("${node.nodeModulesDir}/node_modules/.bin/firebase")
-    // TODO(dotdoom): read from system property
-    args = ['-P', 'delern-e1b33', 'deploy']
+if (project.hasProperty('firebaseProject')) {
+    task deployFirebase(type: NodeTask, dependsOn: convertBoltToFirebaseRules) {
+        workingDir = firebaseDir
+        script = file("${node.nodeModulesDir}/node_modules/.bin/firebase")
+        args = ['-P', project.property('firebaseProject'), 'deploy']
+    }
 }
 
 testClasses.dependsOn convertBoltToFirebaseRules
