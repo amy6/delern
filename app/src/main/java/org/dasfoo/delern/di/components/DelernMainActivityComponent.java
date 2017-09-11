@@ -33,6 +33,8 @@ import dagger.Component;
 @Component(modules = DelernMainActivityModule.class)
 public interface DelernMainActivityComponent {
     /**
+     * Dagger injector.
+     *
      * @param mainActivity sets a type for injection
      */
     void inject(DelernMainActivity mainActivity);

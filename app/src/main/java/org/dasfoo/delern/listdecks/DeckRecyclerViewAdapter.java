@@ -34,6 +34,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
 
     /**
+     * Default constructor.
+     *
      * @param modelLayout This is the layout used to represent a single item in the list.
      *                    You will be responsible for populating an instance of the
      *                    corresponding view with the data from an instance of modelClass.

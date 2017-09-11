@@ -135,7 +135,7 @@ dependencies {
     //noinspection NewerVersionAvailable
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
-    // TODO(dotdoom): update once https://github.com/square/leakcanary/issues/815 is fixed.
+    // FIXME(https://github.com/square/leakcanary/issues/815): broken version
     //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     // TODO(dotdoom): use instrumented once https://github.com/square/leakcanary/pull/633 goes in.

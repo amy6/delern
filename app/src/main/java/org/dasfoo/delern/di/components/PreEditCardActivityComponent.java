@@ -18,11 +18,6 @@
 
 package org.dasfoo.delern.di.components;
 
-/**
- * It can be seen as an intermediate object which allows accessing to objects defined in
- * Dagger modules. Interface describes for which types we want to use members injection
- */
-
 import org.dasfoo.delern.previewcard.PreEditCardActivity;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 
@@ -38,6 +33,8 @@ import dagger.Component;
 @Component(modules = PreEditCardActivityModule.class)
 public interface PreEditCardActivityComponent {
     /**
+     * Dagger injector.
+     *
      * @param preEditCardActivity sets type for injection
      */
     void inject(PreEditCardActivity preEditCardActivity);

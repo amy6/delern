@@ -281,6 +281,7 @@ public class DelernMainActivity extends AppCompatActivity
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT);
 
+        // TODO(ksheremet): un-duplicate this code (see DeckViewHolder).
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.deck)
                 .setView(input)

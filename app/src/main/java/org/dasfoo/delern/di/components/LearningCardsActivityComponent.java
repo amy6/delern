@@ -33,6 +33,8 @@ import dagger.Component;
 @Component(modules = LearningCardsActivityModule.class)
 public interface LearningCardsActivityComponent {
     /**
+     * Dagger injector.
+     *
      * @param learningCardsActivity sets type for injection
      */
     void inject(LearningCardsActivity learningCardsActivity);

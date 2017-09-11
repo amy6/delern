@@ -22,7 +22,12 @@ package org.dasfoo.delern.models;
  * Created by katarina on 2/23/17.
  * Model class for view.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+// FIXME(https://github.com/google/error-prone/issues/659):
+// ConstructorInvokesOverridable: false positive for card.getKey().
+// FIXME(https://github.com/google/error-prone/issues/656):
+// ConstructorInvokesOverridable: must be applied to the whole class.
+@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField",
+        "ConstructorInvokesOverridable"})
 public class View extends Model {
 
     private String cardId;
@@ -42,8 +47,6 @@ public class View extends Model {
      *
      * @param card Card which this View belongs to.
      */
-    // False positive: in "card.getKey()" card is fully initialized.
-    @SuppressWarnings("ConstructorInvokesOverridable")
     public View(final Card card) {
         super(card, null);
         this.cardId = card.getKey();
