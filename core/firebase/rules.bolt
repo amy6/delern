@@ -139,7 +139,7 @@ type CardReply extends String {
 }
 
 type View {
-  // TODO(dotdoom): why is cardId duplicated?
+  // TODO(dotdoom): remove cardId once all devices update.
   cardId: String | Null,
   levelBefore: CardLevel,
   reply: CardReply,
@@ -164,4 +164,9 @@ path /learning/{userId} {
 }
 path /learning/{userId}/{deckId}/{cardId} is ScheduledCard {
   index() { "repeatAt" }
+}
+
+// Data recovery (see MultiWrite.java).
+path /trash {
+  write() { true }
 }
