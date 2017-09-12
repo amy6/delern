@@ -113,6 +113,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:id="@+id/turn_card_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:layout_gravity="center"
             android:contentDescription="@string/flip_the_card_message"
             android:paddingLeft="40dp"
