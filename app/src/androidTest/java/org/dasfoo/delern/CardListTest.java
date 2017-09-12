@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -59,11 +60,14 @@ public class CardListTest {
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
+    @Rule
+    public TestName mName = new TestName();
+
     private String mDeckName;
 
     @Before
     public void createDeck() {
-        mDeckName = "TestCardList" + DeckPostfix.getRandomNumber();
+        mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());

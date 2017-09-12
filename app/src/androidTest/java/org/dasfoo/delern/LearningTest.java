@@ -35,6 +35,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -67,6 +68,9 @@ public class LearningTest {
             DelernMainActivity.class);
 
     @Rule
+    public TestName mName = new TestName();
+
+    @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
     private String mDeckName;
@@ -83,7 +87,7 @@ public class LearningTest {
 
     @Before
     public void createDeck() {
-        mDeckName = "TestLearning" + DeckPostfix.getRandomNumber();
+        mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());

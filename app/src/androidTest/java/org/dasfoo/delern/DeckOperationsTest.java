@@ -27,6 +27,7 @@ import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.util.DeckPostfix;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -57,6 +58,9 @@ public class DeckOperationsTest {
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
 
+    @Rule
+    public TestName mName = new TestName();
+
     private static void deleteDeck(final String deckName) {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click());
@@ -73,7 +77,7 @@ public class DeckOperationsTest {
 
     @Test
     public void addEmptyDeckAndDelete() {
-        String deckName = "Empty" + DeckPostfix.getRandomNumber();
+        String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
@@ -90,7 +94,7 @@ public class DeckOperationsTest {
 
     @Test
     public void createDeckWithCardToLearnAndDelete() {
-        String deckName = "Learn" + DeckPostfix.getRandomNumber();
+        String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
@@ -115,7 +119,7 @@ public class DeckOperationsTest {
 
     @Test
     public void createDeckToRenameAndDelete() {
-        String deckName = "Created" + DeckPostfix.getRandomNumber();
+        String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
@@ -138,7 +142,7 @@ public class DeckOperationsTest {
 
     @Test
     public void addDeckToChangeDeckTypeToGermanAndDelete() {
-        String deckName = "Deutsch" + DeckPostfix.getRandomNumber();
+        String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
@@ -170,7 +174,7 @@ public class DeckOperationsTest {
 
     @Test
     public void addDeckToChangeDeckTypeToSwissAndDelete() {
-        String deckName = "Swiss" + DeckPostfix.getRandomNumber();
+        String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(withId(R.id.fab)).perform(click());
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
