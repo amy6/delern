@@ -103,7 +103,8 @@ jobs:
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
           if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
-            ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
+            # Deploy debug database rules before running any tests.
+            ./gradlew -PfirebaseProject=delern-debug core:deployFirebase
 
             echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
               >>/etc/apt/sources.list.d/google-cloud-sdk.list
@@ -116,6 +117,10 @@ jobs:
             echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
             gcloud auth activate-service-account --key-file app/play-store-service-account.json
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
+            gsutil cp gs://dasfoo-keystore/delern.jks app
+
+            # Assemble Release APK (to store in artifacts).
+            ./gradlew assembleRelease
 
             # Run instrumented tests (for coverage).
             ./gradlew \
@@ -157,8 +162,8 @@ jobs:
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
 
-            # Assemble Release APK (to store in artifacts).
-            ./gradlew assembleRelease
+            # If tests have passed, deploy production database.
+            ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
           fi
 
     - deploy:
@@ -182,7 +187,6 @@ jobs:
               cut -b10- | \
               awk '!a[$0]++' | \
               cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
-            gsutil cp gs://dasfoo-keystore/delern.jks app
             # Publish to Google Play (this also automatically runs Robo tests).
             ./gradlew lintRelease publishRelease --console=plain
           fi
