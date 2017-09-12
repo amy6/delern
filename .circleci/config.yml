@@ -129,8 +129,8 @@ jobs:
               assembleInstrumentedAndroidTest \
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
+            # FIXME(https://firebase.google.com/support/): --device model=Nexus5
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5 \
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
@@ -156,8 +156,8 @@ jobs:
               assembleInstrumentedAndroidTest \
               --console=plain
             # https://circleci.com/docs/firebase-test-lab/
+            # FIXME(https://firebase.google.com/support/): --device model=Nexus5
             gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5 \
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
