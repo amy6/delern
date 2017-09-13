@@ -119,9 +119,6 @@ jobs:
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
             gsutil cp gs://dasfoo-keystore/delern.jks app
 
-            # Assemble Release APK (to store in artifacts).
-            ./gradlew assembleRelease
-
             # Run instrumented tests (for coverage).
             ./gradlew \
               -PcoverageRun \
@@ -161,6 +158,9 @@ jobs:
               --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+
+            # Assemble Release APK (to store in artifacts).
+            ./gradlew clean assembleRelease
 
             # If tests have passed, deploy production database.
             ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
