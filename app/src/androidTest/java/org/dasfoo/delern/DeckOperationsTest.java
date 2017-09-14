@@ -25,6 +25,7 @@ import android.text.InputType;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.util.DeckPostfix;
+import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -38,6 +39,7 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -87,7 +89,11 @@ public class DeckOperationsTest {
         pressBack();
         waitView(withId(R.id.fab)).check(matches(isDisplayed()));
         // Check that deck was created with 0 cards
-        waitView(withText(deckName)).check(matches(hasSibling(withText("0"))));
+        waitView(withText(deckName)).check(matches(hasSibling(withText("0")))).perform(click());
+        // No cards to learn toast.
+        onView(withText(R.string.no_card_message))
+                .inRoot(withDecorView(CoreMatchers.not(mActivityRule.getActivity().getWindow()
+                        .getDecorView()))).check(matches(isDisplayed()));
         onView(withId(R.id.empty_recyclerview_message)).check(matches(not(isDisplayed())));
         deleteDeck(deckName);
     }
