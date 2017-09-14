@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -109,5 +110,15 @@ public class NavigationTest {
         onView(withText(R.string.invitation_sent_message))
                 .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void openAndCloseNavigationDrawerPressingBack() {
+        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
+        // Close navigation drawer by pressing back.
+        pressBack();
+        waitView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
     }
 }
