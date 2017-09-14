@@ -270,6 +270,40 @@ public class LearningTest {
         onView(withText(R.string.delete)).perform(click());
     }
 
+    @Test
+    public void basicDeckType() {
+        String front1 = "mother";
+        String back1 = "d Muetter";
+        createCard(front1, back1);
+        pressBack();
+        // Change deckType
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.cards_type)).perform(click());
+        onView(withText(R.string.basic_cards_type)).check(matches(not(isClickable())));
+        onView(withText(R.string.swissgerman_cards_type)).perform(click());
+        // Start Learning Activity
+        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click());
+        // Check the first card
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
+        pressBack();
+        // Change deckType
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.cards_type)).perform(click());
+        onView(withText(R.string.swissgerman_cards_type)).check(matches(not(isClickable())));
+        onView(withText(R.string.basic_cards_type)).perform(click());
+        // Start Learning Activity
+        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click());
+        // Check the first card
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
+        pressBack();
+    }
+
     @After
     public void deleteDeck() {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
