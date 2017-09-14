@@ -34,6 +34,7 @@ import org.junit.rules.TestName;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
@@ -102,12 +103,19 @@ public class CardListTest {
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         2))));
         waitView(withId(R.id.search_action)).perform(click());
-        onView(isAssignableFrom(EditText.class)).perform(typeText("die"),
-                closeSoftKeyboard());
+        onView(isAssignableFrom(EditText.class)).perform(typeText("die"));
         waitView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         1))));
         onView(withText(front1)).check(matches(hasSibling(withText(back1))));
+        // Clean Search
+        onView(isAssignableFrom(EditText.class)).perform(clearText(),
+                closeSoftKeyboard());
+        waitView(withText(front1)).check(matches(hasSibling(withText(back1))));
+        onView(withText(front2)).check(matches(hasSibling(withText(back2))));
+        waitView(withId(R.id.number_of_cards))
+                .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
+                        2))));
         pressBack();
         pressBack();
     }
