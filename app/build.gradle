@@ -66,8 +66,7 @@ android {
             initWith release
 
             if (isIDE) {
-                // Disable obfuscation (slow, strips logger), make debuggable under Android Studio.
-                useProguard false
+                // Disable minifying (slow build, strips logger), make debuggable under Android Studio.
                 minifyEnabled false
                 debuggable true
                 testCoverageEnabled true
