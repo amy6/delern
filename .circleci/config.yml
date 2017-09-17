@@ -8,6 +8,9 @@ jobs:
     - ANDROID_HOME: /opt/android-sdk-linux
     - TERM: dumb
     - IDEA_VERSION: IC-2017.2.3-no-jdk
+    # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
+    # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
+    - GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
     - checkout
     - run:
