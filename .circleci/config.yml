@@ -57,6 +57,7 @@ jobs:
 
     - run:
         name: "Lint, assemble and run unit tests"
+        no_output_timeout: "35m"
         command: |
           # Check formatting
           "/opt/idea/${IDEA_VERSION}/bin/format.sh" -m '*.java' -r */src >/dev/null
@@ -103,6 +104,7 @@ jobs:
 
     - deploy:
         name: "Install Cloud SDK, run instrumented tests"
+        no_output_timeout: "35m"
         # https://cloud.google.com/sdk/downloads#apt-get
         command: |
           if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
@@ -173,6 +175,7 @@ jobs:
 
     - deploy:
         name: "Build signed Release binary, run instrumented tests, publish to Google Play"
+        no_output_timeout: "35m"
         command: |
           if [ -n "${CIRCLE_TAG}" ]; then
             # Run instrumented test (on hardware).
@@ -182,6 +185,7 @@ jobs:
               assembleInstrumentedAndroidTest \
               --console=plain
             gcloud --project=delern-debug firebase test android run \
+              --timeout 30m \
               --app app/build/outputs/apk/instrumented/app-instrumented.apk \
               --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
             # Build relnote.
