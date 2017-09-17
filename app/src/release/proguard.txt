@@ -60,3 +60,6 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+
+# Support Library 26.2.0 integrates with Architecture Library, but doesn't work as intended right now.
+-dontwarn android.arch.core.**
