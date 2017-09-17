@@ -58,8 +58,8 @@ android {
 
             minifyEnabled true
             // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-release.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-test.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                'src/release/proguard.txt'
         }
         instrumented {
             // Instrumented tests that require release-style optimizations.
@@ -84,6 +84,13 @@ android {
                 testCoverageEnabled true
                 minifyEnabled false
             }
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                'src/release/proguard.txt',
+                'src/instrumented/proguard.txt'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'),
+                'src/release/proguard.txt',
+                'src/androidTest/proguard.txt'
         }
         debug {
             // https://developers.google.com/android/guides/google-services-plugin

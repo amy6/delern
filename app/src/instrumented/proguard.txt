@@ -1,0 +1,10 @@
+# Methods called from Android tests are listed here. Keep this file to the
+# minimum, because any configuration in here will not be tested.
+
+-keep class org.dasfoo.delern.models.helpers.MultiWrite {
+  public *** getOperationsInFlight();
+}
+
+-keep class com.google.firebase.auth.FirebaseAuth {
+  public *** signInAnonymously();
+}

@@ -1,0 +1,19 @@
+# This is ProGuard configuration for instrumented test APK. This APK is not
+# statically linked to instrumented APK, which is a stand-alone application
+# version. Instead, both APK share the same process.
+
+# Since both APK are separately processed by ProGuard, calling instrumented
+# APK methods from instrumented test APK is not easy. The methods in
+# instrumented APK can be obfuscated or optimized away. Those that are to
+# be called must be whitelisted in instrumented APK ProGuard configuration.
+
+# The optimization level of instrumented test APK does not matter, so we
+# disable all optimizations to save build time.
+-dontoptimize
+-dontobfuscate
+-dontshrink
+-dontpreverify
+
+# Ignore all warnings about instrumented test APK, since any issues will show
+# up during the test run.
+-ignorewarnings

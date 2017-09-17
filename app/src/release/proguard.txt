@@ -7,6 +7,11 @@
 
 # Add any project specific keep options here:
 
+# Do not obfuscate the methods. This is useless in most cases, since basic
+# obfuscation does not prevent hacking, and space saved is very small compared
+# to all the inconveniences of mapping.txt and Android tests.
+-dontobfuscate
+
 # Disable logging below "info" (assuming this rule set is only enabled on Release).
 -assumenosideeffects interface org.slf4j.Logger {
   public void debug(...);
@@ -55,3 +60,12 @@
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
+
+# Methods called from Android tests are listed here (keep these to minimum,
+# because they will also hang in prod application).
+-keep class org.dasfoo.delern.models.helpers.MultiWrite {
+  public *** getOperationsInFlight();
+}
+-keep class com.google.firebase.auth.FirebaseAuth {
+  public *** signInAnonymously();
+}
