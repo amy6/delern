@@ -64,4 +64,11 @@ public interface OnDeckViewHolderClick {
      * @param deckType type of deck
      */
     void changeDeckType(int position, DeckType deckType);
+
+    /**
+     * Handles deck settings.
+     *
+     * @param deck deck to add cards
+     */
+    void editDeckSettings(int position);
 }

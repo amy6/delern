@@ -25,8 +25,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invite_menu_label">Invite Friends</string>
     <string name="invitation_message">Please join me for learning</string>
     <string name="invitation_title">Delern Invite</string>
-    <string name="invitation_email_html_content"
-            tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
+    <string name="invitation_email_html_content" tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
 <html>
     <body>
         <center>
@@ -51,6 +50,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="flip_the_card_message">Flip the card</string>
     <string name="number_of_cards">Number of cards: %d</string>
     <string name="card_watched_text">Watched: %d</string>
+    <string name="deck_settings_menu">Settings</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

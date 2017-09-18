@@ -53,6 +53,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.SplashScreenActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
+import org.dasfoo.delern.editdeck.EditDeckActivity;
 import org.dasfoo.delern.listcards.EditCardListActivity;
 import org.dasfoo.delern.learncards.LearningCardsActivity;
 import org.dasfoo.delern.di.Injector;
@@ -363,6 +364,11 @@ public class DelernMainActivity extends AppCompatActivity
     @Override
     public void addCardsToDeck(final Deck deck) {
         AddEditCardActivity.startAddCardActivity(this, deck);
+    }
+
+    @Override
+    public void editDeckSettings(final int position) {
+        EditDeckActivity.startActivity(this, mFirebaseAdapter.getItem(position));
     }
 
     /**

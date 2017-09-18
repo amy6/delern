@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (C) 2017 Katarina Sheremet
 
 This file is part of Delern.
@@ -18,13 +17,16 @@ You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.dasfoo.delern">
+    package="org.dasfoo.delern">
 
-    <!-- Some Chromebooks don't support touch. Although not essential,
+    <!--
+         Some Chromebooks don't support touch. Although not essential,
          it's a good idea to explicitly include this declaration.
-          https://developer.android.com/topic/arc/index.html-->
-    <uses-feature android:name="android.hardware.touchscreen"
-                  android:required="false" />
+          https://developer.android.com/topic/arc/index.html
+    -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
 
     <!-- Required permission for App measurement(Firebase Analytics) to run. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -43,23 +45,21 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:name=".listdecks.DelernMainActivity"
             android:label="${appName}"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".signin.SignInActivity"/>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".signin.SignInActivity" />
 
         <service
             android:name=".notifications.DelernFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".notifications.DelernFirebaseInstanceIdService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -70,7 +70,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.listdecks.DelernMainActivity"/>
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
         </activity>
         <activity
             android:name=".addupdatecard.AddEditCardActivity"
@@ -78,7 +78,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.listcards.EditCardListActivity"/>
+                android:value="org.dasfoo.delern.listcards.EditCardListActivity" />
         </activity>
         <activity
             android:name=".previewcard.PreEditCardActivity"
@@ -87,7 +87,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.listcards.EditCardListActivity"/>
+                android:value="org.dasfoo.delern.listcards.EditCardListActivity" />
         </activity>
         <activity
             android:name=".learncards.LearningCardsActivity"
@@ -96,16 +96,24 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.listdecks.DelernMainActivity"/>
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
         </activity>
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".editdeck.EditDeckActivity"
+            android:parentActivityName=".listdecks.DelernMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
         </activity>
     </application>
 

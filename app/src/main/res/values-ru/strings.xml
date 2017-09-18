@@ -52,6 +52,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="flip_the_card_message">Перевернуть карточку</string>
     <string name="number_of_cards">Количество карточек: %d</string>
     <string name="card_watched_text">Просмотрено: %d</string>
+    <string name="deck_settings_menu">Настройки</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
