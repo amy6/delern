@@ -1,8 +1,14 @@
 {
-	"hosting": {
-		"public": "www"
-	},
-	"database": {
-		"rules": "delern-rules.json"
-	}
+  "hosting": {
+    "public": "www/build/es5-debug",
+    "rewrites": [
+      {
+        "source": "**/!(*.*)",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "database": {
+    "rules": "delern-rules.json"
+  }
 }

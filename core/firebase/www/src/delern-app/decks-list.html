@@ -1,0 +1,38 @@
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<dom-module id="decks-list">
+  <template>
+    <firebase-query
+      path="/decks/[[uid]]"
+      data="{{decks}}">
+    </firebase-query>
+
+    <select value="{{selectedDeckKey::change}}">
+      <option value="">- Выберите список -</option>
+      <template is="dom-repeat" items="[[decks]]">
+        <option value="[[item.$key]]">[[item.name]]</option>
+      </template>
+    </select>
+  </template>
+
+  <script>
+    class DecksList extends Polymer.Element {
+      static get is() { return 'decks-list' }
+
+      static get properties() {
+        return {
+          uid: String,
+          decks: Array,
+          selectedDeckKey: {
+            type: String,
+            notify: true
+          }
+        };
+      }
+    }
+    customElements.define(DecksList.is, DecksList);
+  </script>
+
+</dom-module>

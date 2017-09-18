@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="decks-list.html">
+
+<dom-module id="add-card">
+  <template>
+
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <i class="intends">Выберите список</i>
+    <div class="row">
+      <div class="col-6">
+        <decks-list class="col-2 intends"
+          uid="[[firebaseUser.uid]]"
+          selected-deck-key="{{deckId}}">
+        </decks-list>
+      </div>
+      <div class="col-4" id="add-progress" style="display: none;">Добавлена</div>
+    </div>
+
+    <i class="intends">Введите переднюю сторону карточки</i>
+    <div class="row">
+      <textarea id="front" name="front" cols="40" rows="5" class="intends"
+        value="{{frontSide::change}}"></textarea>
+    </div>
+
+    <i class="intends">Введите обратную сторону карточки</i>
+    <div class="row">
+      <textarea id="back" name="back" cols="40" rows="5" class="intends"
+        value="{{backSide::change}}"></textarea>
+    </div>
+
+    <div class="row">
+      <button id="add-card" on-click="addCard" class="intends">Добавить</button>
+    </div>
+  </template>
+
+  <script>
+    class AddCard extends Polymer.Element {
+      static get is() { return 'add-card'; }
+
+      static get properties() {
+        return {
+          firebaseUser: {
+            type: Object,
+            notify: true,
+          },
+          deckId: String,
+          frontSide: {
+            type: String,
+            value: ''
+          },
+          backSide: {
+            type: String,
+            value: ''
+          }
+        };
+      }
+
+      addCard() {
+        if (this.frontSide.length == 0) {
+          alert("Передняя сторона карточки пуста");
+          return;
+        }
+
+        var card = {
+          front: this.frontSide,
+          back: this.backSide,
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+        };
+
+        var scheduled = {
+          level: "L0",
+          repeatAt: (new Date()).getTime(),
+        };
+
+        var newCardKey = firebase.database().ref().child('cards').child(this.deckId).push().key;
+
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        var updates = {};
+        updates['/cards/' + this.deckId +'/' + newCardKey] = card;
+        updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
+          newCardKey] = scheduled;
+
+        this.$['add-card'].disabled = true;
+        var self = this;
+        firebase.database().ref().update(updates).then(function() {
+          self.$['add-card'].disabled = false;
+          self.frontSide = '';
+          self.backSide = '';
+          self.$.front.focus();
+          setTimeout(function () {
+            self.$['add-progress'].style.display = 'none';
+          }, 3000);
+          self.$['add-progress'].style.display = 'inline';
+        }).catch(function(err) {
+          self.$['add-card'].disabled = false;
+          alert(err);
+        });
+      }
+    }
+
+    window.customElements.define(AddCard.is, AddCard);
+  </script>
+</dom-module>

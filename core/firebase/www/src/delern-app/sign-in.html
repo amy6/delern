@@ -1,0 +1,57 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="sign-in">
+  <template>
+    <firebase-auth
+      id="auth"
+      user="{{firebaseUser}}"
+      provider="google"
+      on-error="__authError">
+    </firebase-auth>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+		<div class="row">
+		<button on-click="signIn" class="content" style="width:170px">Google SignIn</button>
+		</div>
+
+  </template>
+
+  <script>
+    class SignIn extends Polymer.Element {
+      static get is() { return 'sign-in'; }
+
+      static get properties() {
+        return {
+          routeData: Object,
+        }
+      }
+
+      __authError(e) {
+        console.error('Can not authenticate', e);
+      }
+
+      signIn() {
+        var self = this;
+        this.$.auth.signInWithPopup()
+          .then(function(response) {
+            console.log('sign in successful, redirecting to add-card');
+            self.set('routeData.page', 'add-card');
+          })
+          .catch(function(error) {
+            console.error('SignIn Error', error);
+          });
+      }
+    }
+
+    window.customElements.define(SignIn.is, SignIn);
+  </script>
+</dom-module>

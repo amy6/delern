@@ -1,0 +1,16 @@
+{
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  },
+  "builds": [
+    {
+      "preset": "es5-bundled"
+    }
+  ],
+  "fragments": [
+    "src/delern-app/add-card.html",
+    "src/delern-app/sign-in.html"
+  ]
+}
