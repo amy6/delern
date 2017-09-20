@@ -18,24 +18,15 @@
 
 package org.dasfoo.delern.listdecks;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.addupdatecard.TextWatcherStub;
-import org.dasfoo.delern.models.DeckType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,26 +121,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         popup.show();
-        setDeckType(popup);
-    }
-
-    /**
-     * Sets current deck type in popup menu and make disable this deck type.
-     * Disabled menuItem doesn't allow to write in Firebase the same deck type
-     * if user touch it.
-     *
-     * @param popup popup menu
-     */
-    private void setDeckType(final PopupMenu popup) {
-        MenuItem menuItem = popup.getMenu().findItem(R.id.basic_type);
-        if (DeckType.SWISS.name().equalsIgnoreCase(mCheckedDeckType)) {
-            menuItem = popup.getMenu().findItem(R.id.swissgerman_type);
-        }
-        if (DeckType.GERMAN.name().equalsIgnoreCase(mCheckedDeckType)) {
-            menuItem = popup.getMenu().findItem(R.id.german_type);
-        }
-        menuItem.setChecked(true);
-        menuItem.setEnabled(false);
     }
 
     /**
@@ -165,23 +136,8 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             return false;
         }
         switch (item.getItemId()) {
-            case R.id.rename_deck_menu:
-                showRenameDialog();
-                return true;
             case R.id.edit_deck_menu:
                 mOnViewClick.editDeck(position);
-                return true;
-            case R.id.delete_deck_menu:
-                showDeleteDialog();
-                return true;
-            case R.id.basic_type:
-                mOnViewClick.changeDeckType(position, DeckType.BASIC);
-                return true;
-            case R.id.german_type:
-                mOnViewClick.changeDeckType(position, DeckType.GERMAN);
-                return true;
-            case R.id.swissgerman_type:
-                mOnViewClick.changeDeckType(position, DeckType.SWISS);
                 return true;
             case R.id.deck_settings:
                 mOnViewClick.editDeckSettings(position);
@@ -199,56 +155,5 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     public void setDeckCardType(final String checkedDeckType) {
         this.mCheckedDeckType = checkedDeckType;
-    }
-
-    private void showDeleteDialog() {
-        new AlertDialog.Builder(getDeckTextView().getContext())
-                .setMessage(R.string.delete_deck)
-                .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    // TODO(ksheremet): adapter position may change while the dialog is open.
-                    //                  Check here for -1, or save before showing the dialog and
-                    //                  check here for being within range.
-                    mOnViewClick.deleteDeck(getAdapterPosition());
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
-                .show();
-    }
-
-    private void showRenameDialog() {
-        final EditText input = new EditText(getDeckTextView().getContext());
-        // Specify the type of input expected
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setText(getDeckTextView().getText().toString());
-
-        final AlertDialog dialog = new AlertDialog.Builder(getDeckTextView().getContext())
-                .setTitle(R.string.deck)
-                .setView(input)
-                .setNegativeButton(R.string.cancel, (dialog1, which) -> dialog1.cancel())
-                .setPositiveButton(R.string.rename, new DialogInterface.OnClickListener() {
-                    /**
-                     * {@inheritDoc}
-                     */
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        mOnViewClick.renameDeck(getAdapterPosition(),
-                                input.getText().toString().trim());
-                    }
-                })
-                .create();
-        input.addTextChangedListener(new TextWatcherStub() {
-            @Override
-            public void afterTextChanged(final Editable s) {
-                // Check if edittext is empty, disable button. Not allow deck that
-                // contains only spaces in name
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setEnabled(!TextUtils.isEmpty(s.toString().trim()));
-            }
-        });
-        if (dialog.getWindow() != null) {
-            dialog.getWindow()
-                    .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
-        dialog.show();
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
 }

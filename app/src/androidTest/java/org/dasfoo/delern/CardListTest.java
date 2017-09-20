@@ -124,7 +124,8 @@ public class CardListTest {
     public void deleteDeck() {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        onView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.deck_settings_menu)).perform(click());
+        waitView(withId(R.id.delete_deck_menu)).perform(click());
         onView(withText(R.string.delete)).perform(click());
     }
 }

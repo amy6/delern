@@ -16,33 +16,26 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.listdecks;
+package org.dasfoo.delern.di.components;
+
+import org.dasfoo.delern.di.modules.EditDeckActivityModule;
+import org.dasfoo.delern.editdeck.EditDeckActivity;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
- * Created by katarina on 10/14/16.
- * Manages clicks on RecyclerView
+ * It can be seen as an intermediate object which allows accessing to objects defined in
+ * Dagger modules. Interface describes for which types we want to use members injection
  */
-
-public interface OnDeckViewHolderClick {
-
+@Singleton
+@Component(modules = EditDeckActivityModule.class)
+public interface EditDeckActivityComponent {
     /**
-     * Manages click on deck.
+     * Dagger injector.
      *
-     * @param position position of the clicked element in the list
+     * @param editDeckActivity sets type for injection
      */
-    void learnDeck(int position);
-
-    /**
-     * "Edit" menu item of a deck.
-     *
-     * @param position position of the element in the list
-     */
-    void editDeck(int position);
-
-    /**
-     * Handles deck settings.
-     *
-     * @param position position of the element in the list
-     */
-    void editDeckSettings(int position);
+    void inject(EditDeckActivity editDeckActivity);
 }

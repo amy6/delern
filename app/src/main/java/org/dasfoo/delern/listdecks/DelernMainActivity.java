@@ -53,13 +53,12 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.SplashScreenActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
-import org.dasfoo.delern.editdeck.EditDeckActivity;
-import org.dasfoo.delern.listcards.EditCardListActivity;
-import org.dasfoo.delern.learncards.LearningCardsActivity;
-import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
+import org.dasfoo.delern.di.Injector;
+import org.dasfoo.delern.editdeck.EditDeckActivity;
+import org.dasfoo.delern.learncards.LearningCardsActivity;
+import org.dasfoo.delern.listcards.EditCardListActivity;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.slf4j.Logger;
@@ -75,8 +74,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Main activity of the application, containing decks and menu.
  */
-@SuppressWarnings("PMD.TooManyMethods")
-// TODO(ksheremet): fix too many methods
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
@@ -383,31 +380,7 @@ public class DelernMainActivity extends AppCompatActivity
      * {@inheritDoc}
      */
     @Override
-    public void renameDeck(final int position, final String newName) {
-        mMainActivityPresenter.renameDeck(mFirebaseAdapter.getItem(position), newName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void editDeck(final int position) {
         EditCardListActivity.startActivity(this, mFirebaseAdapter.getItem(position));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void deleteDeck(final int position) {
-        mMainActivityPresenter.deleteDeck(mFirebaseAdapter.getItem(position));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeDeckType(final int position, final DeckType deckType) {
-        mMainActivityPresenter.changeDeckType(mFirebaseAdapter.getItem(position), deckType);
     }
 }

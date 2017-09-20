@@ -1,14 +1,57 @@
+/*
+ * Copyright (C) 2017 Katarina Sheremet
+ * This file is part of Delern.
+ *
+ * Delern is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * Delern is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.dasfoo.delern.editdeck;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.addupdatecard.TextWatcherStub;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.ParcelableDeck;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class EditDeckActivity extends AppCompatActivity {
 
@@ -16,11 +59,45 @@ public class EditDeckActivity extends AppCompatActivity {
      * IntentExtra deck for this activity.
      */
     public static final String DECK = "deck";
+    @BindView(R.id.deck_name)
+    /* default */ TextInputEditText mDeckNameEditText;
+    @BindView(R.id.deck_type_spinner)
+    /* default */ Spinner mDeckTypeSpinner;
+    @Inject
+    /* default */ EditDeckActivityPresenter mPresenter;
+    private Deck mDeck;
+    private boolean mInputValid;
+    private String mNewDeckType;
+
+    private AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
+            new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mNewDeckType = (String) adapterView.getItemAtPosition(i);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    if (mDeck.getDeckType() == null) {
+                        mNewDeckType = DeckType.BASIC.name();
+                    } else {
+                        mNewDeckType = mDeck.getDeckType();
+                    }
+                }
+            };
 
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditDeckActivity.class);
         intent.putExtra(EditDeckActivity.DECK, new ParcelableDeck(deck));
         context.startActivity(intent);
+    }
+
+    private static List<String> getDeckTypeList() {
+        List<String> deckTypeList = new ArrayList<>(DeckType.values().length);
+        for (DeckType deckType: DeckType.values()) {
+            deckTypeList.add(deckType.name());
+        }
+        return deckTypeList;
     }
 
     @Override
@@ -33,7 +110,96 @@ public class EditDeckActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(deck.getName());
+        mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
+        this.setTitle(mDeck.getName());
+        mNewDeckType = mDeck.getDeckType();
+        Injector.getEditDeckActivityInjector().inject(this);
+        ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ArrayAdapter<String> arrayAdapter =
+                new ArrayAdapter<>(this,
+                        android.R.layout.simple_spinner_dropdown_item, getDeckTypeList());
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mDeckTypeSpinner.setAdapter(arrayAdapter);
+        mDeckTypeSpinner.setSelection(arrayAdapter.getPosition(mDeck.getDeckType()));
+        mDeckTypeSpinner.setOnItemSelectedListener(mSpinnerItemClickListener);
+
+        mDeckNameEditText.setText(mDeck.getName());
+        final TextWatcherStub deckNameChanged = new TextWatcherStub() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                mInputValid = !TextUtils.isEmpty(mDeckNameEditText.getText().toString().trim());
+            }
+        };
+        mDeckNameEditText.addTextChangedListener(deckNameChanged);
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveDeck();
+        super.onBackPressed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.deck_settings_menu, menu);
+        // Menu icons from drawable folder isn't tinted on default.
+        // http://stackoverflow.com/questions/24301235/tint-menu-icons
+        MenuItem deleteMenuItem = menu.findItem(R.id.delete_deck_menu);
+        Drawable tintedIcon = deleteMenuItem.getIcon();
+        // TODO(ksheremet): Check mode http://ssp.impulsetrain.com/porterduff.html
+        tintedIcon.mutate().setColorFilter(ContextCompat.getColor(this, R.color.toolbarIconColor),
+                PorterDuff.Mode.SRC_IN);
+        deleteMenuItem.setIcon(tintedIcon);
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_deck_menu: {
+                showDeleteDialog();
+                break;
+            }
+            case android.R.id.home: {
+                saveDeck();
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    private void showDeleteDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.delete_deck)
+                .setPositiveButton(R.string.delete, (dialog, which) -> {
+                    mPresenter.deleteDeck(mDeck);
+                    finish();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+                .show();
+    }
+
+    private void saveDeck() {
+        if ((mInputValid) || (!mNewDeckType.equals(mDeck.getDeckType()))) {
+            String newDeckName = mDeckNameEditText.getText().toString().trim();
+            mDeck.setName(newDeckName);
+            mDeck.setDeckType(mNewDeckType);
+            mPresenter.updateDeck(mDeck);
+        }
     }
 }

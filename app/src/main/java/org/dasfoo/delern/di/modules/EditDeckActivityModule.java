@@ -16,33 +16,21 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.listdecks;
+package org.dasfoo.delern.di.modules;
+
+import org.dasfoo.delern.editdeck.EditDeckActivityPresenter;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
- * Created by katarina on 10/14/16.
- * Manages clicks on RecyclerView
+ * Dagger 2 class that says how to inject EditDeckActivity.
  */
+@Module
+public class EditDeckActivityModule {
 
-public interface OnDeckViewHolderClick {
-
-    /**
-     * Manages click on deck.
-     *
-     * @param position position of the clicked element in the list
-     */
-    void learnDeck(int position);
-
-    /**
-     * "Edit" menu item of a deck.
-     *
-     * @param position position of the element in the list
-     */
-    void editDeck(int position);
-
-    /**
-     * Handles deck settings.
-     *
-     * @param position position of the element in the list
-     */
-    void editDeckSettings(int position);
+    @Provides
+    /* default */ EditDeckActivityPresenter providePresenter() {
+        return new EditDeckActivityPresenter();
+    }
 }

@@ -92,38 +92,6 @@ public class DelernMainActivityPresenter {
     }
 
     /**
-     * Method renames deck.
-     *
-     * @param deck    deck to rename.
-     * @param newName new name for deck.
-     */
-    public void renameDeck(final Deck deck, final String newName) {
-        deck.setName(newName);
-        deck.save();
-    }
-
-    /**
-     * Method deletes deck.
-     *
-     * @param deck deck to delete.
-     */
-    public void deleteDeck(final Deck deck) {
-        deck.delete();
-    }
-
-    /**
-     * Method changes type of deck.
-     *
-     * @param deck     deck type of which to change.
-     * @param deckType new type of deck.
-     */
-    public void changeDeckType(final Deck deck, final DeckType deckType) {
-        deck.setDeckType(deckType.name());
-        deck.save();
-    }
-
-
-    /**
      * Cleanup listeners and release resources.
      */
     public void cleanup() {

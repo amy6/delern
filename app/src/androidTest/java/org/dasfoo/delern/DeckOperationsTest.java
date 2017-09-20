@@ -66,7 +66,8 @@ public class DeckOperationsTest {
     private static void deleteDeck(final String deckName) {
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click());
-        onView(withText(R.string.delete)).perform(click());
+        onView(withText(R.string.deck_settings_menu)).perform(click());
+        waitView(withId(R.id.delete_deck_menu)).perform(click());
         onView(withText(R.string.delete)).perform(click());
     }
 

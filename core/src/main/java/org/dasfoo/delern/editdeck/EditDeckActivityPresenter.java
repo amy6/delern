@@ -16,33 +16,30 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.listdecks;
+package org.dasfoo.delern.editdeck;
+
+import org.dasfoo.delern.models.Deck;
 
 /**
- * Created by katarina on 10/14/16.
- * Manages clicks on RecyclerView
+ * Presenter for EditDeckActivity. It performs logic with model
  */
-
-public interface OnDeckViewHolderClick {
-
-    /**
-     * Manages click on deck.
-     *
-     * @param position position of the clicked element in the list
-     */
-    void learnDeck(int position);
+public class EditDeckActivityPresenter {
 
     /**
-     * "Edit" menu item of a deck.
+     * Method deletes deck.
      *
-     * @param position position of the element in the list
+     * @param deck deck to delete.
      */
-    void editDeck(int position);
+    public void deleteDeck(final Deck deck) {
+        deck.delete();
+    }
 
     /**
-     * Handles deck settings.
+     * Method renames deck or changes type of deck.
      *
-     * @param position position of the element in the list
+     * @param newDeck updated deck.
      */
-    void editDeckSettings(int position);
+    public void updateDeck(final Deck newDeck) {
+        newDeck.save();
+    }
 }
