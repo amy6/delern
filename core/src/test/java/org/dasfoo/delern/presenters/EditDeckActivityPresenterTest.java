@@ -20,40 +20,34 @@ package org.dasfoo.delern.presenters;
 
 
 import org.dasfoo.delern.editdeck.EditDeckActivityPresenter;
-import org.dasfoo.delern.editdeck.IEditDeckView;
+import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.test.FirebaseServerRule;
 import org.junit.Before;
 import org.junit.Rule;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 public class EditDeckActivityPresenterTest {
-
-    private final static int TIMEOUT = 5000;
 
     @Rule
     public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
 
-    @Mock
-    private IEditDeckView mEditDeckViev;
-    @InjectMocks
-    private EditDeckActivityPresenter mPresenter;
+    private EditDeckActivityPresenter mPresenter = new EditDeckActivityPresenter();
 
     private User mUser;
 
     @Before
     public void setupParamPresenter() throws Exception {
-        // Mockito has a very convenient way to inject mocks by using the @Mock annotation. To
-        // inject the mocks in the test the initMocks method needs to be called.
-        MockitoAnnotations.initMocks(this);
-
         mUser = mFirebaseServer.signIn();
     }
 
-    /*@Test
-    public void deleteDeckWithListener() {
+    @Test
+    public void deleteDeck() {
         mUser.save().blockingAwait();
         Deck newDeck = new Deck(mUser);
         newDeck.setName("test");
@@ -61,8 +55,56 @@ public class EditDeckActivityPresenterTest {
         newDeck.setAccepted(true);
         newDeck.create().blockingAwait();
         mPresenter.deleteDeck(newDeck);
-        // TODO(ksheremet): Verify that activity closed
-        verify(mDelernMainView, timeout(TIMEOUT).times(2)).showProgressBar(Boolean.FALSE);
-        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.TRUE);
-    }*/
+        List<Deck> deleted = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .blockingFirst();
+        assertTrue(deleted.size() == 0);
+    }
+
+    @Test
+    public void updateDeckName() {
+        mUser.save().blockingAwait();
+        Deck newDeck = new Deck(mUser);
+        newDeck.setName("test");
+        newDeck.setDeckType(DeckType.BASIC.name());
+        newDeck.setAccepted(true);
+        newDeck.create().blockingAwait();
+        newDeck.setName("test2");
+        mPresenter.updateDeck(newDeck);
+        List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .firstOrError().blockingGet();
+        assertTrue(updated.size() == 1 && "test2".equals(updated.get(0).getName()));
+    }
+
+    @Test
+    public void updateDeckType() {
+        mUser.save().blockingAwait();
+        Deck newDeck = new Deck(mUser);
+        newDeck.setName("test");
+        newDeck.setDeckType(DeckType.BASIC.name());
+        newDeck.setAccepted(true);
+        newDeck.create().blockingAwait();
+        newDeck.setDeckType(DeckType.GERMAN.name());
+        mPresenter.updateDeck(newDeck);
+        List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .firstOrError().blockingGet();
+        assertTrue(updated.size() == 1 && DeckType.GERMAN.name()
+                .equals(updated.get(0).getDeckType()));
+    }
+
+    @Test
+    public void updateNameDeckType() {
+        mUser.save().blockingAwait();
+        Deck newDeck = new Deck(mUser);
+        newDeck.setName("test");
+        newDeck.setDeckType(DeckType.BASIC.name());
+        newDeck.setAccepted(true);
+        newDeck.create().blockingAwait();
+        newDeck.setName("test2");
+        newDeck.setDeckType(DeckType.SWISS.name());
+        mPresenter.updateDeck(newDeck);
+        List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
+                .firstOrError().blockingGet();
+        assertTrue(updated.size() == 1 && DeckType.SWISS.name()
+                .equals(updated.get(0).getDeckType()) && "test2".equals(updated.get(0).getName()));
+    }
 }

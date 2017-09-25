@@ -39,7 +39,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invitation_failed_message">The invitation was not sent</string>
     <string name="invitation_sent_message">The invitation was sent</string>
 
-    <string name="rename">Rename</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>

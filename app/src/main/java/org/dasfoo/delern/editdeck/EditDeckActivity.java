@@ -53,6 +53,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Performs operations with a deck, such as rename, delete, update.
+ */
 public class EditDeckActivity extends AppCompatActivity {
 
     /**
@@ -69,15 +72,22 @@ public class EditDeckActivity extends AppCompatActivity {
     private boolean mInputValid;
     private String mNewDeckType;
 
-    private AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
+    private final AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
             new AdapterView.OnItemSelectedListener() {
+                /**
+                 * {@inheritDoc}
+                 */
                 @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                public void onItemSelected(final AdapterView<?> adapterView, final View view,
+                                           final int i, final long l) {
                     mNewDeckType = (String) adapterView.getItemAtPosition(i);
                 }
 
+                /**
+                 * {@inheritDoc}
+                 */
                 @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
+                public void onNothingSelected(final AdapterView<?> adapterView) {
                     if (mDeck.getDeckType() == null) {
                         mNewDeckType = DeckType.BASIC.name();
                     } else {
@@ -86,6 +96,12 @@ public class EditDeckActivity extends AppCompatActivity {
                 }
             };
 
+    /**
+     * Method starts EditDeckActivity.
+     *
+     * @param context context of Activity that called this method.
+     * @param deck    deck to perform operations.
+     */
     public static void startActivity(final Context context, final Deck deck) {
         Intent intent = new Intent(context, EditDeckActivity.class);
         intent.putExtra(EditDeckActivity.DECK, new ParcelableDeck(deck));
@@ -94,14 +110,14 @@ public class EditDeckActivity extends AppCompatActivity {
 
     private static List<String> getDeckTypeList() {
         List<String> deckTypeList = new ArrayList<>(DeckType.values().length);
-        for (DeckType deckType: DeckType.values()) {
+        for (DeckType deckType : DeckType.values()) {
             deckTypeList.add(deckType.name());
         }
         return deckTypeList;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_deck_activity);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -131,13 +147,16 @@ public class EditDeckActivity extends AppCompatActivity {
         mDeckNameEditText.setText(mDeck.getName());
         final TextWatcherStub deckNameChanged = new TextWatcherStub() {
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
                 mInputValid = !TextUtils.isEmpty(mDeckNameEditText.getText().toString().trim());
             }
         };
         mDeckNameEditText.addTextChangedListener(deckNameChanged);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onBackPressed() {
         saveDeck();
@@ -148,7 +167,7 @@ public class EditDeckActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.deck_settings_menu, menu);
         // Menu icons from drawable folder isn't tinted on default.
@@ -166,17 +185,15 @@ public class EditDeckActivity extends AppCompatActivity {
      * {@inheritDoc}
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete_deck_menu: {
+            case R.id.delete_deck_menu:
                 showDeleteDialog();
                 break;
-            }
-            case android.R.id.home: {
+            case android.R.id.home:
                 saveDeck();
                 NavUtils.navigateUpFromSameTask(this);
                 break;
-            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -195,7 +212,7 @@ public class EditDeckActivity extends AppCompatActivity {
     }
 
     private void saveDeck() {
-        if ((mInputValid) || (!mNewDeckType.equals(mDeck.getDeckType()))) {
+        if (mInputValid || !mNewDeckType.equals(mDeck.getDeckType())) {
             String newDeckName = mDeckNameEditText.getText().toString().trim();
             mDeck.setName(newDeckName);
             mDeck.setDeckType(mNewDeckType);

@@ -363,6 +363,9 @@ public class DelernMainActivity extends AppCompatActivity
         AddEditCardActivity.startAddCardActivity(this, deck);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void editDeckSettings(final int position) {
         EditDeckActivity.startActivity(this, mFirebaseAdapter.getItem(position));

@@ -52,7 +52,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
     private OnDeckViewHolderClick mOnViewClick;
-    private String mCheckedDeckType;
 
     /**
      * Constructor. It initializes variable that describe how to place deck.
@@ -128,7 +127,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
-
         int position = getAdapterPosition();
         if (position == RecyclerView.NO_POSITION) {
             // ViewHolder was either removed or the view has been changed.
@@ -146,14 +144,5 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
                 return false;
         }
-    }
-
-    /**
-     * Setter for deck type.
-     *
-     * @param checkedDeckType deck type
-     */
-    public void setDeckCardType(final String checkedDeckType) {
-        this.mCheckedDeckType = checkedDeckType;
     }
 }

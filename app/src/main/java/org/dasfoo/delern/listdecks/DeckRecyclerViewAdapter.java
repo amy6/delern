@@ -54,8 +54,6 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.getDeckTextView().setText(deck.getName());
-        viewHolder.setDeckCardType(deck.getDeckType());
-
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
                 .subscribe((final Long cardsCount) -> {

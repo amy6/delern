@@ -21,7 +21,6 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.listdecks.DelernMainActivityPresenter;
 import org.dasfoo.delern.listdecks.IDelernMainView;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.test.FirebaseServerRule;
 import org.junit.Before;
@@ -31,8 +30,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -121,43 +118,5 @@ public class DelernMainActivityPresenterTest {
         mPresenter.onCreate(mUser);
         User user = mPresenter.getUser();
         assertEquals(mUser, user);
-    }
-
-    @Test
-    public void renameDeck() {
-        mUser.save().blockingAwait();
-        Deck deck = new Deck(mUser);
-        deck.setName("test");
-        deck.setDeckType(DeckType.BASIC.name());
-        deck.setAccepted(true);
-        deck.create().blockingAwait();
-
-        mPresenter.onCreate(mUser);
-        mPresenter.onStart();
-        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
-        mPresenter.renameDeck(deck, "newTest");
-
-        List<Deck> deckList = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-                .blockingFirst();
-        assertEquals("newTest", deckList.get(0).getName());
-    }
-
-    @Test
-    public void changeDeckType() {
-        mUser.save().blockingAwait();
-        Deck deck = new Deck(mUser);
-        deck.setName("test");
-        deck.setDeckType(DeckType.BASIC.name());
-        deck.setAccepted(true);
-        deck.create().blockingAwait();
-
-        mPresenter.onCreate(mUser);
-        mPresenter.onStart();
-        verify(mDelernMainView, timeout(TIMEOUT)).noDecksMessage(Boolean.FALSE);
-        mPresenter.changeDeckType(deck, DeckType.SWISS);
-
-        List<Deck> deckList = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
-                .blockingFirst();
-        assertEquals(DeckType.SWISS.name(), deckList.get(0).getDeckType());
     }
 }

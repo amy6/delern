@@ -40,8 +40,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invitation_failed_message">Приглашение не было отправлено</string>
     <string name="invitation_sent_message">Приглашение отправлено</string>
 
-
-    <string name="rename">Переименовать</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
     <string name="cancel">Отменить</string>
