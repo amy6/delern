@@ -46,10 +46,16 @@ task buildPolymer(type: NodeTask, dependsOn: [npmInstall, bowerInstall]) {
     args = ['build']
 }
 
+task npmInstallFunctions(type: NpmTask) {
+    workingDir = file("${firebaseDir}/functions")
+    args = ['install']
+}
+
 if (project.hasProperty('firebaseProject')) {
     task deployFirebase(type: NodeTask, dependsOn: [
       convertBoltToFirebaseRules,
       buildPolymer,
+      npmInstallFunctions,
     ]) {
         workingDir = firebaseDir
         script = file("${node.nodeModulesDir}/node_modules/.bin/firebase")
