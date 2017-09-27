@@ -123,16 +123,16 @@ public class AddUpdateCardTest {
                 .perform(click());
         onView(withText(R.string.edit)).perform(click());
         waitView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
-        waitView(withId(R.id.textFrontPreview)).check(matches(withText(frontCard)));
-        onView(withId(R.id.textBackPreview)).check(matches(withText(backCard)));
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontCard)));
+        onView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
         onView(withId(R.id.edit_card_button)).check(matches(isDisplayed())).perform(click());
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
                 .perform(replaceText("front2"));
         onView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
                 .perform(replaceText("back2"));
         onView(withId(R.id.add_card_to_db)).perform(click());
-        waitView(withId(R.id.textFrontPreview)).check(matches(withText("front2")));
-        onView(withId(R.id.textBackPreview)).check(matches(withText("back2")));
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
+        onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
         pressBack();
         pressBack();
     }

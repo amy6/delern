@@ -96,8 +96,8 @@ public class PreviewCardTest {
         waitView(withId(R.id.number_of_cards)).check(matches(withText(
                 String.format(context.getString(R.string.number_of_cards), 1))));
         onView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
-        waitView(withId(R.id.textFrontPreview)).check(matches(withText(frontCard)));
-        onView(withId(R.id.textBackPreview)).check(matches(withText(backCard)));
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontCard)));
+        onView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
         onView(withId(R.id.delete_card_menu)).perform(click());
         onView(withText(R.string.delete)).perform(click());
         waitView(withId(R.id.number_of_cards)).check(matches(withText(

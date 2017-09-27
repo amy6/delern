@@ -18,8 +18,6 @@
 
 package org.dasfoo.delern.previewcard;
 
-// TODO(ksheremet): this class should be gone!
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -47,7 +45,6 @@ import butterknife.OnClick;
 
 /**
  * Activity that shows the card before it is being edited.
- * TODO(ksheremet): use existing showCardActivity for that?
  */
 public class PreEditCardActivity extends AppCompatActivity implements IPreEditCardView {
 
@@ -56,9 +53,9 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
      */
     public static final String CARD = "card";
 
-    @BindView(R.id.textFrontPreview)
+    @BindView(R.id.textFrontCardView)
     /* default */ TextView mFrontPreview;
-    @BindView(R.id.textBackPreview)
+    @BindView(R.id.textBackCardView)
     /* default */ TextView mBackPreview;
     @Inject
     /* default */ PreEditCardActivityPresenter mPresenter;

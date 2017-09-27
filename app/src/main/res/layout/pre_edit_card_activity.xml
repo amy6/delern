@@ -29,7 +29,16 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <include layout="@layout/toolbar" />
 
-    <include layout="@layout/pre_edit_card_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <include layout="@layout/show_cards_content" />
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/edit_card_button"
