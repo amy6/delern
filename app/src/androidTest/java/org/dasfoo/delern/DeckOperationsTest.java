@@ -23,7 +23,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.util.DeckPostfix;
 import org.hamcrest.CoreMatchers;
@@ -32,7 +31,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -46,11 +44,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
-import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.waitView;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -152,7 +147,7 @@ public class DeckOperationsTest {
         deleteDeck(newDeckName);
     }
 
-    @Test
+   /* @Test
     public void addDeckToChangeDeckTypeToGermanAndDelete() {
         addDeckToChangeDeckType(DeckType.GERMAN.name());
     }
@@ -188,5 +183,5 @@ public class DeckOperationsTest {
                 .check(matches(withSpinnerText(is(deckType))));
         pressBack();
         deleteDeck(deckName);
-    }
+    }*/
 }
