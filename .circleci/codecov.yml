@@ -1,0 +1,5 @@
+ignore:
+# Ignore slf4j implementation because it can't always be tested.
+- "**/org/slf4j/impl/**"
+# Ignore Android logger bridge because we never test it.
+- "**/org/dasfoo/delern/logging/**"
