@@ -30,12 +30,12 @@ public enum DeckType {
     BASIC,
 
     /**
+     * Cards in this deck are german. Extra colors for background available.
+     */
+    GERMAN,
+
+    /**
      * Cards in this deck are swissgerman. Extra colors for background available.
      */
     SWISS,
-
-    /**
-     * Cards in this deck are german. Extra colors for background available.
-     */
-    GERMAN
 }

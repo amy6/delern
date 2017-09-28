@@ -75,9 +75,12 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Cards type menu -->
     <string name="cards_type">Тип списка</string>
-    <string name="basic_cards_type">Базовый</string>
-    <string name="german_cards_type">Немецкий</string>
-    <string name="swissgerman_cards_type">Швейцарский</string>
+    <string-array name="deck_type_spinner">
+        <item>Базовый</item>
+        <item>Немецкий</item>
+        <item>Швейцарский</item>
+    </string-array>
+    <string name="decktype_not_exist_user_message">Тип списка не был изменен</string>
 
     <!-- Force update user messages  -->
     <string name="new_app_version_dialog_title">Доступна новая верския приложения</string>

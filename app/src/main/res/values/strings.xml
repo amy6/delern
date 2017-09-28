@@ -73,11 +73,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="front_side_card_hint">Front side</string>
 
 
-    <!-- Cards type menu -->
+    <!-- Cards type spinner -->
     <string name="cards_type">Deck Type</string>
-    <string name="basic_cards_type">Basic</string>
-    <string name="german_cards_type">German</string>
-    <string name="swissgerman_cards_type">Swiss</string>
+    <string-array name="deck_type_spinner">
+        <item>Basic</item>
+        <item>German</item>
+        <item>Swiss</item>
+    </string-array>
+    <string name="decktype_not_exist_user_message">Deck Type wasn\'t change</string>
 
     <!-- Force update user messages  -->
     <string name="new_app_version_dialog_title">New version available</string>

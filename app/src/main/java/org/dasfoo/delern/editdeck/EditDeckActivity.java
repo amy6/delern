@@ -37,6 +37,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
@@ -44,9 +45,8 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.ParcelableDeck;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -62,6 +62,9 @@ public class EditDeckActivity extends AppCompatActivity {
      * IntentExtra deck for this activity.
      */
     public static final String DECK = "deck";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EditDeckActivity.class);
+
     @BindView(R.id.deck_name)
     /* default */ TextInputEditText mDeckNameEditText;
     @BindView(R.id.deck_type_spinner)
@@ -79,8 +82,16 @@ public class EditDeckActivity extends AppCompatActivity {
                  */
                 @Override
                 public void onItemSelected(final AdapterView<?> adapterView, final View view,
-                                           final int i, final long l) {
-                    mNewDeckType = (String) adapterView.getItemAtPosition(i);
+                                           final int position, final long id) {
+                    if (DeckType.values().length < position) {
+                        mNewDeckType = mDeck.getDeckType();
+                        Toast.makeText(EditDeckActivity.this,
+                                R.string.decktype_not_exist_user_message,
+                                Toast.LENGTH_SHORT).show();
+                        LOGGER.error("the selected item number is {}", position,
+                                new IndexOutOfBoundsException());
+                    }
+                    mNewDeckType = DeckType.values()[position].name();
                 }
 
                 /**
@@ -108,14 +119,6 @@ public class EditDeckActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    private static List<String> getDeckTypeList() {
-        List<String> deckTypeList = new ArrayList<>(DeckType.values().length);
-        for (DeckType deckType : DeckType.values()) {
-            deckTypeList.add(deckType.name());
-        }
-        return deckTypeList;
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,12 +139,21 @@ public class EditDeckActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_dropdown_item, getDeckTypeList());
+        ArrayAdapter<CharSequence> arrayAdapter =
+                ArrayAdapter.createFromResource(this,
+                        R.array.deck_type_spinner, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDeckTypeSpinner.setAdapter(arrayAdapter);
-        mDeckTypeSpinner.setSelection(arrayAdapter.getPosition(mDeck.getDeckType()));
+
+        int arrayLength = getResources().getStringArray(R.array.deck_type_spinner).length;
+        int deckTypeLength = DeckType.values().length;
+        if (deckTypeLength > arrayLength) {
+            LOGGER.error("DeckType has more type than Spinner", new IndexOutOfBoundsException());
+            mDeckTypeSpinner.setSelection(DeckType.BASIC.ordinal());
+        } else {
+            mDeckTypeSpinner.setSelection(DeckType.valueOf(mDeck.getDeckType()).ordinal());
+        }
+
         mDeckTypeSpinner.setOnItemSelectedListener(mSpinnerItemClickListener);
 
         mDeckNameEditText.setText(mDeck.getName());
