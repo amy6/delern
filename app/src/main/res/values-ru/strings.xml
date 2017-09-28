@@ -86,4 +86,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="new_app_version_dialog_title">Доступна новая верския приложения</string>
     <string name="update_app_user_message">Пожалуйста, обновите Delern до новой версии.</string>
 
+    <!-- Markdown -->
+    <string name="markdown_textview">Маркдаун</string>
+    <string name="off_switch_text">OFF</string>
+    <string name="on_switch_text">ON</string>
+
 </resources>

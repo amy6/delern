@@ -36,7 +36,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
@@ -64,6 +66,8 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
     /* default */ TextInputEditText mDeckNameEditText;
     @BindView(R.id.deck_type_spinner)
     /* default */ Spinner mDeckTypeSpinner;
+    @BindView(R.id.on_off_switch)
+    /* default */ Switch mOnOfSwitch;
     @Inject
     /* default */ EditDeckActivityPresenter mPresenter;
     private Deck mDeck;
@@ -86,6 +90,13 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
                 @Override
                 public void onNothingSelected(final AdapterView<?> adapterView) {
                     mPresenter.selectDeckType(-1);
+                }
+            };
+
+    private final CompoundButton.OnCheckedChangeListener mCheckedChangeListener =
+            (compoundButton, isChecked) -> {
+                if (isChecked) {
+                    Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show();
                 }
             };
 
@@ -139,6 +150,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             }
         };
         mDeckNameEditText.addTextChangedListener(deckNameChanged);
+        mOnOfSwitch.setOnCheckedChangeListener(mCheckedChangeListener);
     }
 
     /**
