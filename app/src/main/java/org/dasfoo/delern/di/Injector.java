@@ -40,6 +40,7 @@ import org.dasfoo.delern.di.modules.EditDeckActivityModule;
 import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
 import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
+import org.dasfoo.delern.editdeck.IEditDeckView;
 import org.dasfoo.delern.learncards.ILearningCardsView;
 import org.dasfoo.delern.listdecks.IDelernMainView;
 import org.dasfoo.delern.models.Card;
@@ -49,6 +50,7 @@ import org.dasfoo.delern.previewcard.IPreEditCardView;
 /**
  * Initialize components for creating class.
  */
+@SuppressWarnings("checkstyle:classFanOutComplexity")
 public final class Injector {
 
     private Injector() {
@@ -135,11 +137,14 @@ public final class Injector {
     /**
      * Method returns injector class.
      *
+     * @param view view to init Presenter of callbacks.
+     * @param deck deck to change settings.
      * @return EditDeckActivityComponent.
      */
-    public static EditDeckActivityComponent getEditDeckActivityInjector() {
+    public static EditDeckActivityComponent getEditDeckActivityInjector(final IEditDeckView view,
+                                                                        final Deck deck) {
         return DaggerEditDeckActivityComponent
                 .builder()
-                .editDeckActivityModule(new EditDeckActivityModule()).build();
+                .editDeckActivityModule(new EditDeckActivityModule(view, deck)).build();
     }
 }

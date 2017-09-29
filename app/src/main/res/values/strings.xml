@@ -80,7 +80,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item>German</item>
         <item>Swiss</item>
     </string-array>
-    <string name="decktype_not_exist_user_message">Deck Type wasn\'t change</string>
+    <string name="decktype_not_exist_user_message">Deck Type wasn\'t changed</string>
 
     <!-- Force update user messages  -->
     <string name="new_app_version_dialog_title">New version available</string>

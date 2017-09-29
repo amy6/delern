@@ -20,6 +20,7 @@ package org.dasfoo.delern.presenters;
 
 
 import org.dasfoo.delern.editdeck.EditDeckActivityPresenter;
+import org.dasfoo.delern.editdeck.IEditDeckView;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
@@ -31,30 +32,39 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 public class EditDeckActivityPresenterTest {
+
+    private static int TIMEOUT = 5000;
 
     @Rule
     public final FirebaseServerRule mFirebaseServer = new FirebaseServerRule();
 
-    private EditDeckActivityPresenter mPresenter = new EditDeckActivityPresenter();
-
     private User mUser;
+    private Deck mDeck;
+    EditDeckActivityPresenter mPresenter;
+    IEditDeckView mView;
 
     @Before
     public void setupParamPresenter() throws Exception {
         mUser = mFirebaseServer.signIn();
+        mUser.save().blockingAwait();
+
+        mDeck = new Deck(mUser);
+        mDeck.setName("test");
+        mDeck.setDeckType(DeckType.BASIC.name());
+        mDeck.setAccepted(true);
+        mDeck.create().blockingAwait();
+        mView = mock(IEditDeckView.class);
+        mPresenter = new EditDeckActivityPresenter(mView, mDeck);
     }
 
     @Test
     public void deleteDeck() {
-        mUser.save().blockingAwait();
-        Deck newDeck = new Deck(mUser);
-        newDeck.setName("test");
-        newDeck.setDeckType(DeckType.BASIC.name());
-        newDeck.setAccepted(true);
-        newDeck.create().blockingAwait();
-        mPresenter.deleteDeck(newDeck);
+        mPresenter.deleteDeck(mDeck);
         List<Deck> deleted = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .blockingFirst();
         assertTrue(deleted.size() == 0);
@@ -62,14 +72,8 @@ public class EditDeckActivityPresenterTest {
 
     @Test
     public void updateDeckName() {
-        mUser.save().blockingAwait();
-        Deck newDeck = new Deck(mUser);
-        newDeck.setName("test");
-        newDeck.setDeckType(DeckType.BASIC.name());
-        newDeck.setAccepted(true);
-        newDeck.create().blockingAwait();
-        newDeck.setName("test2");
-        mPresenter.updateDeck(newDeck);
+        mDeck.setName("test2");
+        mPresenter.updateDeck(mDeck, true);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && "test2".equals(updated.get(0).getName()));
@@ -77,14 +81,8 @@ public class EditDeckActivityPresenterTest {
 
     @Test
     public void updateDeckType() {
-        mUser.save().blockingAwait();
-        Deck newDeck = new Deck(mUser);
-        newDeck.setName("test");
-        newDeck.setDeckType(DeckType.BASIC.name());
-        newDeck.setAccepted(true);
-        newDeck.create().blockingAwait();
-        newDeck.setDeckType(DeckType.GERMAN.name());
-        mPresenter.updateDeck(newDeck);
+        mPresenter.selectDeckType(DeckType.GERMAN.ordinal());
+        mPresenter.updateDeck(mDeck, false);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && DeckType.GERMAN.name()
@@ -93,18 +91,24 @@ public class EditDeckActivityPresenterTest {
 
     @Test
     public void updateNameDeckType() {
-        mUser.save().blockingAwait();
-        Deck newDeck = new Deck(mUser);
-        newDeck.setName("test");
-        newDeck.setDeckType(DeckType.BASIC.name());
-        newDeck.setAccepted(true);
-        newDeck.create().blockingAwait();
-        newDeck.setName("test2");
-        newDeck.setDeckType(DeckType.SWISS.name());
-        mPresenter.updateDeck(newDeck);
+        mDeck.setName("test2");
+        mPresenter.selectDeckType(DeckType.SWISS.ordinal());
+        mPresenter.updateDeck(mDeck, true);
         List<Deck> updated = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .firstOrError().blockingGet();
         assertTrue(updated.size() == 1 && DeckType.SWISS.name()
                 .equals(updated.get(0).getDeckType()) && "test2".equals(updated.get(0).getName()));
+    }
+
+    @Test
+    public void chooseNotExistedDeckType() {
+        int deckType = mPresenter.setDefaultDeckType(DeckType.values().length - 1);
+        assertTrue(deckType == 0);
+    }
+
+    @Test
+    public void selectNotExistedDeckType() {
+        mPresenter.selectDeckType(DeckType.values().length + 1);
+        verify(mView, timeout(TIMEOUT)).showDeckTypeNotExistUserMessage();
     }
 }

@@ -43,10 +43,7 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.ParcelableDeck;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -56,14 +53,12 @@ import butterknife.ButterKnife;
 /**
  * Performs operations with a deck, such as rename, delete, update.
  */
-public class EditDeckActivity extends AppCompatActivity {
+public class EditDeckActivity extends AppCompatActivity implements IEditDeckView {
 
     /**
      * IntentExtra deck for this activity.
      */
     public static final String DECK = "deck";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EditDeckActivity.class);
 
     @BindView(R.id.deck_name)
     /* default */ TextInputEditText mDeckNameEditText;
@@ -73,7 +68,6 @@ public class EditDeckActivity extends AppCompatActivity {
     /* default */ EditDeckActivityPresenter mPresenter;
     private Deck mDeck;
     private boolean mInputValid;
-    private String mNewDeckType;
 
     private final AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
             new AdapterView.OnItemSelectedListener() {
@@ -83,15 +77,7 @@ public class EditDeckActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(final AdapterView<?> adapterView, final View view,
                                            final int position, final long id) {
-                    if (DeckType.values().length < position) {
-                        mNewDeckType = mDeck.getDeckType();
-                        Toast.makeText(EditDeckActivity.this,
-                                R.string.decktype_not_exist_user_message,
-                                Toast.LENGTH_SHORT).show();
-                        LOGGER.error("the selected item number is {}", position,
-                                new IndexOutOfBoundsException());
-                    }
-                    mNewDeckType = DeckType.values()[position].name();
+                    mPresenter.selectDeckType(position);
                 }
 
                 /**
@@ -99,11 +85,7 @@ public class EditDeckActivity extends AppCompatActivity {
                  */
                 @Override
                 public void onNothingSelected(final AdapterView<?> adapterView) {
-                    if (mDeck.getDeckType() == null) {
-                        mNewDeckType = DeckType.BASIC.name();
-                    } else {
-                        mNewDeckType = mDeck.getDeckType();
-                    }
+                    mPresenter.selectDeckType(-1);
                 }
             };
 
@@ -131,8 +113,7 @@ public class EditDeckActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(mDeck.getName());
-        mNewDeckType = mDeck.getDeckType();
-        Injector.getEditDeckActivityInjector().inject(this);
+        Injector.getEditDeckActivityInjector(this, mDeck).inject(this);
         ButterKnife.bind(this);
     }
 
@@ -146,13 +127,7 @@ public class EditDeckActivity extends AppCompatActivity {
         mDeckTypeSpinner.setAdapter(arrayAdapter);
 
         int arrayLength = getResources().getStringArray(R.array.deck_type_spinner).length;
-        int deckTypeLength = DeckType.values().length;
-        if (deckTypeLength > arrayLength) {
-            LOGGER.error("DeckType has more type than Spinner", new IndexOutOfBoundsException());
-            mDeckTypeSpinner.setSelection(DeckType.BASIC.ordinal());
-        } else {
-            mDeckTypeSpinner.setSelection(DeckType.valueOf(mDeck.getDeckType()).ordinal());
-        }
+        mDeckTypeSpinner.setSelection(mPresenter.setDefaultDeckType(arrayLength));
 
         mDeckTypeSpinner.setOnItemSelectedListener(mSpinnerItemClickListener);
 
@@ -224,11 +199,19 @@ public class EditDeckActivity extends AppCompatActivity {
     }
 
     private void saveDeck() {
-        if (mInputValid || !mNewDeckType.equals(mDeck.getDeckType())) {
+        if (mInputValid) {
             String newDeckName = mDeckNameEditText.getText().toString().trim();
             mDeck.setName(newDeckName);
-            mDeck.setDeckType(mNewDeckType);
-            mPresenter.updateDeck(mDeck);
         }
+        mPresenter.updateDeck(mDeck, mInputValid);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showDeckTypeNotExistUserMessage() {
+        Toast.makeText(this, R.string.decktype_not_exist_user_message,
+                Toast.LENGTH_SHORT).show();
     }
 }

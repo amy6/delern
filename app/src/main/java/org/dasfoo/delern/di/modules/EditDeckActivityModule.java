@@ -19,6 +19,8 @@
 package org.dasfoo.delern.di.modules;
 
 import org.dasfoo.delern.editdeck.EditDeckActivityPresenter;
+import org.dasfoo.delern.editdeck.IEditDeckView;
+import org.dasfoo.delern.models.Deck;
 
 import dagger.Module;
 import dagger.Provides;
@@ -28,9 +30,23 @@ import dagger.Provides;
  */
 @Module
 public class EditDeckActivityModule {
+    private final IEditDeckView mView;
+    private final Deck mDeck;
+
+    /**
+     * Constructor.
+     *
+     * @param view view to init EditDeckActivityPresenter.
+     * @param deck deck to init EditDeckActivityPresenter.
+     */
+    public EditDeckActivityModule(final IEditDeckView view,
+                                  final Deck deck) {
+        this.mView = view;
+        this.mDeck = deck;
+    }
 
     @Provides
     /* default */ EditDeckActivityPresenter providePresenter() {
-        return new EditDeckActivityPresenter();
+        return new EditDeckActivityPresenter(mView, mDeck);
     }
 }
