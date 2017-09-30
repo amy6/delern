@@ -28,16 +28,18 @@ public interface ILearningCardsView {
     /**
      * Handles showing front side of card.
      *
-     * @param front text to be shown.
+     * @param front  text to be shown.
+     * @param isHtml true if text is html.
      */
-    void showFrontSide(String front);
+    void showFrontSide(String front, boolean isHtml);
 
     /**
      * Handles showing back side of card.
      *
-     * @param back text to be shown.
+     * @param back   text to be shown.
+     * @param isHtml true if text is html.
      */
-    void showBackSide(String back);
+    void showBackSide(String back, boolean isHtml);
 
     /**
      * Callback from Presenter to start Activity for editing Cards.

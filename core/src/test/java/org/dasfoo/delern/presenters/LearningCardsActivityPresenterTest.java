@@ -82,7 +82,7 @@ public class LearningCardsActivityPresenterTest {
     public void startLearning() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
     }
 
     @Test
@@ -90,26 +90,26 @@ public class LearningCardsActivityPresenterTest {
         when(mLearningCardView.backSideIsShown()).thenReturn(true);
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
-        verify(mLearningCardView, timeout(TIMEOUT)).showBackSide(BACK_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showBackSide(BACK_SIDE_CARD, false);
     }
 
     @Test
     public void cardIsFlipped() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         mPresenter.flipCard();
-        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
     }
 
     @Test
     public void finishLearningByUserKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         mPresenter.flipCard();
-        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.userKnowCard();
         verify(mLearningCardView, timeout(TIMEOUT)).finishLearning();
     }
@@ -118,9 +118,9 @@ public class LearningCardsActivityPresenterTest {
     public void finishLearningByUserDoNotKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         mPresenter.flipCard();
-        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.userDoNotKnowCard();
         verify(mLearningCardView, timeout(TIMEOUT)).finishLearning();
     }
@@ -129,7 +129,7 @@ public class LearningCardsActivityPresenterTest {
     public void specifyGender() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
         assertEquals(gender, GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
@@ -138,7 +138,7 @@ public class LearningCardsActivityPresenterTest {
     public void startEditCardCallbackCheck() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         mPresenter.startEditCard();
         ArgumentCaptor<Card> argument = ArgumentCaptor.forClass(Card.class);
         verify(mLearningCardView).startEditCardActivity(argument.capture());
@@ -150,9 +150,9 @@ public class LearningCardsActivityPresenterTest {
     public void finishLearningByDeletingCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
         mPresenter.flipCard();
-        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD);
+        verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.delete();
         verify(mLearningCardView, timeout(TIMEOUT)).finishLearning();
     }

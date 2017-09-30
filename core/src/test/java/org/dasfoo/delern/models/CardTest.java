@@ -200,6 +200,10 @@ public class CardTest {
                         "<thead>\n<tr><th>a</th><th>b</th><th>c</th></tr>\n</thead>\n" +
                         "<tbody>\n<tr><td>x</td><td>y</td><td>z</td></tr>\n</tbody>\n" +
                         "</table>\n"},
+                {"![alt text](https://example.com/image.jpg \"image text\")",
+                        "<p><img src=\"https://example.com/image.jpg\" " +
+                                "alt=\"alt text\" " +
+                                "title=\"image text\" /></p>\n"},
         };
         Card c = new Card((Deck) null);
         for (String[] testCase : markdownToHtml) {

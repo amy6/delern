@@ -67,7 +67,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
     @BindView(R.id.deck_type_spinner)
     /* default */ Spinner mDeckTypeSpinner;
     @BindView(R.id.on_off_switch)
-    /* default */ Switch mOnOfSwitch;
+    /* default */ Switch mOnOffSwitch;
     @Inject
     /* default */ EditDeckActivityPresenter mPresenter;
     private Deck mDeck;
@@ -148,8 +148,8 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             }
         };
         mDeckNameEditText.addTextChangedListener(deckNameChanged);
-        mOnOfSwitch.setChecked(mDeck.isMarkdown());
-        mOnOfSwitch.setOnCheckedChangeListener(mCheckedChangeListener);
+        mOnOffSwitch.setChecked(mDeck.isMarkdown());
+        mOnOffSwitch.setOnCheckedChangeListener(mCheckedChangeListener);
     }
 
     /**

@@ -37,12 +37,12 @@ import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
-import org.dasfoo.delern.util.CardColor;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.util.Animation;
+import org.dasfoo.delern.util.CardColor;
 
 import javax.inject.Inject;
 
@@ -89,7 +89,6 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
-    private Deck mDeck;
 
     /**
      * Method starts LearningCardsActivity.
@@ -121,10 +120,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(mDeck.getName());
+        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
+        this.setTitle(deck.getName());
         Injector.getLearningCardsActivityInjector(this).inject(this);
-        mPresenter.onCreate(mDeck);
+        mPresenter.onCreate(deck);
         ButterKnife.bind(this);
         mDelimiter.setVisibility(View.INVISIBLE);
     }
@@ -218,10 +217,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      */
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
-    public void showFrontSide(final String front) {
+    public void showFrontSide(final String front, final boolean isHtml) {
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
-        if (mDeck.isMarkdown()) {
+        if (isHtml) {
             mFrontTextView.setText(Html.fromHtml(front));
         } else {
             mFrontTextView.setText(front);
@@ -238,8 +237,8 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      */
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
-    public void showBackSide(final String back) {
-        if (mDeck.isMarkdown()) {
+    public void showBackSide(final String back, final boolean isHtml) {
+        if (isHtml) {
             mBackTextView.setText(Html.fromHtml(back));
         } else {
             mBackTextView.setText(back);
