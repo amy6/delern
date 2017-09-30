@@ -95,10 +95,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
 
     private final CompoundButton.OnCheckedChangeListener mCheckedChangeListener =
             (compoundButton, isChecked) -> {
-                if (isChecked) {
-                    Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show();
-                    mDeck.setMarkdown(isChecked);
-                }
+                mPresenter.setMarkdown(isChecked);
             };
 
     /**

@@ -34,6 +34,7 @@ public class EditDeckActivityPresenter {
     private final IEditDeckView mView;
     private final Deck mDeck;
     private String mNewDeckType;
+    private boolean mMarkdown;
 
     /**
      * Constructor initialize presenter.
@@ -45,6 +46,7 @@ public class EditDeckActivityPresenter {
         this.mView = view;
         this.mDeck = deck;
         this.mNewDeckType = mDeck.getDeckType();
+        this.mMarkdown = mDeck.isMarkdown();
     }
 
 
@@ -64,8 +66,10 @@ public class EditDeckActivityPresenter {
      * @param nameChanged whether name of deck changed or not.
      */
     public void updateDeck(final Deck newDeck, final boolean nameChanged) {
-        if (!mNewDeckType.equals(mDeck.getDeckType()) || nameChanged) {
+        if (!mNewDeckType.equals(mDeck.getDeckType()) || nameChanged ||
+                mMarkdown != mDeck.isMarkdown()) {
             newDeck.setDeckType(mNewDeckType);
+            newDeck.setMarkdown(mMarkdown);
             newDeck.save();
         }
     }
@@ -100,7 +104,7 @@ public class EditDeckActivityPresenter {
      * @param arrayLength lenth array in spinner.
      * @return decktype.
      */
-    // TODO(ksheremet): it should cover test
+    // TODO(ksheremet): it should be covered by test
     public int setDefaultDeckType(final int arrayLength) {
         int deckTypeLength = DeckType.values().length;
         if (deckTypeLength > arrayLength) {
@@ -109,5 +113,14 @@ public class EditDeckActivityPresenter {
         } else {
             return DeckType.valueOf(mDeck.getDeckType()).ordinal();
         }
+    }
+
+    /**
+     * Change setting for deck for markdown.
+     *
+     * @param isMarkdown whether enable markdown or not.
+     */
+    public void setMarkdown(final boolean isMarkdown) {
+        mMarkdown = isMarkdown;
     }
 }
