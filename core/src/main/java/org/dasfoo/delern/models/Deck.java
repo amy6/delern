@@ -42,6 +42,7 @@ public class Deck extends Model {
     // TODO(ksheremet): sync when app has the Internet.
     private long lastSyncAt;
     private boolean accepted;
+    private  boolean markdown;
 
     /**
      * An empty constructor is required for Firebase deserialization.
@@ -220,6 +221,24 @@ public class Deck extends Model {
      */
     public void setAccepted(final boolean accepted) {
         this.accepted = accepted;
+    }
+
+    /**
+     * Whether deck is markdown or not.
+     *
+     * @return true is deck is markdown.
+     */
+    public boolean isMarkdown() {
+        return markdown;
+    }
+
+    /**
+     * Enables markdown for deck.
+     *
+     * @param isMarkdown true to enable markdown for deck.
+     */
+    public void setMarkdown(boolean isMarkdown) {
+        this.markdown = isMarkdown;
     }
 
     /**

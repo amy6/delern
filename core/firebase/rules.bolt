@@ -1,3 +1,5 @@
+// https://github.com/firebase/bolt/blob/master/docs/language.md
+
 /* IMPORTANT NOTES
  * - Access is disallowed by default. If no .write or .read rule is specified at
  *   or above a path, access will be denied.
@@ -85,6 +87,7 @@ type Deck {
   category: String | Null,
   accepted: TransitionToTrueOnlyBoolean,
   lastSyncAt: Number,
+  markdown: Boolean | Null,
 }
 
 path /decks/{userId} {
