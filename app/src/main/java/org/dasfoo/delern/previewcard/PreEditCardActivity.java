@@ -28,6 +28,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -166,9 +167,15 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
      * {@inheritDoc}
      */
     @Override
-    public void showCard(final String front, final String back) {
-        mFrontPreview.setText(front);
-        mBackPreview.setText(back);
+    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
+    public void showCard(final String front, final String back, final boolean isHtml) {
+        if (isHtml) {
+            mFrontPreview.setText(Html.fromHtml(front));
+            mBackPreview.setText(Html.fromHtml(back));
+        } else {
+            mFrontPreview.setText(front);
+            mBackPreview.setText(back);
+        }
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
     }

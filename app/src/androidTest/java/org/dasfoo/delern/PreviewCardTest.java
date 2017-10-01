@@ -42,11 +42,13 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 /**
@@ -105,6 +107,38 @@ public class PreviewCardTest {
         pressBack();
         // Check that card was deleted
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("0"))));
+    }
+
+    @Test
+    public void createMarkdownCardToPreview() {
+        String frontCard = "**bold**";
+        String frontShouldBeShown = "bold\n\n";
+        String backCard = "*italic*";
+        String backShouldBeShown = "italic\n\n";
+        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
+        pressBack();
+        waitView(withText(mDeckName)).check(matches(hasSibling(withText("1"))));
+        // Set markdown in settings
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.deck_settings_menu)).perform(click());
+        waitView(withId(R.id.on_off_switch)).check(matches(not(isChecked()))).perform(click());
+        onView(withId(R.id.on_off_switch)).check(matches(isChecked()));
+        pressBack();
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.edit)).perform(click());
+        onView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
+        waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontShouldBeShown)));
+        onView(withId(R.id.textBackCardView)).check(matches(withText(backShouldBeShown)));
+        pressBack();
+        pressBack();
     }
 
     @After

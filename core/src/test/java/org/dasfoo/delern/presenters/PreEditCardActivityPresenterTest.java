@@ -91,7 +91,7 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(newCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
     }
 
     @Test
@@ -143,13 +143,13 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(mCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
         String frontSideNew = "frontSide2";
         String backSideNew = "backSide2";
         mCard.setFront(frontSideNew);
         mCard.setBack(backSideNew);
         mCard.save();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSideNew, backSideNew);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSideNew, backSideNew, false);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(mCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
         mPresenter.onStop();
         String frontSideNew = "frontSide2";
         String backSideNew = "backSide2";
@@ -208,5 +208,33 @@ public class PreEditCardActivityPresenterTest {
         mPresenter.onCreate(newCard);
         GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
         assertEquals(gender, GrammaticalGenderSpecifier.Gender.FEMININE);
+    }
+
+    @Test
+    public void showMarkdownCardCallback() throws Exception {
+        String frontSide = "**bold**";
+        String frontShouldBeShown = "<p><strong>bold</strong></p>\n";
+        String backSide = "*italic*";
+        String backShouldBeShown = "<p><em>italic</em></p>\n";
+        User user = mFirebaseServer.signIn();
+        Deck deck = new Deck(user);
+
+        //Create user, deck and card for testing
+        user.save().blockingAwait();
+
+        deck.setName("CreateCard");
+        deck.setAccepted(true);
+        deck.setMarkdown(true);
+        deck.create().blockingAwait();
+
+        Card newCard = new Card(deck);
+        newCard.setFront(frontSide);
+        newCard.setBack(backSide);
+        newCard.create().blockingAwait();
+
+        mPresenter.onCreate(newCard);
+        mPresenter.onStart();
+        verify(mPreEditCardView, timeout(TIMEOUT))
+                .showCard(frontShouldBeShown, backShouldBeShown, true);
     }
 }

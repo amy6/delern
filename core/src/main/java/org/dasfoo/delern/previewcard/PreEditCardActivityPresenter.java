@@ -72,7 +72,11 @@ public class PreEditCardActivityPresenter {
         mCardValueEventListener = mCard.watch(Card.class).subscribe((final Card card) -> {
             if (card != null) {
                 mCard = card;
-                mPreEditCardView.showCard(mCard.getFront(), mCard.getBack());
+                if (mCard.getDeck().isMarkdown()) {
+                    mPreEditCardView.showCard(mCard.getFrontHtml(), mCard.getBackHtml(), true);
+                } else {
+                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack(), false);
+                }
             }
         });
     }

@@ -28,10 +28,11 @@ public interface IPreEditCardView {
     /**
      * Perform showing card to user.
      *
-     * @param front front side of card.
-     * @param back  back side of card.
+     * @param front  front side of card.
+     * @param back   back side of card.
+     * @param isHtml whether text is html or not.
      */
-    void showCard(String front, String back);
+    void showCard(String front, String back, boolean isHtml);
 
     /**
      * Starts Activity for editing card.
