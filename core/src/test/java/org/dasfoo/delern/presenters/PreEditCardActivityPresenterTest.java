@@ -21,10 +21,12 @@ package org.dasfoo.delern.presenters;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.previewcard.IPreEditCardView;
 import org.dasfoo.delern.previewcard.PreEditCardActivityPresenter;
 import org.dasfoo.delern.test.FirebaseServerRule;
-import org.dasfoo.delern.previewcard.IPreEditCardView;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,6 +37,7 @@ import org.mockito.MockitoAnnotations;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -185,5 +188,25 @@ public class PreEditCardActivityPresenterTest {
         mCard.setBack(backSideNew);
         mCard.save();
         verifyNoMoreInteractions(mPreEditCardView);
+    }
+
+    @Test
+    public void specifyGender() throws Exception {
+        String frontSide = "mother";
+        String backSide = "die Mutter";
+        User user = mFirebaseServer.signIn();
+        Deck deck = new Deck(user);
+
+        deck.setName("Specify Gender");
+        deck.setAccepted(true);
+        deck.setDeckType(DeckType.GERMAN.name());
+
+        Card newCard = new Card(deck);
+        newCard.setFront(frontSide);
+        newCard.setBack(backSide);
+
+        mPresenter.onCreate(newCard);
+        GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
+        assertEquals(gender, GrammaticalGenderSpecifier.Gender.FEMININE);
     }
 }

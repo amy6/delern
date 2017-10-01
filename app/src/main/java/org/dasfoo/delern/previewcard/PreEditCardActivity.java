@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.ParcelableCard;
+import org.dasfoo.delern.util.CardColor;
 
 import javax.inject.Inject;
 
@@ -57,6 +59,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     /* default */ TextView mFrontPreview;
     @BindView(R.id.textBackCardView)
     /* default */ TextView mBackPreview;
+    @BindView(R.id.card_view)
+    /* default */ CardView mCardView;
     @Inject
     /* default */ PreEditCardActivityPresenter mPresenter;
 
@@ -165,6 +169,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     public void showCard(final String front, final String back) {
         mFrontPreview.setText(front);
         mBackPreview.setText(back);
+        mCardView.setCardBackgroundColor(ContextCompat
+                .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
     }
 
     /**

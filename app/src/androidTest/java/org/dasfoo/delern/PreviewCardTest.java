@@ -115,4 +115,6 @@ public class PreviewCardTest {
         waitView(withId(R.id.delete_deck_menu)).perform(click());
         onView(withText(R.string.delete)).perform(click());
     }
+
+    // TODO(ksheremet): Write tests for testing background colors for gender.
 }
