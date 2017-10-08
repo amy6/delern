@@ -1,16 +1,39 @@
 version: 2
-jobs:
-  build:
-    working_directory: ~/delern
-    docker:
-    - image: openjdk:8
-    environment:
-    - ANDROID_HOME: /opt/android-sdk-linux
+
+defaults: &defaults
+  docker:
+  - image: openjdk:8
+  environment:
+    - ANDROID_HOME: /root/android-sdk-linux
     - TERM: dumb
-    - IDEA_VERSION: IC-2017.2.3-no-jdk
+    - IDEA_VERSION: IC-2017.2.5-no-jdk
     # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
     # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
     - GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+gcloud_install_command: &gcloud_install_command
+  name: "Install GCloud, download & activate authentication keys"
+  command: |
+    apt update
+    apt install -y lsb-release apt-transport-https
+    # https://cloud.google.com/sdk/downloads#apt-get
+    echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
+      >>/etc/apt/sources.list.d/google-cloud-sdk.list
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    apt update
+    apt install -y google-cloud-sdk
+
+    # We use this account to access both Google Play account and GCS.
+    # The former requires it to be in "app" subdirectory.
+    echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
+    gcloud auth activate-service-account --key-file app/play-store-service-account.json
+    mkdir -p ~/.android
+    gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
+    gsutil cp gs://dasfoo-keystore/delern.jks app/
+
+jobs:
+  checkout:
+    <<: *defaults
     steps:
     - checkout
     - run:
@@ -28,47 +51,87 @@ jobs:
           # (aka removed and re-added) do not count twice.
           git tag -l | xargs git tag -d
           git fetch --tags
-          find . -name package.json -o -name '*.gradle' -type f -print0 | xargs -0 cat >/tmp/dependencies
-          echo "${IDEA_VERSION}" >>/tmp/dependencies
+    - run:
+        name: "Build dependency cache key"
+        command: |
+          # A key will for our cache will be a hash of all .gradle files, plus IDEA version.
+          find . -name package.json -o -name '*.gradle' -type f -print0 | xargs -0 cat >../dependencies-key
+          echo "${IDEA_VERSION}" >>../dependencies-key
+    - persist_to_workspace:
+        root: ..
+        paths:
+        - project
+        - dependencies-key
+
+  dependencies:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
 
     - restore_cache:
         keys:
-        - v4-android-{{ .Branch }}-{{ checksum "/tmp/dependencies" }}
-        - v4-android-{{ .Branch }}-
-        - v4-android-master-
+        - v5-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
+        - v5-android-{{ arch }}-{{ .Branch }}-
+        - v5-android-{{ arch }}-master-
 
     - run:
-        name: "Install Android SDK"
+        name: "Install system and Android dependencies"
         command: |
           mkdir -p "${ANDROID_HOME?}/licenses"
           # This is just a hash sum of the license agreements accepted.
           # Take this text from the Android SDK directory on your machine.
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
-          # These two packages are normally already available, but we deal with some extremely minimalistic Docker image.
-          apt update
-          apt install -y lsb-release apt-transport-https build-essential
-          if [ ! -d "/opt/idea/${IDEA_VERSION}" ]; then
-            rm -rf /opt/idea
-            mkdir /opt/idea
+          if [ ! -d "../idea/${IDEA_VERSION}" ]; then
+            rm -rf ../idea
+            mkdir ../idea
             curl -sSL "https://download.jetbrains.com/idea/idea${IDEA_VERSION?}.tar.gz" |
-                tar -C /opt/idea -x -z
-            mv /opt/idea/* "/opt/idea/${IDEA_VERSION}"
+                tar -C ../idea -x -z
+            mv ../idea/* "../idea/${IDEA_VERSION}"
           fi
+          apt update
+          apt install -y build-essential
+          ./gradlew --quiet resolveDependencies npmInstall
+
+    - save_cache:
+        # Use different keys because caches are immutable.
+        key: v5-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
+        paths:
+        - core/firebase/node_modules
+        # TODO(dotdoom): use environment variables once they are supported.
+        #                Currently only CircleCI built-in variables are supported.
+        - ../android-sdk-linux
+        - ../.gradle
+        - ../idea
+
+    - persist_to_workspace:
+        root: ..
+        paths:
+        - project
+        - .gradle
+        - android-sdk-linux
+        - idea
+
+  unit-tests:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
 
     - run:
         name: "Lint, assemble and run unit tests"
         no_output_timeout: "35m"
         command: |
           # Check formatting
-          "/opt/idea/${IDEA_VERSION}/bin/format.sh" -m '*.java' -r */src >/dev/null
+          "../idea/${IDEA_VERSION}/bin/format.sh" -m '*.java' -r */src >/dev/null
           git diff --stat --exit-code
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
           ./gradlew \
             --continue \
             :app:checkQualityDebug \
-            :app:testDebugUnitTest \
             :core:checkQualityMain \
+            :app:testDebugUnitTest \
             :core:test \
             --quiet \
             --console=plain
@@ -80,6 +143,11 @@ jobs:
             --quiet \
             --console=plain >/dev/null
 
+    - store_test_results:
+        path: core/build/test-results
+    - store_test_results:
+        path: app/build/test-results
+
     - run:
         name: "Re-run unit tests with INFO level"
         command: |
@@ -90,132 +158,216 @@ jobs:
             --console=plain
         when: on_fail
 
-    # Some packages are installed only during the lint/assemble step, we need to cache them as well.
-    - save_cache:
-        # Use different keys because caches are immutable.
-        key: v4-android-{{ .Branch }}-{{ checksum "/tmp/dependencies" }}
+    - persist_to_workspace:
+        root: ..
         paths:
-        - core/firebase/node_modules
-        - ~/.gradle
-        # TODO(dotdoom): use environment variables once they are supported
-        #                Currently only CircleCI built-in variables are supported.
-        - /opt/android-sdk-linux
-        - /opt/idea
+        # Persist project so that coverage results make it to codecov.
+        - project
 
-    - deploy:
-        name: "Install Cloud SDK, run instrumented tests"
-        no_output_timeout: "35m"
-        # https://cloud.google.com/sdk/downloads#apt-get
-        command: |
-          if [ -n "${CIRCLE_TAG}" -o "${CIRCLE_BRANCH}" = "master" ]; then
-            # Deploy debug database rules before running any tests.
-            ./gradlew -PfirebaseProject=delern-debug core:deployFirebase
+  deploy-firebase-debug:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
+    - run:
+        <<: *gcloud_install_command
 
-            echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
-              >>/etc/apt/sources.list.d/google-cloud-sdk.list
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-            apt update
-            apt install -y google-cloud-sdk
+    - run:
+        name: "Deploy Firebase database rules, functions, hosting to DEBUG"
+        command: ./gradlew -PfirebaseProject=delern-debug core:deployFirebase
 
-            # We use this account to access both Google Play account and GCS.
-            # The former requires it to be in "app" subdirectory.
-            echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
-            gcloud auth activate-service-account --key-file app/play-store-service-account.json
-            gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android
-            gsutil cp gs://dasfoo-keystore/delern.jks app
+  instrumented-coverage:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
+    - run:
+        <<: *gcloud_install_command
 
-            # Run instrumented tests (for coverage).
-            ./gradlew \
-              -PcoverageRun \
-              assembleInstrumented \
-              assembleInstrumentedAndroidTest \
-              --console=plain
-            # https://circleci.com/docs/firebase-test-lab/
-            # FIXME(https://firebase.google.com/support/): --device model=Nexus5
-            gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5,version=23 \
-              --timeout 30m \
-              --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-              --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
-              --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
-              --directories-to-pull /sdcard/coverage \
-              --results-bucket delern-test-results \
-              --results-dir "circle-${CIRCLE_BUILD_NUM}"
-            gsutil cp "gs://delern-test-results/circle-${CIRCLE_BUILD_NUM}/*/artifacts/coverage.ec" \
-              app/build/outputs/code-coverage/connected/coverage.ec
-            ./gradlew -PcoverageRun -x app:connectedInstrumentedAndroidTest app:createInstrumentedAndroidTestCoverageReport
-            # The code in "app" can only be covered by Android on-device tests,
-            # therefore PR builds will always report false negatives.
-            ./gradlew \
-              core:jacocoTestReport \
-              app:jacocoTestDebugUnitTestReport \
-              --console=plain
-            bash <(curl -s https://codecov.io/bash)
-
-            # Run instrumented test (for ProGuard).
-            ./gradlew \
-              clean \
-              assembleInstrumented \
-              assembleInstrumentedAndroidTest \
-              --console=plain
-            # https://circleci.com/docs/firebase-test-lab/
-            # FIXME(https://firebase.google.com/support/): --device model=Nexus5
-            gcloud --project=delern-debug firebase test android run \
-              --device model=Nexus5,version=23 \
-              --timeout 30m \
-              --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-              --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
-
-            # Assemble Release APK (to store in artifacts).
-            ./gradlew clean assembleRelease
-
-            # If tests have passed, deploy production database.
-            ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
-          fi
-
-    - deploy:
-        name: "Build signed Release binary, run instrumented tests, publish to Google Play"
+    - run:
+        name: "Run instrumented tests without ProGuard (for coverage)"
         no_output_timeout: "35m"
         command: |
-          if [ -n "${CIRCLE_TAG}" ]; then
-            # Run instrumented test (on hardware).
-            ./gradlew \
-              clean \
-              assembleInstrumented \
-              assembleInstrumentedAndroidTest \
-              --console=plain
-            gcloud --project=delern-debug firebase test android run \
-              --timeout 30m \
-              --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-              --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
-            # Build relnote.
-            previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
-            git log "${previous_tag?}.." --format=%B | \
-              grep '^relnote: ' | \
-              grep -E -v -x 'relnote: none[.]?' | \
-              cut -b10- | \
-              awk '!a[$0]++' | \
-              cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
-            # Publish to Google Play (this also automatically runs Robo tests).
-            ./gradlew lintRelease publishRelease --console=plain
-          fi
+          ./gradlew \
+            -PcoverageRun \
+            assembleInstrumented \
+            assembleInstrumentedAndroidTest \
+            --console=plain
+          # https://circleci.com/docs/firebase-test-lab/
+          # FIXME(https://firebase.google.com/support/): --device model=Nexus5
+          gcloud --project=delern-debug firebase test android run \
+            --device model=Nexus5,version=23 \
+            --timeout 30m \
+            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
+            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
+            --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
+            --directories-to-pull /sdcard/coverage \
+            --results-bucket delern-test-results \
+            --results-dir "circle-${CIRCLE_BUILD_NUM}"
+          gsutil cp "gs://delern-test-results/circle-${CIRCLE_BUILD_NUM}/*/artifacts/coverage.ec" \
+            app/build/outputs/code-coverage/connected/coverage.ec
+          ./gradlew -PcoverageRun -x app:connectedInstrumentedAndroidTest app:createInstrumentedAndroidTestCoverageReport
+          # The code in "app" can only be covered by Android on-device tests,
+          # therefore PR builds will always report false negatives.
+          ./gradlew \
+            core:jacocoTestReport \
+            app:jacocoTestDebugUnitTestReport \
+            --console=plain
+          bash <(curl -s https://codecov.io/bash)
 
-    - store_test_results:
-        path: app/build/test-results
-    - store_test_results:
-        path: core/build/test-results
     - store_artifacts:
         path: app/build/outputs
     - store_artifacts:
         path: app/build/reports
+
+    - persist_to_workspace:
+        root: ..
+        paths:
+        # Persist test results to export to CircleCI.
+        - project
+
+  instrumented-proguard:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
+    - run:
+        <<: *gcloud_install_command
+
+    - run:
+        name: "Run instrumented tests with ProGuard"
+        no_output_timeout: "35m"
+        command: |
+          ./gradlew \
+            assembleInstrumented \
+            assembleInstrumentedAndroidTest \
+            --console=plain
+          # https://circleci.com/docs/firebase-test-lab/
+          # FIXME(https://firebase.google.com/support/): --device model=Nexus5
+          gcloud --project=delern-debug firebase test android run \
+            --device model=Nexus5,version=23 \
+            --timeout 30m \
+            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
+            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+
+    - store_artifacts:
+        path: app/build/outputs
+    - store_artifacts:
+        path: app/build/reports
+
+  deploy-firebase-release:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
+    - run:
+        <<: *gcloud_install_command
+
+    - run:
+        name: "Deploy Firebase database rules, functions, hosting to DEBUG"
+        command: ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
+
+    - run:
+        name: "Assemble release APK (to store in artifacts)"
+        command: ./gradlew clean lintRelease assembleRelease
+
+    - store_artifacts:
+        path: app/build/outputs
+
+  google-play:
+    <<: *defaults
+    steps:
+    - attach_workspace:
+        at: ..
+    - run:
+        <<: *gcloud_install_command
+
+    - run:
+        name: "Run instrumented tests with ProGuard (on a hardware device)"
+        command: |
+          ./gradlew \
+            assembleInstrumented \
+            assembleInstrumentedAndroidTest \
+            --console=plain
+          gcloud --project=delern-debug firebase test android run \
+            --timeout 30m \
+            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
+            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+    - run:
+        name: "Upload release APK to Google Play"
+        command: |
+          # Build relnote.
+          previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
+          git log "${previous_tag?}.." --format=%B | \
+            grep '^relnote: ' | \
+            grep -E -v -x 'relnote: none[.]?' | \
+            cut -b10- | \
+            awk '!a[$0]++' | \
+            cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
+          # Publish to Google Play (this also automatically runs Robo tests).
+          ./gradlew lintRelease publishRelease --console=plain
+
     - store_artifacts:
         path: app/src/main/play
+    - store_artifacts:
+        path: app/build/outputs
+    - store_artifacts:
+        path: app/build/reports
 
 workflows:
   version: 2
-  build-workflow:
+
+  build-and-release:
     jobs:
-    - build:
+    - checkout
+    - dependencies:
+        requires:
+        - checkout
+    - unit-tests:
+        requires:
+        - checkout
+        - dependencies
+    - deploy-firebase-debug:
+        requires:
+        - checkout
+        - dependencies
+        - unit-tests
+        filters:
+          branches:
+            only: master
+    - instrumented-coverage:
+        requires:
+        - checkout
+        - dependencies
+        - deploy-firebase-debug
+        filters:
+          branches:
+            only: master
+    - instrumented-proguard:
+        requires:
+        - checkout
+        - dependencies
+        - deploy-firebase-debug
+        filters:
+          branches:
+            only: master
+    - deploy-firebase-release:
+        requires:
+        - checkout
+        - dependencies
+        - deploy-firebase-debug
+        - instrumented-proguard
+        filters:
+          branches:
+            only: master
+    - google-play:
+        requires:
+        - checkout
+        - dependencies
+        - deploy-firebase-release
+        - instrumented-proguard
         filters:
           tags:
             only: /v[0-9]+(\.[0-9]+)*/
+          branches:
+            only: does-circleci-support-tag-only-triggers
