@@ -319,20 +319,26 @@ workflows:
 
   build-and-release:
     jobs:
-    - checkout
+    - checkout:
+        filters: &release_tags
+          tags:
+            only: /v[0-9]+(\.[0-9]+)*/
     - dependencies:
         requires:
         - checkout
+        filters: *release_tags
     - unit-tests:
         requires:
         - checkout
         - dependencies
+        filters: *release_tags
     - deploy-firebase-debug:
         requires:
         - checkout
         - dependencies
         - unit-tests
         filters:
+          <<: *release_tags
           branches:
             only: master
     - instrumented-coverage:
@@ -358,16 +364,17 @@ workflows:
         - deploy-firebase-debug
         - instrumented-proguard
         filters:
+          <<: *release_tags
           branches:
             only: master
     - google-play:
         requires:
         - checkout
         - dependencies
+        - deploy-firebase-debug
         - deploy-firebase-release
         - instrumented-proguard
         filters:
-          tags:
-            only: /v[0-9]+(\.[0-9]+)*/
+          <<: *release_tags
           branches:
-            only: does-circleci-support-tag-only-triggers
+            ignore: /.*/
