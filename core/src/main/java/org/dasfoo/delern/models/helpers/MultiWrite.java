@@ -127,7 +127,7 @@ public class MultiWrite {
             reference = model.getParent().getChildReference(model.getClass()).push();
             model.setKey(reference.getKey());
         }
-        mData.put(getFirebasePathFromReference(reference), model.getFirebaseValue());
+        mData.put(getFirebasePathFromReference(reference), model);
         setRootFrom(reference);
         return this;
     }

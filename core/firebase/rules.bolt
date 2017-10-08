@@ -40,7 +40,15 @@ type AccessString extends String {
   }
 }
 
-deckAccess(deckId) { root.deck_access[deckId][auth.uid] }
+type DeckAccess {
+  access: AccessString,
+}
+
+deckAccess(deckId) {
+  root.deck_access[deckId][auth.uid].access == null ?
+    root.deck_access[deckId][auth.uid] :
+    root.deck_access[deckId][auth.uid].access
+}
 deckExisted(deckId) { prior(root.deck_access[deckId]) !== null }
 userExisted(userId) { prior(root.users[userId]) !== null }
 
@@ -48,7 +56,7 @@ path /deck_access/{deckId} {
   read() { prior(deckAccess(deckId)) === "owner" }
   delete() { prior(deckAccess(deckId)) === "owner" }
 }
-path /deck_access/{deckId}/{sharedWithUserId} is AccessString {
+path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
   read() { isCurrentUser(sharedWithUserId) }
 
   create() {
@@ -57,11 +65,11 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString {
       deckExisted(deckId) ? (
         // Sharing a deck.
         prior(deckAccess(deckId)) === "owner" &&
-        this !== "owner"
+        deckAccess(deckId) !== "owner"
       ) : (
         // Creating a new deck.
         isCurrentUser(sharedWithUserId) &&
-        this === "owner"
+        deckAccess(deckId) === "owner"
       )
     )
   }
@@ -70,7 +78,7 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString {
     prior(deckAccess(deckId)) === "owner" &&
     (
       // Not deleting ownership access...
-      prior(this) !== "owner" ||
+      prior(deckAccess(deckId)) !== "owner" ||
       // ...unless the deck is also gone.
       deckAccess(deckId) === null
     )

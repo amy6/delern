@@ -81,15 +81,6 @@ public class DeckAccess extends Model {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Exclude
-    @Override
-    public Object getFirebaseValue() {
-        return getAccess();
-    }
-
-    /**
      * Getter for access of deck for the user.
      *
      * @return access of deck.

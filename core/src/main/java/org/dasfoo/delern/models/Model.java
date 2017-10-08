@@ -192,17 +192,6 @@ public class Model {
     }
 
     /**
-     * Return a value that should be saved to the database for this model. It's usually the same
-     * object, but may be overwritten in child classes for trivial models or for performance.
-     *
-     * @return value to be written by Firebase to getKey() location/
-     */
-    @Exclude
-    public Object getFirebaseValue() {
-        return this;
-    }
-
-    /**
      * Get a DatabaseReference pointing to the root of all child nodes belonging to this parent.
      * There may be more levels of hierarchy between the reference returned and child objects in the
      * database. On a related note, child nodes are usually not under the parent node in JSON tree;
