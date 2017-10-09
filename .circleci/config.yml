@@ -196,7 +196,7 @@ jobs:
           # https://circleci.com/docs/firebase-test-lab/
           # FIXME(https://firebase.google.com/support/): --device model=Nexus5
           gcloud --project=delern-debug firebase test android run \
-            --device model=Nexus5,version=23 \
+            --device model=Nexus5X,version=26 \
             --timeout 30m \
             --app app/build/outputs/apk/instrumented/app-instrumented.apk \
             --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
@@ -245,7 +245,7 @@ jobs:
           # https://circleci.com/docs/firebase-test-lab/
           # FIXME(https://firebase.google.com/support/): --device model=Nexus5
           gcloud --project=delern-debug firebase test android run \
-            --device model=Nexus5,version=23 \
+            --device model=m0,version=18 \
             --timeout 30m \
             --app app/build/outputs/apk/instrumented/app-instrumented.apk \
             --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
@@ -299,11 +299,11 @@ jobs:
           # Build relnote.
           previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
           git log "${previous_tag?}.." --format=%B | \
+            cat <(echo "relnote: ${CIRCLE_TAG}") - |
             grep '^relnote: ' | \
             grep -E -v -x 'relnote: none[.]?' | \
             cut -b10- | \
-            awk '!a[$0]++' | \
-            cat <(echo "${CIRCLE_TAG}") - >app/src/main/play/en-US/whatsnew
+            awk '!a[$0]++' >app/src/main/play/en-US/whatsnew
           # Publish to Google Play (this also automatically runs Robo tests).
           ./gradlew lintRelease publishRelease --console=plain
 
@@ -336,7 +336,6 @@ workflows:
         requires:
         - checkout
         - dependencies
-        - unit-tests
         filters:
           <<: *release_tags
           branches:
