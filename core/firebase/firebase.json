@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "www/build/es5-debug",
+    "public": "www/build/es5-bundled",
     "rewrites": [
       {
         "source": "**/!(*.*)",
