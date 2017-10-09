@@ -7,7 +7,6 @@
   <template>
     <firebase-auth
       id="auth"
-      user="{{firebaseUser}}"
       provider="google"
       on-error="__authError">
     </firebase-auth>
@@ -19,9 +18,9 @@
       }
     </style>
 
-		<div class="row">
-		<button on-click="signIn" class="content" style="width:170px">Google SignIn</button>
-		</div>
+    <div class="row">
+      <button on-click="signIn" class="content" style="width:170px">Google SignIn</button>
+    </div>
 
   </template>
 
