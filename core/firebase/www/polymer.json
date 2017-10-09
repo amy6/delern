@@ -13,5 +13,8 @@
     "src/delern-app/delern-app.html",
     "src/delern-app/add-card.html",
     "src/delern-app/sign-in.html"
+  ],
+  "extraDependencies": [
+    "manifest.json"
   ]
 }
