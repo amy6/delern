@@ -6,6 +6,12 @@
     "rules": ["polymer-2-hybrid"]
   },
   "builds": [
-    {"preset": "es5-bundled"}
+    {
+      "preset": "es5-bundled",
+      "js": {
+        "__comment__minify": "FIXME(https://github.com/Polymer/polymer-cli/issues/701)",
+        "minify": false
+      }
+    }
   ]
 }
