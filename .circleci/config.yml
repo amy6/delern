@@ -91,7 +91,7 @@ jobs:
           fi
           apt update
           apt install -y build-essential
-          ./gradlew --quiet resolveDependencies npmInstall bowerInstall
+          ./gradlew resolveDependencies npmInstall bowerInstall
 
     - save_cache:
         # Use different keys because caches are immutable.
