@@ -71,9 +71,9 @@ jobs:
 
     - restore_cache:
         keys:
-        - v5-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
-        - v5-android-{{ arch }}-{{ .Branch }}-
-        - v5-android-{{ arch }}-master-
+        - v6-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
+        - v6-android-{{ arch }}-{{ .Branch }}-
+        - v6-android-{{ arch }}-master-
 
     - run:
         name: "Install system and Android dependencies"
@@ -91,13 +91,14 @@ jobs:
           fi
           apt update
           apt install -y build-essential
-          ./gradlew --quiet resolveDependencies npmInstall
+          ./gradlew --quiet resolveDependencies npmInstall bowerInstall
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v5-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
+        key: v6-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
         paths:
         - core/firebase/node_modules
+        - core/firebase/www/bower_components
         # TODO(dotdoom): use environment variables once they are supported.
         #                Currently only CircleCI built-in variables are supported.
         - ../android-sdk-linux
