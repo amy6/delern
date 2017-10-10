@@ -142,6 +142,7 @@ jobs:
             :app:assembleInstrumentedAndroidTest \
             --quiet \
             --console=plain >/dev/null
+          ./gradlew :core:lintPolymer :core:buildPolymer
 
     - store_test_results:
         path: core/build/test-results
