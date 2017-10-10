@@ -31,7 +31,7 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
 task bowerInstall(type: NodeTask, dependsOn: npmInstall) {
     workingDir = "${firebaseDir}/www"
     script = file("${node.nodeModulesDir}/node_modules/.bin/bower")
-    args = ['install']
+    args = ['--allow-root', 'install']
 }
 
 task lintPolymer(type: NodeTask, dependsOn: [npmInstall, bowerInstall]) {
