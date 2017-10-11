@@ -8,7 +8,7 @@ ext {
     git = org.ajoberstar.grgit.Grgit.open()
     gitVersionCode = git.log(includes: ['HEAD']).size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
-    leakCanaryVersion = '1.5.1'
+    leakCanaryVersion = '1.5.4'
 }
 
 android {
@@ -140,13 +140,8 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
-    // FIXME(https://github.com/square/leakcanary/issues/815): broken version
-    //noinspection NewerVersionAvailable
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    // FIXME(https://github.com/square/leakcanary/pull/633): use instrumental
-    //noinspection NewerVersionAvailable
     instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-    //noinspection NewerVersionAvailable
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     testImplementation 'junit:junit:4.12'
