@@ -19,6 +19,11 @@ This account has to have access to:
   - Manage Alpha & Beta APKs
   - Manage Alpha & Beta users
 
+  Enable API (to deploy App Engine applications via this project's account):
+
+  - [Google Service Management API](https://console.developers.google.com/apis/api/servicemanagement.googleapis.com/)
+  - [Google App Engine Admin API](https://console.developers.google.com/apis/api/appengine.googleapis.com/)
+
 * **Android Keystore** (in GCS bucket)
 
   Storing data in a bucket requires billing account. Attaching billing account
@@ -56,6 +61,12 @@ This account has to have access to:
 
   `Editor` access to the Google Cloud project for debug purposes
   (`delern-debug`) to run tests in Firebase Test Lab.
+
+* **AppEngine deployment**
+
+  `Editor` access to Google Cloud project for release (`delern-e1b33`) to be
+  able to deploy cronjobs and change traffic split to the newly deployed
+  version.
 
 ## Firebase settings and google-services.json
 

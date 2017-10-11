@@ -32,6 +32,7 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
 }
 
 testClasses.dependsOn convertBoltToFirebaseRules
+resolveDependencies.dependsOn npmInstall
 
 jacoco {
     toolVersion '0.7.9'

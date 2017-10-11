@@ -49,3 +49,8 @@ exports.userLookup = functions.https.onRequest((req, res) => {
 		res.send(matchingUsers.slice(0, limits.maxResponseItems));
 	});
 });
+
+exports.databaseMaintenance =
+	functions.pubsub.topic('cron-databaseMaintenance').onPublish((event) => {
+		console.log('Doing something to the database');
+	});

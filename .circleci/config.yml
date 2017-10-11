@@ -2,9 +2,9 @@ version: 2
 
 defaults: &defaults
   docker:
-  - image: dasfoo/firebase:6
+  - image: dasfoo/firebase:latest
   environment:
-  - ANDROID_HOME: /root/android-sdk-linux
+  - ANDROID_HOME: /root/android-sdk
   - TERM: dumb
   # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
   # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
@@ -41,15 +41,10 @@ jobs:
           # (aka removed and re-added) do not count twice.
           git tag -l | xargs git tag -d
           git fetch --tags
-    - run:
-        name: "Build dependency cache key"
-        command: |
-          find . -name package.json -o -name '*.gradle' -o -name bower.json -type f -print0 | xargs -0 cat >../dependencies-key
     - persist_to_workspace:
         root: ..
         paths:
         - project
-        - dependencies-key
 
   dependencies:
     <<: *defaults
@@ -57,42 +52,42 @@ jobs:
     - attach_workspace:
         at: ..
 
+    - run: ci-dependencies hash
     - restore_cache:
         keys:
-        - v6-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
-        - v6-android-{{ arch }}-{{ .Branch }}-
-        - v6-android-{{ arch }}-master-
+        - v10-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
+        - v10-android-{{ arch }}-{{ .Branch }}-
+        - v10-android-{{ arch }}-master-
 
     - run:
-        name: "Install system and Android dependencies"
+        name: "Install dependencies"
         command: |
+          ci-dependencies explode
           mkdir -p "${ANDROID_HOME?}/licenses"
           # This is just a hash sum of the license agreements accepted.
           # Take this text from the Android SDK directory on your machine.
-          echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
-          ./gradlew resolveDependencies
+          echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >>"${ANDROID_HOME?}/licenses/android-sdk-license"
+          echo d56f5187479451eabf01fb78af6dfcb131a6481e >>"${ANDROID_HOME?}/licenses/android-sdk-license"
+          ci-dependencies install collect
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v6-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
+        key: v10-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
         paths:
-        # TODO(dotdoom): use environment variables once they are supported.
-        #                Currently only CircleCI built-in variables are supported.
-        - ../android-sdk-linux
-        - ../.gradle
+        - ~/.cache/dependencies
 
     - persist_to_workspace:
         root: ..
         paths:
         - project
-        - .gradle
-        - android-sdk-linux
+        - .cache/dependencies
 
   unit-tests:
     <<: *defaults
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
 
     - run:
         name: "Lint, assemble and run unit tests"
@@ -118,6 +113,9 @@ jobs:
             :app:assembleInstrumentedAndroidTest \
             --quiet \
             --console=plain >/dev/null
+          # Lint Polymer files
+          # TODO(dotdoom): ci-lint-html
+          ( cd firebase/www && polymer lint && polymer build )
 
     - store_test_results:
         path: core/build/test-results
@@ -145,6 +143,7 @@ jobs:
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
     - run:
         <<: *gcloud_install_command
 
@@ -152,16 +151,17 @@ jobs:
         working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to DEBUG"
         command: |
-          ( cd functions && npm install )
-          ( cd www && bower --allow-root install && polymer build )
+          ( cd www && polymer build )
           firebase-bolt rules.bolt
           firebase --project=delern-debug deploy
+          ( cd appengine && gcloud --project=delern-debug app deploy app.yaml cron.yaml )
 
   instrumented-coverage:
     <<: *defaults
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
     - run:
         <<: *gcloud_install_command
 
@@ -212,6 +212,7 @@ jobs:
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
     - run:
         <<: *gcloud_install_command
 
@@ -241,6 +242,7 @@ jobs:
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
     - run:
         <<: *gcloud_install_command
 
@@ -248,10 +250,10 @@ jobs:
         working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to RELEASE"
         command: |
-          ( cd functions && npm install )
-          ( cd www && bower --allow-root install && polymer build )
+          ( cd www && polymer build )
           firebase-bolt rules.bolt
           firebase --project=delern-e1b33 deploy
+          ( cd appengine && gcloud --project=delern-e1b33 app deploy app.yaml cron.yaml )
 
     - run:
         name: "Assemble release APK (to store in artifacts)"
@@ -265,6 +267,7 @@ jobs:
     steps:
     - attach_workspace:
         at: ..
+    - run: ci-dependencies explode
     - run:
         <<: *gcloud_install_command
 
