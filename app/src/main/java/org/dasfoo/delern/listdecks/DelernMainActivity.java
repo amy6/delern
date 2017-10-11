@@ -376,6 +376,15 @@ public class DelernMainActivity extends AppCompatActivity
      * {@inheritDoc}
      */
     @Override
+    public void shareDeck(final int position) {
+       Toast.makeText(this, mFirebaseAdapter.getItem(position).getName(),
+               Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void learnDeck(final int position) {
         LearningCardsActivity.startActivity(this, mFirebaseAdapter.getItem(position));
     }

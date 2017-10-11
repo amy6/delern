@@ -53,7 +53,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Deck menu -->
     <string name="deck_settings_menu">Настройки</string>
     <string name="edit_cards_deck_menu">Редактировать карточки</string>
-
+    <string name="deck_share_menu">Поделиться</string>
+    
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>

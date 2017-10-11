@@ -52,6 +52,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Deck menu -->
     <string name="deck_settings_menu">Settings</string>
     <string name="edit_cards_deck_menu">Edit cards</string>
+    <string name="deck_share_menu">Share</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

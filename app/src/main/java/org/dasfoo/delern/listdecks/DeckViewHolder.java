@@ -140,6 +140,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             case R.id.deck_settings:
                 mOnViewClick.editDeckSettings(position);
                 return true;
+            case R.id.deck_share:
+                mOnViewClick.shareDeck(position);
+                return true;
             default:
                 LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
                 return false;

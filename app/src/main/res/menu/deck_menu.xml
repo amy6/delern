@@ -28,4 +28,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:id="@+id/deck_settings"
         android:orderInCategory="102"
         android:title="@string/deck_settings_menu" />
+    <item
+        android:id="@+id/deck_share"
+        android:orderInCategory="103"
+        android:title="@string/deck_share_menu" />
 </menu>

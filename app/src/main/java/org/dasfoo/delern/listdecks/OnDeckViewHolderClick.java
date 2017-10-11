@@ -45,4 +45,11 @@ public interface OnDeckViewHolderClick {
      * @param position position of the element in the list
      */
     void editDeckSettings(int position);
+
+    /**
+     * Handles sharing of the deck.
+     *
+     * @param position position of the element in the list
+     */
+    void shareDeck(int position);
 }
