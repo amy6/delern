@@ -55,7 +55,7 @@ jobs:
         name: "Build dependency cache key"
         command: |
           # A key will for our cache will be a hash of all .gradle files, plus IDEA version.
-          find . -name package.json -o -name '*.gradle' -type f -print0 | xargs -0 cat >../dependencies-key
+          find . -name package.json -o -name '*.gradle' -o -name bower.json -type f -print0 | xargs -0 cat >../dependencies-key
           echo "${IDEA_VERSION}" >>../dependencies-key
     - persist_to_workspace:
         root: ..
