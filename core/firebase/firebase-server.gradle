@@ -28,39 +28,4 @@ task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
     args = ['rules.bolt', '-o', 'delern-rules.json']
 }
 
-task bowerInstall(type: NodeTask, dependsOn: npmInstall) {
-    workingDir = "${firebaseDir}/www"
-    script = file("${node.nodeModulesDir}/node_modules/.bin/bower")
-    args = ['--allow-root', 'install']
-}
-
-task lintPolymer(type: NodeTask, dependsOn: [npmInstall, bowerInstall]) {
-    workingDir = "${firebaseDir}/www"
-    script = file("${node.nodeModulesDir}/node_modules/.bin/polymer")
-    args = ['lint']
-}
-
-task buildPolymer(type: NodeTask, dependsOn: [npmInstall, bowerInstall]) {
-    workingDir = "${firebaseDir}/www"
-    script = file("${node.nodeModulesDir}/node_modules/.bin/polymer")
-    args = ['build']
-}
-
-task npmInstallFunctions(type: NpmTask) {
-    workingDir = file("${firebaseDir}/functions")
-    args = ['install']
-}
-
-if (project.hasProperty('firebaseProject')) {
-    task deployFirebase(type: NodeTask, dependsOn: [
-      convertBoltToFirebaseRules,
-      buildPolymer,
-      npmInstallFunctions,
-    ]) {
-        workingDir = firebaseDir
-        script = file("${node.nodeModulesDir}/node_modules/.bin/firebase")
-        args = ['-P', project.property('firebaseProject'), 'deploy']
-    }
-}
-
 testClasses.dependsOn convertBoltToFirebaseRules
