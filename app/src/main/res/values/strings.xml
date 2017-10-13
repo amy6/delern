@@ -54,6 +54,13 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="edit_cards_deck_menu">Edit cards</string>
     <string name="deck_share_menu">Share</string>
 
+    <!-- Deck Sharing -->
+    <string name="share_people_textview">People</string>
+    <string-array name="share_permissions_spinner">
+        <item>Can Edit</item>
+        <item>Can View</item>
+    </string-array>
+
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -74,7 +81,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="delete_deck">Delete deck with all cards?</string>
     <string name="back_side_card_hint">Back Side</string>
     <string name="front_side_card_hint">Front side</string>
-
 
     <!-- Cards type spinner -->
     <string name="cards_type">Deck Type</string>

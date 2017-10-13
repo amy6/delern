@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.di.modules.DelernMainActivityModule;
+import org.dasfoo.delern.listdecks.DelernMainActivity;
 
 import javax.inject.Singleton;
 

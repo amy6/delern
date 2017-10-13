@@ -54,7 +54,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="deck_settings_menu">Настройки</string>
     <string name="edit_cards_deck_menu">Редактировать карточки</string>
     <string name="deck_share_menu">Поделиться</string>
-    
+
+    <!-- Deck Sharing -->
+    <string name="share_people_textview">Люди</string>
+    <string-array name="share_permissions_spinner">
+        <item>Может редактировать</item>
+        <item>Может просматривать</item>
+    </string-array>
+
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
@@ -91,7 +98,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Markdown -->
     <string name="markdown_textview">Маркдаун</string>
-    <string name="off_switch_text">OFF</string>
-    <string name="on_switch_text">ON</string>
+    <string name="off_switch_text">ВЫКЛ</string>
+    <string name="on_switch_text">ВКЛ</string>
 
 </resources>

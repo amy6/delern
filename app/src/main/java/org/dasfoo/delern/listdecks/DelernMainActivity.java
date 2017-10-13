@@ -61,6 +61,7 @@ import org.dasfoo.delern.listcards.EditCardListActivity;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.sharedeck.ShareDeckActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -377,8 +378,7 @@ public class DelernMainActivity extends AppCompatActivity
      */
     @Override
     public void shareDeck(final int position) {
-       Toast.makeText(this, mFirebaseAdapter.getItem(position).getName(),
-               Toast.LENGTH_SHORT).show();
+        ShareDeckActivity.startActivity(this, mFirebaseAdapter.getItem(position));
     }
 
     /**

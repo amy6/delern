@@ -45,7 +45,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:name=".listdecks.DelernMainActivity"
             android:label="${appName}"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".signin.SignInActivity" />
 
         <service
@@ -114,6 +114,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
+        </activity>
+        <activity android:name=".sharedeck.ShareDeckActivity"
+            android:parentActivityName=".listdecks.DelernMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
+
         </activity>
     </application>
 

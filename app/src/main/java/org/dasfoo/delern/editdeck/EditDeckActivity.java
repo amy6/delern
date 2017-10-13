@@ -70,9 +70,6 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
     /* default */ Switch mOnOffSwitch;
     @Inject
     /* default */ EditDeckActivityPresenter mPresenter;
-    private Deck mDeck;
-    private boolean mInputValid;
-
     private final AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
             new AdapterView.OnItemSelectedListener() {
                 /**
@@ -92,11 +89,12 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
                     mPresenter.selectDeckType(-1);
                 }
             };
-
     private final CompoundButton.OnCheckedChangeListener mCheckedChangeListener =
             (compoundButton, isChecked) -> {
                 mPresenter.setMarkdown(isChecked);
             };
+    private Deck mDeck;
+    private boolean mInputValid;
 
     /**
      * Method starts EditDeckActivity.

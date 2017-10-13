@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.listcards.EditCardListActivity;
 import org.dasfoo.delern.di.modules.EditCardListActivityModule;
+import org.dasfoo.delern.listcards.EditCardListActivity;
 
 import javax.inject.Singleton;
 

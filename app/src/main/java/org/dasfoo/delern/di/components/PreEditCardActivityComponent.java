@@ -18,8 +18,8 @@
 
 package org.dasfoo.delern.di.components;
 
-import org.dasfoo.delern.previewcard.PreEditCardActivity;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
+import org.dasfoo.delern.previewcard.PreEditCardActivity;
 
 import javax.inject.Singleton;
 

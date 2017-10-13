@@ -18,10 +18,10 @@
 
 package org.dasfoo.delern.di.modules;
 
-import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.addupdatecard.UpdateCardActivityPresenter;
-import org.dasfoo.delern.addupdatecard.IAddUpdatePresenter;
 import org.dasfoo.delern.addupdatecard.IAddEditCardView;
+import org.dasfoo.delern.addupdatecard.IAddUpdatePresenter;
+import org.dasfoo.delern.addupdatecard.UpdateCardActivityPresenter;
+import org.dasfoo.delern.models.Card;
 
 import dagger.Module;
 import dagger.Provides;
