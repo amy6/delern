@@ -2,27 +2,17 @@ version: 2
 
 defaults: &defaults
   docker:
-  - image: openjdk:8
+  - image: dasfoo/firebase:6
   environment:
-    - ANDROID_HOME: /root/android-sdk-linux
-    - TERM: dumb
-    - IDEA_VERSION: IC-2017.2.5-no-jdk
-    # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
-    # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
-    - GRADLE_OPTS: -Dorg.gradle.daemon=false
+  - ANDROID_HOME: /root/android-sdk-linux
+  - TERM: dumb
+  # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
+  # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
+  - GRADLE_OPTS: -Dorg.gradle.daemon=false
 
 gcloud_install_command: &gcloud_install_command
   name: "Install GCloud, download & activate authentication keys"
   command: |
-    apt update
-    apt install -y lsb-release apt-transport-https
-    # https://cloud.google.com/sdk/downloads#apt-get
-    echo "deb https://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" \
-      >>/etc/apt/sources.list.d/google-cloud-sdk.list
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    apt update
-    apt install -y google-cloud-sdk
-
     # We use this account to access both Google Play account and GCS.
     # The former requires it to be in "app" subdirectory.
     echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
@@ -54,9 +44,7 @@ jobs:
     - run:
         name: "Build dependency cache key"
         command: |
-          # A key will for our cache will be a hash of all .gradle files, plus IDEA version.
           find . -name package.json -o -name '*.gradle' -o -name bower.json -type f -print0 | xargs -0 cat >../dependencies-key
-          echo "${IDEA_VERSION}" >>../dependencies-key
     - persist_to_workspace:
         root: ..
         paths:
@@ -82,28 +70,16 @@ jobs:
           # This is just a hash sum of the license agreements accepted.
           # Take this text from the Android SDK directory on your machine.
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >"${ANDROID_HOME?}/licenses/android-sdk-license"
-          if [ ! -d "../idea/${IDEA_VERSION}" ]; then
-            rm -rf ../idea
-            mkdir ../idea
-            curl -sSL "https://download.jetbrains.com/idea/idea${IDEA_VERSION?}.tar.gz" |
-                tar -C ../idea -x -z
-            mv ../idea/* "../idea/${IDEA_VERSION}"
-          fi
-          apt update
-          apt install -y build-essential
-          ./gradlew resolveDependencies npmInstall bowerInstall
+          ./gradlew resolveDependencies
 
     - save_cache:
         # Use different keys because caches are immutable.
         key: v6-android-{{ arch }}-{{ .Branch }}-{{ checksum "../dependencies-key" }}
         paths:
-        - core/firebase/node_modules
-        - core/firebase/www/bower_components
         # TODO(dotdoom): use environment variables once they are supported.
         #                Currently only CircleCI built-in variables are supported.
         - ../android-sdk-linux
         - ../.gradle
-        - ../idea
 
     - persist_to_workspace:
         root: ..
@@ -111,7 +87,6 @@ jobs:
         - project
         - .gradle
         - android-sdk-linux
-        - idea
 
   unit-tests:
     <<: *defaults
@@ -124,7 +99,7 @@ jobs:
         no_output_timeout: "35m"
         command: |
           # Check formatting
-          "../idea/${IDEA_VERSION}/bin/format.sh" -m '*.java' -r */src >/dev/null
+          format.sh -m '*.java' -r */src >/dev/null
           git diff --stat --exit-code
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
@@ -143,7 +118,6 @@ jobs:
             :app:assembleInstrumentedAndroidTest \
             --quiet \
             --console=plain >/dev/null
-          ./gradlew :core:lintPolymer :core:buildPolymer
 
     - store_test_results:
         path: core/build/test-results
@@ -175,8 +149,13 @@ jobs:
         <<: *gcloud_install_command
 
     - run:
+        working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to DEBUG"
-        command: ./gradlew -PfirebaseProject=delern-debug core:deployFirebase
+        command: |
+          ( cd functions && npm install )
+          ( cd www && bower --allow-root install && polymer build )
+          firebase-bolt rules.bolt
+          firebase --project=delern-debug deploy
 
   instrumented-coverage:
     <<: *defaults
@@ -266,8 +245,13 @@ jobs:
         <<: *gcloud_install_command
 
     - run:
-        name: "Deploy Firebase database rules, functions, hosting to DEBUG"
-        command: ./gradlew -PfirebaseProject=delern-e1b33 core:deployFirebase
+        working_directory: ~/project/firebase
+        name: "Deploy Firebase database rules, functions, hosting to RELEASE"
+        command: |
+          ( cd functions && npm install )
+          ( cd www && bower --allow-root install && polymer build )
+          firebase-bolt rules.bolt
+          firebase --project=delern-e1b33 deploy
 
     - run:
         name: "Assemble release APK (to store in artifacts)"

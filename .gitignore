@@ -44,3 +44,7 @@ nohup.out
 
 # Editor temporary files
 *.swp
+
+# Dependencies
+bower_components
+node_modules

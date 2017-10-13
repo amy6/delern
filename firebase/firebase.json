@@ -9,7 +9,7 @@
     ]
   },
   "database": {
-    "rules": "delern-rules.json"
+    "rules": "rules.json"
   },
   "functions": {
     "source": "functions"

@@ -1,9 +1,37 @@
+// FIXME(https://docs.gradle.org/4.1-rc-2/userguide/plugins.html#sec:build_scripts_only):
+// Replace buildscript+apply with just
+// plugins {
+//     id 'gradle-node-plugin' version '1.2.0'
+// }
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    dependencies {
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+    }
+}
+
 plugins {
     id 'java-library'
     id 'jacoco'
 }
 apply from: "$rootDir/quality/quality-java.gradle"
-apply from: 'firebase/firebase-server.gradle'
+apply plugin: com.moowork.gradle.node.NodePlugin
+
+node {
+    download = true
+}
+
+task convertBoltToFirebaseRules(type: NodeTask, dependsOn: npmInstall) {
+    script = file("${node.nodeModulesDir}/node_modules/.bin/firebase-bolt")
+    args = [
+        "${rootProject.projectDir}/firebase/rules.bolt",
+        '-o', "${project.buildDir}/delern-rules.json",
+    ]
+}
+
+testClasses.dependsOn convertBoltToFirebaseRules
 
 jacoco {
     toolVersion '0.7.9'
