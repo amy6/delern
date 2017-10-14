@@ -8,6 +8,8 @@ class PushToPubSub(webapp2.RequestHandler):
             # and AppEngine Cron always adds "X-Appengine-Cron: true".
             self.response.status = '403'
             return
+        # Perhaps use:
+        # https://cloud.google.com/appengine/docs/standard/python/issue-requests#issuing_an_http_request
         pubsub_utils.publish_to_topic('cron-' + topic, 'cron')
 
 app = webapp2.WSGIApplication([
