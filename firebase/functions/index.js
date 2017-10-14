@@ -50,7 +50,6 @@ exports.userLookup = functions.https.onRequest((req, res) => {
 	});
 });
 
-exports.databaseMaintenance =
-	functions.pubsub.topic('cron-databaseMaintenance').onPublish((event) => {
-		console.log('Doing something to the database');
-	});
+exports.databaseMaintenance = functions.https.onRequest((req, res) => {
+	console.log('Doing something to the database');
+});

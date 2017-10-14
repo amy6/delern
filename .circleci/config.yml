@@ -154,7 +154,7 @@ jobs:
           ( cd www && polymer build )
           firebase-bolt rules.bolt
           firebase --project=delern-debug deploy
-          ( cd appengine && gcloud --project=delern-debug app deploy app.yaml cron.yaml )
+          ( cd appengine && gcloud --project=delern-debug app deploy --version=ci app.yaml cron.yaml )
 
   instrumented-coverage:
     <<: *defaults
@@ -253,7 +253,7 @@ jobs:
           ( cd www && polymer build )
           firebase-bolt rules.bolt
           firebase --project=delern-e1b33 deploy
-          ( cd appengine && gcloud --project=delern-e1b33 app deploy app.yaml cron.yaml )
+          ( cd appengine && gcloud --project=delern-e1b33 app deploy --version=ci app.yaml cron.yaml )
 
     - run:
         name: "Assemble release APK (to store in artifacts)"

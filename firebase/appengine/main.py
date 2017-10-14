@@ -1,19 +1,29 @@
 import webapp2
-import pubsub_utils
 
-class PushToPubSub(webapp2.RequestHandler):
-    def get(self, topic):
-        if 'X-Appengine-Cron' not in self.request.headers:
-            # AppEngine strips "X-" headers from external requests,
-            # and AppEngine Cron always adds "X-Appengine-Cron: true".
-            self.response.status = '403'
-            return
-        # Perhaps use:
-        # https://cloud.google.com/appengine/docs/standard/python/issue-requests#issuing_an_http_request
-        pubsub_utils.publish_to_topic('cron-' + topic, 'cron')
+from google.appengine.api import app_identity
+from google.appengine.api import urlfetch
+
+class ProxyToFunctions(webapp2.RequestHandler):
+
+    def get(self, *unused_args):
+        url = 'https://us-central1-{}.cloudfunctions.net{}'.format(
+                app_identity.get_application_id(),
+                self.request.path_qs)
+        auth_token, _ = app_identity.get_access_token(
+                'https://www.googleapis.com/auth/cloud-platform')
+
+        # "result" is of type _URLFetchResult,
+        # https://cloud.google.com/appengine/docs/standard/python/refdocs/modules/google/appengine/api/urlfetch
+        result = urlfetch.fetch(url, headers={
+            'Authorization': 'Bearer {}'.format(auth_token),
+        }, deadline=180, validate_certificate=True)
+
+        self.response.status = result.status_code
+        #self.response.write(result.content)
+
 
 app = webapp2.WSGIApplication([
-    webapp2.Route(r'/cron/<topic>', handler=PushToPubSub)
+    webapp2.Route(r'/<:.*>', handler=ProxyToFunctions)
 ], debug=True)
 
 # vim: ft=python
