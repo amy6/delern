@@ -141,6 +141,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // FIXME(https://github.com/square/leakcanary/pull/633): enable in instrumented
     instrumentedImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
