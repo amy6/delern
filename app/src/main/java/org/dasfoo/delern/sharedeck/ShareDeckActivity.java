@@ -28,8 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,25 +51,6 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ TextView mPersonData;
     @BindView(R.id.sharing_permissions_spinner)
     /* default */ Spinner mSharingPermissionsSpinner;
-    private final AdapterView.OnItemSelectedListener mSpinnerItemClickListener =
-            new AdapterView.OnItemSelectedListener() {
-                /**
-                 * {@inheritDoc}
-                 */
-                @Override
-                public void onItemSelected(final AdapterView<?> adapterView, final View view,
-                                           final int position, final long id) {
-                    // To be implemented
-                }
-
-                /**
-                 * {@inheritDoc}
-                 */
-                @Override
-                public void onNothingSelected(final AdapterView<?> adapterView) {
-                    // To be implemented
-                }
-            };
     private Deck mDeck;
 
     /**
@@ -105,7 +84,6 @@ public class ShareDeckActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
-        mSharingPermissionsSpinner.setOnItemSelectedListener(mSpinnerItemClickListener);
     }
 
     /**
