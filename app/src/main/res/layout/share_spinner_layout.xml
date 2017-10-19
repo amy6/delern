@@ -20,24 +20,28 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/sharingTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/elements_margin"/>
+            android:layout_margin="@dimen/elements_margin"
+            tools:ignore="SelectableText" />
 
         <ImageView
             android:id="@+id/sharingImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/elements_margin"/>
+            android:layout_margin="@dimen/elements_margin"
+            android:contentDescription="@string/sharing_imageview_description" />
 
     </TableRow>
 

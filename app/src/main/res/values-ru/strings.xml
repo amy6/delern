@@ -56,10 +56,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="deck_share_menu">Поделиться</string>
 
     <!-- Deck Sharing -->
+    <string name="sharing_imageview_description">Опции расшаривания</string>
     <string name="share_people_textview">Люди</string>
     <string-array name="share_permissions_spinner">
         <item>Может редактировать</item>
         <item>Может просматривать</item>
+    </string-array>
+    <string-array name="choose_contact_autocomplete">
+        <item>Выбрать из Контактов…</item>
     </string-array>
 
     <!-- Navigation Drawer -->

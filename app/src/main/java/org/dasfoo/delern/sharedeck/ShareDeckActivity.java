@@ -20,21 +20,27 @@ package org.dasfoo.delern.sharedeck;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,12 +49,16 @@ import butterknife.ButterKnife;
  * Handles sharing a deck with users.
  */
 public class ShareDeckActivity extends AppCompatActivity {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivity.class);
+
     /**
      * IntentExtra deck for this activity.
      */
     private static final String DECK = "deck";
+    private static final int RESULT_PICK_CONTACT = 855;
     @BindView(R.id.person_data)
-    /* default */ TextView mPersonData;
+    /* default */ AutoCompleteTextView mPersonData;
     @BindView(R.id.sharing_permissions_spinner)
     /* default */ Spinner mSharingPermissionsSpinner;
     private Deck mDeck;
@@ -84,6 +94,20 @@ public class ShareDeckActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
+        setAutoCompleteAdapter();
+    }
+
+    private void setAutoCompleteAdapter() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.choose_contact_autocomplete));
+        mPersonData.setAdapter(adapter);
+        mPersonData.setThreshold(0);
+        mPersonData.setOnClickListener(v -> mPersonData.showDropDown());
+        mPersonData.setOnItemClickListener((parent, view, position, id) -> {
+            mPersonData.setText("");
+            chooseEmailFromContactsIntent();
+        });
     }
 
     /**
@@ -118,5 +142,55 @@ public class ShareDeckActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    /**
+     * Intent that opens Contact app for choosing user.
+     */
+    private void chooseEmailFromContactsIntent() {
+        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI);
+        startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode,
+                                    final Intent data) {
+        if (resultCode == RESULT_OK) {
+            // Check for the request code, we might be usign multiple startActivityForReslut
+            switch (requestCode) {
+                case RESULT_PICK_CONTACT:
+                    contactPicked(data);
+                    break;
+                default:
+                    LOGGER.debug("on ActivityResult not implemented");
+                    break;
+            }
+        } else {
+            LOGGER.error("Failed to pick a contact");
+        }
+    }
+
+    /**
+     * Query the Uri and read contact details. Handle the picked contact data.
+     *
+     * @param data intent to get an email that was chosen from contacts.
+     */
+    private void contactPicked(final Intent data) {
+        Cursor cursor = null;
+        // getData() method will have the Content Uri of the selected contact
+        Uri uri = data.getData();
+        //Query the content uri
+        cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        // column index of the email
+        int emailIndex = cursor
+                .getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+        // Set the value to the textview
+        mPersonData.setText(cursor.getString(emailIndex));
+        cursor.close();
     }
 }
