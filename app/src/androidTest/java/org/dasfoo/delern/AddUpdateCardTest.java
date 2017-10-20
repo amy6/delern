@@ -121,7 +121,7 @@ public class AddUpdateCardTest {
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("1"))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        onView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit_cards_deck_menu)).perform(click());
         waitView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
         waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontCard)));
         onView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
@@ -145,7 +145,7 @@ public class AddUpdateCardTest {
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("0"))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        onView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit_cards_deck_menu)).perform(click());
         waitView(withId(R.id.f_add_card_button)).perform(click());
         waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
         String frontCard = "front";

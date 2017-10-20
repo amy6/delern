@@ -23,7 +23,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <item
         android:id="@+id/edit_deck_menu"
         android:orderInCategory="101"
-        android:title="@string/edit" />
+        android:title="@string/edit_cards_deck_menu" />
     <item
         android:id="@+id/deck_settings"
         android:orderInCategory="102"

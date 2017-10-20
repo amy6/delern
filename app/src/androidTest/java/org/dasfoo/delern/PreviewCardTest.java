@@ -94,7 +94,7 @@ public class PreviewCardTest {
         waitView(withText(mDeckName)).check(matches(hasSibling(withText("1"))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        onView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit_cards_deck_menu)).perform(click());
         waitView(withId(R.id.number_of_cards)).check(matches(withText(
                 String.format(context.getString(R.string.number_of_cards), 1))));
         onView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
@@ -133,7 +133,7 @@ public class PreviewCardTest {
         pressBack();
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
-        onView(withText(R.string.edit)).perform(click());
+        onView(withText(R.string.edit_cards_deck_menu)).perform(click());
         onView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
         waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontShouldBeShown)));
         onView(withId(R.id.textBackCardView)).check(matches(withText(backShouldBeShown)));
