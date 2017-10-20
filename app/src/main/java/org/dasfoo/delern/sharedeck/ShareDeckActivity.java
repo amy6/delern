@@ -29,6 +29,8 @@ import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -37,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.slf4j.Logger;
@@ -62,6 +65,7 @@ public class ShareDeckActivity extends AppCompatActivity {
     @BindView(R.id.sharing_permissions_spinner)
     /* default */ Spinner mSharingPermissionsSpinner;
     private Deck mDeck;
+    private boolean mValidInput;
 
     /**
      * Method starts ShareDeckActivity.
@@ -94,10 +98,10 @@ public class ShareDeckActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
-        setAutoCompleteAdapter();
+        setAutoCompleteViewSettings();
     }
 
-    private void setAutoCompleteAdapter() {
+    private void setAutoCompleteViewSettings() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line,
                 getResources().getStringArray(R.array.choose_contact_autocomplete));
@@ -107,6 +111,19 @@ public class ShareDeckActivity extends AppCompatActivity {
         mPersonData.setOnItemClickListener((parent, view, position, id) -> {
             mPersonData.setText("");
             chooseEmailFromContactsIntent();
+        });
+        mPersonData.addTextChangedListener(new TextWatcherStub() {
+            /**
+             * Checks whether an email address valid or not in view.
+             *
+             * @param editableView view for typing email address.
+             */
+            @Override
+            public void afterTextChanged(final Editable editableView) {
+                // Check valid email address.
+                mValidInput = Patterns.EMAIL_ADDRESS
+                        .matcher(editableView.toString().trim()).matches();
+            }
         });
     }
 
@@ -136,7 +153,12 @@ public class ShareDeckActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_deck_menu:
-                Toast.makeText(this, "Share deck:" + mDeck.getName(), Toast.LENGTH_SHORT).show();
+                if (mValidInput) {
+                    Toast.makeText(this, "Share deck:" + mDeck.getName(),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,7 +182,6 @@ public class ShareDeckActivity extends AppCompatActivity {
     protected void onActivityResult(final int requestCode, final int resultCode,
                                     final Intent data) {
         if (resultCode == RESULT_OK) {
-            // Check for the request code, we might be usign multiple startActivityForReslut
             switch (requestCode) {
                 case RESULT_PICK_CONTACT:
                     contactPicked(data);
@@ -180,7 +201,7 @@ public class ShareDeckActivity extends AppCompatActivity {
      * @param data intent to get an email that was chosen from contacts.
      */
     private void contactPicked(final Intent data) {
-        Cursor cursor = null;
+        Cursor cursor;
         // getData() method will have the Content Uri of the selected contact
         Uri uri = data.getData();
         //Query the content uri
