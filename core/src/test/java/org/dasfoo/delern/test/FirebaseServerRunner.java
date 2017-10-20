@@ -19,13 +19,13 @@
 package org.dasfoo.delern.test;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseServerRunner {
 
     private Process mFirebaseServer;
-    private List<String> mArgv = new LinkedList<>();
+    private List<String> mArgv = new ArrayList<>();
 
     public FirebaseServerRunner(final String node, final String server) {
         mArgv.add(node);
