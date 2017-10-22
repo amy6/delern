@@ -127,10 +127,10 @@ public class AddUpdateCardTest {
         onView(withId(R.id.textBackCardView)).check(matches(withText(backCard)));
         onView(withId(R.id.edit_card_button)).check(matches(isDisplayed())).perform(click());
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
-                .perform(replaceText("front2"));
+                .perform(replaceText("front2"), closeSoftKeyboard());
         onView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
-                .perform(replaceText("back2"));
-        onView(withId(R.id.add_card_to_db)).perform(click());
+                .perform(replaceText("back2"), closeSoftKeyboard());
+        pressBack();
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
         pressBack();
@@ -185,8 +185,8 @@ public class AddUpdateCardTest {
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
         onView(withText(R.string.edit)).perform(click());
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
-                .perform(replaceText("front2"));
-        onView(withId(R.id.add_card_to_db)).perform(click());
+                .perform(replaceText("front2"), closeSoftKeyboard());
+        pressBack();
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         pressBack();
@@ -216,10 +216,10 @@ public class AddUpdateCardTest {
         onView(withText(R.string.edit)).perform(click());
 
         waitView(withId(R.id.front_side_text)).check(matches(withText(frontCard)))
-                .perform(replaceText("front2"));
+                .perform(replaceText("front2"), closeSoftKeyboard());
         onView(withId(R.id.back_side_text)).check(matches(withText(backCard)))
-                .perform(replaceText("back2"));
-        onView(withId(R.id.add_card_to_db)).perform(click());
+                .perform(replaceText("back2"), closeSoftKeyboard());
+        pressBack();
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));

@@ -45,7 +45,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="deck_menu_description">Menu for operations with decks and cards</string>
-    <string name="save">Save</string>
     <string name="flip_the_card_message">Flip the card</string>
     <string name="number_of_cards">Number of cards: %d</string>
     <string name="card_watched_text">Watched: %d</string>

@@ -22,10 +22,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -64,6 +66,7 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
 
     @Inject
     /* default */ IAddUpdatePresenter mPresenter;
+    private boolean mInputValid;
 
     /**
      * Method starts activity for adding cards in deck.
@@ -111,15 +114,15 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
         final TextWatcherStub cardValid = new TextWatcherStub() {
             @Override
             public void afterTextChanged(final Editable s) {
-                boolean inputValid = true;
+                mInputValid = true;
                 if (TextUtils.isEmpty(mFrontSideInputText.getText().toString().trim())) {
-                    inputValid = false;
+                    mInputValid = false;
                 }
                 if (mAddReversedCardCheckbox.isChecked() &&
                         TextUtils.isEmpty(mBackSideInputText.getText().toString().trim())) {
-                    inputValid = false;
+                    mInputValid = false;
                 }
-                mAddCardToDbButton.setEnabled(inputValid);
+                mAddCardToDbButton.setEnabled(mInputValid);
             }
         };
 
@@ -169,10 +172,10 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
      * @param back  back side text for update.
      */
     public void initForUpdate(final String front, final String back) {
-        mAddCardToDbButton.setText(R.string.save);
         mFrontSideInputText.setText(front);
         mBackSideInputText.setText(back);
         mAddReversedCardCheckbox.setVisibility(View.INVISIBLE);
+        mAddCardToDbButton.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -181,7 +184,6 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     @Override
     public void cardUpdated() {
         Toast.makeText(this, R.string.updated_card_user_message, Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     /**
@@ -205,5 +207,37 @@ public class AddEditCardActivity extends AppCompatActivity implements IAddEditCa
     @Override
     public boolean addReversedCard() {
         return mAddReversedCardCheckbox.isChecked();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onBackPressed() {
+        updateCard();
+        super.onBackPressed();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                updateCard();
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    private void updateCard() {
+        if (mInputValid) {
+            mPresenter.onAddUpdate(mFrontSideInputText.getText().toString(),
+                    mBackSideInputText.getText().toString());
+        }
     }
 }
