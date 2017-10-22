@@ -61,19 +61,19 @@ public class NavigationTest {
 
     @Test
     public void openNavigationDrawer() {
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
     }
 
     @Test
     public void signOut() {
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
-        waitView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.nav_sign_out));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_sign_out)));
         onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
         onView(withText(R.string.sign_out)).perform(click());
     }
@@ -83,9 +83,9 @@ public class NavigationTest {
         Instrumentation.ActivityResult result = new Instrumentation
                 .ActivityResult(Activity.RESULT_CANCELED, null);
         intending(toPackage("com.google.android.gms")).respondWith(result);
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
         intended(allOf(hasAction("com.google.android.gms.appinvite.ACTION_APP_INVITE"),
@@ -100,9 +100,9 @@ public class NavigationTest {
         Instrumentation.ActivityResult result = new Instrumentation
                 .ActivityResult(Activity.RESULT_OK, null);
         intending(toPackage("com.google.android.gms")).respondWith(result);
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
         intended(allOf(hasAction("com.google.android.gms.appinvite.ACTION_APP_INVITE"),
@@ -114,11 +114,11 @@ public class NavigationTest {
 
     @Test
     public void openAndCloseNavigationDrawerPressingBack() {
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(withId(R.id.nav_view)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         // Close navigation drawer by pressing back.
         pressBack();
-        waitView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(not(isDisplayed()))));
     }
 }

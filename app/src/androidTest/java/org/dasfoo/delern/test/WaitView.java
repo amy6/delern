@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
@@ -61,25 +60,20 @@ public final class WaitView {
     /**
      * Like onView, but waits for a view matcher to trigger.
      *
-     * @param viewMatcher matcher for onView()
-     * @return see onView()
+     * @param matcher matcher calling onView() etc
      */
-    public static ViewInteraction waitView(final Matcher<View> viewMatcher) {
+    public static void waitView(final Runnable matcher) {
         long startTime = System.currentTimeMillis();
-        ViewInteraction vi = onView(viewMatcher);
         while (true) {
             try {
-                LOGGER.info("Attempting to locate View {}", viewMatcher);
-                return vi.check((targetView, missingViewException) -> {
-                    if (targetView == null) {
-                        throw missingViewException;
-                    }
-                });
+                matcher.run();
+                return;
             } catch (NoMatchingViewException e) {
                 if (startTime + TIMEOUT >= System.currentTimeMillis()) {
+                    LOGGER.error("Failed to locate a View: " + e + ", retrying");
                     sleep(POLL_INTERVAL);
                 } else {
-                    LOGGER.error("Giving up locating View {}", viewMatcher);
+                    LOGGER.error("Giving up locating a View");
                     throw e;
                 }
             }

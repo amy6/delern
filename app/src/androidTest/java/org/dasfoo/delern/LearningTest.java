@@ -75,12 +75,12 @@ public class LearningTest {
     private String mDeckName;
 
     private static void createCard(final String frontSide, final String backSide) {
-        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
         onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
         onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
         onView(withId(R.id.add_card_to_db)).perform(click());
         // Check that fields are empty after adding card
-        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
         onView(withId(R.id.back_side_text)).check(matches(withText("")));
     }
 
@@ -94,7 +94,7 @@ public class LearningTest {
     @Before
     public void createDeck() {
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
-        waitView(withId(R.id.fab)).perform(click());
+        waitView(() -> onView(withId(R.id.fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
         onView(withText(R.string.add)).perform(click());
@@ -192,10 +192,10 @@ public class LearningTest {
 
         pressBack();
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click()));
         // Check the card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
@@ -217,10 +217,10 @@ public class LearningTest {
         createCard(front3, back3);
         pressBack();
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("3"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
+                .perform(click()));
         // Check the first card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         0))));
@@ -229,7 +229,7 @@ public class LearningTest {
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front2)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         1))));
@@ -239,7 +239,7 @@ public class LearningTest {
         onView(withId(R.id.textBackCardView)).check(matches(withText(back2)));
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front3)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         2))));
@@ -257,10 +257,10 @@ public class LearningTest {
         createCard(front, back);
         pressBack();
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click()));
         // Check the card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front))));
         // Open the options menu OR open the overflow menu, depending on whether
         // the device has a hardware or software overflow menu button.
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
@@ -304,10 +304,10 @@ public class LearningTest {
     @After
     public void deleteDeck() {
         bringToFront(mActivityRule);
-        waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click());
+        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click()));
         onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(withId(R.id.delete_deck_menu)).perform(click());
+        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
         onView(withText(R.string.delete)).perform(click());
     }
 

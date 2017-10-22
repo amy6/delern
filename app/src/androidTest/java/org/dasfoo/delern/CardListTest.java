@@ -70,19 +70,19 @@ public class CardListTest {
     @Before
     public void createDeck() {
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
-        waitView(withId(R.id.fab)).perform(click());
+        waitView(() -> onView(withId(R.id.fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
         onView(withText(R.string.add)).perform(click());
     }
 
     private static void createCard(final String frontSide, final String backSide) {
-        waitView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
         onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
         onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
         onView(withId(R.id.add_card_to_db)).perform(click());
         // Check that fields are empty after adding card
-        waitView(withId(R.id.front_side_text)).check(matches(withText("")));
+        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
         onView(withId(R.id.back_side_text)).check(matches(withText("")));
     }
 
@@ -103,29 +103,29 @@ public class CardListTest {
         onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         2))));
-        waitView(withId(R.id.search_action)).perform(click());
+        waitView(() -> onView(withId(R.id.search_action)).perform(click()));
         onView(isAssignableFrom(EditText.class)).perform(typeText("die"));
-        waitView(withId(R.id.number_of_cards))
+        waitView(() -> onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
-                        1))));
+                        1)))));
         onView(withText(front1)).check(matches(hasSibling(withText(back1))));
         // Clean Search
         onView(isAssignableFrom(EditText.class)).perform(clearText(),
                 closeSoftKeyboard());
-        waitView(withText(front1)).check(matches(hasSibling(withText(back1))));
+        waitView(() -> onView(withText(front1)).check(matches(hasSibling(withText(back1)))));
         onView(withText(front2)).check(matches(hasSibling(withText(back2))));
-        waitView(withId(R.id.number_of_cards))
+        waitView(() -> onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
-                        2))));
+                        2)))));
     }
 
     @After
     public void deleteDeck() {
         bringToFront(mActivityRule);
-        waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click());
+        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click()));
         onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(withId(R.id.delete_deck_menu)).perform(click());
+        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
         onView(withText(R.string.delete)).perform(click());
     }
 }
