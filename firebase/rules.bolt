@@ -147,8 +147,6 @@ type CardReply extends String {
 }
 
 type View {
-  // TODO(dotdoom): remove cardId once all devices update.
-  cardId: String | Null,
   levelBefore: CardLevel,
   reply: CardReply,
   timestamp: Number,
