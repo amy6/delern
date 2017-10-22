@@ -9,6 +9,7 @@ ext {
     gitVersionCode = git.log(includes: ['HEAD']).size()
     gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
     leakCanaryVersion = '1.5.4'
+    espressoVersion = '3.0.1'
 }
 
 android {
@@ -148,12 +149,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Espresso
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espressoVersion"
 
     // TODO(dotdoom): update once it's possible to disable Crashlytics
     //noinspection GradleDependency
