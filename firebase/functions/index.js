@@ -52,4 +52,5 @@ exports.userLookup = functions.https.onRequest((req, res) => {
 
 exports.databaseMaintenance = functions.https.onRequest((req, res) => {
 	console.log('Doing something to the database');
+	res.send('OK');
 });
