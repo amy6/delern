@@ -16,7 +16,7 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.util;
+package org.dasfoo.delern.test;
 
 import java.util.Random;
 

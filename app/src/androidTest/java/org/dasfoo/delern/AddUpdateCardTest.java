@@ -24,7 +24,7 @@ import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
-import org.dasfoo.delern.util.DeckPostfix;
+import org.dasfoo.delern.test.DeckPostfix;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

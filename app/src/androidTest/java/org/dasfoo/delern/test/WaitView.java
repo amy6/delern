@@ -80,6 +80,12 @@ public final class WaitView {
         }
     }
 
+    /**
+     * Brings activity to foreground, if it is already launched, or launches it.
+     *
+     * @param rule activity rule for the activity to operate on.
+     * @param <T> activity class.
+     */
     public static <T extends Activity> void bringToFront(final ActivityTestRule<T> rule) {
         final T runningActivity = rule.getActivity();
         if (runningActivity == null) {

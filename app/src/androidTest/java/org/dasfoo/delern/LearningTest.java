@@ -28,7 +28,7 @@ import android.view.View;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
-import org.dasfoo.delern.util.DeckPostfix;
+import org.dasfoo.delern.test.DeckPostfix;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.After;

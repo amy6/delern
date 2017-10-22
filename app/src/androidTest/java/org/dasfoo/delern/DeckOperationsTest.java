@@ -18,13 +18,14 @@
 
 package org.dasfoo.delern;
 
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
-import org.dasfoo.delern.util.DeckPostfix;
+import org.dasfoo.delern.test.DeckPostfix;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +46,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.ViewMatchers.first;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -65,6 +67,10 @@ public class DeckOperationsTest {
     private static void deleteDeck(final String deckName) {
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click()));
+        deleteSelectedDeck();
+    }
+
+    private static void deleteSelectedDeck() {
         onView(withText(R.string.deck_settings_menu)).perform(click());
         waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
         onView(withText(R.string.delete)).perform(click());
@@ -73,6 +79,17 @@ public class DeckOperationsTest {
     @Test
     public void noDecksMessageShown() {
         waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+
+        // Delete all existing decks.
+        try {
+            while (true) {
+                onView(first(withId(R.id.deck_popup_menu))).perform(click());
+                deleteSelectedDeck();
+            }
+        } catch (NoMatchingViewException e) {
+            // Finished deleting all decks.
+        }
+
         waitView(() -> onView(allOf(withId(R.id.empty_recyclerview_message),
                 withText(R.string.empty_decks_message))).check(matches(isDisplayed())));
     }
