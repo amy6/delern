@@ -24,6 +24,14 @@ path /users/{userId} is User {
   write() { isCurrentUser(userId) }
 }
 
+type FCMToken {
+  name: String,
+}
+path /fcm/{userId}/{tokenId} is FCMToken {
+  read() { isCurrentUser(userId) }
+  write() { isCurrentUser(userId) }
+}
+
 type AccessString extends String {
   validate() {
     (this === "read" || this === "write" || this === "owner") &&
