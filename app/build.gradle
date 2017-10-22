@@ -147,7 +147,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    //Espresso
+    // Espresso
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -155,7 +155,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
 
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+    // TODO(dotdoom): update once it's possible to disable Crashlytics
+    //noinspection GradleDependency
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
 
