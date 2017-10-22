@@ -170,8 +170,8 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.12'
 
     // Markdown
-    compile "com.atlassian.commonmark:commonmark:$commonmarkVersion"
-    compile "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
+    implementation "com.atlassian.commonmark:commonmark:$commonmarkVersion"
+    implementation "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
 }
 
 apply plugin: 'com.google.gms.google-services'
