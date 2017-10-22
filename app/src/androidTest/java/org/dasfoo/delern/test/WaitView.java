@@ -20,7 +20,6 @@ package org.dasfoo.delern.test;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.rule.ActivityTestRule;
@@ -68,7 +67,7 @@ public final class WaitView {
             try {
                 matcher.run();
                 return;
-            } catch (NoMatchingViewException e) {
+            } catch (Throwable e) {
                 if (startTime + TIMEOUT >= System.currentTimeMillis()) {
                     LOGGER.error("Failed to locate a View: " + e + ", retrying");
                     sleep(POLL_INTERVAL);
