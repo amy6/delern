@@ -8,3 +8,6 @@
 -keep class com.google.firebase.auth.FirebaseAuth {
   public *** signInAnonymously();
 }
+
+# For Espresso.
+-keep class javax.inject.* { *;  }
