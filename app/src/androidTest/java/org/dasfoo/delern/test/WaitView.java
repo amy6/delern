@@ -83,13 +83,15 @@ public final class WaitView {
      * Brings activity to foreground, if it is already launched, or launches it.
      *
      * @param rule activity rule for the activity to operate on.
-     * @param <T> activity class.
+     * @param <T>  activity class.
      */
     public static <T extends Activity> void bringToFront(final ActivityTestRule<T> rule) {
         final T runningActivity = rule.getActivity();
         if (runningActivity == null) {
             rule.launchActivity(null);
         } else {
+            // TODO(dotdoom): launch using runningActivity.getIntent()? E.g. to preserve username
+            //                and save roundtrip to login window.
             final Intent intent = new Intent(runningActivity, runningActivity.getClass());
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             runningActivity.startActivity(intent);

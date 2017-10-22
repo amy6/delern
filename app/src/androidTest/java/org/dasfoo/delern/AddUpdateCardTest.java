@@ -160,7 +160,6 @@ public class AddUpdateCardTest {
         waitView(() -> onView(withText(frontCard)).check(matches(hasSibling(withText(backCard)))));
     }
 
-
     @Test
     public void createCardToUpdateFromLearningShowingFront() {
         String frontCard = "front";
