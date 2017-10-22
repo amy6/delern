@@ -52,6 +52,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -88,7 +89,6 @@ public class LearningTest {
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(deckType))).perform(click());
-        pressBack();
     }*/
 
     @Before
@@ -299,11 +299,11 @@ public class LearningTest {
         // Check the first card
         waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
-        pressBack();
     }*/
 
     @After
     public void deleteDeck() {
+        bringToFront(mActivityRule);
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());

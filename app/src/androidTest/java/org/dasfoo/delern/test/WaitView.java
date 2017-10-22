@@ -18,10 +18,13 @@
 
 package org.dasfoo.delern.test;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
 import org.hamcrest.Matcher;
@@ -80,6 +83,17 @@ public final class WaitView {
                     throw e;
                 }
             }
+        }
+    }
+
+    public static <T extends Activity> void bringToFront(final ActivityTestRule<T> rule) {
+        final T runningActivity = rule.getActivity();
+        if (runningActivity == null) {
+            rule.launchActivity(null);
+        } else {
+            final Intent intent = new Intent(runningActivity, runningActivity.getClass());
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            runningActivity.startActivity(intent);
         }
     }
 }

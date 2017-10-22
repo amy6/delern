@@ -46,6 +46,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -116,12 +117,11 @@ public class CardListTest {
         waitView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         2))));
-        pressBack();
-        pressBack();
     }
 
     @After
     public void deleteDeck() {
+        bringToFront(mActivityRule);
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());

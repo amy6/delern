@@ -47,6 +47,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
@@ -137,12 +138,11 @@ public class PreviewCardTest {
         onView(allOf(withText(frontCard), hasSibling(withText(backCard)))).perform(click());
         waitView(withId(R.id.textFrontCardView)).check(matches(withText(frontShouldBeShown)));
         onView(withId(R.id.textBackCardView)).check(matches(withText(backShouldBeShown)));
-        pressBack();
-        pressBack();
     }
 
     @After
     public void deleteDeck() {
+        bringToFront(mActivityRule);
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());

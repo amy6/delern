@@ -47,6 +47,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -133,8 +134,6 @@ public class AddUpdateCardTest {
         pressBack();
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
-        pressBack();
-        pressBack();
     }
 
     @Test
@@ -158,7 +157,6 @@ public class AddUpdateCardTest {
         onView(withId(R.id.back_side_text)).check(matches(withText("")));
         pressBack();
         waitView(withText(frontCard)).check(matches(hasSibling(withText(backCard))));
-        pressBack();
     }
 
 
@@ -189,7 +187,6 @@ public class AddUpdateCardTest {
         pressBack();
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
-        pressBack();
     }
 
     @Test
@@ -223,11 +220,11 @@ public class AddUpdateCardTest {
         // Check that front side in Learning Activity is correct
         waitView(withId(R.id.textFrontCardView)).check(matches(withText("front2")));
         onView(withId(R.id.textBackCardView)).check(matches(withText("back2")));
-        pressBack();
     }
 
     @After
     public void deleteDeck() {
+        bringToFront(mActivityRule);
         waitView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());
