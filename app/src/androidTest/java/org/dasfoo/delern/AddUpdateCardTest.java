@@ -139,8 +139,8 @@ public class AddUpdateCardTest {
 
     @Test
     public void createCardFromCardsList() {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        pressBack();
+        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()))
+                .perform(closeSoftKeyboard()));
         pressBack();
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("0")))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
