@@ -38,6 +38,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
@@ -156,6 +161,7 @@ public class ShareDeckActivity extends AppCompatActivity {
                 if (mValidInput) {
                     Toast.makeText(this, "Share deck:" + mDeck.getName(),
                             Toast.LENGTH_SHORT).show();
+                    httpReq(mPersonData.getText().toString().trim());
                 } else {
                     Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 }
@@ -213,5 +219,24 @@ public class ShareDeckActivity extends AppCompatActivity {
         // Set the value to the textview
         mPersonData.setText(cursor.getString(emailIndex));
         cursor.close();
+    }
+
+    private void httpReq(final String email) {
+        // Volley
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = new StringBuilder("http://us-central1-")
+                .append(getResources().getString(R.string.project_id))
+                .append(".cloudfunctions.net/userLookup?q=")
+                .append(email).toString();
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+                },
+                error -> LOGGER.error("That didn't work!")
+        );
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }

@@ -177,6 +177,9 @@ dependencies {
     // Markdown
     implementation "com.atlassian.commonmark:commonmark:$commonmarkVersion"
     implementation "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
+
+    // Volley, for http req
+    implementation 'com.android.volley:volley:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
