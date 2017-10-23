@@ -67,9 +67,11 @@ public class ParcelableCard implements Parcelable {
      *
      * @param in parcel.
      */
+    // When running instrumented tests (2 APK in a single process) Thread class loader is empty.
+    @SuppressWarnings("PMD.UseProperClassLoader")
     protected ParcelableCard(final Parcel in) {
         mCard = new Card(ParcelableDeck.get(in.readParcelable(
-                Thread.currentThread().getContextClassLoader())));
+                ParcelableCard.class.getClassLoader())));
         mCard.setKey(in.readString());
         mCard.setBack(in.readString());
         mCard.setFront(in.readString());
