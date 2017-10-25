@@ -27,9 +27,11 @@ import android.text.InputType;
 import android.view.View;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.hamcrest.BaseMatcher;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.junit.After;
 import org.junit.Before;
@@ -39,6 +41,7 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -51,9 +54,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 
 /**
@@ -84,12 +90,20 @@ public class LearningTest {
         onView(withId(R.id.back_side_text)).check(matches(withText("")));
     }
 
-    /*private void changeDeckType(final String deckType) {
-        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+    private void changeDeckType(final DeckType dType) {
+        Context context = mActivityRule.getActivity().getApplicationContext();
+        String deckType = context.getResources()
+                .getStringArray(R.array.deck_type_spinner)[dType.ordinal()];
+        onView(CoreMatchers.allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(deckType))).perform(click());
-    }*/
+        // Spinner doesn't always open.
+        onView(withId(R.id.deck_type_spinner)).perform(click());
+        onData(CoreMatchers.allOf(is(instanceOf(String.class)), is(deckType))).perform(click());
+        onView(withId(R.id.deck_type_spinner))
+                .check(matches(withSpinnerText(is(deckType))));
+        pressBack();
+    }
 
     @Before
     public void createDeck() {
@@ -100,7 +114,7 @@ public class LearningTest {
         onView(withText(R.string.add)).perform(click());
     }
 
-    /*@Test
+    @Test
     public void learnGermanCards() {
         String front1 = "mother";
         String back1 = "die Mutter";
@@ -113,19 +127,20 @@ public class LearningTest {
         createCard(front3, back3);
         pressBack();
         // Change deckType
-        changeDeckType(DeckType.GERMAN.name());
+
+        changeDeckType(DeckType.GERMAN);
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("3"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
+                .perform(click()));
         // Check the first card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front2)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
@@ -133,16 +148,16 @@ public class LearningTest {
         onView(withId(R.id.textBackCardView)).check(matches(withText(back2)));
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front3)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
         onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
         onView(withId(R.id.to_repeat_button)).perform(click());
-    }*/
+    }
 
-    /*@Test
+    @Test
     public void learnSwissCards() {
         String front1 = "mother";
         String back1 = "d Muetter";
@@ -155,19 +170,19 @@ public class LearningTest {
         createCard(front3, back3);
         pressBack();
         // Change deckType
-        changeDeckType(DeckType.SWISS.name());
+        changeDeckType(DeckType.SWISS);
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("3"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
+                .perform(click()));
         // Check the first card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front2)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
@@ -175,14 +190,14 @@ public class LearningTest {
         onView(withId(R.id.textBackCardView)).check(matches(withText(back2)));
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front3)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
         onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
         onView(withId(R.id.to_repeat_button)).perform(click());
-    }*/
+    }
 
     @Test
     public void learnBasicCard() {
@@ -268,38 +283,29 @@ public class LearningTest {
         onView(withText(R.string.delete)).perform(click());
     }
 
-    /*@Test
+    @Test
     public void basicDeckType() {
         String front1 = "mother";
         String back1 = "d Muetter";
         createCard(front1, back1);
         pressBack();
         // Change deckType
-        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click());
-        onView(withText(R.string.cards_type)).perform(click());
-        onView(withText(R.string.basic_cards_type)).check(matches(not(isClickable())));
-        onView(withText(R.string.swissgerman_cards_type)).perform(click());
-        // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click());
+        changeDeckType(DeckType.SWISS);
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click()));
         // Check the first card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
         pressBack();
         // Change deckType
-        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click());
-        onView(withText(R.string.cards_type)).perform(click());
-        onView(withText(R.string.swissgerman_cards_type)).check(matches(not(isClickable())));
-        onView(withText(R.string.basic_cards_type)).perform(click());
+        changeDeckType(DeckType.BASIC);
         // Start Learning Activity
-        waitView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click());
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click()));
         // Check the first card
-        waitView(withId(R.id.textFrontCardView)).check(matches(withText(front1)));
+        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
-    }*/
+    }
 
     @After
     public void deleteDeck() {

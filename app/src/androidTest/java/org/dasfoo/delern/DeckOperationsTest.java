@@ -18,20 +18,23 @@
 
 package org.dasfoo.delern;
 
+import android.content.Context;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -45,11 +48,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.ViewMatchers.first;
 import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class DeckOperationsTest {
@@ -165,41 +171,50 @@ public class DeckOperationsTest {
         deleteDeck(newDeckName);
     }
 
-   /* @Test
+    @Test
     public void addDeckToChangeDeckTypeToGermanAndDelete() {
-        addDeckToChangeDeckType(DeckType.GERMAN.name());
+        Context context = mActivityRule.getActivity().getApplicationContext();
+        String swissDeckType = context.getResources()
+                .getStringArray(R.array.deck_type_spinner)[DeckType.GERMAN.ordinal()];
+        addDeckToChangeDeckType(swissDeckType);
     }
 
     @Test
     public void addDeckToChangeDeckTypeToSwissAndDelete() {
-        addDeckToChangeDeckType(DeckType.SWISS.name());
+        Context context = mActivityRule.getActivity().getApplicationContext();
+        String swissDeckType = context.getResources()
+                .getStringArray(R.array.deck_type_spinner)[DeckType.SWISS.ordinal()];
+        addDeckToChangeDeckType(swissDeckType);
     }
 
     public void addDeckToChangeDeckType(final String deckType) {
         String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
-        waitView(withId(R.id.fab)).perform(click());
+        waitView(() -> onView(withId(R.id.fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
         onView(withText(R.string.add)).perform(click());
         onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed()))
                 .perform(closeSoftKeyboard());
         pressBack();
-        waitView(withId(R.id.fab)).check(matches(isDisplayed()));
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         // Check that deck was created with 1 cards
-        waitView(withText(deckName)).check(matches(hasSibling(withText("0"))));
+        waitView(() -> onView(withText(deckName)).check(matches(hasSibling(withText("0")))));
         onView(withId(R.id.empty_recyclerview_message)).check(matches(not(isDisplayed())));
 
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click());
         onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(withId(R.id.deck_type_spinner))
-                .check(matches(withSpinnerText(is(DeckType.BASIC.name()))));
+        waitView(() -> onView(withId(R.id.deck_type_spinner))
+                .check(matches(withSpinnerText(is("Basic")))));
         // Spinner doesn't always open.
         onView(withId(R.id.deck_type_spinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(deckType))).perform(click());
         onView(withId(R.id.deck_type_spinner))
                 .check(matches(withSpinnerText(is(deckType))));
+        // Check that deckType was changed
+        waitView(() -> onView(withId(R.id.deck_type_spinner))
+                .check(matches(withSpinnerText(is(deckType)))));
         pressBack();
         deleteDeck(deckName);
-    }*/
+    }
 }
