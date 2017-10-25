@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         // TODO(dotodoom): Move these into module-specific build.gradle and use new Gradle syntax.
-        classpath 'com.android.tools.build:gradle:3.0.0-rc2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
 
         classpath 'com.github.triplet.gradle:play-publisher:1.2.0'
         classpath 'com.google.gms:google-services:3.1.0'
