@@ -28,6 +28,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Patterns;
@@ -42,6 +44,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
@@ -69,6 +72,8 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ AutoCompleteTextView mPersonData;
     @BindView(R.id.sharing_permissions_spinner)
     /* default */ Spinner mSharingPermissionsSpinner;
+    @BindView(R.id.recycler_view)
+    /* default */ RecyclerView mRecyclerView;
     private Deck mDeck;
     private boolean mValidInput;
 
@@ -97,13 +102,21 @@ public class ShareDeckActivity extends AppCompatActivity {
         mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(mDeck.getName());
         ButterKnife.bind(this);
+
+        mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
+        setAutoCompleteViewSettings();
+
+        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+                .build());
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
-        setAutoCompleteViewSettings();
+        mRecyclerView.setAdapter(new UserDeckAccessRecyclerViewAdapter());
     }
 
     private void setAutoCompleteViewSettings() {

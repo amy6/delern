@@ -63,6 +63,15 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
         </LinearLayout>
 
+        <TextView
+            style="@style/SecondaryText"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/who_has_access_textview"/>
+
+        <include layout="@layout/recycler_view_layout" />
+
     </LinearLayout>
 
 </LinearLayout>

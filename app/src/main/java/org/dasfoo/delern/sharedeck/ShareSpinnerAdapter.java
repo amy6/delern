@@ -34,6 +34,7 @@ import org.dasfoo.delern.R;
 /**
  * Adapter for Spinner that combines text and image.
  */
+// TODO(ksheremet): sent param of spinner in constructor.
 public class ShareSpinnerAdapter extends ArrayAdapter<String> {
     private final String[] mContentArray;
     private final Integer[] mImageArray = {R.drawable.ic_create_black_24dp,

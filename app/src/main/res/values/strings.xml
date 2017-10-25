@@ -64,6 +64,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string-array name="choose_contact_autocomplete">
         <item>Choose from Contacts…</item>
     </string-array>
+    <string name="who_has_access_textview">Who has access</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -103,5 +104,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="markdown_textview">Markdown</string>
     <string name="off_switch_text">OFF</string>
     <string name="on_switch_text">ON</string>
+    <string name="round_shape_image_contentdescription">Round shaped photo of user who have access to deck</string>
 
 </resources>

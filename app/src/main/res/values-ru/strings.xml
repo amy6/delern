@@ -65,6 +65,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string-array name="choose_contact_autocomplete">
         <item>Выбрать из Контактов…</item>
     </string-array>
+    <string name="who_has_access_textview">У кого есть доступ</string>
+    <string name="round_shape_image_contentdescription">Фотография пользователя, который имеет доступ к списку карточек</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
