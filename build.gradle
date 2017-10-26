@@ -36,9 +36,9 @@ task clean(type: Delete) {
 
 ext {
     firebaseVersion = '11.4.2'
-    sdkVersion = 26
-    supportVersion = "${sdkVersion}.1.0"
-    toolsVersion = "${sdkVersion}.0.2"
+    sdkVersion = 27
+    supportVersion = "${sdkVersion}.0.0"
+    toolsVersion = "${sdkVersion}.0.0"
     slf4jVersion = '1.7.25'
     rxJavaVersion = '2.1.2'
     commonmarkVersion = '0.9.0'
