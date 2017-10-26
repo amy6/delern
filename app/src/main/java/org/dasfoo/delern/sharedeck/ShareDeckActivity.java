@@ -50,8 +50,11 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
+import org.dasfoo.delern.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +62,7 @@ import butterknife.ButterKnife;
 /**
  * Handles sharing a deck with users.
  */
-public class ShareDeckActivity extends AppCompatActivity {
+public class ShareDeckActivity extends AppCompatActivity implements IShareDeckView {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivity.class);
 
@@ -76,6 +79,9 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ RecyclerView mRecyclerView;
     private Deck mDeck;
     private boolean mValidInput;
+
+    //TODO: Dagger2
+    private ShareDeckActivityPresenter mPresenter;
 
     /**
      * Method starts ShareDeckActivity.
@@ -111,12 +117,16 @@ public class ShareDeckActivity extends AppCompatActivity {
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mPresenter = new ShareDeckActivityPresenter(this, mDeck);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mRecyclerView.setAdapter(new UserDeckAccessRecyclerViewAdapter());
+        mRecyclerView.setAdapter(
+                new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout, mDeck));
+
     }
 
     private void setAutoCompleteViewSettings() {
@@ -251,5 +261,9 @@ public class ShareDeckActivity extends AppCompatActivity {
         );
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    @Override
+    public void updateUserAccessInfo(Map<User, String> users) {
     }
 }

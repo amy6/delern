@@ -78,7 +78,6 @@ public class ShareSpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(final int position, final View convertView,
                         @NonNull final ViewGroup parent) {
-        //return getCustomView(position, convertView, parent);
         ImageView v = new ImageView(parent.getContext());
         v.setImageResource(mImageArray[position]);
         return v;

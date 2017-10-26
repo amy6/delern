@@ -18,62 +18,46 @@
 
 package org.dasfoo.delern.sharedeck;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by katarina on 10/24/17.
- */
-
 public class UserDeckAccessRecyclerViewAdapter
-        extends RecyclerView.Adapter<UserDeckAccessRecyclerViewAdapter.ViewHolder> {
+        extends FirebaseRecyclerAdapter<DeckAccess, UserDeckAccessRecyclerViewAdapter.ViewHolder> {
 
-    private Context mContext;
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(UserDeckAccessRecyclerViewAdapter.class);
 
-    private final String[] mName = {"Katarina Sheremet",
-            "Artem Sheremet",
-    };
 
-    private final String[] mEmail = {"kate@sheremet.ch",
-            "artem@sheremet.ch",
-    };
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        mContext = parent.getContext();
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_deck_access_layout, parent, false));
+    public UserDeckAccessRecyclerViewAdapter(final int modelLayout, final Deck deck) {
+        super(new FirebaseSnapshotParser<>(DeckAccess.class, deck),
+                modelLayout, ViewHolder.class, deck.getChildReference(DeckAccess.class));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mNameTextView.setText(mName[position]);
-        holder.mEmaiTextView.setText(mEmail[position]);
-        holder.mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(mContext));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getItemCount() {
-        return mName.length;
+    @SuppressWarnings("CheckReturnValue")
+    protected void populateViewHolder(ViewHolder viewHolder, DeckAccess deckAccess, int position) {
+        deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)
+                .subscribe((final User user) -> {
+                    LOGGER.debug("Adapter" + user.toString());
+                    viewHolder.mNameTextView.setText(user.getName());
+                    viewHolder.mSharingPermissionsSpinner
+                            .setAdapter(new ShareSpinnerAdapter(viewHolder.itemView.getContext()));
+                });
     }
 
     /**
@@ -84,8 +68,6 @@ public class UserDeckAccessRecyclerViewAdapter
     /* default */ Spinner mSharingPermissionsSpinner;
         @BindView(R.id.user_name_textview)
     /* default */ TextView mNameTextView;
-        @BindView(R.id.user_email_textview)
-    /* default */ TextView mEmaiTextView;
 
         /**
          * Constructor for one item of recyclerview.
