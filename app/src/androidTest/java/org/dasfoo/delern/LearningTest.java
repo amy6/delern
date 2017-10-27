@@ -127,7 +127,6 @@ public class LearningTest {
         createCard(front3, back3);
         pressBack();
         // Change deckType
-
         changeDeckType(DeckType.GERMAN);
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
@@ -159,6 +158,7 @@ public class LearningTest {
 
     @Test
     public void learnSwissCards() {
+        Context context = mActivityRule.getActivity().getApplicationContext();
         String front1 = "mother";
         String back1 = "d Muetter";
         String front2 = "father";
@@ -177,65 +177,6 @@ public class LearningTest {
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
-        onView(withId(R.id.to_know_button)).perform(click());
-        // Check the second card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        // Check back side of card
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back2)));
-        onView(withId(R.id.to_repeat_button)).perform(click());
-        // Check the third card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        // Check back side of card
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
-        onView(withId(R.id.to_repeat_button)).perform(click());
-    }
-
-    @Test
-    public void learnBasicCard() {
-        String front = "mother";
-        String back = "die Mutter";
-        createCard(front, back);
-
-        pressBack();
-        // Start Learning Activity
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click()));
-        // Check the card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back)));
-        onView(withId(R.id.to_know_button)).perform(click());
-    }
-
-    @Test
-    public void learnBasicCardsCheckingWatchedProgress() {
-        Context context = mActivityRule.getActivity().getApplicationContext();
-        String front1 = "card1";
-        String back1 = "backCard1";
-        String front2 = "card2";
-        String back2 = "backCard2";
-        String front3 = "card3";
-        String back3 = "backCard3";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
-        pressBack();
-        // Start Learning Activity
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
-                .perform(click()));
-        // Check the first card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         0))));
@@ -245,6 +186,7 @@ public class LearningTest {
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
+        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         1))));
@@ -255,6 +197,7 @@ public class LearningTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
+        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         2))));

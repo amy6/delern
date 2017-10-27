@@ -79,20 +79,6 @@ public class AddUpdateCardTest {
     }
 
     @Test
-    public void createCard() {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText("front"));
-        onView(withId(R.id.back_side_text)).perform(typeText("back"), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
-        pressBack();
-        // Check that deck with 1 card was created
-        waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
-    }
-
-    @Test
     public void createReversedCard() {
         waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
         onView(withId(R.id.front_side_text)).perform(typeText("front"));
