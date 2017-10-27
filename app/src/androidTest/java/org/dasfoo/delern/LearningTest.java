@@ -51,6 +51,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
@@ -60,6 +61,7 @@ import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 /**
@@ -248,6 +250,41 @@ public class LearningTest {
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
         onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
+    }
+
+    @Test
+    public void createMarkdownCardToLearn() {
+        String frontCard = "**bold**";
+        String frontShouldBeShown = "bold\n\n";
+        String backCard = "*italic*";
+        String backShouldBeShown = "italic\n\n";
+        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
+        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
+        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
+        onView(withId(R.id.add_card_to_db)).perform(click());
+        // Check that fields are empty after adding card
+        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")));
+        pressBack();
+        waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
+        // Set markdown in settings
+        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click());
+        onView(withText(R.string.deck_settings_menu)).perform(click());
+        waitView(() -> onView(withId(R.id.on_off_switch)).check(matches(not(isChecked())))
+                .perform(click()));
+        onView(withId(R.id.on_off_switch)).check(matches(isChecked()));
+        pressBack();
+        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
+                .perform(click()));
+        // Check the front side of markdown
+        waitView(() -> onView(withId(R.id.textFrontCardView))
+                .check(matches(withText(frontShouldBeShown))));
+        // Flip card
+        onView(withId(R.id.turn_card_button)).perform(click());
+        // Check the back side of markdown
+        waitView(() -> onView(withId(R.id.textBackCardView))
+                .check(matches(withText(backShouldBeShown))));
     }
 
     @After
