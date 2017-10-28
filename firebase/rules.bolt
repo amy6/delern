@@ -20,11 +20,8 @@ type User {
 isCurrentUser(uid) { auth !== null && auth.uid === uid }
 
 path /users/{userId} is User {
-  read() { isCurrentUser(userId) }
-  write() { isCurrentUser(userId) }
-}
-path /users/{userId}/name {
   read() { auth !== null }
+  write() { isCurrentUser(userId) }
 }
 
 type AccessString extends String {
