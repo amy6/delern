@@ -30,6 +30,7 @@ import org.slf4j.helpers.MessageFormatter;
 class Logger extends MarkerIgnoringBase {
 
     private static final int MAX_TAG_LENGTH = 23;
+    private static final int LOGGER_STACKTRACE_OFFSET = 3;
 
     private final String mTag;
 
@@ -271,11 +272,30 @@ class Logger extends MarkerIgnoringBase {
         }
     }
 
+    /**
+     * Wraps throwable into another throwable to provide current stacktrace.
+     *
+     * @param t original throwable.
+     * @return a Throwable that has cause of t and current stacktrace.
+     */
+    private static Throwable wrapThrowable(final Throwable t) {
+        Throwable wrappedThrowable = new Throwable(t);
+        StackTraceElement[] currentStackTrace = wrappedThrowable.getStackTrace();
+        StackTraceElement[] stackTraceWithoutLogger =
+                new StackTraceElement[currentStackTrace.length - LOGGER_STACKTRACE_OFFSET];
+        System.arraycopy(currentStackTrace, LOGGER_STACKTRACE_OFFSET, stackTraceWithoutLogger,
+                0, stackTraceWithoutLogger.length);
+        wrappedThrowable.setStackTrace(stackTraceWithoutLogger);
+        return wrappedThrowable;
+    }
+
     private void exception(final int level, final Throwable t) {
         // Wrap t into another throwable to preserve both current and exception stack traces.
-        Crashlytics.logException(new Throwable(t));
+        Throwable wrappedThrowable = wrapThrowable(t);
+
+        Crashlytics.logException(wrappedThrowable);
         if (Log.isLoggable(mTag, level)) {
-            Log.println(level, mTag, "Exception: " + Log.getStackTraceString(t));
+            Log.println(level, mTag, "Exception: " + Log.getStackTraceString(wrappedThrowable));
         }
     }
 }
