@@ -42,7 +42,7 @@ import io.reactivex.functions.Function;
  * Base class for models, implementing Firebase functionality.
  */
 public class Model {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Model.class);
 
     @Exclude
     private String mKey;
@@ -113,7 +113,7 @@ public class Model {
                         @Override
                         public void onCancelled(final DatabaseError databaseError) {
                             // On DatabaseError (e.g. permission no longer there) this isn't called.
-                            LOGGER.error("Listener at {} has been cancelled", query,
+                            LOGGER.error("Listener at {} has been cancelled", query.getRef(),
                                     databaseError.toException());
                             emitter.onError(databaseError.toException());
                         }
