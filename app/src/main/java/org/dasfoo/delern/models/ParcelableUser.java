@@ -66,7 +66,6 @@ public class ParcelableUser implements Parcelable {
         mUser = new User(FirebaseDatabase.getInstance());
         mUser.setKey(in.readString());
         mUser.setName(in.readString());
-        mUser.setEmail(in.readString());
         mUser.setPhotoUrl(in.readString());
     }
 
@@ -99,7 +98,6 @@ public class ParcelableUser implements Parcelable {
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(mUser.getKey());
         dest.writeString(mUser.getName());
-        dest.writeString(mUser.getEmail());
         dest.writeString(mUser.getPhotoUrl());
     }
 }

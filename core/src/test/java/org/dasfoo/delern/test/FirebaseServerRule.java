@@ -130,7 +130,6 @@ public class FirebaseServerRule extends ExternalResource {
                 userId)));
         user.setKey(userId);
         user.setName("Bob " + userId);
-        user.setEmail("bob-" + userId + "@example.com");
         return user;
     }
 }

@@ -33,7 +33,6 @@ public final class User extends Model {
     private FirebaseDatabase mDatabase;
 
     private String name;
-    private String email;
     private String photoUrl;
 
     /**
@@ -72,24 +71,6 @@ public final class User extends Model {
     }
 
     /**
-     * Getter of email of user.
-     *
-     * @return email of user.
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * Setter for email of user.
-     *
-     * @param email email of user.
-     */
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    /**
      * Getter for photo url of user.
      *
      * @return photo url of user.
@@ -114,7 +95,6 @@ public final class User extends Model {
     public String toString() {
         return "User{" + super.toString() +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
                 '}';
     }
@@ -196,9 +176,6 @@ public final class User extends Model {
         if (!name.equals(user.name)) {
             return false;
         }
-        if (!email.equals(user.email)) {
-            return false;
-        }
         if (photoUrl != null) {
             return photoUrl.equals(user.photoUrl);
         }
@@ -212,7 +189,6 @@ public final class User extends Model {
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + email.hashCode();
         if (photoUrl != null) {
             result = 31 * result + photoUrl.hashCode();
         }

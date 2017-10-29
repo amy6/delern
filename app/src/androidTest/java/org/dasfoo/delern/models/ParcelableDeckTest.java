@@ -45,7 +45,6 @@ public class ParcelableDeckTest {
         mUser = new User(null);
         mUser.setKey("user");
         mUser.setName("Bob");
-        mUser.setEmail("bob@example@com");
 
         mDeck = new Deck(mUser);
         mDeck.setName("test");

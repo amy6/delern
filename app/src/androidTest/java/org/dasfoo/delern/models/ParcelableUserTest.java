@@ -44,7 +44,6 @@ public class ParcelableUserTest {
         mUser = new User(null);
         mUser.setKey("user");
         mUser.setName("Bob");
-        mUser.setEmail("bob@example@com");
     }
 
     @Test

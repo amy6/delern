@@ -351,7 +351,8 @@ public class DelernMainActivity extends AppCompatActivity
     @Override
     public void updateUserProfileInfo(final User user) {
         mUserNameTextView.setText(user.getName());
-        mUserEmailTextView.setText(user.getEmail());
+        // TODO(dotdoom): fix User and make this work!
+        mUserEmailTextView.setText("");
         Glide.with(this).load(user.getPhotoUrl()).into(mProfilePhotoImageView);
     }
 

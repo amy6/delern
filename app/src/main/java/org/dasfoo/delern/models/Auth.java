@@ -83,7 +83,6 @@ public final class Auth {
             // Clear out existing object.
             sCurrentUser.setKey(null);
             sCurrentUser.setName("Signed Out");
-            sCurrentUser.setEmail(null);
             sCurrentUser.setPhotoUrl(null);
         } else {
             Crashlytics.setUserIdentifier(user.getUid());
@@ -92,10 +91,8 @@ public final class Auth {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
                 sCurrentUser.setName("Anonymous User");
-                sCurrentUser.setEmail("anonymous@example.com");
             } else {
                 sCurrentUser.setName(user.getDisplayName());
-                sCurrentUser.setEmail(user.getEmail());
                 if (user.getPhotoUrl() == null) {
                     sCurrentUser.setPhotoUrl(null);
                 } else {

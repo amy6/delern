@@ -44,7 +44,6 @@ public class ParcelableCardTest {
         User user = new User(null);
         user.setKey("user");
         user.setName("Bob");
-        user.setEmail("bob@example@com");
 
         mDeck = new Deck(user);
         mDeck.setName("test");

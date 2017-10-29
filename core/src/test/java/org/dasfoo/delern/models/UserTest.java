@@ -47,7 +47,6 @@ public class UserTest {
         User user = mUser.save().andThen((ObservableSource<User>) observer ->
                 mUser.watch(User.class).subscribe(observer)
         ).firstOrError().blockingGet();
-        assertTrue(user.getName().startsWith("Bob ")
-                && user.getEmail().startsWith("bob-"));
+        assertTrue(user.getName().startsWith("Bob "));
     }
 }

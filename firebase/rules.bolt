@@ -12,7 +12,7 @@
  */
 
 type User {
-  email: String,
+  email: String | Null,
   name: String,
   photoUrl: String | Null,
 }
@@ -28,7 +28,6 @@ type FCMToken {
   name: String,
 }
 path /fcm/{userId}/{tokenId} is FCMToken {
-  read() { isCurrentUser(userId) }
   write() { isCurrentUser(userId) }
 }
 
