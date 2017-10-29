@@ -48,10 +48,11 @@ type DeckAccess {
   access: AccessString,
 }
 
+deckAccessFor(deckId, userId) {
+  root.deck_access[deckId][userId].access
+}
 deckAccess(deckId) {
-  root.deck_access[deckId][auth.uid].access == null ?
-    root.deck_access[deckId][auth.uid] :
-    root.deck_access[deckId][auth.uid].access
+  deckAccessFor(deckId, auth.uid)
 }
 deckExisted(deckId) { prior(root.deck_access[deckId]) !== null }
 userExisted(userId) { prior(root.users[userId]) !== null }
@@ -69,7 +70,9 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
       deckExisted(deckId) ? (
         // Sharing a deck.
         prior(deckAccess(deckId)) === "owner" &&
-        deckAccess(deckId) !== "owner"
+        // Make sure access is not owner (there can be only 1 owner!), the
+        // actual allowed set of values is handled by AccessString validation.
+        deckAccessFor(deckId, sharedWithUserId) !== "owner"
       ) : (
         // Creating a new deck.
         isCurrentUser(sharedWithUserId) &&
