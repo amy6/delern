@@ -26,6 +26,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.FCMToken;
+import org.dasfoo.delern.models.User;
 
 /**
  * Created by katarina on 10/7/16.
@@ -36,17 +37,29 @@ public class DelernFirebaseInstanceIdService extends FirebaseInstanceIdService {
     private static final String DELERN_TOPIC = "delern_engage";
 
     /**
-     * The Application's current Instance ID token is no longer valid
-     * and thus a new one must be requested.
+     * Saves token to the database, for our Cloud functions to be able to deliver notifications.
+     */
+    public static void saveCurrentToken() {
+        User currentUser = Auth.getCurrentUser();
+        // This code may run before user is authenticated; if that's the case, Auth will update the
+        // token.
+        if (currentUser.exists()) {
+            // Save token to the database for external notifications.
+            // NOTE: token must be kept private!
+            FCMToken token = new FCMToken(currentUser);
+            token.setName(Build.MANUFACTURER + " " + Build.MODEL);
+            token.setKey(FirebaseInstanceId.getInstance().getToken());
+            token.save();
+        }
+    }
+
+    /**
+     * The Application's current Instance ID token is no longer valid and thus a new one must be
+     * requested.
      */
     @Override
     public void onTokenRefresh() {
-        // Save token to the database for external notifications.
-        // NOTE: token must be kept private!
-        FCMToken token = new FCMToken(Auth.getCurrentUser());
-        token.setName(Build.MANUFACTURER + " " + Build.MODEL);
-        token.setKey(FirebaseInstanceId.getInstance().getToken());
-        token.save();
+        saveCurrentToken();
 
         // Once a token is generated, we subscribe to topic.
         FirebaseMessaging.getInstance().subscribeToTopic(DELERN_TOPIC);

@@ -26,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.dasfoo.delern.notifications.DelernFirebaseInstanceIdService;
+
 /**
  * A class to handle authentication with Firebase.
  */
@@ -101,6 +103,7 @@ public final class Auth {
                 }
             }
             sCurrentUser.save();
+            DelernFirebaseInstanceIdService.saveCurrentToken();
         }
     }
 
