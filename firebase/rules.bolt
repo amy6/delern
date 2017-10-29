@@ -101,7 +101,7 @@ type Deck {
   deckType: String,
   category: String | Null,
   accepted: TransitionToTrueOnlyBoolean,
-  lastSyncAt: Number,
+  lastSyncAt: Number | Null,
   markdown: Boolean | Null,
 }
 
@@ -136,7 +136,7 @@ type SetOnceTimestamp extends Number {
 type Card {
   front: String,
   back: String,
-  createdAt: SetOnceTimestamp,
+  createdAt: SetOnceTimestamp | Null,
 }
 
 path /cards/{deckId} {

@@ -20,7 +20,6 @@ package org.dasfoo.delern.models;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
-import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.dasfoo.delern.util.MarkdownParser;
@@ -47,7 +46,6 @@ public class Card extends Model {
 
     private String back;
     private String front;
-    private Object createdAt;
 
     /**
      * An empty constructor is required for Firebase deserialization.
@@ -63,9 +61,6 @@ public class Card extends Model {
      */
     public Card(final Deck parent) {
         super(parent, null);
-        // This field is used to sync other people's decks, so must be the server value
-        // at the time this reaches Firebase server.
-        this.createdAt = ServerValue.TIMESTAMP;
     }
 
     /**
@@ -75,9 +70,6 @@ public class Card extends Model {
      */
     public Card(final ScheduledCard parent) {
         super(parent, null);
-        // This field is used to sync other people's decks, so must be the server value
-        // at the time this reaches Firebase server.
-        this.createdAt = ServerValue.TIMESTAMP;
     }
 
     /**
@@ -247,24 +239,6 @@ public class Card extends Model {
     }
 
     /**
-     * Getter for time im milliseconds when card should be repeated in the next time.
-     *
-     * @return time in milliseconds when to repeat card.
-     */
-    public Object getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * Setter for time im milliseconds when card should be repeated in the next time.
-     *
-     * @param createdAt time in milliseconds when to repeat card.
-     */
-    public void setCreatedAt(final Object createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -272,7 +246,6 @@ public class Card extends Model {
         return "Card{" + super.toString() +
                 ", back='" + back + '\'' +
                 ", front='" + front + '\'' +
-                ", createdAt=" + createdAt +
                 '}';
     }
 
