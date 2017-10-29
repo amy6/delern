@@ -57,9 +57,21 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Deck Sharing -->
     <string name="sharing_imageview_description">Sharing options</string>
     <string name="share_people_textview">People</string>
-    <string-array name="share_permissions_spinner">
-        <item>Can Edit</item>
-        <item>Can View</item>
+    <string name="can_edit_text">Can Edit</string>
+    <string name="can_view_text">Can View</string>
+    <string name="no_access_text">No Access</string>
+    <string name="owner_access_text">Owner</string>
+    <string-array name="share_permissions_spinner_text">
+        <item>@string/can_edit_text</item>
+        <item>@string/can_view_text</item>
+    </string-array>
+    <string-array name="user_permissions_spinner_text">
+        <item>@string/can_edit_text</item>
+        <item>@string/can_view_text</item>
+        <item>@string/no_access_text</item>
+    </string-array>
+    <string-array name="owner_access_spinner_text">
+        <item>@string/owner_access_text</item>
     </string-array>
     <string-array name="choose_contact_autocomplete">
         <item>Choose from Contacts…</item>

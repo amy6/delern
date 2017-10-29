@@ -19,6 +19,7 @@
 package org.dasfoo.delern.sharedeck;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -34,22 +35,21 @@ import org.dasfoo.delern.R;
 /**
  * Adapter for Spinner that combines text and image.
  */
-// TODO(ksheremet): sent param of spinner in constructor.
 public class ShareSpinnerAdapter extends ArrayAdapter<String> {
     private final String[] mContentArray;
-    private final Integer[] mImageArray = {R.drawable.ic_create_black_24dp,
-            R.drawable.ic_can_view_black_24dp};
+    private final TypedArray mImageArray;
 
     /**
      * Constructor. Initializes content of spinner.
      *
      * @param context context.
      */
-    public ShareSpinnerAdapter(@NonNull final Context context) {
+    public ShareSpinnerAdapter(@NonNull final Context context, final int textSpinner,
+                               final int imgSpinner) {
         super(context, R.layout.share_spinner_layout, R.id.sharingTextView, context.getResources()
-                .getStringArray(R.array.share_permissions_spinner));
-        this.mContentArray = context.getResources()
-                .getStringArray(R.array.share_permissions_spinner);
+                .getStringArray(textSpinner));
+        this.mContentArray = context.getResources().getStringArray(textSpinner);
+        this.mImageArray = context.getResources().obtainTypedArray(imgSpinner);
     }
 
     /**
@@ -65,8 +65,10 @@ public class ShareSpinnerAdapter extends ArrayAdapter<String> {
         TextView textView = row.findViewById(R.id.sharingTextView);
         textView.setText(mContentArray[position]);
 
-        ImageView imageView = row.findViewById(R.id.sharingImageView);
-        imageView.setImageResource(mImageArray[position]);
+        if (position < mImageArray.length()) {
+            ImageView imageView = row.findViewById(R.id.sharingImageView);
+            imageView.setImageResource(mImageArray.getResourceId(position, 0));
+        }
 
         return row;
     }
@@ -78,8 +80,14 @@ public class ShareSpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(final int position, final View convertView,
                         @NonNull final ViewGroup parent) {
-        ImageView v = new ImageView(parent.getContext());
-        v.setImageResource(mImageArray[position]);
-        return v;
+        if (position < mImageArray.length()) {
+            ImageView imageView = new ImageView(parent.getContext());
+            imageView.setImageResource(mImageArray.getResourceId(position, 0));
+            return imageView;
+        } else {
+            TextView textView = new TextView(parent.getContext());
+            textView.setText(mContentArray[position]);
+            return textView;
+        }
     }
 }

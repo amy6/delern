@@ -26,12 +26,9 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import org.dasfoo.delern.R;
-import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,24 +36,37 @@ import butterknife.ButterKnife;
 public class UserDeckAccessRecyclerViewAdapter
         extends FirebaseRecyclerAdapter<DeckAccess, UserDeckAccessRecyclerViewAdapter.ViewHolder> {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(UserDeckAccessRecyclerViewAdapter.class);
+    private final ShareDeckActivityPresenter mPresenter;
 
 
-    public UserDeckAccessRecyclerViewAdapter(final int modelLayout, final Deck deck) {
-        super(new FirebaseSnapshotParser<>(DeckAccess.class, deck),
-                modelLayout, ViewHolder.class, deck.getChildReference(DeckAccess.class));
+    public UserDeckAccessRecyclerViewAdapter(final int modelLayout,
+                                             final ShareDeckActivityPresenter presenter) {
+        super(new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()),
+                modelLayout, ViewHolder.class,
+                presenter.getDeck().getChildReference(DeckAccess.class));
+        this.mPresenter = presenter;
     }
 
     @Override
     @SuppressWarnings("CheckReturnValue")
-    protected void populateViewHolder(ViewHolder viewHolder, DeckAccess deckAccess, int position) {
+    protected void populateViewHolder(final ViewHolder viewHolder, final DeckAccess deckAccess,
+                                      final int position) {
         deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)
                 .subscribe((final User user) -> {
-                    LOGGER.debug("Adapter" + user.toString());
                     viewHolder.mNameTextView.setText(user.getName());
-                    viewHolder.mSharingPermissionsSpinner
-                            .setAdapter(new ShareSpinnerAdapter(viewHolder.itemView.getContext()));
+                    if ("owner".equals(deckAccess.getAccess())) {
+                        viewHolder.mSharingPermissionsSpinner
+                                .setAdapter(new ShareSpinnerAdapter(viewHolder.itemView.getContext(),
+                                        R.array.owner_access_spinner_text,
+                                        R.array.owner_access_spinner_img));
+                    } else {
+                        viewHolder.mSharingPermissionsSpinner
+                                .setAdapter(new ShareSpinnerAdapter(viewHolder.itemView.getContext(),
+                                        R.array.user_permissions_spinner_text,
+                                        R.array.share_permissions_spinner_img));
+                        viewHolder.mSharingPermissionsSpinner
+                                .setSelection(mPresenter.getDefaultUserAccess(deckAccess));
+                    }
                 });
     }
 

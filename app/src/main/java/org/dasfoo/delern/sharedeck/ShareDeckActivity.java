@@ -49,12 +49,10 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableDeck;
-import org.dasfoo.delern.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,7 +107,8 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         this.setTitle(mDeck.getName());
         ButterKnife.bind(this);
 
-        mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this));
+        mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this,
+                R.array.share_permissions_spinner_text, R.array.share_permissions_spinner_img));
         setAutoCompleteViewSettings();
 
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
@@ -119,14 +118,14 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mPresenter = new ShareDeckActivityPresenter(this, mDeck);
+        mRecyclerView.setAdapter(
+                new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout,
+                        mPresenter));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mRecyclerView.setAdapter(
-                new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout, mDeck));
-
     }
 
     private void setAutoCompleteViewSettings() {
@@ -256,14 +255,32 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
                     Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
+                    shareDeck(response);
                 },
-                error -> LOGGER.error("That didn't work!")
+                error -> LOGGER.error("That didn't work!", error)
         );
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
-    @Override
-    public void updateUserAccessInfo(Map<User, String> users) {
+    // TODO: Move to presenter
+    @SuppressWarnings("CheckReturnValue")
+    private void shareDeck(String uid) {
+        int itemPosition = mSharingPermissionsSpinner.getSelectedItemPosition();
+        DeckAccess deckAccess = new DeckAccess(mDeck);
+        deckAccess.setKey(uid);
+        if (itemPosition == 0) {
+            Toast.makeText(this, "Can Edit", Toast.LENGTH_SHORT).show();
+            deckAccess.setAccess("write");
+        }
+        if (itemPosition == 1) {
+            Toast.makeText(this, "Can View", Toast.LENGTH_SHORT).show();
+            deckAccess.setAccess("read");
+        }
+
+        // TODO(ksheremet): write Deck for the new user.
+
+        deckAccess.save().doOnComplete(() ->
+                Toast.makeText(this, "Shared", Toast.LENGTH_SHORT).show());
     }
 }

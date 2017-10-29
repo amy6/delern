@@ -1,6 +1,7 @@
 package org.dasfoo.delern.sharedeck;
 
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,59 +12,22 @@ import org.slf4j.LoggerFactory;
 public class ShareDeckActivityPresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivityPresenter.class);
-    private IShareDeckView mView;
-    private Deck mDeck;
+    private final IShareDeckView mView;
+    private final Deck mDeck;
 
     public ShareDeckActivityPresenter(final IShareDeckView view, final Deck deck) {
         this.mView = view;
         this.mDeck = deck;
     }
 
-    /*//TODO(ksheremet): Refactor.
-    public void getUsersUsingDeck() {
-        ArrayList<String> ids;
-        Map<User, String> users = new HashMap<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("deck_access")
-                .child(mDeck.getKey());
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot data: dataSnapshot.getChildren()) {
-                    String uid = data.getKey();
-                    String access = data.getValue(String.class);
-                    LOGGER.debug("User id" + uid);
-                    LOGGER.debug("User access" + access);
-                    User user = getUserById(uid);
-
-                }
-                LOGGER.debug("Users fetched:", users);
-                mView.updateUserAccessInfo(users);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    public Deck getDeck() {
+        return mDeck;
     }
 
-    //TODO: move to model
-    private User getUserById(String uid) {
-        DatabaseReference userReference = FirebaseDatabase.getInstance()
-                .getReference("users").child(uid);
-        LOGGER.debug("User inf ref" + userReference);
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                LOGGER.debug("Fetched User" + user);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return User.
-    }*/
+    public int getDefaultUserAccess(final DeckAccess deckAccess) {
+        if ("read".equals(deckAccess.getAccess())) {
+            return 1;
+        }
+        return 0;
+    }
 }
