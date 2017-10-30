@@ -21,6 +21,7 @@ package org.dasfoo.delern.listdecks;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
 
@@ -53,16 +54,20 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @SuppressWarnings("CheckReturnValue")
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
-        viewHolder.getDeckTextView().setText(deck.getName());
+        viewHolder.mDeckTextView.setText(deck.getName());
+        deck.fetchDeckAccessOfUser().subscribe((final DeckAccess deckAccess) -> {
+            viewHolder.mDeckAccess = deckAccess;
+        });
+
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
                 .subscribe((final Long cardsCount) -> {
                     if (cardsCount <= CARDS_COUNTER_LIMIT) {
-                        viewHolder.getCountToLearnTextView().setText(
+                        viewHolder.mCountToLearnTextView.setText(
                                 String.valueOf(cardsCount));
                     } else {
                         String tooManyCards = CARDS_COUNTER_LIMIT + "+";
-                        viewHolder.getCountToLearnTextView().setText(tooManyCards);
+                        viewHolder.mCountToLearnTextView.setText(tooManyCards);
                     }
                 });
         viewHolder.setOnViewClick(mOnDeckViewHolderClick);

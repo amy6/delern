@@ -19,6 +19,7 @@
 package org.dasfoo.delern.listdecks;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.DeckAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
+    /* default */ DeckAccess mDeckAccess;
     private OnDeckViewHolderClick mOnViewClick;
 
     /**
@@ -61,25 +64,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     public DeckViewHolder(final View viewHolder) {
         super(viewHolder);
         ButterKnife.bind(this, viewHolder);
-    }
-
-    /**
-     * Getter to reference to R.id.deck_text_view.
-     *
-     * @return textview of deck
-     */
-    public TextView getDeckTextView() {
-        return mDeckTextView;
-    }
-
-    /**
-     * Getter for number of cards to learn. mCountToLearnTextView references to
-     * R.id.count_to_learn_textview.
-     *
-     * @return textview with number of cards to learn
-     */
-    public TextView getCountToLearnTextView() {
-        return mCountToLearnTextView;
     }
 
     /**
@@ -119,6 +103,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
+        managePopupMenu(popup.getMenu());
         popup.show();
     }
 
@@ -146,6 +131,29 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             default:
                 LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
                 return false;
+        }
+    }
+
+    /**
+     * Disables menu settings regarding user's access.
+     * menu.getMenu(0) - Edit Cards,
+     * menu.getMenu(1) - Settings,
+     * menu.getMenu(2) - Sharing.
+     *
+     * @param menu Popup menu
+     */
+    private void managePopupMenu(final Menu menu) {
+        switch (mDeckAccess.getAccess()) {
+            case "read":
+                menu.getItem(0).setEnabled(false);
+                menu.getItem(1).setEnabled(false);
+                menu.getItem(2).setEnabled(false);
+                break;
+            case "write":
+                menu.getItem(2).setEnabled(false);
+                break;
+            default:
+                break;
         }
     }
 }

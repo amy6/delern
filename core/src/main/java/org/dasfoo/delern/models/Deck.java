@@ -127,6 +127,17 @@ public class Deck extends Model {
     }
 
     /**
+     * Fetches deckAccess of deck for current user.
+     *
+     * @return Observable
+     */
+    @Exclude
+    public Observable<DeckAccess> fetchDeckAccessOfUser() {
+        return fetchChild(getChildReference(DeckAccess.class).child(getUser().getKey()),
+                DeckAccess.class);
+    }
+
+    /**
      * Getter for name of deck.
      *
      * @return name of deck.

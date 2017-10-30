@@ -78,7 +78,7 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
     private Deck mDeck;
     private boolean mValidInput;
 
-    //TODO: Dagger2
+    //TODO(ksheremet): Dagger2
     private ShareDeckActivityPresenter mPresenter;
 
     /**
@@ -263,9 +263,9 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         queue.add(stringRequest);
     }
 
-    // TODO: Move to presenter
+    // TODO(ksheremet): Move to presenter
     @SuppressWarnings("CheckReturnValue")
-    private void shareDeck(String uid) {
+    private void shareDeck(final String uid) {
         int itemPosition = mSharingPermissionsSpinner.getSelectedItemPosition();
         DeckAccess deckAccess = new DeckAccess(mDeck);
         deckAccess.setKey(uid);
