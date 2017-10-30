@@ -123,11 +123,6 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
                         mPresenter));
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
     private void setAutoCompleteViewSettings() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line,

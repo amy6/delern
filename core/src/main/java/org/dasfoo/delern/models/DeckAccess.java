@@ -21,6 +21,10 @@ package org.dasfoo.delern.models;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
+import org.dasfoo.delern.models.helpers.MultiWrite;
+
+import io.reactivex.Completable;
+
 /**
  * Created by katarina on 2/22/17.
  * Model class for deck_access.
@@ -97,5 +101,17 @@ public class DeckAccess extends Model {
         }
 
         return super.getChildReference(childClass);
+    }
+
+    /**
+     * Remove the current deckAccess from the database.
+     *
+     * @return FirebaseTaskAdapter for the delete operation.
+     */
+    @Exclude
+    public Completable delete() {
+        return new MultiWrite()
+                .delete(this)
+                .write();
     }
 }

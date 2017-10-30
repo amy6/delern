@@ -43,6 +43,8 @@ public class ShareSpinnerAdapter extends ArrayAdapter<String> {
      * Constructor. Initializes content of spinner.
      *
      * @param context context.
+     * @param textSpinner array for initialising test information in Spinner.
+     * @param imgSpinner array for images to set in Spinner.
      */
     public ShareSpinnerAdapter(@NonNull final Context context, final int textSpinner,
                                final int imgSpinner) {
