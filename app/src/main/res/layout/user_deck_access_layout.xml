@@ -23,9 +23,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginTop="@dimen/elements_margin"
     android:layout_marginBottom="@dimen/elements_margin"
+    android:layout_marginTop="@dimen/elements_margin"
+    android:orientation="horizontal"
     android:weightSum="1">
 
     <ImageView

@@ -42,8 +42,7 @@ public class UserDeckAccessRecyclerViewAdapter
     public UserDeckAccessRecyclerViewAdapter(final int modelLayout,
                                              final ShareDeckActivityPresenter presenter) {
         super(new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()),
-                modelLayout, ViewHolder.class,
-                presenter.getDeck().getChildReference(DeckAccess.class));
+                modelLayout, ViewHolder.class, presenter.getReference());
         this.mPresenter = presenter;
     }
 
@@ -75,9 +74,9 @@ public class UserDeckAccessRecyclerViewAdapter
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.sharing_user_permissions)
-    /* default */ Spinner mSharingPermissionsSpinner;
+        /* default */ Spinner mSharingPermissionsSpinner;
         @BindView(R.id.user_name_textview)
-    /* default */ TextView mNameTextView;
+        /* default */ TextView mNameTextView;
 
         /**
          * Constructor for one item of recyclerview.

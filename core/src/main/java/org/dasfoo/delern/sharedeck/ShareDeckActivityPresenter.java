@@ -1,5 +1,7 @@
 package org.dasfoo.delern.sharedeck;
 
+import com.google.firebase.database.Query;
+
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 import org.slf4j.Logger;
@@ -29,5 +31,9 @@ public class ShareDeckActivityPresenter {
             return 1;
         }
         return 0;
+    }
+
+    public Query getReference() {
+        return mDeck.getChildReference(DeckAccess.class).orderByChild("access");
     }
 }
