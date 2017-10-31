@@ -72,7 +72,6 @@ public class ShareDeckActivityPresenter {
                 deckAccess.save();
                 break;
             case "":
-                //TODO(ksheremet): Fix permissions denied.
                 deckAccess.delete();
                 break;
             default:

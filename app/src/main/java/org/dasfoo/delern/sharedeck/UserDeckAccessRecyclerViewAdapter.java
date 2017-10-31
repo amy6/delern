@@ -44,45 +44,6 @@ public class UserDeckAccessRecyclerViewAdapter
 
     private final ShareDeckActivityPresenter mPresenter;
 
-    @SuppressWarnings("ConstructorInvokesOverridable")
-    private final AdapterView.OnItemSelectedListener mUsersPermissionsListener =
-            new AdapterView.OnItemSelectedListener() {
-
-                /**
-                 * {@inheritDoc}
-                 */
-                @Override
-                public void onItemSelected(final AdapterView<?> adapterView, final View view,
-                                           final int position, final long l) {
-                    Context context = view.getContext();
-                    String[] sharingArrayOption = context.getResources()
-                            .getStringArray(R.array.user_permissions_spinner_text);
-                    DeckAccess deckAccess = getItem(position);
-                    if (sharingArrayOption[position].equals(context
-                            .getResources()
-                            .getString(R.string.can_edit_text))) {
-                        mPresenter.changeUserPermission("write", deckAccess);
-                    }
-                    if (sharingArrayOption[position].equals(context.getResources()
-                            .getString(R.string.can_view_text))) {
-                        mPresenter.changeUserPermission("read", deckAccess);
-                    }
-                    if (sharingArrayOption[position].equals(context
-                            .getResources().getString(R.string.no_access_text))) {
-                        mPresenter.changeUserPermission("", deckAccess);
-                    }
-                }
-
-                /**
-                 * {@inheritDoc}
-                 */
-                @Override
-                public void onNothingSelected(final AdapterView<?> adapterView) {
-                    //No need for implementation
-                }
-            };
-
-
     public UserDeckAccessRecyclerViewAdapter(final int modelLayout,
                                              final ShareDeckActivityPresenter presenter) {
         super(new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()),
@@ -96,6 +57,7 @@ public class UserDeckAccessRecyclerViewAdapter
                                       final int position) {
         deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)
                 .subscribe((final User user) -> {
+                    System.out.println("User:" + user);
                     viewHolder.mNameTextView.setText(user.getName());
                     Context context = viewHolder.itemView.getContext();
                     if ("owner".equals(deckAccess.getAccess())) {
@@ -111,9 +73,48 @@ public class UserDeckAccessRecyclerViewAdapter
                         viewHolder.mSharingPermissionsSpinner
                                 .setSelection(mPresenter.getDefaultUserAccess(deckAccess));
                         viewHolder.mSharingPermissionsSpinner
-                                .setOnItemSelectedListener(mUsersPermissionsListener);
+                                .setOnItemSelectedListener(
+                                        setPermissionChangedListener(deckAccess));
                     }
                 });
+    }
+
+    private AdapterView.OnItemSelectedListener setPermissionChangedListener(
+            final DeckAccess deckAccess) {
+        return new AdapterView.OnItemSelectedListener() {
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onItemSelected(final AdapterView<?> adapterView, final View view,
+                                       final int position, final long l) {
+                Context context = view.getContext();
+                String[] sharingArrayOption = context.getResources()
+                        .getStringArray(R.array.user_permissions_spinner_text);
+                if (sharingArrayOption[position].equals(context
+                        .getResources()
+                        .getString(R.string.can_edit_text))) {
+                    mPresenter.changeUserPermission("write", deckAccess);
+                }
+                if (sharingArrayOption[position].equals(context.getResources()
+                        .getString(R.string.can_view_text))) {
+                    mPresenter.changeUserPermission("read", deckAccess);
+                }
+                if (sharingArrayOption[position].equals(context
+                        .getResources().getString(R.string.no_access_text))) {
+                    mPresenter.changeUserPermission("", deckAccess);
+                }
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void onNothingSelected(final AdapterView<?> adapterView) {
+                //No need for implementation
+            }
+        };
     }
 
     /**

@@ -146,7 +146,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         switch (mDeckAccess.getAccess()) {
             case "read":
                 menu.getItem(0).setEnabled(false);
-                menu.getItem(1).setEnabled(false);
                 menu.getItem(2).setEnabled(false);
                 break;
             case "write":
