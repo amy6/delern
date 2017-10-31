@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.models;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
 /**
@@ -55,32 +56,6 @@ public class DeckAccess extends Model {
     }
 
     /**
-     * Get the key of this DeckAccess (based on the User ID who owns the deck).
-     *
-     * @return value of the key (usually a fairly random string).
-     */
-    @Exclude
-    @Override
-    public String getKey() {
-        return getDeck().getUser().getKey();
-    }
-
-    /**
-     * No-op. Throws an exception when trying to set a key that's different from the User ID this
-     * DeckAccess belongs to.
-     *
-     * @param key value of the key (usually a fairly random string).
-     */
-    @Exclude
-    @Override
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
-    public void setKey(final String key) {
-        if (!key.equals(getKey())) {
-            throw new RuntimeException("Attempt to set key to DeckAccess (always belongs to user)");
-        }
-    }
-
-    /**
      * Getter for access of deck for the user.
      *
      * @return access of deck.
@@ -106,5 +81,21 @@ public class DeckAccess extends Model {
         return "DeckAccess{" + super.toString() +
                 ", access='" + access + '\'' +
                 '}';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Exclude
+    @Override
+    public <T> DatabaseReference getChildReference(final Class<T> childClass) {
+        if (childClass == User.class) {
+            DatabaseReference reference = getDeck().getUser()
+                    .getChildReference(childClass).child(getKey());
+            reference.keepSynced(true);
+            return reference;
+        }
+
+        return super.getChildReference(childClass);
     }
 }

@@ -105,7 +105,7 @@ public final class User extends Model {
     @Exclude
     @Override
     public DatabaseReference getReference() {
-        DatabaseReference reference = mDatabase.getReference("users").child(getKey());
+        DatabaseReference reference = getChildReference(User.class, getKey());
         reference.keepSynced(true);
         return reference;
     }
@@ -155,6 +155,10 @@ public final class User extends Model {
                     .child(getKey());
             reference.keepSynced(true);
             return reference;
+        }
+        if (childClass == User.class) {
+            // TODO(dotdoom): invalid level of child()
+            return mDatabase.getReference().child("users");
         }
 
         return super.getChildReference(childClass);
