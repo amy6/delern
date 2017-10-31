@@ -35,6 +35,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
+
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
@@ -89,6 +92,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
+    private Trace mStartTrace;
 
     /**
      * Method starts LearningCardsActivity.
@@ -108,6 +112,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mStartTrace = FirebasePerformance.getInstance().newTrace("start_learning_cards_first_deck");
+        mStartTrace.start();
+
         setContentView(R.layout.show_cards_activity);
         mLearnedCardsCount = 0;
         if (savedInstanceState != null) {
@@ -218,6 +226,9 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void showFrontSide(final String front, final boolean isHtml) {
+        // TODO(dotdoom): do not stop the trace twice.
+        mStartTrace.stop();
+
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
         if (isHtml) {

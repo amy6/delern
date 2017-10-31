@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
@@ -130,6 +131,7 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.firebase:firebase-config:$firebaseVersion"
     implementation "com.google.firebase:firebase-invites:$firebaseVersion"
+    implementation "com.google.firebase:firebase-perf:$firebaseVersion"
 
     implementation 'com.firebaseui:firebase-ui-database:2.2.0'
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
