@@ -97,6 +97,7 @@ exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}').
 	return admin.database().ref('/').update({
 		[['learning', userId, deckId].join('/')]: null,
 		[['views', userId, deckId].join('/')]: null,
+		[['decks', userId, deckId].join('/')]: null,
 	})
 });
 

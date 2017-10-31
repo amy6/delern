@@ -85,9 +85,9 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
     prior(deckAccess(deckId)) === "owner" &&
     (
       // Not deleting ownership access...
-      prior(deckAccess(deckId)) !== "owner" ||
+      prior(deckAccessFor(deckId, sharedWithUserId)) !== "owner" ||
       // ...unless the deck is also gone.
-      deckAccess(deckId) === null
+      deckAccessFor(deckId, sharedWithUserId) === null
     )
   }
 }
