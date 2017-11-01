@@ -28,9 +28,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_profile_photo"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_weight="0.1"
         android:contentDescription="@string/round_shape_image_contentdescription" />
 
@@ -39,6 +40,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:textAppearance="@android:style/TextAppearance.Medium"
         tools:ignore="selectableText" />
 

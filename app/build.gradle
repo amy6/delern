@@ -140,9 +140,8 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:2.2.0'
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    // TODO(ksheremet): update
-    //noinspection NewerVersionAvailable
-    implementation 'com.github.bumptech.glide:glide:4.0.0'
+    implementation 'com.github.bumptech.glide:glide:4.3.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.3.0'
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
