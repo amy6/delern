@@ -38,7 +38,7 @@ public class EditDeckActivityPresenter {
     /**
      * Constructor initialize presenter.
      *
-     * @param view view for callbacks.
+     * @param view       view for callbacks.
      * @param deckAccess deck to change settings.
      */
     public EditDeckActivityPresenter(final IEditDeckView view, final DeckAccess deckAccess) {
@@ -49,10 +49,8 @@ public class EditDeckActivityPresenter {
 
     /**
      * Method deletes deck.
-     *
      */
     public void deleteDeck() {
-        System.out.println("DeckAccess: " + mDeckAccess);
         if ("owner".equals(mDeckAccess.getAccess())) {
             mDeck.delete();
             return;

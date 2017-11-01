@@ -44,6 +44,13 @@ public class UserDeckAccessRecyclerViewAdapter
 
     private final ShareDeckActivityPresenter mPresenter;
 
+    /**
+     * Constructor for Adapter. Adapter places information about users, that can
+     * use a deck.
+     *
+     * @param modelLayout moder to inflate.
+     * @param presenter   presenter for performing operations.
+     */
     public UserDeckAccessRecyclerViewAdapter(final int modelLayout,
                                              final ShareDeckActivityPresenter presenter) {
         super(new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()),
@@ -70,7 +77,8 @@ public class UserDeckAccessRecyclerViewAdapter
                                         R.array.user_permissions_spinner_text,
                                         R.array.share_permissions_spinner_img));
                         viewHolder.mSharingPermissionsSpinner
-                                .setSelection(mPresenter.getDefaultUserAccess(deckAccess));
+                                .setSelection(mPresenter
+                                        .setUserAccessPositionForSpinner(deckAccess));
                         viewHolder.mSharingPermissionsSpinner
                                 .setOnItemSelectedListener(
                                         setPermissionChangedListener(deckAccess));

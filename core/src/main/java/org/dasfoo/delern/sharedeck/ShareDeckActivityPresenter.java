@@ -22,35 +22,56 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
- * Created by katarina on 10/25/17.
+ * Performs operation with a deck such as sharing, managing sharing permissions.
  */
-
 public class ShareDeckActivityPresenter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivityPresenter.class);
-    private final IShareDeckView mView;
+    private static final String READ_PERMISSION = "read";
+    private static final String WRITE_PERMISSION = "write";
+
     private final Deck mDeck;
 
-    public ShareDeckActivityPresenter(final IShareDeckView view, final Deck deck) {
-        this.mView = view;
+    /**
+     * Constructor for presenter.
+     *
+     * @param deck current deck.
+     */
+    public ShareDeckActivityPresenter(final Deck deck) {
         this.mDeck = deck;
     }
 
+    /**
+     * Getter for deck.
+     *
+     * @return deck.
+     */
     public Deck getDeck() {
         return mDeck;
     }
 
-    public int getDefaultUserAccess(final DeckAccess deckAccess) {
-        if ("read".equals(deckAccess.getAccess())) {
+    /**
+     * Returns position user access in a spinner to set.
+     * 1 - can read.
+     * 0 - can write.
+     *
+     * @param deckAccess deck access of a user
+     * @return position in a spinner.
+     */
+    public int setUserAccessPositionForSpinner(final DeckAccess deckAccess) {
+        if (READ_PERMISSION.equals(deckAccess.getAccess())) {
             return 1;
         }
         return 0;
     }
 
+    /**
+     * Reference to all users that use a deck.
+     *
+     * @return reference to all users that use a deck.
+     */
     public Query getReference() {
         return mDeck.getChildReference(DeckAccess.class).orderByChild("access");
     }
@@ -59,24 +80,33 @@ public class ShareDeckActivityPresenter {
     /**
      * Changes permissions for users that use decks.
      *
-     * @param access new permission.
+     * @param access     new permission.
      * @param deckAccess object for saving permissions.
      */
     public void changeUserPermission(final String access, final DeckAccess deckAccess) {
         deckAccess.setAccess(access);
-        switch (access) {
-            case "write":
-                deckAccess.save();
-                break;
-            case "read":
-                deckAccess.save();
-                break;
-            case "":
-                deckAccess.delete();
-                break;
-            default:
-                break;
-
+        if ("".equals(access)) {
+            deckAccess.delete();
+            return;
         }
+        if (WRITE_PERMISSION.equals(access) || READ_PERMISSION.equals(access)) {
+            deckAccess.save();
+        }
+    }
+
+    /**
+     * Shares deck with user.
+     *
+     * @param uid    id of user.
+     * @param access permissions for deck.
+     */
+    @SuppressWarnings("CheckReturnValue")
+    public void shareDeck(final String uid, final String access) {
+        DeckAccess deckAccess = new DeckAccess(mDeck);
+        deckAccess.setKey(uid);
+        deckAccess.setAccess(access);
+
+        // TODO(ksheremet): write Deck for the new user.
+        deckAccess.save();
     }
 }

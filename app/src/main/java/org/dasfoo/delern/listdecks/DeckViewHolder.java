@@ -156,7 +156,12 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         }
     }
 
-    public void setDeckAccess(DeckAccess mDeckAccess) {
-        this.mDeckAccess = mDeckAccess;
+    /**
+     * Setter for deckAccess.
+     *
+     * @param deckAccess deckAccess
+     */
+    public void setDeckAccess(final DeckAccess deckAccess) {
+        this.mDeckAccess = deckAccess;
     }
 }

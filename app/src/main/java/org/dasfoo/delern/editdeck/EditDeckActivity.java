@@ -95,19 +95,17 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
                 mPresenter.setMarkdown(isChecked);
             };
     private Deck mDeck;
-    private DeckAccess mDeckAccess;
     private boolean mInputValid;
 
     /**
      * Method starts EditDeckActivity.
      *
-     * @param context context of Activity that called this method.
-     * @param deckAccess    deck to perform operations.
+     * @param context    context of Activity that called this method.
+     * @param deckAccess deck to perform operations.
      */
     public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditDeckActivity.class);
         intent.putExtra(EditDeckActivity.DECK, new ParcelableDeckAccess(deckAccess));
-        System.out.println();
         context.startActivity(intent);
     }
 
@@ -121,10 +119,10 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        mDeckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK));
-        mDeck = mDeckAccess.getDeck();
+        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK));
+        mDeck = deckAccess.getDeck();
         this.setTitle(mDeck.getName());
-        Injector.getEditDeckActivityInjector(this, mDeckAccess).inject(this);
+        Injector.getEditDeckActivityInjector(this, deckAccess).inject(this);
         ButterKnife.bind(this);
     }
 

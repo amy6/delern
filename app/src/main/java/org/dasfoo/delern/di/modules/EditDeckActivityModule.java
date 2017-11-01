@@ -36,7 +36,7 @@ public class EditDeckActivityModule {
     /**
      * Constructor.
      *
-     * @param view view to init EditDeckActivityPresenter.
+     * @param view       view to init EditDeckActivityPresenter.
      * @param deckAccess deckAccess to init EditDeckActivityPresenter.
      */
     public EditDeckActivityModule(final IEditDeckView view,

@@ -22,6 +22,7 @@ package org.dasfoo.delern.presenters;
 import org.dasfoo.delern.editdeck.EditDeckActivityPresenter;
 import org.dasfoo.delern.editdeck.IEditDeckView;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.test.FirebaseServerRule;
@@ -58,13 +59,15 @@ public class EditDeckActivityPresenterTest {
         mDeck.setDeckType(DeckType.BASIC.name());
         mDeck.setAccepted(true);
         mDeck.create().blockingAwait();
+        DeckAccess deckAccess = new DeckAccess(mDeck);
+        deckAccess.setAccess("owner");
         mView = mock(IEditDeckView.class);
-        mPresenter = new EditDeckActivityPresenter(mView, mDeck);
+        mPresenter = new EditDeckActivityPresenter(mView, deckAccess);
     }
 
     @Test
     public void deleteDeck() {
-        mPresenter.deleteDeck(mDeck);
+        mPresenter.deleteDeck();
         List<Deck> deleted = mUser.fetchChildren(mUser.getChildReference(Deck.class), Deck.class)
                 .blockingFirst();
         assertTrue(deleted.size() == 0);

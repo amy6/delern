@@ -160,10 +160,6 @@ public final class User extends Model {
             // TODO(dotdoom): invalid level of child()
             return mDatabase.getReference().child("users");
         }
-        if (childClass == User.class) {
-            // TODO(dotdoom): invalid level of child()
-            return mDatabase.getReference().child("users");
-        }
 
         return super.getChildReference(childClass);
     }

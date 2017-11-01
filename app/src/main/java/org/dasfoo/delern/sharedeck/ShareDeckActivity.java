@@ -49,7 +49,6 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,7 @@ import butterknife.ButterKnife;
 /**
  * Handles sharing a deck with users.
  */
-public class ShareDeckActivity extends AppCompatActivity implements IShareDeckView {
+public class ShareDeckActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivity.class);
 
@@ -75,7 +74,6 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
     /* default */ Spinner mSharingPermissionsSpinner;
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
-    private Deck mDeck;
     private boolean mValidInput;
 
     //TODO(ksheremet): Dagger2
@@ -103,8 +101,8 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(mDeck.getName());
+        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
+        this.setTitle(deck.getName());
         ButterKnife.bind(this);
 
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this,
@@ -117,7 +115,7 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mPresenter = new ShareDeckActivityPresenter(this, mDeck);
+        mPresenter = new ShareDeckActivityPresenter(deck);
         mRecyclerView.setAdapter(
                 new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout,
                         mPresenter));
@@ -176,8 +174,6 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         switch (item.getItemId()) {
             case R.id.share_deck_menu:
                 if (mValidInput) {
-                    Toast.makeText(this, "Share deck:" + mDeck.getName(),
-                            Toast.LENGTH_SHORT).show();
                     httpReq(mPersonData.getText().toString().trim());
                 } else {
                     Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
@@ -249,33 +245,25 @@ public class ShareDeckActivity extends AppCompatActivity implements IShareDeckVi
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    Toast.makeText(this, response, Toast.LENGTH_SHORT).show();
                     shareDeck(response);
                 },
-                error -> LOGGER.error("That didn't work!", error)
+                error -> {
+                    //TODO(ksheremet): check error that user doesn't exist, send invitation
+                    LOGGER.error("That didn't work!", error);
+                }
         );
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
-    // TODO(ksheremet): Move to presenter
-    @SuppressWarnings("CheckReturnValue")
     private void shareDeck(final String uid) {
-        int itemPosition = mSharingPermissionsSpinner.getSelectedItemPosition();
-        DeckAccess deckAccess = new DeckAccess(mDeck);
-        deckAccess.setKey(uid);
-        if (itemPosition == 0) {
-            Toast.makeText(this, "Can Edit", Toast.LENGTH_SHORT).show();
-            deckAccess.setAccess("write");
-        }
-        if (itemPosition == 1) {
-            Toast.makeText(this, "Can View", Toast.LENGTH_SHORT).show();
-            deckAccess.setAccess("read");
-        }
+        String selectedAccess = mSharingPermissionsSpinner.getSelectedItem().toString();
+        if (selectedAccess.equals(getString(R.string.can_edit_text))) {
+            mPresenter.shareDeck(uid, "write");
 
-        // TODO(ksheremet): write Deck for the new user.
-
-        deckAccess.save().doOnComplete(() ->
-                Toast.makeText(this, "Shared", Toast.LENGTH_SHORT).show());
+        }
+        if (selectedAccess.equals(getString(R.string.can_view_text))) {
+            mPresenter.shareDeck(uid, "read");
+        }
     }
 }
