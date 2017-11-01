@@ -93,6 +93,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
     private Trace mStartTrace;
+    private Trace mNextCardTrace;
 
     /**
      * Method starts LearningCardsActivity.
@@ -113,7 +114,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mStartTrace = FirebasePerformance.getInstance().newTrace("start_learning_cards_first_deck");
+        mStartTrace = FirebasePerformance.getInstance().newTrace("start_learning_cards");
         mStartTrace.start();
 
         setContentView(R.layout.show_cards_activity);
@@ -160,12 +161,22 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     protected void onStop() {
         mPresenter.onStop();
+        if (mNextCardTrace != null) {
+            mNextCardTrace.stop();
+            mNextCardTrace = null;
+        }
+        if (mStartTrace != null) {
+            mStartTrace.stop();
+            mStartTrace = null;
+        }
         super.onStop();
     }
 
     @OnClick(R.id.to_know_button)
     /* default */ void userKnowCardButtonClick() {
         setClickableRepeatKnowButtons(false);
+        mNextCardTrace = FirebasePerformance.getInstance().newTrace("learning_next_card");
+        mNextCardTrace.start();
         mPresenter.userKnowCard();
         mBackIsShown = false;
         increaseNumberOfShowedCards();
@@ -226,8 +237,14 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void showFrontSide(final String front, final boolean isHtml) {
-        // TODO(dotdoom): do not stop the trace twice.
-        mStartTrace.stop();
+        if (mStartTrace != null) {
+            mStartTrace.stop();
+            mStartTrace = null;
+        }
+        if (mNextCardTrace != null) {
+            mNextCardTrace.stop();
+            mNextCardTrace = null;
+        }
 
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
