@@ -57,7 +57,6 @@ public class UserDeckAccessRecyclerViewAdapter
                                       final int position) {
         deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)
                 .subscribe((final User user) -> {
-                    System.out.println("User:" + user);
                     viewHolder.mNameTextView.setText(user.getName());
                     Context context = viewHolder.itemView.getContext();
                     if ("owner".equals(deckAccess.getAccess())) {

@@ -45,6 +45,7 @@ import org.dasfoo.delern.learncards.ILearningCardsView;
 import org.dasfoo.delern.listdecks.IDelernMainView;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.previewcard.IPreEditCardView;
 
 /**
@@ -137,14 +138,15 @@ public final class Injector {
     /**
      * Method returns injector class.
      *
-     * @param view view to init Presenter of callbacks.
-     * @param deck deck to change settings.
+     * @param view       view to init Presenter of callbacks.
+     * @param deckAccess deckAccess to change settings.
      * @return EditDeckActivityComponent.
      */
     public static EditDeckActivityComponent getEditDeckActivityInjector(final IEditDeckView view,
-                                                                        final Deck deck) {
+                                                                        final DeckAccess
+                                                                                deckAccess) {
         return DaggerEditDeckActivityComponent
                 .builder()
-                .editDeckActivityModule(new EditDeckActivityModule(view, deck)).build();
+                .editDeckActivityModule(new EditDeckActivityModule(view, deckAccess)).build();
     }
 }

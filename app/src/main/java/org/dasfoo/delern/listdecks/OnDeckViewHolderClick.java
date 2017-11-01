@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.listdecks;
 
+import org.dasfoo.delern.models.DeckAccess;
+
 /**
  * Created by katarina on 10/14/16.
  * Manages clicks on RecyclerView
@@ -42,9 +44,9 @@ public interface OnDeckViewHolderClick {
     /**
      * Handles deck settings.
      *
-     * @param position position of the element in the list
+     * @param deckAccess position of the element in the list
      */
-    void editDeckSettings(int position);
+    void editDeckSettings(DeckAccess deckAccess);
 
     /**
      * Handles sharing of the deck.

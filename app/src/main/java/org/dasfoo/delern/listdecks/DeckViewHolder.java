@@ -53,7 +53,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
-    /* default */ DeckAccess mDeckAccess;
+    private DeckAccess mDeckAccess;
     private OnDeckViewHolderClick mOnViewClick;
 
     /**
@@ -123,7 +123,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 mOnViewClick.editDeck(position);
                 return true;
             case R.id.deck_settings:
-                mOnViewClick.editDeckSettings(position);
+                mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
                 mOnViewClick.shareDeck(position);
@@ -154,5 +154,9 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             default:
                 break;
         }
+    }
+
+    public void setDeckAccess(DeckAccess mDeckAccess) {
+        this.mDeckAccess = mDeckAccess;
     }
 }

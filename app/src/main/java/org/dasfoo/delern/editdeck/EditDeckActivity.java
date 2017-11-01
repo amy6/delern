@@ -45,7 +45,8 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.ParcelableDeck;
+import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.ParcelableDeckAccess;
 
 import javax.inject.Inject;
 
@@ -94,17 +95,19 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
                 mPresenter.setMarkdown(isChecked);
             };
     private Deck mDeck;
+    private DeckAccess mDeckAccess;
     private boolean mInputValid;
 
     /**
      * Method starts EditDeckActivity.
      *
      * @param context context of Activity that called this method.
-     * @param deck    deck to perform operations.
+     * @param deckAccess    deck to perform operations.
      */
-    public static void startActivity(final Context context, final Deck deck) {
+    public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditDeckActivity.class);
-        intent.putExtra(EditDeckActivity.DECK, new ParcelableDeck(deck));
+        intent.putExtra(EditDeckActivity.DECK, new ParcelableDeckAccess(deckAccess));
+        System.out.println();
         context.startActivity(intent);
     }
 
@@ -118,9 +121,10 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        mDeck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
+        mDeckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK));
+        mDeck = mDeckAccess.getDeck();
         this.setTitle(mDeck.getName());
-        Injector.getEditDeckActivityInjector(this, mDeck).inject(this);
+        Injector.getEditDeckActivityInjector(this, mDeckAccess).inject(this);
         ButterKnife.bind(this);
     }
 
@@ -200,10 +204,12 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
         new AlertDialog.Builder(this)
                 .setMessage(R.string.delete_deck)
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    mPresenter.deleteDeck(mDeck);
+                    mPresenter.deleteDeck();
                     finish();
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    dialog.cancel();
+                })
                 .show();
     }
 

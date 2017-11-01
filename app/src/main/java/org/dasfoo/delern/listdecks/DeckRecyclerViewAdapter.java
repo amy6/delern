@@ -21,7 +21,6 @@ package org.dasfoo.delern.listdecks;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
 
@@ -55,9 +54,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.mDeckTextView.setText(deck.getName());
-        deck.fetchDeckAccessOfUser().subscribe((final DeckAccess deckAccess) -> {
-            viewHolder.mDeckAccess = deckAccess;
-        });
+        deck.fetchDeckAccessOfUser().subscribe(viewHolder::setDeckAccess);
 
         Deck.fetchCount(
                 getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))

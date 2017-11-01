@@ -59,6 +59,7 @@ import org.dasfoo.delern.editdeck.EditDeckActivity;
 import org.dasfoo.delern.learncards.LearningCardsActivity;
 import org.dasfoo.delern.listcards.EditCardListActivity;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
@@ -369,8 +370,8 @@ public class DelernMainActivity extends AppCompatActivity
      * {@inheritDoc}
      */
     @Override
-    public void editDeckSettings(final int position) {
-        EditDeckActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    public void editDeckSettings(final DeckAccess deckAccess) {
+        EditDeckActivity.startActivity(this, deckAccess);
     }
 
     /**

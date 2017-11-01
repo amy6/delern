@@ -19,6 +19,7 @@
 package org.dasfoo.delern.editdeck;
 
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.DeckType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,26 +33,31 @@ public class EditDeckActivityPresenter {
 
     private final IEditDeckView mView;
     private final Deck mDeck;
+    private final DeckAccess mDeckAccess;
 
     /**
      * Constructor initialize presenter.
      *
      * @param view view for callbacks.
-     * @param deck deck to change settings.
+     * @param deckAccess deck to change settings.
      */
-    public EditDeckActivityPresenter(final IEditDeckView view, final Deck deck) {
+    public EditDeckActivityPresenter(final IEditDeckView view, final DeckAccess deckAccess) {
         this.mView = view;
-        this.mDeck = deck;
+        this.mDeckAccess = deckAccess;
+        this.mDeck = deckAccess.getDeck();
     }
-
 
     /**
      * Method deletes deck.
      *
-     * @param deck deck to delete.
      */
-    public void deleteDeck(final Deck deck) {
-        deck.delete();
+    public void deleteDeck() {
+        System.out.println("DeckAccess: " + mDeckAccess);
+        if ("owner".equals(mDeckAccess.getAccess())) {
+            mDeck.delete();
+            return;
+        }
+        mDeck.deleteShared();
     }
 
     /**

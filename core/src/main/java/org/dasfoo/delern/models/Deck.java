@@ -106,6 +106,21 @@ public class Deck extends Model {
     }
 
     /**
+     * Remove the current deck from the database, including Cards, ScheduledCards, Views and access.
+     *
+     * @return FirebaseTaskAdapter for the delete operation.
+     */
+    @Exclude
+    public Completable deleteShared() {
+        return new MultiWrite()
+                .delete(this)
+                .delete(this.getChildReference(ScheduledCard.class))
+                .delete(this.getChildReference(View.class))
+                .delete(this.getChildReference(DeckAccess.class).child(this.getUser().getKey()))
+                .write();
+    }
+
+    /**
      * Start a watcher that will trigger for every top-1 card that needs to be learned, in sequence.
      *
      * @return Multi-shot TaskAdapter, called initially and after each change to ScheduledCard. The
