@@ -82,7 +82,10 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
   }
   update() { prior(deckAccess(deckId)) === "owner" }
   delete() {
-    prior(deckAccess(deckId)) === "owner" &&
+    (
+      isCurrentUser(sharedWithUserId) ||
+      prior(deckAccess(deckId)) === "owner"
+    ) &&
     (
       // Not deleting ownership access...
       prior(deckAccessFor(deckId, sharedWithUserId)) !== "owner" ||
