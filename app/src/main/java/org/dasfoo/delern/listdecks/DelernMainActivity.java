@@ -42,12 +42,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
@@ -355,7 +355,8 @@ public class DelernMainActivity extends AppCompatActivity
         mUserNameTextView.setText(user.getName());
         // TODO(dotdoom): fix User and make this work!
         mUserEmailTextView.setText("");
-        Glide.with(this).load(user.getPhotoUrl()).into(mProfilePhotoImageView);
+        Picasso.with(this).load(user.getPhotoUrl())
+                .error(android.R.color.holo_orange_dark).into(mProfilePhotoImageView);
     }
 
     /**

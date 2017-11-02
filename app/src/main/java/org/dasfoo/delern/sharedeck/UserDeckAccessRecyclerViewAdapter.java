@@ -25,8 +25,8 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.squareup.picasso.Picasso;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.DeckAccess;
@@ -68,8 +68,10 @@ public class UserDeckAccessRecyclerViewAdapter
                 .subscribe((final User user) -> {
                     viewHolder.mNameTextView.setText(user.getName());
                     Context context = viewHolder.itemView.getContext();
-                    Glide.with(context)
+                    Picasso.with(context)
                             .load(user.getPhotoUrl())
+                            .error(android.R.color.holo_green_dark)
+                            .placeholder(R.drawable.splash_screen)
                             .into(viewHolder.mProfilePhoto);
                     if ("owner".equals(deckAccess.getAccess())) {
                         viewHolder.mSharingPermissionsSpinner
