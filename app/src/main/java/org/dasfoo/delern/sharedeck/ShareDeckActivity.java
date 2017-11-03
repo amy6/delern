@@ -27,11 +27,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +63,8 @@ import butterknife.ButterKnife;
  */
 public class ShareDeckActivity extends AppCompatActivity {
 
+    private static final int REQUEST_INVITE = 1;
+    private static final int USER_NOT_EXIST = 404;
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDeckActivity.class);
 
     /**
@@ -200,17 +204,26 @@ public class ShareDeckActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
                                     final Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case RESULT_PICK_CONTACT:
+        switch (requestCode) {
+            case REQUEST_INVITE:
+                if (resultCode == RESULT_OK) {
+                    return;
+                } else {
+                    LOGGER.error("onActivityResult Invite: requestCode={}, resultCode={}",
+                            requestCode, resultCode);
+                }
+                break;
+            case RESULT_PICK_CONTACT:
+                if (resultCode == RESULT_OK) {
                     contactPicked(data);
-                    break;
-                default:
-                    LOGGER.debug("on ActivityResult not implemented");
-                    break;
-            }
-        } else {
-            LOGGER.error("Failed to pick a contact");
+                    return;
+                } else {
+                    LOGGER.error("onActivityResult Chose Contact: requestCode={}, resultCode={}",
+                            requestCode, resultCode);
+                }
+                break;
+            default:
+                LOGGER.error("Requesе Code not implemented:", requestCode);
         }
     }
 
@@ -248,8 +261,13 @@ public class ShareDeckActivity extends AppCompatActivity {
                     shareDeck(response);
                 },
                 error -> {
-                    //TODO(ksheremet): check error that user doesn't exist, send invitation
-                    LOGGER.error("That didn't work!", error);
+                    if (USER_NOT_EXIST == error.networkResponse.statusCode) {
+                        inviteFriendDialog();
+                    } else {
+                        Toast.makeText(this,
+                                "Deck wasn't share. Please try later",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
         );
         // Add the request to the RequestQueue.
@@ -265,5 +283,25 @@ public class ShareDeckActivity extends AppCompatActivity {
         if (selectedAccess.equals(getString(R.string.can_view_text))) {
             mPresenter.shareDeck(uid, "read");
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void inviteFriendDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.invite_user_sharing_deck_message)
+                .setPositiveButton(R.string.invite, (dialog, which) -> {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_EMAIL,
+                            new String[]{mPersonData.getText().toString()});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.invitation_title));
+                    intent.putExtra(Intent.EXTRA_TEXT,
+                            Html.fromHtml(getString(R.string.simple_email_sharing)));
+                    startActivityForResult(intent, REQUEST_INVITE);
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    dialog.cancel();
+                })
+                .show();
     }
 }
