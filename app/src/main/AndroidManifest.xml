@@ -115,9 +115,11 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
         </activity>
-        <activity android:name=".sharedeck.ShareDeckActivity"
+        <activity
+            android:name=".sharedeck.ShareDeckActivity"
             android:parentActivityName=".listdecks.DelernMainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
