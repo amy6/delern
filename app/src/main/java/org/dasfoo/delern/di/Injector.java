@@ -26,12 +26,14 @@ import org.dasfoo.delern.di.components.DaggerEditCardListActivityComponent;
 import org.dasfoo.delern.di.components.DaggerEditDeckActivityComponent;
 import org.dasfoo.delern.di.components.DaggerLearningCardsActivityComponent;
 import org.dasfoo.delern.di.components.DaggerPreEditCardActivityComponent;
+import org.dasfoo.delern.di.components.DaggerShareDeckActivityComponent;
 import org.dasfoo.delern.di.components.DaggerUpdateCardActivityComponent;
 import org.dasfoo.delern.di.components.DelernMainActivityComponent;
 import org.dasfoo.delern.di.components.EditCardListActivityComponent;
 import org.dasfoo.delern.di.components.EditDeckActivityComponent;
 import org.dasfoo.delern.di.components.LearningCardsActivityComponent;
 import org.dasfoo.delern.di.components.PreEditCardActivityComponent;
+import org.dasfoo.delern.di.components.ShareDeckActivityComponent;
 import org.dasfoo.delern.di.components.UpdateCardActivityComponent;
 import org.dasfoo.delern.di.modules.AddCardActivityModule;
 import org.dasfoo.delern.di.modules.DelernMainActivityModule;
@@ -39,6 +41,7 @@ import org.dasfoo.delern.di.modules.EditCardListActivityModule;
 import org.dasfoo.delern.di.modules.EditDeckActivityModule;
 import org.dasfoo.delern.di.modules.LearningCardsActivityModule;
 import org.dasfoo.delern.di.modules.PreEditCardActivityModule;
+import org.dasfoo.delern.di.modules.ShareDeckActivityModule;
 import org.dasfoo.delern.di.modules.UpdateCardActivityModule;
 import org.dasfoo.delern.editdeck.IEditDeckView;
 import org.dasfoo.delern.learncards.ILearningCardsView;
@@ -148,5 +151,17 @@ public final class Injector {
         return DaggerEditDeckActivityComponent
                 .builder()
                 .editDeckActivityModule(new EditDeckActivityModule(view, deckAccess)).build();
+    }
+
+    /**
+     * Method returns injector class.
+     *
+     * @param deck deck to perform sharing.
+     * @return ShareDeckActivityComponent.
+     */
+    public static ShareDeckActivityComponent getShareDeckActivityInjector(final Deck deck) {
+        return DaggerShareDeckActivityComponent
+                .builder()
+                .shareDeckActivityModule(new ShareDeckActivityModule(deck)).build();
     }
 }

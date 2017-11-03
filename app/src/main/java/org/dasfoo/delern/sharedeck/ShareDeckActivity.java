@@ -50,10 +50,13 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
+import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,10 +81,9 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ Spinner mSharingPermissionsSpinner;
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
+    @Inject
+    /* default */ ShareDeckActivityPresenter mPresenter;
     private boolean mValidInput;
-
-    //TODO(ksheremet): Dagger2
-    private ShareDeckActivityPresenter mPresenter;
 
     /**
      * Method starts ShareDeckActivity.
@@ -108,6 +110,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
+        Injector.getShareDeckActivityInjector(deck).inject(this);
 
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this,
                 R.array.share_permissions_spinner_text, R.array.share_permissions_spinner_img));
@@ -118,8 +121,6 @@ public class ShareDeckActivity extends AppCompatActivity {
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mPresenter = new ShareDeckActivityPresenter(deck);
         mRecyclerView.setAdapter(
                 new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout,
                         mPresenter));
