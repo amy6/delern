@@ -90,7 +90,8 @@ public class PreviewCardTest {
         onView(withId(R.id.add_card_to_db)).perform(click());
         // Check that fields are empty after adding card
         waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
+        onView(withId(R.id.back_side_text)).check(matches(withText("")))
+                .perform(closeSoftKeyboard());
         pressBack();
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
