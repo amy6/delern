@@ -9,7 +9,8 @@
     "paper-icon-button": "PolymerElements/paper-icon-button#^2.0.1",
     "iron-pages": "PolymerElements/iron-pages#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.2",
-    "polymerfire": "firebase/polymerfire#^2.2.1"
+    "polymerfire": "firebase/polymerfire#^2.2.1",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

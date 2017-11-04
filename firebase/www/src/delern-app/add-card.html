@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="decks-list.html">
 
@@ -36,6 +37,12 @@
         value="{{backSide::change}}"></textarea>
     </div>
 
+    <div class="intends row">
+      <paper-toggle-button checked="{{reversed}}" title="Добавить обратную карточку">
+        Добавить обратную карточку
+      </paper-toggle-button>
+    </div
+
     <div class="row">
       <button id="add-card" on-click="addCard" class="intends">Добавить</button>
     </div>
@@ -59,11 +66,16 @@
           backSide: {
             type: String,
             value: ''
+          },
+          reversed: {
+            type: Boolean,
+            value: false,
           }
         };
       }
 
       addCard() {
+
         if (this.frontSide.length == 0) {
           alert("Передняя сторона карточки пуста");
           return;
@@ -87,6 +99,18 @@
         updates['/cards/' + this.deckId +'/' + newCardKey] = card;
         updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
           newCardKey] = scheduled;
+        // Add reversed card.
+        if (this.reversed) {
+          var cardReversed = {
+            front: this.backSide,
+            back: this.frontSide,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+          };
+          var newCardKeyReversed = firebase.database().ref().child('cards').child(this.deckId).push().key;
+          updates['/cards/' + this.deckId +'/' + newCardKeyReversed] = cardReversed;
+          updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
+            newCardKeyReversed] = scheduled;
+        };
 
         this.$['add-card'].disabled = true;
         var self = this;
