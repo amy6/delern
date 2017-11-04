@@ -47,9 +47,9 @@ public class ParcelableDeckAccess implements Parcelable {
     private final DeckAccess mDeckAccess;
 
     /**
-     * Create a Parcelable wrapper around User.
+     * Create a Parcelable wrapper around DeckAccess.
      *
-     * @param d Deck.
+     * @param d DeckAccess.
      */
     public ParcelableDeckAccess(final DeckAccess d) {
         mDeckAccess = d;
