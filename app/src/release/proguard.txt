@@ -63,3 +63,6 @@
 
 # Support Library 26.2.0 integrates with Architecture Library, but doesn't work as intended right now.
 -dontwarn android.arch.core.**
+
+# Picasso recommended ProGuard options: https://github.com/square/picasso
+-dontwarn com.squareup.okhttp.**
