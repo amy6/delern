@@ -14,7 +14,8 @@
     "paper-input": "PolymerElements/paper-input#^2.0.3",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^2.0.0",
     "paper-item": "PolymerElements/paper-item#^2.0.0",
-    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0"
+    "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

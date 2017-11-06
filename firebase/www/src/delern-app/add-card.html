@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="decks-list.html">
 
@@ -25,16 +26,17 @@
   <div class="col-4" id="add-progress" style="display: none;">Добавлена</div>
 </div>
 
+<!--TODO(ksheremet): check maxRows. -->
 <div class="row">
   <paper-textarea class="col-12 intends" id="front" name="front"
   maxRows="5" label="Введите переднюю сторону карточки"
-  bind-value="{{frontSide}}" value="{{frontSide}}"></paper-extarea>
+  value="{{frontSide}}"></paper-extarea>
 </div>
 
 <div class="row">
   <paper-textarea class="col-12 intends" id="back" name="back"
   maxRows="5" label="Введите обратную сторону карточки"
-  bind-value="{{backSide}}" value="{{backSide}}"></paper-textarea>
+  value="{{backSide}}"></paper-textarea>
 </div>
 
 <div class="intends row">
@@ -44,7 +46,9 @@
   </div
 
   <div class="row">
-    <button id="add-card" on-click="addCard" class="intends">Добавить</button>
+    <paper-button raised id="add-card" on-click="addCard" class="intends">
+      Добавить
+    </paper-button>
   </div>
 </template>
 
