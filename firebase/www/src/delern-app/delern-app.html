@@ -36,10 +36,6 @@
     display: block;
   }
 
-  app-drawer-layout:not([narrow]) [drawer-toggle] {
-    display: none;
-  }
-
   app-header {
     color: #fff;
     background-color: var(--app-primary-color);
@@ -47,6 +43,23 @@
 
   app-header paper-icon-button {
     --paper-icon-button-ink-color: white;
+  }
+
+  app-drawer-layout {
+    --app-drawer-layout-content-transition: margin 0.2s;
+  }
+
+  app-drawer {
+    --app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
+    --app-drawer-content-container: {
+      background-color: #eeeeee;
+    }
+  }
+
+  .drawer-content {
+    margin-top: 80px;
+    height: calc(100% - 80px);
+    overflow: auto;
   }
 
   .drawer-list {
@@ -88,21 +101,21 @@ tail="{{subroute}}"></app-route>
 
 <!-- Main content -->
 <app-header-layout fullbleed has-scrolling-region>
-    <app-header slot="header" condenses reveals effects="waterfall">
-      <app-toolbar>
-        <paper-icon-button icon="icons:menu" drawer-toggle></paper-icon-button>
-        <div main-title>Delern - Изучай легко!</div>
-      </app-toolbar>
-    </app-header>
+  <app-header slot="header" condenses reveals effects="waterfall">
+    <app-toolbar>
+      <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
+      <div main-title>Delern - Изучай легко!</div>
+    </app-toolbar>
+  </app-header>
 
-    <app-drawer-layout narrow="{{narrow}}">
-      <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <app-toolbar>Меню</app-toolbar>
-        <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="sign-in" href="/sign-in">Выход</a>
-        </iron-selector>
-      </app-drawer>
+  <app-drawer-layout drawer-toggle>
+    <!-- Drawer content -->
+    <app-drawer id="drawer" position="left"  slot="drawer">
+      <app-toolbar>Меню</app-toolbar>
+      <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
+        <a name="sign-in" href="/sign-in">Выход</a>
+      </iron-selector>
+    </app-drawer>
 
     <!-- iron-pages selects the view based on the active route -->
     <iron-pages
@@ -114,7 +127,7 @@ tail="{{subroute}}"></app-route>
     <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
   </iron-pages>
 
-  </app-drawer-layout>
+</app-drawer-layout>
 </app-header-layout>
 </template>
 
@@ -195,6 +208,13 @@ class DelernApp extends Polymer.Element {
 
   _showPage404() {
     this.set('routeData.page', 'view404');
+  }
+
+  _toggleDrawer() {
+    var drawer = this.$.drawer;
+    if (drawer && !drawer.persistent) {
+      drawer.toggle();
+    }
   }
 }
 
