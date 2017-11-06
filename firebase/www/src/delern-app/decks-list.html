@@ -1,38 +1,42 @@
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 
 <dom-module id="decks-list">
   <template>
     <firebase-query
-      path="/decks/[[uid]]"
-      data="{{decks}}">
-    </firebase-query>
+    path="/decks/[[uid]]"
+    data="{{decks}}">
+  </firebase-query>
 
-    <select value="{{selectedDeckKey::change}}">
-      <option value="">- Выберите список -</option>
+  <paper-dropdown-menu label="Выберите список">
+    <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
       <template is="dom-repeat" items="[[decks]]">
-        <option value="[[item.$key]]">[[item.name]]</option>
+        <paper-item value="[[item.$key]]">[[item.name]]</paper-item>
       </template>
-    </select>
+    </paper-listbox>
   </template>
 
   <script>
-    class DecksList extends Polymer.Element {
-      static get is() { return 'decks-list' }
+  class DecksList extends Polymer.Element {
+    static get is() { return 'decks-list' }
 
-      static get properties() {
-        return {
-          uid: String,
-          decks: Array,
-          selectedDeckKey: {
-            type: String,
-            notify: true
-          }
-        };
-      }
+    static get properties() {
+      return {
+        uid: String,
+        decks: Array,
+        selectedDeckKey: {
+          type: String,
+          notify: true
+        }
+      };
     }
-    customElements.define(DecksList.is, DecksList);
+  }
+  customElements.define(DecksList.is, DecksList);
   </script>
 
 </dom-module>
