@@ -16,7 +16,7 @@
   <paper-dropdown-menu label="Выберите список">
     <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
       <template is="dom-repeat" items="[[decks]]">
-        <paper-item value="[[item.$key]]">[[item.name]]</paper-item>
+        <paper-item value$="[[item.$key]]">[[item.name]]</paper-item>
       </template>
     </paper-listbox>
   </template>
