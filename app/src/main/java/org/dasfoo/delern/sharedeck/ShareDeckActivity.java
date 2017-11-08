@@ -86,6 +86,7 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ ShareDeckActivityPresenter mPresenter;
     private boolean mValidInput;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private Bundle mPayload;
 
     /**
      * Method starts ShareDeckActivity.
@@ -252,6 +253,11 @@ public class ShareDeckActivity extends AppCompatActivity {
     }
 
     private void httpReq(final String email) {
+        // Init Bundle for Analytics.
+        mPayload = new Bundle();
+        mPayload.putString(FirebaseAnalytics.Param.ITEM_ID,
+                mPresenter.getDeck().getKey());
+        mPayload.putString(FirebaseAnalytics.Param.CONTENT_TYPE, DECK);
         // Volley
         // Instantiate the RequestQueue.
         String url = new Uri.Builder()
@@ -273,6 +279,8 @@ public class ShareDeckActivity extends AppCompatActivity {
                         Toast.makeText(this,
                                 "Deck wasn't share. Please try later",
                                 Toast.LENGTH_SHORT).show();
+                        mPayload.putString(FirebaseAnalytics.Param.VALUE, "sharing error");
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
                     }
                 }
         );
@@ -289,9 +297,8 @@ public class ShareDeckActivity extends AppCompatActivity {
         if (selectedAccess.equals(getString(R.string.can_view_text))) {
             mPresenter.shareDeck(uid, "read");
         }
-        Bundle payload = new Bundle();
-        payload.putString(FirebaseAnalytics.Param.VALUE, "share deck");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
+        mPayload.putString(FirebaseAnalytics.Param.VALUE, "share deck");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
     }
 
     @SuppressWarnings("deprecation")
@@ -299,9 +306,9 @@ public class ShareDeckActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.invite_user_sharing_deck_message)
                 .setPositiveButton(R.string.invite, (dialog, which) -> {
-                    Bundle payload = new Bundle();
-                    payload.putString(FirebaseAnalytics.Param.VALUE, "share deck with new user");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
+                    mPayload = new Bundle();
+                    mPayload.putString(FirebaseAnalytics.Param.VALUE, "share deck with new user");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("*/*");
                     intent.putExtra(Intent.EXTRA_EMAIL,
