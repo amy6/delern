@@ -21,4 +21,15 @@
 	<issue id="MissingRegistered" severity="ignore"/>
 	<issue id="KeyboardInaccessibleWidget" severity="ignore"/>
 	<issue id="ObsoleteLintCustomCheck" severity="ignore"/>
+	<issue id="GradleDependency">
+		<!--
+			https://developers.google.com/android/guides/overview
+			"upgrading is not necessary if you don't care about new features or bug fixes"
+
+			Bumping Play Services / Firebase version only bumps the requirement
+			on the phone. We will manually update when we need some new feature
+			or a bug fix. Devices will update automatically regardless.
+		-->
+		<ignore regexp="com.google.firebase|com.google.android.gms:play-services-auth"/>
+	</issue>
 </lint>
