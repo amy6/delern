@@ -112,3 +112,8 @@ You can get the API key (not secret key, which isn't used) on the Fabric
 
   Base64-encoded private key for a Google Cloud Service Account in `JSON`
   format, which can be obtained from Google Cloud Console in IAM section.
+
+* `VERSIONEYE_API_KEY`
+
+  API key for https://www.versioneye.com/, a system for reporting dependency
+  versions and notifying about important updates.

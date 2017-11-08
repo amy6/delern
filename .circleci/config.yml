@@ -148,6 +148,10 @@ jobs:
         <<: *gcloud_install_command
 
     - run:
+        name: "Check Gradle package versions, upload status"
+        command: ./gradlew versionEyeSecurityCheck
+
+    - run:
         working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to DEBUG"
         command: |
