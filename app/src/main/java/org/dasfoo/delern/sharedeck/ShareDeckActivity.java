@@ -46,6 +46,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
@@ -84,6 +85,7 @@ public class ShareDeckActivity extends AppCompatActivity {
     @Inject
     /* default */ ShareDeckActivityPresenter mPresenter;
     private boolean mValidInput;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      * Method starts ShareDeckActivity.
@@ -124,6 +126,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(
                 new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout,
                         mPresenter));
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void setAutoCompleteViewSettings() {
@@ -224,7 +227,7 @@ public class ShareDeckActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                LOGGER.error("Requesе Code not implemented:", requestCode);
+                LOGGER.error("Request Code not implemented:", requestCode);
         }
     }
 
@@ -286,6 +289,9 @@ public class ShareDeckActivity extends AppCompatActivity {
         if (selectedAccess.equals(getString(R.string.can_view_text))) {
             mPresenter.shareDeck(uid, "read");
         }
+        Bundle payload = new Bundle();
+        payload.putString(FirebaseAnalytics.Param.VALUE, "share deck");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
     }
 
     @SuppressWarnings("deprecation")
@@ -293,6 +299,9 @@ public class ShareDeckActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.invite_user_sharing_deck_message)
                 .setPositiveButton(R.string.invite, (dialog, which) -> {
+                    Bundle payload = new Bundle();
+                    payload.putString(FirebaseAnalytics.Param.VALUE, "share deck with new user");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("*/*");
                     intent.putExtra(Intent.EXTRA_EMAIL,

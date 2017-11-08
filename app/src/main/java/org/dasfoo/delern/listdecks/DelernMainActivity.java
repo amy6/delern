@@ -244,13 +244,13 @@ public class DelernMainActivity extends AppCompatActivity
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == RESULT_OK) {
                 Bundle payload = new Bundle();
-                payload.putString(FirebaseAnalytics.Param.VALUE, "sent");
+                payload.putString(FirebaseAnalytics.Param.VALUE, "invite friend");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
                         payload);
                 Toast.makeText(this, R.string.invitation_sent_message, Toast.LENGTH_SHORT).show();
             } else {
                 Bundle payload = new Bundle();
-                payload.putString(FirebaseAnalytics.Param.VALUE, "not sent");
+                payload.putString(FirebaseAnalytics.Param.VALUE, "cancel invite friend");
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
                         payload);
                 Toast.makeText(this, R.string.invitation_failed_message, Toast.LENGTH_SHORT).show();
