@@ -214,7 +214,7 @@ public class Deck extends Model {
      *
      * @return true if deck is accepted, otherwise false.
      */
-    // TODO(ksheremet): should this be named "getAccepted"?
+    // PMD:A getX() method which returns a boolean should be named isX()
     public boolean isAccepted() {
         return accepted;
     }

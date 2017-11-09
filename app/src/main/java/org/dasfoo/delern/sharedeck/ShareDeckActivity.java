@@ -167,7 +167,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         // http://stackoverflow.com/questions/24301235/tint-menu-icons
         MenuItem sendMenuItem = menu.findItem(R.id.share_deck_menu);
         Drawable tintedIcon = sendMenuItem.getIcon();
-        // TODO(ksheremet): Check mode http://ssp.impulsetrain.com/porterduff.html
+        // More about PorterDuff.Mode http://ssp.impulsetrain.com/porterduff.html
         tintedIcon.mutate().setColorFilter(ContextCompat.getColor(this, R.color.toolbarIconColor),
                 PorterDuff.Mode.SRC_IN);
         sendMenuItem.setIcon(tintedIcon);

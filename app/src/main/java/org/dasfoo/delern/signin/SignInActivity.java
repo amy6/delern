@@ -35,7 +35,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.models.ParcelableUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,14 +86,10 @@ public class SignInActivity extends AppCompatActivity
                 .build();
 
         FirebaseAuth.getInstance().addAuthStateListener(auth -> {
-            // TODO(ksheremet): this should be a method of MainActivity
             org.dasfoo.delern.models.Auth.setCurrentUser(auth.getCurrentUser());
             if (org.dasfoo.delern.models.Auth.isSignedIn()) {
-                Intent intent = new Intent(this, DelernMainActivity.class);
-                intent.putExtra(DelernMainActivity.USER, new ParcelableUser(
-                        org.dasfoo.delern.models.Auth.getCurrentUser()
-                ));
-                startActivity(intent);
+                DelernMainActivity.startActivity(this,
+                        org.dasfoo.delern.models.Auth.getCurrentUser());
                 finish();
             }
         });

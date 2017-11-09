@@ -172,7 +172,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
         // http://stackoverflow.com/questions/24301235/tint-menu-icons
         MenuItem deleteMenuItem = menu.findItem(R.id.delete_deck_menu);
         Drawable tintedIcon = deleteMenuItem.getIcon();
-        // TODO(ksheremet): Check mode http://ssp.impulsetrain.com/porterduff.html
+        // More about PorterDuff.Mode http://ssp.impulsetrain.com/porterduff.html
         tintedIcon.mutate().setColorFilter(ContextCompat.getColor(this, R.color.toolbarIconColor),
                 PorterDuff.Mode.SRC_IN);
         deleteMenuItem.setIcon(tintedIcon);
