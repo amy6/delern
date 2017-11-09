@@ -12,6 +12,14 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+
+<!-- Localization -->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <link rel="import" href="icons.html">
 <link rel="import" href="../firebase/firebase-hosted-app.html">
@@ -20,6 +28,7 @@
 
 <dom-module id="delern-app">
   <template>
+
     <firebase-hosted-app></firebase-hosted-app>
     <firebase-auth id="auth" user="{{firebaseUser}}" provider="google" status-known="{{firebaseUserStatusKnown}}"
       on-error="__authError">
@@ -96,7 +105,15 @@
       <app-header slot="header" condenses reveals effects="waterfall">
         <app-toolbar>
           <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
-          <div main-title>Delern - Изучай легко!</div>
+          <div main-title>[[localize('delern_main_title')]]</div>
+          <!-- Language -->
+          <paper-dropdown-menu>
+            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{language}}">
+              <paper-item value="en">English</paper-item>
+              <paper-item value="ru">Русский</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
         </app-toolbar>
       </app-header>
 
@@ -105,13 +122,13 @@
         <app-drawer id="drawer" position="left" slot="drawer">
           <app-toolbar>Меню</app-toolbar>
           <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a id="sign-in" href="/sign-in">Выход</a>
+            <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
           </iron-selector>
         </app-drawer>
 
         <!-- iron-pages selects the view based on the active route -->
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-          <add-card name="add-card" firebase-user="[[firebaseUser]]"></add-card>
+          <add-card name="add-card" firebase-user="[[firebaseUser]]" language="[[language]]"></add-card>
           <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
         </iron-pages>
 
@@ -121,10 +138,13 @@
 
   <script>
     /**
+     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
      * @customElement
      * @polymer
+     * @extends {Polymer.Element}
+     * @appliesMixin Polymer.AppLocalizeBehavior
      */
-    class DelernApp extends Polymer.Element {
+    class DelernApp extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
       static get is() {
         return 'delern-app';
       }
@@ -140,7 +160,26 @@
             notify: true,
           },
           subroute: String,
+          language: {
+            value: 'en',
+            type: String,
+            notify: true,
+          },
         };
+      }
+
+      ready() {
+        super.ready();
+        // load localized messages
+        this.loadResources(this.resolveUrl('locales.json'));
+        // Get user language
+        var userLang = navigator.language || navigator.userLanguage;
+        var lang = userLang.slice(0, 2);
+        if (lang == "ru") {
+          this.language = "ru";
+        } else {
+          this.language = "en";
+        }
       }
 
       _userChanged(user, statusKnown) {
@@ -194,10 +233,6 @@
           this.set('routeData.page', 'add-card');
           return;
         }
-      }
-
-      _showPage404() {
-        this.set('routeData.page', 'view404');
       }
 
       _toggleDrawer() {

@@ -1,0 +1,32 @@
+{
+  "en": {
+    "add_front_side_text": "Add front side of card",
+    "add_back_side_text": "Add back side of card",
+    "add_reversed_card_text": "Add reversed card",
+    "add_button_text": "Add",
+    "empty_front_side_message": "Front side of the card is empty",
+    "added_card_message": "Added",
+    "error_adding_card_message": "Error occurred. Try again",
+
+    "menu_text": "Menu",
+    "delern_main_title": "Delern - Learn easy!",
+    "sign_out_button_text": "Sign Out",
+
+    "choose_deck_text": "Choose deck"
+   },
+  "ru": {
+    "add_front_side_text": "Введите переднюю сторону карточки",
+    "add_back_side_text": "Введите обратную сторону карточки",
+    "add_reversed_card_text": "Добавить обратную карточку",
+    "add_button_text": "Добавить",
+    "empty_front_side_message": "Передняя сторона карточки пуста",
+    "added_card_message": "Добавлена",
+    "error_adding_card_message": "Произошла ошибка. Попробуйте еще раз",
+
+    "menu_text": "Меню",
+    "delern_main_title": "Delern - Изучай легко!",
+    "sign_out_button_text": "Выход",
+
+    "choose_deck_text": "Выберите список"
+  }
+}

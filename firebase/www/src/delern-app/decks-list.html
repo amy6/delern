@@ -5,14 +5,17 @@
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<!-- Localization -->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
 <dom-module id="decks-list">
   <template>
-    <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
-
     <style include="shared-styles"></style>
 
-    <paper-dropdown-menu label="Выберите список">
+    <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
+
+    <paper-dropdown-menu label="[[localize('choose_deck_text')]]">
       <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
         <paper-item class="fake-paper-item">
           FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden fake item whose only purpose
@@ -26,7 +29,12 @@
   </template>
 
   <script>
-    class DecksList extends Polymer.Element {
+    /**
+     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
+     * @extends {Polymer.Element}
+     * @appliesMixin Polymer.AppLocalizeBehavior
+     */
+    class DecksList extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
       static get is() {
         return 'decks-list'
       }
@@ -37,10 +45,20 @@
           decks: Array,
           selectedDeckKey: {
             type: String,
-            notify: true
-          }
+            notify: true,
+          },
+          language: {
+            type: String,
+            value: 'en',
+          },
         };
       }
+
+      ready() {
+        super.ready();
+        // load localized messages
+        this.loadResources(this.resolveUrl('locales.json'));
+      };
     }
     customElements.define(DecksList.is, DecksList);
 
