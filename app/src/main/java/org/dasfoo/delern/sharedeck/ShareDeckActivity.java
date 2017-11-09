@@ -86,7 +86,6 @@ public class ShareDeckActivity extends AppCompatActivity {
     /* default */ ShareDeckActivityPresenter mPresenter;
     private boolean mValidInput;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Bundle mPayload;
 
     /**
      * Method starts ShareDeckActivity.
@@ -254,10 +253,10 @@ public class ShareDeckActivity extends AppCompatActivity {
 
     private void httpReq(final String email) {
         // Init Bundle for Analytics.
-        mPayload = new Bundle();
-        mPayload.putString(FirebaseAnalytics.Param.ITEM_ID,
+        Bundle payload = new Bundle();
+        payload.putString(FirebaseAnalytics.Param.ITEM_ID,
                 mPresenter.getDeck().getKey());
-        mPayload.putString(FirebaseAnalytics.Param.CONTENT_TYPE, DECK);
+        payload.putString(FirebaseAnalytics.Param.CONTENT_TYPE, DECK);
         // Volley
         // Instantiate the RequestQueue.
         String url = new Uri.Builder()
@@ -270,17 +269,17 @@ public class ShareDeckActivity extends AppCompatActivity {
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
-                    shareDeck(response);
+                    shareDeck(response, payload);
                 },
                 error -> {
                     if (USER_NOT_EXIST == error.networkResponse.statusCode) {
-                        inviteFriendDialog();
+                        inviteFriendDialog(payload);
                     } else {
                         Toast.makeText(this,
                                 "Deck wasn't share. Please try later",
                                 Toast.LENGTH_SHORT).show();
-                        mPayload.putString(FirebaseAnalytics.Param.VALUE, "sharing error");
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
+                        payload.putString(FirebaseAnalytics.Param.VALUE, "sharing error");
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                     }
                 }
         );
@@ -288,7 +287,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    private void shareDeck(final String uid) {
+    private void shareDeck(final String uid, final Bundle payload) {
         String selectedAccess = mSharingPermissionsSpinner.getSelectedItem().toString();
         if (selectedAccess.equals(getString(R.string.can_edit_text))) {
             mPresenter.shareDeck(uid, "write");
@@ -297,18 +296,17 @@ public class ShareDeckActivity extends AppCompatActivity {
         if (selectedAccess.equals(getString(R.string.can_view_text))) {
             mPresenter.shareDeck(uid, "read");
         }
-        mPayload.putString(FirebaseAnalytics.Param.VALUE, "share deck");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
+        payload.putString(FirebaseAnalytics.Param.VALUE, "share deck");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
     }
 
     @SuppressWarnings("deprecation")
-    private void inviteFriendDialog() {
+    private void inviteFriendDialog(final Bundle payload) {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.invite_user_sharing_deck_message)
                 .setPositiveButton(R.string.invite, (dialog, which) -> {
-                    mPayload = new Bundle();
-                    mPayload.putString(FirebaseAnalytics.Param.VALUE, "share deck with new user");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, mPayload);
+                    payload.putString(FirebaseAnalytics.Param.VALUE, "share deck with new user");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("*/*");
                     intent.putExtra(Intent.EXTRA_EMAIL,
