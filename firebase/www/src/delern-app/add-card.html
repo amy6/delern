@@ -81,7 +81,8 @@ class AddCard extends Polymer.Element {
 
   addCard() {
     if (this.frontSide.length == 0) {
-      alert("Передняя сторона карточки пуста");
+      // TODO(ksheremet): replace with input validation
+      document.getElementById('toast').show("Передняя сторона карточки пуста");
       return;
     }
 
