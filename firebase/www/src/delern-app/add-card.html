@@ -23,7 +23,6 @@
       selected-deck-key="{{deckId}}">
     </decks-list>
   </div>
-  <div class="col-4" id="add-progress" style="display: none;">Добавлена</div>
 </div>
 
 <!--TODO(ksheremet): check maxRows. -->
@@ -124,13 +123,11 @@ class AddCard extends Polymer.Element {
       self.frontSide = '';
       self.backSide = '';
       self.$.front.focus();
-      setTimeout(function () {
-        self.$['add-progress'].style.display = 'none';
-      }, 3000);
-      self.$['add-progress'].style.display = 'inline';
+      document.getElementById('toast').show("Добавлена");
     }).catch(function(err) {
       self.$['add-card'].disabled = false;
-      alert(err);
+      console.error(err);
+      document.getElementById('toast').show("Произошла ошибка");
     });
   }
 }

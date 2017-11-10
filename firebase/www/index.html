@@ -35,6 +35,15 @@
     </style>
   </head>
   <body>
+    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+
+    <!--
+      Due to how overlays work, we have to put the toast here. Which is okay-ish
+      since only one toast may be displayed at a time (see documentation). See
+      also: https://github.com/PolymerElements/paper-toast/issues/80.
+    -->
+    <paper-toast id="toast"></paper-toast>
+
     <delern-app></delern-app>
     <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
   </body>

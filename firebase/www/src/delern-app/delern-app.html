@@ -119,13 +119,13 @@ tail="{{subroute}}"></app-route>
 
     <!-- iron-pages selects the view based on the active route -->
     <iron-pages
-    selected="[[routeData.page]]"
-    attr-for-selected="name"
-    fallback-selection="view404"
-    role="main">
-    <add-card name="add-card" firebase-user="[[firebaseUser]]"></add-card>
-    <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
-  </iron-pages>
+      selected="[[routeData.page]]"
+      attr-for-selected="name"
+      fallback-selection="view404"
+      role="main">
+      <add-card name="add-card" firebase-user="[[firebaseUser]]"></add-card>
+      <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
+    </iron-pages>
 
 </app-drawer-layout>
 </app-header-layout>
