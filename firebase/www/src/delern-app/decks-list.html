@@ -15,6 +15,10 @@
 
   <paper-dropdown-menu label="Выберите список">
     <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
+      <paper-item style="display: none">
+        FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden
+             fake item whose only purpose is to load styles properly.
+      </paper-item>
       <template is="dom-repeat" items="[[decks]]">
         <paper-item value$="[[item.$key]]">[[item.name]]</paper-item>
       </template>
