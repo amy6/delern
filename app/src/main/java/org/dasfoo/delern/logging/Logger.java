@@ -44,6 +44,23 @@ class Logger extends MarkerIgnoringBase {
         mTag = simpleClassName.substring(0, Math.min(simpleClassName.length(), MAX_TAG_LENGTH));
     }
 
+    /**
+     * Wraps throwable into another throwable to provide current stacktrace.
+     *
+     * @param t original throwable.
+     * @return a Throwable that has cause of t and current stacktrace.
+     */
+    private static Throwable wrapThrowable(final Throwable t) {
+        Throwable wrappedThrowable = new Throwable(t);
+        StackTraceElement[] currentStackTrace = wrappedThrowable.getStackTrace();
+        StackTraceElement[] stackTraceWithoutLogger =
+                new StackTraceElement[currentStackTrace.length - LOGGER_STACKTRACE_OFFSET];
+        System.arraycopy(currentStackTrace, LOGGER_STACKTRACE_OFFSET, stackTraceWithoutLogger,
+                0, stackTraceWithoutLogger.length);
+        wrappedThrowable.setStackTrace(stackTraceWithoutLogger);
+        return wrappedThrowable;
+    }
+
     @Override
     public String getName() {
         return mTag;
@@ -274,23 +291,6 @@ class Logger extends MarkerIgnoringBase {
         if (t != null) {
             exception(Log.ERROR, t);
         }
-    }
-
-    /**
-     * Wraps throwable into another throwable to provide current stacktrace.
-     *
-     * @param t original throwable.
-     * @return a Throwable that has cause of t and current stacktrace.
-     */
-    private static Throwable wrapThrowable(final Throwable t) {
-        Throwable wrappedThrowable = new Throwable(t);
-        StackTraceElement[] currentStackTrace = wrappedThrowable.getStackTrace();
-        StackTraceElement[] stackTraceWithoutLogger =
-                new StackTraceElement[currentStackTrace.length - LOGGER_STACKTRACE_OFFSET];
-        System.arraycopy(currentStackTrace, LOGGER_STACKTRACE_OFFSET, stackTraceWithoutLogger,
-                0, stackTraceWithoutLogger.length);
-        wrappedThrowable.setStackTrace(stackTraceWithoutLogger);
-        return wrappedThrowable;
     }
 
     private void exception(final int level, final Throwable t) {

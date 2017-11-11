@@ -62,8 +62,8 @@ public class ParcelableDeck implements Parcelable {
      * @param in parcel.
      */
     @SuppressWarnings(
-        /* Thread class loader is empty during  instrumented tests (2 APK in a single process) */
-        "PMD.UseProperClassLoader"
+            /* Thread class loader is empty during instrumented tests (2 APK in a single process) */
+            "PMD.UseProperClassLoader"
     )
     protected ParcelableDeck(final Parcel in) {
         mDeck = new Deck(ParcelableUser.get(in.readParcelable(
