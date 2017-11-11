@@ -300,7 +300,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings(/* TODO(ksheremet): why? */ "deprecation")
     private void inviteFriendDialog(final Bundle payload) {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.invite_user_sharing_deck_message)

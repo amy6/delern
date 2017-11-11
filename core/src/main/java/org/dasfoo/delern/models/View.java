@@ -22,7 +22,7 @@ package org.dasfoo.delern.models;
  * Created by katarina on 2/23/17.
  * Model class for view.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class View extends Model {
 
     private String levelBefore;

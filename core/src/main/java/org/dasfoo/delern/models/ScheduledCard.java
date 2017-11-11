@@ -25,7 +25,7 @@ import com.google.firebase.database.Exclude;
  * Created by katarina on 2/20/17.
  * Model class for learning.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class ScheduledCard extends Model {
 
     private String level;

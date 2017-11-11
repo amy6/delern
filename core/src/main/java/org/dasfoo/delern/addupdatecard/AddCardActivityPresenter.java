@@ -48,7 +48,7 @@ public class AddCardActivityPresenter implements IAddUpdatePresenter {
      * @param front text on front side of card.
      * @param back  text on back side of card.
      */
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     private void add(final String front, final String back) {
         Card card = new Card(mDeck);
         card.setFront(front);

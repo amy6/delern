@@ -31,7 +31,7 @@ import io.reactivex.annotations.Nullable;
  * Created by katarina on 10/4/16.
  * Model class for card.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class Card extends Model {
 
     /**

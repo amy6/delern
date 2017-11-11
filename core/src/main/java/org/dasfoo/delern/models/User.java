@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by katarina on 10/12/16.
  * Model class for users.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public final class User extends Model {
 
     @Exclude

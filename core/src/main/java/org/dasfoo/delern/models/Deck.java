@@ -33,7 +33,7 @@ import io.reactivex.Observable;
  * Created by katarina on 10/11/16.
  * Model class for deck.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class Deck extends Model {
 
     private String name;

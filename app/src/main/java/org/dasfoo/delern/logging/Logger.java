@@ -26,7 +26,11 @@ import org.slf4j.helpers.FormattingTuple;
 import org.slf4j.helpers.MarkerIgnoringBase;
 import org.slf4j.helpers.MessageFormatter;
 
-@SuppressWarnings({"serial", "PMD.TooManyMethods", "checkstyle:NoAndroidLog"})
+@SuppressWarnings({
+        /* this is never serialized */ "serial",
+        /* optimization methods */ "PMD.TooManyMethods",
+        /* the only place where Log can be used */ "checkstyle:NoAndroidLog"
+})
 class Logger extends MarkerIgnoringBase {
 
     private static final int MAX_TAG_LENGTH = 23;

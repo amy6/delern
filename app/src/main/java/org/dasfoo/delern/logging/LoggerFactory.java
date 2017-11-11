@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * A simple logger factory to create org.dasfoo.delern.logging.Logger for slf4j.
  */
-@SuppressWarnings("PMD.MoreThanOneLogger")
+@SuppressWarnings(/* required by slf4j */ "PMD.MoreThanOneLogger")
 public class LoggerFactory implements ILoggerFactory {
     private final ConcurrentHashMap<String, Logger> mLoggers = new ConcurrentHashMap<>();
 

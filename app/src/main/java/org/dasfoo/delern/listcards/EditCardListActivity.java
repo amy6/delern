@@ -188,7 +188,6 @@ public class EditCardListActivity extends AppCompatActivity implements
      * @return false if the SearchView should perform the default action of showing any
      * suggestions if available, true if the action was handled by the listener.
      */
-    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     @Override
     public boolean onQueryTextChange(final String newText) {
         mRecyclerView.setAdapter(search(newText));
@@ -229,7 +228,9 @@ public class EditCardListActivity extends AppCompatActivity implements
      * @param text text to be searched
      * @return Adapter with appropriate list of cards.
      */
-    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
+    @SuppressWarnings(
+        /* ignore \uf8ff (largest possible) char */ "checkstyle:AvoidEscapedUnicodeCharacters"
+    )
     private CardRecyclerViewAdapter search(final String text) {
         if (mPresenter.getQuery() != null) {
             return createAdapter(mPresenter.getQuery().orderByChild("front").startAt(text)

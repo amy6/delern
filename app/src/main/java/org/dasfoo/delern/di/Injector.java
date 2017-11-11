@@ -54,11 +54,11 @@ import org.dasfoo.delern.previewcard.IPreEditCardView;
 /**
  * Initialize components for creating class.
  */
-@SuppressWarnings("checkstyle:classFanOutComplexity")
+@SuppressWarnings(/* normal for dependency injectors? */ "checkstyle:classFanOutComplexity")
 public final class Injector {
 
     private Injector() {
-        // Private constructor to prohibit to create instance of clall
+        // Private constructor to prohibit to create instance of class
     }
 
     /**

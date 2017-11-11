@@ -32,7 +32,7 @@ public final class RepetitionIntervals {
     private static RepetitionIntervals sOurInstance = new RepetitionIntervals();
     private final Map<String, Long> mIntervals = new ConcurrentHashMap<>();
 
-    @SuppressWarnings("checkstyle:MagicNumber")
+    @SuppressWarnings(/* boilerplate */ "checkstyle:MagicNumber")
     private RepetitionIntervals() {
         mIntervals.put(Level.L0.name(), 4 * ONE_HOUR);
         mIntervals.put(Level.L1.name(), ONE_DAY);

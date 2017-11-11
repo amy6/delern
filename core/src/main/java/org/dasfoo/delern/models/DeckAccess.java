@@ -29,7 +29,7 @@ import io.reactivex.Completable;
  * Created by katarina on 2/22/17.
  * Model class for deck_access.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class DeckAccess extends Model {
     private String access;
 

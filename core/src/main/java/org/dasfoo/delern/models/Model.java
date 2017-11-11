@@ -92,7 +92,7 @@ public class Model {
             ValueEventListener listener = query.addValueEventListener(
                     new ValueEventListener() {
                         @Override
-                        @SuppressWarnings({"checkstyle:IllegalCatch",
+                        @SuppressWarnings(/* the error is propagaded */ {"checkstyle:IllegalCatch",
                                 "PMD.AvoidCatchingGenericException"})
                         public void onDataChange(final DataSnapshot dataSnapshot) {
                             try {
@@ -304,7 +304,9 @@ public class Model {
      * @param ref Database reference used to provide the snapshot this model has been parsed from.
      */
     @Exclude
-    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    @SuppressWarnings(
+        /* TODO(dotdoom): redesign */ "PMD.EmptyMethodInAbstractClassShouldBeAbstract"
+    )
     protected void setReference(final DatabaseReference ref) {
         // This method can be overridden in child classes.
     }

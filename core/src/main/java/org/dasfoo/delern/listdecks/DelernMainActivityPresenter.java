@@ -109,7 +109,7 @@ public class DelernMainActivityPresenter {
      *
      * @param deckName name of deck
      */
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     public void createNewDeck(final String deckName) {
         final Deck newDeck = new Deck(mUser);
         newDeck.setName(deckName);

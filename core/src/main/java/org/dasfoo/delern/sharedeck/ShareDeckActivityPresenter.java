@@ -100,7 +100,9 @@ public class ShareDeckActivityPresenter {
      * @param uid    id of user.
      * @param access permissions for deck.
      */
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(
+        /* TODO(dotdoom): garbage collection */ "CheckReturnValue"
+    )
     public void shareDeck(final String uid, final String access) {
         DeckAccess deckAccess = new DeckAccess(mDeck);
         deckAccess.setKey(uid);

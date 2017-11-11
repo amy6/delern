@@ -49,7 +49,9 @@ public class MultiWrite {
     // Default to "true" in case we don't want an offline listener.
     private static boolean sConnected = true;
 
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    @SuppressWarnings(
+        /* no concurrency here */ "PMD.UseConcurrentHashMap"
+    )
     private final Map<String, Object> mData = new HashMap<>();
     private DatabaseReference mRoot;
 
@@ -99,7 +101,9 @@ public class MultiWrite {
         }
     }
 
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
+    @SuppressWarnings(
+        /* TODO(dotdoom): get rid of raw type */ "PMD.AvoidThrowingRawExceptionTypes"
+    )
     private void setRootFrom(final DatabaseReference reference) {
         final DatabaseReference newRoot = reference.getRoot();
         if (mRoot == null) {

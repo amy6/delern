@@ -24,7 +24,7 @@ import org.slf4j.spi.MDCAdapter;
 /**
  * A stub required by slf4j.
  */
-@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+@SuppressWarnings(/* naming required by slf4j */ "checkstyle:AbbreviationAsWordInName")
 public final class StaticMDCBinder {
 
     /**

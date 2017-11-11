@@ -50,7 +50,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
                                       final int position) {
         viewHolder.mDeckTextView.setText(deck.getName());

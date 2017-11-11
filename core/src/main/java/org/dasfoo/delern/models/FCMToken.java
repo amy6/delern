@@ -21,7 +21,7 @@ package org.dasfoo.delern.models;
 /**
  * Model class for FCM token.
  */
-@SuppressWarnings({"checkstyle:MemberName", "checkstyle:HiddenField"})
+@SuppressWarnings(/* firebase */ {"checkstyle:MemberName", "checkstyle:HiddenField"})
 public class FCMToken extends Model {
 
     private String name;

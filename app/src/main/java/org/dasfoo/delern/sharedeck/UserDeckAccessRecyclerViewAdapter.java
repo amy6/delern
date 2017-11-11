@@ -61,7 +61,7 @@ public class UserDeckAccessRecyclerViewAdapter
     }
 
     @Override
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     protected void populateViewHolder(final ViewHolder viewHolder, final DeckAccess deckAccess,
                                       final int position) {
         deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)

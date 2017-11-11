@@ -49,7 +49,7 @@ public class UpdateCardActivityPresenter implements IAddUpdatePresenter {
      * @param newFront new front side of card.
      * @param newBack  new back side of card.
      */
-    @SuppressWarnings("CheckReturnValue")
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
@@ -60,7 +60,6 @@ public class UpdateCardActivityPresenter implements IAddUpdatePresenter {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings({"ArgumentParameterSwap", "ArgumentParameterMismatch"})
     public void onAddUpdate(final String front, final String back) {
         update(front, back);
     }
