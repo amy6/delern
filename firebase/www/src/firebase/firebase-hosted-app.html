@@ -2,16 +2,19 @@
 
 <dom-module id="firebase-hosted-app">
   <template preserve-content>
-    <script
-      src="/__/firebase/init.js"
-      onload="window.dispatchEvent(new CustomEvent('firebase-app-initialized'))">
+    <script src="/__/firebase/init.js" onload="window.dispatchEvent(new CustomEvent('firebase-app-initialized'))">
+
+
     </script>
   </template>
   <script>
     class FirebaseHostedApp extends Polymer.Element {
-      static get is() { return 'firebase-hosted-app' }
+      static get is() {
+        return 'firebase-hosted-app'
+      }
     }
     customElements.define(FirebaseHostedApp.is, FirebaseHostedApp);
+
   </script>
 
 </dom-module>

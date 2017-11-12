@@ -5,10 +5,7 @@
 
 <dom-module id="sign-in">
   <template>
-    <firebase-auth
-      id="auth"
-      provider="google"
-      on-error="__authError">
+    <firebase-auth id="auth" provider="google" on-error="__authError">
     </firebase-auth>
     <style include="shared-styles">
       :host {
@@ -16,17 +13,24 @@
 
         padding: 10px;
       }
+
+      .sign-in-button {
+        width: 170px;
+      }
+
     </style>
 
     <div class="row">
-      <button on-click="signIn" class="content" style="width:170px">Google SignIn</button>
+      <button on-click="signIn" class="content sign-in-button">Google SignIn</button>
     </div>
 
   </template>
 
   <script>
     class SignIn extends Polymer.Element {
-      static get is() { return 'sign-in'; }
+      static get is() {
+        return 'sign-in';
+      }
 
       static get properties() {
         return {
@@ -52,5 +56,6 @@
     }
 
     window.customElements.define(SignIn.is, SignIn);
+
   </script>
 </dom-module>

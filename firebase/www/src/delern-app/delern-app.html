@@ -1,4 +1,4 @@
-<script src="https://polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="//polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
@@ -21,68 +21,64 @@
 <dom-module id="delern-app">
   <template>
     <firebase-hosted-app></firebase-hosted-app>
-    <firebase-auth
-    id="auth"
-    user="{{firebaseUser}}"
-    provider="google"
-    status-known="{{firebaseUserStatusKnown}}"
-    on-error="__authError">
-  </firebase-auth>
+    <firebase-auth id="auth" user="{{firebaseUser}}" provider="google" status-known="{{firebaseUserStatusKnown}}"
+      on-error="__authError">
+    </firebase-auth>
 
-  <style>
-  :host {
-    --app-primary-color: #8BC34A;
-    --app-secondary-color: black;
-    display: block;
-  }
+    <style>
+      :host {
+        --app-primary-color: #8BC34A;
+        --app-secondary-color: black;
+        display: block;
+      }
 
-  app-header {
-    color: #fff;
-    background-color: var(--app-primary-color);
-  }
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
 
-  app-header paper-icon-button {
-    --paper-icon-button-ink-color: white;
-  }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
 
-  app-drawer-layout {
-    --app-drawer-layout-content-transition: margin 0.2s;
-  }
+      app-drawer-layout {
+        --app-drawer-layout-content-transition: margin 0.2s;
+      }
 
-  app-drawer {
-    --app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
-    --app-drawer-content-container: {
-      background-color: #eeeeee;
-    }
-  }
+      app-drawer {
+        --app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
+        --app-drawer-content-container: {
+          background-color: #eeeeee;
+        }
+      }
 
-  .drawer-content {
-    margin-top: 80px;
-    height: calc(100% - 80px);
-    overflow: auto;
-  }
+      .drawer-content {
+        margin-top: 80px;
+        height: calc(100% - 80px);
+        overflow: auto;
+      }
 
-  .drawer-list {
-    margin: 0 20px;
-  }
+      .drawer-list {
+        margin: 0 20px;
+      }
 
-  .drawer-list a {
-    display: block;
-    padding: 0 16px;
-    text-decoration: none;
-    color: var(--app-secondary-color);
-    line-height: 40px;
-  }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+        line-height: 40px;
+      }
 
-  .drawer-list a.iron-selected {
-    color: black;
-    font-weight: bold;
-  }
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
 
-  </style>
-  <!-- app-location binds to the app's URL -->
-  <app-location route="{{route}}"></app-location>
-  <!-- <app-route> matches an input path against a specified pattern,
+    </style>
+    <!-- app-location binds to the app's URL -->
+    <app-location route="{{route}}"></app-location>
+    <!-- <app-route> matches an input path against a specified pattern,
   deals with hierarchical, slash separated paths. You give it a pattern,
   and it tells you when the input matches. If the pattern contains any
   variables, like /:page then the <app-route> extracts that portion of the
@@ -93,131 +89,126 @@
   If the pattern matches, the route is active and any URL parameters are
   added to the data object
 -->
-<app-route
-route="{{route}}"
-pattern="/:page"
-data="{{routeData}}"
-tail="{{subroute}}"></app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
 
-<!-- Main content -->
-<app-header-layout fullbleed has-scrolling-region>
-  <app-header slot="header" condenses reveals effects="waterfall">
-    <app-toolbar>
-      <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
-      <div main-title>Delern - Изучай легко!</div>
-    </app-toolbar>
-  </app-header>
+    <!-- Main content -->
+    <app-header-layout fullbleed has-scrolling-region>
+      <app-header slot="header" condenses reveals effects="waterfall">
+        <app-toolbar>
+          <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
+          <div main-title>Delern - Изучай легко!</div>
+        </app-toolbar>
+      </app-header>
 
-  <app-drawer-layout drawer-toggle>
-    <!-- Drawer content -->
-    <app-drawer id="drawer" position="left"  slot="drawer">
-      <app-toolbar>Меню</app-toolbar>
-      <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-        <a name="sign-in" href="/sign-in">Выход</a>
-      </iron-selector>
-    </app-drawer>
+      <app-drawer-layout drawer-toggle>
+        <!-- Drawer content -->
+        <app-drawer id="drawer" position="left" slot="drawer">
+          <app-toolbar>Меню</app-toolbar>
+          <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a id="sign-in" href="/sign-in">Выход</a>
+          </iron-selector>
+        </app-drawer>
 
-    <!-- iron-pages selects the view based on the active route -->
-    <iron-pages
-      selected="[[routeData.page]]"
-      attr-for-selected="name"
-      fallback-selection="view404"
-      role="main">
-      <add-card name="add-card" firebase-user="[[firebaseUser]]"></add-card>
-      <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
-    </iron-pages>
+        <!-- iron-pages selects the view based on the active route -->
+        <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+          <add-card name="add-card" firebase-user="[[firebaseUser]]"></add-card>
+          <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
+        </iron-pages>
 
-</app-drawer-layout>
-</app-header-layout>
-</template>
+      </app-drawer-layout>
+    </app-header-layout>
+  </template>
 
-<script>
-/**
-* @customElement
-* @polymer
-*/
-class DelernApp extends Polymer.Element {
-  static get is() { return 'delern-app'; }
-  static get properties() {
-    return {
-      firebaseUser: {
-        type: Object,
-        notify: true,
-      },
-      firebaseUserStatusKnown: Boolean,
-      routeData: {
-        type: Object,
-        notify: true,
-      },
-      subroute: String,
-    };
-  }
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class DelernApp extends Polymer.Element {
+      static get is() {
+        return 'delern-app';
+      }
+      static get properties() {
+        return {
+          firebaseUser: {
+            type: Object,
+            notify: true,
+          },
+          firebaseUserStatusKnown: Boolean,
+          routeData: {
+            type: Object,
+            notify: true,
+          },
+          subroute: String,
+        };
+      }
 
-  _userChanged(user, statusKnown) {
-    if (statusKnown && !user) {
-      console.log('user not signed in, redirecting to sign-in');
-      this.set('routeData.page', 'sign-in');
+      _userChanged(user, statusKnown) {
+        if (statusKnown && !user) {
+          console.log('user not signed in, redirecting to sign-in');
+          this.set('routeData.page', 'sign-in');
+        }
+      }
+
+      __authError(e) {
+        console.error('Can not authenticate', e);
+      }
+
+      signOut() {
+        this.$.auth.signOut()
+          .catch(function(error) {
+            console.error('SignOut Error', error);
+          });
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page, firebaseUserStatusKnown)',
+          '_userChanged(firebaseUser, firebaseUserStatusKnown)',
+        ];
+      }
+
+      _routePageChanged(page, firebaseUserStatusKnown) {
+        // Until Firebase User login status is known, don't do anything and let
+        // _userChanged observer make a decision.
+        if (!firebaseUserStatusKnown) {
+          console.log('loading page ' + page + ', but user status not yet known');
+          return;
+        }
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+
+        if (page == 'sign-in' && this.firebaseUser != null) {
+          console.log('user is signed in and landed on sign-in page, signing out');
+          this.signOut();
+          return;
+        }
+
+        // If no page was found in the route data, page will be an empty string.
+        // Deault to 'add-card' in that case.
+        if (!page || page == 'index.html') {
+          console.log('user landed on page ' + page + ', re-routing to add-card');
+          this.set('routeData.page', 'add-card');
+          return;
+        }
+      }
+
+      _showPage404() {
+        this.set('routeData.page', 'view404');
+      }
+
+      _toggleDrawer() {
+        var drawer = this.$.drawer;
+        if (drawer && !drawer.persistent) {
+          drawer.toggle();
+        }
+      }
     }
-  }
 
-  __authError(e) {
-    console.error('Can not authenticate', e);
-  }
+    window.customElements.define(DelernApp.is, DelernApp);
 
-  signOut() {
-    this.$.auth.signOut()
-    .catch(function(error) {
-      console.error('SignOut Error', error);
-    });
-  }
-
-  static get observers() {
-    return [
-      '_routePageChanged(routeData.page, firebaseUserStatusKnown)',
-      '_userChanged(firebaseUser, firebaseUserStatusKnown)',
-    ];
-  }
-
-  _routePageChanged(page, firebaseUserStatusKnown) {
-    // Until Firebase User login status is known, don't do anything and let
-    // _userChanged observer make a decision.
-    if (!firebaseUserStatusKnown) {
-      console.log('loading page ' + page + ', but user status not yet known');
-      return;
-    }
-
-    // Close a non-persistent drawer when the page & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
-    }
-
-    if (page == 'sign-in' && this.firebaseUser != null) {
-      console.log('user is signed in and landed on sign-in page, signing out');
-      this.signOut();
-      return;
-    }
-
-    // If no page was found in the route data, page will be an empty string.
-    // Deault to 'add-card' in that case.
-    if (!page || page == 'index.html') {
-      console.log('user landed on page ' + page + ', re-routing to add-card');
-      this.set('routeData.page', 'add-card');
-      return;
-    }
-  }
-
-  _showPage404() {
-    this.set('routeData.page', 'view404');
-  }
-
-  _toggleDrawer() {
-    var drawer = this.$.drawer;
-    if (drawer && !drawer.persistent) {
-      drawer.toggle();
-    }
-  }
-}
-
-window.customElements.define(DelernApp.is, DelernApp);
-</script>
+  </script>
 </dom-module>

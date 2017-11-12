@@ -8,131 +8,132 @@
 <dom-module id="add-card">
   <template>
 
-  <style include="shared-styles">
-  :host {
-    display: block;
+    <style include="shared-styles">
+      :host {
+        display: block;
 
-    padding: 10px;
-  }
-  </style>
-
-  <div class="row">
-    <div class="col-6">
-      <decks-list class="col-2 intends"
-      uid="[[firebaseUser.uid]]"
-      selected-deck-key="{{deckId}}">
-    </decks-list>
-  </div>
-</div>
-
-<!--TODO(ksheremet): check maxRows. -->
-<div class="row">
-  <paper-textarea class="col-12 intends" id="front" name="front"
-  maxRows="5" label="Введите переднюю сторону карточки"
-  value="{{frontSide}}"></paper-extarea>
-</div>
-
-<div class="row">
-  <paper-textarea class="col-12 intends" id="back" name="back"
-  maxRows="5" label="Введите обратную сторону карточки"
-  value="{{backSide}}"></paper-textarea>
-</div>
-
-<div class="intends row">
-  <paper-toggle-button checked="{{reversed}}" title="Добавить обратную карточку">
-    Добавить обратную карточку
-  </paper-toggle-button>
-</div>
-
-<div class="row">
-  <paper-button raised id="add-card" on-click="addCard" class="intends">
-    Добавить
-  </paper-button>
-</div>
-</template>
-
-<script>
-class AddCard extends Polymer.Element {
-  static get is() { return 'add-card'; }
-
-  static get properties() {
-    return {
-      firebaseUser: {
-        type: Object,
-        notify: true,
-      },
-      deckId: String,
-      frontSide: {
-        type: String,
-        value: '',
-        notify: true,
-      },
-      backSide: {
-        type: String,
-        value: '',
-        notify: true,
-      },
-      reversed: {
-        type: Boolean,
-        value: false,
+        padding: 10px;
       }
-    };
-  }
 
-  addCard() {
-    if (this.frontSide.length == 0) {
-      // TODO(ksheremet): replace with input validation
-      document.getElementById('toast').show("Передняя сторона карточки пуста");
-      return;
+    </style>
+
+    <div class="row">
+      <div class="col-6">
+        <decks-list class="col-2 intends" uid="[[firebaseUser.uid]]" selected-deck-key="{{deckId}}">
+        </decks-list>
+      </div>
+    </div>
+
+    <!--TODO(ksheremet): check max-rows. -->
+    <div class="row">
+      <paper-textarea class="col-12 intends" id="front" name="front" max-rows="5" label="Введите переднюю сторону карточки"
+        value="{{frontSide}}"></paper-textarea>
+    </div>
+
+    <div class="row">
+      <paper-textarea class="col-12 intends" id="back" name="back" max-rows="5" label="Введите обратную сторону карточки"
+        value="{{backSide}}"></paper-textarea>
+    </div>
+
+    <div class="intends row">
+      <paper-toggle-button checked="{{reversed}}" title="Добавить обратную карточку">
+        Добавить обратную карточку
+      </paper-toggle-button>
+    </div>
+
+    <div class="row">
+      <paper-button raised id="add-card-button" on-click="addCard" class="intends">
+        Добавить
+      </paper-button>
+    </div>
+  </template>
+
+  <script>
+    class AddCard extends Polymer.Element {
+      static get is() {
+        return 'add-card';
+      }
+
+      static get properties() {
+        return {
+          firebaseUser: {
+            type: Object,
+            notify: true,
+          },
+          deckId: String,
+          frontSide: {
+            type: String,
+            value: '',
+            notify: true,
+          },
+          backSide: {
+            type: String,
+            value: '',
+            notify: true,
+          },
+          reversed: {
+            type: Boolean,
+            value: false,
+          }
+        };
+      }
+
+      addCard() {
+        if (this.frontSide.length == 0) {
+          // TODO(ksheremet): replace with input validation
+          document.getElementById('toast').show("Передняя сторона карточки пуста");
+          return;
+        }
+
+        var card = {
+          front: this.frontSide,
+          back: this.backSide,
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+        };
+
+        var scheduled = {
+          level: "L0",
+          repeatAt: (new Date()).getTime(),
+        };
+
+        var newCardKey = firebase.database().ref().child('cards').child(this.deckId).push().key;
+
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        var updates = {};
+        updates['/cards/' + this.deckId + '/' + newCardKey] = card;
+        updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
+          newCardKey] = scheduled;
+        // Add reversed card.
+        if (this.reversed) {
+          var cardReversed = {
+            front: this.backSide,
+            back: this.frontSide,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+          };
+          var newCardKeyReversed = firebase.database().ref().child('cards').child(this.deckId).push()
+            .key;
+          updates['/cards/' + this.deckId + '/' + newCardKeyReversed] = cardReversed;
+          updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
+            newCardKeyReversed] = scheduled;
+        };
+
+        this.$['add-card-button'].disabled = true;
+        var self = this;
+        firebase.database().ref().update(updates).then(function() {
+          self.$['add-card-button'].disabled = false;
+          self.frontSide = '';
+          self.backSide = '';
+          self.$.front.focus();
+          document.getElementById('toast').show("Добавлена");
+        }).catch(function(err) {
+          self.$['add-card-button'].disabled = false;
+          console.error(err);
+          document.getElementById('toast').show("Произошла ошибка");
+        });
+      }
     }
 
-    var card = {
-      front: this.frontSide,
-      back: this.backSide,
-      createdAt: firebase.database.ServerValue.TIMESTAMP,
-    };
+    window.customElements.define(AddCard.is, AddCard);
 
-    var scheduled = {
-      level: "L0",
-      repeatAt: (new Date()).getTime(),
-    };
-
-    var newCardKey = firebase.database().ref().child('cards').child(this.deckId).push().key;
-
-    // Write the new post's data simultaneously in the posts list and the user's post list.
-    var updates = {};
-    updates['/cards/' + this.deckId +'/' + newCardKey] = card;
-    updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
-    newCardKey] = scheduled;
-    // Add reversed card.
-    if (this.reversed) {
-      var cardReversed = {
-        front: this.backSide,
-        back: this.frontSide,
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-      };
-      var newCardKeyReversed = firebase.database().ref().child('cards').child(this.deckId).push().key;
-      updates['/cards/' + this.deckId +'/' + newCardKeyReversed] = cardReversed;
-      updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
-      newCardKeyReversed] = scheduled;
-    };
-
-    this.$['add-card'].disabled = true;
-    var self = this;
-    firebase.database().ref().update(updates).then(function() {
-      self.$['add-card'].disabled = false;
-      self.frontSide = '';
-      self.backSide = '';
-      self.$.front.focus();
-      document.getElementById('toast').show("Добавлена");
-    }).catch(function(err) {
-      self.$['add-card'].disabled = false;
-      console.error(err);
-      document.getElementById('toast').show("Произошла ошибка");
-    });
-  }
-}
-
-window.customElements.define(AddCard.is, AddCard);
-</script>
+  </script>
 </dom-module>

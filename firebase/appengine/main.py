@@ -1,16 +1,20 @@
-import webapp2
+"""AppEngine application entry point."""
 
-from google.appengine.api import app_identity
-from google.appengine.api import urlfetch
+# pylint: disable=import-error
+import webapp2
+from google.appengine.api import app_identity, urlfetch
 
 class ProxyToFunctions(webapp2.RequestHandler):
+    """HTTP handler proxying requests to Cloud Functions."""
 
-    def get(self, *unused_args):
+    def get(self, *args):
+        """HTTP 'GET' method handler for incoming requests."""
+        del args
         url = 'https://us-central1-{}.cloudfunctions.net{}'.format(
-                app_identity.get_application_id(),
-                self.request.path_qs)
+            app_identity.get_application_id(),
+            self.request.path_qs)
         auth_token, _ = app_identity.get_access_token(
-                'https://www.googleapis.com/auth/cloud-platform')
+            'https://www.googleapis.com/auth/cloud-platform')
 
         # "result" is of type _URLFetchResult,
         # https://cloud.google.com/appengine/docs/standard/python/refdocs/modules/google/appengine/api/urlfetch
@@ -22,8 +26,7 @@ class ProxyToFunctions(webapp2.RequestHandler):
         #self.response.write(result.content)
 
 
+# pylint: disable=invalid-name
 app = webapp2.WSGIApplication([
     webapp2.Route(r'/<:.*>', handler=ProxyToFunctions)
 ], debug=True)
-
-# vim: ft=python

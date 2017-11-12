@@ -8,40 +8,42 @@
 
 <dom-module id="decks-list">
   <template>
-    <firebase-query
-    path="/decks/[[uid]]"
-    data="{{decks}}">
-  </firebase-query>
+    <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
 
-  <paper-dropdown-menu label="Выберите список">
-    <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
-      <paper-item style="display: none">
-        FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden
-             fake item whose only purpose is to load styles properly.
-      </paper-item>
-      <template is="dom-repeat" items="[[decks]]">
-        <paper-item value$="[[item.$key]]">[[item.name]]</paper-item>
-      </template>
-    </paper-listbox>
-  </paper-dropdown-menu>
+    <style include="shared-styles"></style>
+
+    <paper-dropdown-menu label="Выберите список">
+      <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
+        <paper-item class="fake-paper-item">
+          FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden fake item whose only purpose
+          is to load styles properly.
+        </paper-item>
+        <template is="dom-repeat" items="[[decks]]">
+          <paper-item value$="[[item.$key]]">[[item.name]]</paper-item>
+        </template>
+      </paper-listbox>
+    </paper-dropdown-menu>
   </template>
 
   <script>
-  class DecksList extends Polymer.Element {
-    static get is() { return 'decks-list' }
+    class DecksList extends Polymer.Element {
+      static get is() {
+        return 'decks-list'
+      }
 
-    static get properties() {
-      return {
-        uid: String,
-        decks: Array,
-        selectedDeckKey: {
-          type: String,
-          notify: true
-        }
-      };
+      static get properties() {
+        return {
+          uid: String,
+          decks: Array,
+          selectedDeckKey: {
+            type: String,
+            notify: true
+          }
+        };
+      }
     }
-  }
-  customElements.define(DecksList.is, DecksList);
+    customElements.define(DecksList.is, DecksList);
+
   </script>
 
 </dom-module>

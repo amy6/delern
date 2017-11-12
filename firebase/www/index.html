@@ -1,50 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Delern</title>
-    <meta name="description" content="Spaced repetition system">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="manifest.json">
+  <title>Delern</title>
+  <meta name="description" content="Spaced repetition system">
 
-    <link rel="import" href="/src/delern-app/delern-app.html">
-    <!-- See https://goo.gl/qRE0vM -->
-    <meta name="theme-color" content="#689f38">
+  <!-- See https://goo.gl/OOhYW5 -->
+  <link rel="manifest" href="manifest.json">
 
-    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Delern">
+  <link rel="import" href="/src/delern-app/delern-app.html">
+  <!-- See https://goo.gl/qRE0vM -->
+  <meta name="theme-color" content="#689f38">
 
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Delern">
+  <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Delern">
 
-    <!-- Add any global styles for body, document, etc. -->
-    <style>
-      body {
-        margin: 0;
-        font-family: 'Roboto', 'Noto', sans-serif;
-        line-height: 1.5;
-        min-height: 100vh;
-        background-color: #ffffff;
-      }
-    </style>
-  </head>
-  <body>
-    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Delern">
 
-    <!--
+  <!-- Add any global styles for body, document, etc. -->
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      background-color: #ffffff;
+    }
+
+  </style>
+</head>
+
+<body>
+  <link rel="import" href="bower_components/paper-toast/paper-toast.html">
+
+  <!--
       Due to how overlays work, we have to put the toast here. Which is okay-ish
       since only one toast may be displayed at a time (see documentation). See
       also: https://github.com/PolymerElements/paper-toast/issues/80.
     -->
-    <paper-toast id="toast"></paper-toast>
+  <paper-toast id="toast"></paper-toast>
 
-    <delern-app></delern-app>
-    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-  </body>
+  <delern-app></delern-app>
+  <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+</body>
+
 </html>

@@ -94,7 +94,7 @@ jobs:
         no_output_timeout: "35m"
         command: |
           # Check formatting
-          format.sh -m '*.java' -r */src >/dev/null
+          ci-lint
           git diff --stat --exit-code
           # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
           # class data.
