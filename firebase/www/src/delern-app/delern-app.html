@@ -100,7 +100,7 @@
         </app-toolbar>
       </app-header>
 
-      <app-drawer-layout drawer-toggle>
+      <app-drawer-layout id="drawerlayout">
         <!-- Drawer content -->
         <app-drawer id="drawer" position="left" slot="drawer">
           <app-toolbar>Меню</app-toolbar>
@@ -201,9 +201,10 @@
       }
 
       _toggleDrawer() {
-        var drawer = this.$.drawer;
-        if (drawer && !drawer.persistent) {
-          drawer.toggle();
+        if (this.$.drawerlayout.forceNarrow || !this.$.drawerlayout.narrow) {
+          this.$.drawerlayout.forceNarrow = !this.$.drawerlayout.forceNarrow;
+        } else {
+          this.$.drawer.toggle();
         }
       }
     }
