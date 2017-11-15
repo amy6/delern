@@ -12,10 +12,9 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
 <!-- Localization -->
 <link rel="import" href="../../bower_components/polymer/polymer.html">
@@ -107,13 +106,8 @@
           <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
           <div main-title>[[localize('delern_main_title')]]</div>
           <!-- Language -->
-          <paper-dropdown-menu>
-            <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{language}}">
-              <paper-item value="en">English</paper-item>
-              <paper-item value="ru">Русский</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-
+          <paper-item raised on-click="changeLang" select-language="en">en</paper-item>
+          <paper-item raised on-click="changeLang" select-language="ru">ru</paper-item>
         </app-toolbar>
       </app-header>
 
@@ -241,6 +235,9 @@
         } else {
           this.$.drawer.toggle();
         }
+
+      changeLang(e) {
+        this.language = e.target.getAttribute('select-language');
       }
     }
 
