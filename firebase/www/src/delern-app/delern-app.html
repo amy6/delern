@@ -20,6 +20,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
+<!--Local storage -->
+<link rel="import" href="../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
 <link rel="import" href="icons.html">
 <link rel="import" href="../firebase/firebase-hosted-app.html">
 <link rel="import" href="add-card.html">
@@ -98,6 +101,9 @@
   added to the data object
 -->
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <paper-input value="{{language}}"></paper-input>
+    <app-localstorage-document key="language" data="{{language}}">
+    </app-localstorage-document>
 
     <!-- Main content -->
     <app-header-layout fullbleed has-scrolling-region>
@@ -235,6 +241,7 @@
         } else {
           this.$.drawer.toggle();
         }
+      }
 
       changeLang(e) {
         this.language = e.target.getAttribute('select-language');
