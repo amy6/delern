@@ -129,7 +129,7 @@
         <!-- iron-pages selects the view based on the active route -->
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <add-card name="add-card" firebase-user="[[firebaseUser]]" language="[[language]]"></add-card>
-          <sign-in name="sign-in" route-data="{{routeData}}"></sign-in>
+          <sign-in name="sign-in" route-data="{{routeData}}" language="[[language]]"></sign-in>
         </iron-pages>
 
       </app-drawer-layout>
