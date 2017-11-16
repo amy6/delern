@@ -1,0 +1,37 @@
+<script src="//polygit.org/components/webcomponentsjs/webcomponents-loader.js"></script>
+<!-- Localization -->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
+
+<script>
+  /**
+   * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
+   * @customElement
+   * @polymer
+   * @extends {Polymer.Element}
+   * @appliesMixin Polymer.AppLocalizeBehavior
+   */
+  class UserLang extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
+
+    static get properties() {
+      return {
+        language: {
+          value: 'en',
+          type: String,
+          notify: true,
+        },
+      };
+    }
+
+
+    ready() {
+      super.ready();
+      // load localized messages
+      this.loadResources(this.resolveUrl('locales.json'));
+    }
+  }
+
+  // Associate the new class with an element name
+  customElements.define('user-lang', UserLang);
+
+</script>

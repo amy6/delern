@@ -9,6 +9,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
+<link rel="import" href="language.html">
+
 <dom-module id="decks-list">
   <template>
     <style include="shared-styles"></style>
@@ -34,7 +36,7 @@
      * @extends {Polymer.Element}
      * @appliesMixin Polymer.AppLocalizeBehavior
      */
-    class DecksList extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
+    class DecksList extends UserLang {
       static get is() {
         return 'decks-list'
       }
@@ -47,18 +49,8 @@
             type: String,
             notify: true,
           },
-          language: {
-            type: String,
-            value: 'en',
-          },
         };
       }
-
-      ready() {
-        super.ready();
-        // load localized messages
-        this.loadResources(this.resolveUrl('locales.json'));
-      };
     }
     customElements.define(DecksList.is, DecksList);
 

@@ -8,6 +8,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
+<link rel="import" href="language.html">
+
 <dom-module id="add-card">
   <template>
 
@@ -57,7 +59,7 @@
      * @extends {Polymer.Element}
      * @appliesMixin Polymer.AppLocalizeBehavior
      */
-    class AddCard extends Polymer.mixinBehaviors([Polymer.AppLocalizeBehavior], Polymer.Element) {
+    class AddCard extends UserLang {
       static get is() {
         return 'add-card';
       }
@@ -83,17 +85,7 @@
             type: Boolean,
             value: false,
           },
-          language: {
-            value: 'en',
-            type: String,
-          },
         };
-      };
-
-      ready() {
-        super.ready();
-        // load localized messages
-        this.loadResources(this.resolveUrl('locales.json'));
       };
 
       addCard() {

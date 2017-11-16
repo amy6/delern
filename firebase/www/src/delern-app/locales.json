@@ -12,7 +12,10 @@
     "delern_main_title": "Delern - Learn easy!",
     "sign_out_button_text": "Sign Out",
 
-    "choose_deck_text": "Choose deck"
+    "choose_deck_text": "Choose deck",
+
+    "google_signin": "Google SignIn"
+
    },
   "ru": {
     "add_front_side_text": "Введите переднюю сторону карточки",
@@ -27,6 +30,9 @@
     "delern_main_title": "Delern - Изучай легко!",
     "sign_out_button_text": "Выход",
 
-    "choose_deck_text": "Выберите список"
+    "choose_deck_text": "Выберите список",
+
+    "google_signin": "Google Авторизация"
+
   }
 }
