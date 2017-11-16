@@ -23,15 +23,11 @@
       };
     }
 
-
     ready() {
       super.ready();
       // load localized messages
       this.loadResources(this.resolveUrl('locales.json'));
     }
   }
-
-  // Associate the new class with an element name
-  customElements.define('user-lang', UserLang);
 
 </script>

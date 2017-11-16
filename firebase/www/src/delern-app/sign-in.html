@@ -1,11 +1,6 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
-<!-- Localization -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
-
-<link rel="import" href="language.html">
-
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="user-lang.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="sign-in">
@@ -19,24 +14,17 @@
         padding: 10px;
       }
 
-      .sign-in-button {
-        width: 170px;
-      }
-
     </style>
 
     <div class="row">
-      <button on-click="signIn" class="content sign-in-button">[[localize('google_signin')]]</button>
+      <paper-button raised on-click="signIn" class="content intends">
+        [[localize('google_signin')]]
+      </paper-button>
     </div>
 
   </template>
 
   <script>
-    /**
-     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
-     * @extends {Polymer.Element}
-     * @appliesMixin Polymer.AppLocalizeBehavior
-     */
     class SignIn extends UserLang {
       static get is() {
         return 'sign-in';

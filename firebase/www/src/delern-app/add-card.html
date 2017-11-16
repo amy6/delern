@@ -1,14 +1,9 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="decks-list.html">
-<!-- Localization -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
-
-<link rel="import" href="language.html">
+<link rel="import" href="user-lang.html">
 
 <dom-module id="add-card">
   <template>
@@ -54,11 +49,6 @@
   </template>
 
   <script>
-    /**
-     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
-     * @extends {Polymer.Element}
-     * @appliesMixin Polymer.AppLocalizeBehavior
-     */
     class AddCard extends UserLang {
       static get is() {
         return 'add-card';

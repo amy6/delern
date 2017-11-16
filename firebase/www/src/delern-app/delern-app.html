@@ -15,10 +15,6 @@
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
-<!-- Localization -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
-
 <!--Local storage -->
 <link rel="import" href="../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
@@ -26,7 +22,7 @@
 <link rel="import" href="../firebase/firebase-hosted-app.html">
 <link rel="import" href="add-card.html">
 <link rel="import" href="sign-in.html">
-<link rel="import" href="language.html">
+<link rel="import" href="user-lang.html">
 
 <dom-module id="delern-app">
   <template>
@@ -137,11 +133,6 @@
   </template>
 
   <script>
-    /**
-     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
-     * @customElement
-     * @polymer
-     */
     class DelernApp extends UserLang {
       static get is() {
         return 'delern-app';

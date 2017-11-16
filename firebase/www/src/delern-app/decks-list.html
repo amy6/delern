@@ -1,15 +1,11 @@
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
-<!-- Localization -->
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/app-localize-behavior/app-localize-behavior.html">
 
-<link rel="import" href="language.html">
+<link rel="import" href="user-lang.html">
 
 <dom-module id="decks-list">
   <template>
@@ -31,11 +27,6 @@
   </template>
 
   <script>
-    /**
-     * https://github.com/Polymer/polymer-analyzer/wiki/JS-Doc-Annotations-recognized-by-the-polymer-analyzer
-     * @extends {Polymer.Element}
-     * @appliesMixin Polymer.AppLocalizeBehavior
-     */
     class DecksList extends UserLang {
       static get is() {
         return 'decks-list'
