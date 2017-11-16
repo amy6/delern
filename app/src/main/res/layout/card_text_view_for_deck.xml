@@ -18,30 +18,46 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_edit_click"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    card_view:cardCornerRadius="5dp">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/card_edit_click"
-              style="@style/RippleBackground"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:clickable="true"
-              android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/front_textview"
-        style="@style/PrimaryText"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/RippleBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        tools:ignore="SelectableText" />
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_margin="16dp">
 
-    <TextView
-        android:id="@+id/back_textview"
-        style="@style/SecondaryText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        tools:ignore="SelectableText" />
+        <TextView
+            android:id="@+id/front_textview"
+            style="@style/PrimaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="SelectableText"
+            android:maxLines="5"/>
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/back_textview"
+            style="@style/SecondaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="SelectableText"
+            android:maxLines="5"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+

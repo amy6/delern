@@ -23,16 +23,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.firebase.database.Query;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
@@ -57,6 +57,8 @@ public class EditCardListActivity extends AppCompatActivity implements
      * IntentExtra deck to edit.
      */
     public static final String DECK = "deck";
+
+    private static final int DEFAULT_CARD_SIZE = 180;
 
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
@@ -92,16 +94,12 @@ public class EditCardListActivity extends AppCompatActivity implements
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
         Injector.getEditCardListActivityInjector().inject(this);
-
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .build());
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        // use a grid layout manager
+        RecyclerView.LayoutManager mLayoutManager =
+                new GridLayoutManager(this, calculateNumberOfColumns());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // For better performance
-        // https://stackoverflow.com/questions/28709220/understanding-recyclerview-sethasfixedsize
-        // TODO(ksheremet): It doesn't show list of cards when activity was started.
-        // mRecyclerView.setHasFixedSize(true);
+        // For better performance. The size of views won't be changed.
+        mRecyclerView.setHasFixedSize(true);
         // The FirebaseRecyclerAdapter asynchronously synchronizes data from the database.
         // To know whenever the data in an adapter changes, you can register an AdapterDataObserver.
         // https://stackoverflow.com/questions/37937497/getitemcount-on-adapter-is-returning-0
@@ -115,6 +113,23 @@ public class EditCardListActivity extends AppCompatActivity implements
             }
         };
         mPresenter.onCreate(deck);
+    }
+
+    /**
+     * Calculate number of columns for GreedLayoutManager.
+     * Default size of card is equivalent of DEFAULT_CARD_SIZE
+     *
+     * @return number of columns in GridLayout;
+     */
+    // https://stackoverflow.com/questions/33575731/gridlayoutmanager-how-to-auto-fit-columns
+    private int calculateNumberOfColumns() {
+        // Describes general information about a display,
+        // such as its size, density, and font scaling.
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        // widthPixels  - The absolute width of the available display size in pixels.
+        // density - The logical density of the display.
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) Math.max(1, dpWidth / DEFAULT_CARD_SIZE);
     }
 
     @OnClick(R.id.f_add_card_button)
