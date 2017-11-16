@@ -79,6 +79,12 @@
       };
 
       addCard() {
+        if (!this.deckId) {
+          // TODO(ksheremet): replace with input validation
+          document.getElementById('toast').show(this.localize('deck_not_selected_message'));
+          return;
+        }
+
         if (this.frontSide.length == 0) {
           // TODO(ksheremet): replace with input validation
           document.getElementById('toast').show(this.localize('empty_front_side_message'));

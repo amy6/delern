@@ -7,6 +7,7 @@
     "empty_front_side_message": "Front side of the card is empty",
     "added_card_message": "Added",
     "error_adding_card_message": "Error occurred. Try again",
+    "deck_not_selected_message": "Deck not selected",
 
     "menu_text": "Menu",
     "delern_main_title": "Delern - Learn easy!",
@@ -25,6 +26,7 @@
     "empty_front_side_message": "Передняя сторона карточки пуста",
     "added_card_message": "Добавлена",
     "error_adding_card_message": "Произошла ошибка. Попробуйте еще раз",
+    "deck_not_selected_message": "Список не выбран",
 
     "menu_text": "Меню",
     "delern_main_title": "Delern - Изучай легко!",
