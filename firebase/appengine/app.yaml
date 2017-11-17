@@ -20,3 +20,6 @@ libraries:
 basic_scaling:
   max_instances: 1
   idle_timeout: 10s
+
+env_variables:
+  PYTHONHTTPSVERIFY: 1
