@@ -83,7 +83,8 @@ public class FirebaseServerRunner {
 
         mFirebaseServer = null;
 
-        if (exitCode != 143) {
+        // Exit codes 143 (SIGTERM) and 0 (processed SIGTERM and exited normally) are expected.
+        if (exitCode != 143 && exitCode != 0) {
             throw new IOException("firebase-server exited with code " + exitCode);
         }
     }
