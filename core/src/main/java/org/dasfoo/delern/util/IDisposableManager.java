@@ -16,30 +16,19 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.addupdatecard;
+package org.dasfoo.delern.util;
 
-import org.dasfoo.delern.util.IDisposableManager;
+import io.reactivex.disposables.Disposable;
 
 /**
- * Callback interface for communicating Presenter with Activity.
+ * Classes implementing this interface should dispose of all objects provided, when they are freeing
+ * their resources (e.g. object is being destroyed).
  */
-public interface IAddEditCardView extends IDisposableManager {
-
+public interface IDisposableManager {
     /**
-     * Handle updating card user message.
-     */
-    void cardUpdated();
-
-    /**
-     * Handle adding card user message.
-     */
-    void cardAdded();
-
-
-    /**
-     * Checks whether reversed card should be added or not.
+     * Track a new object to be released.
      *
-     * @return true if add reversed card, false if not.
+     * @param d a disposable to call dispose() on, to release unused resources.
      */
-    boolean addReversedCard();
+    void manageDisposable(Disposable d);
 }

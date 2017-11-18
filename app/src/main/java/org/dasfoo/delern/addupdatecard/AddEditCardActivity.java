@@ -38,6 +38,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
+import org.dasfoo.delern.util.ILifecycleDisposableManager;
 
 import javax.inject.Inject;
 
@@ -48,7 +49,8 @@ import butterknife.OnClick;
 /**
  * Activity to edit or add a new card.
  */
-public class AddEditCardActivity extends AppCompatActivity implements IAddEditCardView {
+public class AddEditCardActivity extends AppCompatActivity implements IAddEditCardView,
+        ILifecycleDisposableManager {
 
     /**
      * IntentExtra Card ID being edited.

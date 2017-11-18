@@ -109,6 +109,7 @@ public class ShareDeckActivityPresenter {
         deckAccess.setAccess(access);
 
         // TODO(ksheremet): write Deck for the new user.
+        // TODO(ksheremet): notify user about sharing (need to add activity interface)
         deckAccess.save();
     }
 }

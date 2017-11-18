@@ -63,6 +63,7 @@ import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
+import org.dasfoo.delern.util.ILifecycleDisposableManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class DelernMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
+        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick,
+        ILifecycleDisposableManager {
 
     /**
      * IntentExtra user for showing user info and data.

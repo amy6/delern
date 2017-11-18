@@ -20,11 +20,12 @@ package org.dasfoo.delern.listdecks;
 
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.util.IDisposableManager;
 
 /**
  * Interface for DelernMainActivity that called from Presenter (DelernMainActivityPresenter).
  */
-public interface IDelernMainView {
+public interface IDelernMainView extends IDisposableManager {
 
     /**
      * Handles when user is not Signed In.

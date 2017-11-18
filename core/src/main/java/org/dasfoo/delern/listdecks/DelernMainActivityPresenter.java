@@ -109,13 +109,13 @@ public class DelernMainActivityPresenter {
      *
      * @param deckName name of deck
      */
-    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     public void createNewDeck(final String deckName) {
         final Deck newDeck = new Deck(mUser);
         newDeck.setName(deckName);
         newDeck.setDeckType(DeckType.BASIC.name());
         newDeck.setAccepted(true);
-        newDeck.create().subscribe(() -> mDelernMainView.addCardsToDeck(newDeck));
+        mDelernMainView.manageDisposable(newDeck.create().subscribe(
+                () -> mDelernMainView.addCardsToDeck(newDeck)));
     }
 
     /**

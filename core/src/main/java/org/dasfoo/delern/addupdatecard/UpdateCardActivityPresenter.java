@@ -49,11 +49,10 @@ public class UpdateCardActivityPresenter implements IAddUpdatePresenter {
      * @param newFront new front side of card.
      * @param newBack  new back side of card.
      */
-    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     private void update(final String newFront, final String newBack) {
         mCard.setFront(newFront);
         mCard.setBack(newBack);
-        mCard.save().subscribe(mAddEditCardView::cardUpdated);
+        mAddEditCardView.manageDisposable(mCard.save().subscribe(mAddEditCardView::cardUpdated));
     }
 
     /**
