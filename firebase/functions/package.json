@@ -2,8 +2,8 @@
   "name": "functions",
   "description": "Firebase Functions",
   "dependencies": {
-    "actions-on-google": "^1.0.7",
-    "firebase-admin": "^5.4.3",
-    "firebase-functions": "^0.7.2"
+    "actions-on-google": "^1.6.0",
+    "firebase-admin": "^5.5.0",
+    "firebase-functions": "^0.7.3"
   }
 }

@@ -4,7 +4,7 @@
 	"license": "GPL-3.0",
 	"description": "Local Firebase Realtime Database server for tests",
 	"dependencies": {
-		"firebase-bolt": ">=0.8.2",
-		"firebase-server": ">=0.11.0"
+		"firebase-bolt": "^0.8.2",
+		"firebase-server": "^0.12.0"
 	}
 }
