@@ -104,7 +104,9 @@ type Deck {
   deckType: String,
   category: String | Null,
   accepted: TransitionToTrueOnlyBoolean,
+  // TODO(dotdoom): do not allow Null
   lastSyncAt: Number | Null,
+  // TODO(dotdoom): do not allow Null
   markdown: Boolean | Null,
 }
 
@@ -128,18 +130,18 @@ path /decks/{userId}/{deckId} is Deck {
   }
 }
 
-type SetOnceTimestamp extends Number {
+type CreatedAtTimestamp extends Number {
   validate() {
-    // We could validate that this === now, but that
-    // might not play well with offline access.
-    prior(this) === null || this === prior(this)
+    (prior(this) === null && this === now) ||
+    this === prior(this)
   }
 }
 
 type Card {
   front: String,
   back: String,
-  createdAt: SetOnceTimestamp | Null,
+  // TODO(dotdoom): do not allow Null
+  createdAt: CreatedAtTimestamp | Null,
 }
 
 path /cards/{deckId} {

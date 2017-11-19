@@ -171,9 +171,13 @@ public class MultiWrite {
                 OPERATIONS_IN_FLIGHT);
         OPERATIONS_IN_FLIGHT.incrementAndGet();
 
+        // TODO(dotdoom): take a stack trace here for onFailureListener.
+
         mRoot.updateChildren(mData)
                 .addOnSuccessListener((final Void p) -> subject.onComplete())
                 .addOnFailureListener((final Exception e) -> {
+                    // TODO(dotdoom): use externally saved stacktrace to log an error here. Stack
+                    //                trace from 'e' is internal to Firebase and not useful.
                     LOGGER.error("Failed to save {}", mData, e);
                     subject.onError(e);
                 })

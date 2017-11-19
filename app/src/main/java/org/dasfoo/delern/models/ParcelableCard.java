@@ -22,6 +22,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.database.ServerValue;
+
 /**
  * Parcelable wrapper.
  */
@@ -44,7 +46,11 @@ public class ParcelableCard implements Parcelable {
                     return new ParcelableCard[size];
                 }
             };
-
+    /**
+     * A special value which, when stored in a Parcel, indicates that it should be a Firebase
+     * special value ServerValue.TIMESTAMP (which is a Map and can't be serialized into parcelable).
+     */
+    private static final long PARCEL_SERVER_VALUE_TIMESTAMP = 0;
     private final Card mCard;
 
     /**
@@ -71,6 +77,12 @@ public class ParcelableCard implements Parcelable {
         mCard.setKey(in.readString());
         mCard.setBack(in.readString());
         mCard.setFront(in.readString());
+        long createdAt = in.readLong();
+        if (createdAt == PARCEL_SERVER_VALUE_TIMESTAMP) {
+            mCard.setCreatedAt(ServerValue.TIMESTAMP);
+        } else {
+            mCard.setCreatedAt(createdAt);
+        }
     }
 
     /**
@@ -104,5 +116,11 @@ public class ParcelableCard implements Parcelable {
         parcel.writeString(mCard.getKey());
         parcel.writeString(mCard.getBack());
         parcel.writeString(mCard.getFront());
+        if (mCard.getCreatedAt() instanceof Long) {
+            parcel.writeLong((Long) mCard.getCreatedAt());
+        } else {
+            // null will also end up here.
+            parcel.writeLong(PARCEL_SERVER_VALUE_TIMESTAMP);
+        }
     }
 }

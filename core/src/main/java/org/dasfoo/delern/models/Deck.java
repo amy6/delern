@@ -39,6 +39,8 @@ public class Deck extends Model {
     private String name;
     private String deckType;
     private String category;
+    // TODO(ksheremet): sync when app has the Internet.
+    private long lastSyncAt;
     private boolean accepted;
     private boolean markdown;
 
@@ -56,6 +58,7 @@ public class Deck extends Model {
      */
     public Deck(final User parent) {
         super(parent, null);
+        lastSyncAt = System.currentTimeMillis();
     }
 
     /**
@@ -192,6 +195,24 @@ public class Deck extends Model {
     }
 
     /**
+     * Getter for time when deck was synced.
+     *
+     * @return time when ScheduledCards of this deck were last synced.
+     */
+    public long getLastSyncAt() {
+        return lastSyncAt;
+    }
+
+    /**
+     * Update time when deck was synced to current.
+     *
+     * @param lastSyncAt time when ScheduledCards of this deck were last synced.
+     */
+    public void setLastSyncAt(final long lastSyncAt) {
+        this.lastSyncAt = lastSyncAt;
+    }
+
+    /**
      * Getter for category of deck.
      *
      * @return category of deck.
@@ -256,6 +277,7 @@ public class Deck extends Model {
                 ", deckType='" + deckType + '\'' +
                 ", category='" + category + '\'' +
                 ", accepted='" + accepted + '\'' +
+                ", lastSyncAt='" + lastSyncAt + '\'' +
                 ", markdown='" + markdown + '\'' +
                 '}';
     }
