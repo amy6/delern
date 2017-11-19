@@ -17,6 +17,10 @@ ext {
     espressoVersion = '3.0.1'
 }
 
+jacoco {
+    toolVersion jacocoVersion
+}
+
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion toolsVersion
