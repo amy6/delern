@@ -153,7 +153,6 @@ public final class User extends Model {
         if (childClass == FCMToken.class) {
             DatabaseReference reference = mDatabase.getReference().child("fcm")
                     .child(getKey());
-            reference.keepSynced(true);
             return reference;
         }
         if (childClass == User.class) {
