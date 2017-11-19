@@ -167,7 +167,10 @@ public class MultiWrite {
     public Completable write() {
         CompletableSubject subject = CompletableSubject.create();
 
+        LOGGER.info("Writing with online={}, operations in queue: {}", sConnected,
+                OPERATIONS_IN_FLIGHT);
         OPERATIONS_IN_FLIGHT.incrementAndGet();
+
         mRoot.updateChildren(mData)
                 .addOnSuccessListener((final Void p) -> subject.onComplete())
                 .addOnFailureListener((final Exception e) -> {

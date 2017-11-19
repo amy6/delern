@@ -112,7 +112,8 @@ public class Model {
 
                         @Override
                         public void onCancelled(final DatabaseError databaseError) {
-                            // On DatabaseError (e.g. permission no longer there) this isn't called.
+                            // FIXME(dotdoom): on DatabaseError (e.g. permission no longer there)
+                            //                 this isn't always called (called on instrumented?!).
                             LOGGER.error("Listener at {} has been cancelled", query.getRef(),
                                     databaseError.toException());
                             emitter.onError(databaseError.toException());
