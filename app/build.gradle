@@ -141,6 +141,8 @@ dependencies {
     implementation "com.google.firebase:firebase-invites:$firebaseVersion"
     implementation "com.google.firebase:firebase-perf:$firebaseVersion"
 
+    // FIXME(ksheremet): update to the latest version when migrated
+    //noinspection GradleDependency
     implementation 'com.firebaseui:firebase-ui-database:2.2.0'
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
