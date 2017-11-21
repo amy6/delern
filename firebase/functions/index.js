@@ -23,7 +23,8 @@ var delern = {
   createScheduledCardObject: function() {
     return {
       level: 'L0',
-      repeatAt: (new Date()).getTime(),
+      // TODO(dotdoom): figure out better repeatAt
+      repeatAt: 0,
     };
   }
 };

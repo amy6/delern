@@ -118,7 +118,8 @@ public class Card extends Model {
     public Completable create() {
         ScheduledCard scheduledCard = new ScheduledCard(getDeck());
         scheduledCard.setLevel(Level.L0.name());
-        scheduledCard.setRepeatAt(System.currentTimeMillis());
+        // TODO(dotdoom): figure out better repeatAt
+        scheduledCard.setRepeatAt(0);
         setParent(scheduledCard);
 
         return new MultiWrite()
