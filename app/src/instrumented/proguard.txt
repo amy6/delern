@@ -9,5 +9,14 @@
   public *** signInAnonymously();
 }
 
+# See CrashlyticsTestExtension.
+-keep class com.crashlytics.android.core.CrashlyticsCore {
+  *** getController();
+  *** doInBackground();
+}
+-keep class com.crashlytics.android.core.CrashlyticsController {
+  *** doOpenSession();
+}
+
 # For Espresso.
 -keep class javax.inject.* { *;  }

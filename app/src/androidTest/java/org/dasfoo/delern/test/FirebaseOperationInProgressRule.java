@@ -74,5 +74,7 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
     @Override
     protected void after() {
         IdlingRegistry.getInstance().unregister(mFirebaseOperationIdlingResource);
+        // TODO(dotdoom): move this to a more appropriate place
+        CrashlyticsTestExtension.sendReportsNow();
     }
 }
