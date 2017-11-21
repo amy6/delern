@@ -24,14 +24,18 @@ import android.text.InputType;
 import android.widget.EditText;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
-import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
+import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.test.ViewMatchers;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -40,14 +44,18 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 
 
@@ -117,6 +125,47 @@ public class CardListTest {
         waitView(() -> onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         2)))));
+    }
+
+    @Test
+    public void checkBackgroundColorsOfCards() {
+        String front1 = "die Tochter";
+        String back1 = "die Tochter2";
+        String front2 = "der Hund";
+        String back2 = "der Hund2";
+        String front3 = "das Madchen";
+        String back3 = "das Madchen2";
+        createCard(front1, back1);
+        createCard(front2, back2);
+        createCard(front3, back3);
+        pressBack();
+        // Change deckType
+        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click()));
+        waitView(() -> onView(withText(R.string.deck_settings_menu)).perform(click()));
+        Context context = mActivityRule.getActivity().getApplicationContext();
+        String deckType = context.getResources()
+                .getStringArray(R.array.deck_type_spinner)[DeckType.GERMAN.ordinal()];
+        // Spinner doesn't always open.
+        onView(withId(R.id.deck_type_spinner)).perform(click());
+        onData(CoreMatchers.allOf(is(instanceOf(String.class)), is(deckType))).perform(click());
+        onView(withId(R.id.deck_type_spinner))
+                .check(matches(withSpinnerText(is(deckType))));
+        pressBack();
+        // Open list of cards
+        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
+                .perform(click()));
+        onView(withText(R.string.edit_cards_deck_menu)).perform(click());
+        onView(withId(R.id.number_of_cards))
+                .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
+                        3))));
+        // Check background colors
+        onView(allOf(withId(R.id.card_edit_click), hasDescendant(withText(front1))))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
+        onView(allOf(withId(R.id.card_edit_click), hasDescendant(withText(front2))))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
+        onView(allOf(withId(R.id.card_edit_click), hasDescendant(withText(front3))))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
     }
 
     @After

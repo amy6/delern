@@ -41,9 +41,9 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
     /**
      * Create a new FirebaseRecyclerAdapter.
      *
-     * @param deck     deck which cards to show.
-     * @param query    reference to FB to cards of deck.
-     * @param listener listener to handle clicks on card.
+     * @param deck      deck which cards to show.
+     * @param query     reference to FB to cards of deck.
+     * @param listener  listener to handle clicks on card.
      * @param presenter presenter to handle deck and cards operations.
      */
     public CardRecyclerViewAdapter(final Deck deck,

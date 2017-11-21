@@ -18,6 +18,11 @@
 
 package org.dasfoo.delern.test;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
+import android.view.View;
+
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -53,5 +58,28 @@ public final class ViewMatchers {
                 description.appendText("first matching item only");
             }
         };
+    }
+
+    /**
+     * Check background colors of CardView.
+     */
+    public static final class ColorMatcher extends BaseMatcher<View> {
+        private final int matchColor;
+
+        public ColorMatcher(int matchColor) {
+            this.matchColor = matchColor;
+        }
+
+        @Override
+        public boolean matches(Object item) {
+            Context context = ((View) item).getContext();
+            int settingsColor = ContextCompat.getColor(context, this.matchColor);
+            return settingsColor == ((CardView) item).getCardBackgroundColor().getDefaultColor();
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("with background color: ");
+        }
     }
 }

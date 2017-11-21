@@ -70,7 +70,7 @@ public class EditCardListActivityPresenter {
      */
     public GrammaticalGenderSpecifier.Gender specifyContentGender(final String backSide) {
         return GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mDeck.getDeckType()),
-                    backSide);
+                DeckType.valueOf(mDeck.getDeckType()),
+                backSide);
     }
 }

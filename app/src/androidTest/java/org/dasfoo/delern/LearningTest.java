@@ -21,18 +21,14 @@ package org.dasfoo.delern;
 import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.text.InputType;
-import android.view.View;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
-import org.hamcrest.BaseMatcher;
+import org.dasfoo.delern.test.ViewMatchers;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Description;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -135,14 +131,14 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
+        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
+        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
@@ -150,7 +146,7 @@ public class LearningTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
+        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
@@ -178,7 +174,8 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
+        onView(withId(R.id.card_view))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         0))));
@@ -188,7 +185,8 @@ public class LearningTest {
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.masculine)));
+        onView(withId(R.id.card_view))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         1))));
@@ -199,7 +197,7 @@ public class LearningTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.neuter)));
+        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         2))));
@@ -240,7 +238,8 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.feminine)));
+        onView(withId(R.id.card_view))
+                .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         pressBack();
         // Change deckType
         changeDeckType(DeckType.BASIC);
@@ -249,7 +248,7 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ColorMatcher(R.color.noGender)));
+        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.noGender)));
     }
 
     @Test
@@ -295,26 +294,5 @@ public class LearningTest {
         onView(withText(R.string.deck_settings_menu)).perform(click());
         waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
         onView(withText(R.string.delete)).perform(click());
-    }
-
-    public static class ColorMatcher extends BaseMatcher<View> {
-
-        private final int matchColor;
-
-        /*default*/ ColorMatcher(int matchColor) {
-            this.matchColor = matchColor;
-        }
-
-        @Override
-        public boolean matches(Object item) {
-            Context context = ((View) item).getContext();
-            int settingsColor = ContextCompat.getColor(context, this.matchColor);
-            return settingsColor == ((CardView) item).getCardBackgroundColor().getDefaultColor();
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("with background color: ");
-        }
     }
 }
