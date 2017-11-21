@@ -18,6 +18,9 @@
 
 package org.dasfoo.delern.listcards;
 
+import android.support.v4.content.ContextCompat;
+import android.text.Html;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
 
@@ -25,14 +28,15 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
+import org.dasfoo.delern.util.CardColor;
 
 /**
- * Created by katarina on 11/19/16.
+ * Activity displays list of cards in given deck.
  */
-
 public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardViewHolder> {
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
+    private final EditCardListActivityPresenter mPresenter;
 
     /**
      * Create a new FirebaseRecyclerAdapter.
@@ -40,23 +44,35 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
      * @param deck     deck which cards to show.
      * @param query    reference to FB to cards of deck.
      * @param listener listener to handle clicks on card.
+     * @param presenter presenter to handle deck and cards operations.
      */
     public CardRecyclerViewAdapter(final Deck deck,
                                    final Query query,
-                                   final OnCardViewHolderClick listener) {
+                                   final OnCardViewHolderClick listener,
+                                   final EditCardListActivityPresenter presenter) {
         super(new FirebaseSnapshotParser<>(Card.class, deck),
                 R.layout.card_text_view_for_deck, CardViewHolder.class, query);
         this.mOnCardViewHolderClick = listener;
+        this.mPresenter = presenter;
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     @Override
     protected void populateViewHolder(final CardViewHolder viewHolder, final Card card,
                                       final int position) {
-        viewHolder.getFrontTextView().setText(card.getFront());
-        viewHolder.getBackTextView().setText(card.getBack());
+        if (mPresenter.getDeck().isMarkdown()) {
+            viewHolder.getFrontTextView().setText(Html.fromHtml(card.getFront()));
+            viewHolder.getBackTextView().setText(Html.fromHtml(card.getBack()));
+        } else {
+            viewHolder.getFrontTextView().setText(card.getFront());
+            viewHolder.getBackTextView().setText(card.getBack());
+        }
         viewHolder.setOnViewClick(mOnCardViewHolderClick);
+        viewHolder.getCardView().setCardBackgroundColor(ContextCompat
+                .getColor(viewHolder.itemView.getContext(),
+                        CardColor.getColor(mPresenter.specifyContentGender(card.getBack()))));
     }
 }

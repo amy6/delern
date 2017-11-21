@@ -224,9 +224,10 @@ public class EditCardListActivity extends AppCompatActivity implements
 
         if (query == null) {
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(),
-                    mPresenter.getQuery(), this);
+                    mPresenter.getQuery(), this, mPresenter);
         } else {
-            mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this);
+            mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this,
+                    mPresenter);
         }
 
         // If it was got 0 cards, AdapterDataObserver won't run. Therefore it will be shown

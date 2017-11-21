@@ -22,12 +22,19 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
+import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Presenter for EditCardListActivity. It performs operation with Model layer and
  * using callbacks update views of user.
  */
 public class EditCardListActivityPresenter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            EditCardListActivityPresenter.class);
 
     private Deck mDeck;
     private Query mQuery;
@@ -59,5 +66,25 @@ public class EditCardListActivityPresenter {
      */
     public Query getQuery() {
         return mQuery;
+    }
+
+    /**
+     * Specifies grammatical gender of content.
+     *
+     * @param backSide back side of card.
+     * @return gender of content.
+     */
+    public GrammaticalGenderSpecifier.Gender specifyContentGender(final String backSide) {
+        GrammaticalGenderSpecifier.Gender gender;
+        try {
+            gender = GrammaticalGenderSpecifier.specifyGender(
+                    DeckType.valueOf(mDeck.getDeckType()),
+                    backSide);
+
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Cannot detect gender: {}", backSide, e);
+            gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
+        }
+        return gender;
     }
 }

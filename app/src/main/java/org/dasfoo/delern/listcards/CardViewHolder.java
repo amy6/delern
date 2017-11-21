@@ -18,6 +18,7 @@
 
 package org.dasfoo.delern.listcards;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     /* default */ TextView mFrontTextView;
     @BindView(R.id.back_textview)
     /* default */ TextView mBackTextView;
+    @BindView(R.id.card_edit_click)
+    /* default */ CardView mCardView;
     private OnCardViewHolderClick mOnViewClick;
 
     /**
@@ -66,6 +69,15 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
      */
     public TextView getBackTextView() {
         return mBackTextView;
+    }
+
+    /**
+     * Getter for card view that contains front and back sides of card.
+     *
+     * @return view of card.
+     */
+    public CardView getCardView() {
+        return mCardView;
     }
 
     /**
