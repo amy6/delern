@@ -19,6 +19,7 @@
 package org.dasfoo.delern.di.modules;
 
 import org.dasfoo.delern.listcards.EditCardListActivityPresenter;
+import org.dasfoo.delern.models.Deck;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,8 +30,19 @@ import dagger.Provides;
 @Module
 public class EditCardListActivityModule {
 
+    private final Deck mDeck;
+
+    /**
+     * Constructor. It gets deck as a parameter to create Presenter.
+     *
+     * @param deck deck to inject.
+     */
+    public EditCardListActivityModule(final Deck deck) {
+        this.mDeck = deck;
+    }
+
     @Provides
     /* default */ EditCardListActivityPresenter providePresenter() {
-        return new EditCardListActivityPresenter();
+        return new EditCardListActivityPresenter(mDeck);
     }
 }

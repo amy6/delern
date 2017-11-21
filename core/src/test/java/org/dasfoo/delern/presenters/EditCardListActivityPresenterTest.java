@@ -25,15 +25,13 @@ public class EditCardListActivityPresenterTest {
 
     @Before
     public void setParam() throws Exception {
-        mPresenter = new EditCardListActivityPresenter();
         User user = mFirebaseServer.signIn();
         user.save().blockingAwait();
         mDeck = new Deck(user);
         mDeck.setAccepted(true);
         mDeck.setName("test");
         mDeck.create().blockingAwait();
-        mPresenter.onCreate(mDeck);
-
+        mPresenter = new EditCardListActivityPresenter(mDeck);
     }
 
     @Test

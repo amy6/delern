@@ -24,8 +24,6 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Presenter for EditCardListActivity. It performs operation with Model layer and
@@ -33,20 +31,16 @@ import org.slf4j.LoggerFactory;
  */
 public class EditCardListActivityPresenter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(
-            EditCardListActivityPresenter.class);
-
-    private Deck mDeck;
-    private Query mQuery;
+    private final Deck mDeck;
+    private final Query mQuery;
 
     /**
-     * Called from EditCardListActivity.onCreate(). It sets deck which
-     * cards to show and gets Query to get list of cards from deck.
+     * It sets deck which cards to show and gets Query to get list of cards from deck.
      *
      * @param deck deck which cards to show.
      */
-    public void onCreate(final Deck deck) {
-        mDeck = deck;
+    public EditCardListActivityPresenter(final Deck deck) {
+        this.mDeck = deck;
         mQuery = mDeck.getChildReference(Card.class);
     }
 
@@ -75,16 +69,8 @@ public class EditCardListActivityPresenter {
      * @return gender of content.
      */
     public GrammaticalGenderSpecifier.Gender specifyContentGender(final String backSide) {
-        GrammaticalGenderSpecifier.Gender gender;
-        try {
-            gender = GrammaticalGenderSpecifier.specifyGender(
+        return GrammaticalGenderSpecifier.specifyGender(
                     DeckType.valueOf(mDeck.getDeckType()),
                     backSide);
-
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Cannot detect gender: {}", backSide, e);
-            gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
-        }
-        return gender;
     }
 }

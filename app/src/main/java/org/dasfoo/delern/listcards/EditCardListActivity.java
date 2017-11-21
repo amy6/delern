@@ -93,7 +93,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
-        Injector.getEditCardListActivityInjector().inject(this);
+        Injector.getEditCardListActivityInjector(deck).inject(this);
         // use a grid layout manager
         RecyclerView.LayoutManager mLayoutManager =
                 new GridLayoutManager(this, calculateNumberOfColumns());
@@ -112,7 +112,6 @@ public class EditCardListActivity extends AppCompatActivity implements
                         mFirebaseAdapter.getItemCount()));
             }
         };
-        mPresenter.onCreate(deck);
     }
 
     /**

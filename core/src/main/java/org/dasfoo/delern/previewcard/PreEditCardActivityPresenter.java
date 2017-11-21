@@ -113,16 +113,8 @@ public class PreEditCardActivityPresenter {
      * @return gender of content.
      */
     public GrammaticalGenderSpecifier.Gender specifyContentGender() {
-        GrammaticalGenderSpecifier.Gender gender;
-        try {
-            gender = GrammaticalGenderSpecifier.specifyGender(
-                    DeckType.valueOf(mCard.getDeck().getDeckType()),
-                    mCard.getBack());
-
-        } catch (IllegalArgumentException e) {
-            LOGGER.error("Cannot detect gender: {}", mCard.getBack(), e);
-            gender = GrammaticalGenderSpecifier.Gender.NO_GENDER;
-        }
-        return gender;
+        return GrammaticalGenderSpecifier.specifyGender(
+                DeckType.valueOf(mCard.getDeck().getDeckType()),
+                mCard.getBack());
     }
 }

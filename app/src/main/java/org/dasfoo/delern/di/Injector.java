@@ -104,12 +104,13 @@ public final class Injector {
     /**
      * Method returns injector class.
      *
+     * @param deck deck to inject.
      * @return EditCardListActivityComponent.
      */
-    public static EditCardListActivityComponent getEditCardListActivityInjector() {
+    public static EditCardListActivityComponent getEditCardListActivityInjector(final Deck deck) {
         return DaggerEditCardListActivityComponent
                 .builder()
-                .editCardListActivityModule(new EditCardListActivityModule()).build();
+                .editCardListActivityModule(new EditCardListActivityModule(deck)).build();
     }
 
     /**
