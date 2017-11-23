@@ -75,7 +75,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
   let deckId = event.params.deckId,
     userId = event.params.userId;
 
-  legacyCreateSharedDeck(deckId, userId)
+  return legacyCreateSharedDeck(deckId, userId)
     .then(() => {
       return admin.database().ref('cards').child(deckId).once('value');
     })

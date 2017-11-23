@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.models;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
@@ -50,9 +49,8 @@ public final class Auth {
         sCurrentUser = new User(db);
 
         // TODO(dotdoom): refactor into a non-static method?
-        FirebaseAuth.getInstance().addAuthStateListener(
-                (@NonNull final FirebaseAuth firebaseAuth) ->
-                        setCurrentUser(firebaseAuth.getCurrentUser()));
+        FirebaseAuth.getInstance().addAuthStateListener(auth ->
+                setCurrentUser(auth.getCurrentUser()));
     }
 
     /**
