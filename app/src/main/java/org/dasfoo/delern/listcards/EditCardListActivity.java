@@ -151,7 +151,7 @@ public class EditCardListActivity extends AppCompatActivity implements
     private void cleanup() {
         if (mFirebaseAdapter != null) {
             mFirebaseAdapter.unregisterAdapterDataObserver(mFirebaseAdapterDataObserver);
-            mFirebaseAdapter.cleanup();
+            mFirebaseAdapter.stopListening();
             mFirebaseAdapter = null;
         }
     }
@@ -227,6 +227,7 @@ public class EditCardListActivity extends AppCompatActivity implements
         } else {
             mFirebaseAdapter = new CardRecyclerViewAdapter(mPresenter.getDeck(), query, this);
         }
+        mFirebaseAdapter.startListening();
 
         // If it was got 0 cards, AdapterDataObserver won't run. Therefore it will be shown
         // the previous value.

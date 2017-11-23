@@ -113,7 +113,6 @@ public class ShareDeckActivity extends AppCompatActivity {
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
         Injector.getShareDeckActivityInjector(deck).inject(this);
-
         mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this,
                 R.array.share_permissions_spinner_text, R.array.share_permissions_spinner_img));
         setAutoCompleteViewSettings();
@@ -123,9 +122,7 @@ public class ShareDeckActivity extends AppCompatActivity {
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(
-                new UserDeckAccessRecyclerViewAdapter(R.layout.user_deck_access_layout,
-                        mPresenter));
+        mRecyclerView.setAdapter(new UserDeckAccessRecyclerViewAdapter(this, mPresenter));
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 

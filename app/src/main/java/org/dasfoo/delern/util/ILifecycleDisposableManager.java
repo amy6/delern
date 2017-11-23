@@ -37,6 +37,7 @@ public interface ILifecycleDisposableManager extends IDisposableManager, Lifecyc
     // TODO(dotdoom): this is slightly sub-optimal: we create an observer per Disposable. Would be
     //                nice to have a single observer, but interfaces can't have fields.
     default void manageDisposable(final Disposable d) {
+        // TODO(dotdoom): remove observer ON_DESTROY
         getLifecycle().addObserver(new LifecycleObserver() {
             @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             public void releaseDisposable() {

@@ -18,11 +18,22 @@
 
 package org.dasfoo.delern.listdecks;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import android.arch.lifecycle.LifecycleOwner;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseError;
+
+import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Created by katarina on 11/19/16.
@@ -31,43 +42,21 @@ import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
     private static final int CARDS_COUNTER_LIMIT = 200;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeckRecyclerViewAdapter.class);
+
     private OnDeckViewHolderClick mOnDeckViewHolderClick;
 
     /**
      * Default constructor.
      *
-     * @param modelLayout This is the layout used to represent a single item in the list.
-     *                    You will be responsible for populating an instance of the
-     *                    corresponding view with the data from an instance of modelClass.
-     * @param user        Current user.
+     * @param user     Current user.
+     * @param activity Activity that manages this RecyclerView.
      */
-    public DeckRecyclerViewAdapter(final int modelLayout, final User user) {
-        super(new FirebaseSnapshotParser<>(Deck.class, user),
-                modelLayout, DeckViewHolder.class, user.getChildReference(Deck.class));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
-    protected void populateViewHolder(final DeckViewHolder viewHolder, final Deck deck,
-                                      final int position) {
-        viewHolder.mDeckTextView.setText(deck.getName());
-        deck.fetchDeckAccessOfUser().subscribe(viewHolder::setDeckAccess);
-
-        Deck.fetchCount(
-                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
-                .subscribe((final Long cardsCount) -> {
-                    if (cardsCount <= CARDS_COUNTER_LIMIT) {
-                        viewHolder.mCountToLearnTextView.setText(
-                                String.valueOf(cardsCount));
-                    } else {
-                        String tooManyCards = CARDS_COUNTER_LIMIT + "+";
-                        viewHolder.mCountToLearnTextView.setText(tooManyCards);
-                    }
-                });
-        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
+    public DeckRecyclerViewAdapter(final User user, final LifecycleOwner activity) {
+        super(new FirebaseRecyclerOptions.Builder<Deck>()
+                .setQuery(user.getChildReference(Deck.class),
+                        new FirebaseSnapshotParser<>(Deck.class, user))
+                .setLifecycleOwner(activity).build());
     }
 
     /**
@@ -77,5 +66,60 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      */
     public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
         this.mOnDeckViewHolderClick = onDeckViewHolderClick;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DeckViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.deck_text_view,
+                parent, false);
+        return new DeckViewHolder(view);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
+    protected void onBindViewHolder(final DeckViewHolder viewHolder, final int position,
+                                    final Deck deck) {
+        viewHolder.mDeckTextView.setText(deck.getName());
+        deck.fetchDeckAccessOfUser().subscribe(viewHolder::setDeckAccess);
+
+        viewHolder.setCardsCountObserver(Deck.fetchCount(
+                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
+                .subscribe((final Long cardsCount) -> {
+                    if (cardsCount <= CARDS_COUNTER_LIMIT) {
+                        viewHolder.mCountToLearnTextView.setText(
+                                String.valueOf(cardsCount));
+                    } else {
+                        String tooManyCards = CARDS_COUNTER_LIMIT + "+";
+                        viewHolder.mCountToLearnTextView.setText(tooManyCards);
+                    }
+                }));
+        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onViewRecycled(final DeckViewHolder viewHolder) {
+        super.onViewRecycled(viewHolder);
+        if (viewHolder.getCardsCountObserver() != null) {
+            viewHolder.getCardsCountObserver().dispose();
+            viewHolder.setCardsCountObserver(null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onError(final DatabaseError error) {
+        LOGGER.error("Error in Adapter: ", error.toException());
+        super.onError(error);
     }
 }

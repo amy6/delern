@@ -41,16 +41,18 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     /* default */ TextView mBackTextView;
     @BindView(R.id.card_edit_click)
     /* default */ CardView mCardView;
-    private OnCardViewHolderClick mOnViewClick;
+    private final OnCardViewHolderClick mOnViewClick;
 
     /**
      * Constructor. It initializes variable that describe how to place card.
      *
-     * @param itemView item view.
+     * @param itemView              item view.
+     * @param onCardViewHolderClick handles clicks on cards.
      */
-    public CardViewHolder(final View itemView) {
+    public CardViewHolder(final View itemView, final OnCardViewHolderClick onCardViewHolderClick) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.mOnViewClick = onCardViewHolderClick;
     }
 
     /**
@@ -78,15 +80,6 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
      */
     public CardView getCardView() {
         return mCardView;
-    }
-
-    /**
-     * Setter for mOnViewClick. It listeners clicks on cards.
-     *
-     * @param onViewClick onCardViewHolderClick.
-     */
-    public void setOnViewClick(final OnCardViewHolderClick onViewClick) {
-        this.mOnViewClick = onViewClick;
     }
 
     /**

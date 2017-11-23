@@ -18,20 +18,27 @@
 
 package org.dasfoo.delern.sharedeck;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseError;
 import com.squareup.picasso.Picasso;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,26 +51,44 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserDeckAccessRecyclerViewAdapter
         extends FirebaseRecyclerAdapter<DeckAccess, UserDeckAccessRecyclerViewAdapter.ViewHolder> {
 
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(UserDeckAccessRecyclerViewAdapter.class);
+
     private final ShareDeckActivityPresenter mPresenter;
 
     /**
      * Constructor for Adapter. Adapter places information about users, that can
      * use a deck.
      *
-     * @param modelLayout moder to inflate.
-     * @param presenter   presenter for performing operations.
+     * @param activity  Activity that manages this RecyclerView.
+     * @param presenter presenter for performing operations.
      */
-    public UserDeckAccessRecyclerViewAdapter(final int modelLayout,
+    public UserDeckAccessRecyclerViewAdapter(final LifecycleOwner activity,
                                              final ShareDeckActivityPresenter presenter) {
-        super(new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()),
-                modelLayout, ViewHolder.class, presenter.getReference());
+        super(new FirebaseRecyclerOptions.Builder<DeckAccess>()
+                .setQuery(presenter.getReference(),
+                        new FirebaseSnapshotParser<>(DeckAccess.class, presenter.getDeck()))
+                .setLifecycleOwner(activity).build());
         this.mPresenter = presenter;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.user_deck_access_layout, parent, false);
+        return new ViewHolder(view);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
-    protected void populateViewHolder(final ViewHolder viewHolder, final DeckAccess deckAccess,
-                                      final int position) {
+    protected void onBindViewHolder(final ViewHolder viewHolder, final int position,
+                                    final DeckAccess deckAccess) {
         deckAccess.fetchChild(deckAccess.getChildReference(User.class), User.class)
                 .subscribe((final User user) -> {
                     viewHolder.mNameTextView.setText(user.getName());
@@ -129,6 +154,15 @@ public class UserDeckAccessRecyclerViewAdapter
                 //No need for implementation
             }
         };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onError(final DatabaseError error) {
+        LOGGER.error("Error in Adapter: ", error.toException());
+        super.onError(error);
     }
 
     /**

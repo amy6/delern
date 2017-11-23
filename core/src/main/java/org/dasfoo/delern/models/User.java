@@ -151,9 +151,8 @@ public final class User extends Model {
             return reference;
         }
         if (childClass == FCMToken.class) {
-            DatabaseReference reference = mDatabase.getReference().child("fcm")
+            return mDatabase.getReference().child("fcm")
                     .child(getKey());
-            return reference;
         }
         if (childClass == User.class) {
             // TODO(dotdoom): invalid level of child()

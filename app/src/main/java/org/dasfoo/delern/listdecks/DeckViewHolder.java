@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Katarina Sheremet on 9/22/16 1:11 AM.
@@ -53,6 +54,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
+    private Disposable mCardsCountObserver;
     private DeckAccess mDeckAccess;
     private OnDeckViewHolderClick mOnViewClick;
 
@@ -163,5 +165,23 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     public void setDeckAccess(final DeckAccess deckAccess) {
         this.mDeckAccess = deckAccess;
+    }
+
+    /**
+     * Getter of mCardsCountObserver.
+     *
+     * @return mCardsCountObserver
+     */
+    public Disposable getCardsCountObserver() {
+        return mCardsCountObserver;
+    }
+
+    /**
+     * Setter for mCardsCountObserver.
+     *
+     * @param cardsCountObserver contains amount of cards for deck.
+     */
+    public void setCardsCountObserver(final Disposable cardsCountObserver) {
+        this.mCardsCountObserver = cardsCountObserver;
     }
 }

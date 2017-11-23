@@ -168,22 +168,20 @@ public class DelernMainActivity extends AppCompatActivity
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this);
+        mFirebaseAdapter.setOnDeckViewHolderClick(this);
+        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mMainActivityPresenter.onStart();
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(R.layout.deck_text_view,
-                mMainActivityPresenter.getUser());
-        mFirebaseAdapter.setOnDeckViewHolderClick(this);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 
     @Override
     protected void onStop() {
         mMainActivityPresenter.onStop();
-        mFirebaseAdapter.cleanup();
         super.onStop();
     }
 
@@ -227,7 +225,6 @@ public class DelernMainActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setMessage(R.string.sign_out_warning)
                 .setPositiveButton(R.string.sign_out, (dialog, which) -> {
-                    mFirebaseAdapter.cleanup();
                     mMainActivityPresenter.cleanup();
                     org.dasfoo.delern.models.Auth.signOut();
                     Auth.GoogleSignInApi.signOut(mGoogleApiClient);
