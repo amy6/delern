@@ -26,6 +26,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     </entry>
     <entry>
         <key>force_update_store_url</key>
-        <value>https://play.google.com/store/apps/details?id=org.dasfoo.delern</value>
+        <value>market://details?id=org.dasfoo.delern</value>
     </entry>
 </defaultsMap>

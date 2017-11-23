@@ -21,14 +21,17 @@ public class CrashlyticsTestExtension {
             getController.setAccessible(true);
             Object controller = getController.invoke(Crashlytics.getInstance().core);
 
-            Method openSession = controller.getClass().getDeclaredMethod("doOpenSession");
-            openSession.setAccessible(true);
-            openSession.invoke(controller);
+            // When Crashlytics is disabled, controller may be null.
+            if (controller != null) {
+                Method openSession = controller.getClass().getDeclaredMethod("doOpenSession");
+                openSession.setAccessible(true);
+                openSession.invoke(controller);
 
-            Method doInBackground = Crashlytics.getInstance().core.getClass().
-                    getDeclaredMethod("doInBackground");
-            doInBackground.setAccessible(true);
-            doInBackground.invoke(Crashlytics.getInstance().core);
+                Method doInBackground = Crashlytics.getInstance().core.getClass().
+                        getDeclaredMethod("doInBackground");
+                doInBackground.setAccessible(true);
+                doInBackground.invoke(Crashlytics.getInstance().core);
+            }
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

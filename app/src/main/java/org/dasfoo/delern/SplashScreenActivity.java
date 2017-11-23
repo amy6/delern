@@ -20,18 +20,13 @@ package org.dasfoo.delern;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.signin.SignInActivity;
+import org.dasfoo.delern.util.RemoteConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,14 +37,6 @@ import org.slf4j.LoggerFactory;
 public class SplashScreenActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SplashScreenActivity.class);
-    private static final long ONE_HOUR = 3600;
-    private static final String KEY_MIN_APP_VERSION = "min_app_version";
-    private static final String KEY_UPDATE_URL = "force_update_store_url";
-
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    // In seconds.
-    private long mCacheExpirationSeconds = ONE_HOUR;
-    private OnCompleteListener<Void> mFetchRemoteConfigListener;
 
     /**
      * Starts SplashScreenActivity using context.
@@ -62,87 +49,35 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Get Remote Config instance.
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        // set in-app defaults
-        // We set default values in case of some parameters could not found in Remote Config Server.
-        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_default_settigs);
-
-        // Create a Remote Config Setting to enable developer mode, which you can use to increase
-        // the number of fetches available per hour during development.
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-        mFirebaseRemoteConfig.setConfigSettings(configSettings);
-
-        // If your app is using developer mode, cacheExpiration is set to 0, so each fetch will
-        // retrieve values from the service.
-        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-            mCacheExpirationSeconds = 0;
-        }
-
-        mFetchRemoteConfigListener = task -> {
-            if (task.isSuccessful()) {
-                LOGGER.info("remote config is fetched.");
-                // After config data is successfully fetched, it must be activated
-                // before newly fetched values are returned.
-                mFirebaseRemoteConfig.activateFetched();
-                if (updateIsNeeded()) {
-                    update();
-                    return;
-                }
-            } else {
-                LOGGER.error("Remote config reading error", task.getException());
-            }
-            if (Auth.isSignedIn()) {
-                LOGGER.info("Redirecting to main activity");
-                DelernMainActivity.startActivity(this, Auth.getCurrentUser());
-            } else {
-                LOGGER.info("Redirecting to singIn");
-                SignInActivity.startActivity(this);
-            }
-            finish();
-        };
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         LOGGER.info("Fetching remote config");
-        mFirebaseRemoteConfig.fetch(mCacheExpirationSeconds)
-                .addOnCompleteListener(mFetchRemoteConfigListener);
-    }
-
-    private void update() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.new_app_version_dialog_title)
-                .setMessage(R.string.update_app_user_message)
-                .setPositiveButton(R.string.update,
-                        (dialogUpdate, which) ->
-                                redirectForUpdate(mFirebaseRemoteConfig.getString(KEY_UPDATE_URL)))
-                .setOnCancelListener(dialogCancel -> finish())
-                .create();
-        dialog.show();
-    }
-
-    private void redirectForUpdate(final String googlePlayUrl) {
-        final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(googlePlayUrl));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    /**
-     * Check whether app needs to be updated or not. Method compares min remote version with
-     * current version of app.
-     *
-     * @return whether app needs an update or not.
-     */
-    private boolean updateIsNeeded() {
-        long minAppVersion = mFirebaseRemoteConfig.getLong(KEY_MIN_APP_VERSION);
-        long appVersion = BuildConfig.VERSION_CODE;
-        return minAppVersion > appVersion;
+        // TODO(ksheremet): add FB performance metric: splash_screen_duration
+        RemoteConfig.INSTANCE.fetch(() -> {
+            if (RemoteConfig.INSTANCE.shouldForceUpdate()) {
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.new_app_version_dialog_title)
+                        .setMessage(R.string.update_app_user_message)
+                        .setPositiveButton(R.string.update, (dialogUpdate, which) -> {
+                            final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                    RemoteConfig.INSTANCE.getUpdateUri());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            // TODO(ksheremet): this crashes the app when nothing can handle Uri
+                            startActivity(intent);
+                        })
+                        .setOnCancelListener(dialogCancel -> finish())
+                        .create();
+                dialog.show();
+            } else {
+                if (Auth.isSignedIn()) {
+                    LOGGER.info("Redirecting to main activity");
+                    DelernMainActivity.startActivity(this, Auth.getCurrentUser());
+                } else {
+                    LOGGER.info("Redirecting to singIn");
+                    SignInActivity.startActivity(this);
+                }
+                finish();
+            }
+        });
     }
 }
