@@ -20,8 +20,6 @@ package org.dasfoo.delern.learncards;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,9 +68,11 @@ public class LearningCardsActivityPresenter {
                 card -> {
                     mCard = card;
                     if (mDeck.isMarkdown()) {
-                        mLearningCardView.showFrontSide(mCard.getFrontHtml(), true);
+                        mLearningCardView.showFrontSide(mCard.getFrontHtml(), true,
+                                mCard.specifyContentGender());
                     } else {
-                        mLearningCardView.showFrontSide(mCard.getFront(), false);
+                        mLearningCardView.showFrontSide(mCard.getFront(), false,
+                                mCard.specifyContentGender());
                     }
                     // if user decided to edit card, a back side can be shown or not.
                     // After returning back it must show the same state (the same buttons
@@ -124,17 +124,6 @@ public class LearningCardsActivityPresenter {
         } else {
             mLearningCardView.showBackSide(mCard.getBack(), false);
         }
-    }
-
-    /**
-     * Specifies grammatical gender of content.
-     *
-     * @return gender of content.
-     */
-    public GrammaticalGenderSpecifier.Gender specifyContentGender() {
-        return GrammaticalGenderSpecifier.specifyGender(
-                DeckType.valueOf(mCard.getDeck().getDeckType()),
-                mCard.getBack());
     }
 
     /**

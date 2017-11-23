@@ -19,13 +19,13 @@
 package org.dasfoo.delern.presenters;
 
 
+import org.dasfoo.delern.learncards.ILearningCardsView;
 import org.dasfoo.delern.learncards.LearningCardsActivityPresenter;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
-import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.test.FirebaseServerRule;
-import org.dasfoo.delern.learncards.ILearningCardsView;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -82,7 +82,8 @@ public class LearningCardsActivityPresenterTest {
     public void startLearning() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
 
     @Test
@@ -90,7 +91,8 @@ public class LearningCardsActivityPresenterTest {
         when(mLearningCardView.backSideIsShown()).thenReturn(true);
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         verify(mLearningCardView, timeout(TIMEOUT)).showBackSide(BACK_SIDE_CARD, false);
     }
 
@@ -98,7 +100,8 @@ public class LearningCardsActivityPresenterTest {
     public void cardIsFlipped() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.flipCard();
         verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
     }
@@ -107,7 +110,8 @@ public class LearningCardsActivityPresenterTest {
     public void finishLearningByUserKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.flipCard();
         verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.userKnowCard();
@@ -118,7 +122,8 @@ public class LearningCardsActivityPresenterTest {
     public void finishLearningByUserDoNotKnowCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.flipCard();
         verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.userDoNotKnowCard();
@@ -126,19 +131,11 @@ public class LearningCardsActivityPresenterTest {
     }
 
     @Test
-    public void specifyGender() {
-        mPresenter.onCreate(mDeck);
-        mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
-        GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
-        assertEquals(gender, GrammaticalGenderSpecifier.Gender.NO_GENDER);
-    }
-
-    @Test
     public void startEditCardCallbackCheck() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.startEditCard();
         ArgumentCaptor<Card> argument = ArgumentCaptor.forClass(Card.class);
         verify(mLearningCardView).startEditCardActivity(argument.capture());
@@ -150,7 +147,8 @@ public class LearningCardsActivityPresenterTest {
     public void finishLearningByDeletingCard() {
         mPresenter.onCreate(mDeck);
         mPresenter.onStart();
-        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false);
+        verify(mLearningCardView, timeout(TIMEOUT)).showFrontSide(FRONT_SIDE_CARD, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.flipCard();
         verify(mLearningCardView).showBackSide(BACK_SIDE_CARD, false);
         mPresenter.delete();

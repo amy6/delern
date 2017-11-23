@@ -19,8 +19,6 @@
 package org.dasfoo.delern.previewcard;
 
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +71,11 @@ public class PreEditCardActivityPresenter {
             if (card != null) {
                 mCard = card;
                 if (mCard.getDeck().isMarkdown()) {
-                    mPreEditCardView.showCard(mCard.getFrontHtml(), mCard.getBackHtml(), true);
+                    mPreEditCardView.showCard(mCard.getFrontHtml(), mCard.getBackHtml(), true,
+                            mCard.specifyContentGender());
                 } else {
-                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack(), false);
+                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack(), false,
+                            mCard.specifyContentGender());
                 }
             }
         });
@@ -105,16 +105,5 @@ public class PreEditCardActivityPresenter {
         if (mCard != null) {
             mCard.delete();
         }
-    }
-
-    /**
-     * Specifies grammatical gender of content.
-     *
-     * @return gender of content.
-     */
-    public GrammaticalGenderSpecifier.Gender specifyContentGender() {
-        return GrammaticalGenderSpecifier.specifyGender(
-                DeckType.valueOf(mCard.getDeck().getDeckType()),
-                mCard.getBack());
     }
 }

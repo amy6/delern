@@ -19,6 +19,7 @@
 package org.dasfoo.delern.previewcard;
 
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
 /**
  * Interface for callbacks from Presenter(PreEditCardActivityPresenter) to
@@ -31,8 +32,10 @@ public interface IPreEditCardView {
      * @param front  front side of card.
      * @param back   back side of card.
      * @param isHtml whether text is html or not.
+     * @param gender grammatical gender of content.
      */
-    void showCard(String front, String back, boolean isHtml);
+    void showCard(String front, String back, boolean isHtml,
+                  GrammaticalGenderSpecifier.Gender gender);
 
     /**
      * Starts Activity for editing card.

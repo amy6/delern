@@ -46,6 +46,7 @@ import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.CardColor;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
 import javax.inject.Inject;
 
@@ -236,7 +237,8 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      */
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
-    public void showFrontSide(final String front, final boolean isHtml) {
+    public void showFrontSide(final String front, final boolean isHtml,
+                              final GrammaticalGenderSpecifier.Gender gender) {
         if (mStartTrace != null) {
             mStartTrace.stop();
             mStartTrace = null;
@@ -247,7 +249,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         }
 
         mCardView.setCardBackgroundColor(ContextCompat
-                .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
+                .getColor(this, CardColor.getColor(gender)));
         if (isHtml) {
             mFrontTextView.setText(Html.fromHtml(front));
         } else {

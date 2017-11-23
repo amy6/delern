@@ -39,6 +39,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.ParcelableCard;
 import org.dasfoo.delern.util.CardColor;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
 import javax.inject.Inject;
 
@@ -168,7 +169,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
      */
     @Override
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
-    public void showCard(final String front, final String back, final boolean isHtml) {
+    public void showCard(final String front, final String back, final boolean isHtml,
+                         final GrammaticalGenderSpecifier.Gender gender) {
         if (isHtml) {
             mFrontPreview.setText(Html.fromHtml(front));
             mBackPreview.setText(Html.fromHtml(back));
@@ -177,7 +179,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
             mBackPreview.setText(back);
         }
         mCardView.setCardBackgroundColor(ContextCompat
-                .getColor(this, CardColor.getColor(mPresenter.specifyContentGender())));
+                .getColor(this, CardColor.getColor(gender)));
     }
 
     /**

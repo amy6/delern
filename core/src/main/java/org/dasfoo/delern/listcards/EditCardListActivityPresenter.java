@@ -22,8 +22,6 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.DeckType;
-import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
 /**
  * Presenter for EditCardListActivity. It performs operation with Model layer and
@@ -60,17 +58,5 @@ public class EditCardListActivityPresenter {
      */
     public Query getQuery() {
         return mQuery;
-    }
-
-    /**
-     * Specifies grammatical gender of content.
-     *
-     * @param backSide back side of card.
-     * @return gender of content.
-     */
-    public GrammaticalGenderSpecifier.Gender specifyContentGender(final String backSide) {
-        return GrammaticalGenderSpecifier.specifyGender(
-                DeckType.valueOf(mDeck.getDeckType()),
-                backSide);
     }
 }

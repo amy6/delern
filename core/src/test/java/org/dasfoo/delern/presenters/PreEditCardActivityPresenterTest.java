@@ -37,7 +37,6 @@ import org.mockito.MockitoAnnotations;
 import uk.org.lidalia.slf4jtest.TestLogger;
 import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -91,7 +90,8 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(newCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
 
     @Test
@@ -143,13 +143,15 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(mCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         String frontSideNew = "frontSide2";
         String backSideNew = "backSide2";
         mCard.setFront(frontSideNew);
         mCard.setBack(backSideNew);
         mCard.save();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSideNew, backSideNew, false);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSideNew, backSideNew, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
 
     @Test
@@ -180,7 +182,8 @@ public class PreEditCardActivityPresenterTest {
 
         mPresenter.onCreate(mCard);
         mPresenter.onStart();
-        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false);
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false,
+                GrammaticalGenderSpecifier.Gender.NO_GENDER);
         mPresenter.onStop();
         String frontSideNew = "frontSide2";
         String backSideNew = "backSide2";
@@ -195,19 +198,23 @@ public class PreEditCardActivityPresenterTest {
         String frontSide = "mother";
         String backSide = "die Mutter";
         User user = mFirebaseServer.signIn();
-        Deck deck = new Deck(user);
+        user.save().blockingAwait();
 
+        Deck deck = new Deck(user);
         deck.setName("Specify Gender");
         deck.setAccepted(true);
         deck.setDeckType(DeckType.GERMAN.name());
+        deck.create().blockingAwait();
 
         Card newCard = new Card(deck);
         newCard.setFront(frontSide);
         newCard.setBack(backSide);
+        newCard.create().blockingAwait();
 
         mPresenter.onCreate(newCard);
-        GrammaticalGenderSpecifier.Gender gender = mPresenter.specifyContentGender();
-        assertEquals(gender, GrammaticalGenderSpecifier.Gender.FEMININE);
+        mPresenter.onStart();
+        verify(mPreEditCardView, timeout(TIMEOUT)).showCard(frontSide, backSide, false,
+                GrammaticalGenderSpecifier.Gender.FEMININE);
     }
 
     @Test
@@ -235,6 +242,7 @@ public class PreEditCardActivityPresenterTest {
         mPresenter.onCreate(newCard);
         mPresenter.onStart();
         verify(mPreEditCardView, timeout(TIMEOUT))
-                .showCard(frontShouldBeShown, backShouldBeShown, true);
+                .showCard(frontShouldBeShown, backShouldBeShown, true,
+                        GrammaticalGenderSpecifier.Gender.NO_GENDER);
     }
 }

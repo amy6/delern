@@ -23,6 +23,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.util.MarkdownParser;
 
 import io.reactivex.Completable;
@@ -288,5 +289,16 @@ public class Card extends Model {
             return getDeck().getChildReference(View.class, getKey());
         }
         return super.getChildReference(childClass);
+    }
+
+    /**
+     * Specifies grammatical gender of content.
+     *
+     * @return gender of content.
+     */
+    @Exclude
+    public GrammaticalGenderSpecifier.Gender specifyContentGender() {
+        return GrammaticalGenderSpecifier.specifyGender(
+                DeckType.valueOf(this.getDeck().getDeckType()), this.back);
     }
 }

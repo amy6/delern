@@ -36,24 +36,20 @@ import org.dasfoo.delern.util.CardColor;
 public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardViewHolder> {
 
     private final OnCardViewHolderClick mOnCardViewHolderClick;
-    private final EditCardListActivityPresenter mPresenter;
 
     /**
      * Create a new FirebaseRecyclerAdapter.
      *
-     * @param deck      deck which cards to show.
-     * @param query     reference to FB to cards of deck.
-     * @param listener  listener to handle clicks on card.
-     * @param presenter presenter to handle deck and cards operations.
+     * @param deck     deck which cards to show.
+     * @param query    reference to FB to cards of deck.
+     * @param listener listener to handle clicks on card.
      */
     public CardRecyclerViewAdapter(final Deck deck,
                                    final Query query,
-                                   final OnCardViewHolderClick listener,
-                                   final EditCardListActivityPresenter presenter) {
+                                   final OnCardViewHolderClick listener) {
         super(new FirebaseSnapshotParser<>(Card.class, deck),
                 R.layout.card_text_view_for_deck, CardViewHolder.class, query);
         this.mOnCardViewHolderClick = listener;
-        this.mPresenter = presenter;
     }
 
     /**
@@ -63,7 +59,7 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
     @Override
     protected void populateViewHolder(final CardViewHolder viewHolder, final Card card,
                                       final int position) {
-        if (mPresenter.getDeck().isMarkdown()) {
+        if (card.getDeck().isMarkdown()) {
             viewHolder.getFrontTextView().setText(Html.fromHtml(card.getFront()));
             viewHolder.getBackTextView().setText(Html.fromHtml(card.getBack()));
         } else {
@@ -73,6 +69,6 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
         viewHolder.setOnViewClick(mOnCardViewHolderClick);
         viewHolder.getCardView().setCardBackgroundColor(ContextCompat
                 .getColor(viewHolder.itemView.getContext(),
-                        CardColor.getColor(mPresenter.specifyContentGender(card.getBack()))));
+                        CardColor.getColor(card.specifyContentGender())));
     }
 }

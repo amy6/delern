@@ -19,6 +19,7 @@
 package org.dasfoo.delern.learncards;
 
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
 /**
  * Interface for callbacks from Presenter(LearningCardsActivityPresenter) to
@@ -30,8 +31,9 @@ public interface ILearningCardsView {
      *
      * @param front  text to be shown.
      * @param isHtml true if text is html.
+     * @param gender grammatical gender of card.
      */
-    void showFrontSide(String front, boolean isHtml);
+    void showFrontSide(String front, boolean isHtml, GrammaticalGenderSpecifier.Gender gender);
 
     /**
      * Handles showing back side of card.
