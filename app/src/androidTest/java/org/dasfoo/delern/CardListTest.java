@@ -27,6 +27,7 @@ import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.test.FirebaseSignInRule;
 import org.dasfoo.delern.test.ViewMatchers;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -72,6 +73,9 @@ public class CardListTest {
 
     @Rule
     public TestName mName = new TestName();
+
+    @Rule
+    public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
     private String mDeckName;
 

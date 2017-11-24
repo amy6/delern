@@ -22,8 +22,6 @@ import android.support.test.espresso.IdlingPolicies;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.dasfoo.delern.models.helpers.MultiWrite;
 import org.junit.rules.ExternalResource;
 
@@ -65,10 +63,6 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
         IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
         IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
-
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            FirebaseAuth.getInstance().signInAnonymously();
-        }
     }
 
     @Override

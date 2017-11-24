@@ -25,6 +25,7 @@ import android.text.InputType;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.test.DeckPostfix;
+import org.dasfoo.delern.test.FirebaseSignInRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -66,6 +67,9 @@ public class AddUpdateCardTest {
 
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
+
+    @Rule
+    public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
     private String mDeckName;
 

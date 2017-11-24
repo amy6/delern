@@ -5,9 +5,8 @@
   public *** getOperationsInFlight();
 }
 
--keep class com.google.firebase.auth.FirebaseAuth {
-  public *** signInAnonymously();
-}
+# See FirebaseSignInRule.
+-keep class com.google.firebase.auth.* { *; }
 
 # See CrashlyticsTestExtension.
 -keep class com.crashlytics.android.core.CrashlyticsCore {
@@ -19,4 +18,4 @@
 }
 
 # For Espresso.
--keep class javax.inject.* { *;  }
+-keep class javax.inject.* { *; }

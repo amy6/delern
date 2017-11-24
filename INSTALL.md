@@ -113,6 +113,12 @@ You can get the API key (not secret key, which isn't used) on the Fabric
   Base64-encoded private key for a Google Cloud Service Account in `JSON`
   format, which can be obtained from Google Cloud Console in IAM section.
 
+* `DEBUG_FIREBASE_SERVICE_KEY`
+
+  Base64-encoded private key for a Firebase Admin Service Account in `JSON`
+  format, which can be obtained from Firebase Console in Project Settings
+  "Service Accounts" tab section for "debug" project.
+
 * `VERSIONEYE_API_KEY`
 
   API key for https://www.versioneye.com/, a system for reporting dependency

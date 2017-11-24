@@ -26,6 +26,7 @@ import android.text.InputType;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.DeckPostfix;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
+import org.dasfoo.delern.test.FirebaseSignInRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -59,6 +60,9 @@ public class DeckOperationsTest {
 
     @Rule
     public TestName mName = new TestName();
+
+    @Rule
+    public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
     private static void deleteDeck(final String deckName) {
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))

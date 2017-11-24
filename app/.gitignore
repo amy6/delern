@@ -2,3 +2,6 @@
 
 # Google Cloud service account credentials with access to Google Play and GCS.
 /play-store-service-account.json
+
+# Firebase Admin SDK private key for Debug project (to sign custom Auth tokens).
+firebase-adminsdk.json

@@ -13,6 +13,8 @@ defaults: &defaults
 gcloud_install_command: &gcloud_install_command
   name: "Install GCloud, download & activate authentication keys"
   command: |
+    # For Instrumented Tests: to generate custom Firebase User ID.
+    echo "${DEBUG_FIREBASE_SERVICE_KEY}" | base64 --decode > app/src/instrumented/resources/firebase-adminsdk.json
     # We use this account to access both Google Play account and GCS.
     # The former requires it to be in "app" subdirectory.
     echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
