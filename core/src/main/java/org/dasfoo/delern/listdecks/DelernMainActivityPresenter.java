@@ -28,7 +28,7 @@ import io.reactivex.disposables.Disposable;
 
 
 /**
- * Presenter for DelernMainActivity. It implements OnDeckViewHolderClick to handle
+ * Presenter for DelernMainActivity. It implements OnDeckAction to handle
  * user clicks. Class calls activity callbacks to show changed user data.
  */
 public class DelernMainActivityPresenter {

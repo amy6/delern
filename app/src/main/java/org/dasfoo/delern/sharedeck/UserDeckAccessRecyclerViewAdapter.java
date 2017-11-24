@@ -77,9 +77,7 @@ public class UserDeckAccessRecyclerViewAdapter
      */
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_deck_access_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(parent);
     }
 
     /**
@@ -176,14 +174,19 @@ public class UserDeckAccessRecyclerViewAdapter
         @BindView(R.id.circle_profile_photo)
         /* default */ CircleImageView mProfilePhoto;
 
+        private ViewHolder(final View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
         /**
          * Constructor for one item of recyclerview.
          *
-         * @param itemView view.
+         * @param parent parent view.
          */
-        public ViewHolder(final View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        public ViewHolder(final ViewGroup parent) {
+            this(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.user_deck_access_layout, parent, false));
         }
     }
 }

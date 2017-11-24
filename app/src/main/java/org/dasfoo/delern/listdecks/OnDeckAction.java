@@ -25,7 +25,7 @@ import org.dasfoo.delern.models.DeckAccess;
  * Manages clicks on RecyclerView
  */
 
-public interface OnDeckViewHolderClick {
+public interface OnDeckAction {
 
     /**
      * Manages click on deck.

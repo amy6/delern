@@ -18,10 +18,6 @@
 
 package org.dasfoo.delern.listcards;
 
-import android.support.v4.content.ContextCompat;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -29,11 +25,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 
-import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
-import org.dasfoo.delern.util.CardColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,28 +59,16 @@ public class CardRecyclerViewAdapter extends FirebaseRecyclerAdapter<Card, CardV
      */
     @Override
     public CardViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_text_view_for_deck, parent, false);
-        return new CardViewHolder(view, mOnCardViewHolderClick);
+        return new CardViewHolder(parent, mOnCardViewHolderClick);
     }
 
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     @Override
     protected void onBindViewHolder(final CardViewHolder viewHolder, final int position,
                                     final Card card) {
-        if (card.getDeck().isMarkdown()) {
-            viewHolder.getFrontTextView().setText(Html.fromHtml(card.getFront()));
-            viewHolder.getBackTextView().setText(Html.fromHtml(card.getBack()));
-        } else {
-            viewHolder.getFrontTextView().setText(card.getFront());
-            viewHolder.getBackTextView().setText(card.getBack());
-        }
-        viewHolder.getCardView().setCardBackgroundColor(ContextCompat
-                .getColor(viewHolder.itemView.getContext(),
-                        CardColor.getColor(card.specifyContentGender())));
+        viewHolder.setCard(card);
     }
 
     /**

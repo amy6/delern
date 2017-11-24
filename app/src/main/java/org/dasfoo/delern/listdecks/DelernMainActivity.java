@@ -78,7 +78,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
+        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckAction {
 
     /**
      * IntentExtra user for showing user info and data.
@@ -166,8 +166,8 @@ public class DelernMainActivity extends AbstractActivity
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this);
-        mFirebaseAdapter.setOnDeckViewHolderClick(this);
+        mFirebaseAdapter = new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this,
+                this);
         mRecyclerView.setAdapter(mFirebaseAdapter);
     }
 

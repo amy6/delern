@@ -19,15 +19,12 @@
 package org.dasfoo.delern.listdecks;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
 
-import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.FirebaseSnapshotParser;
@@ -44,28 +41,22 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     private static final int CARDS_COUNTER_LIMIT = 200;
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckRecyclerViewAdapter.class);
 
-    private OnDeckViewHolderClick mOnDeckViewHolderClick;
+    private final OnDeckAction mOnDeckAction;
 
     /**
      * Default constructor.
      *
-     * @param user     Current user.
-     * @param activity Activity that manages this RecyclerView.
+     * @param user         current user.
+     * @param activity     activity that manages this RecyclerView.
+     * @param onDeckAction handler on recyclerview clicks.
      */
-    public DeckRecyclerViewAdapter(final User user, final LifecycleOwner activity) {
+    public DeckRecyclerViewAdapter(final User user, final LifecycleOwner activity,
+                                   final OnDeckAction onDeckAction) {
         super(new FirebaseRecyclerOptions.Builder<Deck>()
                 .setQuery(user.getChildReference(Deck.class),
                         new FirebaseSnapshotParser<>(Deck.class, user))
                 .setLifecycleOwner(activity).build());
-    }
-
-    /**
-     * Sets on Deck menu clicks handler.
-     *
-     * @param onDeckViewHolderClick handler on recyclerview clicks
-     */
-    public void setOnDeckViewHolderClick(final OnDeckViewHolderClick onDeckViewHolderClick) {
-        this.mOnDeckViewHolderClick = onDeckViewHolderClick;
+        mOnDeckAction = onDeckAction;
     }
 
     /**
@@ -73,9 +64,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      */
     @Override
     public DeckViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.deck_text_view,
-                parent, false);
-        return new DeckViewHolder(view);
+        return new DeckViewHolder(parent, mOnDeckAction);
     }
 
     /**
@@ -85,7 +74,7 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
     @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     protected void onBindViewHolder(final DeckViewHolder viewHolder, final int position,
                                     final Deck deck) {
-        viewHolder.mDeckTextView.setText(deck.getName());
+        viewHolder.setDeck(deck);
         deck.fetchDeckAccessOfUser().subscribe(viewHolder::setDeckAccess);
 
         viewHolder.setCardsCountObserver(Deck.fetchCount(
@@ -99,7 +88,6 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
                         viewHolder.mCountToLearnTextView.setText(tooManyCards);
                     }
                 }));
-        viewHolder.setOnViewClick(mOnDeckViewHolderClick);
     }
 
     /**

@@ -18,16 +18,21 @@
 
 package org.dasfoo.delern.listcards;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.util.CardColor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import io.reactivex.annotations.Nullable;
 
 /**
  * Created by katarina on 11/14/16.
@@ -41,52 +46,38 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     /* default */ TextView mBackTextView;
     @BindView(R.id.card_edit_click)
     /* default */ CardView mCardView;
-    private final OnCardViewHolderClick mOnViewClick;
 
     /**
      * Constructor. It initializes variable that describe how to place card.
      *
-     * @param itemView              item view.
+     * @param parent                parent view.
      * @param onCardViewHolderClick handles clicks on cards.
      */
-    public CardViewHolder(final View itemView, final OnCardViewHolderClick onCardViewHolderClick) {
-        super(itemView);
+    public CardViewHolder(final ViewGroup parent,
+                          final OnCardViewHolderClick onCardViewHolderClick) {
+        super(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card_text_view_for_deck, parent, false));
         ButterKnife.bind(this, itemView);
-        this.mOnViewClick = onCardViewHolderClick;
+        mCardView.setOnClickListener(v -> onCardViewHolderClick.onCardClick(getAdapterPosition()));
     }
 
     /**
-     * Getter for front side of card. It references to R.id.front_textview.
+     * Set Card object currently associated with this ViewHolder.
      *
-     * @return reference to R.id.front_textview.
+     * @param card Card or null if ViewHolder is being recycled.
      */
-    public TextView getFrontTextView() {
-        return mFrontTextView;
-    }
-
-    /**
-     * Getter for back side of card. It references to R.id.back_textview.
-     *
-     * @return reference to R.id.back_textview.
-     */
-    public TextView getBackTextView() {
-        return mBackTextView;
-    }
-
-    /**
-     * Getter for card view that contains front and back sides of card.
-     *
-     * @return view of card.
-     */
-    public CardView getCardView() {
-        return mCardView;
-    }
-
-    /**
-     * Called when recyclerview card has been clicked.
-     */
-    @OnClick(R.id.card_edit_click)
-    public void onClick() {
-        mOnViewClick.onCardClick(getAdapterPosition());
+    @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
+    public void setCard(@Nullable final Card card) {
+        if (card != null) {
+            if (card.getDeck().isMarkdown()) {
+                mFrontTextView.setText(Html.fromHtml(card.getFront()));
+                mBackTextView.setText(Html.fromHtml(card.getBack()));
+            } else {
+                mFrontTextView.setText(card.getFront());
+                mBackTextView.setText(card.getBack());
+            }
+            mCardView.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(),
+                    CardColor.getColor(card.specifyContentGender())));
+        }
     }
 }

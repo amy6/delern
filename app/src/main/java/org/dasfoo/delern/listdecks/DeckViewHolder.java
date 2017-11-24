@@ -19,15 +19,18 @@
 package org.dasfoo.delern.listdecks;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -49,33 +53,25 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckViewHolder.class);
     private static final String NULL_CARDS = "0";
-
     @BindView(R.id.deck_text_view)
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
     private Disposable mCardsCountObserver;
     private DeckAccess mDeckAccess;
-    private OnDeckViewHolderClick mOnViewClick;
+    private final OnDeckAction mOnViewClick;
 
     /**
      * Constructor. It initializes variable that describe how to place deck.
      *
-     * @param viewHolder item view
+     * @param parent      parent view
+     * @param onViewClick action listener
      */
-    public DeckViewHolder(final View viewHolder) {
-        super(viewHolder);
-        ButterKnife.bind(this, viewHolder);
-    }
-
-    /**
-     * Setter for mOnViewClick. It listeners clicks on deck name and
-     * popup menu.
-     *
-     * @param onViewClick onDeckViewClickListener
-     */
-    public void setOnViewClick(final OnDeckViewHolderClick onViewClick) {
-        this.mOnViewClick = onViewClick;
+    public DeckViewHolder(final ViewGroup parent, final OnDeckAction onViewClick) {
+        super(LayoutInflater.from(parent.getContext()).inflate(R.layout.deck_text_view,
+                parent, false));
+        ButterKnife.bind(this, itemView);
+        mOnViewClick = onViewClick;
     }
 
     @OnClick(R.id.deck_view_holder)
@@ -183,5 +179,16 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     public void setCardsCountObserver(final Disposable cardsCountObserver) {
         this.mCardsCountObserver = cardsCountObserver;
+    }
+
+    /**
+     * Set deck object currently associated with this ViewHolder.
+     *
+     * @param deck Deck or null if ViewHolder is being recycled.
+     */
+    public void setDeck(@Nullable final Deck deck) {
+        if (deck != null) {
+            mDeckTextView.setText(deck.getName());
+        }
     }
 }
