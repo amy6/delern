@@ -27,16 +27,14 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.dasfoo.delern.util.IDisposableManager;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /**
  * Base class for all activities in the app.
  */
 public abstract class AbstractActivity extends AppCompatActivity implements IDisposableManager {
-    private final Deque<Disposable> mDisposeOnDestroy = new ArrayDeque<>();
+    private final CompositeDisposable mDisposeOnDestroy = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -45,9 +43,7 @@ public abstract class AbstractActivity extends AppCompatActivity implements IDis
             @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             public void cleanDisposables() {
                 getLifecycle().removeObserver(this);
-                while (!mDisposeOnDestroy.isEmpty()) {
-                    mDisposeOnDestroy.remove().dispose();
-                }
+                mDisposeOnDestroy.dispose();
             }
         });
     }
