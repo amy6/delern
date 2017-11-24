@@ -46,6 +46,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     /* default */ TextView mBackTextView;
     @BindView(R.id.card_edit_click)
     /* default */ CardView mCardView;
+    private Card mCard;
 
     /**
      * Constructor. It initializes variable that describe how to place card.
@@ -58,7 +59,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
         super(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_text_view_for_deck, parent, false));
         ButterKnife.bind(this, itemView);
-        mCardView.setOnClickListener(v -> onCardViewHolderClick.onCardClick(getAdapterPosition()));
+        mCardView.setOnClickListener(v -> onCardViewHolderClick.onCardClick(mCard));
     }
 
     /**
@@ -68,6 +69,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
      */
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void setCard(@Nullable final Card card) {
+        mCard = card;
         if (card != null) {
             if (card.getDeck().isMarkdown()) {
                 mFrontTextView.setText(Html.fromHtml(card.getFront()));

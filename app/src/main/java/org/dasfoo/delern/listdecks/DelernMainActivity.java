@@ -102,7 +102,6 @@ public class DelernMainActivity extends AbstractActivity
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleApiClient mGoogleApiClient;
-    private DeckRecyclerViewAdapter mFirebaseAdapter;
 
     /**
      * Method starts DelernMainActivity.
@@ -166,9 +165,8 @@ public class DelernMainActivity extends AbstractActivity
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mFirebaseAdapter = new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this,
-                this);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mRecyclerView.setAdapter(new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this,
+                this));
     }
 
     @Override
@@ -376,23 +374,23 @@ public class DelernMainActivity extends AbstractActivity
      * {@inheritDoc}
      */
     @Override
-    public void shareDeck(final int position) {
-        ShareDeckActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    public void shareDeck(final Deck deck) {
+        ShareDeckActivity.startActivity(this, deck);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void learnDeck(final int position) {
-        LearningCardsActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    public void learnDeck(final Deck deck) {
+        LearningCardsActivity.startActivity(this, deck);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void editDeck(final int position) {
-        EditCardListActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    public void editDeck(final Deck deck) {
+        EditCardListActivity.startActivity(this, deck);
     }
 }

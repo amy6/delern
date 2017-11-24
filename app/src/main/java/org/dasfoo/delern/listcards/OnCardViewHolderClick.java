@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.listcards;
 
+import org.dasfoo.delern.models.Card;
+
 /**
  * Created by katarina on 11/22/16.
  */
@@ -26,7 +28,7 @@ public interface OnCardViewHolderClick {
     /**
      * Card click event listener.
      *
-     * @param position card position in the list
+     * @param card selected card
      */
-    void onCardClick(int position);
+    void onCardClick(Card card);
 }

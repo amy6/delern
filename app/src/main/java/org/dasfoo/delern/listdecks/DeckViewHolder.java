@@ -59,6 +59,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     /* default */ TextView mCountToLearnTextView;
     private Disposable mCardsCountObserver;
     private DeckAccess mDeckAccess;
+    private Deck mDeck;
     private final OnDeckAction mOnViewClick;
 
     /**
@@ -82,10 +83,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             Toast.makeText(view.getContext(), R.string.no_card_message,
                     Toast.LENGTH_SHORT).show();
         } else {
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                mOnViewClick.learnDeck(position);
-            }
+            mOnViewClick.learnDeck(mDeck);
         }
     }
 
@@ -110,21 +108,15 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     @Override
     public boolean onMenuItemClick(final MenuItem item) {
-        int position = getAdapterPosition();
-        if (position == RecyclerView.NO_POSITION) {
-            // ViewHolder was either removed or the view has been changed.
-            // Rather than failing, ignore the click.
-            return false;
-        }
         switch (item.getItemId()) {
             case R.id.edit_deck_menu:
-                mOnViewClick.editDeck(position);
+                mOnViewClick.editDeck(mDeck);
                 return true;
             case R.id.deck_settings:
                 mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
-                mOnViewClick.shareDeck(position);
+                mOnViewClick.shareDeck(mDeck);
                 return true;
             default:
                 LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
@@ -187,6 +179,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      * @param deck Deck or null if ViewHolder is being recycled.
      */
     public void setDeck(@Nullable final Deck deck) {
+        mDeck = deck;
         if (deck != null) {
             mDeckTextView.setText(deck.getName());
         }

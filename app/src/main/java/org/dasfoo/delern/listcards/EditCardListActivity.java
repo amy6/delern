@@ -37,6 +37,7 @@ import com.google.firebase.database.Query;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
+import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.previewcard.PreEditCardActivity;
@@ -212,8 +213,8 @@ public class EditCardListActivity extends AppCompatActivity implements
      * {@inheritDoc}
      */
     @Override
-    public void onCardClick(final int position) {
-        PreEditCardActivity.startActivity(this, mFirebaseAdapter.getItem(position));
+    public void onCardClick(final Card card) {
+        PreEditCardActivity.startActivity(this, card);
     }
 
     private CardRecyclerViewAdapter createAdapter(@Nullable final Query query) {
