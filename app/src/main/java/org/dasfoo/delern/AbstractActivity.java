@@ -16,33 +16,47 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.util;
+package org.dasfoo.delern;
 
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.OnLifecycleEvent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+
+import org.dasfoo.delern.util.IDisposableManager;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import io.reactivex.disposables.Disposable;
 
 /**
- * IDisposableManager with a default implementation that disposes of managed objects on
- * LifecycleOwner (e.g. Activity) ON_DESTROY lifecycle event.
+ * Base class for all activities in the app.
  */
-public interface ILifecycleDisposableManager extends IDisposableManager, LifecycleOwner {
+public abstract class AbstractActivity extends AppCompatActivity implements IDisposableManager {
+    private final Deque<Disposable> mDisposeOnDestroy = new ArrayDeque<>();
+
+    @Override
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(new LifecycleObserver() {
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            public void cleanDisposables() {
+                getLifecycle().removeObserver(this);
+                while (!mDisposeOnDestroy.isEmpty()) {
+                    mDisposeOnDestroy.remove().dispose();
+                }
+            }
+        });
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    // TODO(dotdoom): this is slightly sub-optimal: we create an observer per Disposable. Would be
-    //                nice to have a single observer, but interfaces can't have fields.
-    default void manageDisposable(final Disposable d) {
-        // TODO(dotdoom): remove observer ON_DESTROY
-        getLifecycle().addObserver(new LifecycleObserver() {
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            public void releaseDisposable() {
-                d.dispose();
-            }
-        });
+    public void manageDisposable(final Disposable d) {
+        mDisposeOnDestroy.add(d);
     }
 }

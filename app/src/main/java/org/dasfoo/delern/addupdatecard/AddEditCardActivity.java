@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -33,12 +32,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import org.dasfoo.delern.AbstractActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
-import org.dasfoo.delern.util.ILifecycleDisposableManager;
 
 import javax.inject.Inject;
 
@@ -49,8 +48,7 @@ import butterknife.OnClick;
 /**
  * Activity to edit or add a new card.
  */
-public class AddEditCardActivity extends AppCompatActivity implements IAddEditCardView,
-        ILifecycleDisposableManager {
+public class AddEditCardActivity extends AbstractActivity implements IAddEditCardView {
 
     /**
      * IntentExtra Card ID being edited.

@@ -27,7 +27,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +49,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import org.dasfoo.delern.AbstractActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.SplashScreenActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
@@ -63,7 +63,6 @@ import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
-import org.dasfoo.delern.util.ILifecycleDisposableManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,10 +76,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Main activity of the application, containing decks and menu.
  */
-public class DelernMainActivity extends AppCompatActivity
+public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick,
-        ILifecycleDisposableManager {
+        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckViewHolderClick {
 
     /**
      * IntentExtra user for showing user info and data.
