@@ -30,14 +30,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'org.standardout.versioneye' version '1.5.0'
-}
-
-versioneye {
-    includeSubProjects = true
-}
-
 allprojects {
     repositories {
         google()
