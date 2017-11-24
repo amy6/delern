@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.annotations.Nullable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by Katarina Sheremet on 9/22/16 1:11 AM.
@@ -53,13 +53,15 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckViewHolder.class);
     private static final String NULL_CARDS = "0";
+    private static final int CARDS_COUNTER_LIMIT = 200;
+
     @BindView(R.id.deck_text_view)
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
-    private Disposable mCardsCountObserver;
     private DeckAccess mDeckAccess;
     private Deck mDeck;
+    private final CompositeDisposable mResources = new CompositeDisposable();
     private final OnDeckAction mOnViewClick;
 
     /**
@@ -113,6 +115,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 mOnViewClick.editDeck(mDeck);
                 return true;
             case R.id.deck_settings:
+                // TODO(dotdoom): mDeckAccess can be null!
                 mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
@@ -133,6 +136,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      * @param menu Popup menu
      */
     private void managePopupMenu(final Menu menu) {
+        // TODO(dotdoom): mDeckAccess can be null!
         switch (mDeckAccess.getAccess()) {
             case "read":
                 menu.getItem(0).setEnabled(false);
@@ -147,41 +151,28 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     }
 
     /**
-     * Setter for deckAccess.
-     *
-     * @param deckAccess deckAccess
-     */
-    public void setDeckAccess(final DeckAccess deckAccess) {
-        this.mDeckAccess = deckAccess;
-    }
-
-    /**
-     * Getter of mCardsCountObserver.
-     *
-     * @return mCardsCountObserver
-     */
-    public Disposable getCardsCountObserver() {
-        return mCardsCountObserver;
-    }
-
-    /**
-     * Setter for mCardsCountObserver.
-     *
-     * @param cardsCountObserver contains amount of cards for deck.
-     */
-    public void setCardsCountObserver(final Disposable cardsCountObserver) {
-        this.mCardsCountObserver = cardsCountObserver;
-    }
-
-    /**
      * Set deck object currently associated with this ViewHolder.
      *
      * @param deck Deck or null if ViewHolder is being recycled.
      */
     public void setDeck(@Nullable final Deck deck) {
         mDeck = deck;
-        if (deck != null) {
+
+        if (deck == null) {
+            mResources.clear();
+        } else {
             mDeckTextView.setText(deck.getName());
+            mResources.add(deck.fetchDeckAccessOfUser().subscribe(v -> mDeckAccess = v));
+            mResources.add(Deck.fetchCount(
+                    mDeck.fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
+                    .subscribe((final Long cardsCount) -> {
+                        if (cardsCount <= CARDS_COUNTER_LIMIT) {
+                            mCountToLearnTextView.setText(String.valueOf(cardsCount));
+                        } else {
+                            String tooManyCards = CARDS_COUNTER_LIMIT + "+";
+                            mCountToLearnTextView.setText(tooManyCards);
+                        }
+                    }));
         }
     }
 }

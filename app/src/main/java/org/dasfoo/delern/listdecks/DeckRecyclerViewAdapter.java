@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckViewHolder> {
 
-    private static final int CARDS_COUNTER_LIMIT = 200;
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckRecyclerViewAdapter.class);
 
     private final OnDeckAction mOnDeckAction;
@@ -71,23 +70,9 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings(/* TODO(dotdoom): garbage collection */ "CheckReturnValue")
     protected void onBindViewHolder(final DeckViewHolder viewHolder, final int position,
                                     final Deck deck) {
         viewHolder.setDeck(deck);
-        deck.fetchDeckAccessOfUser().subscribe(viewHolder::setDeckAccess);
-
-        viewHolder.setCardsCountObserver(Deck.fetchCount(
-                getItem(position).fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
-                .subscribe((final Long cardsCount) -> {
-                    if (cardsCount <= CARDS_COUNTER_LIMIT) {
-                        viewHolder.mCountToLearnTextView.setText(
-                                String.valueOf(cardsCount));
-                    } else {
-                        String tooManyCards = CARDS_COUNTER_LIMIT + "+";
-                        viewHolder.mCountToLearnTextView.setText(tooManyCards);
-                    }
-                }));
     }
 
     /**
@@ -95,11 +80,8 @@ public class DeckRecyclerViewAdapter extends FirebaseRecyclerAdapter<Deck, DeckV
      */
     @Override
     public void onViewRecycled(final DeckViewHolder viewHolder) {
+        viewHolder.setDeck(null);
         super.onViewRecycled(viewHolder);
-        if (viewHolder.getCardsCountObserver() != null) {
-            viewHolder.getCardsCountObserver().dispose();
-            viewHolder.setCardsCountObserver(null);
-        }
     }
 
     /**
