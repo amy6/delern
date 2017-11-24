@@ -85,7 +85,7 @@ public final class Auth {
         } else {
             Crashlytics.setUserIdentifier(user.getUid());
             sCurrentUser.setKey(user.getUid());
-            if (user.isAnonymous()) {
+            if (user.getDisplayName() == null) {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
                 sCurrentUser.setName("Anonymous User");
