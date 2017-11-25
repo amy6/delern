@@ -126,6 +126,15 @@ public class ShareDeckActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        // Stop memory leaks.
+        // TODO(dotdoom): redesign RecyclerView to use Lifecycle #rv
+        // TODO(dotdoom): also stop listeners onStop? #rv
+        mRecyclerView.setAdapter(null);
+        super.onDestroy();
+    }
+
     private void setAutoCompleteViewSettings() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line,

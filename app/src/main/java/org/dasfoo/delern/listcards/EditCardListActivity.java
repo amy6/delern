@@ -155,6 +155,7 @@ public class EditCardListActivity extends AppCompatActivity implements
             mFirebaseAdapter.stopListening();
             mFirebaseAdapter = null;
         }
+        mRecyclerView.setAdapter(null);
     }
 
     /**

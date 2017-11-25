@@ -76,6 +76,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Main activity of the application, containing decks and menu.
  */
+@SuppressWarnings("PMD.TooManyMethods" /* TODO(dotdoom): refactor */)
 public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckAction {
@@ -179,6 +180,13 @@ public class DelernMainActivity extends AbstractActivity
     protected void onStop() {
         mMainActivityPresenter.onStop();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Stop memory leaks.
+        mRecyclerView.setAdapter(null);
+        super.onDestroy();
     }
 
     /**
