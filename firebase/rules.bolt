@@ -140,8 +140,12 @@ type CreatedAtTimestamp extends Number {
 type Card {
   front: String,
   back: String,
-  // TODO(dotdoom): do not allow Null
-  createdAt: CreatedAtTimestamp | Null,
+  // TODO(dotdoom): CreatedAtTimestamp. Firebase Offline "lies" to the
+  //                application, replacing ServerValue.TIMESTAMP with
+  //                phone's time when fetched (although it saves it
+  //                to the server correctly when online). Have to do our
+  //                own object mapping to avoid resetting this value.
+  createdAt: Number | Null,
 }
 
 path /cards/{deckId} {
