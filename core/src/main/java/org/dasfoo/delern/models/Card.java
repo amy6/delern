@@ -64,9 +64,6 @@ public class Card extends Model {
      */
     public Card(final Deck parent) {
         super(parent, null);
-        // This field is used to sync other people's decks, so must be the server value
-        // at the time this reaches Firebase server.
-        this.createdAt = ServerValue.TIMESTAMP;
     }
 
     /**
@@ -76,9 +73,6 @@ public class Card extends Model {
      */
     public Card(final ScheduledCard parent) {
         super(parent, null);
-        // This field is used to sync other people's decks, so must be the server value
-        // at the time this reaches Firebase server.
-        this.createdAt = ServerValue.TIMESTAMP;
     }
 
     /**
@@ -122,6 +116,9 @@ public class Card extends Model {
         // TODO(dotdoom): figure out better repeatAt
         scheduledCard.setRepeatAt(0);
         setParent(scheduledCard);
+        // This field is used to sync other people's decks, so must be the server value
+        // at the time this reaches Firebase server.
+        setCreatedAt(ServerValue.TIMESTAMP);
 
         return new MultiWrite()
                 .save(this)
