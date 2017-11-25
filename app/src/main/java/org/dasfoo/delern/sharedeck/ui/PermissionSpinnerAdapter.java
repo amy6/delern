@@ -16,7 +16,7 @@
  * along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dasfoo.delern.sharedeck;
+package org.dasfoo.delern.sharedeck.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -31,11 +31,10 @@ import android.widget.TextView;
 
 import org.dasfoo.delern.R;
 
-
 /**
  * Adapter for Spinner that combines text and image.
  */
-public class ShareSpinnerAdapter extends ArrayAdapter<String> {
+public class PermissionSpinnerAdapter extends ArrayAdapter<String> {
     private final String[] mContentArray;
     private final TypedArray mImageArray;
 
@@ -46,8 +45,8 @@ public class ShareSpinnerAdapter extends ArrayAdapter<String> {
      * @param textSpinner array for initialising test information in Spinner.
      * @param imgSpinner  array for images to set in Spinner.
      */
-    public ShareSpinnerAdapter(@NonNull final Context context, final int textSpinner,
-                               final int imgSpinner) {
+    public PermissionSpinnerAdapter(@NonNull final Context context, final int textSpinner,
+                                    final int imgSpinner) {
         super(context, R.layout.share_spinner_layout, R.id.sharingTextView, context.getResources()
                 .getStringArray(textSpinner));
         this.mContentArray = context.getResources().getStringArray(textSpinner);

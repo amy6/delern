@@ -46,7 +46,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:textAppearance="@android:style/TextAppearance.Medium"
         tools:ignore="selectableText" />
 
-    <Spinner
+    <org.dasfoo.delern.sharedeck.ui.PermissionSpinner
         android:id="@+id/sharing_user_permissions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

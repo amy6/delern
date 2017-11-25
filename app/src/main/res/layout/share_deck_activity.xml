@@ -55,7 +55,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8" />
 
-            <Spinner
+            <org.dasfoo.delern.sharedeck.ui.PermissionSpinner
                 android:id="@+id/sharing_permissions_spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

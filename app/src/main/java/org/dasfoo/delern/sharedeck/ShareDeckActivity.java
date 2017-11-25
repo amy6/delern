@@ -39,7 +39,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -54,6 +53,7 @@ import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
+import org.dasfoo.delern.sharedeck.ui.PermissionSpinner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class ShareDeckActivity extends AppCompatActivity {
     @BindView(R.id.person_data)
     /* default */ AutoCompleteTextView mPersonData;
     @BindView(R.id.sharing_permissions_spinner)
-    /* default */ Spinner mSharingPermissionsSpinner;
+    /* default */ PermissionSpinner mSharingPermissionsSpinner;
     @BindView(R.id.recycler_view)
     /* default */ RecyclerView mRecyclerView;
     @Inject
@@ -113,8 +113,8 @@ public class ShareDeckActivity extends AppCompatActivity {
         this.setTitle(deck.getName());
         ButterKnife.bind(this);
         Injector.getShareDeckActivityInjector(deck).inject(this);
-        mSharingPermissionsSpinner.setAdapter(new ShareSpinnerAdapter(this,
-                R.array.share_permissions_spinner_text, R.array.share_permissions_spinner_img));
+        mSharingPermissionsSpinner.setType(
+                R.array.share_permissions_spinner_text, R.array.share_permissions_spinner_img);
         setAutoCompleteViewSettings();
 
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)

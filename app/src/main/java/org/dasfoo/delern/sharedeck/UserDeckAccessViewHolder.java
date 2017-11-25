@@ -21,10 +21,7 @@ package org.dasfoo.delern.sharedeck;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -32,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.sharedeck.ui.PermissionSpinner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +42,7 @@ import io.reactivex.disposables.Disposable;
  */
 public class UserDeckAccessViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.sharing_user_permissions)
-    /* default */ Spinner mSharingPermissionsSpinner;
+    /* default */ PermissionSpinner mSharingPermissionsSpinner;
     @BindView(R.id.user_name_textview)
     /* default */ TextView mNameTextView;
     @BindView(R.id.circle_profile_photo)
@@ -87,62 +85,20 @@ public class UserDeckAccessViewHolder extends RecyclerView.ViewHolder {
                                 .into(mProfilePhoto);
                         if ("owner".equals(deckAccess.getAccess())) {
                             mSharingPermissionsSpinner
-                                    .setAdapter(new ShareSpinnerAdapter(context,
-                                            R.array.owner_access_spinner_text,
-                                            R.array.owner_access_spinner_img));
+                                    .setType(R.array.owner_access_spinner_text,
+                                            R.array.owner_access_spinner_img);
                         } else {
                             mSharingPermissionsSpinner
-                                    .setAdapter(new ShareSpinnerAdapter(context,
-                                            R.array.user_permissions_spinner_text,
-                                            R.array.share_permissions_spinner_img));
+                                    .setType(R.array.user_permissions_spinner_text,
+                                            R.array.share_permissions_spinner_img);
                             mSharingPermissionsSpinner
                                     .setSelection(mPresenter
                                             .setUserAccessPositionForSpinner(deckAccess));
                             mSharingPermissionsSpinner
-                                    .setOnItemSelectedListener(
-                                            setPermissionChangedListener(deckAccess));
+                                    .setOnItemSelectedListener(access ->
+                                            mPresenter.changeUserPermission(access, deckAccess));
                         }
                     });
         }
     }
-
-    // TODO(dotdoom): create a separate view for SharingPermissionsSpinner
-    private AdapterView.OnItemSelectedListener setPermissionChangedListener(
-            final DeckAccess deckAccess) {
-        return new AdapterView.OnItemSelectedListener() {
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onItemSelected(final AdapterView<?> adapterView, final View view,
-                                       final int position, final long l) {
-                Context context = view.getContext();
-                String[] sharingArrayOption = context.getResources()
-                        .getStringArray(R.array.user_permissions_spinner_text);
-                if (sharingArrayOption[position].equals(context
-                        .getResources()
-                        .getString(R.string.can_edit_text))) {
-                    mPresenter.changeUserPermission("write", deckAccess);
-                }
-                if (sharingArrayOption[position].equals(context.getResources()
-                        .getString(R.string.can_view_text))) {
-                    mPresenter.changeUserPermission("read", deckAccess);
-                }
-                if (sharingArrayOption[position].equals(context
-                        .getResources().getString(R.string.no_access_text))) {
-                    mPresenter.changeUserPermission("", deckAccess);
-                }
-            }
-
-            /**
-             * {@inheritDoc}
-             */
-            @Override
-            public void onNothingSelected(final AdapterView<?> adapterView) {
-                //No need for implementation
-            }
-        };
-    }
 }
-
