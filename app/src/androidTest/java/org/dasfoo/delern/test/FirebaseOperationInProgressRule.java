@@ -29,6 +29,12 @@ import java.util.concurrent.TimeUnit;
 
 public class FirebaseOperationInProgressRule extends ExternalResource {
 
+    private boolean mDefaultEnabled;
+
+    public FirebaseOperationInProgressRule(final boolean defaultEnabled) {
+        mDefaultEnabled = defaultEnabled;
+    }
+
     private final IdlingResource mFirebaseOperationIdlingResource = new IdlingResource() {
         private ResourceCallback mResourceCallback;
         private boolean mIsIdle = false;
@@ -62,6 +68,15 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
         // Raise Idling policy timeout because emulator or network can be really slow.
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.MINUTES);
         IdlingPolicies.setMasterPolicyTimeout(2, TimeUnit.MINUTES);
+        if (mDefaultEnabled) {
+            enableForCurrentTestCase();
+        }
+    }
+
+    /**
+     * Enable IdlingResource for the current test case (useful when defaultEnabled = false).
+     */
+    public void enableForCurrentTestCase() {
         IdlingRegistry.getInstance().register(mFirebaseOperationIdlingResource);
     }
 

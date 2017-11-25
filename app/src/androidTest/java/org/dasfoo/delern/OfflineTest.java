@@ -23,6 +23,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.text.InputType;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.DeckType;
 import org.dasfoo.delern.test.DeckPostfix;
@@ -32,15 +34,14 @@ import org.dasfoo.delern.test.ViewMatchers;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -48,7 +49,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
@@ -58,14 +58,16 @@ import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 /**
- * Test learning cards functions.
+ * Test for Firebase Offline sync.
  */
 @RunWith(AndroidJUnit4.class)
-public class LearningTest {
+public class OfflineTest {
+
+    // TODO(dotdoom): change this from being a copy of LearningTest to a jUnit @Rule or a test
+    //                runner, which will retry test cases in offline to see whether they pass.
 
     @Rule
     public ActivityTestRule<DelernMainActivity> mActivityRule = new ActivityTestRule<>(
@@ -76,7 +78,7 @@ public class LearningTest {
 
     @Rule
     public FirebaseOperationInProgressRule mFirebaseRule =
-            new FirebaseOperationInProgressRule(true);
+            new FirebaseOperationInProgressRule(false);
 
     @Rule
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
@@ -110,6 +112,8 @@ public class LearningTest {
 
     @Before
     public void createDeck() {
+        FirebaseDatabase.getInstance().goOffline();
+
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(() -> onView(withId(R.id.fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
@@ -118,6 +122,7 @@ public class LearningTest {
     }
 
     @Test
+    @Ignore
     public void learnGermanCards() {
         String front1 = "mother";
         String back1 = "die Mutter";
@@ -129,8 +134,10 @@ public class LearningTest {
         createCard(front2, back2);
         createCard(front3, back3);
         pressBack();
+
         // Change deckType
         changeDeckType(DeckType.GERMAN);
+
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
                 .perform(click()));
@@ -141,6 +148,10 @@ public class LearningTest {
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
+
+        FirebaseDatabase.getInstance().goOnline();
+        mFirebaseRule.enableForCurrentTestCase();
+
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
         onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
@@ -157,138 +168,6 @@ public class LearningTest {
         // Check back side of card
         onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
         onView(withId(R.id.to_repeat_button)).perform(click());
-    }
-
-    @Test
-    public void learnSwissCards() {
-        Context context = mActivityRule.getActivity().getApplicationContext();
-        String front1 = "mother";
-        String back1 = "d Muetter";
-        String front2 = "father";
-        String back2 = "de Vater";
-        String front3 = "kid";
-        String back3 = "s Kind";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
-        pressBack();
-        // Change deckType
-        changeDeckType(DeckType.SWISS);
-        // Start Learning Activity
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("3"))))
-                .perform(click()));
-        // Check the first card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view))
-                .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
-        onView(withId(R.id.learned_in_session))
-                .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
-                        0))));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
-        onView(withId(R.id.to_know_button)).perform(click());
-        // Check the second card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view))
-                .check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
-        onView(withId(R.id.learned_in_session))
-                .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
-                        1))));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        // Check back side of card
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back2)));
-        onView(withId(R.id.to_repeat_button)).perform(click());
-        // Check the third card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
-        onView(withId(R.id.learned_in_session))
-                .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
-                        2))));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        // Check back side of card
-        onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
-        onView(withId(R.id.to_repeat_button)).perform(click());
-    }
-
-    @Test
-    public void deleteCardMenuOption() {
-        String front = "mother";
-        String back = "die Mutter";
-        createCard(front, back);
-        pressBack();
-        // Start Learning Activity
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click()));
-        // Check the card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front))));
-        // Open the options menu OR open the overflow menu, depending on whether
-        // the device has a hardware or software overflow menu button.
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText(R.string.delete)).perform(click());
-        onView(withText(R.string.delete)).perform(click());
-    }
-
-    @Test
-    public void basicDeckType() {
-        String front1 = "mother";
-        String back1 = "d Muetter";
-        createCard(front1, back1);
-        pressBack();
-        // Change deckType
-        changeDeckType(DeckType.SWISS);
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click()));
-        // Check the first card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view))
-                .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
-        pressBack();
-        // Change deckType
-        changeDeckType(DeckType.BASIC);
-        // Start Learning Activity
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click()));
-        // Check the first card
-        waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.noGender)));
-    }
-
-    @Test
-    public void createMarkdownCardToLearn() {
-        String frontCard = "**bold**";
-        String frontShouldBeShown = "bold\n\n";
-        String backCard = "*italic*";
-        String backShouldBeShown = "italic\n\n";
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontCard));
-        onView(withId(R.id.back_side_text)).perform(typeText(backCard), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
-        pressBack();
-        waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
-        // Set markdown in settings
-        onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click());
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.on_off_switch)).check(matches(not(isChecked())))
-                .perform(click()));
-        onView(withId(R.id.on_off_switch)).check(matches(isChecked()));
-        pressBack();
-        waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
-                .perform(click()));
-        // Check the front side of markdown
-        waitView(() -> onView(withId(R.id.textFrontCardView))
-                .check(matches(withText(frontShouldBeShown))));
-        // Flip card
-        onView(withId(R.id.turn_card_button)).perform(click());
-        // Check the back side of markdown
-        waitView(() -> onView(withId(R.id.textBackCardView))
-                .check(matches(withText(backShouldBeShown))));
     }
 
     @After

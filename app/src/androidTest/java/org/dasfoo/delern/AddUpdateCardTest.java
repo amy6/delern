@@ -66,7 +66,8 @@ public class AddUpdateCardTest {
     public TestName mName = new TestName();
 
     @Rule
-    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
+    public FirebaseOperationInProgressRule mFirebaseRule =
+            new FirebaseOperationInProgressRule(true);
 
     @Rule
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);

@@ -48,7 +48,8 @@ public class SharingTest {
             DelernMainActivity.class);
 
     @Rule
-    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
+    public FirebaseOperationInProgressRule mFirebaseRule =
+            new FirebaseOperationInProgressRule(true);
 
     @Rule
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(false);

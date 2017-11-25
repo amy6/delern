@@ -64,7 +64,8 @@ public class PreviewCardTest {
             DelernMainActivity.class);
 
     @Rule
-    public FirebaseOperationInProgressRule mFirebaseRule = new FirebaseOperationInProgressRule();
+    public FirebaseOperationInProgressRule mFirebaseRule =
+            new FirebaseOperationInProgressRule(true);
 
     @Rule
     public TestName mName = new TestName();
