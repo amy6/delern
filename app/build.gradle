@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
-if (!project.hasProperty('coverageRun') && !isIDE) {
-    // FIXME(https://stackoverflow.com/questions/47032877/): firebase-perf is
-    // not compatible with jacoco coverage agent.
-    apply plugin: 'com.google.firebase.firebase-perf'
-}
+apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'com.github.triplet.play'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
