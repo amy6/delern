@@ -44,15 +44,15 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.createCard;
+import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -83,16 +83,6 @@ public class OfflineTest {
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
     private String mDeckName;
-
-    private static void createCard(final String frontSide, final String backSide) {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
-        onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
-    }
 
     private void changeDeckType(final DeckType dType) {
         Context context = mActivityRule.getActivity().getApplicationContext();
@@ -128,9 +118,9 @@ public class OfflineTest {
         String back2 = "der Vater";
         String front3 = "kid";
         String back3 = "das Kind";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
+        createCard(front1, back1, false);
+        createCard(front2, back2, false);
+        createCard(front3, back3, false);
         pressBack();
 
         // Change deckType
@@ -169,12 +159,8 @@ public class OfflineTest {
     }
 
     @After
-    public void deleteDeck() {
+    public void delete() {
         bringToFront(mActivityRule);
-        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click()));
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
-        onView(withText(R.string.delete)).perform(click());
+        deleteDeck(mDeckName);
     }
 }

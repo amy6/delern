@@ -24,15 +24,12 @@ import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.text.InputType;
-import android.view.View;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.DeckPostfix;
-import org.dasfoo.delern.test.DrawableMatcher;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.test.FirebaseSignInRule;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.hamcrest.core.AllOf;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,8 +48,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.createCard;
+import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.waitView;
-import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -96,10 +94,7 @@ public class SharingTest {
                 .perform(closeSoftKeyboard()));
         String front1 = "front1";
         String back1 = "back1";
-        String front2 = "front2";
-        String back2 = "back2";
-        createCard(front1, back1);
-        createCard(front2, back2);
+        createCard(front1, back1, true);
         pressBack();
         // Open ShareActivity
         onView(AllOf.allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
@@ -161,28 +156,5 @@ public class SharingTest {
         onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
         onView(withText(R.string.sign_out)).perform(click());
         waitView(() -> onView(withId(R.id.sign_in_button)).check(matches(isDisplayed())));
-    }
-
-    private static void deleteDeck(final String deckName) {
-        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
-                .perform(click()));
-        deleteSelectedDeck();
-    }
-
-    private static void deleteSelectedDeck() {
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
-        onView(withText(R.string.delete)).perform(click());
-    }
-
-    // TODO(ksheremet): Move basic operation in a common class.
-    private static void createCard(final String frontSide, final String backSide) {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
-        onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
     }
 }

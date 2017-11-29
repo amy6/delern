@@ -54,6 +54,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.createCard;
+import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -82,16 +84,6 @@ public class LearningTest {
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
     private String mDeckName;
-
-    private static void createCard(final String frontSide, final String backSide) {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
-        onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
-    }
 
     private void changeDeckType(final DeckType dType) {
         Context context = mActivityRule.getActivity().getApplicationContext();
@@ -125,9 +117,9 @@ public class LearningTest {
         String back2 = "der Vater";
         String front3 = "kid";
         String back3 = "das Kind";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
+        createCard(front1, back1, false);
+        createCard(front2, back2, false);
+        createCard(front3, back3, false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.GERMAN);
@@ -168,9 +160,9 @@ public class LearningTest {
         String back2 = "de Vater";
         String front3 = "kid";
         String back3 = "s Kind";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
+        createCard(front1, back1, false);
+        createCard(front2, back2, false);
+        createCard(front3, back3, false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.SWISS);
@@ -217,7 +209,7 @@ public class LearningTest {
     public void deleteCardMenuOption() {
         String front = "mother";
         String back = "die Mutter";
-        createCard(front, back);
+        createCard(front, back, false);
         pressBack();
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
@@ -235,7 +227,7 @@ public class LearningTest {
     public void basicDeckType() {
         String front1 = "mother";
         String back1 = "d Muetter";
-        createCard(front1, back1);
+        createCard(front1, back1, false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.SWISS);
@@ -292,12 +284,8 @@ public class LearningTest {
     }
 
     @After
-    public void deleteDeck() {
+    public void delete() {
         bringToFront(mActivityRule);
-        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click()));
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
-        onView(withText(R.string.delete)).perform(click());
+        deleteDeck(mDeckName);
     }
 }

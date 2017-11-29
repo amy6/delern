@@ -48,11 +48,12 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.createCard;
+import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -89,24 +90,14 @@ public class CardListTest {
         onView(withText(R.string.add)).perform(click());
     }
 
-    private static void createCard(final String frontSide, final String backSide) {
-        waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
-        onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
-        onView(withId(R.id.add_card_to_db)).perform(click());
-        // Check that fields are empty after adding card
-        waitView(() -> onView(withId(R.id.front_side_text)).check(matches(withText(""))));
-        onView(withId(R.id.back_side_text)).check(matches(withText("")));
-    }
-
     @Test
     public void searchCard() {
         String front1 = "die Tochter";
         String back1 = "die Tochter2";
         String front2 = "der Hund";
         String back2 = "der Hund2";
-        createCard(front1, back1);
-        createCard(front2, back2);
+        createCard(front1, back1, false);
+        createCard(front2, back2, false);
         pressBack();
         // Change deckType
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
@@ -140,9 +131,9 @@ public class CardListTest {
         String back2 = "der Hund2";
         String front3 = "das Madchen";
         String back3 = "das Madchen2";
-        createCard(front1, back1);
-        createCard(front2, back2);
-        createCard(front3, back3);
+        createCard(front1, back1, false);
+        createCard(front2, back2, false);
+        createCard(front3, back3, false);
         pressBack();
         // Change deckType
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
@@ -174,12 +165,8 @@ public class CardListTest {
     }
 
     @After
-    public void deleteDeck() {
+    public void delete() {
         bringToFront(mActivityRule);
-        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
-                .perform(click()));
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
-        onView(withText(R.string.delete)).perform(click());
+        deleteDeck(mDeckName);
     }
 }

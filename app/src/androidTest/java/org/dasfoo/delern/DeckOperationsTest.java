@@ -44,6 +44,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
+import static org.dasfoo.delern.test.BasicOperations.deleteSelectedDeck;
 import static org.dasfoo.delern.test.ViewMatchers.first;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -64,18 +66,6 @@ public class DeckOperationsTest {
 
     @Rule
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
-
-    private static void deleteDeck(final String deckName) {
-        waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
-                .perform(click()));
-        deleteSelectedDeck();
-    }
-
-    private static void deleteSelectedDeck() {
-        onView(withText(R.string.deck_settings_menu)).perform(click());
-        waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
-        onView(withText(R.string.delete)).perform(click());
-    }
 
     @Test
     public void noDecksMessageShown() {
