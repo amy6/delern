@@ -75,6 +75,8 @@ public final class Auth {
      *
      * @param user FirebaseUser currently logged in.
      */
+    @SuppressWarnings({"PMD.AvoidLiteralsInIfCondition"/* TODO(dotdoom): extract user name*/,
+            "checkstyle:magicnumber"/* TODO(dotdoom): extract user name*/})
     public static void setCurrentUser(@Nullable final FirebaseUser user) {
         if (user == null) {
             Crashlytics.setUserIdentifier(null);
@@ -88,7 +90,13 @@ public final class Auth {
             if (user.getDisplayName() == null) {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
-                sCurrentUser.setName("Anonymous User");
+                // TODO(dotdoom): find a better way of extracting user name
+                String[] idParts = user.getUid().split("-", 3);
+                if (idParts.length >= 2) {
+                    sCurrentUser.setName(idParts[1]);
+                } else {
+                    sCurrentUser.setName("Anonymous User");
+                }
             } else {
                 sCurrentUser.setName(user.getDisplayName());
                 if (user.getPhotoUrl() == null) {
