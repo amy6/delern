@@ -29,12 +29,6 @@ import java.util.concurrent.TimeUnit;
 
 public class FirebaseOperationInProgressRule extends ExternalResource {
 
-    private boolean mDefaultEnabled;
-
-    public FirebaseOperationInProgressRule(final boolean defaultEnabled) {
-        mDefaultEnabled = defaultEnabled;
-    }
-
     private final IdlingResource mFirebaseOperationIdlingResource = new IdlingResource() {
         private ResourceCallback mResourceCallback;
         private boolean mIsIdle = false;
@@ -62,6 +56,11 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
             mResourceCallback = callback;
         }
     };
+    private boolean mDefaultEnabled;
+
+    public FirebaseOperationInProgressRule(final boolean defaultEnabled) {
+        mDefaultEnabled = defaultEnabled;
+    }
 
     @Override
     protected void before() throws Throwable {

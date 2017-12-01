@@ -86,7 +86,7 @@ public class AddUpdateCardTest {
 
     @Test
     public void createReversedCard() {
-        createCard("front", "back", true);
+        createCard("front", "back", /* reversed= */true);
         pressBack();
         // Check that deck with 2 card was created
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("2")))));
@@ -96,7 +96,7 @@ public class AddUpdateCardTest {
     public void createCardToUpdateFromPreview() {
         String frontCard = "front";
         String backCard = "back";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
@@ -128,7 +128,7 @@ public class AddUpdateCardTest {
         waitView(() -> onView(withId(R.id.f_add_card_button)).perform(click()));
         String frontCard = "front";
         String backCard = "back";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         waitView(() -> onView(withText(frontCard)).check(matches(hasSibling(withText(backCard)))));
     }
@@ -137,7 +137,7 @@ public class AddUpdateCardTest {
     public void createCardToUpdateFromLearningShowingFront() {
         String frontCard = "front";
         String backCard = "back";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
@@ -160,7 +160,7 @@ public class AddUpdateCardTest {
     public void createCardToUpdateFromLearningShowingBack() {
         String frontCard = "front";
         String backCard = "back";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))

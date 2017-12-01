@@ -117,9 +117,9 @@ public class LearningTest {
         String back2 = "der Vater";
         String front3 = "kid";
         String back3 = "das Kind";
-        createCard(front1, back1, false);
-        createCard(front2, back2, false);
-        createCard(front3, back3, false);
+        createCard(front1, back1, /* reversed= */false);
+        createCard(front2, back2, /* reversed= */false);
+        createCard(front3, back3, /* reversed= */false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.GERMAN);
@@ -160,9 +160,9 @@ public class LearningTest {
         String back2 = "de Vater";
         String front3 = "kid";
         String back3 = "s Kind";
-        createCard(front1, back1, false);
-        createCard(front2, back2, false);
-        createCard(front3, back3, false);
+        createCard(front1, back1, /* reversed= */false);
+        createCard(front2, back2, /* reversed= */false);
+        createCard(front3, back3, /* reversed= */false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.SWISS);
@@ -209,7 +209,7 @@ public class LearningTest {
     public void deleteCardMenuOption() {
         String front = "mother";
         String back = "die Mutter";
-        createCard(front, back, false);
+        createCard(front, back, /* reversed= */false);
         pressBack();
         // Start Learning Activity
         waitView(() -> onView(allOf(withText(mDeckName), hasSibling(withText("1"))))
@@ -227,7 +227,7 @@ public class LearningTest {
     public void basicDeckType() {
         String front1 = "mother";
         String back1 = "d Muetter";
-        createCard(front1, back1, false);
+        createCard(front1, back1, /* reversed= */false);
         pressBack();
         // Change deckType
         changeDeckType(DeckType.SWISS);

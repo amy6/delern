@@ -96,8 +96,8 @@ public class CardListTest {
         String back1 = "die Tochter2";
         String front2 = "der Hund";
         String back2 = "der Hund2";
-        createCard(front1, back1, false);
-        createCard(front2, back2, false);
+        createCard(front1, back1, /* reversed= */false);
+        createCard(front2, back2, /* reversed= */false);
         pressBack();
         // Change deckType
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
@@ -131,9 +131,9 @@ public class CardListTest {
         String back2 = "der Hund2";
         String front3 = "das Madchen";
         String back3 = "das Madchen2";
-        createCard(front1, back1, false);
-        createCard(front2, back2, false);
-        createCard(front3, back3, false);
+        createCard(front1, back1, /* reversed= */false);
+        createCard(front2, back2, /* reversed= */false);
+        createCard(front3, back3, /* reversed= */false);
         pressBack();
         // Change deckType
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))

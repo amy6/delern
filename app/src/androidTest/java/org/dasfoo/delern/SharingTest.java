@@ -74,6 +74,17 @@ public class SharingTest {
     @Rule
     public TestName mName = new TestName();
 
+    private static void signOut() {
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_sign_out)));
+        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
+        onView(withText(R.string.sign_out)).perform(click());
+        waitView(() -> onView(withId(R.id.sign_in_button)).check(matches(isDisplayed())));
+    }
+
     @Test
     public void shareDeckWithEditAccess() {
         waitView(() -> onView(withId(R.id.sign_in_button)).check(matches(isDisplayed())));
@@ -94,7 +105,7 @@ public class SharingTest {
                 .perform(closeSoftKeyboard()));
         String front1 = "front1";
         String back1 = "back1";
-        createCard(front1, back1, true);
+        createCard(front1, back1, /* reversed= */true);
         pressBack();
         // Open ShareActivity
         onView(AllOf.allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
@@ -145,16 +156,5 @@ public class SharingTest {
         // Bob sign in
         mSignInRule.signIn("bob");
         deleteDeck(deckName);
-    }
-
-    private static void signOut() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
-        waitView(() -> onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.nav_sign_out)));
-        onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
-        onView(withText(R.string.sign_out)).perform(click());
-        waitView(() -> onView(withId(R.id.sign_in_button)).check(matches(isDisplayed())));
     }
 }

@@ -89,7 +89,7 @@ public class PreviewCardTest {
         Context context = mActivityRule.getActivity().getApplicationContext();
         String frontCard = "front";
         String backCard = "back";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
         onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(mDeckName))))
@@ -115,7 +115,7 @@ public class PreviewCardTest {
         String frontShouldBeShown = "bold\n\n";
         String backCard = "*italic*";
         String backShouldBeShown = "italic\n\n";
-        createCard(frontCard, backCard, false);
+        createCard(frontCard, backCard, /* reversed= */false);
         pressBack();
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("1")))));
         // Set markdown in settings

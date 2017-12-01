@@ -118,9 +118,9 @@ public class OfflineTest {
         String back2 = "der Vater";
         String front3 = "kid";
         String back3 = "das Kind";
-        createCard(front1, back1, false);
-        createCard(front2, back2, false);
-        createCard(front3, back3, false);
+        createCard(front1, back1, /* reversed= */false);
+        createCard(front2, back2, /* reversed= */false);
+        createCard(front3, back3, /* reversed= */false);
         pressBack();
 
         // Change deckType
