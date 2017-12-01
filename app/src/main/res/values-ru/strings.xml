@@ -25,8 +25,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invite_menu_label">Пригласить Друзей</string>
     <string name="invitation_message">Пожалуйста, присоединяйтесь к изучению</string>
     <string name="invitation_title">Delern Приглашение</string>
-    <string name="invitation_email_html_content"
-            tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
+    <string name="invitation_email_html_content" tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
 <html>
     <body>
         <center>
@@ -112,6 +111,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="delete_deck">Удалить все карточки в списке?</string>
     <string name="back_side_card_hint">Обратная сторона</string>
     <string name="front_side_card_hint">Передняя сторона</string>
+    <string name="install_contact_app_user_message">Пожалуйста устновите приложение Контакты</string>
 
     <!-- Cards type menu -->
     <string name="cards_type">Тип списка</string>

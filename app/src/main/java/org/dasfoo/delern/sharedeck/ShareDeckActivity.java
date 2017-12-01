@@ -205,7 +205,13 @@ public class ShareDeckActivity extends AppCompatActivity {
     private void chooseEmailFromContactsIntent() {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
                 ContactsContract.CommonDataKinds.Email.CONTENT_URI);
-        startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+        if (contactPickerIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+            return;
+        }
+        Toast.makeText(this, getString(R.string.install_contact_app_user_message),
+                Toast.LENGTH_SHORT).show();
+
     }
 
     /**
