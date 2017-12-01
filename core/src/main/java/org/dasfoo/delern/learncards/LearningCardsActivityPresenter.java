@@ -68,10 +68,10 @@ public class LearningCardsActivityPresenter {
                 card -> {
                     mCard = card;
                     if (mDeck.isMarkdown()) {
-                        mLearningCardView.showFrontSide(mCard.getFrontHtml(), true,
+                        mLearningCardView.showFrontSide(mCard.getFrontHtml(), /* isHtml= */true,
                                 mCard.specifyContentGender());
                     } else {
-                        mLearningCardView.showFrontSide(mCard.getFront(), false,
+                        mLearningCardView.showFrontSide(mCard.getFront(), /* isHtml= */false,
                                 mCard.specifyContentGender());
                     }
                     // if user decided to edit card, a back side can be shown or not.
@@ -79,9 +79,9 @@ public class LearningCardsActivityPresenter {
                     // and text) as before editing
                     if (mLearningCardView.backSideIsShown()) {
                         if (mDeck.isMarkdown()) {
-                            mLearningCardView.showBackSide(mCard.getBackHtml(), true);
+                            mLearningCardView.showBackSide(mCard.getBackHtml(), /* isHtml= */true);
                         } else {
-                            mLearningCardView.showBackSide(mCard.getBack(), false);
+                            mLearningCardView.showBackSide(mCard.getBack(), /* isHtml= */false);
                         }
                     }
                 },
@@ -120,9 +120,9 @@ public class LearningCardsActivityPresenter {
     public void flipCard() {
         // TODO(ksheremet): if card is not loaded yet (e.g. slow database), mCard is null.
         if (mDeck.isMarkdown()) {
-            mLearningCardView.showBackSide(mCard.getBackHtml(), true);
+            mLearningCardView.showBackSide(mCard.getBackHtml(), /* isHtml= */true);
         } else {
-            mLearningCardView.showBackSide(mCard.getBack(), false);
+            mLearningCardView.showBackSide(mCard.getBack(), /* isHtml= */false);
         }
     }
 

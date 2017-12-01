@@ -72,7 +72,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      */
     public DeckViewHolder(final ViewGroup parent, final OnDeckAction onViewClick) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.deck_text_view,
-                parent, false));
+                parent, /* attachToRoot= */false));
         ButterKnife.bind(this, itemView);
         mOnViewClick = onViewClick;
     }

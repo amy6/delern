@@ -57,7 +57,7 @@ public class CardViewHolder extends RecyclerView.ViewHolder {
     public CardViewHolder(final ViewGroup parent,
                           final OnCardViewHolderClick onCardViewHolderClick) {
         super(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_text_view_for_deck, parent, false));
+                .inflate(R.layout.card_text_view_for_deck, parent, /* attachToRoot= */false));
         ButterKnife.bind(this, itemView);
         mCardView.setOnClickListener(v -> onCardViewHolderClick.onCardClick(mCard));
     }

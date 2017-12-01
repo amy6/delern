@@ -71,11 +71,11 @@ public class PreEditCardActivityPresenter {
             if (card != null) {
                 mCard = card;
                 if (mCard.getDeck().isMarkdown()) {
-                    mPreEditCardView.showCard(mCard.getFrontHtml(), mCard.getBackHtml(), true,
-                            mCard.specifyContentGender());
+                    mPreEditCardView.showCard(mCard.getFrontHtml(), mCard.getBackHtml(),
+                            /* isHtml= */true, mCard.specifyContentGender());
                 } else {
-                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack(), false,
-                            mCard.specifyContentGender());
+                    mPreEditCardView.showCard(mCard.getFront(), mCard.getBack(),
+                            /* isHtml= */false, mCard.specifyContentGender());
                 }
             }
         });

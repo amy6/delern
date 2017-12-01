@@ -59,7 +59,7 @@ public class UserDeckAccessViewHolder extends RecyclerView.ViewHolder {
     public UserDeckAccessViewHolder(final ViewGroup parent,
                                     final ShareDeckActivityPresenter presenter) {
         super(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_deck_access_layout, parent, false));
+                .inflate(R.layout.user_deck_access_layout, parent, /* attachToRoot= */false));
         ButterKnife.bind(this, itemView);
         mPresenter = presenter;
     }

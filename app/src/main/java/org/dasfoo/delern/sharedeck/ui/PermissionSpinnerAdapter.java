@@ -61,7 +61,8 @@ public class PermissionSpinnerAdapter extends ArrayAdapter<String> {
                                 final @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.share_spinner_layout, parent, false);
+        View row = inflater.inflate(R.layout.share_spinner_layout, parent,
+                /* attachToRoot= */false);
 
         TextView textView = row.findViewById(R.id.sharingTextView);
         textView.setText(mContentArray[position]);
