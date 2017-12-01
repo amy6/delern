@@ -121,11 +121,18 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // TODO(ksheremet): update when Lifecycle is fixed
+    //noinspection GradleDependency
     implementation "com.android.support:appcompat-v7:$supportVersion"
+    //noinspection GradleDependency
     implementation "com.android.support:design:$supportVersion"
+    //noinspection GradleDependency
     implementation "com.android.support:recyclerview-v7:$supportVersion"
+    //noinspection GradleDependency
     implementation "com.android.support:cardview-v7:$supportVersion"
+    //noinspection GradleDependency
     implementation "com.android.support:support-v4:$supportVersion"
+    //noinspection GradleDependency
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     implementation "com.google.android.gms:play-services-auth:$firebaseVersion"
