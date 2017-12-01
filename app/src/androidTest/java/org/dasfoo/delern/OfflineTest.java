@@ -34,7 +34,6 @@ import org.dasfoo.delern.test.ViewMatchers;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -122,7 +121,6 @@ public class OfflineTest {
     }
 
     @Test
-    @Ignore
     public void learnGermanCards() {
         String front1 = "mother";
         String back1 = "die Mutter";

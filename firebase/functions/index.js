@@ -72,6 +72,13 @@ var legacyCreateSharedDeck = (deckId, userId) => {
 };
 
 exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate(event => {
+  if (event.data.val().access === 'owner') {
+    console.log('Deck is being created (not shared), skipping');
+    // Return some 'true' value per
+    // https://cloud.google.com/functions/docs/writing/background#using_promises
+    return true;
+  }
+
   let deckId = event.params.deckId,
     userId = event.params.userId;
 
@@ -113,8 +120,13 @@ exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate(
     .then(deckAccessSnapshot => {
       let learningUpdate = {};
       for (let userId in deckAccessSnapshot.val()) {
-        learningUpdate[[userId, deckId, cardId].join('/')] =
-          delern.createScheduledCardObject();
+        if (userId === event.auth.variable.uid) {
+          console.log('Skipping learning creation for', userId,
+            'as they are creating this card');
+        } else {
+          learningUpdate[[userId, deckId, cardId].join('/')] =
+            delern.createScheduledCardObject();
+        }
       }
       return admin.database().ref('learning').update(learningUpdate);
     })
