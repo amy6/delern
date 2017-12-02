@@ -17,5 +17,11 @@
   *** doOpenSession();
 }
 
+# For OfflineTest.
+-keep class com.google.firebase.database.FirebaseDatabase {
+  *** goOffline();
+  *** goOnline();
+}
+
 # For Espresso.
 -keep class javax.inject.* { *; }

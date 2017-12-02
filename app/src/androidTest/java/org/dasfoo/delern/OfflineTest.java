@@ -101,9 +101,9 @@ public class OfflineTest {
 
     @Before
     public void createDeck() {
+        mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         FirebaseDatabase.getInstance().goOffline();
 
-        mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         waitView(() -> onView(withId(R.id.fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
