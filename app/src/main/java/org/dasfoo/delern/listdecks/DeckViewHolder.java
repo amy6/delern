@@ -32,6 +32,7 @@ import android.widget.Toast;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.util.RemoteConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     /* default */ TextView mCountToLearnTextView;
     private DeckAccess mDeckAccess;
     private Deck mDeck;
+
     private final CompositeDisposable mResources = new CompositeDisposable();
     private final OnDeckAction mOnViewClick;
 
@@ -102,6 +104,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         managePopupMenu(popup.getMenu());
+        manageSharingMenu(popup.getMenu());
         popup.show();
     }
 
@@ -148,6 +151,16 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             default:
                 break;
         }
+    }
+
+    /**
+     * Disables sharing if it was disabled in Remote config.
+     * menu.getMenu(2) - Sharing.
+     *
+     * @param menu Popup menu
+     */
+    private static void manageSharingMenu(final Menu menu) {
+        menu.getItem(2).setVisible(RemoteConfig.INSTANCE.isSharingEnabled());
     }
 
     /**

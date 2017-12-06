@@ -81,6 +81,15 @@ public enum RemoteConfig {
     }
 
     /**
+     * Check whether sharing is available.
+     *
+     * @return whether sharing feature available or not.
+     */
+    public boolean isSharingEnabled() {
+        return mFirebaseRemoteConfig.getBoolean("sharing_feature_enabled");
+    }
+
+    /**
      * Get a link (Uri) to update the app from the Play Store.
      *
      * @return Uri to Play Store.

@@ -143,6 +143,7 @@ public class DelernMainActivity extends AbstractActivity
                         this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
+
     }
 
     private void initViews() {
@@ -166,8 +167,8 @@ public class DelernMainActivity extends AbstractActivity
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(), this,
-                this));
+        mRecyclerView.setAdapter(new DeckRecyclerViewAdapter(mMainActivityPresenter.getUser(),
+                this, this));
     }
 
     @Override

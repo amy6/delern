@@ -28,4 +28,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <key>force_update_store_url</key>
         <value>market://details?id=org.dasfoo.delern</value>
     </entry>
+    <entry>
+        <key>sharing_feature_enabled</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>
