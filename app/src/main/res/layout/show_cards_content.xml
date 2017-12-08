@@ -19,61 +19,63 @@ You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="0.8"
-    card_view:cardBackgroundColor="@color/colorPrimaryLight"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
-    card_view:layout_behavior="@string/appbar_scrolling_view_behavior"
-    app:ignore="NamespaceTypo">
+    android:layout_weight="0.8"
+    app:ignore="NamespaceTypo"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    card_view:cardBackgroundColor="@color/colorPrimaryLight"
+    card_view:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textFrontCardView"
+                style="@style/PrimaryText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="25dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center_horizontal"
+                android:textIsSelectable="true" />
 
-                <TextView
-                    android:id="@+id/textFrontCardView"
-                    style="@style/PrimaryText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="25dp"
-                    android:layout_marginTop="30dp"
-                    android:textIsSelectable="true"/>
+            <View
+                android:id="@+id/delimeter"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:alpha="0.88"
+                android:background="@android:color/darker_gray" />
 
-                <View
-                    android:id="@+id/delimeter"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:alpha="0.88"
-                    android:background="@android:color/darker_gray"/>
+            <TextView
+                android:id="@+id/textBackCardView"
+                style="@style/PrimaryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="25dp"
+                android:gravity="center_horizontal"
+                android:textIsSelectable="true" />
 
-                <TextView
-                    android:id="@+id/textBackCardView"
-                    style="@style/PrimaryText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="25dp"
-                    android:textIsSelectable="true"/>
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </ScrollView>
+    </ScrollView>
 
 </android.support.v7.widget.CardView>
