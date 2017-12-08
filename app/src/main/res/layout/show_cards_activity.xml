@@ -45,7 +45,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:id="@+id/to_repeat_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="6dp"
+            android:elevation="@dimen/fab_elevation"
             android:paddingEnd="40dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
@@ -53,7 +53,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:visibility="invisible"
             app:backgroundTint="@color/dontKnowButton"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
+            app:pressedTranslationZ="@dimen/fab_pressed_elevation"
             app:rippleColor="@color/redRipple"
             app:srcCompat="@drawable/ic_close_black_24dp" />
 
@@ -73,14 +73,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:id="@+id/to_know_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:elevation="6dp"
+            android:elevation="@dimen/fab_elevation"
             android:paddingEnd="40dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:paddingStart="40dp"
             android:visibility="invisible"
             app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
+            app:pressedTranslationZ="@dimen/fab_pressed_elevation"
             app:rippleColor="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_check_black_24dp" />
 
