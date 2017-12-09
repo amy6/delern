@@ -43,6 +43,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -53,6 +54,7 @@ import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 
 
 /**
@@ -143,7 +145,9 @@ public class SharingTest {
         // not(isEnabled) doesn't work with Popup menu. To check that menu "Share" is disabled,
         // click on it and check that nothing happened.
         waitView(() -> onView(withText(R.string.deck_share_menu)).perform(click()));
-        waitView(() -> onView(withText(R.string.deck_share_menu)).check(matches(isDisplayed())));
+        waitView(() -> onView(withText(R.string.share_cards_with_no_access_user_warning))
+                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
+                .check(matches(isDisplayed())));
         pressBack();
         // Check that cards available for learning
         // Start Learning Activity
