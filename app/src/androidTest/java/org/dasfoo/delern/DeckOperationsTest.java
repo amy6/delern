@@ -21,7 +21,6 @@ package org.dasfoo.delern;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.DeckPostfix;
@@ -37,13 +36,12 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.dasfoo.delern.test.BasicOperations.createDeck;
 import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.BasicOperations.deleteSelectedDeck;
 import static org.dasfoo.delern.test.ViewMatchers.first;
@@ -88,13 +86,7 @@ public class DeckOperationsTest {
     @Test
     public void createDeckToRenameAndDelete() {
         String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
-        waitView(() -> onView(withId(R.id.fab)).perform(click()));
-        onView(withInputType(InputType.TYPE_CLASS_TEXT))
-                .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
-        onView(withText(R.string.add)).perform(click());
-        waitView(() -> onView(withId(R.id.add_card_to_db))
-                .check(matches(isDisplayed()))
-                .perform(closeSoftKeyboard()));
+        createDeck(deckName);
         pressBack();
         waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))

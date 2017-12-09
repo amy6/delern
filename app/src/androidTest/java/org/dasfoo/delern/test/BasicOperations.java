@@ -18,16 +18,20 @@
 
 package org.dasfoo.delern.test;
 
+import android.text.InputType;
+
 import org.dasfoo.delern.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -76,5 +80,20 @@ public final class BasicOperations {
         onView(withText(R.string.deck_settings_menu)).perform(click());
         waitView(() -> onView(withId(R.id.delete_deck_menu)).perform(click()));
         onView(withText(R.string.delete)).perform(click());
+    }
+
+    /**
+     * Creates deck in DelernMainActivity. After creation it lands in AddEditCardActivity.
+     *
+     * @param deckName name of deck.
+     */
+    public static void createDeck(String deckName) {
+        waitView(() -> onView(withId(R.id.fab)).perform(click()));
+        onView(withInputType(InputType.TYPE_CLASS_TEXT))
+                .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
+        onView(withText(R.string.add)).perform(click());
+        waitView(() -> onView(withId(R.id.add_card_to_db))
+                .check(matches(isDisplayed()))
+                .perform(closeSoftKeyboard()));
     }
 }

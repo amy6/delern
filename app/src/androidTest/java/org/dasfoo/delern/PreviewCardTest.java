@@ -22,7 +22,6 @@ package org.dasfoo.delern;
 import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.text.InputType;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.DeckPostfix;
@@ -38,15 +37,13 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withInputType;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.BasicOperations.createCard;
+import static org.dasfoo.delern.test.BasicOperations.createDeck;
 import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
@@ -76,12 +73,9 @@ public class PreviewCardTest {
     private String mDeckName;
 
     @Before
-    public void createDeck() {
+    public void createDeckBeforeTest() {
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
-        waitView(() -> onView(withId(R.id.fab)).perform(click()));
-        onView(withInputType(InputType.TYPE_CLASS_TEXT))
-                .perform(typeTextIntoFocusedView(mDeckName), closeSoftKeyboard());
-        onView(withText(R.string.add)).perform(click());
+        createDeck(mDeckName);
     }
 
     @Test
