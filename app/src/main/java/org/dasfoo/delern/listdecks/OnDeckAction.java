@@ -18,7 +18,6 @@
 
 package org.dasfoo.delern.listdecks;
 
-import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 
 /**
@@ -31,28 +30,28 @@ public interface OnDeckAction {
     /**
      * Manages click on deck.
      *
-     * @param deck selected deck
+     * @param deckAccess deck information that user has
      */
-    void learnDeck(Deck deck);
+    void learnDeck(DeckAccess deckAccess);
 
     /**
      * "Edit" menu item of a deck.
      *
-     * @param deck selected deck
+     * @param deckAccess access to deck that user has
      */
-    void editDeck(Deck deck);
+    void editDeck(DeckAccess deckAccess);
 
     /**
      * Handles deck settings.
      *
-     * @param deckAccess position of the element in the list
+     * @param deckAccess access to deck that user has
      */
     void editDeckSettings(DeckAccess deckAccess);
 
     /**
      * Handles sharing of the deck.
      *
-     * @param deck selected deck
+     * @param deckAccess information about selected deck
      */
-    void shareDeck(Deck deck);
+    void shareDeck(DeckAccess deckAccess);
 }

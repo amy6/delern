@@ -169,8 +169,6 @@ public class Card extends Model {
                 .getNextTimeToRepeat(newCardLevel));
 
         return new MultiWrite()
-                // TODO(dotdoom): save(this) is unnecessary here
-                .save(this)
                 .save(v)
                 .save(sc)
                 .write();

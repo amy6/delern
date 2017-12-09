@@ -32,12 +32,15 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
+import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableCard;
+import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.util.CardColor;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 
@@ -56,6 +59,10 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
      * IntentExtra card that is being edited.
      */
     public static final String CARD = "card";
+    /**
+     * IntentExtra card that is being edited.
+     */
+    public static final String DECK_ACCESS = "deck_access";
 
     @BindView(R.id.textFrontCardView)
     /* default */ TextView mFrontPreview;
@@ -65,17 +72,21 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     /* default */ CardView mCardView;
     @Inject
     /* default */ PreEditCardActivityPresenter mPresenter;
+    private DeckAccess mDeckAccess;
 
     /**
      * Method starts PreEditCardActivity. It gets context from where it was called
      * and card for preview.
      *
-     * @param context context for starting activity.
-     * @param card    card for preview.
+     * @param context    context for starting activity.
+     * @param card       card for preview.
+     * @param deckAccess access to deck that user has.
      */
-    public static void startActivity(final Context context, final Card card) {
+    public static void startActivity(final Context context, final Card card,
+                                     final DeckAccess deckAccess) {
         Intent intent = new Intent(context, PreEditCardActivity.class);
         intent.putExtra(PreEditCardActivity.CARD, new ParcelableCard(card));
+        intent.putExtra(PreEditCardActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
         context.startActivity(intent);
     }
 
@@ -87,6 +98,8 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
         configureToolbar();
         Intent intent = getIntent();
         Card card = ParcelableCard.get(intent.getParcelableExtra(CARD));
+        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK_ACCESS));
+        mDeckAccess = deckAccess;
         this.setTitle(card.getDeck().getName());
         ButterKnife.bind(this);
         Injector.getPreEditCardActivityInjector(this).inject(this);
@@ -115,6 +128,11 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
 
     @OnClick(R.id.edit_card_button)
     /* default */ void editCardActivityStart() {
+        if (getResources().getString(R.string.read_access).equals(mDeckAccess.getAccess())) {
+            Toast.makeText(this, R.string.edit_cards_with_read_access_user_warning,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         mPresenter.editCard();
 
     }
@@ -145,6 +163,13 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_card_menu:
+                if (getResources().getString(R.string.read_access)
+                        .equals(mDeckAccess.getAccess())) {
+                    Toast.makeText(this,
+                            R.string.delete_cards_with_read_access_user_warning,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 deleteCard();
                 break;
             default:

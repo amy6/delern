@@ -383,23 +383,28 @@ public class DelernMainActivity extends AbstractActivity
      * {@inheritDoc}
      */
     @Override
-    public void shareDeck(final Deck deck) {
-        ShareDeckActivity.startActivity(this, deck);
+    public void shareDeck(final DeckAccess deckAccess) {
+        if (getString(R.string.owner_access).equals(deckAccess.getAccess())) {
+            ShareDeckActivity.startActivity(this, deckAccess.getDeck());
+            return;
+        }
+        Toast.makeText(this, getString(R.string.share_cards_with_no_access_user_warning),
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void learnDeck(final Deck deck) {
-        LearningCardsActivity.startActivity(this, deck);
+    public void learnDeck(final DeckAccess deckAccess) {
+        LearningCardsActivity.startActivity(this, deckAccess);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void editDeck(final Deck deck) {
-        EditCardListActivity.startActivity(this, deck);
+    public void editDeck(final DeckAccess deckAccess) {
+        EditCardListActivity.startActivity(this, deckAccess);
     }
 }

@@ -112,6 +112,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="back_side_card_hint">Back Side</string>
     <string name="front_side_card_hint">Front side</string>
     <string name="install_contact_app_user_message">Please install Contacts App</string>
+    <string name="add_cards_with_read_access_user_warning">You cannot add cards with a read access.</string>
+    <string name="edit_cards_with_read_access_user_warning">You cannot edit card with a read access.</string>
+    <string name="delete_cards_with_read_access_user_warning">You cannot delete card with a read access.</string>
+    <string name="share_cards_with_no_access_user_warning">Only owner of deck can share it.</string>
 
     <!-- Cards type spinner -->
     <string name="cards_type">Deck Type</string>
@@ -131,5 +135,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="off_switch_text">OFF</string>
     <string name="on_switch_text">ON</string>
     <string name="round_shape_image_contentdescription">Round shaped photo of user who have access to deck</string>
+
+    <!-- Delern App values -->
+    <string name="read_access" translatable="false">read</string>
+    <string name="owner_access" translatable="false">owner</string>
 
 </resources>

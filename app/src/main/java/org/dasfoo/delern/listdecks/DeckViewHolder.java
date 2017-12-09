@@ -55,16 +55,13 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckViewHolder.class);
     private static final String NULL_CARDS = "0";
     private static final int CARDS_COUNTER_LIMIT = 200;
-
     @BindView(R.id.deck_text_view)
     /* default */ TextView mDeckTextView;
     @BindView(R.id.count_to_learn_textview)
     /* default */ TextView mCountToLearnTextView;
-    private DeckAccess mDeckAccess;
-    private Deck mDeck;
-
     private final CompositeDisposable mResources = new CompositeDisposable();
     private final OnDeckAction mOnViewClick;
+    private DeckAccess mDeckAccess;
 
     /**
      * Constructor. It initializes variable that describe how to place deck.
@@ -87,7 +84,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             Toast.makeText(view.getContext(), R.string.no_card_message,
                     Toast.LENGTH_SHORT).show();
         } else {
-            mOnViewClick.learnDeck(mDeck);
+            mOnViewClick.learnDeck(mDeckAccess);
         }
     }
 
@@ -103,7 +100,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
-        managePopupMenu(popup.getMenu());
         manageSharingMenu(popup.getMenu());
         popup.show();
     }
@@ -115,41 +111,18 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
     public boolean onMenuItemClick(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_deck_menu:
-                mOnViewClick.editDeck(mDeck);
+                mOnViewClick.editDeck(mDeckAccess);
                 return true;
             case R.id.deck_settings:
                 // TODO(dotdoom): mDeckAccess can be null!
                 mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
-                mOnViewClick.shareDeck(mDeck);
+                mOnViewClick.shareDeck(mDeckAccess);
                 return true;
             default:
                 LOGGER.info("Menu Item {} is not implemented yet", item.getItemId());
                 return false;
-        }
-    }
-
-    /**
-     * Disables menu settings regarding user's access.
-     * menu.getMenu(0) - Edit Cards,
-     * menu.getMenu(1) - Settings,
-     * menu.getMenu(2) - Sharing.
-     *
-     * @param menu Popup menu
-     */
-    private void managePopupMenu(final Menu menu) {
-        // TODO(dotdoom): mDeckAccess can be null!
-        switch (mDeckAccess.getAccess()) {
-            case "read":
-                menu.getItem(0).setEnabled(false);
-                menu.getItem(2).setEnabled(false);
-                break;
-            case "write":
-                menu.getItem(2).setEnabled(false);
-                break;
-            default:
-                break;
         }
     }
 
@@ -169,7 +142,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      * @param deck Deck or null if ViewHolder is being recycled.
      */
     public void setDeck(@Nullable final Deck deck) {
-        mDeck = deck;
 
         if (deck == null) {
             mResources.clear();
@@ -177,7 +149,7 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             mDeckTextView.setText(deck.getName());
             mResources.add(deck.fetchDeckAccessOfUser().subscribe(v -> mDeckAccess = v));
             mResources.add(Deck.fetchCount(
-                    mDeck.fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
+                    deck.fetchCardsToRepeatWithLimitQuery(CARDS_COUNTER_LIMIT + 1))
                     .subscribe((final Long cardsCount) -> {
                         if (cardsCount <= CARDS_COUNTER_LIMIT) {
                             mCountToLearnTextView.setText(String.valueOf(cardsCount));

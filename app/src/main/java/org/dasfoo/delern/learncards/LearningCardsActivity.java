@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
@@ -42,8 +43,8 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.ParcelableDeck;
+import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.CardColor;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
@@ -62,7 +63,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /**
      * IntentExtra deck for this activity.
      */
-    public static final String DECK = "deck";
+    public static final String DECK_ACCESS = "deck_access";
 
     /**
      * Key for saving onSaveInstanceState.
@@ -93,18 +94,19 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     /* default */ LearningCardsActivityPresenter mPresenter;
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
+    private String mAccess;
     private Trace mStartTrace;
     private Trace mNextCardTrace;
 
     /**
      * Method starts LearningCardsActivity.
      *
-     * @param context context to start Activity.
-     * @param deck    deck which cards to learn.
+     * @param context    context to start Activity.
+     * @param deckAccess deck information which cards to learn.
      */
-    public static void startActivity(final Context context, final Deck deck) {
+    public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, LearningCardsActivity.class);
-        intent.putExtra(LearningCardsActivity.DECK, new ParcelableDeck(deck));
+        intent.putExtra(LearningCardsActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
         context.startActivity(intent);
     }
 
@@ -130,12 +132,17 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(deck.getName());
-        Injector.getLearningCardsActivityInjector(this).inject(this);
-        mPresenter.onCreate(deck);
-        ButterKnife.bind(this);
-        mDelimiter.setVisibility(View.INVISIBLE);
+        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK_ACCESS));
+        if (deckAccess == null || deckAccess.getDeck() == null) {
+            finish();
+        } else {
+            mAccess = deckAccess.getAccess();
+            this.setTitle(deckAccess.getDeck().getName());
+            Injector.getLearningCardsActivityInjector(this).inject(this);
+            mPresenter.onCreate(deckAccess.getDeck());
+            ButterKnife.bind(this);
+            mDelimiter.setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -213,9 +220,21 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_card_show_menu:
+                if (mAccess.equals(getString(R.string.read_access))) {
+                    Toast.makeText(this,
+                            getString(R.string.edit_cards_with_read_access_user_warning),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 mPresenter.startEditCard();
                 break;
             case R.id.delete_card_show_menu:
+                if (mAccess.equals(getString(R.string.read_access))) {
+                    Toast.makeText(this,
+                            getString(R.string.delete_cards_with_read_access_user_warning),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.delete_card_warning);
                 builder.setPositiveButton(R.string.delete, (dialogDelete, which) -> {

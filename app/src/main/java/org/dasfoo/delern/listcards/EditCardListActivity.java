@@ -31,6 +31,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.Query;
 
@@ -38,8 +39,8 @@ import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
-import org.dasfoo.delern.models.Deck;
-import org.dasfoo.delern.models.ParcelableDeck;
+import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.previewcard.PreEditCardActivity;
 
 import javax.inject.Inject;
@@ -57,7 +58,7 @@ public class EditCardListActivity extends AppCompatActivity implements
     /**
      * IntentExtra deck to edit.
      */
-    public static final String DECK = "deck";
+    public static final String DECK_ACCESS = "deck_access";
 
     private static final int DEFAULT_CARD_SIZE = 180;
 
@@ -72,16 +73,17 @@ public class EditCardListActivity extends AppCompatActivity implements
 
     private CardRecyclerViewAdapter mFirebaseAdapter;
     private RecyclerView.AdapterDataObserver mFirebaseAdapterDataObserver;
+    private DeckAccess mDeckAccess;
 
     /**
      * Method starts EditCardListActivity.
      *
-     * @param context context from where it was called.
-     * @param deck    deck which cards to show.
+     * @param context    context from where it was called.
+     * @param deckAccess deck information which cards to show.
      */
-    public static void startActivity(final Context context, final Deck deck) {
+    public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditCardListActivity.class);
-        intent.putExtra(EditCardListActivity.DECK, new ParcelableDeck(deck));
+        intent.putExtra(EditCardListActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
         context.startActivity(intent);
     }
 
@@ -91,28 +93,34 @@ public class EditCardListActivity extends AppCompatActivity implements
         setContentView(R.layout.show_deck_activity);
         configureToolbar();
         Intent intent = getIntent();
-        Deck deck = ParcelableDeck.get(intent.getParcelableExtra(DECK));
-        this.setTitle(deck.getName());
-        ButterKnife.bind(this);
-        Injector.getEditCardListActivityInjector(deck).inject(this);
-        // use a grid layout manager
-        RecyclerView.LayoutManager mLayoutManager =
-                new GridLayoutManager(this, calculateNumberOfColumns());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        // For better performance. The size of views won't be changed.
-        mRecyclerView.setHasFixedSize(true);
-        // The FirebaseRecyclerAdapter asynchronously synchronizes data from the database.
-        // To know whenever the data in an adapter changes, you can register an AdapterDataObserver.
-        // https://stackoverflow.com/questions/37937497/getitemcount-on-adapter-is-returning-0
-        mFirebaseAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
+        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK_ACCESS));
+        if (deckAccess == null || deckAccess.getDeck() == null) {
+            finish();
+        } else {
+            mDeckAccess = deckAccess;
+            this.setTitle(deckAccess.getDeck().getName());
+            ButterKnife.bind(this);
+            Injector.getEditCardListActivityInjector(deckAccess.getDeck()).inject(this);
+            // use a grid layout manager
+            RecyclerView.LayoutManager mLayoutManager =
+                    new GridLayoutManager(this, calculateNumberOfColumns());
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            // For better performance. The size of views won't be changed.
+            mRecyclerView.setHasFixedSize(true);
+            // The FirebaseRecyclerAdapter asynchronously synchronizes data from the database.
+            // To know whenever the data in an adapter changes, you can register
+            // an AdapterDataObserver.
+            // https://stackoverflow.com/questions/37937497/getitemcount-on-adapter-is-returning-0
+            mFirebaseAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
 
-            @Override
-            public void onItemRangeInserted(final int positionStart, final int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                mNumberOfCards.setText(String.format(getString(R.string.number_of_cards),
-                        mFirebaseAdapter.getItemCount()));
-            }
-        };
+                @Override
+                public void onItemRangeInserted(final int positionStart, final int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+                    mNumberOfCards.setText(String.format(getString(R.string.number_of_cards),
+                            mFirebaseAdapter.getItemCount()));
+                }
+            };
+        }
     }
 
     /**
@@ -134,6 +142,11 @@ public class EditCardListActivity extends AppCompatActivity implements
 
     @OnClick(R.id.f_add_card_button)
     /* default */ void addCards() {
+        if (getResources().getString(R.string.read_access).equals(mDeckAccess.getAccess())) {
+            Toast.makeText(this, R.string.add_cards_with_read_access_user_warning,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         AddEditCardActivity.startAddCardActivity(this, mPresenter.getDeck());
     }
 
@@ -215,7 +228,7 @@ public class EditCardListActivity extends AppCompatActivity implements
      */
     @Override
     public void onCardClick(final Card card) {
-        PreEditCardActivity.startActivity(this, card);
+        PreEditCardActivity.startActivity(this, card, mDeckAccess);
     }
 
     private CardRecyclerViewAdapter createAdapter(@Nullable final Query query) {

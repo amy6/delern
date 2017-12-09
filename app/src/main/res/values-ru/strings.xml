@@ -111,7 +111,11 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="delete_deck">Удалить все карточки в списке?</string>
     <string name="back_side_card_hint">Обратная сторона</string>
     <string name="front_side_card_hint">Передняя сторона</string>
-    <string name="install_contact_app_user_message">Пожалуйста устновите приложение Контакты</string>
+    <string name="install_contact_app_user_message">Пожалуйста установите приложение Контакты</string>
+    <string name="add_cards_with_read_access_user_warning">Вы не можете добавлять карточки с доступом на чтение.</string>
+    <string name="edit_cards_with_read_access_user_warning">Вы не можете редактировать карточки с доступом на чтение.</string>
+    <string name="delete_cards_with_read_access_user_warning">Вы не можете удалить карточки с доступом на чтение.</string>
+    <string name="share_cards_with_no_access_user_warning">Только владелец может поделиться списком</string>
 
     <!-- Cards type menu -->
     <string name="cards_type">Тип списка</string>
