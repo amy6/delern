@@ -95,6 +95,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
     <string name="communicate_menu">Общение</string>
+    <string name="nav_contact_us">Связаться с нами</string>
+    <string name="install_email_app_user_message">Пожалуйста установите приложение Электронной Почты</string>
+    <string name="feedback_email_subject">Обратная связь</string>
+    <string name="send_email_intent_chooser_message">Отправить письмо</string>
 
     <!-- User messages, including warnins dialogs and toasts -->
     <string name="delete_card_warning">Удалить карточку?</string>

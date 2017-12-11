@@ -34,6 +34,11 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:id="@+id/nav_invite"
                 android:icon="@drawable/ic_contact_mail_black_24dp"
                 android:title="@string/invite_menu_label" />
+
+            <item
+                android:id="@+id/nav_contact_us"
+                android:icon="@drawable/ic_live_help_black_24dp"
+                android:title="@string/nav_contact_us" />
         </menu>
     </item>
 

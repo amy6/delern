@@ -20,6 +20,7 @@ package org.dasfoo.delern.listdecks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -208,17 +209,25 @@ public class DelernMainActivity extends AbstractActivity
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.nav_invite) {
-            Intent intent = new AppInviteInvitation
-                    .IntentBuilder(getString(R.string.invitation_title))
-                    .setEmailHtmlContent(getString(R.string.invitation_email_html_content))
-                    .setEmailSubject(getString(R.string.invitation_title))
-                    .setMessage(getString(R.string.invitation_message))
-                    .build();
-            startActivityForResult(intent, REQUEST_INVITE);
-        } else if (id == R.id.nav_sign_out) {
-            signOut();
+        switch (item.getItemId()) {
+            case R.id.nav_invite:
+                Intent intent = new AppInviteInvitation
+                        .IntentBuilder(getString(R.string.invitation_title))
+                        .setEmailHtmlContent(getString(R.string.invitation_email_html_content))
+                        .setEmailSubject(getString(R.string.invitation_title))
+                        .setMessage(getString(R.string.invitation_message))
+                        .build();
+                startActivityForResult(intent, REQUEST_INVITE);
+                break;
+            case R.id.nav_sign_out:
+                signOut();
+                break;
+            case R.id.nav_contact_us:
+                contactUs();
+                break;
+            default:
+                LOGGER.warn("Not implemented:", item.getItemId());
+                break;
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -237,6 +246,21 @@ public class DelernMainActivity extends AbstractActivity
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .show();
+    }
+
+    private void contactUs() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        // Only email apps should handle this
+        intent.setData(Uri.parse("mailto:"));
+        // It must be an array. In another way, the recipient is empty.
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.developers_email)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedback_email_subject));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(Intent.createChooser(intent,
+                    getString(R.string.send_email_intent_chooser_message)));
+            return;
+        }
+        Toast.makeText(this, R.string.install_email_app_user_message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

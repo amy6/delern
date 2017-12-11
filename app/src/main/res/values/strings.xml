@@ -95,6 +95,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="communicate_menu">Communicate</string>
+    <string name="nav_contact_us">Contact Us</string>
+    <string name="install_email_app_user_message">Please install Email App</string>
+    <string name="feedback_email_subject">Feedback</string>
+    <string name="send_email_intent_chooser_message">Send Email</string>
 
     <!-- User messages, including warnins dialogs and toasts -->
     <string name="delete_card_warning">Delete card?</string>
@@ -139,5 +143,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Delern App values -->
     <string name="read_access" translatable="false">read</string>
     <string name="owner_access" translatable="false">owner</string>
+    <string name="developers_email" translatable="false">odasfoo@gmail.com</string>
 
 </resources>
