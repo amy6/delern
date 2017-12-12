@@ -143,6 +143,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Delern App values -->
     <string name="read_access" translatable="false">read</string>
     <string name="owner_access" translatable="false">owner</string>
-    <string name="developers_email" translatable="false">odasfoo@gmail.com</string>
+    <string name="developers_email" translatable="false">feedback@dasfoo.org</string>
 
 </resources>

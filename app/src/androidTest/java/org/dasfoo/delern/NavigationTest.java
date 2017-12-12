@@ -21,6 +21,7 @@ package org.dasfoo.delern;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -38,6 +39,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -125,5 +127,22 @@ public class NavigationTest {
         // Close navigation drawer by pressing back.
         pressBack();
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(not(isDisplayed()))));
+    }
+
+    @Test
+    public void sendFeedbackEmailTest() {
+        Context context = mActivityRule.getActivity().getBaseContext();
+        intending(toPackage("android.intent.action.CHOOSER"));
+
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_contact_us)));
+        intended(allOf(
+                hasAction("android.intent.action.CHOOSER"),
+                hasExtra("android.intent.extra.TITLE", context.
+                        getString(R.string.send_email_intent_chooser_message))));
+
     }
 }
