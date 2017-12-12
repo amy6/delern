@@ -145,4 +145,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="owner_access" translatable="false">owner</string>
     <string name="developers_email" translatable="false">feedback@dasfoo.org</string>
 
+    <!-- About App -->
+    <string name="nav_about_app">About</string>
+    <string name="pref_summary_licenses">Open source licenses</string>
+    <string name="pref_title_license">License</string>
+    <string name="pref_key_license" translatable="false">license_key</string>
+
 </resources>

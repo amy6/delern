@@ -139,4 +139,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="off_switch_text">ВЫКЛ</string>
     <string name="on_switch_text">ВКЛ</string>
 
+    <!-- About App -->
+    <string name="nav_about_app">О приложении</string>
+    <string name="pref_summary_licenses">Лицензии приложений с открытым кодом</string>
+    <string name="pref_title_license">Лицензии</string>
+
 </resources>

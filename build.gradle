@@ -24,6 +24,8 @@ buildscript {
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
         classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
+        // Open Source Notices
+        classpath 'com.google.gms:oss-licenses:0.9.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

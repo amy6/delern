@@ -53,6 +53,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 import org.dasfoo.delern.AbstractActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.SplashScreenActivity;
+import org.dasfoo.delern.aboutapp.AboutAppActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
 import org.dasfoo.delern.di.Injector;
@@ -224,6 +225,9 @@ public class DelernMainActivity extends AbstractActivity
                 break;
             case R.id.nav_contact_us:
                 contactUs();
+                break;
+            case R.id.nav_about:
+                AboutAppActivity.startActivity(this);
                 break;
             default:
                 LOGGER.warn("Not implemented:", item.getItemId());
