@@ -21,6 +21,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
+        android:key="pref_version"
+        android:title="Version">
+    </Preference>
+    <Preference
         android:key="@string/pref_key_license"
         android:summary="@string/pref_summary_licenses"
         android:title="@string/pref_title_license">

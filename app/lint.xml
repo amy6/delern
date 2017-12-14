@@ -15,6 +15,8 @@
 			This comes from google-services.json but nothing uses it.
 		-->
 		<ignore regexp="^The resource `R.string.project_id` appears to be unused$"/>
+		<ignore regexp="^The resource `R.raw.third_party_licenses` appears to be unused$"/>
+		<ignore regexp="^The resource `R.raw.third_party_license_metadata` appears to be unused$"/>
 	</issue>
 	<!-- TODO(ksheremet): fix these issues -->
 	<issue id="GoogleAppIndexingWarning" severity="ignore"/>

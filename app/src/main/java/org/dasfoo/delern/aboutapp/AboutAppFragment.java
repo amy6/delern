@@ -24,6 +24,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
+import org.dasfoo.delern.BuildConfig;
 import org.dasfoo.delern.R;
 
 
@@ -45,5 +46,6 @@ public class AboutAppFragment extends PreferenceFragmentCompat {
                     startActivity(intent);
                     return true;
                 });
+        findPreference("pref_version").setSummary(BuildConfig.VERSION_NAME);
     }
 }
