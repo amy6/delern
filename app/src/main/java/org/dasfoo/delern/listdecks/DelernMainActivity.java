@@ -43,9 +43,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -81,7 +78,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 @SuppressWarnings("PMD.TooManyMethods" /* TODO(dotdoom): refactor */)
 public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, IDelernMainView, OnDeckAction {
+        IDelernMainView, OnDeckAction {
 
     /**
      * IntentExtra user for showing user info and data.
@@ -104,7 +101,6 @@ public class DelernMainActivity extends AbstractActivity
     private TextView mUserEmailTextView;
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private GoogleApiClient mGoogleApiClient;
 
     /**
      * Method starts DelernMainActivity.
@@ -132,20 +128,13 @@ public class DelernMainActivity extends AbstractActivity
         }
         Intent intent = getIntent();
         User user = ParcelableUser.get(intent.getParcelableExtra(USER));
+
         // TODO(ksheremet): finish isn't called
         if (!mMainActivityPresenter.onCreate(user)) {
             return;
         }
 
         initViews();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(
-                        this /* Activity */,
-                        this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .build();
-
     }
 
     private void initViews() {
@@ -245,7 +234,6 @@ public class DelernMainActivity extends AbstractActivity
                 .setPositiveButton(R.string.sign_out, (dialog, which) -> {
                     mMainActivityPresenter.cleanup();
                     org.dasfoo.delern.models.Auth.signOut();
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                     signIn();
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
@@ -288,20 +276,6 @@ public class DelernMainActivity extends AbstractActivity
                 Toast.makeText(this, R.string.invitation_failed_message, Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    /**
-     * Notify the user that sign in has permanently failed.
-     *
-     * @param connectionResult information about unsuccessful connection attempt
-     */
-    @Override
-    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        LOGGER.error("Google Play Services connection failed: {}",
-                connectionResult.getErrorMessage());
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
     /**
