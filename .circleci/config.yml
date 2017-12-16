@@ -57,9 +57,9 @@ jobs:
     - run: ci-dependencies hash
     - restore_cache:
         keys:
-        - v10-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
-        - v10-android-{{ arch }}-{{ .Branch }}-
-        - v10-android-{{ arch }}-master-
+        - v11-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
+        - v11-android-{{ arch }}-{{ .Branch }}-
+        - v11-android-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
@@ -74,7 +74,7 @@ jobs:
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v10-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
+        key: v11-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
         paths:
         - ~/.cache/dependencies
 
