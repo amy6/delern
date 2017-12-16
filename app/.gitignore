@@ -7,6 +7,5 @@
 firebase-adminsdk.json
 
 # Generated files for opensource licenses.
-/app/src/main/res/raw/third_party_license_metadata
-/app/src/main/res/raw/third_party_licenses
-
+/src/main/res/raw/third_party_license_metadata
+/src/main/res/raw/third_party_licenses
