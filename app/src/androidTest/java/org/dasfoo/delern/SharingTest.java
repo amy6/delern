@@ -162,23 +162,16 @@ public class SharingTest {
         // Bob sign in
         mSignInRule.signIn("bob");
         deleteDeck(mDeckName);
-    }
 
-    @Test
-    public void shareDeckWithReadAccess() {
+        // Check Read Access
         waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
         // Create Deck
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         createDeck(mDeckName);
-        String front1 = "front1";
-        String back1 = "back1";
         createCard(front1, back1, /* reversed= */false);
-        String front2 = "front2";
-        String back2 = "back2";
         createCard(front2, back2, /* reversed= */ false);
         pressBack();
         // Share deck.
-        Context context = mActivityRule.getActivity().getApplicationContext();
         String sharingAccessView = context.getResources()
                 .getString(R.string.can_view_text);
         shareDeck(mAliceEmail, "alice", sharingAccessView);
