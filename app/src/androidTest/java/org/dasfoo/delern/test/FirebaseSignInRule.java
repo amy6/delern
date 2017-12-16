@@ -98,6 +98,10 @@ public class FirebaseSignInRule extends ExternalResource {
         return serviceAccount != null && serviceAccountKey != null;
     }
 
+    private static String idCompatibleString(final String src) {
+        return src.replaceAll("[^a-z0-9]", "-").toLowerCase();
+    }
+
     public String signIn(final String deviceLocalUserId) {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -105,9 +109,10 @@ public class FirebaseSignInRule extends ExternalResource {
         calendar.add(Calendar.HOUR, 1);
         Date expiresAt = calendar.getTime();
 
-        String email = deviceLocalUserId + "@" + FirebaseInstanceId.getInstance().getId() +
+        String email = idCompatibleString(deviceLocalUserId) + "@" +
+                idCompatibleString(FirebaseInstanceId.getInstance().getId()) +
                 ".example.com";
-        String id = "test-" + email.toLowerCase().replaceAll("[^a-z0-9]", "-");
+        String id = idCompatibleString("test-" + email);
 
         FirebaseAuth.getInstance().signInWithCustomToken(Jwts.builder()
                 .setIssuer(serviceAccount)
