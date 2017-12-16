@@ -29,13 +29,15 @@ import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 
 public final class WaitView {
     private static final Logger LOGGER = LoggerFactory.getLogger(WaitView.class);
-    private static final long TIMEOUT = 5000;
-    private static final long POLL_INTERVAL = 100;
+    private static final long TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(10);
+    private static final long POLL_INTERVAL_MILLIS = 100;
 
     private static void sleep(long millis) {
         onView(isRoot()).perform(new ViewAction() {
@@ -57,9 +59,9 @@ public final class WaitView {
     }
 
     /**
-     * Like onView, but waits for a view matcher to trigger.
+     * Retries calling matcher several times within the allotted interval until it stops throwing.
      *
-     * @param matcher matcher calling onView() etc
+     * @param matcher Runnable that's calling onView() etc
      */
     public static void waitView(final Runnable matcher) {
         long startTime = System.currentTimeMillis();
@@ -68,9 +70,9 @@ public final class WaitView {
                 matcher.run();
                 return;
             } catch (Throwable e) {
-                if (startTime + TIMEOUT >= System.currentTimeMillis()) {
+                if (startTime + TIMEOUT_MILLIS >= System.currentTimeMillis()) {
                     LOGGER.error("Failed to locate a View: " + e + ", retrying");
-                    sleep(POLL_INTERVAL);
+                    sleep(POLL_INTERVAL_MILLIS);
                 } else {
                     LOGGER.error("Giving up locating a View");
                     throw e;
