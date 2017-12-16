@@ -24,6 +24,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- FloatActionButton, links in TextView etc -->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>

@@ -20,6 +20,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <resources>
+    <!--
+        https://material.io/guidelines/style/color.html#color-color-palette
+        "Light Green"
+    -->
     <color name="colorPrimary">#FF8BC34A</color>
     <color name="colorPrimaryDark">#FF689F38</color>
     <color name="colorAccent">#FFCDDC39</color>
