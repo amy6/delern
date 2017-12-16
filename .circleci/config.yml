@@ -275,6 +275,7 @@ jobs:
 
     - run:
         name: "Run instrumented tests with ProGuard (on a hardware device)"
+        no_output_timeout: "35m"
         command: |
           ./gradlew \
             assembleInstrumented \
