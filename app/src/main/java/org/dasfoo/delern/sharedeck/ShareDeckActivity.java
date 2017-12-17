@@ -288,8 +288,9 @@ public class ShareDeckActivity extends AppCompatActivity {
                     if (USER_NOT_EXIST == error.networkResponse.statusCode) {
                         inviteFriendDialog(payload);
                     } else {
+                        // TODO(ksheremet): need translation for the error message!
                         Toast.makeText(this,
-                                "Deck wasn't share. Please try later",
+                                "Deck wasn't shared. Please try later",
                                 Toast.LENGTH_SHORT).show();
                         payload.putString(FirebaseAnalytics.Param.VALUE, "sharing error");
                         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
