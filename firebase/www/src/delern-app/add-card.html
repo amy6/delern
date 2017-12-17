@@ -130,11 +130,11 @@
           self.frontSide = '';
           self.backSide = '';
           self.$.front.focus();
-          document.getElementById('toast').show(this.localize('added_card_message'));
+          document.getElementById('toast').show(self.localize('added_card_message'));
         }).catch(function(err) {
           self.$['add-card-button'].disabled = false;
           console.error(err);
-          document.getElementById('toast').show(this.localize('error_adding_card_message'));
+          document.getElementById('toast').show(self.localize('error_adding_card_message'));
         });
       }
     }
