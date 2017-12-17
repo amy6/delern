@@ -284,6 +284,7 @@ public class ShareDeckActivity extends AppCompatActivity {
                     shareDeck(response, payload);
                 },
                 error -> {
+                    // TODO(ksheremet): error.networkResponse may be null - app will crash!
                     if (USER_NOT_EXIST == error.networkResponse.statusCode) {
                         inviteFriendDialog(payload);
                     } else {
