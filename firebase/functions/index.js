@@ -48,6 +48,7 @@ exports.userLookup = functions.https.onRequest((req, res) => {
 });
 
 var legacyCreateSharedDeck = (deckId, userId) => {
+  let deck = null;
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then(deckAccessSnapshot => {
       let deckAccesses = deckAccessSnapshot.val();
@@ -63,11 +64,13 @@ var legacyCreateSharedDeck = (deckId, userId) => {
       }
     }).then(deckSnapshot => {
       if (deckSnapshot) {
-        let deck = deckSnapshot.val();
+        deck = deckSnapshot.val();
         deck.accepted = false;
         return admin.database().ref('decks').child(userId).child(deckId)
           .set(deck);
       }
+    }).then(() => {
+      return Promise.resolve(deck.name);
     });
 };
 
@@ -80,19 +83,66 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
   }
 
   let deckId = event.params.deckId,
-    userId = event.params.userId;
+    userId = event.params.userId,
+    actorUserId = event.auth.variable.uid,
+    numberOfCards = 0,
+    actorUser = null,
+    deckName = null;
 
   return legacyCreateSharedDeck(deckId, userId)
-    .then(() => {
+    .then((createdDeckName) => {
+      deckName = createdDeckName;
       return admin.database().ref('cards').child(deckId).once('value');
     })
     .then(cardsSnapshot => {
       let scheduledCards = {};
       for (let cardId in cardsSnapshot.val()) {
         scheduledCards[cardId] = delern.createScheduledCardObject();
+        numberOfCards++;
       }
       return admin.database().ref('learning').child(userId).child(deckId)
         .set(scheduledCards);
+    })
+    .then(() => {
+      return admin.database().ref('users').child(actorUserId).once('value');
+    })
+    .then(actorUserSnapshot => {
+      actorUser = actorUserSnapshot.val();
+      return admin.database().ref('fcm').child(userId).once('value');
+    })
+    .then(fcmSnapshot => {
+      let fcm = fcmSnapshot.val();
+      for (let fcmId in fcm) {
+        console.log('Notifying ' + userId + ' on ' + fcm[fcmId].name +
+          ' about ' + actorUser.name + ' sharing a deck ' + deckName +
+          ' with ' + numberOfCards + ' cards');
+      }
+      let payload = {
+        notification: {
+          title: 'A user has shared a deck with you',
+          body: actorUser.name + ' shared deck "' + deckName + '" (' +
+            numberOfCards + ' cards) with you',
+          icon: actorUser.photoUrl || '',
+        },
+      };
+      let tokens = Object.keys(fcm);
+      return admin.messaging().sendToDevice(tokens, payload).then(response => {
+        const tokensToRemove = [];
+        response.results.forEach((result, index) => {
+          const error = result.error;
+          if (error) {
+            // Cleanup the tokens which are not registered anymore.
+            if (error.code === 'messaging/invalid-registration-token' ||
+              error.code === 'messaging/registration-token-not-registered') {
+              tokensToRemove.push(fcmSnapshot.ref.child(tokens[index]).remove());
+            } else {
+              console.error('Failure sending notification to', userId, 'at',
+                fcm[tokens[index]].name, error);
+            }
+          }
+        });
+        return Promise.all(tokensToRemove);
+      })
     });
 });
 
