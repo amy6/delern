@@ -216,7 +216,9 @@ delern.forEachUser = (batchSize, callback, nextPageToken) => {
 exports.databaseMaintenance = functions.https.onRequest((req, res) => {
   let now = new Date().getTime();
   delern.forEachUser(1000, (user) => {
-    if (!user.email && !user.phoneNumber) {
+    // Properties at https://firebase.google.com/docs/auth/admin/manage-users
+    if ((!user.email && !user.phoneNumber) ||
+      user.uid.startsWith('test-')) {
       // No email/phone => anonymous user!
       let daysStale =
         (now - new Date(user.metadata.lastSignInTime).getTime()) /
