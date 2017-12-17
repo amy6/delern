@@ -89,6 +89,23 @@ After all the SHA-1 are set, you can download `google-services.json` and put the
 one from Debug project into `app`, and the one from Release into
 `app/src/release`.
 
+Firebase functions need access to email account. Email and password can be set
+via Cloud Functions config (also possible to separate debug and release):
+
+```shell
+$ firebase -P project-name functions:config:set \
+    'gmail.password=my_secret_password' \
+    'gmail.email=myemail@gmail.com'
+```
+
+Note that, due to the authentication mechanism used (PLAIN), you will most
+likely need to enable access to this Google Account for "less secure apps" at
+https://myaccount.google.com/lesssecureapps.
+
+Sometimes your account may be locked out if it's being accessed from a very
+remote geographical location. Visit https://g.co/allowaccess to fix it and
+then retry sending email.
+
 ## Crashlytics
 
 Put `fabric.properties` with Fabric API key configured into `app` subdirectory.

@@ -1,8 +1,19 @@
 'use strict';
 
 const functions = require('firebase-functions');
+
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
+
+const nodemailer = require('nodemailer');
+const mailEmail = functions.config().gmail.email;
+const mailTransport = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: mailEmail,
+    pass: functions.config().gmail.password,
+  }
+})
 
 var delern = {
   deleteDeck: function(deckId) {
@@ -84,6 +95,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
 
   let deckId = event.params.deckId,
     userId = event.params.userId,
+    user = null,
     actorUserId = event.auth.variable.uid,
     numberOfCards = 0,
     actorUser = null,
@@ -104,10 +116,31 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
         .set(scheduledCards);
     })
     .then(() => {
+      return admin.auth().getUser(userId);
+    })
+    .then(userRecord => {
+      user = userRecord;
       return admin.database().ref('users').child(actorUserId).once('value');
     })
     .then(actorUserSnapshot => {
       actorUser = actorUserSnapshot.val();
+
+      let mailOptions = {
+        // TODO(dotdoom): mail+delern+actorUserName@gmail.com (avoid filters)
+        from: actorUser.name + ' via Delern <' + mailEmail + '>',
+        to: user.email,
+        subject: actorUser.name + ' shared a deck with you',
+        text: 'Hello! ' + actorUser.name + ' has shared a deck ' +
+          deckName + ' with you! Go to the app to check it out',
+      };
+
+      console.log('Sending email', mailOptions);
+
+      return mailTransport.sendMail(mailOptions).catch(error => {
+        console.error('Cannot send email', error);
+      });
+    })
+    .then(() => {
       return admin.database().ref('fcm').child(userId).once('value');
     })
     .then(fcmSnapshot => {
