@@ -15,7 +15,7 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
-var delern = {
+const delern = {
   deleteDeck: function(deckId) {
     Promise.resolve(true)
       .then(() => {
@@ -58,7 +58,7 @@ exports.userLookup = functions.https.onRequest((req, res) => {
     });
 });
 
-var legacyCreateSharedDeck = (deckId, userId) => {
+const legacyCreateSharedDeck = (deckId, userId) => {
   let deck = null;
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then((deckAccessSnapshot) => {
@@ -93,13 +93,13 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     return true;
   }
 
-  let deckId = event.params.deckId,
-    userId = event.params.userId,
-    user = null,
-    actorUserId = event.auth.variable.uid,
-    numberOfCards = 0,
-    actorUser = null,
-    deckName = null;
+  let deckId = event.params.deckId;
+  let userId = event.params.userId;
+  let user = null;
+  let actorUserId = event.auth.variable.uid;
+  let numberOfCards = 0;
+  let actorUser = null;
+  let deckName = null;
 
   return legacyCreateSharedDeck(deckId, userId)
     .then((createdDeckName) => {
@@ -108,10 +108,10 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     })
     .then((cardsSnapshot) => {
       let scheduledCards = {};
-      for (let cardId in cardsSnapshot.val()) {
+      Object.keys(cardsSnapshot.val()).forEach((cardId) => {
         scheduledCards[cardId] = delern.createScheduledCardObject();
         numberOfCards++;
-      }
+      });
       return admin.database().ref('learning').child(userId).child(deckId)
         .set(scheduledCards);
     })
@@ -145,11 +145,11 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     })
     .then((fcmSnapshot) => {
       let fcm = fcmSnapshot.val();
-      for (let fcmId in fcm) {
+      Object.keys(fcm).forEach((fcmId) => {
         console.log('Notifying ' + userId + ' on ' + fcm[fcmId].name +
           ' about ' + actorUser.name + ' sharing a deck ' + deckName +
           ' with ' + numberOfCards + ' cards');
-      }
+      });
       let payload = {
         notification: {
           title: 'A user has shared a deck with you',
@@ -179,30 +179,31 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     });
 });
 
-exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}').onDelete((event) => {
-  let deckId = event.params.deckId,
-    userId = event.params.userId;
+exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}')
+  .onDelete((event) => {
+    let deckId = event.params.deckId;
+    let userId = event.params.userId;
 
-  return admin.database().ref('/').update({
-    [
-      ['learning', userId, deckId].join('/')
-    ]: null,
-    [
-      ['views', userId, deckId].join('/')
-    ]: null,
-    [
-      ['decks', userId, deckId].join('/')
-    ]: null,
+    return admin.database().ref('/').update({
+      [
+        ['learning', userId, deckId].join('/')
+      ]: null,
+      [
+        ['views', userId, deckId].join('/')
+      ]: null,
+      [
+        ['decks', userId, deckId].join('/')
+      ]: null,
+    });
   });
-});
 
 exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate((event) => {
-  let deckId = event.params.deckId,
-    cardId = event.params.cardId;
+  let deckId = event.params.deckId;
+  let cardId = event.params.cardId;
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then((deckAccessSnapshot) => {
       let learningUpdate = {};
-      for (let userId in deckAccessSnapshot.val()) {
+      Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
         if (userId === event.auth.variable.uid) {
           console.log('Skipping learning creation for', userId,
             'as they are creating this card');
@@ -210,25 +211,25 @@ exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate(
           learningUpdate[[userId, deckId, cardId].join('/')] =
             delern.createScheduledCardObject();
         }
-      }
+      });
       return admin.database().ref('learning').update(learningUpdate);
     });
 });
 
 exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelete((event) => {
-  let deckId = event.params.deckId,
-    cardId = event.params.cardId;
+  let deckId = event.params.deckId;
+  let cardId = event.params.cardId;
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then((deckAccessSnapshot) => {
       let learningAndViewsUpdate = {};
-      for (let userId in deckAccessSnapshot.val()) {
+      Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
         learningAndViewsUpdate[
           ['learning', userId, deckId, cardId].join('/')
         ] = null;
         learningAndViewsUpdate[
           ['views', userId, deckId, cardId].join('/')
         ] = null;
-      };
+      });
       return admin.database().ref('/').update(learningAndViewsUpdate);
     });
 });
@@ -265,25 +266,24 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
   }).then(() => {
     return admin.database().ref('deck_access').once('value')
       .then((deckAccessSnapshot) => {
-        let deckAccesses = deckAccessSnapshot.val(),
-          deckAccessUpdate = {};
-        for (let deckId in deckAccesses) {
-          let deckAccess = deckAccesses[deckId];
-          for (let userId in deckAccess) {
+        let deckAccesses = deckAccessSnapshot.val();
+        let deckAccessUpdate = {};
+        for (const [deckId, deckAccess] of Object.entries(deckAccesses)) {
+          Object.keys(deckAccess).forEach((userId) => {
             if (!deckAccess[userId].access) {
               deckAccessUpdate[[deckId, userId].join('/')] = {
                 access: deckAccess[userId],
               };
             }
-          }
-        }
+          });
+        };
         return admin.database().ref('deck_access').update(deckAccessUpdate);
       });
   }).then(() => {
     let usersRef = admin.database().ref('users');
     return usersRef.once('value').then((usersSnapshot) => {
       let promises = [];
-      for (let uid in usersSnapshot.val()) {
+      Object.keys(usersSnapshot.val()).forEach((uid) => {
         promises.push(admin.auth().getUser(uid)
           .catch((e) => {
             if (e.errorInfo.code === 'auth/user-not-found') {
@@ -291,7 +291,7 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
               return usersRef.child(uid).set(null);
             }
           }));
-      }
+      });
       return Promise.all(promises);
     });
   }).then(() => {
