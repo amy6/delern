@@ -25,6 +25,7 @@ package org.dasfoo.delern.models;
 public class FCMToken extends Model {
 
     private String name;
+    private String language;
 
     /**
      * An empty constructor is required for Firebase deserialization.
@@ -61,12 +62,31 @@ public class FCMToken extends Model {
     }
 
     /**
+     * Getter for FCM language.
+     *
+     * @return locale and language, e.g. en_US.
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * Sets FCM token language.
+     *
+     * @param language local and language, e.g. en_US.
+     */
+    public void setLanguage(final String language) {
+        this.language = language;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String toString() {
         return "FCMToken{" + super.toString() +
                 ", name='" + name + '\'' +
+                ", language='" + language + '\'' +
                 '}';
     }
 }

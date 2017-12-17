@@ -26,6 +26,7 @@ path /users/{userId} is User {
 
 type FCMToken {
   name: String,
+  language: String | Null,
 }
 path /fcm/{userId}/{tokenId} is FCMToken {
   write() { isCurrentUser(userId) }

@@ -28,6 +28,8 @@ import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.FCMToken;
 import org.dasfoo.delern.models.User;
 
+import java.util.Locale;
+
 /**
  * Created by katarina on 10/7/16.
  */
@@ -48,6 +50,7 @@ public class DelernFirebaseInstanceIdService extends FirebaseInstanceIdService {
             // NOTE: token must be kept private!
             FCMToken token = new FCMToken(currentUser);
             token.setName(Build.MANUFACTURER + " " + Build.MODEL);
+            token.setLanguage(Locale.getDefault().toString());
             token.setKey(FirebaseInstanceId.getInstance().getToken());
             token.save();
         }
