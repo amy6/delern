@@ -91,32 +91,32 @@
           return;
         }
 
-        var card = {
+        let card = {
           front: this.frontSide,
           back: this.backSide,
           createdAt: firebase.database.ServerValue.TIMESTAMP,
         };
 
-        var scheduled = {
-          level: "L0",
+        let scheduled = {
+          level: 'L0',
           repeatAt: (new Date()).getTime(),
         };
 
-        var newCardKey = firebase.database().ref().child('cards').child(this.deckId).push().key;
+        let newCardKey = firebase.database().ref().child('cards').child(this.deckId).push().key;
 
         // Write the new post's data simultaneously in the posts list and the user's post list.
-        var updates = {};
+        let updates = {};
         updates['/cards/' + this.deckId + '/' + newCardKey] = card;
         updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
           newCardKey] = scheduled;
         // Add reversed card.
         if (this.reversed) {
-          var cardReversed = {
+          let cardReversed = {
             front: this.backSide,
             back: this.frontSide,
             createdAt: firebase.database.ServerValue.TIMESTAMP,
           };
-          var newCardKeyReversed = firebase.database().ref().child('cards').child(this.deckId).push()
+          let newCardKeyReversed = firebase.database().ref().child('cards').child(this.deckId).push()
             .key;
           updates['/cards/' + this.deckId + '/' + newCardKeyReversed] = cardReversed;
           updates['/learning/' + this.firebaseUser.uid + '/' + this.deckId + '/' +
@@ -124,7 +124,7 @@
         };
 
         this.$['add-card-button'].disabled = true;
-        var self = this;
+        let self = this;
         firebase.database().ref().update(updates).then(function() {
           self.$['add-card-button'].disabled = false;
           self.frontSide = '';

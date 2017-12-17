@@ -154,12 +154,12 @@
       ready() {
         super.ready();
         // Get user language
-        var userLang = navigator.language || navigator.userLanguage;
-        var lang = userLang.slice(0, 2);
-        if (lang == "ru") {
-          this.language = "ru";
+        let userLang = navigator.language || navigator.userLanguage;
+        let lang = userLang.slice(0, 2);
+        if (lang == 'ru') {
+          this.language = 'ru';
         } else {
-          this.language = "en";
+          this.language = 'en';
         }
       }
 

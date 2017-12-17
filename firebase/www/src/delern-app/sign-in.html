@@ -33,7 +33,7 @@
       static get properties() {
         return {
           routeData: Object,
-        }
+        };
       }
 
       __authError(e) {
@@ -41,7 +41,7 @@
       }
 
       signIn() {
-        var self = this;
+        let self = this;
         this.$.auth.signInWithPopup()
           .then(function(response) {
             console.log('sign in successful, redirecting to add-card');

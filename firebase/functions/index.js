@@ -12,8 +12,8 @@ const mailTransport = nodemailer.createTransport({
   auth: {
     user: mailEmail,
     pass: functions.config().gmail.password,
-  }
-})
+  },
+});
 
 var delern = {
   deleteDeck: function(deckId) {
@@ -37,7 +37,7 @@ var delern = {
       // TODO(dotdoom): figure out better repeatAt
       repeatAt: 0,
     };
-  }
+  },
 };
 
 exports.userLookup = functions.https.onRequest((req, res) => {
@@ -49,10 +49,10 @@ exports.userLookup = functions.https.onRequest((req, res) => {
   }
 
   admin.auth().getUserByEmail(req.query.q)
-    .then(user => {
+    .then((user) => {
       return res.send(user.uid);
     })
-    .catch(error => {
+    .catch((error) => {
       // TODO(dotdoom): getUserByPhoneNumber.
       return res.status(404).end();
     });
@@ -61,19 +61,19 @@ exports.userLookup = functions.https.onRequest((req, res) => {
 var legacyCreateSharedDeck = (deckId, userId) => {
   let deck = null;
   return admin.database().ref('deck_access').child(deckId).once('value')
-    .then(deckAccessSnapshot => {
+    .then((deckAccessSnapshot) => {
       let deckAccesses = deckAccessSnapshot.val();
       for (let sharedWithUserId in deckAccesses) {
         if (deckAccesses[sharedWithUserId].access === 'owner') {
           return sharedWithUserId;
         }
       }
-    }).then(ownerUserId => {
+    }).then((ownerUserId) => {
       if (ownerUserId !== userId) {
         return admin.database().ref('decks').child(ownerUserId)
           .child(deckId).once('value');
       }
-    }).then(deckSnapshot => {
+    }).then((deckSnapshot) => {
       if (deckSnapshot) {
         deck = deckSnapshot.val();
         deck.accepted = false;
@@ -85,7 +85,7 @@ var legacyCreateSharedDeck = (deckId, userId) => {
     });
 };
 
-exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate(event => {
+exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate((event) => {
   if (event.data.val().access === 'owner') {
     console.log('Deck is being created (not shared), skipping');
     // Return some 'true' value per
@@ -106,7 +106,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
       deckName = createdDeckName;
       return admin.database().ref('cards').child(deckId).once('value');
     })
-    .then(cardsSnapshot => {
+    .then((cardsSnapshot) => {
       let scheduledCards = {};
       for (let cardId in cardsSnapshot.val()) {
         scheduledCards[cardId] = delern.createScheduledCardObject();
@@ -118,11 +118,11 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     .then(() => {
       return admin.auth().getUser(userId);
     })
-    .then(userRecord => {
+    .then((userRecord) => {
       user = userRecord;
       return admin.database().ref('users').child(actorUserId).once('value');
     })
-    .then(actorUserSnapshot => {
+    .then((actorUserSnapshot) => {
       actorUser = actorUserSnapshot.val();
 
       let mailOptions = {
@@ -136,14 +136,14 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
 
       console.log('Sending email', mailOptions);
 
-      return mailTransport.sendMail(mailOptions).catch(error => {
+      return mailTransport.sendMail(mailOptions).catch((error) => {
         console.error('Cannot send email', error);
       });
     })
     .then(() => {
       return admin.database().ref('fcm').child(userId).once('value');
     })
-    .then(fcmSnapshot => {
+    .then((fcmSnapshot) => {
       let fcm = fcmSnapshot.val();
       for (let fcmId in fcm) {
         console.log('Notifying ' + userId + ' on ' + fcm[fcmId].name +
@@ -159,7 +159,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
         },
       };
       let tokens = Object.keys(fcm);
-      return admin.messaging().sendToDevice(tokens, payload).then(response => {
+      return admin.messaging().sendToDevice(tokens, payload).then((response) => {
         const tokensToRemove = [];
         response.results.forEach((result, index) => {
           const error = result.error;
@@ -175,11 +175,11 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
           }
         });
         return Promise.all(tokensToRemove);
-      })
+      });
     });
 });
 
-exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}').onDelete(event => {
+exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}').onDelete((event) => {
   let deckId = event.params.deckId,
     userId = event.params.userId;
 
@@ -193,14 +193,14 @@ exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}').
     [
       ['decks', userId, deckId].join('/')
     ]: null,
-  })
+  });
 });
 
-exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate(event => {
+exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate((event) => {
   let deckId = event.params.deckId,
     cardId = event.params.cardId;
   return admin.database().ref('deck_access').child(deckId).once('value')
-    .then(deckAccessSnapshot => {
+    .then((deckAccessSnapshot) => {
       let learningUpdate = {};
       for (let userId in deckAccessSnapshot.val()) {
         if (userId === event.auth.variable.uid) {
@@ -212,14 +212,14 @@ exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate(
         }
       }
       return admin.database().ref('learning').update(learningUpdate);
-    })
+    });
 });
 
-exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelete(event => {
+exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelete((event) => {
   let deckId = event.params.deckId,
     cardId = event.params.cardId;
   return admin.database().ref('deck_access').child(deckId).once('value')
-    .then(deckAccessSnapshot => {
+    .then((deckAccessSnapshot) => {
       let learningAndViewsUpdate = {};
       for (let userId in deckAccessSnapshot.val()) {
         learningAndViewsUpdate[
@@ -230,7 +230,7 @@ exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelet
         ] = null;
       };
       return admin.database().ref('/').update(learningAndViewsUpdate);
-    })
+    });
 });
 
 delern.forEachUser = (batchSize, callback, nextPageToken) => {
@@ -264,7 +264,7 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
     }
   }).then(() => {
     return admin.database().ref('deck_access').once('value')
-      .then(deckAccessSnapshot => {
+      .then((deckAccessSnapshot) => {
         let deckAccesses = deckAccessSnapshot.val(),
           deckAccessUpdate = {};
         for (let deckId in deckAccesses) {
