@@ -268,7 +268,8 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
       .then((deckAccessSnapshot) => {
         let deckAccesses = deckAccessSnapshot.val();
         let deckAccessUpdate = {};
-        for (const [deckId, deckAccess] of Object.entries(deckAccesses)) {
+        Object.keys(deckAccesses).forEach((deckId) => {
+          let deckAccess = deckAccesses[deckId];
           Object.keys(deckAccess).forEach((userId) => {
             if (!deckAccess[userId].access) {
               deckAccessUpdate[[deckId, userId].join('/')] = {
@@ -276,7 +277,7 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
               };
             }
           });
-        };
+        });
         return admin.database().ref('deck_access').update(deckAccessUpdate);
       });
   }).then(() => {
