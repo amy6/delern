@@ -222,15 +222,18 @@ exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelet
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then((deckAccessSnapshot) => {
       let learningAndViewsUpdate = {};
-      Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
-        learningAndViewsUpdate[
-          ['learning', userId, deckId, cardId].join('/')
-        ] = null;
-        learningAndViewsUpdate[
-          ['views', userId, deckId, cardId].join('/')
-        ] = null;
-      });
-      return admin.database().ref('/').update(learningAndViewsUpdate);
+      // TODO(dotdoom): deleting deck with too many cards may be bad.
+      if (deckAccessSnapshot.val()) {
+        Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
+          learningAndViewsUpdate[
+            ['learning', userId, deckId, cardId].join('/')
+          ] = null;
+          learningAndViewsUpdate[
+            ['views', userId, deckId, cardId].join('/')
+          ] = null;
+        });
+        return admin.database().ref('/').update(learningAndViewsUpdate);
+      }
     });
 });
 
