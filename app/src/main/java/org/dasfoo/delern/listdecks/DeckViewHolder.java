@@ -101,7 +101,14 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         manageSharingMenu(popup.getMenu());
-        popup.show();
+        // mDeckAccess can be null due to asynchronous operations.
+        if (mDeckAccess != null) {
+            popup.show();
+            return;
+        }
+        Toast.makeText(mDeckTextView.getContext(),
+                R.string.not_all_data_loaded_user_warning, Toast.LENGTH_SHORT).show();
+        LOGGER.warn("mDeckAccess is null in DeckViewHolder", new Throwable());
     }
 
     /**
@@ -114,7 +121,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 mOnViewClick.editDeck(mDeckAccess);
                 return true;
             case R.id.deck_settings:
-                // TODO(dotdoom): mDeckAccess can be null!
                 mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
@@ -142,7 +148,6 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
      * @param deck Deck or null if ViewHolder is being recycled.
      */
     public void setDeck(@Nullable final Deck deck) {
-
         if (deck == null) {
             mResources.clear();
         } else {

@@ -61,7 +61,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
     /**
      * IntentExtra deck for this activity.
      */
-    public static final String DECK = "deck";
+    public static final String DECK_ACCESS = "deckAccess";
 
     @BindView(R.id.deck_name)
     /* default */ TextInputEditText mDeckNameEditText;
@@ -105,7 +105,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
      */
     public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditDeckActivity.class);
-        intent.putExtra(EditDeckActivity.DECK, new ParcelableDeckAccess(deckAccess));
+        intent.putExtra(EditDeckActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
         context.startActivity(intent);
     }
 
@@ -119,7 +119,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK));
+        DeckAccess deckAccess = ParcelableDeckAccess.get(intent.getParcelableExtra(DECK_ACCESS));
         mDeck = deckAccess.getDeck();
         this.setTitle(mDeck.getName());
         Injector.getEditDeckActivityInjector(this, deckAccess).inject(this);

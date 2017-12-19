@@ -120,6 +120,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="edit_cards_with_read_access_user_warning">Вы не можете редактировать карточки с доступом на чтение.</string>
     <string name="delete_cards_with_read_access_user_warning">Вы не можете удалить карточки с доступом на чтение.</string>
     <string name="share_cards_with_no_access_user_warning">Только владелец может поделиться списком</string>
+    <string name="not_all_data_loaded_user_warning">Не все данные загружены. Повторите попытку позже</string>
 
     <!-- Cards type menu -->
     <string name="cards_type">Тип списка</string>

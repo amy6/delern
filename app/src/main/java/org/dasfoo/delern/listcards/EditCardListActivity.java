@@ -42,6 +42,8 @@ import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.previewcard.PreEditCardActivity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -59,6 +61,8 @@ public class EditCardListActivity extends AppCompatActivity implements
      * IntentExtra deck to edit.
      */
     public static final String DECK_ACCESS = "deck_access";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EditCardListActivity.class);
 
     private static final int DEFAULT_CARD_SIZE = 180;
 
@@ -84,6 +88,7 @@ public class EditCardListActivity extends AppCompatActivity implements
     public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditCardListActivity.class);
         intent.putExtra(EditCardListActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
+        LOGGER.debug("Write deckAccess:", deckAccess);
         context.startActivity(intent);
     }
 

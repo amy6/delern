@@ -120,6 +120,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="edit_cards_with_read_access_user_warning">You cannot edit card with a read access.</string>
     <string name="delete_cards_with_read_access_user_warning">You cannot delete card with a read access.</string>
     <string name="share_cards_with_no_access_user_warning">Only owner of deck can share it.</string>
+    <string name="not_all_data_loaded_user_warning">Not all data loaded. Try later</string>
 
     <!-- Cards type spinner -->
     <string name="cards_type">Deck Type</string>
