@@ -190,7 +190,8 @@ public class ShareDeckActivity extends AppCompatActivity {
                 if (mValidInput) {
                     httpReq(mPersonData.getText().toString().trim());
                 } else {
-                    Toast.makeText(this, "Invalid email address", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.invalid_email_address_user_warning,
+                            Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -209,7 +210,7 @@ public class ShareDeckActivity extends AppCompatActivity {
             startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
             return;
         }
-        Toast.makeText(this, getString(R.string.install_contact_app_user_message),
+        Toast.makeText(this, R.string.install_contact_app_user_message,
                 Toast.LENGTH_SHORT).show();
 
     }
@@ -284,13 +285,18 @@ public class ShareDeckActivity extends AppCompatActivity {
                     shareDeck(response, payload);
                 },
                 error -> {
-                    // TODO(ksheremet): error.networkResponse may be null - app will crash!
+                    if (error.networkResponse == null) {
+                        Toast.makeText(this,
+                                R.string.deck_not_shared_user_warning,
+                                Toast.LENGTH_SHORT).show();
+                        LOGGER.error("Sharing deck network response is null", error);
+                        return;
+                    }
                     if (USER_NOT_EXIST == error.networkResponse.statusCode) {
                         inviteFriendDialog(payload);
                     } else {
-                        // TODO(ksheremet): need translation for the error message!
                         Toast.makeText(this,
-                                "Deck wasn't shared. Please try later",
+                                R.string.deck_not_shared_user_warning,
                                 Toast.LENGTH_SHORT).show();
                         payload.putString(FirebaseAnalytics.Param.VALUE, "sharing error");
                         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
