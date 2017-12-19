@@ -4,13 +4,14 @@ buildscript {
     ext {
         // Have to be here because buildscript is evaluated before anything else.
         jacocoVersion = '0.7.9'
+        defaultRepositories = {
+            delegate.google()
+            delegate.jcenter()
+            delegate.maven { url 'https://maven.fabric.io/public' }
+        }
     }
 
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-    }
+    repositories defaultRepositories
     dependencies {
         // TODO(dotodoom): Move these into module-specific build.gradle and use new Gradle syntax.
         classpath 'com.android.tools.build:gradle:3.0.1'
@@ -33,11 +34,7 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-    }
+    repositories defaultRepositories
 }
 
 task clean(type: Delete) {
