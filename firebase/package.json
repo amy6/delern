@@ -1,0 +1,11 @@
+{
+  "name": "firebase",
+  "description": "Umbrella package for Firebase",
+  "scripts": {
+    "www": "cd www && mkdir -p __/firebase && curl https://delern-debug.firebaseapp.com/__/firebase/init.json -o __/firebase/init.json && polymer serve -H 0.0.0.0",
+    "__comment__build": "bower --allow-root to run on CI",
+    "build": "firebase-bolt database.rules.bolt && cd www && bower --allow-root install && polymer build",
+    "deploy": "npm run build && firebase --project=${PROJECT?} deploy && cd appengine && gcloud --project=${PROJECT?} app deploy --version=ci app.yaml cron.yaml"
+  },
+  "private": true
+}

@@ -152,11 +152,9 @@ jobs:
     - run:
         working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to DEBUG"
-        command: |
-          ( cd www && polymer build )
-          firebase-bolt rules.bolt
-          firebase --project=delern-debug deploy
-          ( cd appengine && gcloud --project=delern-debug app deploy --version=ci app.yaml cron.yaml )
+        environment:
+          PROJECT: delern-debug
+        command: npm run deploy
 
   instrumented-coverage:
     <<: *defaults
@@ -177,7 +175,6 @@ jobs:
             assembleInstrumentedAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
-          # FIXME(https://firebase.google.com/support/): --device model=Nexus5
           gcloud --project=delern-debug firebase test android run \
             --device model=Nexus5X,version=26 \
             --timeout 30m \
@@ -227,7 +224,6 @@ jobs:
             assembleInstrumentedAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
-          # FIXME(https://firebase.google.com/support/): --device model=Nexus5
           gcloud --project=delern-debug firebase test android run \
             --device model=m0,version=18 \
             --timeout 30m \
@@ -251,11 +247,9 @@ jobs:
     - run:
         working_directory: ~/project/firebase
         name: "Deploy Firebase database rules, functions, hosting to RELEASE"
-        command: |
-          ( cd www && polymer build )
-          firebase-bolt rules.bolt
-          firebase --project=delern-e1b33 deploy
-          ( cd appengine && gcloud --project=delern-e1b33 app deploy --version=ci app.yaml cron.yaml )
+        environment:
+          PROJECT: delern-e1b33
+        command: npm run deploy
 
     - run:
         name: "Assemble release APK (to store in artifacts)"

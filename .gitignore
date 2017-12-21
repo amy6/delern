@@ -5,6 +5,9 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 
+# firebase-tools npm package output
+firebase-debug.log
+
 # Intellij
 *.iml
 /.idea
@@ -23,7 +26,7 @@ node_modules
 /firebase/www/__/
 
 # firebase-bolt conversion tool output.
-/firebase/rules.json
+/firebase/database.rules.json
 
 # Google Cloud service account credentials with access to Google Play and GCS.
 /app/play-store-service-account.json

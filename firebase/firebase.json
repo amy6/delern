@@ -1,6 +1,10 @@
 {
   "hosting": {
     "public": "www/build/es5-bundled",
+    "ignore": [
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "**/!(*.*)",
@@ -9,7 +13,7 @@
     ]
   },
   "database": {
-    "rules": "rules.json"
+    "rules": "database.rules.json"
   },
   "functions": {
     "source": "functions"

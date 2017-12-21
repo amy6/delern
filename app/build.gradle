@@ -180,8 +180,11 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    // Dagger2
+    // Dagger2: https://github.com/google/dagger/releases
+    // TODO(ksheremet): update and fix code
+    //noinspection NewerVersionAvailable
     implementation 'com.google.dagger:dagger:2.13'
+    //noinspection NewerVersionAvailable
     annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
 
     // Markdown
