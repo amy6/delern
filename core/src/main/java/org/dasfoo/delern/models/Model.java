@@ -112,11 +112,12 @@ public class Model {
 
                         @Override
                         public void onCancelled(final DatabaseError databaseError) {
-                            // FIXME(dotdoom): on DatabaseError (e.g. permission no longer there)
-                            //                 this isn't always called (called on instrumented?!).
-                            LOGGER.error("Listener at {} has been cancelled", query.getRef(),
-                                    databaseError.toException());
-                            emitter.onError(databaseError.toException());
+                            // Let the subscriber (or RxJava default catch-all) process the error.
+                            // In some cases it can be PermissionDenied error which is expected when
+                            // users are changing Sharing options.
+                            emitter.onError(new Throwable(
+                                    "Listener at " + query.getRef() + " has been cancelled",
+                                    databaseError.toException()));
                         }
                     });
             emitter.setCancellable(() -> query.removeEventListener(listener));

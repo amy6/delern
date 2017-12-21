@@ -86,10 +86,11 @@ public class LearningCardsActivityPresenter {
                     }
                 },
                 error -> {
+                    // TODO(dotdoom): ignore Permission Denied here (but notify the user)
                     LOGGER.error("Failed to fetch next card", error);
                     mLearningCardView.finishLearning();
                 },
-                () -> mLearningCardView.finishLearning()
+                mLearningCardView::finishLearning
         );
     }
 
