@@ -115,7 +115,9 @@ public enum RemoteConfig {
                                     FirebaseRemoteConfigFetchThrottledException)) {
                                 // Throttling is okay; this may happen from time to time. Others
                                 // must be logged and reported.
-                                LOGGER.error("Failed to update RemoteConfig", task.getException());
+                                LOGGER.error("Failed to update RemoteConfig. Last fetch status: {}",
+                                        mFirebaseRemoteConfig.getInfo().getLastFetchStatus(),
+                                        task.getException());
                             }
                         }
                     }
