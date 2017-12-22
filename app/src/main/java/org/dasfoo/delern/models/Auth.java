@@ -91,9 +91,9 @@ public final class Auth {
                 // Anonymous users don't have any data, which means saving them to Firebase creates
                 // an empty record, stripping the access and confusing the MainActivity. Fake it.
                 // TODO(dotdoom): find a better way of extracting user name
-                String[] idParts = user.getUid().split("-", 3);
-                if (idParts.length >= 2) {
-                    sCurrentUser.setName(idParts[1]);
+                String[] idParts = user.getEmail().split("@", 2);
+                if (idParts.length == 2) {
+                    sCurrentUser.setName(idParts[0]);
                 } else {
                     sCurrentUser.setName("Anonymous User");
                 }

@@ -18,115 +18,51 @@
 
 package org.dasfoo.delern.test;
 
-import android.util.Base64;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.rules.ExternalResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Calendar;
-import java.util.Date;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 public class FirebaseSignInRule extends ExternalResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(FirebaseSignInRule.class);
 
     private final boolean mAutoSignIn;
 
-    private String serviceAccount;
-    private Key serviceAccountKey;
-
     public FirebaseSignInRule(final boolean autoSignIn) {
         mAutoSignIn = autoSignIn;
-
-        byte[] keyDataBytes;
-        try (InputStream keyFileStream = getClass().getClassLoader()
-                .getResourceAsStream("firebase-adminsdk.json")) {
-            if (keyFileStream == null) {
-                throw new IOException("Firebase Admin SDK credentials resource is missing");
-            }
-            keyDataBytes = new byte[keyFileStream.available()];
-            keyFileStream.read(keyDataBytes);
-        } catch (IOException e) {
-            LOGGER.error("Cannot read Firebase Admin SDK credentials", e);
-            return;
-        }
-
-        try {
-            JSONObject keyData = new JSONObject(new String(keyDataBytes, "UTF-8"));
-            serviceAccount = keyData.getString("client_email");
-            serviceAccountKey = KeyFactory.getInstance("RSA").generatePrivate(
-                    new PKCS8EncodedKeySpec(
-                            Base64.decode(keyData.getString("private_key")
-                                    .replace("-----BEGIN PRIVATE KEY-----", "")
-                                    .replace("-----END PRIVATE KEY-----", ""), Base64.DEFAULT)));
-        } catch (UnsupportedEncodingException | JSONException | GeneralSecurityException e) {
-            LOGGER.error("Cannot parse Firebase Admin SDK credentials", e);
-        }
     }
 
     @Override
     protected void before() throws Throwable {
         if (mAutoSignIn) {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                if (customSignInAvailable()) {
-                    signIn("bob");
-                } else {
-                    FirebaseAuth.getInstance().signInAnonymously();
-                }
+                signIn("bob");
             }
         } else {
             FirebaseAuth.getInstance().signOut();
         }
     }
 
-    public boolean customSignInAvailable() {
-        return serviceAccount != null && serviceAccountKey != null;
-    }
-
     private static String idCompatibleString(final String src) {
-        return src.replaceAll("[^a-z0-9]", "-").toLowerCase();
+        return src.replaceAll("[^a-zA-Z0-9]", "-").toLowerCase();
     }
 
     public String signIn(final String deviceLocalUserId) {
-        Date now = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.add(Calendar.HOUR, 1);
-        Date expiresAt = calendar.getTime();
-
         String email = idCompatibleString(deviceLocalUserId) + "@" +
                 idCompatibleString(FirebaseInstanceId.getInstance().getId()) +
                 ".example.com";
-        String id = idCompatibleString("test-" + email);
-
-        FirebaseAuth.getInstance().signInWithCustomToken(Jwts.builder()
-                .setIssuer(serviceAccount)
-                .setSubject(serviceAccount)
-                .setAudience("https://identitytoolkit.googleapis.com/" +
-                        "google.identity.identitytoolkit.v1.IdentityToolkit")
-                .setIssuedAt(now)
-                .setExpiration(expiresAt)
-                .claim("uid", id)
-                .signWith(SignatureAlgorithm.RS256, serviceAccountKey)
-                .compact()).addOnSuccessListener(auth -> {
-            auth.getUser().updateEmail(email);
-        });
-
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, email)
+                .addOnFailureListener(error -> FirebaseAuth.getInstance()
+                        // If we can't sign in, try creating account.
+                        .createUserWithEmailAndPassword(email, email)
+                        .addOnSuccessListener(authResult ->
+                                authResult.getUser().updateProfile(
+                                        new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(deviceLocalUserId)
+                                                .build())));
         return email;
     }
 }
