@@ -32,6 +32,7 @@ import android.widget.Toast;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.helpers.ServerConnection;
 import org.dasfoo.delern.util.RemoteConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,6 +125,12 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
                 mOnViewClick.editDeckSettings(mDeckAccess);
                 return true;
             case R.id.deck_share:
+                if (!ServerConnection.isOnline()) {
+                    Toast.makeText(mDeckTextView.getContext(),
+                            R.string.offline_sharing_disabled_user_warning,
+                            Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 mOnViewClick.shareDeck(mDeckAccess);
                 return true;
             default:

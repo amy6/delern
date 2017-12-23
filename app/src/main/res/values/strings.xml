@@ -92,6 +92,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="who_has_access_textview">Who has access</string>
     <string name="invalid_email_address_user_warning">Invalid email address</string>
     <string name="deck_not_shared_user_warning">Deck wasn\'t shared. Please try later</string>
+    <string name="offline_sharing_disabled_user_warning">Cannot perform operation when app is offline</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

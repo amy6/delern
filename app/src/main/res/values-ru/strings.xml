@@ -92,6 +92,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="round_shape_image_contentdescription">Фотография пользователя, который имеет доступ к списку карточек</string>
     <string name="invalid_email_address_user_warning">Неверный адрес электронной почты</string>
     <string name="deck_not_shared_user_warning">Список не был отправлен. Пожалуйста попробуйте позже</string>
+    <string name="offline_sharing_disabled_user_warning">Невозможно поделиться списком если нет подключения к сети</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
