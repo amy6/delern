@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.models;
 
+import org.dasfoo.delern.models.helpers.ServerClock;
+
 /**
  * Created by katarina on 2/23/17.
  * Model class for view.
@@ -43,7 +45,7 @@ public class View extends Model {
      */
     public View(final Card card) {
         super(card, null);
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = (long) ServerClock.currentTimeMillis();
     }
 
     /**

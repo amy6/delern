@@ -18,6 +18,8 @@
 
 package org.dasfoo.delern.models;
 
+import org.dasfoo.delern.models.helpers.ServerClock;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,7 +72,8 @@ public final class RepetitionIntervals {
      * @return next time to repeat
      */
     public long getNextTimeToRepeat(final String level) {
-        return System.currentTimeMillis() + getInstance().getInterval(level) + getJitter();
+        return (long) ServerClock.currentTimeMillis() + getInstance().getInterval(level) +
+                getJitter();
     }
 
     /**

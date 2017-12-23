@@ -27,6 +27,7 @@ import com.squareup.leakcanary.LeakCanary;
 
 import org.dasfoo.delern.models.Auth;
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.dasfoo.delern.models.helpers.ServerClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +83,7 @@ public class DelernApplication extends Application {
         https://firebase.google.com/docs/database/android/offline-capabilities */
         db.setPersistenceEnabled(true);
         MultiWrite.initializeOfflineListener(db);
+        ServerClock.initializeOffsetListener(db);
         Auth.initializeCurrentUser(db);
     }
 }

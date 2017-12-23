@@ -23,6 +23,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.helpers.MultiWrite;
+import org.dasfoo.delern.models.helpers.ServerClock;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class Deck extends Model {
      */
     public Deck(final User parent) {
         super(parent, null);
-        lastSyncAt = System.currentTimeMillis();
+        lastSyncAt = (long) ServerClock.currentTimeMillis();
     }
 
     /**
@@ -69,7 +70,7 @@ public class Deck extends Model {
      */
     @Exclude
     public Query fetchCardsToRepeatWithLimitQuery(final int limit) {
-        long time = System.currentTimeMillis();
+        long time = (long) ServerClock.currentTimeMillis();
         return getChildReference(ScheduledCard.class)
                 .orderByChild("repeatAt")
                 .endAt(time)
