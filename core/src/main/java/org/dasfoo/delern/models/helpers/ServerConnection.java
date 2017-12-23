@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.dasfoo.delern.util.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ public final class ServerConnection {
 
     // Default to "true" in case we don't want an offline listener.
     private static boolean sConnected = true;
+    private static Consumer<Boolean> sOnlineStatusWatcher;
 
     private ServerConnection() {
     }
@@ -49,6 +51,17 @@ public final class ServerConnection {
     }
 
     /**
+     * Set a (single) watcher for online status. IMPORTANT: any other watcher will be removed!
+     * TODO(dotdoom): expand to allow more online status watchers (or even LiveData).
+     *
+     * @param callback called immediately with current status, and then every time status changes.
+     */
+    public static void setOnlineStatusWatcher(final Consumer<Boolean> callback) {
+        sOnlineStatusWatcher = callback;
+        sOnlineStatusWatcher.accept(sConnected);
+    }
+
+    /**
      * Initialize a listener for online/offline status, e.g. for correct operation of
      * MultiWrite.write() callback.
      *
@@ -59,6 +72,9 @@ public final class ServerConnection {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 sConnected = dataSnapshot.getValue(Boolean.class);
+                if (sOnlineStatusWatcher != null) {
+                    sOnlineStatusWatcher.accept(sConnected);
+                }
             }
 
             @Override

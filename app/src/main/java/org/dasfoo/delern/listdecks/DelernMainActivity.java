@@ -20,10 +20,12 @@ package org.dasfoo.delern.listdecks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -61,6 +63,7 @@ import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.ServerConnection;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,6 +147,18 @@ public class DelernMainActivity extends AbstractActivity
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        ServerConnection.setOnlineStatusWatcher(online -> {
+            int color;
+            if (online) {
+                color = R.color.onlineToolbarIconColor;
+            } else {
+                color = R.color.offlineToolbarIconColor;
+            }
+            mToolbar.getNavigationIcon().setColorFilter(
+                    ContextCompat.getColor(this, color),
+                    PorterDuff.Mode.SRC_IN);
+        });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
