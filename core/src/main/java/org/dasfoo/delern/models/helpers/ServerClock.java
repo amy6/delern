@@ -58,7 +58,7 @@ public final class ServerClock {
 
                     @Override
                     public void onCancelled(final DatabaseError error) {
-                        LOGGER.error("Server time offset listener has been cancelled",
+                        LOGGER.error("Server time offset listener has been cancelled, re-starting",
                                 error.toException());
                         initializeOffsetListener(db);
                     }

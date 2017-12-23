@@ -18,11 +18,7 @@
 
 package org.dasfoo.delern.models.helpers;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.dasfoo.delern.models.Model;
 import org.slf4j.Logger;
@@ -46,35 +42,11 @@ public class MultiWrite {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiWrite.class);
     private static final AtomicInteger OPERATIONS_IN_FLIGHT = new AtomicInteger();
 
-    // Default to "true" in case we don't want an offline listener.
-    private static boolean sConnected = true;
-
     @SuppressWarnings(
         /* no concurrency here */ "PMD.UseConcurrentHashMap"
     )
     private final Map<String, Object> mData = new HashMap<>();
     private DatabaseReference mRoot;
-
-    /**
-     * Initialize a listener for online/offline status, for correct operation of write() callback.
-     *
-     * @param db DatabaseReference to the root of the database.
-     */
-    public static void initializeOfflineListener(final FirebaseDatabase db) {
-        db.getReference(".info/connected").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                sConnected = dataSnapshot.getValue(Boolean.class);
-            }
-
-            @Override
-            public void onCancelled(final DatabaseError databaseError) {
-                LOGGER.error("Offline status listener has been cancelled, re-starting",
-                        databaseError.toException());
-                initializeOfflineListener(db);
-            }
-        });
-    }
 
     /**
      * Gets the number of currently unfinished *online* write() operations.
@@ -167,7 +139,7 @@ public class MultiWrite {
     public Completable write() {
         CompletableSubject subject = CompletableSubject.create();
 
-        LOGGER.info("Writing with online={}, operations in queue: {}", sConnected,
+        LOGGER.info("Writing with online={}, operations in queue: {}", ServerConnection.isOnline(),
                 OPERATIONS_IN_FLIGHT);
         OPERATIONS_IN_FLIGHT.incrementAndGet();
 
@@ -182,7 +154,7 @@ public class MultiWrite {
                 })
                 .addOnCompleteListener(t -> OPERATIONS_IN_FLIGHT.decrementAndGet());
 
-        if (sConnected) {
+        if (ServerConnection.isOnline()) {
             return subject;
         } else {
             return Completable.complete();
