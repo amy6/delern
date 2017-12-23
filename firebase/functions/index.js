@@ -108,12 +108,15 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     })
     .then((cardsSnapshot) => {
       let scheduledCards = {};
-      Object.keys(cardsSnapshot.val()).forEach((cardId) => {
-        scheduledCards[cardId] = delern.createScheduledCardObject();
-        numberOfCards++;
-      });
-      return admin.database().ref('learning').child(userId).child(deckId)
-        .set(scheduledCards);
+      // Check that there are actually some cards.
+      if (cardsSnapshot.val()) {
+        Object.keys(cardsSnapshot.val()).forEach((cardId) => {
+          scheduledCards[cardId] = delern.createScheduledCardObject();
+          numberOfCards++;
+        });
+        return admin.database().ref('learning').child(userId).child(deckId)
+          .set(scheduledCards);
+      }
     })
     .then(() => {
       return admin.auth().getUser(userId);
