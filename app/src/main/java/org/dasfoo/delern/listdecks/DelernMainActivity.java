@@ -235,7 +235,7 @@ public class DelernMainActivity extends AbstractActivity
                 AboutAppActivity.startActivity(this);
                 break;
             default:
-                LOGGER.warn("Not implemented:", item.getItemId());
+                LOGGER.warn("Not implemented: {}", item.getItemId());
                 break;
         }
 

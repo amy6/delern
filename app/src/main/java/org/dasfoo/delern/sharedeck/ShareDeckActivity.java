@@ -239,7 +239,7 @@ public class ShareDeckActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                LOGGER.error("Request Code not implemented:", requestCode);
+                LOGGER.error("Request Code not implemented: {}", requestCode);
         }
     }
 

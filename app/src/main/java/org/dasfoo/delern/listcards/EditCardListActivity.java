@@ -88,7 +88,7 @@ public class EditCardListActivity extends AppCompatActivity implements
     public static void startActivity(final Context context, final DeckAccess deckAccess) {
         Intent intent = new Intent(context, EditCardListActivity.class);
         intent.putExtra(EditCardListActivity.DECK_ACCESS, new ParcelableDeckAccess(deckAccess));
-        LOGGER.debug("Write deckAccess:", deckAccess);
+        LOGGER.debug("Write deckAccess: {}", deckAccess);
         context.startActivity(intent);
     }
 

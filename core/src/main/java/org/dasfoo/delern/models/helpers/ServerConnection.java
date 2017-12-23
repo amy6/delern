@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ServerConnection {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServerClock.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerConnection.class);
 
     // Default to "true" in case we don't want an offline listener.
     private static boolean sConnected = true;
