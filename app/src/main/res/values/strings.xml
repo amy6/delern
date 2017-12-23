@@ -154,4 +154,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_title_license">License</string>
     <string name="pref_key_license" translatable="false">license_key</string>
 
+    <!-- LeakCanary (currently only enabled for debug). See also: https://github.com/square/leakcanary/wiki/Customizing-LeakCanary#icon-and-label -->
+    <string name="leak_canary_display_activity_label">Delern DEBUG Leaks</string>
 </resources>
