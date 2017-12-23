@@ -31,9 +31,6 @@ node_modules
 # Google Cloud service account credentials with access to Google Play and GCS.
 /app/play-store-service-account.json
 
-# Firebase Admin SDK private key for Instrumented project (to sign custom Auth tokens).
-/app/src/instrumented/resources/firebase-adminsdk.json
-
 # Generated files for opensource licenses.
 /app/src/main/res/raw/third_party_license_metadata
 /app/src/main/res/raw/third_party_licenses

@@ -51,7 +51,7 @@ public final class BasicOperations {
     public static void createCard(final String frontSide, final String backSide,
                                   final boolean reversed) {
         waitView(() -> onView(withId(R.id.add_card_to_db)).check(matches(isDisplayed())));
-        onView(withId(R.id.front_side_text)).perform(typeText(frontSide));
+        onView(withId(R.id.front_side_text)).perform(typeText(frontSide), closeSoftKeyboard());
         onView(withId(R.id.back_side_text)).perform(typeText(backSide), closeSoftKeyboard());
         if (reversed) {
             onView(withId(R.id.add_reversed_card_checkbox)).perform(click());

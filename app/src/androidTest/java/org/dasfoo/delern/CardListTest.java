@@ -102,8 +102,9 @@ public class CardListTest {
         onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         2))));
-        waitView(() -> onView(withId(R.id.search_action)).perform(click()));
-        onView(isAssignableFrom(EditText.class)).perform(typeText("die"));
+        waitView(() -> onView(withId(R.id.search_action)).perform(click(), closeSoftKeyboard()));
+        onView(isAssignableFrom(EditText.class)).perform(typeText("die"),
+                closeSoftKeyboard());
         waitView(() -> onView(withId(R.id.number_of_cards))
                 .check(matches(withText(String.format(context.getString(R.string.number_of_cards),
                         1)))));
