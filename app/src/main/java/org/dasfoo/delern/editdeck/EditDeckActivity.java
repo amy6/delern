@@ -47,6 +47,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableDeckAccess;
+import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
 
@@ -212,6 +213,7 @@ public class EditDeckActivity extends AppCompatActivity implements IEditDeckView
     }
 
     private void saveDeck() {
+        PerfEventTracker.trackEvent(PerfEventTracker.Event.DECK_SETTINGS_SAVE, this, null);
         if (mInputValid) {
             String newDeckName = mDeckNameEditText.getText().toString().trim();
             mDeck.setName(newDeckName);

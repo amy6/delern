@@ -65,6 +65,7 @@ import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.ServerConnection;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
+import org.dasfoo.delern.util.PerfEventTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -307,8 +308,11 @@ public class DelernMainActivity extends AbstractActivity
                 .setTitle(R.string.deck)
                 .setView(input)
                 .setNegativeButton(R.string.cancel, (dialogCancel, which) -> dialogCancel.cancel())
-                .setPositiveButton(R.string.add, (dialogCreate, which) ->
-                        mMainActivityPresenter.createNewDeck(input.getText().toString().trim()))
+                .setPositiveButton(R.string.add, (dialogCreate, which) -> {
+                    PerfEventTracker.trackEventStart(PerfEventTracker.Event.DECK_CREATE, this, null,
+                            this);
+                    mMainActivityPresenter.createNewDeck(input.getText().toString().trim());
+                })
                 .create();
         input.addTextChangedListener(new TextWatcherStub() {
             @Override
@@ -345,8 +349,11 @@ public class DelernMainActivity extends AbstractActivity
     @Override
     public void showProgressBar(final Boolean toShow) {
         if (toShow) {
+            PerfEventTracker.trackEventStart(PerfEventTracker.Event.DECKS_LOAD, this, null,
+                    this);
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
         } else {
+            PerfEventTracker.trackEventFinish(PerfEventTracker.Event.DECKS_LOAD);
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
@@ -385,6 +392,7 @@ public class DelernMainActivity extends AbstractActivity
      */
     @Override
     public void addCardsToDeck(final Deck deck) {
+        PerfEventTracker.trackEventFinish(PerfEventTracker.Event.DECK_CREATE);
         AddEditCardActivity.startAddCardActivity(this, deck);
     }
 
@@ -393,6 +401,7 @@ public class DelernMainActivity extends AbstractActivity
      */
     @Override
     public void editDeckSettings(final DeckAccess deckAccess) {
+        PerfEventTracker.trackEvent(PerfEventTracker.Event.DECK_SETTINGS_OPEN, this, null);
         EditDeckActivity.startActivity(this, deckAccess);
     }
 

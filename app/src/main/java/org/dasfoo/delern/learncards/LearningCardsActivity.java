@@ -36,9 +36,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.perf.FirebasePerformance;
-import com.google.firebase.perf.metrics.Trace;
-
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
@@ -48,6 +45,7 @@ import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.CardColor;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
 
@@ -95,8 +93,6 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
     private String mAccess;
-    private Trace mStartTrace;
-    private Trace mNextCardTrace;
 
     /**
      * Method starts LearningCardsActivity.
@@ -117,8 +113,11 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mStartTrace = FirebasePerformance.getInstance().newTrace("start_learning_cards");
-        mStartTrace.start();
+        // This event won't be stopped manually; PerfEventTracker will stop it onDestroy.
+        PerfEventTracker.trackEventStart(PerfEventTracker.Event.DECK_LEARNING_SESSION, this, null,
+                this);
+        PerfEventTracker.trackEventStart(PerfEventTracker.Event.DECK_LEARNING_START, this, null,
+                this);
 
         setContentView(R.layout.show_cards_activity);
         mLearnedCardsCount = 0;
@@ -169,33 +168,33 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @Override
     protected void onStop() {
         mPresenter.onStop();
-        if (mNextCardTrace != null) {
-            mNextCardTrace.stop();
-            mNextCardTrace = null;
-        }
-        if (mStartTrace != null) {
-            mStartTrace.stop();
-            mStartTrace = null;
-        }
         super.onStop();
+    }
+
+    private void cardFinished() {
+        setClickableRepeatKnowButtons(false);
+        mBackIsShown = false;
+
+        PerfEventTracker.trackEventCounter(PerfEventTracker.Event.DECK_LEARNING_SESSION,
+                PerfEventTracker.Counter.DECK_LEARNING_SESSION_CARDS);
+        PerfEventTracker.trackEventStart(PerfEventTracker.Event.DECK_LEARNING_NEXT_CARD,
+                this, null, this);
+
+        mLearnedCardsCount++;
+        mLearnedInSessionCards.setText(String.format(getString(R.string.card_watched_text),
+                mLearnedCardsCount));
     }
 
     @OnClick(R.id.to_know_button)
     /* default */ void userKnowCardButtonClick() {
-        setClickableRepeatKnowButtons(false);
-        mNextCardTrace = FirebasePerformance.getInstance().newTrace("learning_next_card");
-        mNextCardTrace.start();
+        cardFinished();
         mPresenter.userKnowCard();
-        mBackIsShown = false;
-        increaseNumberOfShowedCards();
     }
 
     @OnClick(R.id.to_repeat_button)
     /* default */ void userDontKnowCardButtonClick() {
-        setClickableRepeatKnowButtons(false);
+        cardFinished();
         mPresenter.userDoNotKnowCard();
-        mBackIsShown = false;
-        increaseNumberOfShowedCards();
     }
 
     @OnClick(R.id.turn_card_button)
@@ -226,6 +225,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
                             Toast.LENGTH_SHORT).show();
                     break;
                 }
+                PerfEventTracker.trackEvent(PerfEventTracker.Event.CARD_EDIT_OPEN, this, null);
                 mPresenter.startEditCard();
                 break;
             case R.id.delete_card_show_menu:
@@ -258,14 +258,8 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     @SuppressWarnings("deprecation" /* fromHtml(String, int) not available before API 24 */)
     public void showFrontSide(final String front, final boolean isHtml,
                               final GrammaticalGenderSpecifier.Gender gender) {
-        if (mStartTrace != null) {
-            mStartTrace.stop();
-            mStartTrace = null;
-        }
-        if (mNextCardTrace != null) {
-            mNextCardTrace.stop();
-            mNextCardTrace = null;
-        }
+        PerfEventTracker.trackEventFinish(PerfEventTracker.Event.DECK_LEARNING_START);
+        PerfEventTracker.trackEventFinish(PerfEventTracker.Event.DECK_LEARNING_NEXT_CARD);
 
         mCardView.setCardBackgroundColor(ContextCompat
                 .getColor(this, CardColor.getColor(gender)));
@@ -343,11 +337,5 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     private void setClickableRepeatKnowButtons(final Boolean isClickable) {
         mKnowButton.setClickable(isClickable);
         mRepeatButton.setClickable(isClickable);
-    }
-
-    private void increaseNumberOfShowedCards() {
-        mLearnedCardsCount++;
-        mLearnedInSessionCards.setText(String.format(getString(R.string.card_watched_text),
-                mLearnedCardsCount));
     }
 }

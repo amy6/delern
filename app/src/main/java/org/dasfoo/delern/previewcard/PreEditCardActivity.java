@@ -43,6 +43,7 @@ import org.dasfoo.delern.models.ParcelableCard;
 import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.util.CardColor;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
+import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
 
@@ -133,6 +134,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        PerfEventTracker.trackEvent(PerfEventTracker.Event.CARD_EDIT_OPEN, this, null);
         mPresenter.editCard();
 
     }

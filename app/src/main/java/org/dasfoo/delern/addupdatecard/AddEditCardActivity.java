@@ -38,6 +38,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
+import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
 
@@ -183,6 +184,7 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
      */
     @Override
     public void cardUpdated() {
+        PerfEventTracker.trackEventFinish(PerfEventTracker.Event.CARD_SAVE);
         Toast.makeText(this, R.string.updated_card_user_message, Toast.LENGTH_SHORT).show();
     }
 
@@ -191,6 +193,7 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
      */
     @Override
     public void cardAdded() {
+        PerfEventTracker.trackEventFinish(PerfEventTracker.Event.CARD_SAVE);
         if (mAddReversedCardCheckbox.isChecked()) {
             // TODO(ksheremet): Fix showing this message double times (2 card)
             Toast.makeText(this, R.string.add_extra_reversed_card_message,
@@ -236,6 +239,8 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
 
     private void updateCard() {
         if (mInputValid) {
+            PerfEventTracker.trackEventStart(PerfEventTracker.Event.CARD_SAVE, this, null,
+                    this);
             mPresenter.onAddUpdate(mFrontSideInputText.getText().toString(),
                     mBackSideInputText.getText().toString());
         }
