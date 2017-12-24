@@ -28,28 +28,24 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="invitation_email_html_content" tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
 <html>
     <body>
-        <center>
-            <img src="https://delern.org/logo/email.png"/>
-        </center>
-        <br/>
-        <a href="https://plus.google.com/communities/106984742080868045693?sqinv=WnNfVksxMzg0TzlpQXVPajNBazFKY2VJcWV5Z2t3">Welcome to Delern!</a>
-        After joining <a href="https://play.google.com/apps/testing/org.dasfoo.delern">Install Delern</a>
-        <br/> or click the next link https://play.google.com/apps/testing/org.dasfoo.delern
+        I invite you to install Delern, a spaced repetition learning app,
+        which will allow you to learn quickly and easily!<br/><br/>
+
+        Proceed to
+        <a href="https://play.google.com/store/apps/details?id=org.dasfoo.delern">
+        https://play.google.com/store/apps/details?id=org.dasfoo.delern</a>
+        to install it from Google Play!<br/><br/>
+
+        After install, follow Delern latest news on:<br/>
+        Facebook: <a href="http://fb.me/das.delern">https://fb.me/das.delern</a><br/>
+        VKontakte: <a href="https://vk.com/delern">https://vk.com/delern</a><br/>
+        Google+: <a href="https://plus.google.com/communities/104603840044649051798">https://plus.google.com/communities/104603840044649051798</a><br/>
+        Twitter: <a href="https://twitter.com/dasdelern">https://twitter.com/dasdelern</a>
     </body>
 </html>]]></string>
     <string name="invitation_failed_message">The invitation was not sent</string>
     <string name="invitation_sent_message">The invitation was sent</string>
     <string name="invite_user_sharing_deck_message">This user hasn\'t installed Delern yet. Do you want to sent an invite?</string>
-    <string name="simple_email_sharing"><![CDATA[<!DOCTYPE html>
-<html>
-    <body>
-        Welcome to Delern!<br/></br/>
-        <a href="https://plus.google.com/communities/106984742080868045693?sqinv=WnNfVksxMzg0TzlpQXVPajNBazFKY2VJcWV5Z2t3">Join Delern Community. </a>
-        Or join using link https://plus.google.com/communities/106984742080868045693?sqinv=WnNfVksxMzg0TzlpQXVPajNBazFKY2VJcWV5Z2t3<br/>
-        After joining <a href="https://play.google.com/apps/testing/org.dasfoo.delern">Install Delern</a>
-        <br/> or click the next link to download https://play.google.com/apps/testing/org.dasfoo.delern
-    </body>
-</html>]]></string>
 
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>

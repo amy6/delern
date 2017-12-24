@@ -217,6 +217,7 @@ public class DelernMainActivity extends AbstractActivity
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_invite:
+                PerfEventTracker.trackEvent(PerfEventTracker.Event.INVITE, this, null);
                 Intent intent = new AppInviteInvitation
                         .IntentBuilder(getString(R.string.invitation_title))
                         .setEmailHtmlContent(getString(R.string.invitation_email_html_content))

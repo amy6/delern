@@ -222,8 +222,9 @@ jobs:
             assembleInstrumentedAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
+          # TODO(ksheremet): fix portrait tests, set orientation=landscape
           gcloud --project=delern-debug firebase test android run \
-            --device model=m0,version=18,locale=ru_RU,orientation=landscape \
+            --device model=m0,version=18,locale=ru_RU \
             --timeout 30m \
             --app app/build/outputs/apk/instrumented/app-instrumented.apk \
             --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk

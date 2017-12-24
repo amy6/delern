@@ -332,7 +332,7 @@ public class ShareDeckActivity extends AppCompatActivity {
                             new String[]{mPersonData.getText().toString()});
                     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.invitation_title));
                     intent.putExtra(Intent.EXTRA_TEXT,
-                            Html.fromHtml(getString(R.string.simple_email_sharing)));
+                            Html.fromHtml(getString(R.string.invitation_email_html_content)));
                     startActivityForResult(intent, REQUEST_INVITE);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
