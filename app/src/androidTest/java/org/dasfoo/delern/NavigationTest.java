@@ -114,9 +114,9 @@ public class NavigationTest {
                 .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
         intended(allOf(hasAction("com.google.android.gms.appinvite.ACTION_APP_INVITE"),
                 toPackage("com.google.android.gms")));
-        onView(withText(R.string.invitation_sent_message))
+        waitView(() -> onView(withText(R.string.invitation_sent_message))
                 .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
+                .check(matches(isDisplayed())));
     }
 
     @Test
