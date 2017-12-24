@@ -274,7 +274,9 @@ jobs:
             assembleInstrumented \
             assembleInstrumentedAndroidTest \
             --console=plain
-          gcloud --project=delern-debug firebase test android run \
+          # Run on production Firebase project, for more quota. The app will still connect
+          # to the test/debug database.
+          gcloud --project=delern-e1b33 firebase test android run \
             --timeout 30m \
             --app app/build/outputs/apk/instrumented/app-instrumented.apk \
             --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
