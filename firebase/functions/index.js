@@ -128,13 +128,19 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     .then((actorUserSnapshot) => {
       actorUser = actorUserSnapshot.val();
 
+      if (user.email.endsWith('.example.com')) {
+        // Do not send emails to test users (delivery fails anyway).
+        return;
+      }
+
       let mailOptions = {
-        // TODO(dotdoom): mail+delern+actorUserName@gmail.com (avoid filters)
+        // TODO(dotdoom): <mailEmail>+<actorUser.name>@gmail.com (avoid filters)
         from: actorUser.name + ' via Delern <' + mailEmail + '>',
         to: user.email,
-        subject: actorUser.name + ' shared a deck with you',
-        text: 'Hello! ' + actorUser.name + ' has shared a deck ' +
-          deckName + ' with you! Go to the app to check it out',
+        subject: actorUser.name + ' shared a Delern deck with you',
+        text: 'Hello! ' + actorUser.name + ' has shared a Delern deck "' +
+          deckName + '" with you! Go to the Delern app on your phone to ' +
+          'check it out',
       };
 
       console.log('Sending email', mailOptions);
