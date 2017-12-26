@@ -55,7 +55,7 @@ deckAccess(deckId) {
   deckAccessFor(deckId, auth.uid)
 }
 deckExisted(deckId) { prior(root.deck_access[deckId]) !== null }
-userExisted(userId) { prior(root.users[userId]) !== null }
+userExists(userId) { root.users[userId] !== null }
 
 path /deck_access/{deckId} {
   read() { prior(deckAccess(deckId)) === "owner" }
@@ -65,7 +65,7 @@ path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
   read() { isCurrentUser(sharedWithUserId) }
 
   create() {
-    userExisted(sharedWithUserId) &&
+    userExists(sharedWithUserId) &&
     (
       deckExisted(deckId) ? (
         // Sharing a deck.
@@ -114,7 +114,7 @@ path /decks/{userId} {
 path /decks/{userId}/{deckId} is Deck {
   create() {
     deckAccess(deckId) === "owner" &&
-    userExisted(userId) &&
+    userExists(userId) &&
     (isCurrentUser(userId) === this.accepted)
   }
 
