@@ -12,7 +12,6 @@
  */
 
 type User {
-  email: String | Null,
   name: String,
   photoUrl: String | Null,
 }
