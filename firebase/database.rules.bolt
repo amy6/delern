@@ -104,10 +104,8 @@ type Deck {
   deckType: String,
   category: String | Null,
   accepted: TransitionToTrueOnlyBoolean,
-  // TODO(dotdoom): do not allow Null
-  lastSyncAt: Number | Null,
-  // TODO(dotdoom): do not allow Null
-  markdown: Boolean | Null,
+  lastSyncAt: Number,
+  markdown: Boolean,
 }
 
 path /decks/{userId} {
