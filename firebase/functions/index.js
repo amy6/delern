@@ -58,33 +58,6 @@ exports.userLookup = functions.https.onRequest((req, res) => {
     });
 });
 
-const legacyCreateSharedDeck = (deckId, userId) => {
-  let deck = null;
-  return admin.database().ref('deck_access').child(deckId).once('value')
-    .then((deckAccessSnapshot) => {
-      let deckAccesses = deckAccessSnapshot.val();
-      for (let sharedWithUserId in deckAccesses) {
-        if (deckAccesses[sharedWithUserId].access === 'owner') {
-          return sharedWithUserId;
-        }
-      }
-    }).then((ownerUserId) => {
-      if (ownerUserId !== userId) {
-        return admin.database().ref('decks').child(ownerUserId)
-          .child(deckId).once('value');
-      }
-    }).then((deckSnapshot) => {
-      if (deckSnapshot) {
-        deck = deckSnapshot.val();
-        deck.accepted = false;
-        return admin.database().ref('decks').child(userId).child(deckId)
-          .set(deck);
-      }
-    }).then(() => {
-      return Promise.resolve(deck.name);
-    });
-};
-
 exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate((event) => {
   if (event.data.val().access === 'owner') {
     console.log('Deck is being created (not shared), skipping');
@@ -101,9 +74,10 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
   let actorUser = null;
   let deckName = null;
 
-  return legacyCreateSharedDeck(deckId, userId)
+  return admin.database().ref('decks').child(userId).child(deckId).child('name')
+    .once('value')
     .then((createdDeckName) => {
-      deckName = createdDeckName;
+      deckName = createdDeckName.val();
       return admin.database().ref('cards').child(deckId).once('value');
     })
     .then((cardsSnapshot) => {
