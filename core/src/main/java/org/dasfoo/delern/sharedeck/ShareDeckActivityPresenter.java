@@ -22,6 +22,8 @@ import com.google.firebase.database.Query;
 
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.DeckAccess;
+import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.models.helpers.MultiWrite;
 
 
 /**
@@ -108,8 +110,20 @@ public class ShareDeckActivityPresenter {
         deckAccess.setKey(uid);
         deckAccess.setAccess(access);
 
-        // TODO(ksheremet): write Deck for the new user.
+        User sharedWithUser = new User(deckAccess.getReference().getDatabase());
+        sharedWithUser.setKey(uid);
+
+        Deck sharedDeck = new Deck(sharedWithUser);
+        sharedDeck.setKey(mDeck.getKey());
+        sharedDeck.setName(mDeck.getName());
+        sharedDeck.setDeckType(mDeck.getDeckType());
+        sharedDeck.setCategory(mDeck.getCategory());
+        sharedDeck.setMarkdown(mDeck.isMarkdown());
+
+        sharedDeck.setLastSyncAt(0);
+        sharedDeck.setAccepted(false);
+
         // TODO(ksheremet): notify user about sharing (need to add activity interface)
-        deckAccess.save();
+        new MultiWrite().save(deckAccess).save(sharedDeck).write();
     }
 }
