@@ -61,7 +61,7 @@ path /deck_access/{deckId} {
   read() { prior(deckAccess(deckId)) === "owner" }
   delete() { prior(deckAccess(deckId)) === "owner" }
 }
-path /deck_access/{deckId}/{sharedWithUserId} is AccessString | DeckAccess {
+path /deck_access/{deckId}/{sharedWithUserId} is DeckAccess {
   read() { isCurrentUser(sharedWithUserId) }
 
   create() {
