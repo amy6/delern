@@ -51,7 +51,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:paddingRight="40dp"
             android:paddingStart="40dp"
             android:visibility="invisible"
-            app:backgroundTint="@color/dontKnowButton"
+            app:backgroundTint="@color/dontKnowCardButton"
             app:fabSize="normal"
             app:pressedTranslationZ="@dimen/fab_pressed_elevation"
             app:rippleColor="@color/redRipple"
@@ -82,6 +82,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:visibility="invisible"
             app:fabSize="normal"
             app:pressedTranslationZ="@dimen/fab_pressed_elevation"
+            app:backgroundTint="@color/toKnowCardButton"
             app:rippleColor="@color/colorPrimaryDark"
             app:srcCompat="@drawable/ic_check_black_24dp" />
 
