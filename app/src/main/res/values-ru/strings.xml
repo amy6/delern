@@ -144,4 +144,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_summary_licenses">Лицензии приложений с открытым кодом</string>
     <string name="pref_title_license">Лицензии</string>
 
+    <!-- OnBoarding -->
+    <string name="create_deck_onboarding_title">Создать список</string>
+    <string name="create_deck_onboarding_description">Нажмите здесь, чтобы создать список</string>
+
 </resources>

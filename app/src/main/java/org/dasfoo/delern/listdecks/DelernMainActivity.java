@@ -20,6 +20,7 @@ package org.dasfoo.delern.listdecks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -65,6 +68,7 @@ import org.dasfoo.delern.models.ParcelableUser;
 import org.dasfoo.delern.models.User;
 import org.dasfoo.delern.models.helpers.ServerConnection;
 import org.dasfoo.delern.sharedeck.ShareDeckActivity;
+import org.dasfoo.delern.util.OnBoardingStyle;
 import org.dasfoo.delern.util.PerfEventTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +83,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Main activity of the application, containing decks and menu.
  */
-@SuppressWarnings("PMD.TooManyMethods" /* TODO(dotdoom): refactor */)
+@SuppressWarnings({"PMD.TooManyMethods" /* TODO(dotdoom): refactor */,
+        "checkstyle:classfanoutcomplexity"})
 public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         IDelernMainView, OnDeckAction {
@@ -104,6 +109,7 @@ public class DelernMainActivity extends AbstractActivity
     private TextView mUserEmailTextView;
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private SharedPreferences mSharedPreferences;
 
     /**
      * Method starts DelernMainActivity.
@@ -138,6 +144,7 @@ public class DelernMainActivity extends AbstractActivity
         }
 
         initViews();
+        mSharedPreferences = getPreferences(Context.MODE_PRIVATE);
     }
 
     private void initViews() {
@@ -181,6 +188,42 @@ public class DelernMainActivity extends AbstractActivity
     protected void onStart() {
         super.onStart();
         mMainActivityPresenter.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean defValue = getResources().getBoolean(R.bool.is_add_deck_on_boarding_showed_default);
+        boolean isOnBoardingShowed = mSharedPreferences
+                .getBoolean(getString(R.string.pref_add_deck_onboarding_key), defValue);
+        if (!isOnBoardingShowed) {
+            showOnBoarding();
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putBoolean(getString(R.string.pref_add_deck_onboarding_key), true);
+            editor.apply();
+        }
+    }
+
+    /**
+     * Shows onBoarding for new users and for users without decks.
+     */
+    private void showOnBoarding() {
+        // Specify title, description for onBoarding for a button.
+        TapTarget tapTarget = TapTarget.forView(findViewById(R.id.fab),
+                getString(R.string.create_deck_onboarding_title),
+                getString(R.string.create_deck_onboarding_description));
+        // Specify default styles.
+        tapTarget = OnBoardingStyle.setDefStyle(tapTarget, this);
+        TapTargetView.showFor(/* Activity */this,
+                tapTarget,
+                /* The listener can listen for regular clicks, long clicks or cancels*/
+                new TapTargetView.Listener() {
+                    @Override
+                    public void onTargetClick(final TapTargetView view) {
+                        super.onTargetClick(view);
+                        createNewDeckDialog();
+                    }
+                });
     }
 
     @Override

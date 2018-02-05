@@ -152,4 +152,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- LeakCanary (currently only enabled for debug). See also: https://github.com/square/leakcanary/wiki/Customizing-LeakCanary#icon-and-label -->
     <string name="leak_canary_display_activity_label">Delern DEBUG Leaks</string>
+
+    <!-- OnBoarding -->
+    <string name="pref_add_deck_onboarding_key" translatable="false">add_deck_onboarding_key</string>
+    <string name="create_deck_onboarding_title">Create deck</string>
+    <string name="create_deck_onboarding_description">Tap here to create your deck</string>
 </resources>

@@ -197,6 +197,10 @@ dependencies {
     // Otherwise version conflict
     //noinspection GradleDependency
     implementation "com.google.android.gms:play-services-oss-licenses:$firebaseVersion"
+
+    // Implements onBoarding
+    // https://github.com/KeepSafe/TapTargetView
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
