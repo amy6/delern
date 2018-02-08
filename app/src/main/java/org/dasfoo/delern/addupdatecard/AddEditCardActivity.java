@@ -32,12 +32,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+
 import org.dasfoo.delern.AbstractActivity;
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
+import org.dasfoo.delern.util.OnBoardingStyle;
 import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
@@ -164,6 +168,36 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
      */
     public void initForAdd() {
         mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
+        showOnBoarding();
+    }
+
+    /**
+     * Shows onBoarding for new users and for users without decks.
+     */
+    private void showOnBoarding() {
+        // Specify title, description for onBoarding for a button.
+        TapTarget tapTargetFront = TapTarget.forView(findViewById(R.id.front_side_text),
+                "Add front side of card");
+        // Specify default styles.
+        tapTargetFront = OnBoardingStyle.setDefStyle(tapTargetFront, this);
+
+        TapTarget tapTargetBack = TapTarget.forView(findViewById(R.id.back_side_text),
+                "Add back side of card");
+        tapTargetBack = OnBoardingStyle.setDefStyle(tapTargetBack, this);
+
+        TapTarget tapTargetReversedCheckBox = TapTarget.forView(mAddReversedCardCheckbox,
+                "Set to create reversed card");
+        tapTargetReversedCheckBox =
+                OnBoardingStyle.setDefStyle(tapTargetReversedCheckBox, this);
+
+        TapTarget tapTargetAddToDb = TapTarget.forView(mAddCardToDbButton, "Click to save");
+        tapTargetAddToDb = OnBoardingStyle.setDefStyle(tapTargetAddToDb, this);
+
+        new TapTargetSequence(this)
+                .targets(tapTargetFront,
+                        tapTargetBack,
+                        tapTargetReversedCheckBox,
+                        tapTargetAddToDb).start();
     }
 
     /**
