@@ -32,17 +32,16 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <include layout="@layout/recycler_view_layout" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/create_deck_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/fab_elevation"
-        android:tint="@color/grey_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="@dimen/fab_pressed_elevation"
         app:rippleColor="@color/colorPrimaryDark"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
+        app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

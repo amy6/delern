@@ -18,37 +18,52 @@
 
 package org.dasfoo.delern.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 
 import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.dasfoo.delern.R;
 
 /**
  * Specifies standard style for onBoarding.
  */
-public final class OnBoardingStyle {
+public final class FirstTimeUserExperienceUtil {
 
-    private OnBoardingStyle() {
-        // a private constructor to prevent instantiation
+    private final Activity mActivity;
+    private final SharedPreferences mSharedPreferences;
+    private final int mPreferenceKey;
+
+    /**
+     * Constructor.Performs initialization of parameters.
+     *
+     * @param prefKey  preference key to check OnBoarding for the Activity.
+     * @param activity activity for showing onBoarding.
+     */
+    public FirstTimeUserExperienceUtil(final Activity activity, final int prefKey) {
+        this.mActivity = activity;
+        this.mPreferenceKey = prefKey;
+        mSharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
     }
 
     /**
      * Specifies default styles for onBoarding.
      *
      * @param tapTarget variable for onBoarding.
-     * @param context   context for getting parameters.
      * @return ViewTapTarget with applied styles.
      */
-    public static TapTarget setDefStyle(final TapTarget tapTarget, final Context context) {
+    private TapTarget setDefStyle(final TapTarget tapTarget) {
         return tapTarget
                 .outerCircleColor(R.color.colorPrimaryDark /* Color for the outer circle */)
                 .targetCircleColor(android.R.color.white /* Color for the target circle */)
-                .titleTextSize(context.getResources()
+                .titleTextSize(mActivity.getResources()
                         .getInteger(R.integer.title_text_size_onboarding) /* Size (in sp) */)
                 .titleTextColor(android.R.color.white /* Color of the title text */)
-                .descriptionTextSize(context.getResources()
+                .descriptionTextSize(mActivity.getResources()
                         .getInteger(R.integer.description_text_size_onboarding))
                 .textColor(android.R.color.white
                         /* Color for both the title and description text */)
@@ -59,5 +74,38 @@ public final class OnBoardingStyle {
                 .tintTarget(true /* Whether to tint the target view's color */)
                 .transparentTarget(true
                         /* if target is transparent displays the content underneath*/);
+    }
+
+    /**
+     * Checks whether activity is opened first time. If yes, it shows onBoarding.
+     *
+     * @return true if OnBoarding was already shown, otherwise false.
+     */
+    public boolean isOnBoardingShown() {
+        boolean defValue = mActivity.getResources()
+                .getBoolean(R.bool.is_onboarding_showed_default);
+        return mSharedPreferences.getBoolean(mActivity.getString(mPreferenceKey), defValue);
+    }
+
+    /**
+     * Shows OnBoarding for a target view.
+     *
+     * @param tapTarget an information about view that needs OnBoarding.
+     * @param listener  listener to handle onClick.
+     */
+    public void showOnBoarding(final TapTarget tapTarget,
+                               @Nullable final TapTargetView.Listener listener) {
+        if (listener == null) {
+            TapTargetView.showFor(/* Activity */mActivity, setDefStyle(tapTarget));
+        } else {
+            TapTargetView.showFor(/* Activity */mActivity, setDefStyle(tapTarget), listener);
+        }
+        savePrefShown();
+    }
+
+    private void savePrefShown() {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(mActivity.getString(mPreferenceKey), true);
+        editor.apply();
     }
 }

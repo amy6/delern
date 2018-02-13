@@ -26,11 +26,12 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     -->
     <color name="colorPrimary">#FF8BC34A</color>
     <color name="colorPrimaryDark">#FF689F38</color>
-    <color name="colorAccent">#FFFFEA00</color>
+    <color name="colorAccent">#FFBF360c</color>
     <color name="colorPrimaryLight">#FFDCEDC8</color>
     <color name="colorPrimaryText">#FF212121</color>
     <color name="toolbarIconColor">#FFF7F7F7</color>
     <color name="grey_tint">#FF787575</color>
+    <color name="white_tint">#FFFFFFFF</color>
 
     <!-- Background cards colors regarding gender -->
     <color name="feminine">#D1F2729B</color>

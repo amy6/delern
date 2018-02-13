@@ -36,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.di.Injector;
@@ -44,6 +46,7 @@ import org.dasfoo.delern.models.DeckAccess;
 import org.dasfoo.delern.models.ParcelableDeckAccess;
 import org.dasfoo.delern.util.Animation;
 import org.dasfoo.delern.util.CardColor;
+import org.dasfoo.delern.util.FirstTimeUserExperienceUtil;
 import org.dasfoo.delern.util.GrammaticalGenderSpecifier;
 import org.dasfoo.delern.util.PerfEventTracker;
 
@@ -93,6 +96,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     private boolean mBackIsShown;
     private int mLearnedCardsCount;
     private String mAccess;
+    private FirstTimeUserExperienceUtil mFirstTimeUserExperience;
 
     /**
      * Method starts LearningCardsActivity.
@@ -142,6 +146,10 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
             ButterKnife.bind(this);
             mDelimiter.setVisibility(View.INVISIBLE);
         }
+
+        mFirstTimeUserExperience =
+                new FirstTimeUserExperienceUtil(this,
+                        R.string.pref_learn_cards_onboarding_key);
     }
 
     /**
@@ -276,6 +284,19 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
     }
 
     /**
+     * Shows onBoarding for new users.
+     */
+    private void checkOnBoarding() {
+        // Check whether it is the first time open.
+        if (!mFirstTimeUserExperience.isOnBoardingShown()) {
+            TapTarget tapTarget = TapTarget.forView(mKnowButton,
+                    getString(R.string.know_card_onboarding_title),
+                    getString(R.string.know_card_onboarding_description));
+            mFirstTimeUserExperience.showOnBoarding(tapTarget, null);
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -302,6 +323,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
         mTurnCardButton.setVisibility(View.INVISIBLE);
         mDelimiter.setVisibility(View.VISIBLE);
         this.mBackIsShown = true;
+        checkOnBoarding();
     }
 
     /**

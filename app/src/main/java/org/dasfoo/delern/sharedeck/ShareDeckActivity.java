@@ -37,6 +37,7 @@ import android.text.Html;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -45,6 +46,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -54,6 +57,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableDeck;
 import org.dasfoo.delern.sharedeck.ui.PermissionSpinner;
+import org.dasfoo.delern.util.FirstTimeUserExperienceUtil;
 import org.dasfoo.delern.util.PerfEventTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +70,7 @@ import butterknife.ButterKnife;
 /**
  * Handles sharing a deck with users.
  */
+@SuppressWarnings("checkstyle:classfanoutcomplexity" /* TODO(ksheremet): refactor */)
 public class ShareDeckActivity extends AppCompatActivity {
 
     private static final int REQUEST_INVITE = 1;
@@ -123,7 +128,40 @@ public class ShareDeckActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(new UserDeckAccessRecyclerViewAdapter(this, mPresenter));
+
+        checkOnBoarding();
     }
+
+    /**
+     * Shows onBoarding for new users.
+     */
+    private void checkOnBoarding() {
+        // Check whether it is the first time open.
+        FirstTimeUserExperienceUtil firstTimeUserExperience =
+                new FirstTimeUserExperienceUtil(this,
+                        R.string.pref_share_deck_onboarding_key);
+        if (!firstTimeUserExperience.isOnBoardingShown()) {
+            TapTarget tapTarget = TapTarget.forView(mPersonData,
+                    getString(R.string.share_deck_onboarding_title),
+                    getString(R.string.share_deck_onboarding_description));
+            firstTimeUserExperience.showOnBoarding(tapTarget,
+                    new TapTargetView.Listener() {
+                        @Override
+                        public void onTargetClick(final TapTargetView view) {
+                            super.onTargetClick(view);
+                            mPersonData.requestFocus();
+                            // Show keyboard when user clicks on target.
+                            InputMethodManager keyboard = (InputMethodManager)
+                                    getSystemService(Context.INPUT_METHOD_SERVICE);
+                            if (keyboard != null) {
+                                keyboard.showSoftInput(mPersonData, 0);
+                            }
+                            mPersonData.showDropDown();
+                        }
+                    });
+        }
+    }
+
 
     @Override
     protected void onDestroy() {

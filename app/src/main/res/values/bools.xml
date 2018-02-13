@@ -20,5 +20,5 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <resources>
-    <bool name="is_add_deck_on_boarding_showed_default">false</bool>
+    <bool name="is_onboarding_showed_default">false</bool>
 </resources>

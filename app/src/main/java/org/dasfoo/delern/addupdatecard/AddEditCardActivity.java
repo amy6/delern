@@ -28,12 +28,13 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import org.dasfoo.delern.AbstractActivity;
 import org.dasfoo.delern.R;
@@ -41,7 +42,7 @@ import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.models.Card;
 import org.dasfoo.delern.models.Deck;
 import org.dasfoo.delern.models.ParcelableCard;
-import org.dasfoo.delern.util.OnBoardingStyle;
+import org.dasfoo.delern.util.FirstTimeUserExperienceUtil;
 import org.dasfoo.delern.util.PerfEventTracker;
 
 import javax.inject.Inject;
@@ -168,36 +169,33 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
      */
     public void initForAdd() {
         mAddReversedCardCheckbox.setVisibility(View.VISIBLE);
-        showOnBoarding();
+        checkOnBoarding();
     }
 
     /**
-     * Shows onBoarding for new users and for users without decks.
+     * Shows onBoarding for new users.
      */
-    private void showOnBoarding() {
-        // Specify title, description for onBoarding for a button.
-        TapTarget tapTargetFront = TapTarget.forView(findViewById(R.id.front_side_text),
-                "Add front side of card");
-        // Specify default styles.
-        tapTargetFront = OnBoardingStyle.setDefStyle(tapTargetFront, this);
-
-        TapTarget tapTargetBack = TapTarget.forView(findViewById(R.id.back_side_text),
-                "Add back side of card");
-        tapTargetBack = OnBoardingStyle.setDefStyle(tapTargetBack, this);
-
-        TapTarget tapTargetReversedCheckBox = TapTarget.forView(mAddReversedCardCheckbox,
-                "Set to create reversed card");
-        tapTargetReversedCheckBox =
-                OnBoardingStyle.setDefStyle(tapTargetReversedCheckBox, this);
-
-        TapTarget tapTargetAddToDb = TapTarget.forView(mAddCardToDbButton, "Click to save");
-        tapTargetAddToDb = OnBoardingStyle.setDefStyle(tapTargetAddToDb, this);
-
-        new TapTargetSequence(this)
-                .targets(tapTargetFront,
-                        tapTargetBack,
-                        tapTargetReversedCheckBox,
-                        tapTargetAddToDb).start();
+    private void checkOnBoarding() {
+        // Check whether it is the first time open.
+        FirstTimeUserExperienceUtil firstTimeUserExperience =
+                new FirstTimeUserExperienceUtil(this, R.string.pref_add_card_onboarding_key);
+        if (!firstTimeUserExperience.isOnBoardingShown()) {
+            TapTarget tapTarget = TapTarget.forView(findViewById(R.id.front_side_text),
+                    getString(R.string.create_card_onboarding_title));
+            firstTimeUserExperience.showOnBoarding(tapTarget, new TapTargetView.Listener() {
+                @Override
+                public void onTargetClick(final TapTargetView view) {
+                    super.onTargetClick(view);
+                    mFrontSideInputText.requestFocus();
+                    // Show keyboard when user clicks on target.
+                    InputMethodManager keyboard = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (keyboard != null) {
+                        keyboard.showSoftInput(mFrontSideInputText, 0);
+                    }
+                }
+            });
+        }
     }
 
     /**

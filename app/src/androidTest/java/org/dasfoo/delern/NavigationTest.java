@@ -75,7 +75,7 @@ public class NavigationTest {
 
     @Test
     public void openNavigationDrawer() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
@@ -83,7 +83,7 @@ public class NavigationTest {
 
     @Test
     public void signOut() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         waitView(() -> onView(withId(R.id.nav_view))
@@ -94,7 +94,7 @@ public class NavigationTest {
 
     @Test
     public void openAndCloseNavigationDrawerPressingBack() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         // Close navigation drawer by pressing back.
@@ -107,7 +107,7 @@ public class NavigationTest {
         Context context = mActivityRule.getActivity().getBaseContext();
         intending(toPackage("android.intent.action.CHOOSER"));
 
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         waitView(() -> onView(withId(R.id.nav_view))

@@ -111,7 +111,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="add_extra_reversed_card_message">2 cards are added</string>
     <string name="deck">Deck</string>
     <string name="delete_deck">Delete deck with all cards?</string>
-    <string name="back_side_card_hint">Back Side</string>
+    <string name="back_side_card_hint">Back side</string>
     <string name="front_side_card_hint">Front side</string>
     <string name="install_contact_app_user_message">Please install Contacts App</string>
     <string name="add_cards_with_read_access_user_warning">You cannot add cards with a read access.</string>
@@ -154,7 +154,20 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="leak_canary_display_activity_label">Delern DEBUG Leaks</string>
 
     <!-- OnBoarding -->
+    <!-- DelernMainActivity -->
     <string name="pref_add_deck_onboarding_key" translatable="false">add_deck_onboarding_key</string>
-    <string name="create_deck_onboarding_title">Create deck</string>
+    <string name="create_deck_onboarding_title">Create your deck</string>
     <string name="create_deck_onboarding_description">Tap here to create your deck</string>
+    <!-- AddEditCardActivity -->
+    <string name="pref_add_card_onboarding_key" translatable="false">add_card_onboarding_key</string>
+    <string name="create_card_onboarding_title">Add front side of the card</string>
+    <!-- LearningCardsActivity -->
+    <string name="pref_learn_cards_onboarding_key" translatable="false">learn_cards_onboarding_key</string>
+    <string name="know_card_onboarding_title">Have you known the card?</string>
+    <string name="know_card_onboarding_description">Tap here if you knew the card</string>
+    <!-- ShareDeckActivity -->
+    <string name="pref_share_deck_onboarding_key" translatable="false">share_deck_onboarding_key</string>
+    <string name="share_deck_onboarding_title">Share the deck</string>
+    <string name="share_deck_onboarding_description">Type your friend email or chose from Contacts</string>
+
 </resources>

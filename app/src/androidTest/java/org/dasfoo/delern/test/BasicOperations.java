@@ -88,7 +88,7 @@ public final class BasicOperations {
      * @param deckName name of deck.
      */
     public static void createDeck(String deckName) {
-        waitView(() -> onView(withId(R.id.fab)).perform(click()));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).perform(click()));
         onView(withInputType(InputType.TYPE_CLASS_TEXT))
                 .perform(typeTextIntoFocusedView(deckName), closeSoftKeyboard());
         onView(withText(R.string.add)).perform(click());

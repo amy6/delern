@@ -90,7 +90,7 @@ public class SharingTest {
     }
 
     private static void signOut() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         waitView(() -> onView(withId(R.id.nav_view))
@@ -102,7 +102,7 @@ public class SharingTest {
 
     @Test
     public void shareDeckWithEditAccess() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         // Create Deck
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         createDeck(mDeckName);
@@ -121,7 +121,7 @@ public class SharingTest {
         signOut();
         // Alice sign in to check shared deck
         mSignInRule.signIn("alice");
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("2")))));
         // Check that sharing is disabled
         checkDisabledSharing();
@@ -164,7 +164,7 @@ public class SharingTest {
         deleteDeck(mDeckName);
 
         // Check Read Access
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         // Create Deck
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         createDeck(mDeckName);
@@ -178,7 +178,7 @@ public class SharingTest {
         signOut();
         // Alice sign in to check shared deck
         mSignInRule.signIn("alice");
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         // Check that shared deck exists
         waitView(() -> onView(withText(mDeckName)).check(matches(hasSibling(withText("2")))));
         // Check that sharing is disabled

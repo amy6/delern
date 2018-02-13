@@ -145,7 +145,16 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_title_license">Лицензии</string>
 
     <!-- OnBoarding -->
+    <!-- DelernMainActivity -->
     <string name="create_deck_onboarding_title">Создать список</string>
     <string name="create_deck_onboarding_description">Нажмите здесь, чтобы создать список</string>
+    <!-- AddUpdateCardActivity -->
+    <string name="create_card_onboarding_title">Добавьте переднюю сторону карточки</string>
+    <!-- LearningCardsActivity -->
+    <string name="know_card_onboarding_title">Вы знали карточку?</string>
+    <string name="know_card_onboarding_description">Нажмите здесь если вы помнили карточку</string>
+    <!-- ShareDeckActivity -->
+    <string name="share_deck_onboarding_title">Поделитесь списком</string>
+    <string name="share_deck_onboarding_description">Введите адрес электронной почты или выберите из Контактов</string>
 
 </resources>

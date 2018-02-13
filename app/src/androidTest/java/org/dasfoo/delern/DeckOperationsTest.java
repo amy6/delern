@@ -67,7 +67,7 @@ public class DeckOperationsTest {
 
     @Test
     public void noDecksMessageShown() {
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
 
         // Delete all existing decks.
         try {
@@ -88,7 +88,7 @@ public class DeckOperationsTest {
         String deckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         createDeck(deckName);
         pressBack();
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
         waitView(() -> onView(allOf(withId(R.id.deck_popup_menu), hasSibling(withText(deckName))))
                 .perform(click()));
         String newDeckName = "Rename" + DeckPostfix.getRandomNumber();

@@ -36,11 +36,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_without_layout_marging"
         android:elevation="@dimen/fab_elevation"
-        android:tint="@color/grey_tint"
         app:fabSize="normal"
         app:pressedTranslationZ="@dimen/fab_pressed_elevation"
         app:rippleColor="@color/colorPrimaryDark"
-        app:srcCompat="@drawable/ic_add_black_24dp"/>
+        app:srcCompat="@drawable/ic_add_white_24dp"/>
 
     <include layout="@layout/toolbar"/>
 
