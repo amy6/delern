@@ -22,6 +22,7 @@ package org.dasfoo.delern;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -95,7 +96,7 @@ public class NavigationTest {
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
-        intended(allOf(hasAction("com.google.android.gms.appinvite.ACTION_APP_INVITE"),
+        intended(allOf(hasAction(Intent.ACTION_SEND),
                 toPackage("com.google.android.gms")));
         onView(withText(R.string.invitation_failed_message))
                 .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
@@ -112,7 +113,7 @@ public class NavigationTest {
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
         onView(withId(R.id.nav_view))
                 .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
-        intended(allOf(hasAction("com.google.android.gms.appinvite.ACTION_APP_INVITE"),
+        intended(allOf(hasAction(Intent.ACTION_SEND),
                 toPackage("com.google.android.gms")));
         waitView(() -> onView(withText(R.string.invitation_sent_message))
                 .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))

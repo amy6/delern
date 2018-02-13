@@ -23,7 +23,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Invitation messages -->
     <string name="invite_menu_label">Invite Friends</string>
-    <string name="invitation_message">Please join me for learning</string>
     <string name="invitation_title">Delern Invite</string>
     <string name="invitation_email_html_content" tools:ignore="TypographyQuotes"><![CDATA[<!DOCTYPE html>
 <html>

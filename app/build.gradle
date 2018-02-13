@@ -144,7 +144,6 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation "com.google.firebase:firebase-config:$firebaseVersion"
-    implementation "com.google.firebase:firebase-invites:$firebaseVersion"
     implementation "com.google.firebase:firebase-perf:$firebaseVersion"
 
     implementation 'com.firebaseui:firebase-ui-database:3.1.0'

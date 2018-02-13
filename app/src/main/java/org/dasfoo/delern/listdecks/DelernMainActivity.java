@@ -34,6 +34,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -44,7 +45,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -213,17 +213,17 @@ public class DelernMainActivity extends AbstractActivity
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings(/* TODO(ksheremet): why? */ "deprecation")
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_invite:
                 PerfEventTracker.trackEvent(PerfEventTracker.Event.INVITE, this, null);
-                Intent intent = new AppInviteInvitation
-                        .IntentBuilder(getString(R.string.invitation_title))
-                        .setEmailHtmlContent(getString(R.string.invitation_email_html_content))
-                        .setEmailSubject(getString(R.string.invitation_title))
-                        .setMessage(getString(R.string.invitation_message))
-                        .build();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.invitation_title));
+                intent.putExtra(Intent.EXTRA_TEXT,
+                        Html.fromHtml(getString(R.string.invitation_email_html_content)));
                 startActivityForResult(intent, REQUEST_INVITE);
                 break;
             case R.id.nav_sign_out:
