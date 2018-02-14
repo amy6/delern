@@ -19,10 +19,7 @@
 package org.dasfoo.delern;
 
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Context;
-import android.content.Intent;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -30,6 +27,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.test.FirebaseSignInRule;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -42,7 +40,6 @@ import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -67,6 +64,15 @@ public class NavigationTest {
     @Rule
     public FirebaseSignInRule mSignInRule = new FirebaseSignInRule(true);
 
+    /**
+     * Make sure that Main Activity is opened before every test due to .
+     * explicit intents.
+     */
+    @Before
+    public void startActvity() {
+        mActivityRule.getActivity();
+    }
+
     @Test
     public void openNavigationDrawer() {
         waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
@@ -84,40 +90,6 @@ public class NavigationTest {
                 .perform(NavigationViewActions.navigateTo(R.id.nav_sign_out)));
         onView(withText(R.string.sign_out)).check(matches(isDisplayed()));
         onView(withText(R.string.sign_out)).perform(click());
-    }
-
-    @Test
-    public void inviteWasNotSent() {
-        Instrumentation.ActivityResult result = new Instrumentation
-                .ActivityResult(Activity.RESULT_CANCELED, null);
-        intending(toPackage("com.google.android.gms")).respondWith(result);
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
-        onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
-        intended(allOf(hasAction(Intent.ACTION_SEND),
-                toPackage("com.google.android.gms")));
-        onView(withText(R.string.invitation_failed_message))
-                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void inviteSent() {
-        Instrumentation.ActivityResult result = new Instrumentation
-                .ActivityResult(Activity.RESULT_OK, null);
-        intending(toPackage("com.google.android.gms")).respondWith(result);
-        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
-        onView(withId(R.id.nav_view))
-                .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
-        intended(allOf(hasAction(Intent.ACTION_SEND),
-                toPackage("com.google.android.gms")));
-        waitView(() -> onView(withText(R.string.invitation_sent_message))
-                .inRoot(withDecorView(not(mActivityRule.getActivity().getWindow().getDecorView())))
-                .check(matches(isDisplayed())));
     }
 
     @Test
@@ -144,6 +116,21 @@ public class NavigationTest {
                 hasAction("android.intent.action.CHOOSER"),
                 hasExtra("android.intent.extra.TITLE", context.
                         getString(R.string.send_email_intent_chooser_message))));
-
     }
+
+    /* TODO(ksheremet): Fix: it opens new window that can't be close by press back or
+    starting main activity. All tests after that are broken.
+    @Test
+    public void inviteFriend() {
+        Context context = mActivityRule.getActivity().getBaseContext();
+        waitView(() -> onView(withId(R.id.fab)).check(matches(isDisplayed())));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        onView(withId(R.id.nav_view))
+                .perform(NavigationViewActions.navigateTo(R.id.nav_invite));
+        intended(allOf(
+                hasAction("android.intent.action.CHOOSER"),
+                hasExtra("android.intent.extra.TITLE", context.
+                        getString(R.string.invite_friend_intent_chooser_message))));
+    }*/
 }

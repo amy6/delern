@@ -42,8 +42,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         Twitter: <a href="https://twitter.com/dasdelern">https://twitter.com/dasdelern</a>
     </body>
 </html>]]></string>
-    <string name="invitation_failed_message">The invitation was not sent</string>
-    <string name="invitation_sent_message">The invitation was sent</string>
     <string name="invite_user_sharing_deck_message">This user hasn\'t installed Delern yet. Do you want to sent an invite?</string>
 
     <string name="edit">Edit</string>
@@ -97,6 +95,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="install_email_app_user_message">Please install Email App</string>
     <string name="feedback_email_subject">Feedback</string>
     <string name="send_email_intent_chooser_message">Send Email</string>
+    <string name="invite_friend_intent_chooser_message">Share</string>
+    <string name="install_messenger_app_user_message">Please install Messenger app</string>
 
     <!-- User messages, including warnins dialogs and toasts -->
     <string name="delete_card_warning">Delete card?</string>

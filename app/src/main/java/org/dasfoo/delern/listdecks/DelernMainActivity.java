@@ -88,7 +88,6 @@ public class DelernMainActivity extends AbstractActivity
      * IntentExtra user for showing user info and data.
      */
     public static final String USER = "user";
-    private static final int REQUEST_INVITE = 1;
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivity.class);
 
     @BindView(R.id.toolbar)
@@ -224,7 +223,16 @@ public class DelernMainActivity extends AbstractActivity
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.invitation_title));
                 intent.putExtra(Intent.EXTRA_TEXT,
                         Html.fromHtml(getString(R.string.invitation_email_html_content)));
-                startActivityForResult(intent, REQUEST_INVITE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    Bundle payload = new Bundle();
+                    payload.putString(FirebaseAnalytics.Param.VALUE, "invite friend");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
+                    startActivity(Intent.createChooser(intent,
+                            getString(R.string.invite_friend_intent_chooser_message)));
+                    break;
+                }
+                Toast.makeText(this, R.string.install_messenger_app_user_message,
+                        Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_sign_out:
                 signOut();
@@ -270,29 +278,6 @@ public class DelernMainActivity extends AbstractActivity
             return;
         }
         Toast.makeText(this, R.string.install_email_app_user_message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode,
-                                    final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        LOGGER.debug("onActivityResult: requestCode={}, resultCode={}", requestCode, resultCode);
-
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                Bundle payload = new Bundle();
-                payload.putString(FirebaseAnalytics.Param.VALUE, "invite friend");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
-                        payload);
-                Toast.makeText(this, R.string.invitation_sent_message, Toast.LENGTH_SHORT).show();
-            } else {
-                Bundle payload = new Bundle();
-                payload.putString(FirebaseAnalytics.Param.VALUE, "cancel invite friend");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,
-                        payload);
-                Toast.makeText(this, R.string.invitation_failed_message, Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     /**

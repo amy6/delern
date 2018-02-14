@@ -42,8 +42,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         Twitter: <a href="https://twitter.com/dasdelern">https://twitter.com/dasdelern</a>
     </body>
 </html>]]></string>
-    <string name="invitation_failed_message">Приглашение не было отправлено</string>
-    <string name="invitation_sent_message">Приглашение отправлено</string>
     <string name="invite_user_sharing_deck_message">Данный пользователь еще не установил Delern. Отправить приглашение?</string>
 
     <string name="edit">Редактировать</string>
@@ -98,6 +96,8 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="install_email_app_user_message">Пожалуйста установите приложение Электронной Почты</string>
     <string name="feedback_email_subject">Обратная связь</string>
     <string name="send_email_intent_chooser_message">Отправить письмо</string>
+    <string name="invite_friend_intent_chooser_message">Поделиться</string>
+    <string name="install_messenger_app_user_message">Пожалуйста установите приложение для обмена сообщениями</string>
 
     <!-- User messages, including warnins dialogs and toasts -->
     <string name="delete_card_warning">Удалить карточку?</string>
