@@ -19,7 +19,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="sign_out">Sign Out</string>
-    <string name="sign_in">Sign In</string>
+    <string name="logo_image_view">Logo Image</string>
 
     <!-- Invitation messages -->
     <string name="invite_menu_label">Invite Friends</string>
