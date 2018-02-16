@@ -1,0 +1,223 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+apply plugin: 'com.android.application'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.oss.licenses.plugin'
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.github.triplet.play'
+apply plugin: 'io.fabric'
+
+ext {
+    // This enforces Play Services minimum requirement on target devices and
+    // emulators. Do not update unless there's a bug that breaks the app.
+    // See also app/lint.xml.
+    // Release Notes: https://developers.google.com/android/guides/releases
+    firebaseVersion = '11.4.2'
+
+    sdkVersion = 27
+    // https://d.android.com/topic/libraries/support-library/revisions.html
+    supportVersion = "${sdkVersion}.0.1"
+    toolsVersion = "${sdkVersion}.0.0"
+    slf4jVersion = '1.7.25'
+    // https://github.com/ReactiveX/RxJava/releases
+    rxJavaVersion = '2.1.6'
+    // https://github.com/atlassian/commonmark-java/releases
+    commonmarkVersion = '0.10.0'
+    isIDE = System.properties['idea.platform.prefix']
+
+    git = org.ajoberstar.grgit.Grgit.open()
+    gitVersionCode = git.log(includes: ['HEAD']).size()
+    gitVersionName = "${git.describe()}${git.status().clean ? "" : "*"}"
+    espressoVersion = '3.0.1'
+}
+
+android {
+    compileSdkVersion sdkVersion
+    buildToolsVersion toolsVersion
+    testBuildType 'instrumented'
+
+    signingConfigs {
+        release {
+            storeFile file('delern.jks')
+            keyAlias 'delern'
+            storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
+            keyPassword System.getenv('ANDROID_KEYSTORE_KEY_PASSWORD')
+        }
+    }
+    defaultConfig {
+        applicationId 'org.dasfoo.delern'
+        minSdkVersion 15
+        targetSdkVersion sdkVersion
+        versionCode gitVersionCode
+        versionName gitVersionName
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        // The VectorDrawableCompat class in the Support Library allows you
+        // to support VectorDrawable in Android 2.1 (API level 7) and higher.
+        // https://developer.android.com/studio/write/vector-asset-studio.html
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            // Building a release to run Robo tests and publish to Google Play.
+            signingConfig signingConfigs.release
+            play {
+                track = 'alpha'
+                jsonFile = file('play-store-service-account.json')
+                uploadImages = true
+            }
+            manifestPlaceholders = [appName: 'Delern']
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+
+            minifyEnabled true
+            // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'src/release/proguard.txt'
+        }
+        instrumented {
+            // Instrumented tests that require release-style optimizations.
+            initWith release
+
+            if (isIDE) {
+                // Disable minifying (slow build, strips logger), make debuggable under Android Studio.
+                minifyEnabled false
+                debuggable true
+                testCoverageEnabled true
+                ext.enableCrashlytics = false
+                buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+            }
+
+            signingConfig signingConfigs.debug
+            applicationIdSuffix '.instrumented'
+            versionNameSuffix '-instrumented'
+            manifestPlaceholders = [appName: 'Delern TEST']
+
+            // Minify and ProGuard don't work with coverage.
+            if (project.hasProperty('coverageRun')) {
+                testCoverageEnabled true
+                minifyEnabled false
+            }
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'src/release/proguard.txt',
+                    'src/instrumented/proguard.txt'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'src/release/proguard.txt',
+                    'src/androidTest/proguard.txt'
+        }
+        debug {
+            // https://developers.google.com/android/guides/google-services-plugin
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            manifestPlaceholders = [appName: 'Delern DEBUG']
+            // To apply Proguard (e.g. to test the configuration), simply copy over
+            // minifyEnabled and proguardFiles from "release" build type and add:
+            //   debuggable false
+            // Do not upload ProGuard mapping for debug (it's not obfuscated).
+            ext.alwaysUpdateBuildId = false
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // TODO(ksheremet): update when Lifecycle is fixed
+    //noinspection GradleDependency
+    implementation "com.android.support:appcompat-v7:$supportVersion"
+    //noinspection GradleDependency
+    implementation "com.android.support:preference-v7:$supportVersion"
+    //noinspection GradleDependency
+    implementation "com.android.support:design:$supportVersion"
+    //noinspection GradleDependency
+    implementation "com.android.support:recyclerview-v7:$supportVersion"
+    //noinspection GradleDependency
+    implementation "com.android.support:cardview-v7:$supportVersion"
+    //noinspection GradleDependency
+    implementation "com.android.support:support-v4:$supportVersion"
+    //noinspection GradleDependency
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    implementation "com.google.android.gms:play-services-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseVersion"
+    implementation "com.google.firebase:firebase-database:$firebaseVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
+    implementation "com.google.firebase:firebase-config:$firebaseVersion"
+    implementation "com.google.firebase:firebase-perf:$firebaseVersion"
+
+    implementation 'com.firebaseui:firebase-ui-database:3.1.0'
+    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+
+    testImplementation 'junit:junit:4.12'
+
+    // Espresso
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+
+    // TODO(dotdoom): update once it's possible to disable Crashlytics
+    //noinspection GradleDependency
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true
+    }
+
+    // ButterKnife
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    // Dagger2: https://github.com/google/dagger/releases
+    // TODO(ksheremet): update and fix code
+    //noinspection NewerVersionAvailable
+    implementation 'com.google.dagger:dagger:2.13'
+    //noinspection NewerVersionAvailable
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
+
+    // Markdown
+    implementation "com.atlassian.commonmark:commonmark:$commonmarkVersion"
+    implementation "com.atlassian.commonmark:commonmark-ext-gfm-tables:$commonmarkVersion"
+
+    // Volley, for http req
+    implementation 'com.android.volley:volley:1.0.0'
+
+    // Open Source Notices
+    // https://developers.google.com/android/guides/opensource
+    // Version must be the same as google-services (com.google.android.gms).
+    // Otherwise version conflict
+    //noinspection GradleDependency
+    implementation "com.google.android.gms:play-services-oss-licenses:$firebaseVersion"
+
+    // Implements onBoarding
+    // https://github.com/KeepSafe/TapTargetView
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    // https://github.com/TangoAgency/material-intro-screen
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'
+}
+
+apply plugin: 'com.google.gms.google-services'

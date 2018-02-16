@@ -1,22 +1,13 @@
-# Gradle files
-.gradle/
+.DS_Store
+.atom/
+.vscode/
+.packages
+.pub/
 build/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# firebase-tools npm package output
-firebase-debug.log
-
-# Intellij
-*.iml
-/.idea
-
-# Keystore files
-*.jks
-
-# Editor temporary files
-*.swp
+ios/.generated/
+packages
+pubspec.lock
+.flutter-plugins
 
 # Dependencies
 bower_components
@@ -28,12 +19,15 @@ node_modules
 # firebase-bolt conversion tool output.
 /firebase/database.rules.json
 
-# Google Cloud service account credentials with access to Google Play and GCS.
-/app/play-store-service-account.json
+# Intellij
+*.iml
+.idea
 
-# Generated files for opensource licenses.
-/app/src/main/res/raw/third_party_license_metadata
-/app/src/main/res/raw/third_party_licenses
+# Editor temporary files
+*.swp
 
-# "What's New" file is created automatically by deployment process
-/app/src/main/play/en-US/whatsnew
+# Local configuration file (sdk path, etc)
+local.properties
+
+# firebase-tools npm package output
+firebase-debug.log
