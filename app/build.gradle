@@ -23,14 +23,6 @@ android {
     buildToolsVersion toolsVersion
     testBuildType 'instrumented'
 
-    sourceSets {
-        main {
-            // An ugly, but necessary hack. Adding full-fledged Android (AAR)
-            // dependencies to :core wasts too much effort on compatibility.
-            java.srcDirs += ['../core/src/main/java']
-        }
-    }
-
     signingConfigs {
         release {
             storeFile file('delern.jks')

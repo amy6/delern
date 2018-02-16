@@ -101,9 +101,7 @@ jobs:
           ./gradlew \
             --continue \
             :app:checkQualityDebug \
-            :core:checkQualityMain \
             :app:testDebugUnitTest \
-            :core:test \
             --quiet \
             --console=plain
           # Assemble instrumented to check ProGuard configuration and warnings.
@@ -118,8 +116,6 @@ jobs:
           ( cd firebase/www && polymer lint && polymer build )
 
     - store_test_results:
-        path: core/build/test-results
-    - store_test_results:
         path: app/build/test-results
 
     - run:
@@ -128,7 +124,6 @@ jobs:
           ./gradlew \
             --info \
             :app:testDebugUnitTest \
-            :core:test \
             --console=plain
         when: on_fail
 
@@ -188,7 +183,6 @@ jobs:
           # The code in "app" can only be covered by Android on-device tests,
           # therefore PR builds will always report false negatives.
           ./gradlew \
-            core:jacocoTestReport \
             app:jacocoTestDebugUnitTestReport \
             --console=plain
           bash <(curl -s https://codecov.io/bash)
