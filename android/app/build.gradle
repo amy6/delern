@@ -45,7 +45,6 @@ ext {
 android {
     compileSdkVersion sdkVersion
     buildToolsVersion toolsVersion
-    testBuildType 'instrumented'
 
     signingConfigs {
         release {
@@ -78,44 +77,13 @@ android {
             }
             manifestPlaceholders = [appName: 'Delern']
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-
-            minifyEnabled true
-            // getDefaultProguardFile searches for the files in path-to-android-sdk/tools/proguard/.
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    'src/release/proguard.txt'
         }
-        instrumented {
-            // Instrumented tests that require release-style optimizations.
-            initWith release
-
+        debug {
             if (isIDE) {
-                // Disable minifying (slow build, strips logger), make debuggable under Android Studio.
-                minifyEnabled false
-                debuggable true
-                testCoverageEnabled true
                 ext.enableCrashlytics = false
                 buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
             }
 
-            signingConfig signingConfigs.debug
-            applicationIdSuffix '.instrumented'
-            versionNameSuffix '-instrumented'
-            manifestPlaceholders = [appName: 'Delern TEST']
-
-            // Minify and ProGuard don't work with coverage.
-            if (project.hasProperty('coverageRun')) {
-                testCoverageEnabled true
-                minifyEnabled false
-            }
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    'src/release/proguard.txt',
-                    'src/instrumented/proguard.txt'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    'src/release/proguard.txt',
-                    'src/androidTest/proguard.txt'
-        }
-        debug {
             // https://developers.google.com/android/guides/google-services-plugin
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'

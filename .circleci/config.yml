@@ -55,8 +55,8 @@ jobs:
     - run: ci-dependencies hash
     - restore_cache:
         keys:
-        - v12-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
-        - v12-android-{{ arch }}-{{ .Branch }}-
+        #- v12-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
+        #- v12-android-{{ arch }}-{{ .Branch }}-
         - v12-android-{{ arch }}-master-
 
     - run:
@@ -110,8 +110,8 @@ jobs:
           # Assemble instrumented to check ProGuard configuration and warnings.
           ./gradlew \
             --continue \
-            :app:assembleInstrumented \
-            :app:assembleInstrumentedAndroidTest \
+            :app:assembleDebug \
+            :app:assembleDebugAndroidTest \
             --quiet \
             --console=plain >/dev/null
           # Lint Polymer files
@@ -169,15 +169,15 @@ jobs:
         command: |
           ./gradlew \
             -PcoverageRun \
-            assembleInstrumented \
-            assembleInstrumentedAndroidTest \
+            assembleDebug \
+            assembleDebugAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
           gcloud --project=delern-debug firebase test android run \
             --device model=Nexus5X,version=26 \
             --timeout 30m \
-            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk \
+            --app app/build/outputs/apk/debug/app-debug.apk \
+            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
             --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
             --directories-to-pull /sdcard/coverage \
             --results-bucket delern-test-results \
@@ -209,16 +209,16 @@ jobs:
         working_directory: ~/project/android
         command: |
           ./gradlew \
-            assembleInstrumented \
-            assembleInstrumentedAndroidTest \
+            assembleDebug \
+            assembleDebugAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
           # TODO(ksheremet): fix portrait tests, set orientation=landscape
           gcloud --project=delern-debug firebase test android run \
             --device model=m0,version=18,locale=ru_RU \
             --timeout 30m \
-            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+            --app app/build/outputs/apk/debug/app-debug.apk \
+            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
     - store_artifacts:
         path: android/app/build/outputs
@@ -263,15 +263,15 @@ jobs:
         working_directory: ~/project/android
         command: |
           ./gradlew \
-            assembleInstrumented \
-            assembleInstrumentedAndroidTest \
+            assembleDebug \
+            assembleDebugAndroidTest \
             --console=plain
           # Run on production Firebase project, for more quota. The app will still connect
           # to the test/debug database.
           gcloud --project=delern-e1b33 firebase test android run \
             --timeout 30m \
-            --app app/build/outputs/apk/instrumented/app-instrumented.apk \
-            --test app/build/outputs/apk/androidTest/instrumented/app-instrumented-androidTest.apk
+            --app app/build/outputs/apk/debug/app-debug.apk \
+            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
     - run:
         name: "Upload release APK to Google Play"
         command: |
