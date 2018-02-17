@@ -9,9 +9,9 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
-    "firebase-admin": "^5.6.0",
-    "firebase-functions": "^0.7.5",
-    "nodemailer": "^4.4.1"
+    "firebase-admin": "^5.9.0",
+    "firebase-functions": "^0.8.1",
+    "nodemailer": "^4.4.2"
   },
   "private": true
 }
