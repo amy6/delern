@@ -100,10 +100,13 @@ public final class FirstTimeUserExperienceUtil {
         } else {
             TapTargetView.showFor(/* Activity */mActivity, setDefStyle(tapTarget), listener);
         }
-        savePrefShown();
+        onBoardingShown();
     }
 
-    private void savePrefShown() {
+    /**
+     * Sets that onBoarding was shown in Preferences.
+     */
+    public void onBoardingShown() {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putBoolean(mActivity.getString(mPreferenceKey), true);
         editor.apply();

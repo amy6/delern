@@ -35,6 +35,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.dasfoo.delern.R;
 import org.dasfoo.delern.listdecks.DelernMainActivity;
+import org.dasfoo.delern.onboarding.OnBoardingActivity;
+import org.dasfoo.delern.util.FirstTimeUserExperienceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,6 +97,18 @@ public class SignInActivity extends AppCompatActivity
         });
 
         ButterKnife.bind(this);
+        checkOnBoarding();
+    }
+
+    private void checkOnBoarding() {
+        // Check whether it is the first time open.
+        FirstTimeUserExperienceUtil firstTimeUserExperience =
+                new FirstTimeUserExperienceUtil(this,
+                        R.string.pref_first_app_open_onboarding_key);
+        if (!firstTimeUserExperience.isOnBoardingShown()) {
+            firstTimeUserExperience.onBoardingShown();
+            OnBoardingActivity.startActivity(this);
+        }
     }
 
     /**

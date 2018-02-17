@@ -156,5 +156,12 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- ShareDeckActivity -->
     <string name="share_deck_onboarding_title">Поделитесь списком</string>
     <string name="share_deck_onboarding_description">Введите адрес электронной почты или выберите из Контактов</string>
+    <!-- OnBoardingActivity-->
+    <string name="create_deck_onboarding_activity_title">Создавайте списки</string>
+    <string name="create_deck_onboarding_activity_description">Создавайте списки с карточками</string>
+    <string name="learn_cards_onboarding_activity_title">Изучайте</string>
+    <string name="learn_cards_onboarding_activity_description">Изучайте в любом месте</string>
+    <string name="share_with_friends_onboarding_activity">Делитесь списками</string>
+    <string name="share_with_friends_onboarding_description">Делитесь списками с друзьями, чтобы изучать вместе</string>
 
 </resources>

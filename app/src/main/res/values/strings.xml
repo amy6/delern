@@ -169,5 +169,13 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_share_deck_onboarding_key" translatable="false">share_deck_onboarding_key</string>
     <string name="share_deck_onboarding_title">Share the deck</string>
     <string name="share_deck_onboarding_description">Type your friend email or chose from Contacts</string>
+    <!-- OnBoardingActivity-->
+    <string name="pref_first_app_open_onboarding_key" translatable="false">first_app_open_onboarding_key</string>
+    <string name="create_deck_onboarding_activity_title">Create decks</string>
+    <string name="create_deck_onboarding_activity_description">Create decks with flashcards</string>
+    <string name="learn_cards_onboarding_activity_title">Learn</string>
+    <string name="learn_cards_onboarding_activity_description">Learn in any place</string>
+    <string name="share_with_friends_onboarding_activity">Share decks</string>
+    <string name="share_with_friends_onboarding_description">Share decks with friends to learn together</string>
 
 </resources>

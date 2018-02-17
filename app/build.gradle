@@ -193,6 +193,8 @@ dependencies {
     // Implements onBoarding
     // https://github.com/KeepSafe/TapTargetView
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    // https://github.com/TangoAgency/material-intro-screen
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'
 }
 
 apply plugin: 'com.google.gms.google-services'
