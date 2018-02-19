@@ -85,8 +85,21 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
             Toast.makeText(view.getContext(), R.string.no_card_message,
                     Toast.LENGTH_SHORT).show();
         } else {
+            if (isDeckAccessNull()) {
+                return;
+            }
             mOnViewClick.learnDeck(mDeckAccess);
         }
+    }
+
+    private boolean isDeckAccessNull() {
+        if (mDeckAccess == null) {
+            Toast.makeText(mDeckTextView.getContext(),
+                    R.string.not_all_data_loaded_user_warning, Toast.LENGTH_SHORT).show();
+            LOGGER.warn("mDeckAccess is null in DeckViewHolder", new Throwable());
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -103,13 +116,10 @@ public class DeckViewHolder extends RecyclerView.ViewHolder implements
         inflater.inflate(R.menu.deck_menu, popup.getMenu());
         manageSharingMenu(popup.getMenu());
         // mDeckAccess can be null due to asynchronous operations.
-        if (mDeckAccess != null) {
-            popup.show();
+        if (isDeckAccessNull()) {
             return;
         }
-        Toast.makeText(mDeckTextView.getContext(),
-                R.string.not_all_data_loaded_user_warning, Toast.LENGTH_SHORT).show();
-        LOGGER.warn("mDeckAccess is null in DeckViewHolder", new Throwable());
+        popup.show();
     }
 
     /**
