@@ -241,15 +241,16 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
   delern.forEachUser(1000, (user) => {
     // Properties at https://firebase.google.com/docs/auth/admin/manage-users
     if ((!user.email && !user.phoneNumber) ||
-      user.uid.startsWith('test-')) {
+      user.email.endsWith('.example.com')) {
       // No email/phone => anonymous user!
       let daysStale =
         (now - new Date(user.metadata.lastSignInTime).getTime()) /
         1000 / 60 / 60 / 24;
-      if (daysStale > 1) {
+      if (daysStale > 14) {
         console.log('Deleting stale (', daysStale,
-          'days) Anonymous user', user.uid);
-        return admin.auth().deleteUser(user.uid);
+          'days) test user', user.uid);
+        return new Promise(resolve => setTimeout(resolve, 2000)).then(() =>
+          admin.auth().deleteUser(user.uid));
       }
     }
   }).then(() => {
