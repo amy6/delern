@@ -69,7 +69,10 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
   let deckId = event.params.deckId;
   let userId = event.params.userId;
   let user = null;
-  let actorUserId = event.auth.variable.uid;
+  let actorUserId = 'ADMIN';
+  if (event.auth && event.auth.variable) {
+    actorUserId = event.auth.variable.uid;
+  }
   let numberOfCards = 0;
   let actorUser = null;
   let deckName = null;
