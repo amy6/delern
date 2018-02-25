@@ -1,8 +1,7 @@
 [![CircleCI](https://circleci.com/gh/dasfoo/delern.svg?style=shield)](https://circleci.com/gh/dasfoo/workflows/delern)<sup>1</sup>
 [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern)
-[![Dependency Status](https://gemnasium.com/badges/github.com/dasfoo/delern.svg)](https://gemnasium.com/github.com/dasfoo/delern)
 
-## <img src="app/src/main/play/en-US/listing/icon/icon.png" height="64px" /> Delern
+## <img src="android/app/src/main/play/en-US/listing/icon/icon.png" height="64px" /> Delern
 
 Spaced repetition learning system
 
