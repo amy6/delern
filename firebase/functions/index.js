@@ -1,6 +1,8 @@
 'use strict';
 
 const functions = require('firebase-functions');
+// https://firebase.google.com/docs/functions/http-events
+const cors = require('cors')({origin: true});
 
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
@@ -41,21 +43,23 @@ const delern = {
 };
 
 exports.userLookup = functions.https.onRequest((req, res) => {
-  // TODO(dotdoom): check auth, e.g.:
-  // https://github.com/firebase/functions-samples/tree/master/authorized-https-endpoint
+  cors(req, res, () => {
+    // TODO(dotdoom): check auth, e.g.:
+    // https://github.com/firebase/functions-samples/tree/master/authorized-https-endpoint
 
-  if (!req.query.q) {
-    return res.status(400).end();
-  }
+    if (!req.query.q) {
+      return res.status(400).end();
+    }
 
-  admin.auth().getUserByEmail(req.query.q)
-    .then((user) => {
-      return res.send(user.uid);
-    })
-    .catch((error) => {
-      // TODO(dotdoom): getUserByPhoneNumber.
-      return res.status(404).end();
-    });
+    admin.auth().getUserByEmail(req.query.q)
+      .then((user) => {
+        return res.send(user.uid);
+      })
+      .catch((error) => {
+        // TODO(dotdoom): getUserByPhoneNumber.
+        return res.status(404).end();
+      });
+  });
 });
 
 exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate((event) => {

@@ -9,8 +9,9 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
-    "firebase-functions": "^0.8.1",
+    "cors": "^2.8.4",
     "firebase-admin": "~5.8.1",
+    "firebase-functions": "^0.8.1",
     "nodemailer": "^4.4.2"
   },
   "private": true
