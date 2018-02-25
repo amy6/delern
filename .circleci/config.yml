@@ -15,11 +15,11 @@ gcloud_install_command: &gcloud_install_command
   command: |
     # We use this account to access both Google Play account and GCS.
     # The former requires it to be in "app" subdirectory.
-    echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > app/play-store-service-account.json
-    gcloud auth activate-service-account --key-file app/play-store-service-account.json
+    echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > android/app/play-store-service-account.json
+    gcloud auth activate-service-account --key-file android/app/play-store-service-account.json
     mkdir -p ~/.android
     gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-    gsutil cp gs://dasfoo-keystore/delern.jks app/
+    gsutil cp gs://dasfoo-keystore/delern.jks android/app/
 
 jobs:
   checkout:
@@ -167,21 +167,22 @@ jobs:
         no_output_timeout: "35m"
         working_directory: ~/project/android
         command: |
+          # Prepare Flutter env
+          ( cd .. && flutter build apk --debug )
+          # Assemble as we want it
           ./gradlew \
             -PcoverageRun \
             assembleDebug \
             assembleDebugAndroidTest \
             --console=plain
           # https://circleci.com/docs/firebase-test-lab/
+          # TODO(dotdoom): do we still need a custom bucket?
           gcloud --project=delern-debug firebase test android run \
             --device model=Nexus5X,version=26 \
             --timeout 30m \
-            --app app/build/outputs/apk/debug/app-debug.apk \
-            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-            --environment-variables coverage=true,coverageFile=/sdcard/coverage/coverage.ec \
-            --directories-to-pull /sdcard/coverage \
-            --results-bucket delern-test-results \
-            --results-dir "circle-${CIRCLE_BUILD_NUM}"
+            --app ../build/app/outputs/apk/debug/app-debug.apk \
+            --test ../build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            --results-bucket delern-test-results
 
     - store_artifacts:
         path: build/outputs
@@ -208,6 +209,8 @@ jobs:
         no_output_timeout: "35m"
         working_directory: ~/project/android
         command: |
+          # Prepare Flutter env
+          ( cd .. && flutter build apk --debug )
           ./gradlew \
             assembleDebug \
             assembleDebugAndroidTest \
@@ -217,8 +220,8 @@ jobs:
           gcloud --project=delern-debug firebase test android run \
             --device model=m0,version=18,locale=ru_RU \
             --timeout 30m \
-            --app app/build/outputs/apk/debug/app-debug.apk \
-            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            --app ../build/app/outputs/apk/debug/app-debug.apk \
+            --test ../build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
     - store_artifacts:
         path: android/app/build/outputs
@@ -243,7 +246,11 @@ jobs:
 
     - run:
         name: "Assemble release APK (to store in artifacts)"
-        command: ./gradlew clean lintRelease assembleRelease
+        working_directory: ~/project/android
+        command: |
+          # Prepare flutter environment
+          ( cd .. && flutter build apk --debug )
+          ./gradlew clean lintRelease assembleRelease
 
     - store_artifacts:
         path: app/build/outputs
