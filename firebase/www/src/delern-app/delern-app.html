@@ -21,13 +21,14 @@
 <link rel="import" href="../firebase/firebase-hosted-app.html">
 <link rel="import" href="add-card.html">
 <link rel="import" href="sign-in.html">
+<link rel="import" href="share-deck.html">
 <link rel="import" href="user-lang.html">
 
 <dom-module id="delern-app">
   <template>
 
     <firebase-hosted-app></firebase-hosted-app>
-    <firebase-auth id="auth" user="{{firebaseUser}}" provider="google" status-known="{{firebaseUserStatusKnown}}"
+    <firebase-auth id="auth" user="{{firebaseUser}}" app="{{firebaseApp}}" provider="google" status-known="{{firebaseUserStatusKnown}}"
       on-error="__authError">
     </firebase-auth>
 
@@ -119,6 +120,7 @@
           <template is="dom-if" if="{{firebaseUser}}">
             <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
               <a id="add-card" href="/add-card">[[localize('add_cards_button_text')]]</a>
+              <a id="share-deck" href="/share-deck">[[localize('share_decks_button_text')]]</a>
               <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
             </iron-selector>
           </template>
@@ -128,6 +130,8 @@
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <add-card name="add-card" firebase-user="[[firebaseUser]]" language="[[language]]"></add-card>
           <sign-in name="sign-in" route-data="{{routeData}}" language="[[language]]"></sign-in>
+          <share-deck name="share-deck" firebase-user="[[firebaseUser]]" language="[[language]]" firebase-project-id="[[firebaseApp.options.projectId]]"></share-deck>
+
         </iron-pages>
 
       </app-drawer-layout>
@@ -142,6 +146,10 @@
       static get properties() {
         return {
           firebaseUser: {
+            type: Object,
+            notify: true,
+          },
+          firebaseApp: {
             type: Object,
             notify: true,
           },

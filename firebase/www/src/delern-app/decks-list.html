@@ -40,7 +40,16 @@
             type: String,
             notify: true,
           },
+          selectedDeck: {
+            type: Object,
+            notify: true,
+            computed: 'computeSelectedDeck(decks, selectedDeckKey)',
+          },
         };
+      }
+
+      computeSelectedDeck(decks, key) {
+        return decks.filter((deck) => deck.$key === key)[0];
       }
     }
     customElements.define(DecksList.is, DecksList);

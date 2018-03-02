@@ -1,0 +1,185 @@
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-request.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="decks-list.html">
+<link rel="import" href="user-lang.html">
+
+<dom-module id="share-deck">
+  <template>
+
+    <iron-ajax id="user-lookup" url="//us-central1-[[firebaseProjectId]].cloudfunctions.net/userLookup"
+      handle-as="text" reject-with-request></iron-ajax>
+
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+    </style>
+
+    <div class="row">
+      <div class="col-6">
+        <decks-list class="col-2 intends" uid="[[firebaseUser.uid]]" selected-deck="{{deck}}" language="[[language]]">
+        </decks-list>
+      </div>
+    </div>
+
+    <!--TODO(ksheremet): check max-rows. -->
+    <div class="row">
+      <paper-textarea class="col-12 intends" id="emails" name="emails" max-rows="5" label="[[localize('share_with_text')]]"
+        value="{{emails}}"></paper-textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-6 intends">
+        <paper-dropdown-menu label="[[localize('access_label')]]">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{access}}">
+            <paper-item value="write">[[localize('can_edit_access')]]</paper-item>
+            <paper-item value="read">[[localize('can_view_access')]]</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+      </div>
+      <div class="col-4">
+        <paper-button raised id="share-deck-button" on-click="shareDeck" class="intends">
+          [[localize('send_button_text')]]
+        </paper-button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    class ShareDeck extends UserLang {
+      static get is() {
+        return 'share-deck';
+      }
+
+      static get properties() {
+        return {
+          firebaseUser: {
+            type: Object,
+            notify: true,
+          },
+          firebaseProjectId: {
+            type: String,
+            notify: true,
+          },
+          deck: {
+            type: Object,
+            notify: true,
+          },
+          emails: {
+            type: String,
+            value: '',
+            notify: true,
+          },
+          access: {
+            type: String,
+            value: '',
+            notify: true,
+          },
+          usersCache: {
+            type: Object,
+            value: {},
+          },
+        };
+      };
+
+      shareDeck() {
+        if (!this.deck) {
+          // TODO(ksheremet): replace with input validation
+          document.getElementById('toast').show(this.localize('deck_not_selected_message'));
+          return;
+        }
+
+        if (this.emails.length == 0) {
+          // TODO(ksheremet): replace with input validation
+          document.getElementById('toast').show(this.localize('empty_emails_message'));
+          return;
+        }
+
+        if (this.access.length == 0) {
+          document.getElementById('toast').show(this.localize('empty_access_message'));
+        }
+
+        let emails = this.emails.split(',').map((s) => s.trim())
+          .filter((s, pos, arr) => s && arr.indexOf(s) === pos);
+        let shareDeckButton = this.$['share-deck-button'];
+        let self = this;
+
+        shareDeckButton.disabled = true;
+        this.resolveAllUsers(emails).then(() => {
+          return self.saveToDB(emails.map((email) => self.usersCache[email]));
+        }).then(() => {
+          self.emails = '';
+          self.$.emails.focus();
+          document.getElementById('toast').show(self.localize('shared_deck_message'));
+        }).catch((e) => {
+          document.getElementById('toast').show(e.message);
+          // document.getElementById('toast').show(self.localize('error_share_deck_message'));
+        }).then(() => shareDeckButton.disabled = false);
+      };
+
+      resolveAllUsers(emails) {
+        let userLookup = this.$['user-lookup'];
+        let usersCache = this.usersCache;
+
+        return emails.reduce((promise, email) =>
+            (email in usersCache) ? promise : promise.then(() => {
+              userLookup.params = {
+                q: email,
+              };
+              let request = userLookup.generateRequest();
+              request.email = email;
+              return request.completes;
+            })
+            .then((request) => {
+              usersCache[request.email] = request.response;
+            })
+            .then(() => new Promise((r) => setTimeout(r, 1000))),
+            Promise.resolve())
+          .catch((e) => {
+            // Quota exceeded is HTTP 429, but we may get it as HTTP 0
+            // because response will not contain proper CORS header.
+            let errorMessage = e.request.status === 404 ?
+              'user with this email is not yet registered in the app' :
+              (e.request.statusText || 'service temporarily unavailable');
+            throw new Error('\'' + e.request.email + '\': ' + errorMessage);
+          });
+      }
+
+      saveToDB(uids) {
+        let deckAccess = {
+          access: this.access,
+        };
+
+        let sharedDeck = {
+          name: this.deck.name,
+          deckType: this.deck.deckType,
+          markdown: this.deck.markdown,
+          lastSyncAt: 0,
+          accepted: false,
+        };
+
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        let updates = {};
+        for (let i = 0; i < uids.length; i++) {
+          updates['/deck_access/' + this.deck.$key + '/' + uids[i]] = deckAccess;
+          updates['/decks/' + uids[i] + '/' + this.deck.$key] = sharedDeck;
+        }
+
+        return firebase.database().ref().update(updates);
+      };
+    }
+
+    window.customElements.define(ShareDeck.is, ShareDeck);
+
+  </script>
+</dom-module>

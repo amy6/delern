@@ -12,6 +12,8 @@
     "menu_text": "Menu",
     "delern_main_title": "Delern - Learn easy!",
     "sign_out_button_text": "Sign Out",
+    "add_cards_button_text": "Add Cards",
+    "share_decks_button_text": "Share Decks",
 
     "choose_deck_text": "Choose deck",
 
@@ -52,6 +54,8 @@
     "menu_text": "Меню",
     "delern_main_title": "Delern - Изучай легко!",
     "sign_out_button_text": "Выход",
+    "add_cards_button_text": "Добавить карточки",
+    "share_decks_button_text": "Поделиться списками",
 
     "choose_deck_text": "Выберите список",
 
