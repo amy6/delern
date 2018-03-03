@@ -111,9 +111,6 @@ jobs:
             :app:assembleInstrumentedAndroidTest \
             --quiet \
             --console=plain >/dev/null
-          # Lint Polymer files
-          # TODO(dotdoom): ci-lint-html
-          ( cd firebase/www && polymer lint && polymer build )
 
     - store_test_results:
         path: app/build/test-results
@@ -132,22 +129,6 @@ jobs:
         paths:
         # Persist project so that coverage results make it to codecov.
         - project
-
-  deploy-firebase-debug:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        working_directory: ~/project/firebase
-        name: "Deploy Firebase database rules, functions, hosting to DEBUG"
-        environment:
-          PROJECT: delern-debug
-        command: npm run deploy
 
   instrumented-coverage:
     <<: *defaults
@@ -228,29 +209,6 @@ jobs:
     - store_artifacts:
         path: app/build/reports
 
-  deploy-firebase-release:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        working_directory: ~/project/firebase
-        name: "Deploy Firebase database rules, functions, hosting to RELEASE"
-        environment:
-          PROJECT: delern-e1b33
-        command: npm run deploy
-
-    - run:
-        name: "Assemble release APK (to store in artifacts)"
-        command: ./gradlew clean lintRelease assembleRelease
-
-    - store_artifacts:
-        path: app/build/outputs
-
   google-play:
     <<: *defaults
     steps:
@@ -313,19 +271,10 @@ workflows:
         - checkout
         - dependencies
         filters: *release_tags
-    - deploy-firebase-debug:
-        requires:
-        - checkout
-        - dependencies
-        filters:
-          <<: *release_tags
-          branches:
-            only: master
     - instrumented-coverage:
         requires:
         - checkout
         - dependencies
-        - deploy-firebase-debug
         filters:
           branches:
             only: master
@@ -333,26 +282,13 @@ workflows:
         requires:
         - checkout
         - dependencies
-        - deploy-firebase-debug
         filters:
-          branches:
-            only: master
-    - deploy-firebase-release:
-        requires:
-        - checkout
-        - dependencies
-        - deploy-firebase-debug
-        - instrumented-proguard
-        filters:
-          <<: *release_tags
           branches:
             only: master
     - google-play:
         requires:
         - checkout
         - dependencies
-        - deploy-firebase-debug
-        - deploy-firebase-release
         - instrumented-proguard
         filters:
           <<: *release_tags

@@ -1,4 +1,0 @@
-cron:
-- description: start database maintenance script
-  url: /databaseMaintenance
-  schedule: every 3 hours

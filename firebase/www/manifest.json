@@ -1,9 +1,0 @@
-{
-  "name": "Delern",
-  "short_name": "delern",
-  "description": "Spaced repetition system",
-  "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#3f51b5",
-  "background_color": "#8BC34A"
-}
