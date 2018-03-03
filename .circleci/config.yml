@@ -30,8 +30,8 @@ jobs:
         name: "Prepare checked out Git repository"
         command: |
           # --invert-grep appeared only in Git 2.4
-          if git log --format=%H "origin/master.." |
-              grep -x -v -f <(git log --format=%H "origin/master.." -E --grep '^relnote: (.*[.]|none[.]?)$'); then
+          if git log --format=%H "origin/android.." |
+              grep -x -v -f <(git log --format=%H "origin/android.." -E --grep '^relnote: (.*[.]|none[.]?)$'); then
             echo "Found commits without (or with invalid) Release Notes, aborting"
             exit 1
           fi
@@ -57,7 +57,7 @@ jobs:
         keys:
         - v12-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
         - v12-android-{{ arch }}-{{ .Branch }}-
-        - v12-android-{{ arch }}-master-
+        - v12-android-{{ arch }}-android-
 
     - run:
         name: "Install dependencies"
@@ -277,14 +277,14 @@ workflows:
         - dependencies
         filters:
           branches:
-            only: master
+            only: android
     - instrumented-proguard:
         requires:
         - checkout
         - dependencies
         filters:
           branches:
-            only: master
+            only: android
     - google-play:
         requires:
         - checkout
