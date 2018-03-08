@@ -141,6 +141,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:3.1.0'
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    //noinspection NewerVersionAvailable
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 

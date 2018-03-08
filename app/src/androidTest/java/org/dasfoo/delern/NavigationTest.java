@@ -32,7 +32,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -45,7 +44,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.WaitView.waitView;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.not;
 
 
 /**
@@ -92,6 +90,8 @@ public class NavigationTest {
         onView(withText(R.string.sign_out)).perform(click());
     }
 
+    /*
+    Unsteady test. pressBack() sometimes closes activity.
     @Test
     public void openAndCloseNavigationDrawerPressingBack() {
         waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
@@ -100,7 +100,7 @@ public class NavigationTest {
         // Close navigation drawer by pressing back.
         pressBack();
         waitView(() -> onView(withId(R.id.nav_view)).check(matches(not(isDisplayed()))));
-    }
+    }*/
 
     @Test
     public void sendFeedbackEmailTest() {
