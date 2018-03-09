@@ -29,4 +29,5 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="elements_margin">16dp</dimen>
     <dimen name="borders_margin">16dp</dimen>
+
 </resources>
