@@ -13,5 +13,10 @@
         "minify": false
       }
     }
+  ],
+  "sources": [
+    "src/delern-app/locales.json",
+    "images/**/*",
+    "logo/**/*"
   ]
 }
