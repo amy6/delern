@@ -105,7 +105,7 @@ public class DelernMainActivity extends AbstractActivity
     @Inject
     /* default */ DelernMainActivityPresenter mMainActivityPresenter;
     private TextView mUserNameTextView;
-    private TextView mUserEmailTextView;
+    private TextView mOfflineTextView;
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -173,24 +173,27 @@ public class DelernMainActivity extends AbstractActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View hView = navigationView.getHeaderView(0);
+        mProfilePhotoImageView = hView.findViewById(R.id.profile_image);
+        mUserNameTextView = hView.findViewById(R.id.user_name);
+        mOfflineTextView = hView.findViewById(R.id.offline_tv);
+
         ServerConnection.setOnlineStatusWatcher(online -> {
             int color;
             if (online) {
                 color = R.color.onlineToolbarIconColor;
+                mOfflineTextView.setVisibility(View.GONE);
             } else {
                 color = R.color.offlineToolbarIconColor;
+                mOfflineTextView.setVisibility(View.VISIBLE);
             }
             mToolbar.getNavigationIcon().setColorFilter(
                     ContextCompat.getColor(this, color),
                     PorterDuff.Mode.SRC_IN);
         });
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View hView = navigationView.getHeaderView(0);
-        mProfilePhotoImageView = hView.findViewById(R.id.profile_image);
-        mUserNameTextView = hView.findViewById(R.id.user_name);
-        mUserEmailTextView = hView.findViewById(R.id.user_email);
         mMainActivityPresenter.getUserInfo();
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .build());
@@ -392,8 +395,7 @@ public class DelernMainActivity extends AbstractActivity
     @Override
     public void updateUserProfileInfo(final User user) {
         mUserNameTextView.setText(user.getName());
-        // TODO(dotdoom): fix User and make this work!
-        mUserEmailTextView.setText("");
+        // TODO(dotdoom): fix User and make this work! Show user email
         Picasso.with(this).load(user.getPhotoUrl())
                 .error(android.R.color.holo_orange_dark).into(mProfilePhotoImageView);
     }

@@ -45,7 +45,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_without_layout_marging"
+        android:layout_margin="@dimen/fab_without_layout_margin"
         android:elevation="@dimen/fab_elevation"
         android:tint="@color/white_tint"
         app:fabSize="normal"

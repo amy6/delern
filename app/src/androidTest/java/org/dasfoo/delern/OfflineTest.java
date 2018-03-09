@@ -19,6 +19,7 @@
 package org.dasfoo.delern;
 
 import android.content.Context;
+import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -26,13 +27,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.dasfoo.delern.listdecks.DelernMainActivity;
 import org.dasfoo.delern.models.DeckType;
+import org.dasfoo.delern.test.BasicOperations;
 import org.dasfoo.delern.test.DeckPostfix;
 import org.dasfoo.delern.test.FirebaseOperationInProgressRule;
 import org.dasfoo.delern.test.FirebaseSignInRule;
 import org.dasfoo.delern.test.ViewMatchers;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -50,7 +50,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.dasfoo.delern.test.BasicOperations.createCard;
-import static org.dasfoo.delern.test.BasicOperations.createDeck;
 import static org.dasfoo.delern.test.BasicOperations.deleteDeck;
 import static org.dasfoo.delern.test.WaitView.bringToFront;
 import static org.dasfoo.delern.test.WaitView.waitView;
@@ -99,15 +98,15 @@ public class OfflineTest {
         pressBack();
     }
 
-    @Before
-    public void createDeckBeforeTest() {
+    public void createDeck() {
         mDeckName = mName.getMethodName() + DeckPostfix.getRandomNumber();
         FirebaseDatabase.getInstance().goOffline();
-        createDeck(mDeckName);
+        BasicOperations.createDeck(mDeckName);
     }
 
     @Test
     public void learnGermanCards() {
+        createDeck();
         String front1 = "mother";
         String back1 = "die Mutter";
         String front2 = "father";
@@ -160,9 +159,28 @@ public class OfflineTest {
         // Check back side of card
         onView(withId(R.id.textBackCardView)).check(matches(withText(back3)));
         onView(withId(R.id.to_repeat_button)).perform(click());
+
+        delete();
     }
 
-    @After
+    @Test
+    public void offlineUserMessageInDrawer() {
+        FirebaseDatabase.getInstance().goOffline();
+        waitView(() -> onView(withId(R.id.create_deck_fab)).check(matches(isDisplayed())));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        onView(withText(R.string.offline_user_message)).check(matches(isDisplayed()));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+        // Go online
+        FirebaseDatabase.getInstance().goOnline();
+        mFirebaseRule.enableForCurrentTestCase();
+        // Open drawer again an check that message is gone
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
+        waitView(() -> onView(withId(R.id.nav_view)).check(matches(isDisplayed())));
+        onView(withText(R.string.offline_user_message)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.drawer_layout)).perform(DrawerActions.close());
+    }
+
     public void delete() {
         bringToFront(mActivityRule);
         deleteDeck(mDeckName);

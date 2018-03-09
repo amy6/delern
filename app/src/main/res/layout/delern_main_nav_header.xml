@@ -19,13 +19,13 @@ You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -34,23 +34,36 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="@dimen/borders_margin"
+        android:layout_marginTop="32dp"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="@dimen/borders_margin" />
 
     <TextView
-        tools:ignore="SelectableText"
         android:id="@+id/user_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintStart_toStartOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image"
+        tools:ignore="SelectableText"
+        tools:text="Petr Petrov" />
 
     <TextView
-        tools:ignore="SelectableText"
-        android:id="@+id/user_email"
+        android:id="@+id/offline_tv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="@+id/user_name"
+        app:layout_constraintTop_toBottomOf="@+id/user_name"
+        tools:ignore="SelectableText"
+        android:text="@string/offline_user_message"
+        android:visibility="gone"/>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

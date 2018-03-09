@@ -178,4 +178,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="share_with_friends_onboarding_activity">Share decks</string>
     <string name="share_with_friends_onboarding_description">Share decks with friends to learn together</string>
 
+    <!-- Offline -->
+    <string name="offline_user_message">You are offline</string>
+
 </resources>

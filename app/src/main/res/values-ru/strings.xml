@@ -164,4 +164,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="share_with_friends_onboarding_activity">Делитесь списками</string>
     <string name="share_with_friends_onboarding_description">Делитесь списками с друзьями, чтобы изучать вместе</string>
 
+    <!-- Offline -->
+    <string name="offline_user_message">Нет сети</string>
+
 </resources>
