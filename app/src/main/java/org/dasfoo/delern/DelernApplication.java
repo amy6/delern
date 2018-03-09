@@ -19,6 +19,7 @@
 package org.dasfoo.delern;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -54,6 +55,9 @@ public class DelernApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // To prevent crashes on low versions of android with vector drawables.
+        // https://stackoverflow.com/questions/37615470
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
