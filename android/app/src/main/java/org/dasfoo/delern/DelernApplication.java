@@ -18,6 +18,9 @@
 
 package org.dasfoo.delern;
 
+import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,6 +55,9 @@ public class DelernApplication extends FlutterApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        // To prevent crashes on low versions of android with vector drawables.
+        // https://stackoverflow.com/questions/37615470
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         Fabric.with(new Fabric.Builder(this)
                 .kits(new Crashlytics.Builder().core(
