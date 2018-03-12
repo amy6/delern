@@ -24,4 +24,5 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
+
 </resources>
