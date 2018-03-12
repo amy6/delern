@@ -44,7 +44,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/borders_margin"
             android:layout_marginStart="@dimen/borders_margin"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="@dimen/after_toolbar_margin"
             android:hint="@string/front_side_card_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

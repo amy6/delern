@@ -34,9 +34,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AddEditActivityTheme" parent="AppTheme.NoActionBar">
-    </style>
-
     <style name="RippleBackground" parent="AppTheme.NoActionBar">
         <item name="android:background">?selectableItemBackground</item>
     </style>

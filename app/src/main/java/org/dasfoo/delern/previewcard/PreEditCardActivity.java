@@ -69,7 +69,7 @@ public class PreEditCardActivity extends AppCompatActivity implements IPreEditCa
     /* default */ TextView mFrontPreview;
     @BindView(R.id.textBackCardView)
     /* default */ TextView mBackPreview;
-    @BindView(R.id.card_view)
+    @BindView(R.id.card)
     /* default */ CardView mCardView;
     @Inject
     /* default */ PreEditCardActivityPresenter mPresenter;

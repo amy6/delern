@@ -21,13 +21,18 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_without_layout_margin">32dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
     <dimen name="fab_pressed_elevation">12dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
+
     <dimen name="elements_margin">16dp</dimen>
     <dimen name="borders_margin">16dp</dimen>
+
+    <dimen name="after_toolbar_margin">72dp</dimen>
 
 </resources>

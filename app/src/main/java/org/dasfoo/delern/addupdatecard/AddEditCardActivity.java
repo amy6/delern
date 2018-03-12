@@ -262,6 +262,7 @@ public class AddEditCardActivity extends AbstractActivity implements IAddEditCar
             case android.R.id.home:
                 updateCard();
                 NavUtils.navigateUpFromSameTask(this);
+                finish();
                 break;
             default:
                 return super.onOptionsItemSelected(item);

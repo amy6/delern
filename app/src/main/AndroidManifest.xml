@@ -80,6 +80,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.listcards.EditCardListActivity" />
         </activity>
+
         <activity
             android:name=".previewcard.PreEditCardActivity"
             android:launchMode="singleTop"
