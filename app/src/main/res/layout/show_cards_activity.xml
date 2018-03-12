@@ -19,81 +19,106 @@ You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.dasfoo.delern.learncards.LearningCardsActivity">
 
-    <include layout="@layout/toolbar" />
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/show_cards_content" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <include
+        android:id="@+id/learning_card"
+        layout="@layout/show_cards_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="0.25"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="@dimen/borders_margin"
+        android:layout_marginStart="@dimen/borders_margin"
+        android:layout_marginTop="@dimen/after_toolbar_margin"
+        app:layout_constraintBottom_toTopOf="@+id/turn_card_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_repeat_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:elevation="@dimen/fab_elevation"
-            android:paddingEnd="40dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingStart="40dp"
-            android:visibility="invisible"
-            app:backgroundTint="@color/dontKnowCardButton"
-            app:fabSize="normal"
-            app:pressedTranslationZ="@dimen/fab_pressed_elevation"
-            app:rippleColor="@color/redRipple"
-            app:srcCompat="@drawable/ic_close_black_24dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/to_repeat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/borders_margin"
+        android:layout_marginLeft="@dimen/borders_margin"
+        android:elevation="@dimen/fab_elevation"
+        android:visibility="invisible"
+        app:backgroundTint="@color/dontKnowCardButton"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/turn_card_button"
+        app:layout_constraintEnd_toStartOf="@+id/turn_card_button"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/turn_card_button"
+        app:pressedTranslationZ="@dimen/fab_pressed_elevation"
+        app:rippleColor="@color/redRipple"
+        app:srcCompat="@drawable/ic_close_black_24dp" />
 
-        <ImageView
-            android:id="@+id/turn_card_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/flip_the_card_message"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:tint="@color/grey_tint"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/ic_cached_black_36dp" />
+    <ImageView
+        android:id="@+id/turn_card_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="@dimen/borders_margin"
+        android:layout_marginStart="@dimen/borders_margin"
+        android:contentDescription="@string/flip_the_card_message"
+        android:padding="30dp"
+        android:tint="@color/grey_tint"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_cached_black_36dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/to_know_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:elevation="@dimen/fab_elevation"
-            android:paddingEnd="40dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:paddingStart="40dp"
-            android:visibility="invisible"
-            app:fabSize="normal"
-            app:pressedTranslationZ="@dimen/fab_pressed_elevation"
-            app:backgroundTint="@color/toKnowCardButton"
-            app:rippleColor="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_check_black_24dp" />
-
-    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/to_know_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/borders_margin"
+        android:layout_marginRight="@dimen/borders_margin"
+        android:elevation="@dimen/fab_elevation"
+        android:visibility="invisible"
+        app:backgroundTint="@color/toKnowCardButton"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/turn_card_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/turn_card_button"
+        app:layout_constraintTop_toTopOf="@+id/turn_card_button"
+        app:pressedTranslationZ="@dimen/fab_pressed_elevation"
+        app:rippleColor="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/ic_check_black_24dp" />
 
     <TextView
         android:id="@+id/learned_in_session"
         style="@style/SecondaryText"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        tools:ignore="SelectableText" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="@dimen/borders_margin"
+        android:layout_marginStart="@dimen/borders_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SelectableText"
+        tools:text="Watched: 3" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -120,14 +120,14 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
@@ -135,7 +135,7 @@ public class LearningTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
@@ -163,7 +163,7 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view))
+        onView(withId(R.id.learning_card))
                 .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
@@ -174,7 +174,7 @@ public class LearningTest {
         onView(withId(R.id.to_know_button)).perform(click());
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view))
+        onView(withId(R.id.learning_card))
                 .check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
@@ -186,7 +186,7 @@ public class LearningTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
         onView(withId(R.id.learned_in_session))
                 .check(matches(withText(String.format(context.getString(R.string.card_watched_text),
                         2))));
@@ -227,7 +227,7 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view))
+        onView(withId(R.id.learning_card))
                 .check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         pressBack();
         // Change deckType
@@ -237,7 +237,7 @@ public class LearningTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.noGender)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.noGender)));
     }
 
     @Test

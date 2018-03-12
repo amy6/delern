@@ -74,7 +74,7 @@ public class LearningCardsActivity extends AppCompatActivity implements ILearnin
      * Number of learned cards for saving onSaveInstanceState.
      */
     private static final String LEARNED_CARDS_KEY = "count";
-    @BindView(R.id.card_view)
+    @BindView(R.id.learning_card)
     /* default */ CardView mCardView;
     @BindView(R.id.to_know_button)
     /* default */ FloatingActionButton mKnowButton;

@@ -134,7 +134,7 @@ public class OfflineTest {
                 .perform(click()));
         // Check the first card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front1))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.feminine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         onView(withId(R.id.textBackCardView)).check(matches(withText(back1)));
@@ -145,7 +145,7 @@ public class OfflineTest {
 
         // Check the second card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front2))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.masculine)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card
@@ -153,7 +153,7 @@ public class OfflineTest {
         onView(withId(R.id.to_repeat_button)).perform(click());
         // Check the third card
         waitView(() -> onView(withId(R.id.textFrontCardView)).check(matches(withText(front3))));
-        onView(withId(R.id.card_view)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
+        onView(withId(R.id.learning_card)).check(matches(new ViewMatchers.ColorMatcher(R.color.neuter)));
         // Flip card
         onView(withId(R.id.turn_card_button)).perform(click());
         // Check back side of card

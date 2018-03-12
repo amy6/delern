@@ -62,7 +62,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <activity
             android:name=".listcards.EditCardListActivity"
             android:launchMode="singleTop"
