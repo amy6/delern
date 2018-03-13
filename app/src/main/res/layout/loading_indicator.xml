@@ -19,14 +19,9 @@ You should have received a copy of the GNU General Public License
 along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:key="pref_version"
-        android:title="@string/pref_version_title">
-    </Preference>
-    <Preference
-        android:key="@string/pref_key_license"
-        android:summary="@string/pref_summary_licenses"
-        android:title="@string/pref_title_license">
-    </Preference>
-</PreferenceScreen>
+<ProgressBar android:id="@+id/progress_bar"
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

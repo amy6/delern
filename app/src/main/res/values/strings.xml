@@ -149,6 +149,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
     <string name="pref_summary_licenses">Open source licenses</string>
     <string name="pref_title_license">License</string>
     <string name="pref_key_license" translatable="false">license_key</string>
+    <string name="pref_version_title">Version</string>
 
     <!-- LeakCanary (currently only enabled for debug). See also: https://github.com/square/leakcanary/wiki/Customizing-LeakCanary#icon-and-label -->
     <string name="leak_canary_display_activity_label">Delern DEBUG Leaks</string>
@@ -180,5 +181,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Offline -->
     <string name="offline_user_message">You are offline</string>
+
+    <!-- Billing messages -->
+    <string name="error_occurred_user_message">Error occurred. Try it later.</string>
+    <string name="support_app_button">Support</string>
+    <string name="pay_button">Pay</string>
+    <string name="image_icon_sup_dev_content_description">Image</string>
+    <string name="pay_button_content_description">Pay Button</string>
+    <string name="nav_support_development">Support Development</string>
+    <string name="thank_you_image">Thank you image</string>
 
 </resources>

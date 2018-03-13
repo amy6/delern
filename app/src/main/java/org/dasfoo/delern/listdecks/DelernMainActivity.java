@@ -57,6 +57,7 @@ import org.dasfoo.delern.SplashScreenActivity;
 import org.dasfoo.delern.aboutapp.AboutAppActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
+import org.dasfoo.delern.billing.SupportAppActivity;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.editdeck.EditDeckActivity;
 import org.dasfoo.delern.learncards.LearningCardsActivity;
@@ -270,6 +271,9 @@ public class DelernMainActivity extends AbstractActivity
                 break;
             case R.id.nav_about:
                 AboutAppActivity.startActivity(this);
+                break;
+            case R.id.sup_dev:
+                SupportAppActivity.startActivity(this);
                 break;
             default:
                 LOGGER.warn("Not implemented: {}", item.getItemId());

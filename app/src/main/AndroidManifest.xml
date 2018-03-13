@@ -64,6 +64,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".listcards.EditCardListActivity"
             android:launchMode="singleTop"
@@ -81,7 +82,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.dasfoo.delern.listcards.EditCardListActivity" />
         </activity>
-
         <activity
             android:name=".previewcard.PreEditCardActivity"
             android:launchMode="singleTop"
@@ -138,6 +138,14 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <activity
             android:name=".onboarding.OnBoardingActivity"
             android:theme="@style/Theme.Intro" />
+        <activity
+            android:name=".billing.SupportAppActivity"
+            android:parentActivityName=".listdecks.DelernMainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
+        </activity>
     </application>
 
 </manifest>

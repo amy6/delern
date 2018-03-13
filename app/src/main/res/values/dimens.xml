@@ -35,4 +35,12 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <dimen name="after_toolbar_margin">72dp</dimen>
 
+
+    <dimen name="single_padding">8dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+    <dimen name="max_padding">24dp</dimen>
+    <dimen name="button_width">150dp</dimen>
+    <dimen name="button_height">50dp</dimen>
+    <dimen name="sku_details_row_height">216dp</dimen>
+
 </resources>

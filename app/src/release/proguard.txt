@@ -66,3 +66,6 @@
 
 # Picasso recommended ProGuard options: https://github.com/square/picasso
 -dontwarn com.squareup.okhttp.**
+
+# In-app billing
+-keep class com.android.vending.billing.**

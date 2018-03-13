@@ -47,6 +47,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item
             android:id="@+id/nav_about"
             android:title="@string/nav_about_app" />
+        <item
+            android:id="@+id/sup_dev"
+            android:title="@string/nav_support_development" />
     </group>
 
 </menu>

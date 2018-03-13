@@ -43,12 +43,7 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         app:rippleColor="@color/colorPrimaryDark"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+    <include layout="@layout/loading_indicator"/>
 
     <TextView
         android:id="@+id/empty_recyclerview_message"
