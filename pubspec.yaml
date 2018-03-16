@@ -2,6 +2,7 @@ name: delern
 description: Spaced repetition learning system
 
 dependencies:
+  sentry: ^0.0.6
   flutter:
     sdk: flutter
 
