@@ -14,12 +14,50 @@
         padding: 10px;
       }
 
+      img.share-button {
+        height: 40px;
+        width: 40px;
+      }
+
+      img.play-button {
+        height: 64px;
+      }
+
     </style>
 
     <div class="row">
       <paper-button raised on-click="signIn" class="content intends">
         [[localize('google_signin')]]
       </paper-button>
+    </div>
+
+    <div class="col-12">
+      [[localize("about_delern")]]
+      <a target="_blank" href="[[localize('spaced_repetition_wiki_link')]]">[[localize('spaced_repetition_system')]]</a>. [[localize('install_app_text')]]
+    </div>
+    <div class="col-12">
+      <a target="_blank" href="//play.google.com/store/apps/details?id=org.dasfoo.delern&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+        <img src="//play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png" class="play-button"
+          alt="[[localize('google_play_alt')]]">
+      </a>
+    </div>
+
+    <div class="col-12">
+      [[localize('follow_on_social_media_text')]]
+    </div>
+    <div class="row">
+      <a target="_blank" href="//fb.me/das.delern">
+        <img src="../../logo/facebook.png" class="share-button" alt="[[localize('follow_facebook_alt')]]">
+      </a>
+      <a target="_blank" href="//vk.com/delern">
+        <img src="../../logo/vk.svg" class="share-button" alt="[[localize('follow_vk_alt')]]">
+      </a>
+      <a target="_blank" href="//plus.google.com/communities/104603840044649051798">
+        <img src="../../logo/gplus.png" class="share-button" alt="[[localize('follow_googleplus_alt')]]">
+      </a>
+      <a target="_blank" href="//twitter.com/dasdelern">
+        <img src="../../logo/twitter.png" class="share-button" alt="[[localize('follow_twitter_alt')]]">
+      </a>
     </div>
 
   </template>

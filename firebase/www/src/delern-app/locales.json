@@ -15,9 +15,30 @@
 
     "choose_deck_text": "Choose deck",
 
-    "google_signin": "Google SignIn"
+    "google_signin": "Google SignIn",
 
-   },
+    "send_button_text": "Send",
+    "share_with_text": "Share with (comma-separated E-Mails)...",
+    "empty_emails_message": "Empty E-Mails",
+    "empty_access_message": "Access isn't chosen",
+    "shared_deck_message": "Deck was shared",
+    "error_share_deck_message": "Error occurred. Try again",
+
+    "access_label": "Access",
+    "can_edit_access": "Can Edit",
+    "can_view_access": "Can View",
+
+    "about_delern": "Delern - it is an app that helps to learn. It work as flashcards and uses",
+    "install_app_text": "To use the app, install it from",
+    "spaced_repetition_system": "spaced repetition system",
+    "follow_on_social_media_text": "Follow Delern latest news on:",
+    "spaced_repetition_wiki_link": "https://en.wikipedia.org/wiki/Spaced_repetition",
+    "follow_facebook_alt": "Follow Delern on Facebook",
+    "follow_vk_alt": "Follow Delern on VKontakte",
+    "follow_googleplus_alt": "Follow Delern on Google+",
+    "follow_twitter_alt": "Follow Delern on Twitter",
+    "google_play_alt": "Get Delern on Google Play"
+  },
   "ru": {
     "add_front_side_text": "Введите переднюю сторону карточки",
     "add_back_side_text": "Введите обратную сторону карточки",
@@ -34,7 +55,28 @@
 
     "choose_deck_text": "Выберите список",
 
-    "google_signin": "Google Авторизация"
+    "google_signin": "Google Авторизация",
 
+    "send_button_text": "Отправить",
+    "share_with_text": "Поделиться с (разделенные через запятую E-Mails)...",
+    "empty_emails_message": "Пустые E-Mails",
+    "empty_access_message": "Права доступа не выбраны",
+    "shared_deck_message": "Список был отправлен",
+    "error_share_deck_message": "Произошла ошибка. Попробуйте еще раз",
+
+    "access_label": "Доступ",
+    "can_edit_access": "Может редактировать",
+    "can_view_access": "Может просматривать",
+
+    "about_delern": "Delern - это приложение для изучения. Оно работает по принципу флешкарточек и использует",
+    "install_app_text": "Установите приложение",
+    "spaced_repetition_system": "систему интервального повторения",
+    "follow_on_social_media_text": "Следите за последними новостями",
+    "spaced_repetition_wiki_link": "https://goo.gl/sr5NPd",
+    "follow_facebook_alt": "Следите за последними новостями Delern на Facebook",
+    "follow_vk_alt": "Следите за последними новостями Delern в VKontakte",
+    "follow_googleplus_alt": "Следите за последними новостями Delern на Google+",
+    "follow_twitter_alt": "Следите за последними новостями Delern в Twitter",
+    "google_play_alt": "Установить Delern из Google Play"
   }
 }
