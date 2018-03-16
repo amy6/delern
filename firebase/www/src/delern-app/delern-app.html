@@ -116,9 +116,12 @@
         <!-- Drawer content -->
         <app-drawer id="drawer" position="left" slot="drawer">
           <app-toolbar>Меню</app-toolbar>
-          <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
-          </iron-selector>
+          <template is="dom-if" if="{{firebaseUser}}">
+            <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
+              <a id="add-card" href="/add-card">[[localize('add_cards_button_text')]]</a>
+              <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
+            </iron-selector>
+          </template>
         </app-drawer>
 
         <!-- iron-pages selects the view based on the active route -->
