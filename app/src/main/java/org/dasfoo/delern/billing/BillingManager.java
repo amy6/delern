@@ -53,7 +53,7 @@ public class BillingManager implements PurchasesUpdatedListener {
         //SKUS.put(BillingClient.SkuType.SUBS, Arrays.asList("gold_monthly", "gold_yearly"));
     }
 
-    private final BillingClient mBillingClient;
+    private BillingClient mBillingClient;
     private final Activity mActivity;
 
     /* default */ BillingManager(final Activity activity) {
@@ -61,18 +61,21 @@ public class BillingManager implements PurchasesUpdatedListener {
         mBillingClient = BillingClient.newBuilder(mActivity).setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public void onBillingSetupFinished(@BillingClient.BillingResponse
-                                               final int billingResponse) {
+            public void onBillingSetupFinished(
+                    @BillingClient.BillingResponse final int billingResponse) {
                 if (billingResponse == BillingClient.BillingResponse.OK) {
                     LOGGER.info("onBillingSetupFinished() response: {} ", billingResponse);
                 } else {
-                    LOGGER.warn("onBillingSetupFinished() error code: {} ", billingResponse);
+                    LOGGER.error("onBillingSetupFinished() error code: {} ", billingResponse);
                 }
             }
 
             @Override
             public void onBillingServiceDisconnected() {
                 LOGGER.warn("onBillingServiceDisconnected");
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+
             }
         });
     }
@@ -85,12 +88,38 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     /**
+     * Fetches results from a cache provided by the Google Play Store app without
+     * initiating a network request. Consumes all purchases.
+     */
+    public void consumePurchases() {
+        Purchase.PurchasesResult purchasesResult = mBillingClient
+                .queryPurchases(BillingClient.SkuType.INAPP);
+        if (purchasesResult != null && purchasesResult.getPurchasesList() != null) {
+            for (Purchase purchase : purchasesResult.getPurchasesList()) {
+                mBillingClient.consumeAsync(purchase.getPurchaseToken(), null);
+            }
+        }
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void onPurchasesUpdated(final int responseCode,
                                    @Nullable final List<Purchase> purchases) {
-        LOGGER.debug("onPurchasesUpdated() response: {} ", responseCode);
+        if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
+            for (Purchase purchase : purchases) {
+                mBillingClient.consumeAsync(purchase.getPurchaseToken(), null);
+            }
+        } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
+            LOGGER.warn("Billing was canceled: {}", responseCode);
+            // TODO(ksheremet): Add analytics
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            LOGGER.warn("Not handled error code: {}", responseCode);
+            // Handle any other error codes.
+        }
     }
 
     /* default */ List<String> getSkus(@BillingClient.SkuType final String type) {
@@ -101,15 +130,25 @@ public class BillingManager implements PurchasesUpdatedListener {
      * Allows to get all the details about products (SKUs) defined at Google Play Developer Console.
      *
      * @param itemType type of Sku.
-     * @param skuList list of SKUs to get info about.
+     * @param skuList  list of SKUs to get info about.
      * @param listener a listener to the actual response from BillingClient library.
      */
     /* default */ void querySkuDetailsAsync(@BillingClient.SkuType final String itemType,
-                              final List<String> skuList,
-                              final SkuDetailsResponseListener listener) {
+                                            final List<String> skuList,
+                                            final SkuDetailsResponseListener listener) {
         SkuDetailsParams skuDetailsParams = SkuDetailsParams.newBuilder()
                 .setSkusList(skuList).setType(itemType).build();
         mBillingClient.querySkuDetailsAsync(skuDetailsParams,
                 listener);
+    }
+
+    /**
+     * Clear the resources.
+     */
+    public void destroy() {
+        if (mBillingClient != null && mBillingClient.isReady()) {
+            mBillingClient.endConnection();
+            mBillingClient = null;
+        }
     }
 }
