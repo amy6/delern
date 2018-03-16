@@ -312,8 +312,8 @@ public class ShareDeckActivity extends AppCompatActivity {
         // Volley
         // Instantiate the RequestQueue.
         String url = new Uri.Builder()
-                .scheme("http")
-                .authority("www.us-central1-" + getResources().getString(R.string.project_id) +
+                .scheme("https")
+                .authority("us-central1-" + getResources().getString(R.string.project_id) +
                         ".cloudfunctions.net")
                 .appendPath("userLookup")
                 .appendQueryParameter("q", email).build().toString();
