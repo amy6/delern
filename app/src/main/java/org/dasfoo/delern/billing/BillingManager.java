@@ -119,17 +119,15 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     /* default */ void startPurchaseFlow(final String skuId, final String billingType) {
+        // Check that payments are supported.
+        Bundle payload = new Bundle();
+        payload.putString(FirebaseAnalytics.Param.ITEM_ID, mUser.getKey());
+        payload.putString(FirebaseAnalytics.Param.VIRTUAL_CURRENCY_NAME, skuId);
+        PerfEventTracker.trackEvent(PerfEventTracker.Event.START_PURCHASE, mActivity, payload);
         // Launch billing flow
         BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
                 .setType(billingType).setSku(skuId).build();
-        // Check that payments are supported.
-        if (mBillingClient.isFeatureSupported(billingType) == BillingClient.BillingResponse.OK) {
-            Bundle payload = new Bundle();
-            payload.putString(FirebaseAnalytics.Param.ITEM_ID, mUser.getKey());
-            payload.putString(FirebaseAnalytics.Param.VIRTUAL_CURRENCY_NAME, skuId);
-            PerfEventTracker.trackEvent(PerfEventTracker.Event.START_PURCHASE, mActivity, payload);
-            mBillingClient.launchBillingFlow(mActivity, billingFlowParams);
-        }
+        mBillingClient.launchBillingFlow(mActivity, billingFlowParams);
     }
 
     /**

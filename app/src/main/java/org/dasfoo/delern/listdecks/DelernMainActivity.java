@@ -234,7 +234,9 @@ public class DelernMainActivity extends AbstractActivity
     protected void onDestroy() {
         // Stop memory leaks.
         mRecyclerView.setAdapter(null);
-        mBillingManager.destroy();
+        if (mBillingManager != null) {
+            mBillingManager.destroy();
+        }
         super.onDestroy();
     }
 
