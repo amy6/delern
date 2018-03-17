@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -55,6 +56,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private BillingClient mBillingClient;
     private final Activity mActivity;
+    private final ConsumeResponseListener mConsumeResponseListener;
 
     /* default */ BillingManager(final Activity activity) {
         mActivity = activity;
@@ -78,6 +80,14 @@ public class BillingManager implements PurchasesUpdatedListener {
 
             }
         });
+
+        mConsumeResponseListener = (responseCode, purchaseToken) -> {
+            if (responseCode == BillingClient.BillingResponse.OK) {
+                LOGGER.info("Product was consumed: {}", purchaseToken);
+            } else {
+                LOGGER.error("Product wast consumed {}: code {}", purchaseToken, responseCode);
+            }
+        };
     }
 
     /* default */ void startPurchaseFlow(final String skuId, final String billingType) {
@@ -94,13 +104,14 @@ public class BillingManager implements PurchasesUpdatedListener {
     public void consumePurchases() {
         Purchase.PurchasesResult purchasesResult = mBillingClient
                 .queryPurchases(BillingClient.SkuType.INAPP);
-        if (purchasesResult != null && purchasesResult.getPurchasesList() != null) {
+        LOGGER.info("Start consuming, purchasesResult: {}", purchasesResult.getResponseCode());
+        if (purchasesResult.getPurchasesList() != null) {
             for (Purchase purchase : purchasesResult.getPurchasesList()) {
-                mBillingClient.consumeAsync(purchase.getPurchaseToken(), null);
+                mBillingClient.consumeAsync(purchase.getPurchaseToken(), mConsumeResponseListener);
+                LOGGER.info("Consume purchase: {}", purchase.getSku());
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -110,7 +121,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                                    @Nullable final List<Purchase> purchases) {
         if (responseCode == BillingClient.BillingResponse.OK && purchases != null) {
             for (Purchase purchase : purchases) {
-                mBillingClient.consumeAsync(purchase.getPurchaseToken(), null);
+                mBillingClient.consumeAsync(purchase.getPurchaseToken(), mConsumeResponseListener);
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
             LOGGER.warn("Billing was canceled: {}", responseCode);
