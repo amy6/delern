@@ -151,7 +151,7 @@ public class DelernMainActivity extends AbstractActivity
         checkOnBoarding();
 
         // Create and initialize BillingManager which talks to BillingLibrary
-        mBillingManager = new BillingManager(this);
+        mBillingManager = new BillingManager(this, user);
         if (savedInstanceState != null) {
             mSupportDevFragment = (SupportDevFragment) getSupportFragmentManager()
                     .findFragmentByTag(DIALOG_TAG);

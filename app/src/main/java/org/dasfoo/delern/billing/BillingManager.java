@@ -19,6 +19,7 @@
 package org.dasfoo.delern.billing;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.android.billingclient.api.BillingClient;
@@ -29,7 +30,10 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.dasfoo.delern.models.User;
+import org.dasfoo.delern.util.PerfEventTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +61,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * Sku parameter id.
      */
     public static final String SKU_SUP_DEV5 = "sup_dev_5";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BillingManager.class);
     private static final Map<String, List<String>> SKUS;
 
@@ -69,16 +74,19 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private final Activity mActivity;
     private final ConsumeResponseListener mConsumeResponseListener;
+    private final User mUser;
     private BillingClient mBillingClient;
 
     /**
      * Initializes BillingClient. When connection is set up, consumes
      * products.
      *
-     * @param activity activity to initialize BillingClient
+     * @param activity activity to initialize BillingClient.
+     * @param user     user to track for analytics.
      */
-    public BillingManager(final Activity activity) {
+    public BillingManager(final Activity activity, final User user) {
         mActivity = activity;
+        mUser = user;
         mBillingClient = BillingClient.newBuilder(mActivity).setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
             @Override
@@ -105,7 +113,7 @@ public class BillingManager implements PurchasesUpdatedListener {
             if (responseCode == BillingClient.BillingResponse.OK) {
                 LOGGER.info("Product was consumed: {}", responseCode);
             } else {
-                LOGGER.error("Product wast consumed code {}", responseCode);
+                LOGGER.error("Product wasn't consumed code {}", responseCode);
             }
         };
     }
@@ -116,6 +124,10 @@ public class BillingManager implements PurchasesUpdatedListener {
                 .setType(billingType).setSku(skuId).build();
         // Check that payments are supported.
         if (mBillingClient.isFeatureSupported(billingType) == BillingClient.BillingResponse.OK) {
+            Bundle payload = new Bundle();
+            payload.putString(FirebaseAnalytics.Param.ITEM_ID, mUser.getKey());
+            payload.putString(FirebaseAnalytics.Param.VIRTUAL_CURRENCY_NAME, skuId);
+            PerfEventTracker.trackEvent(PerfEventTracker.Event.START_PURCHASE, mActivity, payload);
             mBillingClient.launchBillingFlow(mActivity, billingFlowParams);
         }
     }
@@ -147,7 +159,10 @@ public class BillingManager implements PurchasesUpdatedListener {
             }
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
             LOGGER.warn("Billing was canceled: {}", responseCode);
-            // TODO(ksheremet): Add analytics
+            Bundle payload = new Bundle();
+            payload.putString(FirebaseAnalytics.Param.ITEM_ID, mUser.getKey());
+            PerfEventTracker
+                    .trackEvent(PerfEventTracker.Event.CANCEL_PURCHASE, mActivity, payload);
             // Handle an error caused by a user cancelling the purchase flow.
         } else {
             LOGGER.warn("Not handled error code: {}", responseCode);

@@ -181,7 +181,17 @@ public final class PerfEventTracker {
         /**
          * Clicking "Invite" in "User you are trying to share with does not exist".
          */
-        INVITE;
+        INVITE,
+
+        /**
+         * Clicking "Pay" in "Support Development fragment".
+         */
+        START_PURCHASE,
+
+        /**
+         * Payment was canceled.
+         */
+        CANCEL_PURCHASE;
 
         /**
          * Generate an identifier for this event.
