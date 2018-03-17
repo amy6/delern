@@ -67,6 +67,8 @@ public class BillingManager implements PurchasesUpdatedListener {
                     @BillingClient.BillingResponse final int billingResponse) {
                 if (billingResponse == BillingClient.BillingResponse.OK) {
                     LOGGER.info("onBillingSetupFinished() response: {} ", billingResponse);
+                    // If item is paid, method consumes it.
+                    consumePurchases();
                 } else {
                     LOGGER.error("onBillingSetupFinished() error code: {} ", billingResponse);
                 }
@@ -101,7 +103,7 @@ public class BillingManager implements PurchasesUpdatedListener {
      * Fetches results from a cache provided by the Google Play Store app without
      * initiating a network request. Consumes all purchases.
      */
-    public void consumePurchases() {
+    private void consumePurchases() {
         Purchase.PurchasesResult purchasesResult = mBillingClient
                 .queryPurchases(BillingClient.SkuType.INAPP);
         LOGGER.info("Start consuming, purchasesResult: {}", purchasesResult.getResponseCode());

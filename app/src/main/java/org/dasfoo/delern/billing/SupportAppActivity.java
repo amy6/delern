@@ -63,8 +63,6 @@ public class SupportAppActivity extends AbstractActivity implements BillingProvi
         setContentView(R.layout.support_dev_activity);
         // Create and initialize BillingManager which talks to BillingLibrary
         mBillingManager = new BillingManager(this);
-        // If item is paid, method consumes it.
-        mBillingManager.consumePurchases();
         ButterKnife.bind(this);
         configureToolbar();
         this.setTitle(R.string.nav_support_development);
