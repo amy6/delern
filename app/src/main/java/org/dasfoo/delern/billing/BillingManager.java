@@ -45,20 +45,39 @@ import java.util.Map;
  */
 public class BillingManager implements PurchasesUpdatedListener {
 
+    /**
+     * Sku parameter id.
+     */
+    public static final String SKU_SUP_DEV1 = "sup_dev_1";
+    /**
+     * Sku parameter id.
+     */
+    public static final String SKU_SUP_DEV2 = "sup_dev_2";
+    /**
+     * Sku parameter id.
+     */
+    public static final String SKU_SUP_DEV5 = "sup_dev_5";
     private static final Logger LOGGER = LoggerFactory.getLogger(BillingManager.class);
     private static final Map<String, List<String>> SKUS;
 
     static {
         SKUS = new HashMap<>();
-        SKUS.put(BillingClient.SkuType.INAPP, Arrays.asList("sup_dev_1", "sup_dev_2"));
+        SKUS.put(BillingClient.SkuType.INAPP,
+                Arrays.asList(SKU_SUP_DEV1, SKU_SUP_DEV2, SKU_SUP_DEV5));
         //SKUS.put(BillingClient.SkuType.SUBS, Arrays.asList("gold_monthly", "gold_yearly"));
     }
 
-    private BillingClient mBillingClient;
     private final Activity mActivity;
     private final ConsumeResponseListener mConsumeResponseListener;
+    private BillingClient mBillingClient;
 
-    /* default */ BillingManager(final Activity activity) {
+    /**
+     * Initializes BillingClient. When connection is set up, consumes
+     * products.
+     *
+     * @param activity activity to initialize BillingClient
+     */
+    public BillingManager(final Activity activity) {
         mActivity = activity;
         mBillingClient = BillingClient.newBuilder(mActivity).setListener(this).build();
         mBillingClient.startConnection(new BillingClientStateListener() {
@@ -79,15 +98,14 @@ public class BillingManager implements PurchasesUpdatedListener {
                 LOGGER.warn("onBillingServiceDisconnected");
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
-
             }
         });
 
         mConsumeResponseListener = (responseCode, purchaseToken) -> {
             if (responseCode == BillingClient.BillingResponse.OK) {
-                LOGGER.info("Product was consumed: {}", purchaseToken);
+                LOGGER.info("Product was consumed: {}", responseCode);
             } else {
-                LOGGER.error("Product wast consumed {}: code {}", purchaseToken, responseCode);
+                LOGGER.error("Product wast consumed code {}", responseCode);
             }
         };
     }
@@ -96,7 +114,10 @@ public class BillingManager implements PurchasesUpdatedListener {
         // Launch billing flow
         BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
                 .setType(billingType).setSku(skuId).build();
-        mBillingClient.launchBillingFlow(mActivity, billingFlowParams);
+        // Check that payments are supported.
+        if (mBillingClient.isFeatureSupported(billingType) == BillingClient.BillingResponse.OK) {
+            mBillingClient.launchBillingFlow(mActivity, billingFlowParams);
+        }
     }
 
     /**
@@ -110,7 +131,6 @@ public class BillingManager implements PurchasesUpdatedListener {
         if (purchasesResult.getPurchasesList() != null) {
             for (Purchase purchase : purchasesResult.getPurchasesList()) {
                 mBillingClient.consumeAsync(purchase.getPurchaseToken(), mConsumeResponseListener);
-                LOGGER.info("Consume purchase: {}", purchase.getSku());
             }
         }
     }

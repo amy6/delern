@@ -184,11 +184,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Billing messages -->
     <string name="error_occurred_user_message">Error occurred. Try it later.</string>
-    <string name="support_app_button">Support</string>
     <string name="pay_button">Pay</string>
     <string name="image_icon_sup_dev_content_description">Image</string>
     <string name="pay_button_content_description">Pay Button</string>
     <string name="nav_support_development">Support Development</string>
-    <string name="thank_you_image">Thank you image</string>
 
 </resources>

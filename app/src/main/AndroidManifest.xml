@@ -138,14 +138,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <activity
             android:name=".onboarding.OnBoardingActivity"
             android:theme="@style/Theme.Intro" />
-        <activity
-            android:name=".billing.SupportAppActivity"
-            android:parentActivityName=".listdecks.DelernMainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.dasfoo.delern.listdecks.DelernMainActivity" />
-        </activity>
     </application>
 
 </manifest>

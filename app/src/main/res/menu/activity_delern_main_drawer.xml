@@ -39,6 +39,10 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
                 android:id="@+id/nav_contact_us"
                 android:icon="@drawable/ic_live_help_black_24dp"
                 android:title="@string/nav_contact_us" />
+            <item
+                android:id="@+id/sup_dev"
+                android:title="@string/nav_support_development"
+                android:icon="@drawable/ic_euro_symbol_black_24dp"/>
         </menu>
     </item>
 
@@ -47,9 +51,6 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
         <item
             android:id="@+id/nav_about"
             android:title="@string/nav_about_app" />
-        <item
-            android:id="@+id/sup_dev"
-            android:title="@string/nav_support_development" />
     </group>
 
 </menu>

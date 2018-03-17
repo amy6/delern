@@ -39,8 +39,8 @@ import java.util.List;
  */
 public class SkusAdapter extends RecyclerView.Adapter<RowViewHolder>
         implements RowViewHolder.OnButtonClickListener {
-    private List<SkuRowData> mListData;
     private final BillingProvider mBillingProvider;
+    private List<SkuRowData> mListData;
 
     /* default */ SkusAdapter(final BillingProvider billingProvider) {
         super();
@@ -69,20 +69,7 @@ public class SkusAdapter extends RecyclerView.Adapter<RowViewHolder>
     public void onBindViewHolder(final RowViewHolder holder, final int position) {
         SkuRowData data = getData(position);
         if (data != null) {
-            holder.getTitle().setText(data.getTitle());
-            holder.getPrice().setText(data.getPrice());
-            holder.getDescription().setText(data.getDescription());
-            holder.getPayButton().setEnabled(true);
-            switch (data.getSku()) {
-                case "sup_dev_1":
-                    holder.getSkuIcon().setImageResource(R.drawable.piggy_bank);
-                    break;
-                case "sup_dev_2":
-                    holder.getSkuIcon().setImageResource(R.drawable.coffee_cup_icon);
-                    break;
-                default:
-                    break;
-            }
+            holder.setData(data);
         }
     }
 

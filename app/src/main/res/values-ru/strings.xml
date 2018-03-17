@@ -170,11 +170,9 @@ along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
 
     <!-- Billing messages -->
     <string name="error_occurred_user_message">Произошла ошибка. Повторите позже.</string>
-    <string name="support_app_button">Поддержать</string>
     <string name="pay_button">Заплатить</string>
     <string name="image_icon_sup_dev_content_description">Картинка</string>
     <string name="pay_button_content_description">Кнопка заплатить</string>
     <string name="nav_support_development">Поддержать приложение</string>
-    <string name="thank_you_image">Картинка благодарности</string>
 
 </resources>

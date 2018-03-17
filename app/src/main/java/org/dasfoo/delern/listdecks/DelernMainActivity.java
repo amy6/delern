@@ -57,7 +57,9 @@ import org.dasfoo.delern.SplashScreenActivity;
 import org.dasfoo.delern.aboutapp.AboutAppActivity;
 import org.dasfoo.delern.addupdatecard.AddEditCardActivity;
 import org.dasfoo.delern.addupdatecard.TextWatcherStub;
-import org.dasfoo.delern.billing.SupportAppActivity;
+import org.dasfoo.delern.billing.BillingManager;
+import org.dasfoo.delern.billing.BillingProvider;
+import org.dasfoo.delern.billing.SupportDevFragment;
 import org.dasfoo.delern.di.Injector;
 import org.dasfoo.delern.editdeck.EditDeckActivity;
 import org.dasfoo.delern.learncards.LearningCardsActivity;
@@ -84,17 +86,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Main activity of the application, containing decks and menu.
  */
 @SuppressWarnings({"PMD.TooManyMethods" /* TODO(dotdoom): refactor */,
-        "checkstyle:classfanoutcomplexity"})
+        "checkstyle:classfanoutcomplexity",
+        "PMD.GodClass"})
 public class DelernMainActivity extends AbstractActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        IDelernMainView, OnDeckAction {
+        IDelernMainView, OnDeckAction, BillingProvider {
 
     /**
      * IntentExtra user for showing user info and data.
      */
     public static final String USER = "user";
     private static final Logger LOGGER = LoggerFactory.getLogger(DelernMainActivity.class);
-
+    private static final String DIALOG_TAG = "dialog_support_development";
     @BindView(R.id.toolbar)
     /* default */ Toolbar mToolbar;
     @BindView(R.id.progress_bar)
@@ -109,6 +112,8 @@ public class DelernMainActivity extends AbstractActivity
     private TextView mOfflineTextView;
     private CircleImageView mProfilePhotoImageView;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private BillingManager mBillingManager;
+    private SupportDevFragment mSupportDevFragment;
 
     /**
      * Method starts DelernMainActivity.
@@ -144,6 +149,14 @@ public class DelernMainActivity extends AbstractActivity
 
         initViews();
         checkOnBoarding();
+
+        // Create and initialize BillingManager which talks to BillingLibrary
+        mBillingManager = new BillingManager(this);
+        if (savedInstanceState != null) {
+            mSupportDevFragment = (SupportDevFragment) getSupportFragmentManager()
+                    .findFragmentByTag(DIALOG_TAG);
+        }
+        showRefreshedUi();
     }
 
     private void checkOnBoarding() {
@@ -164,7 +177,6 @@ public class DelernMainActivity extends AbstractActivity
                     });
         }
     }
-
 
     private void initViews() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -222,6 +234,7 @@ public class DelernMainActivity extends AbstractActivity
     protected void onDestroy() {
         // Stop memory leaks.
         mRecyclerView.setAdapter(null);
+        mBillingManager.destroy();
         super.onDestroy();
     }
 
@@ -273,7 +286,12 @@ public class DelernMainActivity extends AbstractActivity
                 AboutAppActivity.startActivity(this);
                 break;
             case R.id.sup_dev:
-                SupportAppActivity.startActivity(this);
+                if (mSupportDevFragment == null) {
+                    mSupportDevFragment = new SupportDevFragment();
+                }
+                if (!isSupDevFragmentShown()) {
+                    mSupportDevFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+                }
                 break;
             default:
                 LOGGER.warn("Not implemented: {}", item.getItemId());
@@ -449,5 +467,33 @@ public class DelernMainActivity extends AbstractActivity
     @Override
     public void editDeck(final DeckAccess deckAccess) {
         EditCardListActivity.startActivity(this, deckAccess);
+    }
+
+    /**
+     * Getter for BillingManager.
+     *
+     * @return BillingManager
+     */
+    @Override
+    public BillingManager getBillingManager() {
+        return mBillingManager;
+    }
+
+    /**
+     * Remove loading spinner and refresh the UI in Billing Fragment.
+     */
+    public void showRefreshedUi() {
+        if (isSupDevFragmentShown()) {
+            mSupportDevFragment.refreshUI();
+        }
+    }
+
+    /**
+     * Check whether fragment is shown of not.
+     *
+     * @return whether fragment is shown of not
+     */
+    public boolean isSupDevFragmentShown() {
+        return mSupportDevFragment != null && mSupportDevFragment.isVisible();
     }
 }

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.dasfoo.delern.R;
+import org.dasfoo.delern.billing.BillingManager;
 
 /**
  * ViewHolder for quick access to row's views.
@@ -57,48 +58,29 @@ public final class RowViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Getter for title of product.
+     * Initializes the row in payment choices (title, description, etc).
      *
-     * @return title.
+     * @param data data to be set in the row.
      */
-    public TextView getTitle() {
-        return mTitle;
-    }
+    public void setData(final SkuRowData data) {
+        mTitle.setText(data.getTitle());
+        mPrice.setText(data.getPrice());
+        mDescription.setText(data.getDescription());
+        mPayButton.setEnabled(true);
+        switch (data.getSku()) {
+            case BillingManager.SKU_SUP_DEV1:
+                mSkuIcon.setImageResource(R.drawable.piggy_bank);
+                break;
+            case BillingManager.SKU_SUP_DEV2:
+                mSkuIcon.setImageResource(R.drawable.coffee_cup_icon);
+                break;
+            case BillingManager.SKU_SUP_DEV5:
+                mSkuIcon.setImageResource(R.drawable.smiley_thumb_up);
+                break;
+            default:
+                break;
+        }
 
-    /**
-     * Getter for description of product.
-     *
-     * @return description.
-     */
-    public TextView getDescription() {
-        return mDescription;
-    }
-
-    /**
-     * Getter for price of product.
-     *
-     * @return price
-     */
-    public TextView getPrice() {
-        return mPrice;
-    }
-
-    /**
-     * Getter for pay button.
-     *
-     * @return pay button
-     */
-    public Button getPayButton() {
-        return mPayButton;
-    }
-
-    /**
-     * Getter for image that will be displayed with product.
-     *
-     * @return image.
-     */
-    public ImageView getSkuIcon() {
-        return mSkuIcon;
     }
 
     /**
