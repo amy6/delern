@@ -140,6 +140,10 @@ jobs:
         <<: *gcloud_install_command
 
     - run:
+        name: "Build release APK"
+        command: ./gradlew assembleRelease
+
+    - run:
         name: "Run instrumented tests without ProGuard (for coverage)"
         no_output_timeout: "35m"
         command: |
