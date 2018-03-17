@@ -1,64 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (C) 2017 Katarina Sheremet
-
-This file is part of Delern.
-
-Delern is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-Delern is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with  Delern.  If not, see <http://www.gnu.org/licenses/>.
--->
-
 <resources>
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <!-- Show a splash screen on the activity. Automatically removed when
              Flutter draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!-- FloatActionButton, links in TextView etc -->
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="RippleBackground" parent="AppTheme.NoActionBar">
-        <item name="android:background">?selectableItemBackground</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="PrimaryText">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
-        <item name="android:textColor">@color/colorPrimaryText</item>
-    </style>
-
-    <style name="SecondaryText">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
-    </style>
-
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash_screen</item>
-    </style>
-
 </resources>

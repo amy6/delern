@@ -1,18 +1,10 @@
-# Gradle files
-.gradle/
-
-# Keystore files
-*.jks
-
-# Google Cloud service account credentials with access to Google Play and GCS.
-/app/play-store-service-account.json
-
-# Generated files for opensource licenses.
-/app/src/main/res/raw/third_party_license_metadata
-/app/src/main/res/raw/third_party_licenses
-
-# "What's New" file is created automatically by deployment process
-/app/src/main/play/en-US/whatsnew
-
-# Flutter
+*.iml
+*.class
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
 GeneratedPluginRegistrant.java

@@ -1,8 +1,12 @@
-name: delern
+name: Delern
 description: Spaced repetition learning system
 
 dependencies:
   sentry: ^0.0.6
+
+  firebase_auth: ^0.5.1
+  firebase_database: ^0.4.0
+
   flutter:
     sdk: flutter
 
