@@ -2,7 +2,9 @@
 
 const functions = require('firebase-functions');
 // https://firebase.google.com/docs/functions/http-events
-const cors = require('cors')({origin: true});
+const cors = require('cors')({
+  origin: true,
+});
 
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
@@ -253,7 +255,7 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
       if (daysStale > 14) {
         console.log('Deleting stale (', daysStale,
           'days) test user', user.uid);
-        return new Promise(resolve => setTimeout(resolve, 2000)).then(() =>
+        return new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
           admin.auth().deleteUser(user.uid));
       }
     }
