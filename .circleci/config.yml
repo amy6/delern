@@ -92,44 +92,16 @@ jobs:
     - run:
         name: "Lint, assemble and run unit tests"
         no_output_timeout: "35m"
-        working_directory: ~/project/android
         command: |
-          # Check formatting
-          # TODO(dotdoom): flutter reformat and lint
-          ci-lint
+          flutter packages get
+          ( cd android && ci-lint )
+          ( cd firebase && ci-lint )
+          $(dirname $(which flutter))/cache/dart-sdk/bin/dartfmt -w lib
+          flutter analyze --preview-dart-2
           git diff --stat --exit-code
-          # Prepare flutter environment
-          ( cd .. && flutter build apk --debug )
-          # Run lint over debug (rather than instrumented) to allow the tools to access non-optimized
-          # class data.
-          ./gradlew \
-            --continue \
-            :app:testDebugUnitTest \
-            --quiet \
-            --console=plain
-          # Assemble instrumented to check ProGuard configuration and warnings.
-          ./gradlew \
-            --continue \
-            :app:assembleDebug \
-            :app:assembleDebugAndroidTest \
-            --quiet \
-            --console=plain >/dev/null
-          # Lint Polymer files
-          # TODO(dotdoom): ci-lint-html
-          ( cd ../firebase/www && polymer lint && polymer build )
-
-    - store_test_results:
-        path: app/build/test-results
-
-    - run:
-        name: "Re-run unit tests with INFO level"
-        working_directory: ~/project/android
-        command: |
-          ./gradlew \
-            --info \
-            :app:testDebugUnitTest \
-            --console=plain
-        when: on_fail
+          flutter build apk --debug
+          # TODO(dotdoom): flutter test
+          ( cd firebase/www && polymer lint && polymer build )
 
     - persist_to_workspace:
         root: ..
@@ -153,80 +125,11 @@ jobs:
           PROJECT: delern-debug
         command: npm run deploy
 
-  instrumented-coverage:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        name: "Run instrumented tests without ProGuard (for coverage)"
-        no_output_timeout: "35m"
-        working_directory: ~/project/android
-        command: |
-          # Prepare Flutter env
-          ( cd .. && flutter build apk --debug )
-          # Assemble as we want it
-          ./gradlew \
-            -PcoverageRun \
-            assembleDebug \
-            assembleDebugAndroidTest \
-            --console=plain
-          # https://circleci.com/docs/firebase-test-lab/
-          # TODO(dotdoom): do we still need a custom bucket?
-          gcloud --project=delern-debug firebase test android run \
-            --device model=Nexus5X,version=26 \
-            --timeout 30m \
-            --app ../build/app/outputs/apk/debug/app-debug.apk \
-            --test ../build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-            --results-bucket delern-test-results
-
-    - store_artifacts:
-        path: build/outputs
-    - store_artifacts:
-        path: build/reports
-
     - persist_to_workspace:
         root: ..
         paths:
         # Persist test results to export to CircleCI.
         - project
-
-  instrumented-proguard:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        name: "Run instrumented tests with ProGuard"
-        no_output_timeout: "35m"
-        working_directory: ~/project/android
-        command: |
-          # Prepare Flutter env
-          ( cd .. && flutter build apk --debug )
-          ./gradlew \
-            assembleDebug \
-            assembleDebugAndroidTest \
-            --console=plain
-          # https://circleci.com/docs/firebase-test-lab/
-          # TODO(ksheremet): fix portrait tests, set orientation=landscape
-          gcloud --project=delern-debug firebase test android run \
-            --device model=m0,version=18,locale=ru_RU \
-            --timeout 30m \
-            --app ../build/app/outputs/apk/debug/app-debug.apk \
-            --test ../build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-
-    - store_artifacts:
-        path: android/app/build/outputs
-    - store_artifacts:
-        path: build/reports
 
   deploy-firebase-release:
     <<: *defaults
@@ -246,59 +149,10 @@ jobs:
 
     - run:
         name: "Assemble release APK (to store in artifacts)"
-        working_directory: ~/project/android
-        command: |
-          # Prepare flutter environment
-          ( cd .. && flutter build apk --debug )
-          ./gradlew clean lintRelease assembleRelease
+        command: flutter build apk
 
     - store_artifacts:
-        path: app/build/outputs
-
-  google-play:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        name: "Run instrumented tests with ProGuard (on a hardware device)"
-        no_output_timeout: "35m"
-        working_directory: ~/project/android
-        command: |
-          ./gradlew \
-            assembleDebug \
-            assembleDebugAndroidTest \
-            --console=plain
-          # Run on production Firebase project, for more quota. The app will still connect
-          # to the test/debug database.
-          gcloud --project=delern-e1b33 firebase test android run \
-            --timeout 30m \
-            --app app/build/outputs/apk/debug/app-debug.apk \
-            --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-    - run:
-        name: "Upload release APK to Google Play"
-        command: |
-          # Build relnote.
-          previous_tag="$(git tag --sort=version:refname | grep -F -v -x -- "${CIRCLE_TAG?}" | tail -1)"
-          git log "${previous_tag?}.." --format=%B | \
-            cat <(echo "relnote: ${CIRCLE_TAG}") - |
-            grep '^relnote: ' | \
-            grep -E -v -x 'relnote: none[.]?' | \
-            cut -b10- | \
-            awk '!a[$0]++' >app/src/main/play/en-US/whatsnew
-          # Publish to Google Play (this also automatically runs Robo tests).
-          ./gradlew lintRelease publishRelease --console=plain
-
-    - store_artifacts:
-        path: android/app/src/main/play
-    - store_artifacts:
-        path: build/outputs
-    - store_artifacts:
-        path: build/reports
+        path: build/app/outputs
 
 workflows:
   version: 2
@@ -326,40 +180,12 @@ workflows:
           <<: *release_tags
           branches:
             only: master
-    - instrumented-coverage:
-        requires:
-        - checkout
-        - dependencies
-        - deploy-firebase-debug
-        filters:
-          branches:
-            only: master
-    - instrumented-proguard:
-        requires:
-        - checkout
-        - dependencies
-        - deploy-firebase-debug
-        filters:
-          branches:
-            only: master
     - deploy-firebase-release:
         requires:
         - checkout
         - dependencies
         - deploy-firebase-debug
-        - instrumented-proguard
         filters:
           <<: *release_tags
           branches:
             only: master
-    - google-play:
-        requires:
-        - checkout
-        - dependencies
-        - deploy-firebase-debug
-        - deploy-firebase-release
-        - instrumented-proguard
-        filters:
-          <<: *release_tags
-          branches:
-            ignore: /.*/
