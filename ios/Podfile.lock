@@ -1,0 +1,111 @@
+PODS:
+  - Firebase/Auth (4.11.0):
+    - Firebase/Core
+    - FirebaseAuth (= 4.5.0)
+  - Firebase/Core (4.11.0):
+    - FirebaseAnalytics (= 4.1.0)
+    - FirebaseCore (= 4.0.18)
+  - Firebase/Database (4.11.0):
+    - Firebase/Core
+    - FirebaseDatabase (= 4.1.5)
+  - firebase_auth (0.0.1):
+    - Firebase/Auth
+    - Firebase/Core
+    - Flutter
+  - firebase_core (0.0.1):
+    - Firebase/Core
+    - Flutter
+  - firebase_database (0.0.1):
+    - Firebase/Database
+    - Flutter
+  - FirebaseAnalytics (4.1.0):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseAuth (4.5.0):
+    - FirebaseAnalytics (~> 4.1)
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (4.0.18):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+  - FirebaseDatabase (4.1.5):
+    - FirebaseAnalytics (~> 4.1)
+    - FirebaseCore (~> 4.0)
+    - leveldb-library (~> 1.18)
+  - FirebaseInstanceID (2.0.10):
+    - FirebaseCore (~> 4.0)
+  - Flutter (1.0.0)
+  - google_sign_in (0.0.1):
+    - Flutter
+    - GoogleSignIn (~> 4.0)
+  - GoogleSignIn (4.1.2):
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
+    - GTMOAuth2 (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/Defines (2.1.3)
+  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
+  - GTMOAuth2 (1.1.6):
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.14):
+    - GTMSessionFetcher/Full (= 1.1.14)
+  - GTMSessionFetcher/Core (1.1.14)
+  - GTMSessionFetcher/Full (1.1.14):
+    - GTMSessionFetcher/Core (= 1.1.14)
+  - leveldb-library (1.20)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+
+DEPENDENCIES:
+  - firebase_auth (from `Pods/.symlinks/plugins/firebase_auth-0.5.1/ios`)
+  - firebase_core (from `Pods/.symlinks/plugins/firebase_core-0.0.7/ios`)
+  - firebase_database (from `Pods/.symlinks/plugins/firebase_database-0.4.1/ios`)
+  - Flutter (from `Pods/.symlinks/flutter/ios`)
+  - google_sign_in (from `Pods/.symlinks/plugins/google_sign_in-3.0.0/ios`)
+
+EXTERNAL SOURCES:
+  firebase_auth:
+    :path: Pods/.symlinks/plugins/firebase_auth-0.5.1/ios
+  firebase_core:
+    :path: Pods/.symlinks/plugins/firebase_core-0.0.7/ios
+  firebase_database:
+    :path: Pods/.symlinks/plugins/firebase_database-0.4.1/ios
+  Flutter:
+    :path: Pods/.symlinks/flutter/ios
+  google_sign_in:
+    :path: Pods/.symlinks/plugins/google_sign_in-3.0.0/ios
+
+SPEC CHECKSUMS:
+  Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
+  firebase_auth: 499d5bfb249606a276f6bddf292a3b2d44139f75
+  firebase_core: eb181e4f329c1806efdf2aed9e59ea98fe924ef5
+  firebase_database: bc8d2848137c7f4b4322fbe3e39fdc68d2518a37
+  FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
+  FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
+  FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
+  FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
+  FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  google_sign_in: 64523e9b42c475b01b726ff87e450425ea6d15bc
+  GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
+  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
+  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
+  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+
+PODFILE CHECKSUM: 0420ab312a523ae0eecfb1fc19ea51dd82cc17c7
+
+COCOAPODS: 1.4.0
