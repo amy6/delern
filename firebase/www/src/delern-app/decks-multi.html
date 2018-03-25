@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/neon-animation/web-animations.html">
+
+<link rel="import" href="user-lang.html">
+
+<dom-module id="decks-multi">
+  <template>
+    <style include="shared-styles">
+      div.checkbox-container {
+        display: inline-block;
+        width: 30%;
+      }
+
+      paper-checkbox {
+        padding: 7px;
+      }
+
+    </style>
+
+    <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
+
+    <template is="dom-repeat" items="[[decks]]" id="selected">
+      <div class="checkbox-container">
+        <paper-checkbox on-change="_updateSelectedDecks">
+          [[item.name]]
+        </paper-checkbox>
+      </div>
+    </template>
+  </template>
+
+  <script>
+    class DecksMulti extends UserLang {
+      static get is() {
+        return 'decks-multi';
+      }
+
+      static get properties() {
+        return {
+          uid: String,
+          decks: Array,
+          selectedDecks: {
+            type: Array,
+            notify: true,
+          },
+        };
+      }
+
+      _updateSelectedDecks(evt) {
+        let item = this.$.selected.itemForElement(evt.target);
+        this.selectedDecks = this.selectedDecks || [];
+
+        if (evt.target.checked) {
+          this.selectedDecks.push(item);
+        } else {
+          this.selectedDecks.splice(this.selectedDecks.indexOf(item), 1);
+        }
+      }
+    }
+    customElements.define(DecksMulti.is, DecksMulti);
+
+  </script>
+
+</dom-module>

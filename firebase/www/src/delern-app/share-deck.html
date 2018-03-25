@@ -3,11 +3,12 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-request.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="decks-list.html">
+<link rel="import" href="decks-multi.html">
 <link rel="import" href="user-lang.html">
 
 <dom-module id="share-deck">
@@ -23,13 +24,20 @@
         padding: 10px;
       }
 
+      paper-progress.red {
+        --paper-progress-active-color: red;
+      }
+
     </style>
 
+    <!-- padding for weird bug with disappearing title -->
+    <div class="row"></div>
+    <div class="row"></div>
+    <div class="row"></div>
+
     <div class="row">
-      <div class="col-6">
-        <decks-list class="col-2 intends" uid="[[firebaseUser.uid]]" selected-deck="{{deck}}" language="[[language]]">
-        </decks-list>
-      </div>
+      <decks-multi class="col-12 intends" uid="[[firebaseUser.uid]]" selected-decks="{{decks}}" language="[[language]]">
+      </decks-multi>
     </div>
 
     <!--TODO(ksheremet): check max-rows. -->
@@ -48,10 +56,14 @@
         </paper-dropdown-menu>
       </div>
       <div class="col-4">
-        <paper-button raised id="share-deck-button" on-click="shareDeck" class="intends">
+        <paper-button raised id="share-deck-button" on-click="shareDecks" class="intends">
           [[localize('send_button_text')]]
         </paper-button>
       </div>
+    </div>
+    <div class="row">
+      <paper-progress id="progress" value="[[currentProgress]]" class="col-12">
+      </paper-progress>
     </div>
   </template>
 
@@ -67,12 +79,17 @@
             type: Object,
             notify: true,
           },
+          currentProgress: {
+            type: Number,
+            notify: true,
+            value: 0,
+          },
           firebaseProjectId: {
             type: String,
             notify: true,
           },
-          deck: {
-            type: Object,
+          decks: {
+            type: Array,
             notify: true,
           },
           emails: {
@@ -92,8 +109,12 @@
         };
       };
 
-      shareDeck() {
-        if (!this.deck) {
+      doWait(wait) {
+        return () => new Promise((r) => setTimeout(r, wait || 3000));
+      }
+
+      shareDecks() {
+        if (!this.decks) {
           // TODO(ksheremet): replace with input validation
           document.getElementById('toast').show(this.localize('deck_not_selected_message'));
           return;
@@ -114,15 +135,21 @@
         let shareDeckButton = this.$['share-deck-button'];
         let self = this;
 
+        this.currentProgress = 0;
         shareDeckButton.disabled = true;
-        this.resolveAllUsers(emails).then(() => {
-          return self.saveToDB(emails.map((email) => self.usersCache[email]));
-        }).then(() => {
-          self.emails = '';
-          self.$.emails.focus();
+        this.$.progress.max = (this.decks.length + 1) * emails.length;
+        this.$.progress.classList.remove('red');
+        this.resolveAllUsers(emails).then(() =>
+          self.saveAll(this.decks, emails)
+        ).then(() => {
           document.getElementById('toast').show(self.localize('shared_deck_message'));
         }).catch((e) => {
-          document.getElementById('toast').show(e.message);
+          self.$.progress.classList.add('red');
+          let message = e.message;
+          if (e.email) {
+            message = e.email + ': ' + e.message;
+          }
+          document.getElementById('toast').show(message);
           // document.getElementById('toast').show(self.localize('error_share_deck_message'));
         }).then(() => shareDeckButton.disabled = false);
       };
@@ -130,21 +157,27 @@
       resolveAllUsers(emails) {
         let userLookup = this.$['user-lookup'];
         let usersCache = this.usersCache;
+        let self = this;
 
-        return emails.reduce((promise, email) =>
-            (email in usersCache) ? promise : promise.then(() => {
-              userLookup.params = {
-                q: email,
-              };
-              let request = userLookup.generateRequest();
-              request.email = email;
-              return request.completes;
-            })
-            .then((request) => {
-              usersCache[request.email] = request.response;
-            })
-            .then(() => new Promise((r) => setTimeout(r, 1000))),
-            Promise.resolve())
+        return emails.reduce((promise, email) => {
+            if (email in usersCache) {
+              ++self.currentProgress;
+              return promise;
+            }
+            return promise.then(() => {
+                userLookup.params = {
+                  q: email,
+                };
+                let request = userLookup.generateRequest();
+                request.email = email;
+                return request.completes;
+              })
+              .then((request) => {
+                ++self.currentProgress;
+                usersCache[request.email] = request.response;
+              })
+              .then(self.doWait());
+          }, Promise.resolve())
           .catch((e) => {
             // Quota exceeded is HTTP 429, but we may get it as HTTP 0
             // because response will not contain proper CORS header.
@@ -155,27 +188,54 @@
           });
       }
 
-      saveToDB(uids) {
+      saveAll(decks, emails) {
+        let self = this;
+        return decks.reduce((decksPromise, deck) =>
+          decksPromise.then(() => emails.reduce((emailsPromise, email) =>
+            emailsPromise.then(() =>
+              self.saveOne(deck, email).then(() => ++self.currentProgress)),
+            Promise.resolve())),
+          Promise.resolve());
+      }
+
+      saveOne(deck, email) {
+        let uid = this.usersCache[email];
+
         let deckAccess = {
           access: this.access,
         };
 
         let sharedDeck = {
-          name: this.deck.name,
-          deckType: this.deck.deckType,
-          markdown: this.deck.markdown,
+          name: deck.name,
+          deckType: deck.deckType,
+          markdown: deck.markdown,
           lastSyncAt: 0,
           accepted: false,
         };
 
-        // Write the new post's data simultaneously in the posts list and the user's post list.
-        let updates = {};
-        for (let i = 0; i < uids.length; i++) {
-          updates['/deck_access/' + this.deck.$key + '/' + uids[i]] = deckAccess;
-          updates['/decks/' + uids[i] + '/' + this.deck.$key] = sharedDeck;
-        }
-
-        return firebase.database().ref().update(updates);
+        let self = this;
+        return firebase.database().ref()
+          .child('deck_access')
+          .child(deck.$key)
+          .child(uid)
+          .once('value').then((snap) => {
+            if (!snap.val()) {
+              let updates = {};
+              updates['/deck_access/' + deck.$key + '/' + uid] = deckAccess;
+              updates['/decks/' + uid + '/' + deck.$key] = sharedDeck;
+              return firebase.database().ref().update(updates).then(
+                self.doWait());
+            } else if (snap.val().access !== deckAccess) {
+              return firebase.database().ref()
+                .child('deck_access')
+                .child(deck.$key)
+                .child(uid)
+                .set(deckAccess);
+            }
+          }).catch((e) => {
+            e.email = email;
+            throw e;
+          });
       };
     }
 
