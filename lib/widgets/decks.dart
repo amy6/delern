@@ -37,22 +37,20 @@ class DeckListItem extends VMViewWidget<DeckViewModel> {
 class _DeckListItemState extends VMViewState<DeckViewModel, DeckListItem> {
   @override
   Widget build(BuildContext context) {
-    if (model == null) {
-      return new Text('Loading...');
-    }
-
     return new Column(
       children: <Widget>[
         new Container(
-          padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-          decoration: new BoxDecoration(color: Theme.of(context).cardColor),
+          padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
+          decoration: new BoxDecoration(
+            color: Theme.of(context).cardColor,
+          ),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Expanded(
                 child: new Container(
                   child: new Text(
-                    model.name,
+                    model?.name ?? 'Loading...',
                     style: new TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w400,
@@ -61,7 +59,7 @@ class _DeckListItemState extends VMViewState<DeckViewModel, DeckListItem> {
                 ),
               ),
               new Container(
-                child: new Text(model.cardsToLearn.toString(),
+                child: new Text(model?.cardsToLearn?.toString() ?? 'N/A',
                     style: new TextStyle(
                       fontSize: 18.0,
                     )),
