@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 abstract class PausableState<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
+  // TODO(dotdoom): trigger events when maintainState=true under an overlay.
   bool _appLifecycleResumed = false;
 
   @override

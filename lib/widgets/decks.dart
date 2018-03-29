@@ -2,92 +2,49 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import '../view_models/deck_view_model.dart';
+import 'vm_view.dart';
 
-import '../flutter/pausable_state.dart';
-
-class DecksWidget extends StatefulWidget {
-  final FirebaseUser user;
-
-  DecksWidget(this.user) : super();
+class DecksWidget extends VMViewWidget<DecksViewModel> {
+  DecksWidget(Stream<DecksViewModel> s) : super(s);
 
   @override
   _DecksWidgetState createState() => new _DecksWidgetState();
 }
 
-// TODO(dotdoom): this is a model
-class Deck {
-  final String name;
-  final String key;
-
-  Deck(this.key, this.name);
-}
-
-class _DecksWidgetState extends PausableState<DecksWidget> {
-  StreamSubscription<Event> _subscription;
-  List<Deck> _decks;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void pauseState() {
-    super.pauseState();
-    _subscription.cancel();
-  }
-
-  @override
-  void resumeState() {
-    super.resumeState();
-    _subscription = FirebaseDatabase.instance
-        .reference()
-        .child('decks')
-        .child(widget.user.uid)
-        .onValue
-        .listen((event) {
-      setState(() {
-        var value = event.snapshot.value as Map;
-        _decks = new List<Deck>();
-        value.forEach((deckId, deck) {
-          _decks.add(new Deck(deckId, deck['name']));
-        });
-      });
-    });
-  }
-
+class _DecksWidgetState extends VMViewState<DecksViewModel, DecksWidget> {
   @override
   Widget build(BuildContext context) {
-    if (_decks == null) {
+    if (model == null) {
       return new Text('Loading...');
     }
 
     return new ListView.builder(
       padding: new EdgeInsets.all(8.0),
-      itemCount: _decks.length,
-      itemBuilder: (context, pos) => new DeckListItem(_decks[pos]),
+      itemCount: model.decks.length,
+      itemBuilder: (context, pos) => new DeckListItem(model.decks[pos]),
     );
   }
 }
 
-class DeckListItem extends StatefulWidget {
-  final Deck deck;
-
-  DeckListItem(this.deck) : super();
+class DeckListItem extends VMViewWidget<DeckViewModel> {
+  DeckListItem(Stream<DeckViewModel> s) : super(s);
 
   @override
   _DeckListItemState createState() => new _DeckListItemState();
 }
 
-class _DeckListItemState extends PausableState<DeckListItem> {
+class _DeckListItemState extends VMViewState<DeckViewModel, DeckListItem> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    if (model == null) {
+      return new Text('Loading...');
+    }
+
+    return new Column(
       children: <Widget>[
         new Container(
-          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
           decoration: new BoxDecoration(color: Theme.of(context).cardColor),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +52,7 @@ class _DeckListItemState extends PausableState<DeckListItem> {
               new Expanded(
                 child: new Container(
                   child: new Text(
-                    widget.deck.name,
+                    model.name,
                     style: new TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w400,
@@ -104,7 +61,7 @@ class _DeckListItemState extends PausableState<DeckListItem> {
                 ),
               ),
               new Container(
-                child: new Text('42',
+                child: new Text(model.cardsToLearn.toString(),
                     style: new TextStyle(
                       fontSize: 18.0,
                     )),

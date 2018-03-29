@@ -97,6 +97,7 @@ jobs:
           ( cd android && ci-lint )
           ( cd firebase && ci-lint )
           flutter format lib
+          flutter analyze
           flutter analyze --preview-dart-2
           git diff --stat --exit-code
           flutter build apk --debug

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../view_models/deck_view_model.dart';
 import '../remote/remote_config.dart';
 import '../remote/sign_in.dart';
 import '../widgets/sign_in.dart';
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       )),
-      body: new DecksWidget(user),
+      body: new DecksWidget(DecksViewModel.getDecks(user.uid)),
       floatingActionButton:
           new FloatingActionButton(child: new Icon(Icons.add), onPressed: null),
     );
