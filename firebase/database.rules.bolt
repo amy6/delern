@@ -185,8 +185,10 @@ path /learning/{userId} {
   read() { isCurrentUser(userId) }
   write() { isCurrentUser(userId) }
 }
-path /learning/{userId}/{deckId}/{cardId} is ScheduledCard {
+path /learning/{userId}/{deckId} {
   index() { "repeatAt" }
+}
+path /learning/{userId}/{deckId}/{cardId} is ScheduledCard {
 }
 
 // Data recovery (see MultiWrite.java).
