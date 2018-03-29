@@ -88,33 +88,28 @@ class _DeckListItemState extends PausableState<DeckListItem> {
       children: <Widget>[
         new Container(
           padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-          decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor),
+          decoration: new BoxDecoration(color: Theme.of(context).cardColor),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Expanded(
                 child: new Container(
                   child: new Text(
-                      widget.deck.name,
-                  style: new TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400,
-                  ),
+                    widget.deck.name,
+                    style: new TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
               new Container(
-                  child: new Text(
-                    '42',
+                child: new Text('42',
                     style: new TextStyle(
                       fontSize: 18.0,
-                    )
-                  ),
+                    )),
               ),
-              new IconButton(
-                  icon: new Icon(Icons.more_vert),
-                  onPressed: null),
+              new IconButton(icon: new Icon(Icons.more_vert), onPressed: null),
             ],
           ),
         ),

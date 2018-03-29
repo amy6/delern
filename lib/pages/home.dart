@@ -73,9 +73,8 @@ class _HomePageState extends State<HomePage> {
         ],
       )),
       body: new DecksWidget(user),
-      floatingActionButton: new FloatingActionButton(
-        child: new Icon(Icons.add),
-          onPressed: null),
+      floatingActionButton:
+          new FloatingActionButton(child: new Icon(Icons.add), onPressed: null),
     );
   }
 }
