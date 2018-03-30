@@ -42,6 +42,53 @@ const delern = {
       repeatAt: 0,
     };
   },
+  createMissingScheduledCards: function(uid, deckId) {
+    return admin.database().ref('learning').child(uid).child(deckId)
+      .once('value')
+      .then((scheduledCards) => {
+        scheduledCards = scheduledCards.val();
+        return admin.database().ref('cards').child(deckId)
+          .once('value').then((cards) => {
+            cards = cards.val();
+            if (!cards) {
+              cards = {};
+            }
+            if (!scheduledCards) {
+              scheduledCards = {};
+            }
+
+            let anyUpdate = false;
+
+            Object.keys(cards).forEach((cardId) => {
+              if (!scheduledCards[cardId]) {
+                scheduledCards[cardId] = delern.createScheduledCardObject();
+                anyUpdate = true;
+                console.log('Creating missing scheduled card ' + cardId +
+                  ' for ' + uid);
+              };
+            });
+
+            Object.keys(scheduledCards).forEach((cardId) => {
+              if (!cards[cardId]) {
+                delete scheduledCards[cardId];
+                anyUpdate = true;
+                console.log('Deleting extra scheduled card ' + cardId +
+                  ' for ' + uid);
+              };
+            });
+
+            if (anyUpdate) {
+              // Throw a real Error object to notify via StackDriver.
+              console.error(new Error('Database denormalized in deck ' +
+                deckId + ' for ' + uid + ', fixing (see log for details)'));
+              return admin.database().ref('learning').child(uid).child(deckId)
+                .set(scheduledCards);
+            }
+
+            return Promise.resolve();
+          });
+      });
+  },
 };
 
 exports.userLookup = functions.https.onRequest((req, res) => {
@@ -264,9 +311,12 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
       .then((deckAccessSnapshot) => {
         let deckAccesses = deckAccessSnapshot.val();
         let deckAccessUpdate = {};
+        let missingCards = Promise.resolve();
         Object.keys(deckAccesses).forEach((deckId) => {
           let deckAccess = deckAccesses[deckId];
           Object.keys(deckAccess).forEach((userId) => {
+            missingCards.then(
+              delern.createMissingScheduledCards(userId, deckId));
             if (!deckAccess[userId].access) {
               deckAccessUpdate[[deckId, userId].join('/')] = {
                 access: deckAccess[userId],
@@ -274,7 +324,8 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
             }
           });
         });
-        return admin.database().ref('deck_access').update(deckAccessUpdate);
+        return missingCards.then(admin.database()
+          .ref('deck_access').update(deckAccessUpdate));
       });
   }).then(() => {
     let usersRef = admin.database().ref('users');
