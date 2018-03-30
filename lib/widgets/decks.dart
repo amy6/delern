@@ -16,7 +16,7 @@ class _DecksWidgetState extends VMViewState<DecksViewModel, DecksWidget> {
   @override
   Widget build(BuildContext context) {
     if (model == null) {
-      return new Text('Loading...');
+      return new Center(child: new CircularProgressIndicator());
     }
 
     return new ListView.builder(
