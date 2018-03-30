@@ -40,36 +40,62 @@ class _DeckListItemState extends VMViewState<DeckViewModel, DeckListItem> {
     return new Column(
       children: <Widget>[
         new Container(
-          padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-          decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
           child: new Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Expanded(
-                child: new Container(
-                  child: new Text(
-                    model?.name ?? 'Loading...',
-                    style: new TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+                child: _buildDeckName(),
               ),
-              new Container(
-                child: new Text(model?.cardsToLearn?.toString() ?? 'N/A',
-                    style: new TextStyle(
-                      fontSize: 18.0,
-                    )),
-              ),
-              new IconButton(icon: new Icon(Icons.more_vert), onPressed: null),
+              _buildNumberOfCards(),
+              _buildDeckMenu(),
             ],
           ),
         ),
         new Divider(height: 1.0),
       ],
+    );
+  }
+
+  Widget _buildDeckName() {
+    return new Material(
+      child: new InkWell(
+        splashColor: Theme.of(context).splashColor,
+        onTap: () {
+          print(model.name);
+        },
+        child: new Container(
+          padding: const EdgeInsets.only(
+              top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+          child: new Text(
+            model?.name ?? 'Loading...',
+            style: new TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNumberOfCards() {
+    return new Container(
+      child: new Text(model?.cardsToLearn?.toString() ?? 'N/A',
+          style: new TextStyle(
+            fontSize: 18.0,
+          )),
+    );
+  }
+
+  Widget _buildDeckMenu() {
+    return new Material(
+      child: new InkResponse(
+        splashColor: Theme.of(context).splashColor,
+        radius: 15.0,
+        onTap: () {},
+        child: new IconButton(
+            icon: new Icon(Icons.more_vert, size: 30.0), onPressed: null),
+      ),
     );
   }
 }
