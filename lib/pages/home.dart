@@ -1,10 +1,8 @@
-import 'package:delern/widgets/logo.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../view_models/deck_view_model.dart';
-import '../remote/remote_config.dart';
 import '../remote/sign_in.dart';
 import '../widgets/sign_in.dart';
 import '../widgets/decks.dart';
@@ -20,31 +18,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseUser user;
-  bool initialized;
 
   @override
   void initState() {
     super.initState();
 
-    getRemoteConfig().then((nothing) {
-      setState(() {
-        initialized = true;
-      });
-
-      getCurrentUser()
-          .then((currentUser) => setState(() {
-                user = currentUser;
-              }))
-          .catchError((e) {/* TODO(dotdoom): not currently signed in */});
-    });
+    getCurrentUser()
+        .then((currentUser) => setState(() {
+              user = currentUser;
+            }))
+        .catchError((e) {/* TODO(dotdoom): not currently signed in */});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!initialized) {
-      return new LogoWidget();
-    }
-
     var appBar = new AppBar(title: new Text(widget.title));
     if (user == null) {
       return new Scaffold(
