@@ -9,14 +9,18 @@ final SentryClient _sentry = new SentryClient(
         "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345");
 
 Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
-  print('Caught error in $src: $error');
+  print('/!\\ /!\\ /!\\ Caught error in $src: $error /!\\ /!\\ /!\\ ');
 
-  // Re-throw in debug mode
-  bool raise = true;
-  // TODO(dotdoom): make this actually work
-  // assert(raise = true);
-  if (raise) {
-    throw error;
+  bool sendToServer = true;
+  assert(() {
+        sendToServer = false;
+        return true;
+      }() !=
+      null);
+  if (!sendToServer) {
+    print(stackTrace);
+    print('-' * 80);
+    return;
   }
 
   print('Reporting to Sentry.io...');

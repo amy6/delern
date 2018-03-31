@@ -5,29 +5,25 @@ import 'package:flutter/material.dart';
 import '../flutter/pausable_state.dart';
 
 abstract class VMViewWidget<T> extends StatefulWidget {
-  final Stream<T> viewModelStream;
+  final Future<T> viewModel;
 
-  VMViewWidget(this.viewModelStream) : super();
+  VMViewWidget(this.viewModel) : super();
 }
 
 abstract class VMViewState<T, W extends VMViewWidget<T>>
     extends PausableState<W> {
-  StreamSubscription<T> _subscription;
+  //StreamSubscription<T> _subscription;
   T model;
 
   @override
   void pauseState() {
     super.pauseState();
-    _subscription.cancel();
+    // TODO(dotdoom): _subscription.cancel();
   }
 
   @override
   void resumeState() {
     super.resumeState();
-    _subscription = widget.viewModelStream.listen(
-      (T newModel) {
-        setState(() => model = newModel);
-      },
-    );
+    widget.viewModel.then((m) => setState(() => model = m));
   }
 }
