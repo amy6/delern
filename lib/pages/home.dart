@@ -6,6 +6,7 @@ import '../view_models/deck_view_model.dart';
 import '../remote/sign_in.dart';
 import '../widgets/sign_in.dart';
 import '../widgets/decks.dart';
+import '../widgets/navigation_drawer.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -18,6 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseUser user;
+
+  void signOutUser() {
+    signOut().then((nothing) => setState(() => user = null));
+  }
 
   @override
   void initState() {
@@ -42,24 +47,7 @@ class _HomePageState extends State<HomePage> {
 
     return new Scaffold(
       appBar: appBar,
-      drawer: new Drawer(
-          child: new Column(
-        children: <Widget>[
-          new UserAccountsDrawerHeader(
-            accountName: new Text(user.displayName),
-            accountEmail: new Text(user.email),
-            currentAccountPicture: new CircleAvatar(
-              backgroundImage: new NetworkImage(user.photoUrl),
-            ),
-          ),
-          new MaterialButton(
-            child: new Text('Sign Out'),
-            onPressed: () {
-              signOut().then((nothing) => setState(() => user = null));
-            },
-          ),
-        ],
-      )),
+      drawer: new NavigationDrawer(user, signOutUser),
       body: new DecksWidget(DecksViewModel.getDecks(user.uid)),
       floatingActionButton:
           new FloatingActionButton(child: new Icon(Icons.add), onPressed: null),

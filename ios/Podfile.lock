@@ -67,17 +67,20 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
+  - package_info (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
-  - firebase_auth (from `Pods/.symlinks/plugins/firebase_auth-0.5.1/ios`)
+  - firebase_auth (from `Pods/.symlinks/plugins/firebase_auth-0.5.3/ios`)
   - firebase_core (from `Pods/.symlinks/plugins/firebase_core-0.0.7/ios`)
   - firebase_database (from `Pods/.symlinks/plugins/firebase_database-0.4.1/ios`)
   - Flutter (from `Pods/.symlinks/flutter/ios`)
   - google_sign_in (from `Pods/.symlinks/plugins/google_sign_in-3.0.0/ios`)
+  - package_info (from `Pods/.symlinks/plugins/package_info-0.3.0/ios`)
 
 EXTERNAL SOURCES:
   firebase_auth:
-    :path: Pods/.symlinks/plugins/firebase_auth-0.5.1/ios
+    :path: Pods/.symlinks/plugins/firebase_auth-0.5.3/ios
   firebase_core:
     :path: Pods/.symlinks/plugins/firebase_core-0.0.7/ios
   firebase_database:
@@ -86,6 +89,8 @@ EXTERNAL SOURCES:
     :path: Pods/.symlinks/flutter/ios
   google_sign_in:
     :path: Pods/.symlinks/plugins/google_sign_in-3.0.0/ios
+  package_info:
+    :path: Pods/.symlinks/plugins/package_info-0.3.0/ios
 
 SPEC CHECKSUMS:
   Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
@@ -105,6 +110,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
 
 PODFILE CHECKSUM: 0420ab312a523ae0eecfb1fc19ea51dd82cc17c7
 
