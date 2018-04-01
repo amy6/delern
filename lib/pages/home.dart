@@ -7,6 +7,7 @@ import '../remote/sign_in.dart';
 import '../widgets/sign_in.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
+import '../widgets/create_deck.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -49,8 +50,7 @@ class _HomePageState extends State<HomePage> {
       appBar: appBar,
       drawer: new NavigationDrawer(user, signOutUser),
       body: new DecksWidget(DecksViewModel.getDecks(user.uid)),
-      floatingActionButton:
-          new FloatingActionButton(child: new Icon(Icons.add), onPressed: null),
+      floatingActionButton: new CreateDeck(user),
     );
   }
 }
