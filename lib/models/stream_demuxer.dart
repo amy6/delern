@@ -15,9 +15,10 @@ class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
 
   StreamDemuxer(this.streams) {
     _controller = new StreamController<StreamDemuxerEvent<T>>(
-      // TODO(dotdoom): support onPause / onResume.
       onCancel: _onCancel,
       onListen: _onListen,
+      onPause: () => _subscriptions.values.forEach((s) => s.pause()),
+      onResume: () => _subscriptions.values.forEach((s) => s.resume()),
     );
   }
 
@@ -42,7 +43,7 @@ class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
   }
 
   void _onCancel() {
-    _subscriptions.forEach((_, sub) => sub.cancel());
+    _subscriptions.values.forEach((sub) => sub.cancel());
     _controller.close();
   }
 }
