@@ -140,6 +140,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
 
   @override
   void dispose() {
+    super.dispose();
     _events.close();
   }
 }
