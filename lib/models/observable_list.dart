@@ -3,7 +3,6 @@ import 'dart:collection';
 
 import 'package:meta/meta.dart';
 
-import 'lame_list.dart';
 import 'disposable.dart';
 
 enum ListEventType {
@@ -42,9 +41,7 @@ class ListEvent<T> {
       eventType.hashCode ^ index.hashCode ^ previousValue.hashCode;
 }
 
-class ObservableList<T> extends ListBase<T>
-    with LameList<T>
-    implements Disposable {
+class ObservableList<T> extends ListBase<T> implements Disposable {
   ObservableList(this._base);
 
   Stream<ListEvent<T>> get events => _events.stream;
@@ -97,7 +94,6 @@ class ObservableList<T> extends ListBase<T>
     }
   }
 
-  @override
   void move(int index1, int index2) {
     T element;
     if (index1 > index2) {
@@ -130,7 +126,8 @@ class ObservableList<T> extends ListBase<T>
         'conventional methods is not supported. Please use methods instead');
   }
 
-  @override
+  // TODO(dotdoom): move into operator[]= once all internal uses of
+  //                operator[]= (e.g. sort()) are cleared.
   void setAt(int index, T value) {
     T previousValue = _base[index];
     _base[index] = value;

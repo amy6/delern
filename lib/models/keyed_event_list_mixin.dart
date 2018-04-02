@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 
 import 'observable_list.dart';
-import 'lame_list.dart';
 
 abstract class KeyedListItem {
   String get key;
@@ -25,7 +24,7 @@ class KeyedListEvent<T extends KeyedListItem> {
 
 // TODO(dotdoom): kill mixin and make it a class instead, and kill LameList.
 abstract class KeyedEventListMixin<T extends KeyedListItem>
-    implements LameList<T> {
+    implements ObservableList<T> {
   int _indexOfKey(String key) => indexWhere((item) => item.key == key);
 
   void processKeyedEvent(KeyedListEvent<T> event) {
