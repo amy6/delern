@@ -74,9 +74,8 @@ class DecksViewModel implements Disposable {
         deckModels.map((deck) => new DeckViewModel(deck)).toList());
     _deckViewModels.forEach((d) => d.own(_deckViewModels));
 
-    Deck
-        .getDecksEvents(uid)
-        .map((deckEvent) => new KeyedListEvent(
+    _deckViewModels.subscribeToKeyedEvents(
+        Deck.getDecksEvents(uid).map((deckEvent) => new KeyedListEvent(
               eventType: deckEvent.eventType,
               previousSiblingKey: deckEvent.previousSiblingKey,
               // TODO(dotdoom): optimize (creating even for null?)
@@ -87,8 +86,7 @@ class DecksViewModel implements Disposable {
                       : null,
                 ),
               // TODO(dotdoom): KeyedList must manage subscription itself.
-            ))
-        .listen(_deckViewModels.processKeyedEvent);
+            )));
 
     decks = _deckViewModels;
     /*new SortedObservableList<DeckViewModel>(

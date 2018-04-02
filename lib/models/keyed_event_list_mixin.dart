@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 
 import 'observable_list.dart';
@@ -24,8 +26,18 @@ class KeyedListEvent<T extends KeyedListItem> {
 
 abstract class KeyedEventListMixin<T extends KeyedListItem>
     implements ObservableList<T> {
+  StreamSubscription<KeyedListEvent<T>> _subscription;
+
   int _indexOfKey(String key) => indexWhere((item) => item.key == key);
 
+  void subscribeToKeyedEvents(Stream<KeyedListEvent<T>> stream) {
+    if (_subscription != null) {
+      _subscription.cancel();
+    }
+    _subscription = stream.listen(processKeyedEvent);
+  }
+
+  // TODO(dotdoom): this must be private.
   void processKeyedEvent(KeyedListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.added:
@@ -58,5 +70,13 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
             _indexOfKey(event.previousSiblingKey) + 1);
         break;
     }
+  }
+
+  @override
+  void dispose() {
+    if (_subscription != null) {
+      _subscription.cancel();
+    }
+    super.dispose();
   }
 }
