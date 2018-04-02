@@ -9,7 +9,7 @@ final SentryClient _sentry = new SentryClient(
         "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345");
 
 Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
-  print('/!\\ /!\\ /!\\ Caught error in $src: $error /!\\ /!\\ /!\\ ');
+  print('/!\\ /!\\ /!\\ Caught error in $src: $error');
 
   bool sendToServer = true;
   assert(() {

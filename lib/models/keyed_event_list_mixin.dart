@@ -36,11 +36,12 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
         var index = _indexOfKey(event.value.key);
         if (index < 0) {
           insert(_indexOfKey(event.previousSiblingKey) + 1, event.value);
-        } else {
-          assert(this[index].key == event.value.key);
+        }
+        /* TODO(dotdoom): fix (order issues?) or remove this assert
+        else {
           assert((index == 0 && event.previousSiblingKey == null) ||
               (this[index - 1].key == event.previousSiblingKey));
-        }
+        }*/
         break;
       case ListEventType.removed:
         removeAt(_indexOfKey(event.value.key));
