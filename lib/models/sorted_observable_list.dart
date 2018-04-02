@@ -1,14 +1,15 @@
-import 'disposable.dart';
+import 'dart:async';
+
 import 'observable_list.dart';
 
 // TODO(dotdoom): make this list read-only.
-// TODO(dotdoom): cancel subscription on dispose().
-class SortedObservableList<T> extends ObservableList<T> implements Disposable {
+class SortedObservableList<T> extends ObservableList<T> {
   final ObservableList<T> _base;
+  StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Comparator<T> _comparator;
 
   SortedObservableList(this._base) : super(_base.toList()) {
-    _base.events.listen((event) {
+    _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.moved:
           break;
@@ -54,5 +55,11 @@ class SortedObservableList<T> extends ObservableList<T> implements Disposable {
 
     List<T> sorted = _base.toList()..sort(_comparator);
     addAll(sorted);
+  }
+
+  @override
+  void dispose() {
+    _baseEventsSubscription.cancel();
+    super.dispose();
   }
 }

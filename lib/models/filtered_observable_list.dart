@@ -1,17 +1,17 @@
-import 'disposable.dart';
+import 'dart:async';
+
 import 'observable_list.dart';
 
 typedef bool Filter<T>(T item);
 
 // TODO(dotdoom): make this list read-only.
-// TODO(dotdoom): cancel subscription on dispose().
-class FilteredObservableList<T> extends ObservableList<T>
-    implements Disposable {
+class FilteredObservableList<T> extends ObservableList<T> {
   final ObservableList<T> _base;
+  StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Filter<T> _filter;
 
   FilteredObservableList(this._base) : super(_base.toList()) {
-    _base.events.listen((event) {
+    _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.added:
           var item = _base[event.index];
@@ -69,5 +69,11 @@ class FilteredObservableList<T> extends ObservableList<T>
         removeAt(indexOf(x));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _baseEventsSubscription.cancel();
+    super.dispose();
   }
 }
