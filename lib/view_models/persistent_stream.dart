@@ -31,7 +31,8 @@ class PersistentStream<T> extends Stream<T> {
       // well into a separate method.
       onListen: _onListen,
       onCancel: _onCancel,
-      // TODO(dotdoom): add onPause / onResume.
+      onPause: _sourceSubscription.pause,
+      onResume: _sourceSubscription.resume,
     );
 
     return _controller.stream.listen(onData,
