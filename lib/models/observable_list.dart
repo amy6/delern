@@ -131,7 +131,7 @@ class ObservableList<T> extends ListBase<T>
   }
 
   @override
-  void set(int index, T value) {
+  void setAt(int index, T value) {
     T previousValue = _base[index];
     _base[index] = value;
     _events.add(new ListEvent(

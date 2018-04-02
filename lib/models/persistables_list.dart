@@ -9,8 +9,8 @@ class PersistablesList<T extends Persistable<T>> extends ObservableList<T> {
   PersistablesList(List<T> base) : super(base);
 
   @override
-  void set(int index, T value) {
-    super.set(index, this[index].absorb(value));
+  void setAt(int index, T value) {
+    super.setAt(index, this[index].absorb(value));
   }
 
   @override

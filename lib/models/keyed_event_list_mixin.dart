@@ -34,8 +34,13 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
         // With Firebase, we subscribe to onValue, which delivers all data,
         // and then onChild* events, which are also initially delivered for
         // every child. We must therefore skip keys that we already got.
-        if (_indexOfKey(event.value.key) < 0) {
+        var index = _indexOfKey(event.value.key);
+        if (index < 0) {
           insert(_indexOfKey(event.previousSiblingKey) + 1, event.value);
+        } else {
+          assert(this[index].key == event.value.key);
+          assert((index == 0 && event.previousSiblingKey == null) ||
+              (this[index - 1].key == event.previousSiblingKey));
         }
         break;
       case ListEventType.removed:
@@ -46,7 +51,7 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
         // listeners. E.g. "remove(X)", "change(X, null)". We should ignore it.
         var index = _indexOfKey(event.value.key);
         if (index >= 0) {
-          set(_indexOfKey(event.value.key), event.value);
+          setAt(_indexOfKey(event.value.key), event.value);
         }
         break;
       case ListEventType.moved:
