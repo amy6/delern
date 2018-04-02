@@ -5,9 +5,8 @@ abstract class Persistable<T> extends Disposable {
   T absorb(T value);
 }
 
-class PersistablesList<T extends Persistable<T>> extends ObservableList<T> {
-  PersistablesList(List<T> base) : super(base);
-
+abstract class PersistablesListMixin<T extends Persistable<T>>
+    implements ObservableList<T> {
   @override
   void setAt(int index, T value) {
     super.setAt(index, this[index].absorb(value));
@@ -18,4 +17,9 @@ class PersistablesList<T extends Persistable<T>> extends ObservableList<T> {
     this[index].dispose();
     return super.removeAt(index);
   }
+}
+
+class PersistablesList<T extends Persistable<T>> extends ObservableList<T>
+    with PersistablesListMixin<T> {
+  PersistablesList(List<T> base) : super(base);
 }
