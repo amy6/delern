@@ -36,9 +36,9 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
   }
 
   void own(owner) {
-    if (owner == null) {
-      // Shortcut.
-      // TODO(dotdoom): poor design.
+    if (_internalUpdates != null) {
+      // We are already owned - can assert that the owner is the same.
+      // This must normally be only a side effect of absorb().
       return;
     }
 
@@ -69,7 +69,6 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
     if (_internalUpdates != null) {
       _internalUpdates.cancel();
     }
-    super.dispose();
   }
 }
 
@@ -77,36 +76,24 @@ class DecksViewModel implements Disposable {
   PersistableKeyedItemsList<DeckViewModel> _deckViewModels;
   StreamSubscription<KeyedListEvent<DeckViewModel>> _sub;
 
-  ObservableList<DeckViewModel> decks;
+  // TODO(dotdoom): sort / filter
+  ObservableList<DeckViewModel> get decks => _deckViewModels;
 
   DecksViewModel(Iterable<Deck> deckModels, String uid) {
     _deckViewModels = new PersistableKeyedItemsList<DeckViewModel>(
         deckModels.map((deck) => new DeckViewModel(deck)).toList());
+
+    // TODO(dotdoom): this must have be done by PersistableKeyedItemsList.
     _deckViewModels.forEach((d) => d.own(_deckViewModels));
 
     _deckViewModels
         .subscribeToKeyedEvents(Deck.getDecksEvents(uid).map((deckEvent) {
-      DeckViewModel model;
-      if (deckEvent.eventType == ListEventType.added ||
-          deckEvent.eventType == ListEventType.changed) {
-        model = new DeckViewModel(deckEvent.value);
-        if (deckEvent.eventType == ListEventType.added) {
-          model.own(_deckViewModels);
-        }
-      }
       return new KeyedListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
-        // TODO(dotdoom): optimize (creating even for null?)
-        value: model,
+        value: new DeckViewModel(deckEvent.value),
       );
     }));
-
-    decks = _deckViewModels;
-    /*new SortedObservableList<DeckViewModel>(
-    new FilteredObservableList<DeckViewModel>(_deckViewModels)
-      ..filter = (d) => d.cardsToLearn != null)
-    ..comparator = (d1, d2) => d2.name.compareTo(d1.name);*/
   }
 
   static Future<DecksViewModel> getDecks(String uid) async {
