@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import '../models/deck.dart';
-
-import 'package:delern/models/stream_demuxer.dart';
+import '../models/stream_demuxer.dart';
 import '../models/disposable.dart';
 import '../models/observable_list.dart';
-import '../models/persistables_list.dart';
 import '../models/keyed_event_list_mixin.dart';
+import 'view_model.dart';
 
-class DeckViewModel implements Persistable<DeckViewModel>, KeyedListItem {
+class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
   final String key;
   String name;
   String access;
@@ -65,13 +64,13 @@ class DeckViewModel implements Persistable<DeckViewModel>, KeyedListItem {
 }
 
 class DecksViewModel implements Disposable {
-  KeyedObservableList<DeckViewModel> _deckViewModels;
+  PersistableKeyedItemsList<DeckViewModel> _deckViewModels;
   StreamSubscription<KeyedListEvent<DeckViewModel>> _sub;
 
   ObservableList<DeckViewModel> decks;
 
   DecksViewModel(Iterable<Deck> deckModels, String uid) {
-    _deckViewModels = new KeyedObservableList<DeckViewModel>(
+    _deckViewModels = new PersistableKeyedItemsList<DeckViewModel>(
         deckModels.map((deck) => new DeckViewModel(deck)).toList());
     _deckViewModels.forEach((d) => d.own(_deckViewModels));
 

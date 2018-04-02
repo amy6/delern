@@ -22,7 +22,6 @@ class KeyedListEvent<T extends KeyedListItem> {
   }
 }
 
-// TODO(dotdoom): kill mixin and make it a class instead, and kill LameList.
 abstract class KeyedEventListMixin<T extends KeyedListItem>
     implements ObservableList<T> {
   int _indexOfKey(String key) => indexWhere((item) => item.key == key);
@@ -60,9 +59,4 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
         break;
     }
   }
-}
-
-class KeyedObservableList<T extends KeyedListItem> extends ObservableList<T>
-    with KeyedEventListMixin<T> {
-  KeyedObservableList(List<T> base) : super(base);
 }

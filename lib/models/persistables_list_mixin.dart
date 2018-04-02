@@ -18,8 +18,3 @@ abstract class PersistablesListMixin<T extends Persistable<T>>
     return super.removeAt(index);
   }
 }
-
-class PersistablesList<T extends Persistable<T>> extends ObservableList<T>
-    with PersistablesListMixin<T> {
-  PersistablesList(List<T> base) : super(base);
-}
