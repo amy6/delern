@@ -15,7 +15,7 @@ class KeyedListEvent<T extends KeyedListItem> {
 
   KeyedListEvent({
     @required this.eventType,
-    @required this.previousSiblingKey,
+    this.previousSiblingKey,
     this.value,
   });
 
@@ -59,7 +59,8 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
         break;
       case ListEventType.changed:
         // With Firebase, some events may be delivered twice - by different
-        // listeners. E.g. "remove(X)", "change(X, null)". We should ignore it.
+        // listeners. E.g. "remove(X)" then "change(X, null)", in which case
+        // the item will no longer exist by the time "change" arrives.
         var index = _indexOfKey(event.value.key);
         if (index >= 0) {
           setAt(_indexOfKey(event.value.key), event.value);

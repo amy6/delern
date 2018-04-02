@@ -10,7 +10,7 @@ class StreamDemuxerEvent<T> {
 class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
   final Map<T, Stream> streams;
 
-  StreamController<StreamDemuxerEvent> _controller;
+  StreamController<StreamDemuxerEvent<T>> _controller;
   Map<T, StreamSubscription> _subscriptions;
 
   StreamDemuxer(this.streams) {

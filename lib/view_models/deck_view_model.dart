@@ -8,39 +8,31 @@ import '../models/keyed_event_list_mixin.dart';
 import 'view_model.dart';
 
 class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
-  final String key;
-  String name;
-  String access;
-  int cardsToLearn;
-  Deck deck;
+  String get key => _deck.key;
+  Deck get deck => _deck;
+  String get name => _deck.name;
+  String get access => _access;
+  int get cardsToLearn => _cardsToLearn;
 
-  StreamSubscription<DeckViewModel> _subscription;
+  Deck _deck;
+  String _access;
+  int _cardsToLearn;
 
-  DeckViewModel.forStream(
-      DeckViewModel model, StreamDemuxerEvent<String> update)
-      : key = model.key,
-        name = model.name,
-        access = update.stream == 'access' ? update.value : null,
-        cardsToLearn = update.stream == 'cardsToLearn' ? update.value : null;
+  StreamSubscription<StreamDemuxerEvent<String>> _internalUpdates;
 
-  DeckViewModel(this.deck)
-      : key = deck?.key,
-        name = deck?.name;
+  DeckViewModel(this._deck);
 
   @override
   DeckViewModel absorb(DeckViewModel value) {
-    // TODO(dotdoom): duplicating efforts?
-    name = value.name ?? name;
-    cardsToLearn = value.cardsToLearn ?? cardsToLearn;
-    access = value.access ?? access;
-    return this;
-  }
-
-  @override
-  void dispose() {
-    if (_subscription != null) {
-      _subscription.cancel();
+    if (this == value) {
+      // This will happen when we sent an internal update event to the owner.
+      return this;
     }
+
+    assert(_deck.key == value._deck.key,
+        'Attempting to absorb a deck with a different key');
+    _deck = value._deck;
+    return this;
   }
 
   void own(owner) {
@@ -50,16 +42,34 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
       return;
     }
 
-    // TODO(dotdoom): why sending item to owner (list) just to get it back?
-    _subscription = new StreamDemuxer<String>({
+    _internalUpdates = new StreamDemuxer<String>({
       'access': deck.getAccess(),
       'cardsToLearn': deck.getNumberOfCardsToLearn(),
-    }).map((evt) => new DeckViewModel.forStream(this, evt)).listen(
-        (dvm) => owner.processKeyedEvent(new KeyedListEvent<DeckViewModel>(
-              eventType: ListEventType.changed,
-              value: dvm,
-              previousSiblingKey: null,
-            )));
+    }).listen((event) {
+      switch (event.stream) {
+        case 'access':
+          this._access = event.value;
+          break;
+        case 'cardsToLearn':
+          this._cardsToLearn = event.value;
+          break;
+      }
+      // Send event to the owner list so that it can find our index
+      // and notify subscribers.
+      (owner as KeyedEventListMixin<DeckViewModel>)
+          .processKeyedEvent(new KeyedListEvent<DeckViewModel>(
+        eventType: ListEventType.changed,
+        value: this,
+      ));
+    });
+  }
+
+  @override
+  void dispose() {
+    if (_internalUpdates != null) {
+      _internalUpdates.cancel();
+    }
+    super.dispose();
   }
 }
 
@@ -74,19 +84,23 @@ class DecksViewModel implements Disposable {
         deckModels.map((deck) => new DeckViewModel(deck)).toList());
     _deckViewModels.forEach((d) => d.own(_deckViewModels));
 
-    _deckViewModels.subscribeToKeyedEvents(
-        Deck.getDecksEvents(uid).map((deckEvent) => new KeyedListEvent(
-              eventType: deckEvent.eventType,
-              previousSiblingKey: deckEvent.previousSiblingKey,
-              // TODO(dotdoom): optimize (creating even for null?)
-              value: new DeckViewModel(deckEvent.value)
-                ..own(
-                  deckEvent.eventType == ListEventType.added
-                      ? _deckViewModels
-                      : null,
-                ),
-              // TODO(dotdoom): KeyedList must manage subscription itself.
-            )));
+    _deckViewModels
+        .subscribeToKeyedEvents(Deck.getDecksEvents(uid).map((deckEvent) {
+      DeckViewModel model;
+      if (deckEvent.eventType == ListEventType.added ||
+          deckEvent.eventType == ListEventType.changed) {
+        model = new DeckViewModel(deckEvent.value);
+        if (deckEvent.eventType == ListEventType.added) {
+          model.own(_deckViewModels);
+        }
+      }
+      return new KeyedListEvent(
+        eventType: deckEvent.eventType,
+        previousSiblingKey: deckEvent.previousSiblingKey,
+        // TODO(dotdoom): optimize (creating even for null?)
+        value: model,
+      );
+    }));
 
     decks = _deckViewModels;
     /*new SortedObservableList<DeckViewModel>(
