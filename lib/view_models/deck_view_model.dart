@@ -83,7 +83,7 @@ class DecksViewModel implements Disposable {
     _deckViewModels = new PersistableKeyedItemsList<DeckViewModel>(
         deckModels.map((deck) => new DeckViewModel(deck)).toList());
 
-    // TODO(dotdoom): this must have be done by PersistableKeyedItemsList.
+    // TODO(dotdoom): this must be done by PersistableKeyedItemsList.
     _deckViewModels.forEach((d) => d.own(_deckViewModels));
 
     _deckViewModels
