@@ -12,11 +12,13 @@ class KeyedListEvent<T extends KeyedListItem> {
   final ListEventType eventType;
   final T value;
   final String previousSiblingKey;
+  final Iterable<T> fullListValueForSet;
 
   KeyedListEvent({
     @required this.eventType,
     this.previousSiblingKey,
     this.value,
+    this.fullListValueForSet,
   });
 
   String toString() {
@@ -67,6 +69,9 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
       case ListEventType.itemMoved:
         move(_indexOfKey(event.value.key),
             _indexOfKey(event.previousSiblingKey) + 1);
+        break;
+      case ListEventType.set:
+        setAll(0, event.fullListValueForSet);
         break;
     }
   }

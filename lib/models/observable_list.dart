@@ -10,7 +10,7 @@ enum ListEventType {
   itemRemoved,
   itemMoved,
   itemChanged,
-  // TODO(dotdoom): set? (and do not pass List into constructor).
+  set,
 }
 
 class ListEvent<T> {
@@ -42,16 +42,20 @@ class ListEvent<T> {
 }
 
 class ObservableList<T> extends ListBase<T> implements Disposable {
+  // TODO(dotdoom): do not pass List into constructor
   ObservableList(this._base);
 
   Stream<ListEvent<T>> get events => _events.stream;
 
   int get length => _base.length;
 
-  List<T> _base;
+  bool get changed => _changed;
+
+  final List<T> _base;
   // TODO(dotdoom): investigate side effects of sync:true.
   StreamController<ListEvent<T>> _events =
       new StreamController<ListEvent<T>>.broadcast(sync: true);
+  bool _changed = false;
 
   T operator [](int index) {
     return _base[index];
@@ -70,6 +74,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   @override
   T removeAt(int index) {
     T value = _base.removeAt(index);
+    _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemRemoved,
       index: index,
@@ -81,6 +86,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   @override
   void insert(int index, T element) {
     _base.insert(index, element);
+    _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemAdded,
       index: index,
@@ -104,9 +110,20 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
       _base.insert(index2 + 1, element);
       _base.removeAt(index1);
     }
+    _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemMoved,
       index: index1,
+    ));
+  }
+
+  @override
+  void setAll(int index, Iterable<T> newValue) {
+    _base.setAll(index, newValue);
+    _changed = true;
+    _events.add(new ListEvent(
+      eventType: ListEventType.set,
+      index: index,
     ));
   }
 
@@ -131,6 +148,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   void setAt(int index, T value) {
     T previousValue = _base[index];
     _base[index] = value;
+    _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemChanged,
       index: index,

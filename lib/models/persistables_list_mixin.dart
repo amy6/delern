@@ -3,11 +3,23 @@ import 'observable_list.dart';
 
 abstract class Persistable<T> extends Disposable {
   T absorb(T value);
+  // TODO(dotdoom): move own() into Disposable?
   void own(PersistablesListMixin owner);
 }
 
 abstract class PersistablesListMixin<T extends Persistable<T>>
     implements ObservableList<T> {
+  @override
+  void setAll(int index, Iterable<T> newValue) {
+    if (changed) {
+      throw new UnsupportedError('setAll can only be called once');
+    }
+    if (index != 0) {
+      throw new UnsupportedError('setAll can only set at index 0');
+    }
+    super.setAll(index, newValue);
+  }
+
   @override
   void setAt(int index, T value) {
     super.setAt(index, this[index].absorb(value)..own(this));

@@ -44,31 +44,24 @@ class FilteredObservableList<T> extends ObservableList<T> {
             }
           }
           break;
+        case ListEventType.set:
+          _refilter();
+          break;
       }
     });
   }
 
   set filter(final Filter<T> value) {
     _filter = value;
-    var toRemove = [];
-    _base.forEach((item) {
-      if (indexOf(item) == -1) {
-        // TODO(dotdoom): duplicates in the list are not handled.
-        if (_filter == null || _filter(item)) {
-          add(item);
-        }
-      }
-      if (_filter != null && !_filter(item)) {
-        toRemove.add(item);
-      }
-    });
+    _refilter();
+  }
 
-    toRemove.forEach((x) {
-      int index = indexOf(x);
-      if (index != -1) {
-        removeAt(indexOf(x));
-      }
-    });
+  void _refilter() {
+    if (_filter == null) {
+      setAll(0, _base);
+    } else {
+      setAll(0, _base.where(_filter));
+    }
   }
 
   @override

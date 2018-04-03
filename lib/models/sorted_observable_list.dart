@@ -38,6 +38,9 @@ class SortedObservableList<T> extends ObservableList<T> {
           _resort();
           // TODO(stazis): optimize that case
           break;
+        case ListEventType.set:
+          _resort();
+          break;
       }
     });
   }
@@ -48,13 +51,7 @@ class SortedObservableList<T> extends ObservableList<T> {
   }
 
   void _resort() {
-    // TODO(dotdoom): optimize.
-    while (length > 0) {
-      removeAt(0);
-    }
-
-    List<T> sorted = _base.toList()..sort(_comparator);
-    addAll(sorted);
+    setAll(0, new List<T>.from(_base)..sort(_comparator));
   }
 
   @override

@@ -66,9 +66,8 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
         );
         break;
       case ListEventType.itemChanged:
-        setState(() {});
-        break;
       case ListEventType.itemMoved:
+      case ListEventType.set:
         setState(() {});
         break;
     }
