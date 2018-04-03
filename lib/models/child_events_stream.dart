@@ -10,10 +10,10 @@ import 'stream_demuxer.dart';
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
     Query query, T snapshotParser(DataSnapshot s)) {
   return new StreamDemuxer<ListEventType>({
-    ListEventType.added: query.onChildAdded,
-    ListEventType.removed: query.onChildRemoved,
-    ListEventType.moved: query.onChildMoved,
-    ListEventType.changed: query.onChildChanged,
+    ListEventType.itemAdded: query.onChildAdded,
+    ListEventType.itemRemoved: query.onChildRemoved,
+    ListEventType.itemMoved: query.onChildMoved,
+    ListEventType.itemChanged: query.onChildChanged,
   }).map((demuxerEvent) {
     Event dbEvent = demuxerEvent.value;
     return new KeyedListEvent(

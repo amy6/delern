@@ -51,11 +51,11 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   void _onListEvent(ListEvent<T> event) {
     switch (event.eventType) {
-      case ListEventType.added:
+      case ListEventType.itemAdded:
         _animatedListKey.currentState.insertItem(event.index,
             duration: const Duration(milliseconds: 300));
         break;
-      case ListEventType.removed:
+      case ListEventType.itemRemoved:
         _animatedListKey.currentState.removeItem(
           event.index,
           (BuildContext context, Animation<double> animation) {
@@ -65,10 +65,10 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
           duration: const Duration(milliseconds: 300),
         );
         break;
-      case ListEventType.changed:
+      case ListEventType.itemChanged:
         setState(() {});
         break;
-      case ListEventType.moved:
+      case ListEventType.itemMoved:
         setState(() {});
         break;
     }

@@ -40,7 +40,7 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
   // TODO(dotdoom): this must be private.
   void processKeyedEvent(KeyedListEvent<T> event) {
     switch (event.eventType) {
-      case ListEventType.added:
+      case ListEventType.itemAdded:
         // With Firebase, we subscribe to onValue, which delivers all data,
         // and then onChild* events, which are also initially delivered for
         // every child. We must therefore skip keys that we already got.
@@ -52,10 +52,10 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
               _indexOfKey(event.previousSiblingKey) >= 0);
         }
         break;
-      case ListEventType.removed:
+      case ListEventType.itemRemoved:
         removeAt(_indexOfKey(event.value.key));
         break;
-      case ListEventType.changed:
+      case ListEventType.itemChanged:
         // With Firebase, some events may be delivered twice - by different
         // listeners. E.g. "remove(X)" then "change(X, null)", in which case
         // the item will no longer exist by the time "change" arrives.
@@ -64,7 +64,7 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
           setAt(_indexOfKey(event.value.key), event.value);
         }
         break;
-      case ListEventType.moved:
+      case ListEventType.itemMoved:
         move(_indexOfKey(event.value.key),
             _indexOfKey(event.previousSiblingKey) + 1);
         break;

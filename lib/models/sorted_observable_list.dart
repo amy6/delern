@@ -11,16 +11,16 @@ class SortedObservableList<T> extends ObservableList<T> {
   SortedObservableList(this._base) : super(_base.toList()) {
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
-        case ListEventType.moved:
+        case ListEventType.itemMoved:
           break;
-        case ListEventType.removed:
+        case ListEventType.itemRemoved:
           if (_comparator == null) {
             super.removeAt(event.index);
           } else {
             super.removeAt(indexOf(event.previousValue));
           }
           break;
-        case ListEventType.added:
+        case ListEventType.itemAdded:
           if (_comparator == null) {
             super.insert(event.index, _base[event.index]);
           } else {
@@ -34,7 +34,7 @@ class SortedObservableList<T> extends ObservableList<T> {
             super.insert(index, item);
           }
           break;
-        case ListEventType.changed:
+        case ListEventType.itemChanged:
           _resort();
           // TODO(stazis): optimize that case
           break;

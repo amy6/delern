@@ -58,7 +58,7 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
       // and notify subscribers.
       (owner as KeyedEventListMixin<DeckViewModel>)
           .processKeyedEvent(new KeyedListEvent<DeckViewModel>(
-        eventType: ListEventType.changed,
+        eventType: ListEventType.itemChanged,
         value: this,
       ));
     });

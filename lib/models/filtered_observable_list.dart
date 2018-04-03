@@ -13,21 +13,21 @@ class FilteredObservableList<T> extends ObservableList<T> {
   FilteredObservableList(this._base) : super(_base.toList()) {
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
-        case ListEventType.added:
+        case ListEventType.itemAdded:
           var item = _base[event.index];
           if (_filter == null || _filter(item)) {
             super.add(item);
           }
           break;
-        case ListEventType.removed:
+        case ListEventType.itemRemoved:
           var index = indexOf(event.previousValue);
           if (index >= 0) {
             super.removeAt(index);
           }
           break;
-        case ListEventType.moved:
+        case ListEventType.itemMoved:
           break;
-        case ListEventType.changed:
+        case ListEventType.itemChanged:
           var item = _base[event.index];
           if (_filter == null || _filter(item)) {
             // TODO(dotdoom): what if we have non-unique items in the list?

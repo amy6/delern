@@ -6,10 +6,10 @@ import 'package:meta/meta.dart';
 import 'disposable.dart';
 
 enum ListEventType {
-  added,
-  removed,
-  moved,
-  changed,
+  itemAdded,
+  itemRemoved,
+  itemMoved,
+  itemChanged,
   // TODO(dotdoom): set? (and do not pass List into constructor).
 }
 
@@ -71,7 +71,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   T removeAt(int index) {
     T value = _base.removeAt(index);
     _events.add(new ListEvent(
-      eventType: ListEventType.removed,
+      eventType: ListEventType.itemRemoved,
       index: index,
       previousValue: value,
     ));
@@ -82,7 +82,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   void insert(int index, T element) {
     _base.insert(index, element);
     _events.add(new ListEvent(
-      eventType: ListEventType.added,
+      eventType: ListEventType.itemAdded,
       index: index,
     ));
   }
@@ -105,7 +105,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
       _base.removeAt(index1);
     }
     _events.add(new ListEvent(
-      eventType: ListEventType.moved,
+      eventType: ListEventType.itemMoved,
       index: index1,
     ));
   }
@@ -132,7 +132,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
     T previousValue = _base[index];
     _base[index] = value;
     _events.add(new ListEvent(
-      eventType: ListEventType.changed,
+      eventType: ListEventType.itemChanged,
       index: index,
       previousValue: previousValue,
     ));
