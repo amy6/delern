@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../view_models/deck_view_model.dart';
@@ -7,7 +5,7 @@ import 'vm_view.dart';
 import 'observing_animated_list.dart';
 
 class DecksWidget extends VMViewWidget<DecksViewModel> {
-  DecksWidget(Future<DecksViewModel> s) : super(s);
+  DecksWidget(DecksViewModel s) : super(s);
 
   @override
   _DecksWidgetState createState() => new _DecksWidgetState();
@@ -16,10 +14,6 @@ class DecksWidget extends VMViewWidget<DecksViewModel> {
 class _DecksWidgetState extends VMViewState<DecksViewModel, DecksWidget> {
   @override
   Widget build(BuildContext context) {
-    if (model == null) {
-      return new Center(child: new CircularProgressIndicator());
-    }
-
     return new ObservingAnimatedList(
       list: model.decks,
       itemBuilder: (context, item, animation, index) => new SizeTransition(

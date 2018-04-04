@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: appBar,
       drawer: new NavigationDrawer(user, signOutUser),
-      body: new DecksWidget(DecksViewModel.getDecks(user.uid)),
+      body: new DecksWidget(new DecksViewModel(user.uid)),
       floatingActionButton: new CreateDeck(user),
     );
   }

@@ -80,6 +80,12 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.list.changed) {
+      return new Center(child: new CircularProgressIndicator());
+    }
+
+    // TODO(ksheremet): for an empty list, return 'Add your decks'
+
     return new AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,

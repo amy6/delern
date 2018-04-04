@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'keyed_event_list_mixin.dart';
 import 'child_events_stream.dart';
+import 'observable_list.dart';
 
 class Deck implements KeyedListItem {
   final String key;
@@ -14,28 +15,28 @@ class Deck implements KeyedListItem {
   Deck.fromSnapshot(this.key, dynamic snapshotValue, this.uid)
       : name = snapshotValue['name'];
 
-  static Stream<Iterable<Deck>> getDecks(String uid) => FirebaseDatabase
-      .instance
-      .reference()
-      .child('decks')
-      .child(uid)
-      .orderByKey()
-      .onValue
-      .map((evt) => (evt.snapshot.value as Map)
-          .entries
-          .map((entry) => new Deck.fromSnapshot(entry.key, entry.value, uid)));
-
-  // TODO(dotdoom): merge both getDecks and getDecksEvents into a single call?
-  static Stream<KeyedListEvent<Deck>> getDecksEvents(
-          String uid) =>
-      childEventsStream(
-          FirebaseDatabase.instance
-              .reference()
-              .child('decks')
-              .child(uid)
-              .orderByKey(),
-          (snapshot) =>
-              new Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
+  static Stream<KeyedListEvent<Deck>> getDecks(String uid) async* {
+    yield new KeyedListEvent(
+        eventType: ListEventType.set,
+        fullListValueForSet: ((await FirebaseDatabase.instance
+                    .reference()
+                    .child('decks')
+                    .child(uid)
+                    .orderByKey()
+                    .onValue
+                    .first)
+                .snapshot
+                .value as Map)
+            .entries
+            .map((item) => new Deck.fromSnapshot(item.key, item.value, uid)));
+    yield* childEventsStream(
+        FirebaseDatabase.instance
+            .reference()
+            .child('decks')
+            .child(uid)
+            .orderByKey(),
+        (snapshot) => new Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
+  }
 
   Stream<String> getAccess() => FirebaseDatabase.instance
       .reference()

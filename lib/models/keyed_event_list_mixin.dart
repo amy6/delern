@@ -71,7 +71,7 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
             _indexOfKey(event.previousSiblingKey) + 1);
         break;
       case ListEventType.set:
-        setAll(0, event.fullListValueForSet);
+        setAll(0, event.fullListValueForSet ?? []);
         break;
     }
   }

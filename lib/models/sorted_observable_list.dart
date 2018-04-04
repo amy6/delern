@@ -8,7 +8,7 @@ class SortedObservableList<T> extends ObservableList<T> {
   StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Comparator<T> _comparator;
 
-  SortedObservableList(this._base) : super(_base.toList()) {
+  SortedObservableList(this._base) {
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.itemMoved:

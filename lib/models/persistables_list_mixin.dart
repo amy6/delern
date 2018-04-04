@@ -12,12 +12,13 @@ abstract class PersistablesListMixin<T extends Persistable<T>>
   @override
   void setAll(int index, Iterable<T> newValue) {
     if (changed) {
+      // TODO(dotdoom): support this case for widget's resume.
       throw new UnsupportedError('setAll can only be called once');
     }
     if (index != 0) {
       throw new UnsupportedError('setAll can only set at index 0');
     }
-    super.setAll(index, newValue);
+    super.setAll(index, newValue..forEach((e) => e.own(this)));
   }
 
   @override
@@ -34,5 +35,11 @@ abstract class PersistablesListMixin<T extends Persistable<T>>
   T removeAt(int index) {
     this[index].dispose();
     return super.removeAt(index);
+  }
+
+  @override
+  void dispose() {
+    forEach((item) => item.dispose());
+    super.dispose();
   }
 }

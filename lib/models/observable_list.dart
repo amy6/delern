@@ -42,16 +42,13 @@ class ListEvent<T> {
 }
 
 class ObservableList<T> extends ListBase<T> implements Disposable {
-  // TODO(dotdoom): do not pass List into constructor
-  ObservableList(this._base);
-
   Stream<ListEvent<T>> get events => _events.stream;
 
   int get length => _base.length;
 
   bool get changed => _changed;
 
-  final List<T> _base;
+  final List<T> _base = new List<T>();
   // TODO(dotdoom): investigate side effects of sync:true.
   StreamController<ListEvent<T>> _events =
       new StreamController<ListEvent<T>>.broadcast(sync: true);
@@ -119,6 +116,8 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
 
   @override
   void setAll(int index, Iterable<T> newValue) {
+    // TODO(dotdoom): perhaps overload addAll instead.
+    _base.length = index + newValue.length;
     _base.setAll(index, newValue);
     _changed = true;
     _events.add(new ListEvent(

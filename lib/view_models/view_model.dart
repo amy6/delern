@@ -7,6 +7,4 @@ abstract class PersistableKeyedItem<T>
 
 class PersistableKeyedItemsList<T extends PersistableKeyedItem<T>>
     extends ObservableList<T>
-    with PersistablesListMixin<T>, KeyedEventListMixin<T> {
-  PersistableKeyedItemsList(List<T> base) : super(base);
-}
+    with PersistablesListMixin<T>, KeyedEventListMixin<T> {}

@@ -4,7 +4,7 @@ import '../lib/models/observable_list.dart';
 
 void main() {
   test('observable list', () {
-    var list = new ObservableList(<int>[]);
+    var list = new ObservableList<int>();
     list.add(42);
     list.insert(0, 17);
     list.insert(2, -1);

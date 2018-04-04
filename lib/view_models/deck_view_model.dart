@@ -37,7 +37,7 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
 
   void own(owner) {
     if (_internalUpdates != null) {
-      // We are already owned - can assert that the owner is the same.
+      // This item is already owned - can assert that the owner is the same.
       // This must normally be only a side effect of absorb().
       return;
     }
@@ -73,31 +73,23 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
 }
 
 class DecksViewModel implements Disposable {
-  PersistableKeyedItemsList<DeckViewModel> _deckViewModels;
+  PersistableKeyedItemsList<DeckViewModel> _deckViewModels =
+      new PersistableKeyedItemsList<DeckViewModel>();
   StreamSubscription<KeyedListEvent<DeckViewModel>> _sub;
 
   // TODO(dotdoom): sort / filter
   ObservableList<DeckViewModel> get decks => _deckViewModels;
 
-  DecksViewModel(Iterable<Deck> deckModels, String uid) {
-    _deckViewModels = new PersistableKeyedItemsList<DeckViewModel>(
-        deckModels.map((deck) => new DeckViewModel(deck)).toList());
-
-    // TODO(dotdoom): this must be done by PersistableKeyedItemsList.
-    _deckViewModels.forEach((d) => d.own(_deckViewModels));
-
-    _deckViewModels
-        .subscribeToKeyedEvents(Deck.getDecksEvents(uid).map((deckEvent) {
+  DecksViewModel(String uid) {
+    _deckViewModels.subscribeToKeyedEvents(Deck.getDecks(uid).map((deckEvent) {
       return new KeyedListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
         value: new DeckViewModel(deckEvent.value),
+        fullListValueForSet: deckEvent.fullListValueForSet
+            ?.map((deck) => new DeckViewModel(deck)),
       );
     }));
-  }
-
-  static Future<DecksViewModel> getDecks(String uid) async {
-    return new DecksViewModel(await Deck.getDecks(uid).first, uid);
   }
 
   @override

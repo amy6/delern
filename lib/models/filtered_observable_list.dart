@@ -10,7 +10,7 @@ class FilteredObservableList<T> extends ObservableList<T> {
   StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Filter<T> _filter;
 
-  FilteredObservableList(this._base) : super(_base.toList()) {
+  FilteredObservableList(this._base) {
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.itemAdded:
