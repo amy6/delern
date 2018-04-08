@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-abstract class Disposable<T> {
+abstract class Attachable<T> {
   @mustCallSuper
   void detach();
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../models/deck.dart';
 import '../models/stream_demuxer.dart';
-import '../models/disposable.dart';
+import '../models/attachable.dart';
 import '../models/observable_list.dart';
 import '../models/keyed_event_list_mixin.dart';
 import 'view_model.dart';
@@ -72,7 +72,7 @@ class DeckViewModel
   }
 }
 
-class DecksViewModel implements Disposable<String> {
+class DecksViewModel implements Attachable<String> {
   PersistableKeyedItemsList<DeckViewModel> _deckViewModels =
       new PersistableKeyedItemsList<DeckViewModel>();
 

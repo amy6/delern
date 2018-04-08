@@ -3,7 +3,7 @@ import 'dart:collection';
 
 import 'package:meta/meta.dart';
 
-import 'disposable.dart';
+import 'attachable.dart';
 
 enum ListEventType {
   itemAdded,
@@ -41,7 +41,7 @@ class ListEvent<T> {
       eventType.hashCode ^ index.hashCode ^ previousValue.hashCode;
 }
 
-class ObservableList<T> extends ListBase<T> implements Disposable {
+class ObservableList<T> extends ListBase<T> implements Attachable {
   Stream<ListEvent<T>> get events => _events.stream;
 
   int get length => _base.length;

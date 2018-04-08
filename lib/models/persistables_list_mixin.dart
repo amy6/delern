@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
-import 'disposable.dart';
+import 'attachable.dart';
 import 'observable_list.dart';
 
-abstract class Persistable<T> extends Disposable<T> {
+abstract class Persistable<T> extends Attachable<T> {
   Persistable<T> absorb(@checked Persistable<T> value);
 }
 
