@@ -18,7 +18,7 @@ class _DecksWidgetState extends State<DecksWidget> {
 
   @override
   void didChangeDependencies() {
-    model?.dispose();
+    model?.detach();
     model = new DecksViewModel(widget.uid);
     super.didChangeDependencies();
   }
@@ -37,7 +37,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   void dispose() {
     super.dispose();
-    model?.dispose();
+    model?.detach();
   }
 }
 

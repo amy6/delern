@@ -156,7 +156,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   }
 
   @override
-  void dispose() {
+  void detach() {
     _events.close();
   }
 }

@@ -65,7 +65,7 @@ class DeckViewModel implements PersistableKeyedItem {
   }
 
   @override
-  void dispose() {
+  void detach() {
     if (_internalUpdates != null) {
       _internalUpdates.cancel();
     }
@@ -92,7 +92,7 @@ class DecksViewModel implements Disposable {
   }
 
   @override
-  void dispose() {
-    _deckViewModels.dispose();
+  void detach() {
+    _deckViewModels.detach();
   }
 }

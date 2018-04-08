@@ -77,10 +77,10 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
   }
 
   @override
-  void dispose() {
+  void detach() {
     if (_subscription != null) {
       _subscription.cancel();
     }
-    super.dispose();
+    super.detach();
   }
 }

@@ -55,8 +55,8 @@ class SortedObservableList<T> extends ObservableList<T> {
   }
 
   @override
-  void dispose() {
+  void detach() {
     _baseEventsSubscription.cancel();
-    super.dispose();
+    super.detach();
   }
 }

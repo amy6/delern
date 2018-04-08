@@ -35,13 +35,13 @@ abstract class PersistablesListMixin<T extends Persistable>
 
   @override
   T removeAt(int index) {
-    this[index].dispose();
+    this[index].detach();
     return super.removeAt(index);
   }
 
   @override
-  void dispose() {
-    forEach((item) => item.dispose());
-    super.dispose();
+  void detach() {
+    forEach((item) => item.detach());
+    super.detach();
   }
 }
