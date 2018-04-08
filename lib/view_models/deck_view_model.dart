@@ -35,7 +35,7 @@ class DeckViewModel implements PersistableKeyedItem {
     return this;
   }
 
-  void own(owner) {
+  void attachTo(owner) {
     if (_internalUpdates != null) {
       // This item is already owned - can assert that the owner is the same.
       // This must normally be only a side effect of absorb().

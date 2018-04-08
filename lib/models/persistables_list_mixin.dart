@@ -6,7 +6,7 @@ import 'observable_list.dart';
 abstract class Persistable extends Disposable {
   Persistable absorb(@checked Persistable value);
   // TODO(dotdoom): move own() into Disposable?
-  void own(PersistablesListMixin owner);
+  void attachTo(PersistablesListMixin owner);
 }
 
 abstract class PersistablesListMixin<T extends Persistable>
@@ -20,17 +20,17 @@ abstract class PersistablesListMixin<T extends Persistable>
     if (index != 0) {
       throw new UnsupportedError('setAll can only set at index 0');
     }
-    super.setAll(index, newValue..forEach((e) => e.own(this)));
+    super.setAll(index, newValue..forEach((e) => e.attachTo(this)));
   }
 
   @override
   void setAt(int index, T value) {
-    super.setAt(index, this[index].absorb(value)..own(this));
+    super.setAt(index, this[index].absorb(value)..attachTo(this));
   }
 
   @override
   void insert(int index, T element) {
-    super.insert(index, element..own(this));
+    super.insert(index, element..attachTo(this));
   }
 
   @override
