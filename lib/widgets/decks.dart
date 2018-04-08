@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../pages/cards.dart';
 import '../view_models/deck_view_model.dart';
-import 'vm_view.dart';
 import 'observing_animated_list.dart';
 
-class DecksWidget extends VMViewWidget<DecksViewModel> {
-  DecksWidget(DecksViewModel s) : super(s);
+class DecksWidget extends StatefulWidget {
+  final String uid;
+
+  DecksWidget(this.uid);
 
   @override
   _DecksWidgetState createState() => new _DecksWidgetState();
 }
 
-class _DecksWidgetState extends VMViewState<DecksViewModel, DecksWidget> {
+class _DecksWidgetState extends State<DecksWidget> {
+  DecksViewModel model;
+
+  @override
+  void didChangeDependencies() {
+    model?.dispose();
+    model = new DecksViewModel(widget.uid);
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new ObservingAnimatedList(
@@ -21,6 +32,12 @@ class _DecksWidgetState extends VMViewState<DecksViewModel, DecksWidget> {
             sizeFactor: animation,
           ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    model?.dispose();
   }
 }
 
@@ -54,9 +71,11 @@ class DeckListItem extends StatelessWidget {
     return new Material(
       child: new InkWell(
         splashColor: Theme.of(context).splashColor,
-        onTap: () {
-          print(model.name);
-        },
+        onTap: () => Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new CardsPage(model?.name)),
+            ),
         child: new Container(
           padding: const EdgeInsets.only(
               top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),

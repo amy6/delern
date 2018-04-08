@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../view_models/deck_view_model.dart';
 import '../remote/sign_in.dart';
 import '../widgets/sign_in.dart';
 import '../widgets/decks.dart';
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       appBar: appBar,
       drawer: new NavigationDrawer(user, signOutUser),
-      body: new DecksWidget(new DecksViewModel(user.uid)),
+      body: new DecksWidget(user.uid),
       floatingActionButton: new CreateDeck(user),
     );
   }

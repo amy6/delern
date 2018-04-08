@@ -37,9 +37,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   @override
   void didChangeDependencies() {
-    if (_listSubscription != null) {
-      _listSubscription.cancel();
-    }
+    _listSubscription?.cancel();
     _listSubscription = widget.list.events.listen(_onListEvent);
     super.didChangeDependencies();
   }
