@@ -1,13 +1,15 @@
+import 'package:meta/meta.dart';
+
 import 'disposable.dart';
 import 'observable_list.dart';
 
-abstract class Persistable<T> extends Disposable {
-  T absorb(T value);
+abstract class Persistable extends Disposable {
+  Persistable absorb(@checked Persistable value);
   // TODO(dotdoom): move own() into Disposable?
   void own(PersistablesListMixin owner);
 }
 
-abstract class PersistablesListMixin<T extends Persistable<T>>
+abstract class PersistablesListMixin<T extends Persistable>
     implements ObservableList<T> {
   @override
   void setAll(int index, Iterable<T> newValue) {

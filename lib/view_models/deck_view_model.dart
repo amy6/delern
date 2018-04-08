@@ -7,7 +7,7 @@ import '../models/observable_list.dart';
 import '../models/keyed_event_list_mixin.dart';
 import 'view_model.dart';
 
-class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
+class DeckViewModel implements PersistableKeyedItem {
   String get key => _deck.key;
   Deck get deck => _deck;
   String get name => _deck.name;
