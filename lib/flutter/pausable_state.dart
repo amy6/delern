@@ -10,14 +10,25 @@ abstract class PausableState<T extends StatefulWidget> extends State<T>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    didChangeAppLifecycleState(AppLifecycleState.resumed);
+    //didChangeAppLifecycleState(AppLifecycleState.resumed);
+  }
+
+  @override
+  void deactivate() {
+    didChangeAppLifecycleState(AppLifecycleState.paused);
+    super.deactivate();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    didChangeAppLifecycleState(AppLifecycleState.paused);
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    didChangeAppLifecycleState(AppLifecycleState.resumed);
+    return super.build(context);
   }
 
   @override
