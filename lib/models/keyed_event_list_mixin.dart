@@ -32,11 +32,12 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
 
   int indexOfKey(String key) => indexWhere((item) => item.key == key);
 
-  void subscribeToKeyedEvents(Stream<KeyedListEvent<T>> stream) {
-    if (_subscription != null) {
-      _subscription.cancel();
-    }
-    _subscription = stream.listen(processKeyedEvent);
+  // TODO(dotdoom): [stream] here must be typed.
+  @override
+  void attachTo(stream) {
+    _subscription?.cancel();
+    _subscription =
+        (stream as Stream<KeyedListEvent<T>>).listen(processKeyedEvent);
   }
 
   // TODO(dotdoom): this must be private.
@@ -78,9 +79,7 @@ abstract class KeyedEventListMixin<T extends KeyedListItem>
 
   @override
   void detach() {
-    if (_subscription != null) {
-      _subscription.cancel();
-    }
-    super.detach();
+    _subscription?.cancel();
+    _subscription = null;
   }
 }

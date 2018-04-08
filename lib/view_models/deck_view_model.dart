@@ -86,7 +86,7 @@ class DecksViewModel implements Attachable<String> {
 
   @override
   void attachTo(String uid) {
-    _deckViewModels.subscribeToKeyedEvents(Deck.getDecks(uid).map((deckEvent) {
+    _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
       return new KeyedListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
