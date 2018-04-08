@@ -75,7 +75,6 @@ class DeckViewModel implements PersistableKeyedItem<DeckViewModel> {
 class DecksViewModel implements Disposable {
   PersistableKeyedItemsList<DeckViewModel> _deckViewModels =
       new PersistableKeyedItemsList<DeckViewModel>();
-  StreamSubscription<KeyedListEvent<DeckViewModel>> _sub;
 
   // TODO(dotdoom): sort / filter
   ObservableList<DeckViewModel> get decks => _deckViewModels;
@@ -95,6 +94,5 @@ class DecksViewModel implements Disposable {
   @override
   void dispose() {
     _deckViewModels.dispose();
-    _sub.cancel();
   }
 }
