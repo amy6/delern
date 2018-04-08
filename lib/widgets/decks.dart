@@ -19,7 +19,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   void didChangeDependencies() {
     model?.detach();
-    model = new DecksViewModel(widget.uid);
+    model = new DecksViewModel()..attachTo(widget.uid);
     super.didChangeDependencies();
   }
 

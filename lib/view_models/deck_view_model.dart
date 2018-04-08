@@ -7,7 +7,8 @@ import '../models/observable_list.dart';
 import '../models/keyed_event_list_mixin.dart';
 import 'view_model.dart';
 
-class DeckViewModel implements PersistableKeyedItem {
+class DeckViewModel
+    implements PersistableKeyedItem<PersistableKeyedItemsList<DeckViewModel>> {
   String get key => _deck.key;
   Deck get deck => _deck;
   String get name => _deck.name;
@@ -56,8 +57,7 @@ class DeckViewModel implements PersistableKeyedItem {
       }
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
-      (owner as KeyedEventListMixin<DeckViewModel>)
-          .processKeyedEvent(new KeyedListEvent<DeckViewModel>(
+      owner.processKeyedEvent(new KeyedListEvent<DeckViewModel>(
         eventType: ListEventType.itemChanged,
         value: this,
       ));
@@ -72,14 +72,20 @@ class DeckViewModel implements PersistableKeyedItem {
   }
 }
 
-class DecksViewModel implements Disposable {
+class DecksViewModel implements Disposable<String> {
   PersistableKeyedItemsList<DeckViewModel> _deckViewModels =
       new PersistableKeyedItemsList<DeckViewModel>();
 
   // TODO(dotdoom): sort / filter
   ObservableList<DeckViewModel> get decks => _deckViewModels;
 
-  DecksViewModel(String uid) {
+  @override
+  void detach() {
+    _deckViewModels.detach();
+  }
+
+  @override
+  void attachTo(String uid) {
     _deckViewModels.subscribeToKeyedEvents(Deck.getDecks(uid).map((deckEvent) {
       return new KeyedListEvent(
         eventType: deckEvent.eventType,
@@ -89,10 +95,5 @@ class DecksViewModel implements Disposable {
             ?.map((deck) => new DeckViewModel(deck)),
       );
     }));
-  }
-
-  @override
-  void detach() {
-    _deckViewModels.detach();
   }
 }

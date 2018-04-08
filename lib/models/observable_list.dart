@@ -50,7 +50,7 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
 
   final List<T> _base = new List<T>();
   // TODO(dotdoom): investigate side effects of sync:true.
-  StreamController<ListEvent<T>> _events =
+  final StreamController<ListEvent<T>> _events =
       new StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;
 
@@ -158,5 +158,10 @@ class ObservableList<T> extends ListBase<T> implements Disposable {
   @override
   void detach() {
     _events.close();
+  }
+
+  @override
+  void attachTo(owner) {
+    throw new UnsupportedError('ObservableList is auto-attaching');
   }
 }
