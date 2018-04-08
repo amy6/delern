@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'observable_list.dart';
+import 'keyed_event_list_mixin.dart';
 
 typedef bool Filter<T>(T item);
 
 // TODO(dotdoom): make this list read-only.
-class FilteredObservableList<T> extends ObservableList<T> {
+class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
+    with KeyedEventListMixin<T> {
   final ObservableList<T> _base;
   StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Filter<T> _filter;
