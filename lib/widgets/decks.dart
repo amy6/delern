@@ -14,14 +14,13 @@ class DecksWidget extends StatefulWidget {
 }
 
 class _DecksWidgetState extends State<DecksWidget> {
-  DecksViewModel model;
+  DecksViewModel viewModel;
 
   @override
   void didChangeDependencies() {
     // TODO(dotdoom): not needed. Also, detach / attachTo on pause / resume
-    // TODO(dotdoom): rename model -> viewModel.
-    model?.detach();
-    model = new DecksViewModel()..attachTo(widget.uid);
+    viewModel?.detach();
+    viewModel = new DecksViewModel()..attachTo(widget.uid);
 
     super.didChangeDependencies();
   }
@@ -29,7 +28,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   Widget build(BuildContext context) {
     return new ObservingAnimatedList(
-      list: model.decks,
+      list: viewModel.decks,
       itemBuilder: (context, item, animation, index) => new SizeTransition(
             child: new DeckListItem(item),
             sizeFactor: animation,
@@ -40,7 +39,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   void dispose() {
     super.dispose();
-    model?.dispose();
+    viewModel?.dispose();
   }
 }
 
