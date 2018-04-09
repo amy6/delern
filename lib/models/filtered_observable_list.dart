@@ -22,7 +22,7 @@ class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
           }
           break;
         case ListEventType.itemRemoved:
-          var index = indexOf(event.previousValue);
+          var index = indexOfKey(event.previousValue.key);
           if (index >= 0) {
             super.removeAt(index);
           }
@@ -32,15 +32,11 @@ class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
         case ListEventType.itemChanged:
           var item = _base[event.index];
           if (_filter == null || _filter(item)) {
-            // TODO(dotdoom): what if we have non-unique items in the list?
-            // TODO(dotdoom): indexOf(previousValue) will stop working for
-            //                Persistable once we implement operator== for the
-            //                items. Should we use Keyed instead?
-            if (indexOf(event.previousValue) == -1) {
+            if (indexOfKey(event.previousValue.key) == -1) {
               super.add(item);
             }
           } else {
-            var index = indexOf(event.previousValue);
+            var index = indexOfKey(event.previousValue.key);
             if (index >= 0) {
               super.removeAt(index);
             }
