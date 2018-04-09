@@ -4,11 +4,9 @@ import '../models/deck.dart';
 import '../models/stream_demuxer.dart';
 import '../models/attachable.dart';
 import '../models/observable_list.dart';
-import '../models/keyed_event_list_mixin.dart';
-import 'view_model.dart';
+import '../models/models_list.dart';
 
-class DeckViewModel
-    implements PersistableKeyedItem<PersistableKeyedItemsList<DeckViewModel>> {
+class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
   String get key => _deck.key;
   Deck get deck => _deck;
   String get name => _deck.name;
@@ -57,7 +55,7 @@ class DeckViewModel
       }
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
-      owner.processKeyedEvent(new KeyedListEvent<DeckViewModel>(
+      owner.processKeyedEvent(new ModelsListEvent<DeckViewModel>(
         eventType: ListEventType.itemChanged,
         value: this,
       ));
@@ -73,8 +71,7 @@ class DeckViewModel
 }
 
 class DecksViewModel implements Attachable<String> {
-  PersistableKeyedItemsList<DeckViewModel> _deckViewModels =
-      new PersistableKeyedItemsList<DeckViewModel>();
+  ModelsList<DeckViewModel> _deckViewModels = new ModelsList<DeckViewModel>();
 
   // TODO(dotdoom): sort / filter
   ObservableList<DeckViewModel> get decks => _deckViewModels;
@@ -87,7 +84,7 @@ class DecksViewModel implements Attachable<String> {
   @override
   void attachTo(String uid) {
     _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
-      return new KeyedListEvent(
+      return new ModelsListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
         value: new DeckViewModel(deckEvent.value),

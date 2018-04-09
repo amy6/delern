@@ -3,8 +3,7 @@ import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
 
-import 'keyed_event_list_mixin.dart';
-import 'child_events_stream.dart';
+import 'keyed_list_event.dart';
 import 'observable_list.dart';
 
 class Deck implements KeyedListItem {

@@ -3,8 +3,6 @@ import 'dart:collection';
 
 import 'package:meta/meta.dart';
 
-import 'attachable.dart';
-
 enum ListEventType {
   itemAdded,
   itemRemoved,
@@ -41,7 +39,7 @@ class ListEvent<T> {
       eventType.hashCode ^ index.hashCode ^ previousValue.hashCode;
 }
 
-class ObservableList<T> extends ListBase<T> implements Attachable {
+class ObservableList<T> extends ListBase<T> {
   Stream<ListEvent<T>> get events => _events.stream;
 
   int get length => _base.length;
@@ -155,13 +153,5 @@ class ObservableList<T> extends ListBase<T> implements Attachable {
     ));
   }
 
-  @override
-  void detach() {
-    _events.close();
-  }
-
-  @override
-  void attachTo(owner) {
-    throw new UnsupportedError('ObservableList is auto-attaching');
-  }
+  void dispose() => _events.close();
 }
