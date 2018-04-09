@@ -34,9 +34,10 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
     return this;
   }
 
-  void attachTo(owner) {
+  @override
+  void attachTo(ModelsList<DeckViewModel> owner) {
     if (_internalUpdates != null) {
-      // This item is already owned - can assert that the owner is the same.
+      // This item is already attached - can assert that the owner is the same.
       // This must normally be only a side effect of absorb().
       return;
     }
@@ -64,9 +65,8 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
 
   @override
   void detach() {
-    if (_internalUpdates != null) {
-      _internalUpdates.cancel();
-    }
+    _internalUpdates?.cancel();
+    _internalUpdates = null;
   }
 }
 
