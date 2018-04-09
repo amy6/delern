@@ -29,6 +29,10 @@ class KeyedListEvent<T extends KeyedListItem> {
   }
 }
 
+abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
+  int indexOfKey(String key) => indexWhere((item) => item.key == key);
+}
+
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
     Query query, T snapshotParser(DataSnapshot s)) {
   return new StreamDemuxer<ListEventType>({

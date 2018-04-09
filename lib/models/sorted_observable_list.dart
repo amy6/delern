@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'observable_list.dart';
-import 'attachable.dart';
 
 // TODO(dotdoom): make this list read-only.
-class SortedObservableList<T> extends ObservableList<T> implements Attachable {
+class SortedObservableList<T> extends ObservableList<T> {
   final ObservableList<T> _base;
   StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Comparator<T> _comparator;
@@ -55,14 +54,5 @@ class SortedObservableList<T> extends ObservableList<T> implements Attachable {
     setAll(0, new List<T>.from(_base)..sort(_comparator));
   }
 
-  @override
-  void detach() {
-    _baseEventsSubscription.cancel();
-    super.detach();
-  }
-
-  @override
-  void attachTo(owner) {
-    // TODO(dotdoom): implement attachTo
-  }
+  void dispose() => _baseEventsSubscription.cancel();
 }

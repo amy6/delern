@@ -30,10 +30,9 @@ class ModelsListEvent<T extends Model> extends KeyedListEvent<T> {
 }
 
 class ModelsList<T extends Model<ModelsList<T>>> extends ObservableList<T>
+    with KeyedListMixin<T>
     implements Attachable<Stream<ModelsListEvent<T>>> {
   StreamSubscription<ModelsListEvent<T>> _subscription;
-
-  int indexOfKey(String key) => indexWhere((item) => item.key == key);
 
   @override
   void attachTo(Stream<ModelsListEvent<T>> stream) {
