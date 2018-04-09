@@ -71,7 +71,8 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
 }
 
 class DecksViewModel implements Attachable<String> {
-  ModelsList<DeckViewModel> _deckViewModels = new ModelsList<DeckViewModel>();
+  final ModelsList<DeckViewModel> _deckViewModels =
+      new ModelsList<DeckViewModel>();
 
   // TODO(dotdoom): sort / filter
   ObservableList<DeckViewModel> get decks => _deckViewModels;
