@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
 
 // Error reporting inspired (or rather, copied 1:1)
@@ -9,7 +10,7 @@ final SentryClient _sentry = new SentryClient(
         "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345");
 
 Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
-  print('/!\\ /!\\ /!\\ Caught error in $src: $error');
+  debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $error');
 
   bool sendToServer = true;
   assert(() {
@@ -18,8 +19,7 @@ Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
       }() !=
       null);
   if (!sendToServer) {
-    print(stackTrace);
-    print('-' * 80);
+    debugPrint('$stackTrace\n' + '-' * 80);
     return;
   }
 
