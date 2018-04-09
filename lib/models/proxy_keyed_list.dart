@@ -6,13 +6,14 @@ import 'keyed_list_event.dart';
 typedef bool Filter<T>(T item);
 
 // TODO(dotdoom): make this list read-only.
-class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
+class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     with KeyedListMixin<T> {
   final ObservableList<T> _base;
   StreamSubscription<ListEvent<T>> _baseEventsSubscription;
   Filter<T> _filter;
+  Comparator<T> _comparator;
 
-  FilteredObservableList(this._base) {
+  ProxyKeyedList(this._base) {
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.itemAdded:
@@ -37,8 +38,21 @@ class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   void _baseItemAdded(T item) {
-    if (_filter == null || _filter(item)) {
+    if (_filter != null && !_filter(item)) {
+      return;
+    }
+
+    if (_comparator == null) {
       super.add(item);
+    } else {
+      var index;
+      for (index = 0; index < length; ++index) {
+        // TODO(dotdoom): is this the right comparison?
+        if (_comparator(item, this[index]) >= 0) {
+          break;
+        }
+      }
+      super.insert(index, item);
     }
   }
 
@@ -58,11 +72,21 @@ class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
         super.removeAt(index);
       }
     }
+    _resort();
   }
 
   set filter(final Filter<T> value) {
     _filter = value;
     _refilter();
+  }
+
+  set comparator(Comparator<T> value) {
+    _comparator = value;
+    _resort();
+  }
+
+  void _resort() {
+    setAll(0, new List<T>.from(_base)..sort(_comparator));
   }
 
   void _refilter() {
@@ -71,6 +95,7 @@ class FilteredObservableList<T extends KeyedListItem> extends ObservableList<T>
     } else {
       setAll(0, _base.where(_filter));
     }
+    _resort();
   }
 
   void dispose() => _baseEventsSubscription.cancel();

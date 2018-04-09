@@ -5,6 +5,7 @@ import '../models/stream_demuxer.dart';
 import '../models/attachable.dart';
 import '../models/observable_list.dart';
 import '../models/models_list.dart';
+import '../models/proxy_keyed_list.dart';
 
 class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
   String get key => _deck.key;
@@ -73,9 +74,10 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
 class DecksViewModel implements Attachable<String> {
   final ModelsList<DeckViewModel> _deckViewModels =
       new ModelsList<DeckViewModel>();
+  ProxyKeyedList<DeckViewModel> _decksProxy;
 
-  // TODO(dotdoom): sort / filter
-  ObservableList<DeckViewModel> get decks => _deckViewModels;
+  ProxyKeyedList<DeckViewModel> get decks =>
+      _decksProxy ??= new ProxyKeyedList(_deckViewModels);
 
   @override
   void detach() {
@@ -93,5 +95,10 @@ class DecksViewModel implements Attachable<String> {
             ?.map((deck) => new DeckViewModel(deck)),
       );
     }));
+  }
+
+  void dispose() {
+    detach();
+    _decksProxy?.dispose();
   }
 }

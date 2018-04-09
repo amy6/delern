@@ -18,8 +18,11 @@ class _DecksWidgetState extends State<DecksWidget> {
 
   @override
   void didChangeDependencies() {
+    // TODO(dotdoom): not needed. Also, detach / attachTo on pause / resume
+    // TODO(dotdoom): rename model -> viewModel.
     model?.detach();
     model = new DecksViewModel()..attachTo(widget.uid);
+
     super.didChangeDependencies();
   }
 
@@ -37,7 +40,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   void dispose() {
     super.dispose();
-    model?.detach();
+    model?.dispose();
   }
 }
 
