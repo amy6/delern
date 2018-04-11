@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import 'keyed_list_event.dart';
-import 'observable_list.dart';
+import '../models/keyed_list_event.dart';
+import '../models/observable_list.dart';
 import 'attachable.dart';
 
-abstract class Model<T> implements KeyedListItem, Attachable<T> {
+abstract class ViewModel<T> implements KeyedListItem, Attachable<T> {
   String get key;
-  Model<T> absorb(@checked Model<T> value);
+  ViewModel<T> updateWith(@checked ViewModel<T> value);
 }
 
-class ModelsListEvent<T extends Model> extends KeyedListEvent<T> {
+class ViewModelsListEvent<T extends ViewModel> extends KeyedListEvent<T> {
   final ListEventType eventType;
   final T value;
   final String previousSiblingKey;
   final Iterable<T> fullListValueForSet;
 
-  ModelsListEvent({
+  ViewModelsListEvent({
     @required this.eventType,
     this.previousSiblingKey,
     this.value,
@@ -29,20 +29,27 @@ class ModelsListEvent<T extends Model> extends KeyedListEvent<T> {
   }
 }
 
-class ModelsList<T extends Model<ModelsList<T>>> extends ObservableList<T>
+class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
+    extends ObservableList<T>
     with KeyedListMixin<T>
-    implements Attachable<Stream<ModelsListEvent<T>>> {
-  StreamSubscription<ModelsListEvent<T>> _subscription;
+    implements Attachable<Stream<ViewModelsListEvent<T>>> {
+  StreamSubscription<ViewModelsListEvent<T>> _subscription;
 
   @override
-  void attachTo(Stream<ModelsListEvent<T>> stream) {
+  void attachTo(Stream<ViewModelsListEvent<T>> stream) {
     _subscription?.cancel();
     forEach((item) => item.attachTo(this));
-    _subscription = stream.listen(processKeyedEvent);
+    _subscription = stream.listen(_processEvent);
   }
 
-  // TODO(dotdoom): this must be private.
-  void processKeyedEvent(ModelsListEvent<T> event) {
+  void childUpdated(T child) {
+    _processEvent(new ViewModelsListEvent(
+      eventType: ListEventType.itemChanged,
+      value: child,
+    ));
+  }
+
+  void _processEvent(ViewModelsListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
         // With Firebase, we subscribe to onValue, which delivers all data,
@@ -99,7 +106,7 @@ class ModelsList<T extends Model<ModelsList<T>>> extends ObservableList<T>
 
   @override
   void setAt(int index, T value) {
-    super.setAt(index, this[index].absorb(value)..attachTo(this));
+    super.setAt(index, this[index].updateWith(value)..attachTo(this));
   }
 
   @override

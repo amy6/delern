@@ -16,13 +16,14 @@ class DecksWidget extends StatefulWidget {
 class _DecksWidgetState extends State<DecksWidget> {
   DecksViewModel viewModel;
 
-  @override
-  void didChangeDependencies() {
-    // TODO(dotdoom): not needed. Also, detach / attachTo on pause / resume
-    viewModel?.detach();
-    viewModel = new DecksViewModel()..attachTo(widget.uid);
+  // TODO(dotdoom): deacticate().
 
-    super.didChangeDependencies();
+  @override
+  void initState() {
+    viewModel = new DecksViewModel()
+      ..attachTo(widget.uid)
+      ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
+    super.initState();
   }
 
   @override
@@ -39,7 +40,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   void dispose() {
     super.dispose();
-    viewModel?.dispose();
+    viewModel.dispose();
   }
 }
 

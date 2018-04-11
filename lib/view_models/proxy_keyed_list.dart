@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'observable_list.dart';
-import 'keyed_list_event.dart';
+import '../models/keyed_list_event.dart';
+import '../models/observable_list.dart';
 
 typedef bool Filter<T>(T item);
 
@@ -14,6 +14,9 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   Comparator<T> _comparator;
 
   ProxyKeyedList(this._base) {
+    if (_base.changed) {
+      setAll(0, _base);
+    }
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
         case ListEventType.itemAdded:
@@ -47,7 +50,6 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     } else {
       var index;
       for (index = 0; index < length; ++index) {
-        // TODO(dotdoom): is this the right comparison?
         if (_comparator(item, this[index]) >= 0) {
           break;
         }
@@ -62,40 +64,51 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   void _baseItemChanged(ListEvent<T> event) {
     var item = _base[event.index];
+    var index = indexOfKey(event.previousValue.key);
     if (_filter == null || _filter(item)) {
-      if (indexOfKey(event.previousValue.key) == -1) {
+      if (index >= 0) {
+        super.setAt(index, item);
+      } else {
         super.add(item);
       }
     } else {
-      var index = indexOfKey(event.previousValue.key);
       if (index >= 0) {
         super.removeAt(index);
       }
     }
-    _resort();
+    _sortAndSet(this);
   }
 
   set filter(final Filter<T> value) {
     _filter = value;
-    _refilter();
+    if (_base.isNotEmpty) {
+      _refilter();
+    }
   }
 
   set comparator(Comparator<T> value) {
     _comparator = value;
-    _resort();
+    if (isNotEmpty) {
+      _sortAndSet(this);
+    }
   }
 
-  void _resort() {
-    setAll(0, new List<T>.from(_base)..sort(_comparator));
+  void _sortAndSet(Iterable<T> items) {
+    assert(!changed || items.length == length,
+        'Attempt to change list size from $length to ${items.length}');
+    if (_comparator == null) {
+      setAll(0, items);
+    } else {
+      setAll(0, new List<T>.from(items)..sort(_comparator));
+    }
   }
 
   void _refilter() {
     if (_filter == null) {
-      setAll(0, _base);
+      _sortAndSet(_base);
     } else {
-      setAll(0, _base.where(_filter));
+      _sortAndSet(_base.where(_filter));
     }
-    _resort();
   }
 
   void dispose() => _baseEventsSubscription.cancel();

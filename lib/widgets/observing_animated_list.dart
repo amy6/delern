@@ -44,28 +44,26 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   @override
   void dispose() {
+    _listSubscription?.cancel();
     super.dispose();
   }
 
   void _onListEvent(ListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
-        _animatedListKey.currentState.insertItem(event.index,
-            duration: const Duration(milliseconds: 300));
+        _animatedListKey.currentState.insertItem(event.index);
         break;
       case ListEventType.itemRemoved:
-        _animatedListKey.currentState.removeItem(
-          event.index,
-          (BuildContext context, Animation<double> animation) {
-            return widget.itemBuilder(
-                context, event.previousValue, animation, event.index);
-          },
-          duration: const Duration(milliseconds: 300),
-        );
+        _animatedListKey.currentState.removeItem(event.index,
+            (BuildContext context, Animation<double> animation) {
+          return widget.itemBuilder(
+              context, event.previousValue, animation, event.index);
+        });
         break;
+      case ListEventType.set:
+      // TODO(dotdoom): assert(item count not changed), then continue;
       case ListEventType.itemChanged:
       case ListEventType.itemMoved:
-      case ListEventType.set:
         setState(() {});
         break;
     }
@@ -82,7 +80,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
       return new Center(child: new CircularProgressIndicator());
     }
 
-    // TODO(ksheremet): for an empty list, return 'Add your decks'
+    // TODO(ksheremet): for an empty list, return 'Add your items'
 
     return new AnimatedList(
       key: _animatedListKey,

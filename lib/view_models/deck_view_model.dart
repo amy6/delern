@@ -2,15 +2,15 @@ import 'dart:async';
 
 import '../models/deck.dart';
 import '../models/stream_demuxer.dart';
-import '../models/attachable.dart';
-import '../models/observable_list.dart';
-import '../models/models_list.dart';
-import '../models/proxy_keyed_list.dart';
+import 'attachable.dart';
+import 'proxy_keyed_list.dart';
+import 'view_models_list.dart';
 
-class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
-  String get key => _deck.key;
+class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
+  // TODO(dotdoom): remove name in favor of deck ?
+  String get key => _deck?.key;
   Deck get deck => _deck;
-  String get name => _deck.name;
+  String get name => _deck?.name;
   String get access => _access;
   int get cardsToLearn => _cardsToLearn;
 
@@ -23,7 +23,7 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
   DeckViewModel(this._deck);
 
   @override
-  DeckViewModel absorb(DeckViewModel value) {
+  DeckViewModel updateWith(DeckViewModel value) {
     if (this == value) {
       // This will happen when we sent an internal update event to the owner.
       return this;
@@ -36,7 +36,7 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
   }
 
   @override
-  void attachTo(ModelsList<DeckViewModel> owner) {
+  void attachTo(ViewModelsList<DeckViewModel> owner) {
     if (_internalUpdates != null) {
       // This item is already attached - can assert that the owner is the same.
       // This must normally be only a side effect of absorb().
@@ -57,10 +57,7 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
       }
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
-      owner.processKeyedEvent(new ModelsListEvent<DeckViewModel>(
-        eventType: ListEventType.itemChanged,
-        value: this,
-      ));
+      owner.childUpdated(this);
     });
   }
 
@@ -69,15 +66,23 @@ class DeckViewModel implements Model<ModelsList<DeckViewModel>> {
     _internalUpdates?.cancel();
     _internalUpdates = null;
   }
+
+  @override
+  String toString() {
+    return '#$key $name [$access $cardsToLearn]';
+  }
 }
 
 class DecksViewModel implements Attachable<String> {
-  final ModelsList<DeckViewModel> _deckViewModels =
-      new ModelsList<DeckViewModel>();
+  String _uid;
+  final ViewModelsList<DeckViewModel> _deckViewModels =
+      new ViewModelsList<DeckViewModel>();
   ProxyKeyedList<DeckViewModel> _decksProxy;
 
   ProxyKeyedList<DeckViewModel> get decks =>
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
+
+  String get uid => _uid;
 
   @override
   void detach() {
@@ -85,9 +90,10 @@ class DecksViewModel implements Attachable<String> {
   }
 
   @override
-  void attachTo(String uid) {
+  void attachTo(uid) {
+    _uid = uid;
     _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
-      return new ModelsListEvent(
+      return new ViewModelsListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
         value: new DeckViewModel(deckEvent.value),
