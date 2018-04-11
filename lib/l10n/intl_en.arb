@@ -1,0 +1,39 @@
+{
+  "@@last_modified": "2018-04-11T10:40:02.760025",
+  "navigationDrawerSignOut": "Sign Out",
+  "@navigationDrawerSignOut": {
+    "description": "Sign Out in Navigation drawer",
+    "type": "text",
+    "placeholders": {}
+  },
+ "navigationDrawerCommunicateGroup": "Communicate",
+   "@navigationDrawerCommunicateGroup": {
+     "description": "Communicate Group Name in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   },
+   "navigationDrawerInviteFriends": "Invite Friends",
+   "@navigationDrawerInviteFriends": {
+     "description": "Invite Friends in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   },
+   "navigationDrawerContactUs": "Contact Us",
+   "@navigationDrawerContactUs": {
+     "description": "Contact Us in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   },
+   "navigationDrawerSupportDevelopment": "Support Development",
+   "@navigationDrawerSupportDevelopment": {
+     "description": "Support Development in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   },
+   "navigationDrawerAbout": "About",
+   "@navigationDrawerAbout": {
+     "description": "About in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   }
+}

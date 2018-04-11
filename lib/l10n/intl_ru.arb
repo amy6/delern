@@ -1,0 +1,39 @@
+{
+  "@@last_modified": "2018-04-11T10:40:02.760025",
+  "navigationDrawerSignOut": "Выход",
+  "@navigationDrawerSignOut": {
+    "description": "Sign Out in Navigation drawer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "navigationDrawerCommunicateGroup": "Общение",
+    "@navigationDrawerCommunicateGroup": {
+      "description": "Communicate Group Name in Navigation Drawer",
+      "type": "text",
+      "placeholders": {}
+    },
+    "navigationDrawerInviteFriends": "Пригласить друзей",
+    "@navigationDrawerInviteFriends": {
+      "description": "Invite Friends in Navigation Drawer",
+      "type": "text",
+      "placeholders": {}
+    },
+    "navigationDrawerContactUs": "Связаться с нами",
+    "@navigationDrawerContactUs": {
+      "description": "Contact Us in Navigation Drawer",
+      "type": "text",
+      "placeholders": {}
+    },
+    "navigationDrawerSupportDevelopment": "Поддержать разработку",
+    "@navigationDrawerSupportDevelopment": {
+      "description": "Support Development in Navigation Drawer",
+      "type": "text",
+      "placeholders": {}
+    },
+    "navigationDrawerAbout": "О приложении",
+    "@navigationDrawerAbout": {
+      "description": "About in Navigation Drawer",
+      "type": "text",
+      "placeholders": {}
+    }
+}

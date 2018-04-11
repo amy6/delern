@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info/package_info.dart';
+import '../flutter/localization.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final FirebaseUser user;
@@ -37,7 +38,7 @@ class _NavDrawerState extends State<NavigationDrawer> {
         ),
         new ListTile(
           leading: new Icon(Icons.perm_identity),
-          title: new Text('Sign Out'),
+          title: new Text(AppLocalizations.of(context).navigationDrawerSignOut),
           onTap: () {
             widget.signOutCallback();
             Navigator.pop(context);
@@ -46,7 +47,7 @@ class _NavDrawerState extends State<NavigationDrawer> {
         new Divider(height: 1.0),
         new ListTile(
           title: new Text(
-            'Communicate',
+            AppLocalizations.of(context).navigationDrawerCommunicateGroup,
             style: new TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.grey[600],
@@ -55,21 +56,24 @@ class _NavDrawerState extends State<NavigationDrawer> {
         ),
         new ListTile(
           leading: new Icon(Icons.contact_mail),
-          title: new Text('Invite Friends'),
+          title: new Text(
+              AppLocalizations.of(context).navigationDrawerInviteFriends),
           onTap: () {
             Navigator.pop(context);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.live_help),
-          title: new Text('Contact Us'),
+          title:
+              new Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () {
             Navigator.pop(context);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.attach_money),
-          title: new Text('Support Development'),
+          title: new Text(
+              AppLocalizations.of(context).navigationDrawerSupportDevelopment),
           onTap: () {
             Navigator.pop(context);
           },
@@ -79,7 +83,7 @@ class _NavDrawerState extends State<NavigationDrawer> {
         ),
         new AboutListTile(
           icon: new Icon(Icons.perm_device_information),
-          child: new Text('About'),
+          child: new Text(AppLocalizations.of(context).navigationDrawerAbout),
           applicationIcon: new Image.asset('images/ic_launcher.png'),
           applicationVersion: versionCode,
           applicationLegalese: 'GNU General Public License v3.0',
