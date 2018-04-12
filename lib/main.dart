@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-
-import 'remote/error_reporting.dart';
-import 'pages/home.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
+import 'remote/error_reporting.dart';
+import 'pages/home.dart';
 
 class App extends StatelessWidget {
   @override
