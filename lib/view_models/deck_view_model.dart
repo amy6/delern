@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../models/deck.dart';
+import '../models/keyed_list_event.dart';
 import '../models/stream_demuxer.dart';
 import 'attachable.dart';
 import 'proxy_keyed_list.dart';
@@ -88,7 +89,7 @@ class DecksViewModel implements Attachable<String> {
   void attachTo(String uid) {
     detach();
     _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
-      return new ViewModelsListEvent(
+      return new KeyedListEvent(
         eventType: deckEvent.eventType,
         previousSiblingKey: deckEvent.previousSiblingKey,
         value: new DeckViewModel(deckEvent.value),

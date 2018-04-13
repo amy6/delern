@@ -11,45 +11,27 @@ abstract class ViewModel<T> implements KeyedListItem, Attachable<T> {
   ViewModel<T> updateWith(@checked ViewModel<T> value);
 }
 
-class ViewModelsListEvent<T extends ViewModel> extends KeyedListEvent<T> {
-  final ListEventType eventType;
-  final T value;
-  final String previousSiblingKey;
-  final Iterable<T> fullListValueForSet;
-
-  ViewModelsListEvent({
-    @required this.eventType,
-    this.previousSiblingKey,
-    this.value,
-    this.fullListValueForSet,
-  });
-
-  String toString() {
-    return '$eventType #$previousSiblingKey ($value)';
-  }
-}
-
 class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
     extends ObservableList<T>
     with KeyedListMixin<T>
-    implements Attachable<Stream<ViewModelsListEvent<T>>> {
-  StreamSubscription<ViewModelsListEvent<T>> _subscription;
+    implements Attachable<Stream<KeyedListEvent<T>>> {
+  StreamSubscription<KeyedListEvent<T>> _subscription;
 
   @override
-  void attachTo(Stream<ViewModelsListEvent<T>> stream) {
+  void attachTo(Stream<KeyedListEvent<T>> stream) {
     _subscription?.cancel();
     forEach((item) => item.attachTo(this));
     _subscription = stream.listen(_processEvent);
   }
 
   void childUpdated(T child) {
-    _processEvent(new ViewModelsListEvent(
+    _processEvent(new KeyedListEvent(
       eventType: ListEventType.itemChanged,
       value: child,
     ));
   }
 
-  void _processEvent(ViewModelsListEvent<T> event) {
+  void _processEvent(KeyedListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
         // With Firebase, we subscribe to onValue, which delivers all data,
