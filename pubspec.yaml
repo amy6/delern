@@ -6,9 +6,13 @@ dependencies:
     # actively worked on, but rarely released.
     git: git://github.com/flutter/sentry.git
 
-  firebase_auth: ^0.5.1
-  firebase_database: ^0.4.0
-  google_sign_in: ^3.0.0
+  # Do not upgrade these packages unless you need it.
+  # Bumping these versions may bump minimum Play Services version required to
+  # run the app, resulting in older phones being unsupported.
+  firebase_auth: 0.5.1
+  firebase_database: 0.4.0
+  google_sign_in: 3.0.0
+
   package_info: ^0.3.0
 
   flutter:
