@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models/keyed_list_event.dart';
+import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
 import 'attachable.dart';
 

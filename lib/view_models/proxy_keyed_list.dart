@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import '../models/keyed_list_event.dart';
+import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
 
 typedef bool Filter<T>(T item);
 
-// TODO(dotdoom): make this list read-only.
 class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     with KeyedListMixin<T> {
   final ObservableList<T> _base;

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../models/deck.dart';
-import '../models/keyed_list_event.dart';
+import '../models/keyed_list.dart';
 import '../models/stream_demuxer.dart';
 import 'attachable.dart';
 import 'proxy_keyed_list.dart';
