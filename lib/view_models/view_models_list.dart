@@ -1,14 +1,12 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 import '../models/keyed_list_event.dart';
 import '../models/observable_list.dart';
 import 'attachable.dart';
 
 abstract class ViewModel<T> implements KeyedListItem, Attachable<T> {
   String get key;
-  ViewModel<T> updateWith(@checked ViewModel<T> value);
+  ViewModel<T> updateWith(covariant ViewModel<T> value);
 }
 
 class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
