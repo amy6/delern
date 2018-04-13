@@ -15,19 +15,28 @@ class DecksWidget extends StatefulWidget {
 
 class _DecksWidgetState extends State<DecksWidget> {
   DecksViewModel viewModel;
-
-  // TODO(dotdoom): deacticate().
+  bool _active = false;
 
   @override
   void initState() {
     viewModel = new DecksViewModel()
-      ..attachTo(widget.uid)
       ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.initState();
   }
 
   @override
+  void deactivate() {
+    viewModel.detach();
+    _active = false;
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!_active) {
+      viewModel.attachTo(widget.uid);
+      _active = true;
+    }
     return new ObservingAnimatedList(
       list: viewModel.decks,
       itemBuilder: (context, item, animation, index) => new SizeTransition(

@@ -57,7 +57,7 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
         // every child. We must therefore skip keys that we already got.
         var index = indexOfKey(event.value.key);
         if (index < 0) {
-          insert(indexOfKey(event.previousSiblingKey) + 1, event.value);
+          _addWithKey(event.previousSiblingKey, event.value);
         } else {
           assert(event.previousSiblingKey == null ||
               indexOfKey(event.previousSiblingKey) >= 0);
@@ -85,6 +85,11 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
     }
   }
 
+  T _addWithKey(String previousKey, T value) {
+    insert(indexOfKey(previousKey) + 1, value);
+    return value;
+  }
+
   @override
   void detach() {
     _subscription?.cancel();
@@ -94,14 +99,39 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
   @override
   void setAll(int index, Iterable<T> newValue) {
-    if (changed) {
-      // TODO(dotdoom): support this case for widget's resume.
-      throw new UnsupportedError('setAll can only be called once');
-    }
     if (index != 0) {
       throw new UnsupportedError('setAll can only set at index 0');
     }
-    super.setAll(index, newValue..forEach((e) => e.attachTo(this)));
+
+    if (isEmpty) {
+      // Shortcut (also beneficial for the UI).
+      super.setAll(index, newValue..forEach((e) => e.attachTo(this)));
+      return;
+    }
+
+    // setAll is called when we receive onValue, which can be initial
+    // data or an update after detach + attachTo cycle.
+    // For the update, we have to merge, retaining as much of the existing
+    // data as possible, so that we display some (maybe stale) data to the
+    // user and then update it as soon as the new data arrives.
+
+    for (var index = 0; index < length; ++index) {
+      if (!newValue.any((e) => e.key == this[index].key)) {
+        this[index].detach();
+        removeAt(index);
+      }
+    }
+
+    var previousKey;
+    for (var element in newValue) {
+      var index = indexOfKey(element.key);
+      if (index < 0) {
+        _addWithKey(previousKey, element).attachTo(this);
+      } else {
+        this[index].updateWith(element).attachTo(this);
+      }
+      previousKey = element.key;
+    }
   }
 
   @override

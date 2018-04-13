@@ -74,7 +74,6 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
 }
 
 class DecksViewModel implements Attachable<String> {
-  String _uid;
   final ViewModelsList<DeckViewModel> _deckViewModels =
       new ViewModelsList<DeckViewModel>();
   ProxyKeyedList<DeckViewModel> _decksProxy;
@@ -82,16 +81,12 @@ class DecksViewModel implements Attachable<String> {
   ProxyKeyedList<DeckViewModel> get decks =>
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
 
-  String get uid => _uid;
+  @override
+  void detach() => _deckViewModels.detach();
 
   @override
-  void detach() {
-    _deckViewModels.detach();
-  }
-
-  @override
-  void attachTo(uid) {
-    _uid = uid;
+  void attachTo(String uid) {
+    detach();
     _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
       return new ViewModelsListEvent(
         eventType: deckEvent.eventType,

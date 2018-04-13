@@ -50,7 +50,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     } else {
       var index;
       for (index = 0; index < length; ++index) {
-        if (_comparator(item, this[index]) >= 0) {
+        if (_comparator(this[index], item) >= 0) {
           break;
         }
       }
@@ -94,6 +94,8 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   void _sortAndSet(Iterable<T> items) {
+    // This won't work with UI. Once the list is constructred, we can only use
+    // add / remove to change its size.
     assert(!changed || items.length == length,
         'Attempt to change list size from $length to ${items.length}');
     if (_comparator == null) {

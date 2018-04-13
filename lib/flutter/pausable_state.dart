@@ -3,17 +3,17 @@ import 'package:flutter/widgets.dart';
 
 abstract class PausableState<T extends StatefulWidget> extends State<T>
     with WidgetsBindingObserver {
-  // TODO(dotdoom): trigger events when maintainState=true under an overlay.
   bool _appLifecycleResumed = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    //didChangeAppLifecycleState(AppLifecycleState.resumed);
+    didChangeAppLifecycleState(AppLifecycleState.resumed);
   }
 
   @override
+  // TODO(dotdoom): we also need reactivate(), but it only happens on build!
   void deactivate() {
     didChangeAppLifecycleState(AppLifecycleState.paused);
     super.deactivate();
@@ -23,12 +23,6 @@ abstract class PausableState<T extends StatefulWidget> extends State<T>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    didChangeAppLifecycleState(AppLifecycleState.resumed);
-    return super.build(context);
   }
 
   @override
