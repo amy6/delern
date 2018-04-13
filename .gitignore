@@ -12,6 +12,7 @@ pubspec.lock
 # Dependencies
 bower_components
 node_modules
+vendor
 
 # Directoy with locally saved Firebase application ID etc.
 /firebase/www/__/
@@ -31,3 +32,6 @@ local.properties
 
 # firebase-tools npm package output
 firebase-debug.log
+
+# fastlane output report
+/fastlane/report.xml

@@ -1,0 +1,32 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+lane :build do
+  flutter(action: 'l10n', l10n_strings_file: 'lib/flutter/localization.dart')
+  flutter(action: 'format')
+  flutter(action: 'analyze')
+end
+
+platform :android do
+  lane :build do
+    flutter(action: 'build', debug: true)
+  end
+end
+
+platform :ios do
+  lane :build do
+    flutter(action: 'build', debug: true)
+  end
+end
+
+# vim: ft=ruby
