@@ -15,7 +15,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   ProxyKeyedList(this._base) {
     if (_base.changed) {
-      setAll(0, _base);
+      super.setAll(0, _base);
     }
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
@@ -25,7 +25,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
         case ListEventType.itemRemoved:
           var index = indexOfKey(event.previousValue.key);
           if (index >= 0) {
-            _baseItemRemoved(index);
+            super.removeAt(index);
           }
           break;
         case ListEventType.itemMoved:
@@ -56,10 +56,6 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
       }
       super.insert(index, item);
     }
-  }
-
-  void _baseItemRemoved(int index) {
-    super.removeAt(index);
   }
 
   void _baseItemChanged(ListEvent<T> event) {
@@ -99,9 +95,9 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     assert(!changed || items.length == length,
         'Attempt to change list size from $length to ${items.length}');
     if (_comparator == null) {
-      setAll(0, items);
+      super.setAll(0, items);
     } else {
-      setAll(0, new List<T>.from(items)..sort(_comparator));
+      super.setAll(0, new List<T>.from(items)..sort(_comparator));
     }
   }
 
@@ -114,4 +110,29 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   void dispose() => _baseEventsSubscription.cancel();
+
+  @override
+  void insert(int index, T value) {
+    _throwReadOnly();
+  }
+
+  @override
+  void move(int index1, int index2) {
+    _throwReadOnly();
+  }
+
+  @override
+  void setAll(int index, Iterable<T> value) {
+    _throwReadOnly();
+  }
+
+  @override
+  T removeAt(int index) {
+    _throwReadOnly();
+    return null;
+  }
+
+  void _throwReadOnly() {
+    throw new UnsupportedError('ProxyKeyedList interface is read-only');
+  }
 }
