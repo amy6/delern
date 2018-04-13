@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/messages_all.dart';
 
 /// https://flutter.io/tutorials/internationalization/
-/// 1. Generate intl_messages.arb that serves as template for other transtations:
+/// 1. Generate intl_messages.arb that serves as template for other translations:
 /// flutter pub pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/flutter/localization.dart
 /// 2. Create other translations files naming them intl_*.arb
 /// 3. Generate messages_*.dart files and messages_all.dart:
@@ -71,6 +72,14 @@ class AppLocalizations {
       'About',
       name: 'navigationDrawerAbout',
       desc: 'About in Navigation Drawer',
+    );
+  }
+
+  String get signInWithGoogle {
+    return Intl.message(
+      'Sign In with Google',
+      name: 'signInWithGoogle',
+      desc: 'Sign In with Google Button',
     );
   }
 }

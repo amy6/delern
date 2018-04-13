@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-04-11T11:07:21.010391",
+  "@@last_modified": "2018-04-13T14:58:33.550313",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -33,6 +33,12 @@
   "navigationDrawerAbout": "About",
   "@navigationDrawerAbout": {
     "description": "About in Navigation Drawer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "signInWithGoogle": "Sign In with Google",
+  "@signInWithGoogle": {
+    "description": "Sign In with Google Button",
     "type": "text",
     "placeholders": {}
   }

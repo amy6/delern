@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSignOut":
             MessageLookupByLibrary.simpleMessage("Sign Out"),
         "navigationDrawerSupportDevelopment":
-            MessageLookupByLibrary.simpleMessage("Support Development")
+            MessageLookupByLibrary.simpleMessage("Support Development"),
+        "signInWithGoogle":
+            MessageLookupByLibrary.simpleMessage("Sign In with Google")
       };
 }

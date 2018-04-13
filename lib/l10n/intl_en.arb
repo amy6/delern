@@ -1,12 +1,13 @@
-{
-  "@@last_modified": "2018-04-11T10:40:02.760025",
-  "navigationDrawerSignOut": "Sign Out",
-  "@navigationDrawerSignOut": {
-    "description": "Sign Out in Navigation drawer",
-    "type": "text",
-    "placeholders": {}
-  },
- "navigationDrawerCommunicateGroup": "Communicate",
+ {
+   "@@locale": "en",
+   "@@last_modified": "2018-04-13T13:09:02.169445",
+   "navigationDrawerSignOut": "Sign Out",
+   "@navigationDrawerSignOut": {
+     "description": "Sign Out in Navigation Drawer",
+     "type": "text",
+     "placeholders": {}
+   },
+   "navigationDrawerCommunicateGroup": "Communicate",
    "@navigationDrawerCommunicateGroup": {
      "description": "Communicate Group Name in Navigation Drawer",
      "type": "text",
@@ -35,5 +36,11 @@
      "description": "About in Navigation Drawer",
      "type": "text",
      "placeholders": {}
+   },
+   "signInWithGoogle": "Sign In with Google",
+   "@signInWithGoogle": {
+     "description": "Sign In with Google Button",
+     "type": "text",
+     "placeholders": {}
    }
-}
+ }

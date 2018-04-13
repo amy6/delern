@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../remote/sign_in.dart';
 
 typedef void OnSignedIn(FirebaseUser user);
@@ -52,7 +53,7 @@ class SignInWidget extends StatelessWidget {
                             new Container(
                                 padding: const EdgeInsets.only(left: 10.0),
                                 child: new Text(
-                                  'Sign In with Google',
+                                  AppLocalizations.of(context).signInWithGoogle,
                                   style: new TextStyle(
                                     fontSize: 18.0,
                                   ),

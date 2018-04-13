@@ -35,5 +35,11 @@
       "description": "About in Navigation Drawer",
       "type": "text",
       "placeholders": {}
+    },
+     "signInWithGoogle": "Войти с помощью Google",
+     "@signInWithGoogle": {
+       "description": "Sign In with Google Button",
+       "type": "text",
+       "placeholders": {}
     }
 }
