@@ -47,7 +47,6 @@ class ObservableList<T> extends ListBase<T> {
   bool get changed => _changed;
 
   final List<T> _base = new List<T>();
-  // TODO(dotdoom): investigate side effects of sync:true.
   final StreamController<ListEvent<T>> _events =
       new StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;
@@ -114,7 +113,6 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   void setAll(int index, Iterable<T> newValue) {
-    // TODO(dotdoom): perhaps overload addAll instead.
     _base.length = index + newValue.length;
     _base.setAll(index, newValue);
     _changed = true;

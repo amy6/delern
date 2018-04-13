@@ -61,7 +61,8 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
         });
         break;
       case ListEventType.set:
-      // TODO(dotdoom): assert(item count not changed), then continue;
+      // Note: number of items must not change here (unless it's the first
+      // update; we validate this in proxy_keyed_list.dart).
       case ListEventType.itemChanged:
       case ListEventType.itemMoved:
         setState(() {});
