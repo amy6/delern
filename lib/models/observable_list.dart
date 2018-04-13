@@ -151,5 +151,6 @@ class ObservableList<T> extends ListBase<T> {
     ));
   }
 
+  @mustCallSuper
   void dispose() => _events.close();
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
+
 import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
 import 'attachable.dart';
@@ -71,6 +73,7 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
   }
 
   @override
+  @mustCallSuper
   void detach() {
     _subscription?.cancel();
     _subscription = null;

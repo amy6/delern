@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
+
 import '../models/deck.dart';
 import '../models/keyed_list.dart';
 import '../models/stream_demuxer.dart';
@@ -8,7 +10,6 @@ import 'proxy_keyed_list.dart';
 import 'view_models_list.dart';
 
 class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
-  // TODO(dotdoom): remove name in favor of deck ?
   String get key => _deck?.key;
   Deck get deck => _deck;
   String get name => _deck?.name;
@@ -37,6 +38,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
   }
 
   @override
+  @mustCallSuper
   void attachTo(ViewModelsList<DeckViewModel> owner) {
     if (_internalUpdates != null) {
       // This item is already attached - can assert that the owner is the same.
@@ -63,6 +65,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
   }
 
   @override
+  @mustCallSuper
   void detach() {
     _internalUpdates?.cancel();
     _internalUpdates = null;
@@ -83,9 +86,11 @@ class DecksViewModel implements Attachable<String> {
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
 
   @override
+  @mustCallSuper
   void detach() => _deckViewModels.detach();
 
   @override
+  @mustCallSuper
   void attachTo(String uid) {
     detach();
     _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
@@ -99,6 +104,7 @@ class DecksViewModel implements Attachable<String> {
     }));
   }
 
+  @mustCallSuper
   void dispose() {
     detach();
     _decksProxy?.dispose();

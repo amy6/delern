@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
+
 import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
 
@@ -108,7 +110,11 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     }
   }
 
-  void dispose() => _baseEventsSubscription.cancel();
+  @mustCallSuper
+  void dispose() {
+    _baseEventsSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   void insert(int index, T value) {
