@@ -25,18 +25,6 @@ class ListEvent<T> {
   String toString() {
     return '$eventType #$index ($previousValue)';
   }
-
-  @visibleForTesting
-  bool operator ==(other) =>
-      other is ListEvent<T> &&
-      other.eventType == eventType &&
-      other.index == index &&
-      other.previousValue == previousValue;
-
-  @visibleForTesting
-  // TODO(dotdoom): quiver.hash3
-  int get hashCode =>
-      eventType.hashCode ^ index.hashCode ^ previousValue.hashCode;
 }
 
 class ObservableList<T> extends ListBase<T> {
@@ -138,8 +126,9 @@ class ObservableList<T> extends ListBase<T> {
         'conventional methods is not supported. Please use methods instead');
   }
 
-  // TODO(dotdoom): move into operator[]= once all internal uses of
-  //                operator[]= (e.g. sort()) are cleared.
+  // We don't override []= because that would allow us to subtly use modifying
+  // methods (e.g. sort()) without immediately noticing the side effects, such
+  // as itemAdded / itemRemoved / itemChanged event churn.
   void setAt(int index, T value) {
     T previousValue = _base[index];
     _base[index] = value;
