@@ -96,9 +96,21 @@ jobs:
           flutter packages get
           ( cd android && ci-lint )
           ( cd firebase && ci-lint )
+
+          flutter pub pub run intl_translation:extract_to_arb --output-dir=lib/l10n \
+                lib/flutter/localization.dart
+          flutter pub pub run intl_translation:generate_from_arb --output-dir=lib/l10n \
+                --no-use-deferred-loading lib/flutter/localization.dart lib/l10n/intl_*.arb
+
           flutter format lib
+
+          if [ "$(git diff --numstat lib/l10n/intl_messages.arb | awk '{ print $1 + $2 }')" -eq 2 ]; then
+                # We expect @@last_modified to be, err, modified. That's 1 deleted and 1 added lines.
+                git checkout lib/l10n/intl_messages.arb
+          fi
+
           flutter analyze
-          flutter analyze --preview-dart-2
+
           git diff --stat --exit-code
           #flutter test
           flutter build apk --debug
