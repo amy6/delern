@@ -5,6 +5,11 @@ class StreamDemuxerEvent<T> {
   final dynamic value;
 
   StreamDemuxerEvent(this.stream, this.value);
+
+  @override
+  String toString() {
+    return 'Stream "$stream" emits: $value';
+  }
 }
 
 class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
