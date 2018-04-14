@@ -101,11 +101,6 @@ jobs:
           bundle exec fastlane build
           bundle exec fastlane android build
 
-          if [ "$(git diff --numstat lib/l10n/intl_messages.arb | awk '{ print $1 + $2 }')" -eq 2 ]; then
-                # We expect @@last_modified to be, err, modified. That's 1 deleted and 1 added lines.
-                git checkout lib/l10n/intl_messages.arb
-          fi
-
           git diff --stat --exit-code
 
           # TODO(dotdoom): flutter test
