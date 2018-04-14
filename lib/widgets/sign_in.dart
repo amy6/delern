@@ -20,8 +20,11 @@ class SignInWidget extends StatelessWidget {
             new Expanded(
               child: new Container(
                 child: new Center(
-                  child: new Image.asset(
-                    'images/delern.png',
+                  child: new Padding(
+                    padding: new EdgeInsets.all(50.0),
+                    child: new Image.asset(
+                      'images/delern.png',
+                    ),
                   ),
                 ),
               ),
