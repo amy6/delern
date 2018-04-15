@@ -1,29 +1,15 @@
 version: 2
 
-defaults: &defaults
-  docker:
-  - image: dasfoo/firebase:latest
-  environment:
-  - ANDROID_HOME: /root/android-sdk
-  - TERM: dumb
-  # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
-  # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
-  - GRADLE_OPTS: -Dorg.gradle.daemon=false
-
-gcloud_install_command: &gcloud_install_command
-  name: "Install GCloud, download & activate authentication keys"
-  command: |
-    # We use this account to access both Google Play account and GCS.
-    # The former requires it to be in "app" subdirectory.
-    echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > android/app/play-store-service-account.json
-    gcloud auth activate-service-account --key-file android/app/play-store-service-account.json
-    mkdir -p ~/.android
-    gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-    gsutil cp gs://dasfoo-keystore/delern.jks android/app/
-
 jobs:
-  checkout:
-    <<: *defaults
+  build:
+    docker:
+    - image: dasfoo/firebase:latest
+    environment:
+    - ANDROID_HOME: /root/android-sdk
+    - TERM: dumb
+    # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
+    # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
+    - GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
     - checkout
     - run:
@@ -41,63 +27,51 @@ jobs:
           # (aka removed and re-added) do not count twice.
           git tag -l | xargs git tag -d
           git fetch --tags
-    - persist_to_workspace:
-        root: ..
-        paths:
-        - project
 
-  dependencies:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-
-    - run: ci-dependencies hash
     - restore_cache:
         keys:
-        #- v12-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
-        #- v12-android-{{ arch }}-{{ .Branch }}-
-        - v12-android-{{ arch }}-master-
+        - v14-{{ arch }}-{{ .Branch }}-{{ checksum "pubspec.yaml" }}
+        - v14-{{ arch }}-{{ .Branch }}-
+        - v14-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
         command: |
-          ci-dependencies explode
+          ( cd firebase/functions && npm install --no-save )
+          ( cd firebase/www && bower --allow-root install )
+
+          bundle install
+
           mkdir -p "${ANDROID_HOME?}/licenses"
           # This is just a hash sum of the license agreements accepted.
           # Take this text from the Android SDK directory on your machine.
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >>"${ANDROID_HOME?}/licenses/android-sdk-license"
           echo d56f5187479451eabf01fb78af6dfcb131a6481e >>"${ANDROID_HOME?}/licenses/android-sdk-license"
-          ci-dependencies install collect
+          # TODO(dotdoom): flutter upgrade ? (docker needs to be on a specific branch?)
+          flutter packages get
+          echo flutter.sdk=/opt/flutter > android/local.properties
+          ( cd android && ./gradlew resolveDependencies )
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v12-android-{{ arch }}-{{ .Branch }}-{{ checksum "../.cache/dependencies.hash" }}
+        key: v14-{{ arch }}-{{ .Branch }}-{{ checksum "pubspec.yaml" }}
         paths:
-        - ~/.cache/dependencies
-
-    - persist_to_workspace:
-        root: ..
-        paths:
-        - project
-        - .cache/dependencies
-
-  unit-tests:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
+        - ~/android-sdk
+        - ~/.gradle
+        - ~/.npm
+        - ~/.pub-cache
+        - ~/project/firebase/functions/node_modules
+        - ~/project/firebase/www/bower_components
+        - ~/project/vendor/bundle
 
     - run:
         name: "Lint, assemble and run unit tests"
         no_output_timeout: "35m"
         command: |
-          flutter packages get
           ( cd android && ci-lint )
           ( cd firebase && ci-lint )
 
-          bundle install
+          bundle exec fastlane update_plugins
           bundle exec fastlane build
           bundle exec fastlane android build
 
@@ -108,89 +82,21 @@ jobs:
 
           ( cd firebase/www && polymer lint && polymer build )
 
-    - persist_to_workspace:
-        root: ..
-        paths:
-        # Persist project so that coverage results make it to codecov.
-        - project
-
-  deploy-firebase-debug:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
     - run:
-        <<: *gcloud_install_command
-
-    - run:
-        working_directory: ~/project/firebase
-        name: "Deploy Firebase database rules, functions, hosting to DEBUG"
-        environment:
-          PROJECT: delern-debug
-        command: npm run deploy
-
-    - persist_to_workspace:
-        root: ..
-        paths:
-        # Persist test results to export to CircleCI.
-        - project
-
-  deploy-firebase-release:
-    <<: *defaults
-    steps:
-    - attach_workspace:
-        at: ..
-    - run: ci-dependencies explode
-    - run:
-        <<: *gcloud_install_command
-
-    - run:
-        working_directory: ~/project/firebase
-        name: "Deploy Firebase database rules, functions, hosting to RELEASE"
-        environment:
-          PROJECT: delern-e1b33
-        command: npm run deploy
-
-    - run:
-        name: "Assemble release APK (to store in artifacts)"
-        command: flutter build apk
+        name: "[if branch=master] Deploy Firebase and build Release APK"
+        command: |
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+            # We use this account to access both Google Play account and GCS.
+            # The former requires it to be in "app" subdirectory.
+            echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > android/app/play-store-service-account.json
+            gcloud auth activate-service-account --key-file android/app/play-store-service-account.json
+            mkdir -p ~/.android
+            gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
+            gsutil cp gs://dasfoo-keystore/delern.jks android/app/
+            ( cd firebase && PROJECT=delern-debug npm run deploy )
+            ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
+            flutter build apk
+          fi
 
     - store_artifacts:
         path: build/app/outputs
-
-workflows:
-  version: 2
-
-  build-and-release:
-    jobs:
-    - checkout:
-        filters: &release_tags
-          tags:
-            only: /v[0-9]+(\.[0-9]+)*/
-    - dependencies:
-        requires:
-        - checkout
-        filters: *release_tags
-    - unit-tests:
-        requires:
-        - checkout
-        - dependencies
-        filters: *release_tags
-    - deploy-firebase-debug:
-        requires:
-        - checkout
-        - dependencies
-        filters:
-          <<: *release_tags
-          branches:
-            only: master
-    - deploy-firebase-release:
-        requires:
-        - checkout
-        - dependencies
-        - deploy-firebase-debug
-        filters:
-          <<: *release_tags
-          branches:
-            only: master
