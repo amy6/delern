@@ -11,6 +11,7 @@ abstract class ViewModel<T> implements KeyedListItem, Attachable<T> {
   ViewModel<T> updateWith(covariant ViewModel<T> value);
 }
 
+// TODO(dotdoom): make this list interface read-only
 class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
     extends ObservableList<T>
     with KeyedListMixin<T>

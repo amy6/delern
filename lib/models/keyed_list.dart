@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:meta/meta.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
 import 'observable_list.dart';
 import 'stream_demuxer.dart';
@@ -17,7 +17,7 @@ class KeyedListEvent<T extends KeyedListItem> {
   final String previousSiblingKey;
   final Iterable<T> fullListValueForSet;
 
-  KeyedListEvent({
+  const KeyedListEvent({
     @required this.eventType,
     this.previousSiblingKey,
     this.value,

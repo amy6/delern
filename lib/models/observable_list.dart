@@ -16,7 +16,7 @@ class ListEvent<T> {
   final int index;
   final T previousValue;
 
-  ListEvent({
+  const ListEvent({
     @required this.eventType,
     @required this.index,
     this.previousValue,

@@ -103,7 +103,8 @@ jobs:
 
           git diff --stat --exit-code
 
-          # TODO(dotdoom): flutter test
+          flutter test --coverage
+          bash <(curl -s https://codecov.io/bash)
 
           ( cd firebase/www && polymer lint && polymer build )
 
