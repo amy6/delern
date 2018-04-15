@@ -34,26 +34,48 @@ void main() {
           _eventMatcher(ListEventType.itemAdded, 2),
           _eventMatcher(ListEventType.itemAdded, 3),
           _eventMatcher(ListEventType.itemAdded, 4),
+          _eventMatcher(ListEventType.itemMoved, 2),
+          _eventMatcher(ListEventType.itemMoved, 1),
+          _eventMatcher(ListEventType.itemChanged, 2, 17),
           _eventMatcher(ListEventType.set, 0),
           emitsDone,
         ]));
 
+    expect(list.changed, equals(false));
     list.add(42);
-    list.insert(0, 17);
-    list.insert(2, -1);
-    list.removeAt(1);
-    list.addAll(<int>[1, 2, 3]);
+    expect(list.changed, true);
 
-    expect(list[0], 17);
-    expect(list[1], -1);
-    expect(list[2], 1);
-    expect(list[3], 2);
-    expect(list[4], 3);
+    // 42
+    list.insert(0, 17);
+    // 17 42
+    list.insert(2, -1);
+    // 17 42 -1
+    list.removeAt(1);
+    // 17 -1
+    list.addAll(<int>[1, 2, 3]);
+    // 17 -1 1 2 3
+    list.move(2, 0);
+    // 1 17 -1 2 3
+    list.move(1, 2);
+    // 1 -1 17 2 3
+    list.setAt(2, 0);
+    expect(list, equals(<int>[1, -1, 0, 2, 3]));
 
     list.setAll(0, <int>[1, 2, 3]);
+    expect(list, equals(<int>[1, 2, 3]));
 
     list.dispose();
+  });
 
+  test('unallowed methods', () {
+    var list = new ObservableList<int>();
+    list.setAll(0, <int>[1, -1, 0]);
+
+    expect(() => list.length += 1,
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(list.sort, throwsA(const isInstanceOf<UnsupportedError>()));
+
+    list.dispose();
     expect(() => list.add(0), throwsA(const isInstanceOf<StateError>()));
   });
 }
