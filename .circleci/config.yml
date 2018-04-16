@@ -98,5 +98,7 @@ jobs:
             flutter build apk
           fi
 
+    - store_test_results:
+        path: fastlane
     - store_artifacts:
         path: build/app/outputs
