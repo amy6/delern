@@ -17,6 +17,7 @@ Stream<T> _listToStream<T>(List<T> list) {
 
 class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
   final String key;
+  dynamic data;
 
   TestFixture(this.key);
 
@@ -35,30 +36,64 @@ class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
       ViewModel<ViewModelsList<TestFixture>> value) {
     return value;
   }
+
+  @override
+  bool operator ==(other) =>
+      (other is TestFixture) && key == other.key && data == other.data;
+
+  @override
+  int get hashCode => key.hashCode ^ data.hashCode;
+
+  @override
+  String toString() => '#$key [$data]';
 }
 
 void main() {
-  test('key insertions', () async {
+  test('key operations', () async {
     var list = new ViewModelsList<TestFixture>();
 
     list.attachTo(_listToStream([
       new KeyedListEvent(
-          eventType: ListEventType.itemAdded,
-          previousSiblingKey: null,
-          value: new TestFixture('1')),
+        eventType: ListEventType.set,
+        fullListValueForSet: [new TestFixture('1')],
+      ),
+      // 1
       new KeyedListEvent(
           eventType: ListEventType.itemAdded,
           previousSiblingKey: '1',
           value: new TestFixture('2')),
+      // 1 2
       new KeyedListEvent(
           eventType: ListEventType.itemAdded,
           previousSiblingKey: '1',
           value: new TestFixture('2')),
+      // 1 2
+      new KeyedListEvent(
+        eventType: ListEventType.itemAdded,
+        previousSiblingKey: '2',
+        value: new TestFixture('3'),
+      ),
+      // 1 2 3
+      new KeyedListEvent(
+          eventType: ListEventType.itemRemoved, value: new TestFixture('2')),
+      // 1 3
+      new KeyedListEvent(
+          eventType: ListEventType.itemMoved, value: new TestFixture('3')),
+      new KeyedListEvent(
+          eventType: ListEventType.itemChanged,
+          value: new TestFixture('1')..data = 'foo'),
     ]));
 
     // Wait for all microtasks (listen()) to complete.
     await new Future(() {});
 
-    expect(list.length, equals(2));
+    list.childUpdated(new TestFixture('3')..data = 'bar');
+
+    expect(
+        list,
+        equals([
+          new TestFixture('3')..data = 'bar',
+          new TestFixture('1')..data = 'foo',
+        ]));
   });
 }

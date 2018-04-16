@@ -42,6 +42,8 @@ class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
         key,
         stream.listen(
           (evt) => _controller.add(new StreamDemuxerEvent<T>(key, evt)),
+          // TODO(dotdoom): should we cancel only when all of them are done?
+          onDone: _onCancel,
           onError: (err) =>
               _controller.addError(new StreamDemuxerEvent<T>(key, err)),
         )));
