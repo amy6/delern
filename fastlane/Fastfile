@@ -21,6 +21,17 @@ platform :android do
   lane :build do
     flutter(action: 'build', debug: true)
   end
+
+  lane :publish do
+    flutter(action: 'build').values.first
+    supply(
+      track: 'internal',
+      apk: lane_context[SharedValues::FLUTTER_OUTPUT_APK],
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
 end
 
 platform :ios do

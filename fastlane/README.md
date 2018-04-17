@@ -29,6 +29,11 @@ fastlane build
 fastlane android build
 ```
 
+### android publish
+```
+fastlane android publish
+```
+
 
 ----
 

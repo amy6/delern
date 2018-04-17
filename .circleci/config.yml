@@ -95,7 +95,7 @@ jobs:
             gsutil cp gs://dasfoo-keystore/delern.jks android/app/
             ( cd firebase && PROJECT=delern-debug npm run deploy )
             ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
-            flutter build apk
+            bundle exec fastlane android publish
           fi
 
     - store_test_results:
