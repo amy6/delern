@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../pages/cards.dart';
+import '../pages/deck_settings.dart';
+import '../pages/edit_cards.dart';
+import '../pages/share_deck.dart';
 import '../view_models/deck_view_model.dart';
 import 'observing_animated_list.dart';
 
@@ -118,9 +122,62 @@ class DeckListItem extends StatelessWidget {
         splashColor: Theme.of(context).splashColor,
         radius: 15.0,
         onTap: () {},
-        child: new IconButton(
-            icon: new Icon(Icons.more_vert, size: 30.0), onPressed: null),
+        child: new PopupMenuButton<DeckMenu>(
+          onSelected: _select,
+          itemBuilder: (BuildContext context) {
+            return buildMenu(context).map((DeckMenu menuItem) {
+              return new PopupMenuItem<DeckMenu>(
+                value: menuItem,
+                child: new Text(menuItem.title),
+              );
+            }).toList();
+          },
+        ),
       ),
     );
   }
+
+  void _select(DeckMenu menuItem) {
+    if (menuItem.title ==
+        AppLocalizations.of(menuItem.context).editCardsDeckMenu) {
+      Navigator.push(
+        menuItem.context,
+        new MaterialPageRoute(
+            builder: (context) => new EditCardsPage(model?.name)),
+      );
+    }
+    if (menuItem.title ==
+        AppLocalizations.of(menuItem.context).settingsDeckMenu) {
+      Navigator.push(
+        menuItem.context,
+        new MaterialPageRoute(
+            builder: (context) => new DeckSettingsPage(model?.name)),
+      );
+    }
+    if (menuItem.title == AppLocalizations.of(menuItem.context).shareDeckMenu) {
+      Navigator.push(
+        menuItem.context,
+        new MaterialPageRoute(
+            builder: (context) => new ShareDeckPage(model?.name)),
+      );
+    }
+  }
+}
+
+class DeckMenu {
+  DeckMenu({this.title, this.context});
+  String title;
+  BuildContext context;
+}
+
+List<DeckMenu> buildMenu(BuildContext context) {
+  return <DeckMenu>[
+    new DeckMenu(
+        title: AppLocalizations.of(context).editCardsDeckMenu,
+        context: context),
+    new DeckMenu(
+        title: AppLocalizations.of(context).settingsDeckMenu, context: context),
+    new DeckMenu(
+        title: AppLocalizations.of(context).shareDeckMenu, context: context),
+  ];
 }

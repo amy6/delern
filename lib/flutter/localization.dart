@@ -82,6 +82,30 @@ class AppLocalizations {
       desc: 'Sign In with Google Button',
     );
   }
+
+  String get editCardsDeckMenu {
+    return Intl.message(
+      'Edit Cards',
+      name: 'editCardsDeckMenu',
+      desc: 'Edit Cards in Deck Menu',
+    );
+  }
+
+  String get settingsDeckMenu {
+    return Intl.message(
+      'Settings',
+      name: 'settingsDeckMenu',
+      desc: 'Settings in Deck Menu',
+    );
+  }
+
+  String get shareDeckMenu {
+    return Intl.message(
+      'Share',
+      name: 'shareDeckMenu',
+      desc: 'Share in Deck Menu',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

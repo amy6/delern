@@ -19,6 +19,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "editCardsDeckMenu":
+            MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
         "navigationDrawerCommunicateGroup":
@@ -31,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Выход"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
+        "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
+        "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google")
       };

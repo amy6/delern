@@ -42,5 +42,23 @@
      "description": "Sign In with Google Button",
      "type": "text",
      "placeholders": {}
-   }
+   },
+   "editCardsDeckMenu": "Edit Cards",
+     "@editCardsDeckMenu": {
+       "description": "Edit Cards in Deck Menu",
+       "type": "text",
+       "placeholders": {}
+     },
+     "settingsDeckMenu": "Settings",
+     "@settingsDeckMenu": {
+       "description": "Settings in Deck Menu",
+       "type": "text",
+       "placeholders": {}
+     },
+     "shareDeckMenu": "Share",
+     "@shareDeckMenu": {
+       "description": "Share in Deck Menu",
+       "type": "text",
+       "placeholders": {}
+     }
  }
