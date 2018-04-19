@@ -137,47 +137,61 @@ class DeckListItem extends StatelessWidget {
     );
   }
 
-  void _onDeckMenuItemSelected(_DeckMenuItem menuItem) {
-    if (menuItem.title ==
-        AppLocalizations.of(menuItem.context).editCardsDeckMenu) {
-      Navigator.push(
-        menuItem.context,
-        new MaterialPageRoute(
-            builder: (context) => new CardsListPage(model?.name)),
-      );
-    }
-    if (menuItem.title ==
-        AppLocalizations.of(menuItem.context).settingsDeckMenu) {
-      Navigator.push(
-        menuItem.context,
-        new MaterialPageRoute(
-            builder: (context) => new DeckSettingsPage(model?.name)),
-      );
-    }
-    if (menuItem.title == AppLocalizations.of(menuItem.context).shareDeckMenu) {
-      Navigator.push(
-        menuItem.context,
-        new MaterialPageRoute(
-            builder: (context) => new DeckSharingPage(model?.name)),
-      );
+  void _onDeckMenuItemSelected(_DeckMenuItem item) {
+    switch (item.menuItem) {
+      case DeckMenu.edit:
+        Navigator.push(
+          item.context,
+          new MaterialPageRoute(
+              builder: (context) => new CardsListPage(model?.name)),
+        );
+        break;
+      case DeckMenu.setting:
+        Navigator.push(
+          item.context,
+          new MaterialPageRoute(
+              builder: (context) => new DeckSettingsPage(model?.name)),
+        );
+        break;
+      case DeckMenu.share:
+        Navigator.push(
+          item.context,
+          new MaterialPageRoute(
+              builder: (context) => new DeckSharingPage(model?.name)),
+        );
+        break;
+      default:
+        throw new UnsupportedError('${item.menuItem}'
+            ' - This Deck Menu item is not supported');
     }
   }
 }
 
 class _DeckMenuItem {
-  _DeckMenuItem({this.title, this.context});
+  _DeckMenuItem({this.menuItem, this.title, this.context});
+  final DeckMenu menuItem;
   final String title;
   final BuildContext context;
 }
 
+enum DeckMenu { edit, setting, share }
+
 List<_DeckMenuItem> _buildMenu(BuildContext context) {
   return <_DeckMenuItem>[
     new _DeckMenuItem(
-        title: AppLocalizations.of(context).editCardsDeckMenu,
-        context: context),
+      menuItem: DeckMenu.edit,
+      title: AppLocalizations.of(context).editCardsDeckMenu,
+      context: context,
+    ),
     new _DeckMenuItem(
-        title: AppLocalizations.of(context).settingsDeckMenu, context: context),
+      menuItem: DeckMenu.setting,
+      title: AppLocalizations.of(context).settingsDeckMenu,
+      context: context,
+    ),
     new _DeckMenuItem(
-        title: AppLocalizations.of(context).shareDeckMenu, context: context),
+      menuItem: DeckMenu.share,
+      title: AppLocalizations.of(context).shareDeckMenu,
+      context: context,
+    ),
   ];
 }
