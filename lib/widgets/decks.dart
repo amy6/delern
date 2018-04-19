@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../pages/cards.dart';
+import '../pages/cards_list.dart';
 import '../pages/deck_settings.dart';
-import '../pages/edit_cards.dart';
-import '../pages/share_deck.dart';
+import '../pages/deck_sharing.dart';
 import '../view_models/deck_view_model.dart';
 import 'observing_animated_list.dart';
 
@@ -122,11 +122,11 @@ class DeckListItem extends StatelessWidget {
         splashColor: Theme.of(context).splashColor,
         radius: 15.0,
         onTap: () {},
-        child: new PopupMenuButton<DeckMenu>(
-          onSelected: _select,
+        child: new PopupMenuButton<_DeckMenuItem>(
+          onSelected: _onDeckMenuItemSelected,
           itemBuilder: (BuildContext context) {
-            return buildMenu(context).map((DeckMenu menuItem) {
-              return new PopupMenuItem<DeckMenu>(
+            return _buildMenu(context).map((_DeckMenuItem menuItem) {
+              return new PopupMenuItem<_DeckMenuItem>(
                 value: menuItem,
                 child: new Text(menuItem.title),
               );
@@ -137,13 +137,13 @@ class DeckListItem extends StatelessWidget {
     );
   }
 
-  void _select(DeckMenu menuItem) {
+  void _onDeckMenuItemSelected(_DeckMenuItem menuItem) {
     if (menuItem.title ==
         AppLocalizations.of(menuItem.context).editCardsDeckMenu) {
       Navigator.push(
         menuItem.context,
         new MaterialPageRoute(
-            builder: (context) => new EditCardsPage(model?.name)),
+            builder: (context) => new CardsListPage(model?.name)),
       );
     }
     if (menuItem.title ==
@@ -158,26 +158,26 @@ class DeckListItem extends StatelessWidget {
       Navigator.push(
         menuItem.context,
         new MaterialPageRoute(
-            builder: (context) => new ShareDeckPage(model?.name)),
+            builder: (context) => new DeckSharingPage(model?.name)),
       );
     }
   }
 }
 
-class DeckMenu {
-  DeckMenu({this.title, this.context});
-  String title;
-  BuildContext context;
+class _DeckMenuItem {
+  _DeckMenuItem({this.title, this.context});
+  final String title;
+  final BuildContext context;
 }
 
-List<DeckMenu> buildMenu(BuildContext context) {
-  return <DeckMenu>[
-    new DeckMenu(
+List<_DeckMenuItem> _buildMenu(BuildContext context) {
+  return <_DeckMenuItem>[
+    new _DeckMenuItem(
         title: AppLocalizations.of(context).editCardsDeckMenu,
         context: context),
-    new DeckMenu(
+    new _DeckMenuItem(
         title: AppLocalizations.of(context).settingsDeckMenu, context: context),
-    new DeckMenu(
+    new _DeckMenuItem(
         title: AppLocalizations.of(context).shareDeckMenu, context: context),
   ];
 }
