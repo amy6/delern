@@ -26,7 +26,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
 
   @override
   DeckViewModel updateWith(DeckViewModel value) {
-    if (this == value) {
+    if (identical(this, value)) {
       // This will happen when we sent an internal update event to the owner.
       return this;
     }
