@@ -38,7 +38,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   @override
   void didChangeDependencies() {
     _listSubscription?.cancel();
-    _listSubscription = widget.list.events.listen(_onListEvent);
+    _listSubscription = widget.list.events.listen(_processListEvent);
     super.didChangeDependencies();
   }
 
@@ -48,7 +48,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
     super.dispose();
   }
 
-  void _onListEvent(ListEvent<T> event) {
+  void _processListEvent(ListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
         _animatedListKey.currentState.insertItem(event.index);

@@ -22,17 +22,17 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
   void attachTo(Stream<KeyedListEvent<T>> stream) {
     _subscription?.cancel();
     forEach((item) => item.attachTo(this));
-    _subscription = stream.listen(_processEvent);
+    _subscription = stream.listen(_processListEvent);
   }
 
   void childUpdated(T child) {
-    _processEvent(new KeyedListEvent(
+    _processListEvent(new KeyedListEvent(
       eventType: ListEventType.itemChanged,
       value: child,
     ));
   }
 
-  void _processEvent(KeyedListEvent<T> event) {
+  void _processListEvent(KeyedListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
         // With Firebase, we subscribe to onValue, which delivers all data,
