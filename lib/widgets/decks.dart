@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
@@ -90,13 +92,13 @@ class DeckListItem extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardsPage(model?.name)),
+                  builder: (context) => new CardsPage(model.name)),
             ),
         child: new Container(
           padding: const EdgeInsets.only(
               top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
           child: new Text(
-            model?.name ?? 'Loading...',
+            model.name,
             style: new TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w400,
@@ -109,7 +111,7 @@ class DeckListItem extends StatelessWidget {
 
   Widget _buildNumberOfCards() {
     return new Container(
-      child: new Text(model?.cardsToLearn?.toString() ?? 'N/A',
+      child: new Text(model.cardsToLearn?.toString() ?? 'N/A',
           style: new TextStyle(
             fontSize: 18.0,
           )),
@@ -122,76 +124,55 @@ class DeckListItem extends StatelessWidget {
         splashColor: Theme.of(context).splashColor,
         radius: 15.0,
         onTap: () {},
-        child: new PopupMenuButton<_DeckMenuItem>(
-          onSelected: _onDeckMenuItemSelected,
+        child: new PopupMenuButton<_DeckMenuItemType>(
+          onSelected: (itemType) => _onDeckMenuItemSelected(context, itemType),
           itemBuilder: (BuildContext context) {
-            return _buildMenu(context).map((_DeckMenuItem menuItem) {
-              return new PopupMenuItem<_DeckMenuItem>(
-                value: menuItem,
-                child: new Text(menuItem.title),
-              );
-            }).toList();
+            return _buildMenu(context)
+                .entries
+                .map((entry) => new PopupMenuItem<_DeckMenuItemType>(
+                      value: entry.key,
+                      child: new Text(entry.value),
+                    ))
+                .toList();
           },
         ),
       ),
     );
   }
 
-  void _onDeckMenuItemSelected(_DeckMenuItem item) {
-    switch (item.menuItem) {
-      case DeckMenu.edit:
+  void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
+    switch (item) {
+      case _DeckMenuItemType.edit:
         Navigator.push(
-          item.context,
+          context,
           new MaterialPageRoute(
-              builder: (context) => new CardsListPage(model?.name)),
+              builder: (context) => new CardsListPage(model.name)),
         );
         break;
-      case DeckMenu.setting:
+      case _DeckMenuItemType.setting:
         Navigator.push(
-          item.context,
+          context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSettingsPage(model?.name)),
+              builder: (context) => new DeckSettingsPage(model.name)),
         );
         break;
-      case DeckMenu.share:
+      case _DeckMenuItemType.share:
         Navigator.push(
-          item.context,
+          context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSharingPage(model?.name)),
+              builder: (context) => new DeckSharingPage(model.name)),
         );
         break;
-      default:
-        throw new UnsupportedError('${item.menuItem}'
-            ' - This Deck Menu item is not supported');
     }
   }
 }
 
-class _DeckMenuItem {
-  _DeckMenuItem({this.menuItem, this.title, this.context});
-  final DeckMenu menuItem;
-  final String title;
-  final BuildContext context;
-}
+enum _DeckMenuItemType { edit, setting, share }
 
-enum DeckMenu { edit, setting, share }
-
-List<_DeckMenuItem> _buildMenu(BuildContext context) {
-  return <_DeckMenuItem>[
-    new _DeckMenuItem(
-      menuItem: DeckMenu.edit,
-      title: AppLocalizations.of(context).editCardsDeckMenu,
-      context: context,
-    ),
-    new _DeckMenuItem(
-      menuItem: DeckMenu.setting,
-      title: AppLocalizations.of(context).settingsDeckMenu,
-      context: context,
-    ),
-    new _DeckMenuItem(
-      menuItem: DeckMenu.share,
-      title: AppLocalizations.of(context).shareDeckMenu,
-      context: context,
-    ),
-  ];
-}
+Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) =>
+    new LinkedHashMap<_DeckMenuItemType, String>()
+      ..[_DeckMenuItemType.edit] =
+          AppLocalizations.of(context).editCardsDeckMenu
+      ..[_DeckMenuItemType.setting] =
+          AppLocalizations.of(context).settingsDeckMenu
+      ..[_DeckMenuItemType.share] = AppLocalizations.of(context).shareDeckMenu;
