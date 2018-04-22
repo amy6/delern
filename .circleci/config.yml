@@ -75,7 +75,11 @@ jobs:
           bundle exec fastlane build
           bundle exec fastlane android build
 
-          git diff --stat --exit-code
+          if [ -n "$(git status --porcelain)" ]; then
+                echo 'Working directory not clean after reformat / update:' >&2
+                git status >&2
+                exit 1
+          fi
 
           flutter test --coverage
           bash <(curl -s https://codecov.io/bash)
