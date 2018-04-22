@@ -117,6 +117,11 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   @override
+  void setAt(int index, T value) {
+    _throwReadOnly();
+  }
+
+  @override
   void insert(int index, T value) {
     _throwReadOnly();
   }

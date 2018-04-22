@@ -14,4 +14,22 @@ void main() {
     var list = new ProxyKeyedList(new ObservableList<TestFixture>());
     list.dispose();
   });
+
+  test('read only interface', () {
+    var list = new ProxyKeyedList(
+        new ObservableList<TestFixture>()..add(null)..add(null));
+
+    expect(() => list.setAt(0, null),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list.move(0, 1), throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.removeAt(0),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.insert(0, null),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list.shuffle(), throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list[0] = null, throwsA(const isInstanceOf<UnsupportedError>()));
+  });
 }

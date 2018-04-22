@@ -96,4 +96,19 @@ void main() {
           new TestFixture('1')..data = 'foo',
         ]));
   });
+
+  test('read only interface', () {
+    var list = new ViewModelsList(null);
+
+    expect(() => list.setAt(0, null),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list.move(0, 1), throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.removeAt(0),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.insert(0, null),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list[0] = null, throwsA(const isInstanceOf<UnsupportedError>()));
+  });
 }

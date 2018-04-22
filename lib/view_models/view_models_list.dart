@@ -137,6 +137,11 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   }
 
   @override
+  void setAt(int index, T value) {
+    _throwReadOnly();
+  }
+
+  @override
   T removeAt(int index) {
     _throwReadOnly();
     return null;
