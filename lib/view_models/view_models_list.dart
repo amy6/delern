@@ -6,23 +6,26 @@ import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
 import 'attachable.dart';
 
-abstract class ViewModel<T> implements KeyedListItem, Attachable<T> {
+abstract class ViewModel<T> implements KeyedListItem, Attachable {
   String get key;
   ViewModel<T> updateWith(covariant ViewModel<T> value);
 }
 
+typedef Stream<T> StreamGetter<T>();
+
 // TODO(dotdoom): make this list interface read-only
 class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
-    extends ObservableList<T>
-    with KeyedListMixin<T>
-    implements Attachable<Stream<KeyedListEvent<T>>> {
+    extends ObservableList<T> with KeyedListMixin<T> implements Attachable {
+  final StreamGetter<KeyedListEvent<T>> _stream;
   StreamSubscription<KeyedListEvent<T>> _subscription;
 
+  ViewModelsList(this._stream);
+
   @override
-  void attachTo(Stream<KeyedListEvent<T>> stream) {
+  void attach() {
     _subscription?.cancel();
-    forEach((item) => item.attachTo(this));
-    _subscription = stream.listen(_processListEvent);
+    forEach((item) => item.attach());
+    _subscription = _stream().listen(_processListEvent);
   }
 
   void childUpdated(T child) {
@@ -89,12 +92,12 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
     if (isEmpty) {
       // Shortcut (also beneficial for the UI).
-      super.setAll(index, newValue..forEach((e) => e.attachTo(this)));
+      super.setAll(index, newValue..forEach((e) => e.attach()));
       return;
     }
 
     // setAll is called when we receive onValue, which can be initial
-    // data or an update after detach + attachTo cycle.
+    // data or an update after detach + attach cycle.
     // For the update, we have to merge, retaining as much of the existing
     // data as possible, so that we display some (maybe stale) data to the
     // user and then update it as soon as the new data arrives.
@@ -110,9 +113,9 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
     for (var element in newValue) {
       var index = indexOfKey(element.key);
       if (index < 0) {
-        _addWithKey(previousKey, element).attachTo(this);
+        _addWithKey(previousKey, element).attach();
       } else {
-        this[index].updateWith(element).attachTo(this);
+        this[index].updateWith(element).attach();
       }
       previousKey = element.key;
     }
@@ -120,12 +123,12 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
   @override
   void setAt(int index, T value) {
-    super.setAt(index, this[index].updateWith(value)..attachTo(this));
+    super.setAt(index, this[index].updateWith(value)..attach());
   }
 
   @override
   void insert(int index, T element) {
-    super.insert(index, element..attachTo(this));
+    super.insert(index, element..attach());
   }
 
   @override

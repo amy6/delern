@@ -22,8 +22,8 @@ class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
   TestFixture(this.key);
 
   @override
-  void attachTo(ViewModelsList<TestFixture> owner) {
-    // TODO: implement attachTo
+  void attach() {
+    // TODO: implement attach
   }
 
   @override
@@ -50,39 +50,40 @@ class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
 
 void main() {
   test('key operations', () async {
-    var list = new ViewModelsList<TestFixture>();
+    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+          new KeyedListEvent(
+            eventType: ListEventType.set,
+            fullListValueForSet: [new TestFixture('1')],
+          ),
+          // 1
+          new KeyedListEvent(
+              eventType: ListEventType.itemAdded,
+              previousSiblingKey: '1',
+              value: new TestFixture('2')),
+          // 1 2
+          new KeyedListEvent(
+              eventType: ListEventType.itemAdded,
+              previousSiblingKey: '1',
+              value: new TestFixture('2')),
+          // 1 2
+          new KeyedListEvent(
+            eventType: ListEventType.itemAdded,
+            previousSiblingKey: '2',
+            value: new TestFixture('3'),
+          ),
+          // 1 2 3
+          new KeyedListEvent(
+              eventType: ListEventType.itemRemoved,
+              value: new TestFixture('2')),
+          // 1 3
+          new KeyedListEvent(
+              eventType: ListEventType.itemMoved, value: new TestFixture('3')),
+          new KeyedListEvent(
+              eventType: ListEventType.itemChanged,
+              value: new TestFixture('1')..data = 'foo'),
+        ]));
 
-    list.attachTo(_listToStream([
-      new KeyedListEvent(
-        eventType: ListEventType.set,
-        fullListValueForSet: [new TestFixture('1')],
-      ),
-      // 1
-      new KeyedListEvent(
-          eventType: ListEventType.itemAdded,
-          previousSiblingKey: '1',
-          value: new TestFixture('2')),
-      // 1 2
-      new KeyedListEvent(
-          eventType: ListEventType.itemAdded,
-          previousSiblingKey: '1',
-          value: new TestFixture('2')),
-      // 1 2
-      new KeyedListEvent(
-        eventType: ListEventType.itemAdded,
-        previousSiblingKey: '2',
-        value: new TestFixture('3'),
-      ),
-      // 1 2 3
-      new KeyedListEvent(
-          eventType: ListEventType.itemRemoved, value: new TestFixture('2')),
-      // 1 3
-      new KeyedListEvent(
-          eventType: ListEventType.itemMoved, value: new TestFixture('3')),
-      new KeyedListEvent(
-          eventType: ListEventType.itemChanged,
-          value: new TestFixture('1')..data = 'foo'),
-    ]));
+    list.attach();
 
     // Wait for all microtasks (listen()) to complete.
     await new Future(() {});

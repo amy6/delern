@@ -1,4 +1,4 @@
-abstract class Attachable<T> {
+abstract class Attachable {
   void detach();
-  void attachTo(T owner);
+  void attach();
 }

@@ -20,9 +20,10 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
   String _access;
   int _cardsToLearn;
 
+  final ViewModelsList<DeckViewModel> _owner;
   StreamSubscription<StreamDemuxerEvent<String>> _internalUpdates;
 
-  DeckViewModel(this._deck);
+  DeckViewModel(this._owner, this._deck);
 
   @override
   DeckViewModel updateWith(DeckViewModel value) {
@@ -39,7 +40,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
 
   @override
   @mustCallSuper
-  void attachTo(ViewModelsList<DeckViewModel> owner) {
+  void attach() {
     if (_internalUpdates != null) {
       // This item is already attached - can assert that the owner is the same.
       // This must normally be only a side effect of absorb().
@@ -60,7 +61,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
       }
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
-      owner.childUpdated(this);
+      _owner.childUpdated(this);
     });
   }
 
@@ -77,13 +78,27 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
   }
 }
 
-class DecksViewModel implements Attachable<String> {
-  final ViewModelsList<DeckViewModel> _deckViewModels =
-      new ViewModelsList<DeckViewModel>();
+class DecksViewModel implements Attachable {
+  final String uid;
+
+  ViewModelsList<DeckViewModel> _deckViewModels;
   ProxyKeyedList<DeckViewModel> _decksProxy;
 
   ProxyKeyedList<DeckViewModel> get decks =>
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
+
+  DecksViewModel(this.uid) {
+    _deckViewModels = new ViewModelsList<DeckViewModel>(
+        () => Deck.getDecks(uid).map((deckEvent) {
+              return new KeyedListEvent(
+                eventType: deckEvent.eventType,
+                previousSiblingKey: deckEvent.previousSiblingKey,
+                value: new DeckViewModel(_deckViewModels, deckEvent.value),
+                fullListValueForSet: deckEvent.fullListValueForSet
+                    ?.map((deck) => new DeckViewModel(_deckViewModels, deck)),
+              );
+            }));
+  }
 
   @override
   @mustCallSuper
@@ -91,17 +106,9 @@ class DecksViewModel implements Attachable<String> {
 
   @override
   @mustCallSuper
-  void attachTo(String uid) {
+  void attach() {
     detach();
-    _deckViewModels.attachTo(Deck.getDecks(uid).map((deckEvent) {
-      return new KeyedListEvent(
-        eventType: deckEvent.eventType,
-        previousSiblingKey: deckEvent.previousSiblingKey,
-        value: new DeckViewModel(deckEvent.value),
-        fullListValueForSet: deckEvent.fullListValueForSet
-            ?.map((deck) => new DeckViewModel(deck)),
-      );
-    }));
+    _deckViewModels.attach();
   }
 
   @mustCallSuper

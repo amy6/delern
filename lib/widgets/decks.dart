@@ -25,7 +25,7 @@ class _DecksWidgetState extends State<DecksWidget> {
 
   @override
   void initState() {
-    viewModel = new DecksViewModel()
+    viewModel = new DecksViewModel(widget.uid)
       ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.initState();
   }
@@ -40,7 +40,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   Widget build(BuildContext context) {
     if (!_active) {
-      viewModel.attachTo(widget.uid);
+      viewModel.attach();
       _active = true;
     }
     return new ObservingAnimatedList(
