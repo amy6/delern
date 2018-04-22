@@ -38,6 +38,7 @@ Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
   return new StreamDemuxer<ListEventType>({
     ListEventType.itemAdded: query.onChildAdded,
     ListEventType.itemRemoved: query.onChildRemoved,
+    // TODO(dotdoom): we disregard server-side sorting, maybe ignore this event?
     ListEventType.itemMoved: query.onChildMoved,
     ListEventType.itemChanged: query.onChildChanged,
   }).map((demuxerEvent) {
