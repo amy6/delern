@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 
 import '../models/keyed_list.dart';
 import '../models/observable_list.dart';
-import 'attachable.dart';
+import 'activatable.dart';
 
-abstract class ViewModel<T> implements KeyedListItem, Attachable {
+abstract class ViewModel<T> implements KeyedListItem, Activatable {
   String get key;
   ViewModel<T> updateWith(covariant ViewModel<T> value);
 }
@@ -15,17 +15,18 @@ typedef Stream<T> StreamGetter<T>();
 
 // TODO(dotdoom): make this list interface read-only
 class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
-    extends ObservableList<T> with KeyedListMixin<T> implements Attachable {
+    extends ObservableList<T> with KeyedListMixin<T> implements Activatable {
   final StreamGetter<KeyedListEvent<T>> _stream;
   StreamSubscription<KeyedListEvent<T>> _subscription;
 
   ViewModelsList(this._stream);
 
   @override
-  void attach() {
-    _subscription?.cancel();
-    forEach((item) => item.attach());
-    _subscription = _stream().listen(_processListEvent);
+  void activate() {
+    if (_subscription == null) {
+      forEach((item) => item.activate());
+      _subscription = _stream().listen(_processListEvent);
+    }
   }
 
   void childUpdated(T child) {
@@ -78,10 +79,10 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
   @override
   @mustCallSuper
-  void detach() {
+  void deactivate() {
     _subscription?.cancel();
     _subscription = null;
-    forEach((item) => item.detach());
+    forEach((item) => item.deactivate());
   }
 
   @override
@@ -92,19 +93,19 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
     if (isEmpty) {
       // Shortcut (also beneficial for the UI).
-      super.setAll(index, newValue..forEach((e) => e.attach()));
+      super.setAll(index, newValue..forEach((e) => e.activate()));
       return;
     }
 
     // setAll is called when we receive onValue, which can be initial
-    // data or an update after detach + attach cycle.
+    // data or an update after deactivate + activate cycle.
     // For the update, we have to merge, retaining as much of the existing
     // data as possible, so that we display some (maybe stale) data to the
     // user and then update it as soon as the new data arrives.
 
     for (var index = 0; index < length; ++index) {
       if (!newValue.any((e) => e.key == this[index].key)) {
-        this[index].detach();
+        this[index].deactivate();
         removeAt(index);
       }
     }
@@ -113,9 +114,9 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
     for (var element in newValue) {
       var index = indexOfKey(element.key);
       if (index < 0) {
-        _addWithKey(previousKey, element).attach();
+        _addWithKey(previousKey, element).activate();
       } else {
-        this[index].updateWith(element).attach();
+        this[index].updateWith(element).activate();
       }
       previousKey = element.key;
     }
@@ -123,17 +124,17 @@ class ViewModelsList<T extends ViewModel<ViewModelsList<T>>>
 
   @override
   void setAt(int index, T value) {
-    super.setAt(index, this[index].updateWith(value)..attach());
+    super.setAt(index, this[index].updateWith(value)..activate());
   }
 
   @override
   void insert(int index, T element) {
-    super.insert(index, element..attach());
+    super.insert(index, element..activate());
   }
 
   @override
   T removeAt(int index) {
-    this[index].detach();
+    this[index].deactivate();
     return super.removeAt(index);
   }
 }

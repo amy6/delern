@@ -32,7 +32,7 @@ class _DecksWidgetState extends State<DecksWidget> {
 
   @override
   void deactivate() {
-    viewModel.detach();
+    viewModel.deactivate();
     _active = false;
     super.deactivate();
   }
@@ -40,7 +40,7 @@ class _DecksWidgetState extends State<DecksWidget> {
   @override
   Widget build(BuildContext context) {
     if (!_active) {
-      viewModel.attach();
+      viewModel.activate();
       _active = true;
     }
     return new ObservingAnimatedList(

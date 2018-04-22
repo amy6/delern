@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import '../models/deck.dart';
 import '../models/keyed_list.dart';
 import '../models/stream_demuxer.dart';
-import 'attachable.dart';
+import 'activatable.dart';
 import 'proxy_keyed_list.dart';
 import 'view_models_list.dart';
 
@@ -40,10 +40,10 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
 
   @override
   @mustCallSuper
-  void attach() {
+  void activate() {
     if (_internalUpdates != null) {
-      // This item is already attached - can assert that the owner is the same.
-      // This must normally be only a side effect of absorb().
+      // This item is already activated. This must normally be only a side
+      // effect of updateWith -> childUpdated cycle.
       return;
     }
 
@@ -67,7 +67,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
 
   @override
   @mustCallSuper
-  void detach() {
+  void deactivate() {
     _internalUpdates?.cancel();
     _internalUpdates = null;
   }
@@ -78,7 +78,7 @@ class DeckViewModel implements ViewModel<ViewModelsList<DeckViewModel>> {
   }
 }
 
-class DecksViewModel implements Attachable {
+class DecksViewModel implements Activatable {
   final String uid;
 
   ViewModelsList<DeckViewModel> _deckViewModels;
@@ -102,18 +102,18 @@ class DecksViewModel implements Attachable {
 
   @override
   @mustCallSuper
-  void detach() => _deckViewModels.detach();
+  void deactivate() => _deckViewModels.deactivate();
 
   @override
   @mustCallSuper
-  void attach() {
-    detach();
-    _deckViewModels.attach();
+  void activate() {
+    deactivate();
+    _deckViewModels.activate();
   }
 
   @mustCallSuper
   void dispose() {
-    detach();
+    deactivate();
     _decksProxy?.dispose();
   }
 }

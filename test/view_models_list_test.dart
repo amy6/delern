@@ -22,13 +22,13 @@ class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
   TestFixture(this.key);
 
   @override
-  void attach() {
-    // TODO: implement attach
+  void activate() {
+    // TODO: implement activate
   }
 
   @override
-  void detach() {
-    // TODO: implement detach
+  void deactivate() {
+    // TODO: implement deactivate
   }
 
   @override
@@ -83,7 +83,7 @@ void main() {
               value: new TestFixture('1')..data = 'foo'),
         ]));
 
-    list.attach();
+    list.activate();
 
     // Wait for all microtasks (listen()) to complete.
     await new Future(() {});
