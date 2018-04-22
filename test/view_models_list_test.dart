@@ -15,7 +15,7 @@ Stream<T> _listToStream<T>(List<T> list) {
   return controller.stream;
 }
 
-class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
+class TestFixture extends ViewModel {
   final String key;
   dynamic data;
 
@@ -32,8 +32,7 @@ class TestFixture extends ViewModel<ViewModelsList<TestFixture>> {
   }
 
   @override
-  ViewModel<ViewModelsList<TestFixture>> updateWith(
-      ViewModel<ViewModelsList<TestFixture>> value) {
+  ViewModel updateWith(ViewModel value) {
     return value;
   }
 
