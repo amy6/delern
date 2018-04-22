@@ -13,7 +13,6 @@ abstract class ViewModel implements KeyedListItem, Activatable {
 
 typedef Stream<T> StreamGetter<T>();
 
-// TODO(dotdoom): make this list interface read-only
 class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     with KeyedListMixin<T>
     implements Activatable {
@@ -52,30 +51,35 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
         }
         break;
       case ListEventType.itemRemoved:
-        removeAt(indexOfKey(event.value.key));
+        _removeAt(indexOfKey(event.value.key));
         break;
       case ListEventType.itemChanged:
         // With Firebase, some events may be delivered twice - by different
-        // listeners. E.g. "remove(X)" then "change(X, null)", in which case
+        // listeners. E.g. "remove(X)" then "change(X -> null)", in which case
         // the item will no longer exist by the time "change" arrives.
         var index = indexOfKey(event.value.key);
         if (index >= 0) {
-          setAt(indexOfKey(event.value.key), event.value);
+          super.setAt(index, this[index].updateWith(event.value)..activate());
         }
         break;
       case ListEventType.itemMoved:
-        move(indexOfKey(event.value.key),
+        super.move(indexOfKey(event.value.key),
             indexOfKey(event.previousSiblingKey) + 1);
         break;
       case ListEventType.set:
-        setAll(0, event.fullListValueForSet ?? []);
+        _setAll(event.fullListValueForSet ?? []);
         break;
     }
   }
 
   T _addWithKey(String previousKey, T value) {
-    insert(indexOfKey(previousKey) + 1, value);
+    super.insert(indexOfKey(previousKey) + 1, value..activate());
     return value;
+  }
+
+  void _removeAt(int index) {
+    this[index].deactivate();
+    super.removeAt(index);
   }
 
   @override
@@ -86,15 +90,10 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     forEach((item) => item.deactivate());
   }
 
-  @override
-  void setAll(int index, Iterable<T> newValue) {
-    if (index != 0) {
-      throw new UnsupportedError('setAll can only set at index 0');
-    }
-
+  void _setAll(Iterable<T> newValue) {
     if (isEmpty) {
       // Shortcut (also beneficial for the UI).
-      super.setAll(index, newValue..forEach((e) => e.activate()));
+      super.setAll(0, newValue..forEach((e) => e.activate()));
       return;
     }
 
@@ -104,10 +103,9 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     // data as possible, so that we display some (maybe stale) data to the
     // user and then update it as soon as the new data arrives.
 
-    for (var index = 0; index < length; ++index) {
+    for (var index = length - 1; index >= 0; --index) {
       if (!newValue.any((e) => e.key == this[index].key)) {
-        this[index].deactivate();
-        removeAt(index);
+        _removeAt(index);
       }
     }
 
@@ -124,18 +122,27 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   }
 
   @override
-  void setAt(int index, T value) {
-    super.setAt(index, this[index].updateWith(value)..activate());
+  void insert(int index, T value) {
+    _throwReadOnly();
   }
 
   @override
-  void insert(int index, T element) {
-    super.insert(index, element..activate());
+  void move(int index1, int index2) {
+    _throwReadOnly();
+  }
+
+  @override
+  void setAll(int index, Iterable<T> value) {
+    _throwReadOnly();
   }
 
   @override
   T removeAt(int index) {
-    this[index].deactivate();
-    return super.removeAt(index);
+    _throwReadOnly();
+    return null;
+  }
+
+  void _throwReadOnly() {
+    throw new UnsupportedError('ViewModelsList interface is read-only');
   }
 }
