@@ -1,71 +1,99 @@
 import 'package:flutter/material.dart';
 
-class CardsListPage extends StatelessWidget {
-  final String _deckName;
-  final String _key;
+import '../view_models/card_view_model.dart';
+import '../widgets/observing_grid_view.dart';
 
-  CardsListPage(this._deckName, this._key);
+class CardsListPage extends StatefulWidget {
+  final String _deckName;
+  final String _deckId;
+
+  CardsListPage(this._deckName, this._deckId);
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(title: new Text(_deckName)),
-        body: new Column(
-          children: <Widget>[
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                new Text(
-                  'Number of cards: 340',
-                ),
-              ],
-            ),
-            new Expanded(
-              child: new GridView.extent(
-                maxCrossAxisExtent: 240.0,
-                children: <Widget>[
-                  buildCard(context, 'die Mutter', 'mother'),
-                  buildCard(context, 'der Vater', 'father'),
-                  buildCard(context, 'uncle', 'der Onkel'),
-                  buildCard(context, 'die Tante', 'aunt'),
-                  buildCard(context, 'Revolution is coming...', 'bllblblblb'),
-                  buildCard(context, 'Revolution, they...', 'dfdfdfdf'),
-                  buildCard(
-                      context, 'He\'d have you all unravel at the', 'the'),
-                  buildCard(context, 'Heed not the rabble', '66666'),
-                  buildCard(context, 'Sound of screams but the', 'ddddddd'),
-                  buildCard(context, 'Who scream', 'rufen'),
-                  buildCard(context, 'Revolution is coming...',
-                      'die Revolution kommt'),
-                  buildCard(
-                      context,
-                      'Revolution, they...hghghg ghghg hggh hghg hghg hghg hg hgh',
-                      'k1212121ghg hg hg hg h hg hg hghghg hg hghg hgg h hg ghg h 212'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        floatingActionButton: new FloatingActionButton(
-          onPressed: null,
-          child: new Icon(Icons.add),
-        ),
-      );
+  _CardsListState createState() => new _CardsListState();
+}
 
-  Widget buildCard(BuildContext context, String frontSide, String backSide) {
+class _CardsListState extends State<CardsListPage> {
+  CardsViewModel viewModel;
+  bool _active = false;
+
+  @override
+  void initState() {
+    viewModel = new CardsViewModel(widget._deckId);
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    viewModel.deactivate();
+    _active = false;
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    viewModel.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_active) {
+      viewModel.activate();
+      _active = true;
+    }
+
+    viewModel.cards.events.listen((_) => setState(() {}));
+
+    return new Scaffold(
+      appBar: new AppBar(title: new Text(widget._deckName)),
+      body: new Column(
+        children: <Widget>[
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              new Text(
+                'Number of cards: ${viewModel.cards.toList().length}',
+              ),
+            ],
+          ),
+          new Expanded(
+            child: new ObservingGrid(
+                maxCrossAxisExtent: 240.0,
+                items: viewModel.cards,
+                itemBuilder: (context, item) => new CardGridItem(item)),
+          ),
+        ],
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: null,
+        child: new Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class CardGridItem extends StatelessWidget {
+  final CardViewModel card;
+
+  CardGridItem(this.card);
+
+  @override
+  Widget build(BuildContext context) {
     return new Card(
       color: Colors.transparent,
       child: new Material(
         color: Colors.greenAccent,
         child: new InkWell(
           splashColor: Theme.of(context).splashColor,
-          onTap: () => print(frontSide),
+          onTap: () => print(card.front),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Text(
-                  frontSide,
+                  card.front,
                   maxLines: 3,
                   softWrap: true,
                   textAlign: TextAlign.center,
@@ -76,7 +104,7 @@ class CardsListPage extends StatelessWidget {
                 new Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: new Text(
-                    backSide,
+                    card.back,
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
