@@ -106,6 +106,14 @@ class AppLocalizations {
       desc: 'Share in Deck Menu',
     );
   }
+
+  String get numberOfCards {
+    return Intl.message(
+      'Number of cards: ',
+      name: 'numberOfCards',
+      desc: 'Number of cards',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

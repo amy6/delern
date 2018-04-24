@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/observing_grid_view.dart';
 
@@ -53,7 +54,8 @@ class _CardsListState extends State<CardsListPage> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               new Text(
-                'Number of cards: ${viewModel.cards.toList().length}',
+                AppLocalizations.of(context).numberOfCards +
+                    '${viewModel.cards.toList().length}',
               ),
             ],
           ),

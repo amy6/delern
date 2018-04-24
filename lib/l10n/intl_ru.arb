@@ -59,5 +59,11 @@
         "description": "Share in Deck Menu",
         "type": "text",
         "placeholders": {}
-      }
+      },
+         "numberOfCards": "Количество карточек: ",
+         "@numberOfCards": {
+           "description": "Number of cards",
+           "type": "text",
+           "placeholders": {}
+         }
 }
