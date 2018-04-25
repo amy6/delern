@@ -60,7 +60,7 @@
         "type": "text",
         "placeholders": {}
       },
-         "numberOfCards": "Количество карточек: ",
+       "numberOfCards": "Количество карточек:",
          "@numberOfCards": {
            "description": "Number of cards",
            "type": "text",

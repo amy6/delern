@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import '../models/observable_list.dart';
 
 typedef Widget ObservingGridItemBuilder<T>(
-  BuildContext context,
   T item,
 );
 
@@ -16,11 +15,13 @@ class ObservingGrid<T> extends StatefulWidget {
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
+    @required this.numberOfCardsLabel,
   }) : super(key: key);
 
   final ObservableList<T> items;
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
+  final String numberOfCardsLabel;
 
   @override
   ObservingGridState<T> createState() => new ObservingGridState<T>();
@@ -30,10 +31,10 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
   StreamSubscription<ListEvent<T>> _listSubscription;
 
   @override
-  void didChangeDependencies() {
+  void initState() {
     _listSubscription?.cancel();
     _listSubscription = widget.items.events.listen(_processListEvent);
-    super.didChangeDependencies();
+    super.initState();
   }
 
   @override
@@ -43,21 +44,11 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
   }
 
   void _processListEvent(ListEvent<T> event) {
-    switch (event.eventType) {
-      case ListEventType.itemAdded:
-      case ListEventType.itemRemoved:
-      case ListEventType.set:
-      // Note: number of items must not change here (unless it's the first
-      // update; we validate this in proxy_keyed_list.dart).
-      case ListEventType.itemChanged:
-      case ListEventType.itemMoved:
-        setState(() {});
-        break;
-    }
+    setState(() {});
   }
 
-  Widget _buildItem(BuildContext context, T item) {
-    return widget.itemBuilder(context, item);
+  Widget _buildItem(T item) {
+    return widget.itemBuilder(item);
   }
 
   @override
@@ -68,10 +59,24 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
 
     // TODO(ksheremet): for an empty list, return 'Add your items'
 
-    return new GridView.extent(
-      maxCrossAxisExtent: widget.maxCrossAxisExtent,
-      children:
-          new List.of(widget.items.map((entry) => _buildItem(context, entry))),
+    return new Column(
+      children: <Widget>[
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            new Text(
+              '${widget.numberOfCardsLabel} ${widget.items.length}',
+            ),
+          ],
+        ),
+        new Expanded(
+          child: new GridView.extent(
+            maxCrossAxisExtent: widget.maxCrossAxisExtent,
+            children:
+                new List.of(widget.items.map((entry) => _buildItem(entry))),
+          ),
+        ),
+      ],
     );
   }
 }

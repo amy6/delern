@@ -32,7 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
         "numberOfCards":
-            MessageLookupByLibrary.simpleMessage("Number of cards: "),
+            MessageLookupByLibrary.simpleMessage("Number of cards:"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":

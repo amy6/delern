@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../view_models/card_view_model.dart';
+import '../view_models/deck_view_model.dart';
 import '../widgets/observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
-  final String _deckName;
-  final String _deckId;
+  final DeckViewModel _deckViewModel;
 
-  CardsListPage(this._deckName, this._deckId);
+  CardsListPage(this._deckViewModel);
 
   @override
   _CardsListState createState() => new _CardsListState();
@@ -20,7 +20,7 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   void initState() {
-    viewModel = new CardsViewModel(widget._deckId);
+    viewModel = new CardsViewModel(widget._deckViewModel.key);
     super.initState();
   }
 
@@ -44,28 +44,13 @@ class _CardsListState extends State<CardsListPage> {
       _active = true;
     }
 
-    viewModel.cards.events.listen((_) => setState(() {}));
-
     return new Scaffold(
-      appBar: new AppBar(title: new Text(widget._deckName)),
-      body: new Column(
-        children: <Widget>[
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              new Text(
-                AppLocalizations.of(context).numberOfCards +
-                    '${viewModel.cards.toList().length}',
-              ),
-            ],
-          ),
-          new Expanded(
-            child: new ObservingGrid(
-                maxCrossAxisExtent: 240.0,
-                items: viewModel.cards,
-                itemBuilder: (context, item) => new CardGridItem(item)),
-          ),
-        ],
+      appBar: new AppBar(title: new Text(widget._deckViewModel.name)),
+      body: new ObservingGrid(
+        maxCrossAxisExtent: 240.0,
+        items: viewModel.cards,
+        itemBuilder: (item) => new CardGridItem(item),
+        numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: null,

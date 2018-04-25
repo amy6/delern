@@ -109,7 +109,7 @@ class AppLocalizations {
 
   String get numberOfCards {
     return Intl.message(
-      'Number of cards: ',
+      'Number of cards:',
       name: 'numberOfCards',
       desc: 'Number of cards',
     );

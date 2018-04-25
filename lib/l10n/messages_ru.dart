@@ -34,7 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
         "numberOfCards":
-            MessageLookupByLibrary.simpleMessage("Количество карточек: "),
+            MessageLookupByLibrary.simpleMessage("Количество карточек:"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":

@@ -60,7 +60,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "numberOfCards": "Number of cards: ",
+  "numberOfCards": "Number of cards:",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
