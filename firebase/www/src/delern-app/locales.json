@@ -16,6 +16,7 @@
     "share_decks_button_text": "Share Decks",
 
     "choose_deck_text": "Choose deck",
+    "filter_decks_hint": "Or select by filter...",
 
     "google_signin": "Google SignIn",
 
@@ -39,7 +40,9 @@
     "follow_vk_alt": "Follow Delern on VKontakte",
     "follow_googleplus_alt": "Follow Delern on Google+",
     "follow_twitter_alt": "Follow Delern on Twitter",
-    "google_play_alt": "Get Delern on Google Play"
+    "google_play_alt": "Get Delern on Google Play",
+
+    "select_all": "Select all"
   },
   "ru": {
     "add_front_side_text": "Введите переднюю сторону карточки",
@@ -58,6 +61,7 @@
     "share_decks_button_text": "Поделиться списками",
 
     "choose_deck_text": "Выберите список",
+    "filter_decks_hint": "Или выберите используя фильтр...",
 
     "google_signin": "Google Авторизация",
 
@@ -81,6 +85,8 @@
     "follow_vk_alt": "Следите за последними новостями Delern в VKontakte",
     "follow_googleplus_alt": "Следите за последними новостями Delern на Google+",
     "follow_twitter_alt": "Следите за последними новостями Delern в Twitter",
-    "google_play_alt": "Установить Delern из Google Play"
+    "google_play_alt": "Установить Delern из Google Play",
+
+    "select_all": "Выбрать все"
   }
 }

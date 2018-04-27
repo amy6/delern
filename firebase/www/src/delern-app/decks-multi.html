@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
@@ -22,11 +23,24 @@
 
     </style>
 
-    <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
+    <firebase-query path="/decks/[[uid]]" on-data-changed="_dataArrived">
+    </firebase-query>
+
+    <div class="row">
+      <paper-checkbox checked="{{selectAllDecks}}">
+        [[localize('select_all')]]
+      </paper-checkbox>
+    </div>
+
+    <div class="row">
+      <paper-textarea class="col-12 intends" id="deckfilter" label="[[localize('filter_decks_hint')]]" on-value-changed="_updateDecksFilter"
+        disabled="[[selectAllDecks]]">
+      </paper-textarea>
+    </div>
 
     <template is="dom-repeat" items="[[decks]]" id="selected">
       <div class="checkbox-container">
-        <paper-checkbox on-change="_updateSelectedDecks">
+        <paper-checkbox checked="{{item.ui_selected}}">
           [[item.name]]
         </paper-checkbox>
       </div>
@@ -43,22 +57,32 @@
         return {
           uid: String,
           decks: Array,
-          selectedDecks: {
-            type: Array,
-            notify: true,
+          selectAllDecks: {
+            type: Boolean,
+            observer: '_updateDecksFilter',
           },
         };
       }
 
-      _updateSelectedDecks(evt) {
-        let item = this.$.selected.itemForElement(evt.target);
-        this.selectedDecks = this.selectedDecks || [];
-
-        if (evt.target.checked) {
-          this.selectedDecks.push(item);
+      _dataArrived(evt, data) {
+        if (data.value.length) {
+          this.set('decks', data.value);
         } else {
-          this.selectedDecks.splice(this.selectedDecks.indexOf(item), 1);
+          this.notifySplices('decks', data.value);
         }
+      }
+
+      getSelectedDecks() {
+        return this.decks.filter((deck) => deck.ui_selected);
+      }
+
+      _updateDecksFilter() {
+        let filter = (this.$.deckfilter.value || '').toLowerCase();
+        this.decks.forEach((d, index) => {
+          let selected = this.selectAllDecks ||
+            (filter && d.name.toLowerCase().includes(filter));
+          this.set('decks.' + index + '.ui_selected', selected);
+        });
       }
     }
     customElements.define(DecksMulti.is, DecksMulti);

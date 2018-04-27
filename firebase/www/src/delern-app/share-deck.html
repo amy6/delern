@@ -36,7 +36,7 @@
     <div class="row"></div>
 
     <div class="row">
-      <decks-multi class="col-12 intends" uid="[[firebaseUser.uid]]" selected-decks="{{decks}}" language="[[language]]">
+      <decks-multi id="decks" class="col-12 intends" uid="[[firebaseUser.uid]]" language="[[language]]">
       </decks-multi>
     </div>
 
@@ -88,10 +88,6 @@
             type: String,
             notify: true,
           },
-          decks: {
-            type: Array,
-            notify: true,
-          },
           emails: {
             type: String,
             value: '',
@@ -114,7 +110,9 @@
       }
 
       shareDecks() {
-        if (!this.decks) {
+        let decks = this.$.decks.getSelectedDecks();
+
+        if (!decks) {
           // TODO(ksheremet): replace with input validation
           document.getElementById('toast').show(this.localize('deck_not_selected_message'));
           return;
@@ -137,10 +135,11 @@
 
         this.currentProgress = 0;
         shareDeckButton.disabled = true;
-        this.$.progress.max = (this.decks.length + 1) * emails.length;
+
+        this.$.progress.max = (decks.length + 1) * emails.length;
         this.$.progress.classList.remove('red');
         this.resolveAllUsers(emails).then(() =>
-          self.saveAll(this.decks, emails)
+          self.saveAll(decks, emails)
         ).then(() => {
           document.getElementById('toast').show(self.localize('shared_deck_message'));
         }).catch((e) => {
