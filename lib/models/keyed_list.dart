@@ -24,6 +24,14 @@ class KeyedListEvent<T extends KeyedListItem> {
     this.fullListValueForSet,
   });
 
+  KeyedListEvent<T2> map<T2 extends KeyedListItem>(T2 mapper(T value)) =>
+      new KeyedListEvent<T2>(
+        eventType: eventType,
+        previousSiblingKey: previousSiblingKey,
+        value: value == null ? null : mapper(value),
+        fullListValueForSet: fullListValueForSet?.map(mapper),
+      );
+
   String toString() {
     return '$eventType #$previousSiblingKey ($value)';
   }

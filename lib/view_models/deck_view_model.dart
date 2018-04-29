@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 
 import '../models/deck.dart';
-import '../models/keyed_list.dart';
 import '../models/stream_demuxer.dart';
 import 'activatable.dart';
 import 'proxy_keyed_list.dart';
@@ -88,16 +87,10 @@ class DecksViewModel implements Activatable {
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
 
   DecksViewModel(this.uid) {
-    _deckViewModels = new ViewModelsList<DeckViewModel>(
-        () => Deck.getDecks(uid).map((deckEvent) {
-              return new KeyedListEvent(
-                eventType: deckEvent.eventType,
-                previousSiblingKey: deckEvent.previousSiblingKey,
-                value: new DeckViewModel(_deckViewModels, deckEvent.value),
-                fullListValueForSet: deckEvent.fullListValueForSet
-                    ?.map((deck) => new DeckViewModel(_deckViewModels, deck)),
-              );
-            }));
+    _deckViewModels = new ViewModelsList<DeckViewModel>(() => Deck
+        .getDecks(uid)
+        .map((deckEvent) =>
+            deckEvent.map((deck) => new DeckViewModel(_deckViewModels, deck))));
   }
 
   @override

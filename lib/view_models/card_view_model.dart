@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 
 import '../models/card.dart';
-import '../models/keyed_list.dart';
 import 'activatable.dart';
 import 'proxy_keyed_list.dart';
 import 'view_models_list.dart';
@@ -43,16 +42,9 @@ class CardsViewModel implements Activatable {
       _cardsProxy ??= new ProxyKeyedList(_cardViewModels);
 
   CardsViewModel(this.deckId) {
-    _cardViewModels = new ViewModelsList<CardViewModel>(
-        () => Card.getCards(deckId).map((cardEvent) {
-              return new KeyedListEvent(
-                eventType: cardEvent.eventType,
-                previousSiblingKey: cardEvent.previousSiblingKey,
-                value: new CardViewModel(cardEvent.value),
-                fullListValueForSet: cardEvent.fullListValueForSet
-                    ?.map((card) => new CardViewModel(card)),
-              );
-            }));
+    _cardViewModels = new ViewModelsList<CardViewModel>(() => Card
+        .getCards(deckId)
+        .map((cardEvent) => cardEvent.map((card) => new CardViewModel(card))));
   }
 
   @override
