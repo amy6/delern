@@ -7,7 +7,7 @@ const cors = require('cors')({
 });
 
 const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
 
 const nodemailer = require('nodemailer');
 const mailEmail = functions.config().gmail.email;
@@ -111,20 +111,22 @@ exports.userLookup = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate((event) => {
-  if (event.data.val().access === 'owner') {
+exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').onCreate((data,
+  context) => {
+  if (data.val().access === 'owner') {
     console.log('Deck is being created (not shared), skipping');
     // Return some 'true' value per
     // https://cloud.google.com/functions/docs/writing/background#using_promises
     return true;
   }
 
-  let deckId = event.params.deckId;
-  let userId = event.params.userId;
+  let deckId = context.params.deckId;
+  let userId = context.params.userId;
   let user = null;
   let actorUserId = 'ADMIN';
-  if (event.auth && event.auth.variable) {
-    actorUserId = event.auth.variable.uid;
+  // https://firebase.google.com/docs/reference/functions/functions.EventContext
+  if (context.authType === 'USER') {
+    actorUserId = context.auth.uid;
   }
   let numberOfCards = 0;
   let actorUser = null;
@@ -184,6 +186,9 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
     })
     .then((fcmSnapshot) => {
       let fcm = fcmSnapshot.val();
+      if (!fcm) {
+        return Promise.resolve();
+      }
       Object.keys(fcm).forEach((fcmId) => {
         console.log('Notifying ' + userId + ' on ' + fcm[fcmId].name +
           ' about ' + actorUser.name + ' sharing a deck ' + deckName +
@@ -206,6 +211,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
             // Cleanup the tokens which are not registered anymore.
             if (error.code === 'messaging/invalid-registration-token' ||
               error.code === 'messaging/registration-token-not-registered') {
+              console.warn('Removing a token:', error.code);
               tokensToRemove.push(fcmSnapshot.ref.child(tokens[index]).remove());
             } else {
               console.error('Failure sending notification to', userId, 'at',
@@ -219,9 +225,9 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
 });
 
 exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}')
-  .onDelete((event) => {
-    let deckId = event.params.deckId;
-    let userId = event.params.userId;
+  .onDelete((data, context) => {
+    let deckId = context.params.deckId;
+    let userId = context.params.userId;
 
     return admin.database().ref('/').update({
       [
@@ -236,14 +242,14 @@ exports.deckUnShared = functions.database.ref('/deck_access/{deckId}/{userId}')
     });
   });
 
-exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate((event) => {
-  let deckId = event.params.deckId;
-  let cardId = event.params.cardId;
+exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate((data, context) => {
+  let deckId = context.params.deckId;
+  let cardId = context.params.cardId;
   return admin.database().ref('deck_access').child(deckId).once('value')
     .then((deckAccessSnapshot) => {
       let learningUpdate = {};
       Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
-        if (userId === event.auth.variable.uid) {
+        if (userId === context.auth.uid) {
           console.log('Skipping learning creation for', userId,
             'as they are creating this card');
         } else {
@@ -255,26 +261,27 @@ exports.cardAdded = functions.database.ref('/cards/{deckId}/{cardId}').onCreate(
     });
 });
 
-exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}').onDelete((event) => {
-  let deckId = event.params.deckId;
-  let cardId = event.params.cardId;
-  return admin.database().ref('deck_access').child(deckId).once('value')
-    .then((deckAccessSnapshot) => {
-      let learningAndViewsUpdate = {};
-      // TODO(dotdoom): deleting deck with too many cards may be bad.
-      if (deckAccessSnapshot.val()) {
-        Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
-          learningAndViewsUpdate[
-            ['learning', userId, deckId, cardId].join('/')
-          ] = null;
-          learningAndViewsUpdate[
-            ['views', userId, deckId, cardId].join('/')
-          ] = null;
-        });
-        return admin.database().ref('/').update(learningAndViewsUpdate);
-      }
-    });
-});
+exports.cardDeleted = functions.database.ref('/cards/{deckId}/{cardId}')
+  .onDelete((data, context) => {
+    let deckId = context.params.deckId;
+    let cardId = context.params.cardId;
+    return admin.database().ref('deck_access').child(deckId).once('value')
+      .then((deckAccessSnapshot) => {
+        let learningAndViewsUpdate = {};
+        // TODO(dotdoom): deleting deck with too many cards may be bad.
+        if (deckAccessSnapshot.val()) {
+          Object.keys(deckAccessSnapshot.val()).forEach((userId) => {
+            learningAndViewsUpdate[
+              ['learning', userId, deckId, cardId].join('/')
+            ] = null;
+            learningAndViewsUpdate[
+              ['views', userId, deckId, cardId].join('/')
+            ] = null;
+          });
+          return admin.database().ref('/').update(learningAndViewsUpdate);
+        }
+      });
+  });
 
 delern.forEachUser = (batchSize, callback, nextPageToken) => {
   return admin.auth().listUsers(batchSize, nextPageToken)
