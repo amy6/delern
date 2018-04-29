@@ -13,6 +13,7 @@ abstract class ViewModel implements KeyedListItem, Activatable {
 
 typedef Stream<T> StreamGetter<T>();
 
+// TODO(dotdoom): make list interface readonly.
 class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     with KeyedListMixin<T>
     implements Activatable {
@@ -59,11 +60,11 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
         // the item will no longer exist by the time "change" arrives.
         var index = indexOfKey(event.value.key);
         if (index >= 0) {
-          super.setAt(index, this[index].updateWith(event.value)..activate());
+          setAt(index, this[index].updateWith(event.value)..activate());
         }
         break;
       case ListEventType.itemMoved:
-        super.move(indexOfKey(event.value.key),
+        move(indexOfKey(event.value.key),
             indexOfKey(event.previousSiblingKey) + 1);
         break;
       case ListEventType.set:
@@ -73,13 +74,13 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   }
 
   T _addWithKey(String previousKey, T value) {
-    super.insert(indexOfKey(previousKey) + 1, value..activate());
+    insert(indexOfKey(previousKey) + 1, value..activate());
     return value;
   }
 
   void _removeAt(int index) {
     this[index].deactivate();
-    super.removeAt(index);
+    removeAt(index);
   }
 
   @override
@@ -91,9 +92,10 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   }
 
   void _setAll(Iterable<T> newValue) {
+    // TODO(dotdoom): "if (!changed)". If items are added to previously empty.
     if (isEmpty) {
       // Shortcut (also beneficial for the UI).
-      super.setAll(0, newValue..forEach((e) => e.activate()));
+      setAll(0, newValue..forEach((e) => e.activate()));
       return;
     }
 
@@ -115,39 +117,9 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
       if (index < 0) {
         _addWithKey(previousKey, element).activate();
       } else {
-        super.setAt(index, this[index].updateWith(element)..activate());
+        setAt(index, this[index].updateWith(element)..activate());
       }
       previousKey = element.key;
     }
-  }
-
-  @override
-  void insert(int index, T value) {
-    _throwReadOnly();
-  }
-
-  @override
-  void move(int index1, int index2) {
-    _throwReadOnly();
-  }
-
-  @override
-  void setAll(int index, Iterable<T> value) {
-    _throwReadOnly();
-  }
-
-  @override
-  void setAt(int index, T value) {
-    _throwReadOnly();
-  }
-
-  @override
-  T removeAt(int index) {
-    _throwReadOnly();
-    return null;
-  }
-
-  void _throwReadOnly() {
-    throw new UnsupportedError('ViewModelsList interface is read-only');
   }
 }

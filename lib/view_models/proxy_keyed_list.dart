@@ -7,6 +7,7 @@ import '../models/observable_list.dart';
 
 typedef bool Filter<T>(T item);
 
+// TODO(dotdoom): make list interface readonly.
 class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     with KeyedListMixin<T> {
   final ObservableList<T> _base;
@@ -16,7 +17,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   ProxyKeyedList(this._base) {
     if (_base.changed) {
-      super.setAll(0, _base);
+      setAll(0, _base);
     }
     _baseEventsSubscription = _base.events.listen((event) {
       switch (event.eventType) {
@@ -26,7 +27,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
         case ListEventType.itemRemoved:
           var index = indexOfKey(event.previousValue.key);
           if (index >= 0) {
-            super.removeAt(index);
+            removeAt(index);
           }
           break;
         case ListEventType.itemMoved:
@@ -47,7 +48,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     }
 
     if (_comparator == null) {
-      super.add(item);
+      add(item);
     } else {
       var index;
       for (index = 0; index < length; ++index) {
@@ -55,7 +56,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
           break;
         }
       }
-      super.insert(index, item);
+      insert(index, item);
     }
   }
 
@@ -64,13 +65,13 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     var index = indexOfKey(event.previousValue.key);
     if (_filter == null || _filter(item)) {
       if (index >= 0) {
-        super.setAt(index, item);
+        setAt(index, item);
       } else {
-        super.add(item);
+        add(item);
       }
     } else {
       if (index >= 0) {
-        super.removeAt(index);
+        removeAt(index);
       }
     }
     _sortAndSet(this);
@@ -96,9 +97,9 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     assert(!changed || items.length == length,
         'Attempt to change list size from $length to ${items.length}');
     if (_comparator == null) {
-      super.setAll(0, items);
+      setAll(0, items);
     } else {
-      super.setAll(0, new List<T>.from(items)..sort(_comparator));
+      setAll(0, new List<T>.from(items)..sort(_comparator));
     }
   }
 
@@ -114,35 +115,5 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   void dispose() {
     _baseEventsSubscription.cancel();
     super.dispose();
-  }
-
-  @override
-  void setAt(int index, T value) {
-    _throwReadOnly();
-  }
-
-  @override
-  void insert(int index, T value) {
-    _throwReadOnly();
-  }
-
-  @override
-  void move(int index1, int index2) {
-    _throwReadOnly();
-  }
-
-  @override
-  void setAll(int index, Iterable<T> value) {
-    _throwReadOnly();
-  }
-
-  @override
-  T removeAt(int index) {
-    _throwReadOnly();
-    return null;
-  }
-
-  void _throwReadOnly() {
-    throw new UnsupportedError('ProxyKeyedList interface is read-only');
   }
 }
