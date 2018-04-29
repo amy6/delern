@@ -5,15 +5,7 @@ import 'package:test/test.dart';
 import '../lib/models/keyed_list.dart';
 import '../lib/models/observable_list.dart';
 import '../lib/view_models/view_models_list.dart';
-
-Stream<T> _listToStream<T>(List<T> list) {
-  var controller = new StreamController<T>(sync: true);
-  controller.onListen = () {
-    list.forEach((e) => controller.add(e));
-    controller.close();
-  };
-  return controller.stream;
-}
+import 'lib/stream_test_helpers.dart';
 
 class TestFixture extends ViewModel {
   final String key;
@@ -49,7 +41,7 @@ class TestFixture extends ViewModel {
 
 void main() {
   test('key operations', () async {
-    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+    var list = new ViewModelsList<TestFixture>(() => listToStream([
           new KeyedListEvent(
             eventType: ListEventType.set,
             fullListValueForSet: [new TestFixture('1')],
@@ -98,7 +90,7 @@ void main() {
   });
 
   test('setAll merging', () async {
-    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+    var list = new ViewModelsList<TestFixture>(() => listToStream([
           new KeyedListEvent(
             eventType: ListEventType.set,
             fullListValueForSet: [
@@ -164,7 +156,7 @@ void main() {
 
     var addedTestFixture = new TestFixture('1')..data = 'preserved';
 
-    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+    var list = new ViewModelsList<TestFixture>(() => listToStream([
           new KeyedListEvent(
             eventType: ListEventType.set,
             fullListValueForSet: testFixtures,
