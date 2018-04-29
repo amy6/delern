@@ -139,6 +139,7 @@ void main() {
 
     var addedTestFixture = new TestFixture('1')..data = 'preserved';
 
+    // TODO(dotdoom): add a test on ViewModelsList#add()
     var list = new ViewModelsList<TestFixture>(() => listToStream([
           new KeyedListEvent(
             eventType: ListEventType.set,

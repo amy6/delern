@@ -40,13 +40,12 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   void _processListEvent(KeyedListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
-        // With Firebase, we subscribe to onValue, which delivers all data,
-        // and then onChild* events, which are also initially delivered for
-        // every child. We must therefore skip keys that we already got.
-        var index = indexOfKey(event.value.key);
-        if (index < 0) {
-          _addWithKey(event.previousSiblingKey, event.value);
+        if (indexOfKey(event.value.key) < 0) {
+          _addWithKey(event.previousSiblingKey, event.value..activate());
         } else {
+          // With Firebase, we subscribe to onValue, which delivers all data,
+          // and then onChild* events, which are also initially delivered for
+          // every child. We must therefore skip keys that we already got.
           assert(event.previousSiblingKey == null ||
               indexOfKey(event.previousSiblingKey) >= 0);
         }
