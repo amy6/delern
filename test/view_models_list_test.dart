@@ -18,21 +18,21 @@ Stream<T> _listToStream<T>(List<T> list) {
 class TestFixture extends ViewModel {
   final String key;
   dynamic data;
+  bool _active = false;
+
+  bool get active => _active;
 
   TestFixture(this.key);
 
   @override
-  void activate() {
-    // TODO: implement activate
-  }
+  void activate() => _active = true;
 
   @override
-  void deactivate() {
-    // TODO: implement deactivate
-  }
+  void deactivate() => _active = false;
 
   @override
   ViewModel updateWith(ViewModel value) {
+    deactivate();
     return value;
   }
 
@@ -97,6 +97,48 @@ void main() {
         ]));
   });
 
+  test('setAll merging', () async {
+    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+          new KeyedListEvent(
+            eventType: ListEventType.set,
+            fullListValueForSet: [
+              new TestFixture('1')..data = 'replaced',
+              new TestFixture('2')
+            ],
+          ),
+          // 1 2
+          new KeyedListEvent(
+            eventType: ListEventType.set,
+            fullListValueForSet: [
+              new TestFixture('1')..data = 'replaced again',
+              new TestFixture('3')
+            ],
+          ),
+          // 1 3
+          new KeyedListEvent(
+            eventType: ListEventType.set,
+            fullListValueForSet: [
+              new TestFixture('1')..data = 'preserved',
+              new TestFixture('3'),
+              new TestFixture('4')
+            ],
+          ),
+        ]));
+
+    list.activate();
+
+    // Wait for all microtasks (listen()) to complete.
+    await new Future(() {});
+
+    expect(
+        list,
+        equals([
+          new TestFixture('1')..data = 'preserved',
+          new TestFixture('3'),
+          new TestFixture('4'),
+        ]));
+  });
+
   test('read only interface', () {
     var list = new ViewModelsList(null);
 
@@ -110,5 +152,47 @@ void main() {
         throwsA(const isInstanceOf<UnsupportedError>()));
     expect(
         () => list[0] = null, throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.setAll(0, []),
+        throwsA(const isInstanceOf<UnsupportedError>()));
+  });
+
+  test('activates items', () async {
+    var testFixtures = [
+      new TestFixture('1')..data = 'replaced',
+      new TestFixture('2')..data = 'preserved',
+    ];
+
+    var addedTestFixture = new TestFixture('1')..data = 'preserved';
+
+    var list = new ViewModelsList<TestFixture>(() => _listToStream([
+          new KeyedListEvent(
+            eventType: ListEventType.set,
+            fullListValueForSet: testFixtures,
+          ),
+          new KeyedListEvent(
+              eventType: ListEventType.itemChanged,
+              previousSiblingKey: null,
+              value: addedTestFixture),
+        ]));
+
+    expect(testFixtures[0].active, false);
+    expect(testFixtures[1].active, false);
+    expect(addedTestFixture.active, false);
+
+    list.activate();
+
+    // Wait for all microtasks (listen()) to complete.
+    await new Future(() {});
+
+    expect(testFixtures[0].active, false);
+    expect(testFixtures[1].active, true);
+    expect(addedTestFixture.active, true);
+
+    list.deactivate();
+    expect(testFixtures[0].active, false);
+    expect(testFixtures[1].active, false);
+    expect(addedTestFixture.active, false);
+
+    list.dispose();
   });
 }

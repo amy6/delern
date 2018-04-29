@@ -67,7 +67,7 @@ void main() {
     list.dispose();
   });
 
-  test('unallowed methods', () {
+  test('disallowed methods', () {
     var list = new ObservableList<int>();
     list.setAll(0, <int>[1, -1, 0]);
 

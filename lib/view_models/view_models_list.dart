@@ -115,7 +115,7 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
       if (index < 0) {
         _addWithKey(previousKey, element).activate();
       } else {
-        this[index].updateWith(element).activate();
+        super.setAt(index, this[index].updateWith(element)..activate());
       }
       previousKey = element.key;
     }
