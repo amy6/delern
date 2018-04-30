@@ -87,18 +87,21 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     var oldIndex = indexOfKey(event.previousValue.key);
     var newIndex = _indexForNewItem(event.index);
 
-    if (oldIndex == newIndex) {
-      return;
+    if (oldIndex != newIndex) {
+      if (oldIndex >= 0) {
+        if (newIndex >= 0) {
+          move(oldIndex, newIndex);
+        } else {
+          removeAt(oldIndex);
+        }
+      } else if (newIndex >= 0) {
+        insert(newIndex, _base[event.index]);
+      }
     }
 
-    if (oldIndex >= 0) {
-      if (newIndex >= 0) {
-        move(oldIndex, newIndex);
-      } else {
-        removeAt(oldIndex);
-      }
-    } else if (newIndex >= 0) {
-      insert(newIndex, _base[event.index]);
+    // Update the item in case it was replaced, and to notify subscribers.
+    if (newIndex >= 0) {
+      setAt(newIndex, _base[event.index]);
     }
   }
 

@@ -32,6 +32,8 @@ void main() {
           eventMatcher(ListEventType.itemAdded, 2),
           eventMatcher(ListEventType.itemAdded, 1),
           eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('D')),
+          // Item changed.
+          eventMatcher(ListEventType.itemChanged, 3, new TestFixture('B')),
           // Sort removed.
           eventMatcher(ListEventType.set, 0),
           emitsDone,
@@ -100,11 +102,23 @@ void main() {
           new TestFixture('B'),
         ]));
 
+    baseList.setAt(0, new TestFixture('B', data: 'updated'));
+    expect(
+        list,
+        equals([
+          new TestFixture('F'),
+          new TestFixture('E'),
+          new TestFixture('C'),
+          // Doesn't go through updateWith because underlying list is not a
+          // ViewModelsList.
+          new TestFixture('B', data: 'updated'),
+        ]));
+
     list.comparator = null;
     expect(
         list,
         equals([
-          new TestFixture('B'),
+          new TestFixture('B', data: 'updated'),
           new TestFixture('C'),
           new TestFixture('E'),
           new TestFixture('F'),
