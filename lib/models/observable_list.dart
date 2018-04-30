@@ -86,16 +86,7 @@ class ObservableList<T> extends ListBase<T> {
     if (index1 == index2) {
       return;
     }
-
-    T element;
-    if (index1 > index2) {
-      element = _base.removeAt(index1);
-      _base.insert(index2, element);
-    } else {
-      element = _base[index1];
-      _base.insert(index2 + 1, element);
-      _base.removeAt(index1);
-    }
+    _base.insert(index2, _base.removeAt(index1));
     _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemMoved,

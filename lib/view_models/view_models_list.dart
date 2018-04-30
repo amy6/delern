@@ -72,11 +72,16 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
         }
         break;
       case ListEventType.itemMoved:
-        move(indexOfKey(event.value.key),
-            indexOfKey(event.previousSiblingKey) + 1);
+        var oldIndex = indexOfKey(event.value.key);
+        var newIndex = indexOfKey(event.previousSiblingKey);
+        if (oldIndex > newIndex) {
+          move(oldIndex, newIndex + 1);
+        } else {
+          move(oldIndex, newIndex);
+        }
         break;
       case ListEventType.set:
-        _setAll(event.fullListValueForSet ?? []);
+        _setAll(event.fullListValueForSet);
         break;
     }
   }
