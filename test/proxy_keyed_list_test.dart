@@ -46,7 +46,7 @@ void main() {
           new TestFixture('3'),
         ]));
 
-    list.filter = ((f) => f.key != '1');
+    list.filter = (f) => f.key != '1';
     expect(
         list,
         equals([
@@ -71,13 +71,29 @@ void main() {
           new TestFixture('4'),
         ]));
 
+    baseList.setAll(0, [
+      new TestFixture('1'),
+      new TestFixture('2'),
+    ]);
+    expect(
+        list,
+        equals([
+          new TestFixture('2'),
+        ]));
+
+    list.filter = (f) => f.key != '2';
+    expect(
+        list,
+        equals([
+          new TestFixture('1'),
+        ]));
+
     list.filter = null;
     expect(
         list,
         equals([
           new TestFixture('1'),
-          new TestFixture('3'),
-          new TestFixture('4'),
+          new TestFixture('2'),
         ]));
 
     list.dispose();
