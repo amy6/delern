@@ -23,11 +23,20 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   ViewModelsList(this._stream);
 
   @override
+  @mustCallSuper
   void activate() {
     if (_subscription == null) {
       forEach((item) => item.activate());
       _subscription = _stream().listen(_processListEvent);
     }
+  }
+
+  @override
+  @mustCallSuper
+  void deactivate() {
+    _subscription?.cancel();
+    _subscription = null;
+    forEach((item) => item.deactivate());
   }
 
   void childUpdated(T child) {
@@ -41,7 +50,7 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     switch (event.eventType) {
       case ListEventType.itemAdded:
         if (indexOfKey(event.value.key) < 0) {
-          _addWithKey(event.previousSiblingKey, event.value..activate());
+          _add(event.previousSiblingKey, event.value);
         } else {
           // With Firebase, we subscribe to onValue, which delivers all data,
           // and then onChild* events, which are also initially delivered for
@@ -51,15 +60,15 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
         }
         break;
       case ListEventType.itemRemoved:
-        _removeAt(indexOfKey(event.value.key));
+        _remove(indexOfKey(event.value.key));
         break;
       case ListEventType.itemChanged:
         // With Firebase, some events may be delivered twice - by different
         // listeners. E.g. "remove(X)" then "change(X -> null)", in which case
-        // the item will no longer exist by the time "change" arrives.
+        // the item will no longer exist by the time "change(...)" arrives.
         var index = indexOfKey(event.value.key);
         if (index >= 0) {
-          setAt(index, this[index].updateWith(event.value)..activate());
+          _update(index, event.value);
         }
         break;
       case ListEventType.itemMoved:
@@ -72,23 +81,16 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     }
   }
 
-  T _addWithKey(String previousKey, T value) {
-    insert(indexOfKey(previousKey) + 1, value..activate());
-    return value;
-  }
+  void _add(String previousKey, T value) =>
+      insert(indexOfKey(previousKey) + 1, value..activate());
 
-  void _removeAt(int index) {
+  void _remove(int index) {
     this[index].deactivate();
     removeAt(index);
   }
 
-  @override
-  @mustCallSuper
-  void deactivate() {
-    _subscription?.cancel();
-    _subscription = null;
-    forEach((item) => item.deactivate());
-  }
+  void _update(int index, T newValue) =>
+      setAt(index, this[index].updateWith(newValue)..activate());
 
   void _setAll(Iterable<T> newValue) {
     if (!changed) {
@@ -105,7 +107,7 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
 
     for (var index = length - 1; index >= 0; --index) {
       if (!newValue.any((e) => e.key == this[index].key)) {
-        _removeAt(index);
+        _remove(index);
       }
     }
 
@@ -113,9 +115,9 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
     for (var element in newValue) {
       var index = indexOfKey(element.key);
       if (index < 0) {
-        _addWithKey(previousKey, element).activate();
+        _add(previousKey, element);
       } else {
-        setAt(index, this[index].updateWith(element)..activate());
+        _update(index, element);
       }
       previousKey = element.key;
     }
