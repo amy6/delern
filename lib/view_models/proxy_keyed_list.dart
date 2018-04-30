@@ -110,8 +110,13 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   void _baseSet() {
-    _refilter();
-    _resort();
+    if (_filter == null && _comparator == null && !changed) {
+      // Shortcut for the initializing 'set' event.
+      setAll(0, _base);
+    } else {
+      _refilter();
+      _resort();
+    }
   }
 
   void _refilter() {
@@ -130,11 +135,13 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   void _resort() {
     if (_comparator == null) {
-      if (_filter == null) {
-        setAll(0, _base);
-      } else {
-        setAll(0, _base.where(_filter));
+      Iterable<T> newValue = _base;
+      if (_filter != null) {
+        newValue = _base.where(_filter);
       }
+      assert(newValue.length == length,
+          'Sorting must not change the size of the list');
+      setAll(0, newValue);
     } else {
       setAll(0, new List<T>.from(this)..sort(_comparator));
     }
