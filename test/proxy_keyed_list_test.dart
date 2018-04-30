@@ -46,7 +46,6 @@ void main() {
           new TestFixture('3'),
         ]));
 
-    /*
     list.filter = ((f) => f.key != '1');
     expect(
         list,
@@ -80,7 +79,6 @@ void main() {
           new TestFixture('3'),
           new TestFixture('4'),
         ]));
-        */
 
     list.dispose();
     baseList.dispose();

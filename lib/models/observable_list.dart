@@ -83,6 +83,10 @@ class ObservableList<T> extends ListBase<T> {
   }
 
   void move(int index1, int index2) {
+    if (index1 == index2) {
+      return;
+    }
+
     T element;
     if (index1 > index2) {
       element = _base.removeAt(index1);
@@ -95,7 +99,7 @@ class ObservableList<T> extends ListBase<T> {
     _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemMoved,
-      index: index1,
+      index: index2,
     ));
   }
 
