@@ -2,47 +2,10 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
+import 'helpers.dart';
 import '../lib/models/keyed_list.dart';
 import '../lib/models/observable_list.dart';
 import '../lib/view_models/view_models_list.dart';
-
-class TestFixture extends ViewModel {
-  final String key;
-  dynamic data;
-  int updateCount;
-  bool get active => _active;
-
-  bool _active = false;
-
-  TestFixture(this.key, {this.data, this.updateCount: 0});
-
-  @override
-  void activate() => _active = true;
-
-  @override
-  void deactivate() => _active = false;
-
-  @override
-  ViewModel updateWith(TestFixture value) {
-    expect(value.key, key);
-    data = value.data;
-    ++updateCount;
-    return this;
-  }
-
-  @override
-  bool operator ==(other) =>
-      (other is TestFixture) &&
-      key == other.key &&
-      data == other.data &&
-      updateCount == other.updateCount;
-
-  @override
-  int get hashCode => key.hashCode ^ data.hashCode ^ updateCount;
-
-  @override
-  String toString() => '#$key [$data] gen $updateCount';
-}
 
 void main() {
   test('initial setAll, add, remove, move, change', () async {

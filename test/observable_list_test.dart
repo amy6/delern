@@ -1,24 +1,7 @@
 import 'package:test/test.dart';
 
+import 'helpers.dart';
 import '../lib/models/observable_list.dart';
-
-StreamMatcher _eventMatcher(ListEventType eventType, int index,
-    [previousValue]) {
-  var expected = new ListEvent(
-      eventType: eventType, index: index, previousValue: previousValue);
-  return new StreamMatcher((q) async {
-    if (!await q.hasNext) return '';
-
-    ListEvent actual = await q.next;
-    if (actual.eventType == expected.eventType &&
-        actual.index == expected.index &&
-        actual.previousValue == expected.previousValue) {
-      return null;
-    }
-
-    return 'emitted $actual';
-  }, 'match $expected');
-}
 
 void main() {
   test('events', () {
@@ -27,17 +10,17 @@ void main() {
     expect(
         list.events,
         emitsInOrder([
-          _eventMatcher(ListEventType.itemAdded, 0),
-          _eventMatcher(ListEventType.itemAdded, 0),
-          _eventMatcher(ListEventType.itemAdded, 2),
-          _eventMatcher(ListEventType.itemRemoved, 1, 42),
-          _eventMatcher(ListEventType.itemAdded, 2),
-          _eventMatcher(ListEventType.itemAdded, 3),
-          _eventMatcher(ListEventType.itemAdded, 4),
-          _eventMatcher(ListEventType.itemMoved, 0),
-          _eventMatcher(ListEventType.itemMoved, 2),
-          _eventMatcher(ListEventType.itemChanged, 2, 17),
-          _eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.itemAdded, 0),
+          eventMatcher(ListEventType.itemAdded, 0),
+          eventMatcher(ListEventType.itemAdded, 2),
+          eventMatcher(ListEventType.itemRemoved, 1, 42),
+          eventMatcher(ListEventType.itemAdded, 2),
+          eventMatcher(ListEventType.itemAdded, 3),
+          eventMatcher(ListEventType.itemAdded, 4),
+          eventMatcher(ListEventType.itemMoved, 0),
+          eventMatcher(ListEventType.itemMoved, 2),
+          eventMatcher(ListEventType.itemChanged, 2, 17),
+          eventMatcher(ListEventType.set, 0),
           emitsDone,
         ]));
 

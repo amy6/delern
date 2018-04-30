@@ -2,41 +2,10 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
+import 'helpers.dart';
 import '../lib/models/keyed_list.dart';
 import '../lib/models/observable_list.dart';
 import '../lib/view_models/proxy_keyed_list.dart';
-
-StreamMatcher _eventMatcher(ListEventType eventType, int index,
-    [previousValue]) {
-  var expected = new ListEvent(
-      eventType: eventType, index: index, previousValue: previousValue);
-  return new StreamMatcher((q) async {
-    if (!await q.hasNext) return '';
-
-    ListEvent actual = await q.next;
-    if (actual.eventType == expected.eventType &&
-        actual.index == expected.index &&
-        actual.previousValue == expected.previousValue) {
-      return null;
-    }
-
-    return 'emitted $actual';
-  }, 'match $expected');
-}
-
-class TestFixture implements KeyedListItem {
-  final String key;
-  TestFixture(this.key);
-
-  @override
-  bool operator ==(other) => (other is TestFixture) && key == other.key;
-
-  @override
-  int get hashCode => key.hashCode;
-
-  @override
-  String toString() => key;
-}
 
 void main() {
   test('filters & sorts', () async {
@@ -47,24 +16,24 @@ void main() {
         list.events,
         emitsInOrder([
           // Initial set.
-          _eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.set, 0),
           // Filter applied.
-          _eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('B')),
-          _eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('C')),
-          _eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('E')),
+          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('B')),
+          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('C')),
+          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('E')),
           // Sort applied.
-          _eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.set, 0),
           // Item that passes the filter is added.
-          _eventMatcher(ListEventType.itemAdded, 1),
+          eventMatcher(ListEventType.itemAdded, 1),
           // Item that passed the filter is removed.
-          _eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('A')),
+          eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('A')),
           // Filter updated to allow a few more items, and disallow one.
-          _eventMatcher(ListEventType.itemAdded, 2),
-          _eventMatcher(ListEventType.itemAdded, 2),
-          _eventMatcher(ListEventType.itemAdded, 1),
-          _eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('D')),
+          eventMatcher(ListEventType.itemAdded, 2),
+          eventMatcher(ListEventType.itemAdded, 2),
+          eventMatcher(ListEventType.itemAdded, 1),
+          eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('D')),
           // Sort removed.
-          _eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.set, 0),
           emitsDone,
         ]));
 
