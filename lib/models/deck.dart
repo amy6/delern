@@ -97,10 +97,12 @@ class Deck implements KeyedListItem {
       .onValue
       .map((evt) => evt.snapshot.value as String);
 
-  static _stringToDeckType(String value) => DeckType.values
-      .firstWhere((deckType) => deckType.toString().toLowerCase() == value);
+  static DeckType _stringToDeckType(String value) => DeckType.values.firstWhere(
+      (deckType) => deckType.toString().split('.').last.toUpperCase() == value,
+      orElse: () => DeckType.basic);
 
-  static _deckTypeToString(DeckType value) => value.toString().split('.')[-1];
+  static String _deckTypeToString(DeckType value) =>
+      value.toString().split('.').last.toUpperCase();
 
   Stream<int> getNumberOfCardsToLearn([int limit = 201]) =>
       FirebaseDatabase.instance
