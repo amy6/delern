@@ -36,6 +36,8 @@ void main() {
           eventMatcher(ListEventType.itemChanged, 3, new TestFixture('B')),
           // Sort removed.
           eventMatcher(ListEventType.set, 0),
+          // Item moved again.
+          eventMatcher(ListEventType.itemMoved, 2),
           emitsDone,
         ]));
 
@@ -114,7 +116,27 @@ void main() {
           new TestFixture('B', data: 'updated'),
         ]));
 
+    baseList.move(2, 3);
+    expect(
+        list,
+        equals([
+          new TestFixture('F'),
+          new TestFixture('E'),
+          new TestFixture('C'),
+          new TestFixture('B', data: 'updated'),
+        ]));
+
     list.comparator = null;
+    expect(
+        list,
+        equals([
+          new TestFixture('B', data: 'updated'),
+          new TestFixture('C'),
+          new TestFixture('F'),
+          new TestFixture('E'),
+        ]));
+
+    baseList.move(3, 2);
     expect(
         list,
         equals([
