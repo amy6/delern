@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 enum _SharingDeckPermissionsType {
-  Edit,
-  View,
+  write,
+  read,
 }
 
 class DeckSharingPage extends StatefulWidget {
@@ -16,9 +16,8 @@ class DeckSharingPage extends StatefulWidget {
 
 class _DeckSharingState extends State<DeckSharingPage> {
   final TextEditingController _textController = new TextEditingController();
-  bool isEmailCorrect = false;
-  _SharingDeckPermissionsType permissionsValue =
-      _SharingDeckPermissionsType.Edit;
+  _SharingDeckPermissionsType _permissionsValue =
+      _SharingDeckPermissionsType.write;
 
   @override
   Widget build(BuildContext context) => new Scaffold(
@@ -27,8 +26,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
           actions: <Widget>[
             new IconButton(
                 icon: new Icon(Icons.send),
-                onPressed: isEmailCorrect
-                    ? () => _shareDeck(permissionsValue, _textController.text)
+                onPressed: _isEmailCorrect()
+                    ? () => _shareDeck(_permissionsValue)
                     : null)
           ],
         ),
@@ -42,12 +41,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
                 ],
               ),
             ),
-            sharingEmail(),
+            _sharingEmail(),
           ],
         ),
       );
 
-  Widget sharingEmail() {
+  Widget _sharingEmail() {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -57,24 +56,22 @@ class _DeckSharingState extends State<DeckSharingPage> {
             child: new TextField(
               controller: _textController,
               onChanged: (String text) {
-                setState(() {
-                  isEmailCorrect = text.contains('@');
-                });
+                setState(() {});
               },
               decoration: new InputDecoration(hintText: "Email address"),
             ),
           ),
         ),
         new DropdownButton<_SharingDeckPermissionsType>(
-          value: permissionsValue,
+          value: _permissionsValue,
           items: _SharingDeckPermissionsType.values
               .map((_SharingDeckPermissionsType value) {
             return new DropdownMenuItem<_SharingDeckPermissionsType>(
-                value: value, child: buildPermissionsDropDownItem(value));
+                value: value, child: _buildPermissionsDropDownItem(value));
           }).toList(),
           onChanged: (_SharingDeckPermissionsType newValue) {
             setState(() {
-              permissionsValue = newValue;
+              _permissionsValue = newValue;
             });
           },
         ),
@@ -82,10 +79,10 @@ class _DeckSharingState extends State<DeckSharingPage> {
     );
   }
 
-  Widget buildPermissionsDropDownItem(_SharingDeckPermissionsType permission) {
+  Widget _buildPermissionsDropDownItem(_SharingDeckPermissionsType permission) {
     String text;
     Icon icon;
-    if (permission == _SharingDeckPermissionsType.Edit) {
+    if (permission == _SharingDeckPermissionsType.write) {
       text = 'Can Edit';
       icon = new Icon(Icons.remove_red_eye);
     } else {
@@ -101,9 +98,14 @@ class _DeckSharingState extends State<DeckSharingPage> {
     );
   }
 
-  _shareDeck(_SharingDeckPermissionsType deckAccess, String email) {
-    _textController.clear();
-    isEmailCorrect = false;
-    print("Share deck: " + deckAccess.toString() + email);
+  bool _isEmailCorrect() {
+    return _textController.text.contains('@');
+  }
+
+  _shareDeck(_SharingDeckPermissionsType deckAccess) {
+    print("Share deck: " + deckAccess.toString() + _textController.text);
+    setState(() {
+      _textController.clear();
+    });
   }
 }
