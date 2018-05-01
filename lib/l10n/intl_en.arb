@@ -1,70 +1,81 @@
- {
-   "@@locale": "en",
-   "@@last_modified": "2018-04-13T13:09:02.169445",
-   "navigationDrawerSignOut": "Sign Out",
-   "@navigationDrawerSignOut": {
-     "description": "Sign Out in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "navigationDrawerCommunicateGroup": "Communicate",
-   "@navigationDrawerCommunicateGroup": {
-     "description": "Communicate Group Name in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "navigationDrawerInviteFriends": "Invite Friends",
-   "@navigationDrawerInviteFriends": {
-     "description": "Invite Friends in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "navigationDrawerContactUs": "Contact Us",
-   "@navigationDrawerContactUs": {
-     "description": "Contact Us in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "navigationDrawerSupportDevelopment": "Support Development",
-   "@navigationDrawerSupportDevelopment": {
-     "description": "Support Development in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "navigationDrawerAbout": "About",
-   "@navigationDrawerAbout": {
-     "description": "About in Navigation Drawer",
-     "type": "text",
-     "placeholders": {}
-   },
-   "signInWithGoogle": "Sign In with Google",
-   "@signInWithGoogle": {
-     "description": "Sign In with Google Button",
-     "type": "text",
-     "placeholders": {}
-   },
-   "editCardsDeckMenu": "Edit Cards",
-     "@editCardsDeckMenu": {
-       "description": "Edit Cards in Deck Menu",
-       "type": "text",
-       "placeholders": {}
-     },
-     "settingsDeckMenu": "Settings",
-     "@settingsDeckMenu": {
-       "description": "Settings in Deck Menu",
-       "type": "text",
-       "placeholders": {}
-     },
-     "shareDeckMenu": "Share",
-     "@shareDeckMenu": {
-       "description": "Share in Deck Menu",
-       "type": "text",
-       "placeholders": {}
-     },
-        "numberOfCards": "Number of cards:",
-        "@numberOfCards": {
-          "description": "Number of cards",
-          "type": "text",
-          "placeholders": {}
-        }
- }
+{
+  "@@locale": "en",
+  "@@last_modified": "2018-04-13T13:09:02.169445",
+  "navigationDrawerSignOut": "Sign Out",
+  "@navigationDrawerSignOut": {
+    "description": "Sign Out in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerCommunicateGroup": "Communicate",
+  "@navigationDrawerCommunicateGroup": {
+    "description": "Communicate Group Name in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerInviteFriends": "Invite Friends",
+  "@navigationDrawerInviteFriends": {
+    "description": "Invite Friends in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerContactUs": "Contact Us",
+  "@navigationDrawerContactUs": {
+    "description": "Contact Us in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerSupportDevelopment": "Support Development",
+  "@navigationDrawerSupportDevelopment": {
+    "description": "Support Development in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerAbout": "About",
+  "@navigationDrawerAbout": {
+    "description": "About in Navigation Drawer",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "signInWithGoogle": "Sign In with Google",
+  "@signInWithGoogle": {
+    "description": "Sign In with Google Button",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "editCardsDeckMenu": "Edit Cards",
+  "@editCardsDeckMenu": {
+    "description": "Edit Cards in Deck Menu",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "settingsDeckMenu": "Settings",
+  "@settingsDeckMenu": {
+    "description": "Settings in Deck Menu",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareDeckMenu": "Share",
+  "@shareDeckMenu": {
+    "description": "Share in Deck Menu",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "numberOfCards": "Number of cards:",
+  "@numberOfCards": {
+    "description": "Number of cards",
+    "type": "text",
+    "placeholders": {
+    }
+  }
+}
