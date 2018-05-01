@@ -5,17 +5,31 @@ enum _SharingDeckPermissionsType {
   View,
 }
 
-class DeckSharingPage extends StatelessWidget {
+class DeckSharingPage extends StatefulWidget {
   final String _deckName;
 
   DeckSharingPage(this._deckName);
 
   @override
+  State<StatefulWidget> createState() => new _DeckSharingState();
+}
+
+class _DeckSharingState extends State<DeckSharingPage> {
+  final TextEditingController _textController = new TextEditingController();
+  bool isEmailCorrect = false;
+  _SharingDeckPermissionsType permissionsValue =
+      _SharingDeckPermissionsType.Edit;
+
+  @override
   Widget build(BuildContext context) => new Scaffold(
         appBar: new AppBar(
-          title: new Text(_deckName),
+          title: new Text(widget._deckName),
           actions: <Widget>[
-            new IconButton(icon: new Icon(Icons.send), onPressed: null)
+            new IconButton(
+                icon: new Icon(Icons.send),
+                onPressed: isEmailCorrect
+                    ? () => _shareDeck(permissionsValue, _textController.text)
+                    : null)
           ],
         ),
         body: new Column(
@@ -28,23 +42,12 @@ class DeckSharingPage extends StatelessWidget {
                 ],
               ),
             ),
-            new SharingEmailWidget(),
+            sharingEmail(),
           ],
         ),
       );
-}
 
-class SharingEmailWidget extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _SharingEmailList();
-}
-
-class _SharingEmailList extends State<SharingEmailWidget> {
-  _SharingDeckPermissionsType permissionsValue =
-      _SharingDeckPermissionsType.Edit;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget sharingEmail() {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -52,6 +55,12 @@ class _SharingEmailList extends State<SharingEmailWidget> {
           child: new Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: new TextField(
+              controller: _textController,
+              onChanged: (String text) {
+                setState(() {
+                  isEmailCorrect = text.contains('@');
+                });
+              },
               decoration: new InputDecoration(hintText: "Email address"),
             ),
           ),
@@ -90,5 +99,11 @@ class _SharingEmailList extends State<SharingEmailWidget> {
         icon,
       ],
     );
+  }
+
+  _shareDeck(_SharingDeckPermissionsType deckAccess, String email) {
+    _textController.clear();
+    isEmailCorrect = false;
+    print("Share deck: " + deckAccess.toString() + email);
   }
 }
