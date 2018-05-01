@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
+
 enum _SharingDeckPermissionsType {
   write,
   read,
@@ -37,7 +39,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
               padding: const EdgeInsets.only(left: 8.0, top: 8.0),
               child: new Row(
                 children: <Widget>[
-                  new Text('People'),
+                  new Text(AppLocalizations.of(context).peopleLabel),
                 ],
               ),
             ),
@@ -58,7 +60,9 @@ class _DeckSharingState extends State<DeckSharingPage> {
               onChanged: (String text) {
                 setState(() {});
               },
-              decoration: new InputDecoration(hintText: "Email address"),
+              decoration: new InputDecoration(
+                hintText: AppLocalizations.of(context).emailAddressHint,
+              ),
             ),
           ),
         ),
@@ -82,12 +86,15 @@ class _DeckSharingState extends State<DeckSharingPage> {
   Widget _buildPermissionsDropDownItem(_SharingDeckPermissionsType permission) {
     String text;
     Icon icon;
-    if (permission == _SharingDeckPermissionsType.write) {
-      text = 'Can Edit';
-      icon = new Icon(Icons.remove_red_eye);
-    } else {
-      text = 'Can View';
-      icon = new Icon(Icons.edit);
+    switch (permission) {
+      case _SharingDeckPermissionsType.read:
+        text = AppLocalizations.of(context).canEdit;
+        icon = new Icon(Icons.edit);
+        break;
+      case _SharingDeckPermissionsType.write:
+        text = AppLocalizations.of(context).canView;
+        icon = new Icon(Icons.remove_red_eye);
+        break;
     }
     return new Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

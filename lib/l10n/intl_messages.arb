@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-04-24T15:36:52.874990",
+  "@@last_modified": "2018-05-01T19:17:59.956498",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -63,6 +63,30 @@
   "numberOfCards": "Number of cards:",
   "@numberOfCards": {
     "description": "Number of cards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canEdit": "Can Edit",
+  "@canEdit": {
+    "description": "User can edit a deck",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canView": "Can View",
+  "@canView": {
+    "description": "User can view a deck",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emailAddressHint": "Email address",
+  "@emailAddressHint": {
+    "description": "Email address hint",
+    "type": "text",
+    "placeholders": {}
+  },
+  "peopleLabel": "People",
+  "@peopleLabel": {
+    "description": "People label",
     "type": "text",
     "placeholders": {}
   }

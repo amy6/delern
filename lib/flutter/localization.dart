@@ -114,6 +114,38 @@ class AppLocalizations {
       desc: 'Number of cards',
     );
   }
+
+  String get canEdit {
+    return Intl.message(
+      'Can Edit',
+      name: 'canEdit',
+      desc: 'User can edit a deck',
+    );
+  }
+
+  String get canView {
+    return Intl.message(
+      'Can View',
+      name: 'canView',
+      desc: 'User can view a deck',
+    );
+  }
+
+  String get emailAddressHint {
+    return Intl.message(
+      'Email address',
+      name: 'emailAddressHint',
+      desc: 'Email address hint',
+    );
+  }
+
+  String get peopleLabel {
+    return Intl.message(
+      'People',
+      name: 'peopleLabel',
+      desc: 'People label',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

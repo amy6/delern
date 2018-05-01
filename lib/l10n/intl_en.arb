@@ -77,5 +77,33 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "canEdit": "Can Edit",
+  "@canEdit": {
+    "description": "User can edit a deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "canView": "Can View",
+  "@canView": {
+    "description": "User can view a deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emailAddressHint": "Email address",
+  "@emailAddressHint": {
+    "description": "Email address hint",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "peopleLabel": "People",
+  "@peopleLabel": {
+    "description": "People label",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

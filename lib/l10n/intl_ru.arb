@@ -76,5 +76,33 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "canEdit": "Может редактировать",
+  "@canEdit": {
+    "description": "User can edit a deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "canView": "Может просматривать",
+  "@canView": {
+    "description": "User can view a deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emailAddressHint": "Адрес электронной почты",
+  "@emailAddressHint": {
+    "description": "Email address hint",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "peopleLabel": "Люди",
+  "@peopleLabel": {
+    "description": "People label",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
