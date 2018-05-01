@@ -34,7 +34,9 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
           _baseItemMoved(event.index);
           break;
         case ListEventType.itemChanged:
-          _baseItemChanged(event);
+          assert(event.previousValue.key == _base[event.index].key,
+              'Item change modifies item key.');
+          _baseItemChanged(event.index);
           break;
         case ListEventType.set:
           _baseSet();
@@ -83,9 +85,14 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     }
   }
 
-  void _baseItemChanged(ListEvent<T> event) {
-    var oldIndex = indexOfKey(event.previousValue.key);
-    var newIndex = _indexForNewItem(event.index);
+  void _baseItemChanged(int index) {
+    var oldIndex = indexOfKey(_base[index].key);
+    var newIndex = _indexForNewItem(index);
+
+    // Update the item in case it was modified, and to notify subscribers.
+    if (oldIndex >= 0) {
+      setAt(oldIndex, _base[index]);
+    }
 
     if (oldIndex != newIndex) {
       if (oldIndex >= 0) {
@@ -95,20 +102,24 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
           removeAt(oldIndex);
         }
       } else if (newIndex >= 0) {
-        insert(newIndex, _base[event.index]);
+        insert(newIndex, _base[index]);
       }
-    }
-
-    // Update the item in case it was replaced, and to notify subscribers.
-    if (newIndex >= 0) {
-      setAt(newIndex, _base[event.index]);
     }
   }
 
   void _baseItemMoved(int newBaseIndex) {
     if (_comparator == null) {
-      // TODO(dotdoom): test that this works.
-      move(indexOfKey(_base[newBaseIndex].key), _indexForNewItem(newBaseIndex));
+      var newIndex = _indexForNewItem(newBaseIndex);
+      // Check that it passes the filter.
+      if (newIndex >= 0) {
+        var oldIndex = indexOfKey(_base[newBaseIndex].key);
+        assert(oldIndex >= 0, 'Item move adds it to the list.');
+        // Adjust indexes for the possible shift.
+        if (oldIndex < newIndex) {
+          --newIndex;
+        }
+        move(oldIndex, newIndex);
+      }
     }
   }
 
@@ -117,6 +128,28 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
       // Shortcut for the initializing 'set' event.
       setAll(0, _base);
     } else {
+      // TODO(dotdoom): with ViewModelsList as a _base, this must not happen.
+
+      // First, update all items in this list.
+      var listReplacement = toList(growable: false);
+      var existingIndexes = new Set<int>();
+      for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {
+        var myIndex = indexOfKey(_base[baseIndex].key);
+        if (myIndex >= 0) {
+          existingIndexes.add(myIndex);
+          listReplacement[myIndex] = _base[baseIndex];
+        }
+      }
+      setAll(0, listReplacement);
+
+      // Second, remove items no longer in the list.
+      // TODO(dotdoom): optimize this.
+      for (var myIndex = length - 1; myIndex >= 0; --myIndex) {
+        if (!existingIndexes.contains(myIndex)) {
+          removeAt(myIndex);
+        }
+      }
+
       _refilter();
       _resort();
     }

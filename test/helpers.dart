@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:test/test.dart';
 
-import '../lib/models/keyed_list.dart';
 import '../lib/models/observable_list.dart';
 import '../lib/view_models/view_models_list.dart';
 
@@ -32,7 +29,7 @@ class TestFixture extends ViewModel {
 
   bool _active = false;
 
-  TestFixture(this.key, {this.data, this.updateCount: 0});
+  TestFixture(this.key, {this.data, this.updateCount});
 
   @override
   void activate() => _active = true;
@@ -44,7 +41,7 @@ class TestFixture extends ViewModel {
   ViewModel updateWith(TestFixture value) {
     expect(value.key, key);
     data = value.data;
-    ++updateCount;
+    updateCount = (updateCount ?? 0) + 1;
     return this;
   }
 
@@ -56,8 +53,9 @@ class TestFixture extends ViewModel {
       updateCount == other.updateCount;
 
   @override
-  int get hashCode => key.hashCode ^ data.hashCode ^ updateCount;
+  int get hashCode => key.hashCode ^ data.hashCode ^ (updateCount ?? 0);
 
   @override
-  String toString() => '#$key [$data] gen $updateCount';
+  String toString() =>
+      '#$key [$data]${updateCount == null ? '' : 'gen $updateCount'}';
 }
