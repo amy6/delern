@@ -100,7 +100,8 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
   void _setAll(Iterable<T> newValue) {
     if (!changed) {
       // Shortcut (also beneficial for the UI).
-      setAll(0, newValue..forEach((e) => e.activate()));
+      setAll(0, newValue);
+      forEach((e) => e.activate());
       return;
     }
 
