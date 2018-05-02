@@ -47,12 +47,32 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   set filter(final Filter<T> value) {
     _filter = value;
-    _refilter();
+    for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {
+      var item = _base[baseIndex];
+      var currentIndex = indexOfKey(item.key);
+      var newIndex = _indexForNewItem(baseIndex);
+
+      if (currentIndex >= 0 && newIndex < 0) {
+        removeAt(currentIndex);
+      } else if (currentIndex < 0 && newIndex >= 0) {
+        insert(_indexForNewItem(baseIndex), item);
+      }
+    }
   }
 
   set comparator(Comparator<T> value) {
     _comparator = value;
-    _resort();
+    if (_comparator == null) {
+      Iterable<T> newValue = _base;
+      if (_filter != null) {
+        newValue = _base.where(_filter);
+      }
+      assert(newValue.length == length,
+          'Sorting must not change the size of the list');
+      setAll(0, newValue);
+    } else {
+      setAll(0, new List<T>.from(this)..sort(_comparator));
+    }
   }
 
   int _indexForNewItem(int baseIndex) {
@@ -124,63 +144,25 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
   }
 
   void _baseSet() {
-    if (_filter == null && _comparator == null && !changed) {
-      // Shortcut for the initializing 'set' event.
-      setAll(0, _base);
-    } else {
-      // TODO(dotdoom): with ViewModelsList as a _base, this must not happen.
+    // We rely heavily on ViewModelsList being a _base. It has to control its
+    // children carefully to activate / deactivate them timely. Therefore, it
+    // does not call setAll.
+    // TODO(dotdoom): force _base to be ViewModelsList?
+    assert(!changed, 'ProxyKeyedList supports "set" only for initializing.');
 
-      // First, update all items in this list.
-      var listReplacement = toList(growable: false);
-      var existingIndexes = new Set<int>();
-      for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {
-        var myIndex = indexOfKey(_base[baseIndex].key);
-        if (myIndex >= 0) {
-          existingIndexes.add(myIndex);
-          listReplacement[myIndex] = _base[baseIndex];
-        }
-      }
-      setAll(0, listReplacement);
+    var items = _base.toList();
 
-      // Second, remove items no longer in the list.
-      // TODO(dotdoom): optimize this.
-      for (var myIndex = length - 1; myIndex >= 0; --myIndex) {
-        if (!existingIndexes.contains(myIndex)) {
-          removeAt(myIndex);
-        }
-      }
-
-      _refilter();
-      _resort();
+    if (_filter != null) {
+      items = items.where(_filter);
     }
-  }
 
-  void _refilter() {
-    for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {
-      var item = _base[baseIndex];
-      var currentIndex = indexOfKey(item.key);
-      var newIndex = _indexForNewItem(baseIndex);
-
-      if (currentIndex >= 0 && newIndex < 0) {
-        removeAt(currentIndex);
-      } else if (currentIndex < 0 && newIndex >= 0) {
-        insert(_indexForNewItem(baseIndex), item);
-      }
+    if (_comparator != null) {
+      items.sort(_comparator);
     }
-  }
 
-  void _resort() {
-    if (_comparator == null) {
-      Iterable<T> newValue = _base;
-      if (_filter != null) {
-        newValue = _base.where(_filter);
-      }
-      assert(newValue.length == length,
-          'Sorting must not change the size of the list');
-      setAll(0, newValue);
-    } else {
-      setAll(0, new List<T>.from(this)..sort(_comparator));
-    }
+    // Here we can simply use setAll without caring about UI, because UI will
+    // not display the list widget until 'changed' is true.
+    setAll(0, items);
   }
 
   @mustCallSuper

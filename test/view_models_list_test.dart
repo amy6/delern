@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
-import 'helpers.dart';
 import '../lib/models/keyed_list.dart';
 import '../lib/models/observable_list.dart';
 import '../lib/view_models/view_models_list.dart';
+import 'helpers.dart';
 
 void main() {
   test('initial setAll, add, remove, move, change', () async {
@@ -137,6 +137,25 @@ void main() {
       );
     })
       ..activate();
+
+    expect(
+        list.events,
+        emitsInOrder([
+          // Apparently events are matched only at the end. Since ViewModelsList
+          // reuses the objects, by the time of verification the data is final.
+          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.itemRemoved, 1,
+              new TestFixture('2', data: 'to be removed')),
+          eventMatcher(ListEventType.itemChanged, 0,
+              new TestFixture('1', data: 'no more changes', updateCount: 2)),
+          eventMatcher(ListEventType.itemAdded, 1),
+          eventMatcher(ListEventType.itemChanged, 0,
+              new TestFixture('1', data: 'no more changes', updateCount: 2)),
+          eventMatcher(ListEventType.itemChanged, 1,
+              new TestFixture('3', updateCount: 1)),
+          eventMatcher(ListEventType.itemAdded, 2),
+          emitsDone,
+        ]));
 
     await new Future<Null>(() {});
     expect(

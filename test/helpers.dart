@@ -57,5 +57,5 @@ class TestFixture extends ViewModel {
 
   @override
   String toString() =>
-      '#$key [$data]${updateCount == null ? '' : 'gen $updateCount'}';
+      '#$key [$data]${updateCount == null ? '' : ' gen $updateCount'}';
 }
