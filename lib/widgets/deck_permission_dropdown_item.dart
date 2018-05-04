@@ -9,13 +9,12 @@ class DeckPermissionDropdownItem extends StatelessWidget {
 
   DeckPermissionDropdownItem(this.permission);
 
-  // TODO(ksheremet): localization
   @override
   Widget build(BuildContext context) {
     String text;
     Icon icon;
     if (permission == null) {
-      text = 'No access';
+      text = AppLocalizations.of(context).noAccess;
       icon = new Icon(Icons.clear);
     } else {
       switch (permission) {
@@ -28,7 +27,7 @@ class DeckPermissionDropdownItem extends StatelessWidget {
           icon = new Icon(Icons.remove_red_eye);
           break;
         case SharingDeckPermissionsType.owner:
-          text = 'owner';
+          text = AppLocalizations.of(context).owner;
           icon = new Icon(Icons.person);
           break;
       }

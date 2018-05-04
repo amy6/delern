@@ -37,12 +37,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Выход"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
+        "noAccess": MessageLookupByLibrary.simpleMessage("Нет доступа"),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Количество карточек:"),
+        "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Войти с помощью Google")
+            MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "whoHasAccessLabel":
+            MessageLookupByLibrary.simpleMessage("У кого есть доступ")
       };
 }

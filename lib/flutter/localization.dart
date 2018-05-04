@@ -131,6 +131,22 @@ class AppLocalizations {
     );
   }
 
+  String get owner {
+    return Intl.message(
+      'Owner',
+      name: 'owner',
+      desc: 'User has owner access',
+    );
+  }
+
+  String get noAccess {
+    return Intl.message(
+      'No access',
+      name: 'noAccess',
+      desc: 'User has no access',
+    );
+  }
+
   String get emailAddressHint {
     return Intl.message(
       'Email address',
@@ -144,6 +160,14 @@ class AppLocalizations {
       'People',
       name: 'peopleLabel',
       desc: 'People label',
+    );
+  }
+
+  String get whoHasAccessLabel {
+    return Intl.message(
+      'Who has access',
+      name: 'whoHasAccessLabel',
+      desc: 'Who has access label',
     );
   }
 }

@@ -91,6 +91,20 @@
     "placeholders": {
     }
   },
+  "owner": "Владелец",
+  "@owner": {
+    "description": "User has owner access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noAccess": "Нет доступа",
+  "@noAccess": {
+    "description": "User has no access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "emailAddressHint": "Адрес электронной почты",
   "@emailAddressHint": {
     "description": "Email address hint",
@@ -101,6 +115,13 @@
   "peopleLabel": "Люди",
   "@peopleLabel": {
     "description": "People label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "whoHasAccessLabel": "У кого есть доступ",
+  "@whoHasAccessLabel": {
+    "description": "Who has access label",
     "type": "text",
     "placeholders": {
     }

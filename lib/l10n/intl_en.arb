@@ -92,6 +92,20 @@
     "placeholders": {
     }
   },
+  "owner": "Owner",
+  "@owner": {
+    "description": "User has owner access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noAccess": "No access",
+  "@noAccess": {
+    "description": "User has no access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "emailAddressHint": "Email address",
   "@emailAddressHint": {
     "description": "Email address hint",
@@ -102,6 +116,13 @@
   "peopleLabel": "People",
   "@peopleLabel": {
     "description": "People label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "whoHasAccessLabel": "Who has access",
+  "@whoHasAccessLabel": {
+    "description": "Who has access label",
     "type": "text",
     "placeholders": {
     }

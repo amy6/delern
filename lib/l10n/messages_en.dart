@@ -35,12 +35,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sign Out"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
+        "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Number of cards:"),
+        "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Sign In with Google")
+            MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+        "whoHasAccessLabel":
+            MessageLookupByLibrary.simpleMessage("Who has access")
       };
 }

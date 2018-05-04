@@ -94,10 +94,9 @@ class DeckUsersWidget extends StatefulWidget {
 }
 
 class _DeckUsersState extends State<DeckUsersWidget> {
-  SharingDeckPermissionsType sharedPermission =
+  SharingDeckPermissionsType _sharedPermission =
       SharingDeckPermissionsType.write;
 
-  // TODO(ksheremet): localization
   @override
   Widget build(BuildContext context) {
     return new Column(
@@ -106,7 +105,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           padding: const EdgeInsets.only(left: 8.0, top: 8.0),
           child: new Row(
             children: <Widget>[
-              new Text('Who has access'),
+              new Text(AppLocalizations.of(context).whoHasAccessLabel),
             ],
           ),
         ),
@@ -117,7 +116,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           ),
           title: new Text('Katarina'),
           trailing: new DropdownButton<SharingDeckPermissionsType>(
-            value: sharedPermission,
+            value: _sharedPermission,
             items: (SharingDeckPermissionsType.values + [null])
                 .where((permission) =>
                     permission != SharingDeckPermissionsType.owner)
@@ -127,7 +126,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             }).toList(),
             onChanged: (SharingDeckPermissionsType newValue) {
               setState(() {
-                sharedPermission = newValue;
+                _sharedPermission = newValue;
               });
             },
           ),
