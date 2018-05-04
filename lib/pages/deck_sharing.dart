@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-
-enum _SharingDeckPermissionsType {
-  write,
-  read,
-}
-
-enum _UsersDeckPermissionsType {
-  write,
-  read,
-  no_access,
-}
+import '../widgets/deck_permission_dropdown_item.dart';
 
 class DeckSharingPage extends StatefulWidget {
   final String _deckName;
@@ -24,8 +14,8 @@ class DeckSharingPage extends StatefulWidget {
 
 class _DeckSharingState extends State<DeckSharingPage> {
   final TextEditingController _textController = new TextEditingController();
-  _SharingDeckPermissionsType _permissionsValue =
-      _SharingDeckPermissionsType.write;
+  SharingDeckPermissionsType _permissionsValue =
+      SharingDeckPermissionsType.write;
 
   @override
   Widget build(BuildContext context) => new Scaffold(
@@ -66,14 +56,18 @@ class _DeckSharingState extends State<DeckSharingPage> {
           hintText: AppLocalizations.of(context).emailAddressHint,
         ),
       ),
-      trailing: new DropdownButton<_SharingDeckPermissionsType>(
+      trailing: new DropdownButton<SharingDeckPermissionsType>(
         value: _permissionsValue,
-        items: _SharingDeckPermissionsType.values
-            .map((_SharingDeckPermissionsType value) {
-          return new DropdownMenuItem<_SharingDeckPermissionsType>(
-              value: value, child: _buildPermissionsDropDownItem(value));
+        items: SharingDeckPermissionsType.values
+            .where(
+                (permission) => permission != SharingDeckPermissionsType.owner)
+            .map((SharingDeckPermissionsType value) {
+          return new DropdownMenuItem<SharingDeckPermissionsType>(
+            child: DeckPermissionDropdownItem(value),
+            value: value,
+          );
         }).toList(),
-        onChanged: (_SharingDeckPermissionsType newValue) {
+        onChanged: (SharingDeckPermissionsType newValue) {
           setState(() {
             _permissionsValue = newValue;
           });
@@ -82,33 +76,11 @@ class _DeckSharingState extends State<DeckSharingPage> {
     );
   }
 
-  Widget _buildPermissionsDropDownItem(_SharingDeckPermissionsType permission) {
-    String text;
-    Icon icon;
-    switch (permission) {
-      case _SharingDeckPermissionsType.read:
-        text = AppLocalizations.of(context).canEdit;
-        icon = new Icon(Icons.edit);
-        break;
-      case _SharingDeckPermissionsType.write:
-        text = AppLocalizations.of(context).canView;
-        icon = new Icon(Icons.remove_red_eye);
-        break;
-    }
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        new Text(text),
-        icon,
-      ],
-    );
-  }
-
   bool _isEmailCorrect() {
     return _textController.text.contains('@');
   }
 
-  _shareDeck(_SharingDeckPermissionsType deckAccess) {
+  _shareDeck(SharingDeckPermissionsType deckAccess) {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     setState(() {
       _textController.clear();
@@ -122,8 +94,10 @@ class DeckUsersWidget extends StatefulWidget {
 }
 
 class _DeckUsersState extends State<DeckUsersWidget> {
-  _UsersDeckPermissionsType sharedPermission = _UsersDeckPermissionsType.write;
+  SharingDeckPermissionsType sharedPermission =
+      SharingDeckPermissionsType.write;
 
+  // TODO(ksheremet): localization
   @override
   Widget build(BuildContext context) {
     return new Column(
@@ -142,47 +116,22 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: new Text('Test'.substring(0, 1)),
           ),
           title: new Text('Katarina'),
-          trailing: new DropdownButton<_UsersDeckPermissionsType>(
+          trailing: new DropdownButton<SharingDeckPermissionsType>(
             value: sharedPermission,
-            items: _UsersDeckPermissionsType.values
-                .map((_UsersDeckPermissionsType value) {
-              return new DropdownMenuItem<_UsersDeckPermissionsType>(
-                  value: value,
-                  child: _buildUsersPermissionsDropDownItem(value));
+            items: (SharingDeckPermissionsType.values + [null])
+                .where((permission) =>
+                    permission != SharingDeckPermissionsType.owner)
+                .map((SharingDeckPermissionsType value) {
+              return new DropdownMenuItem<SharingDeckPermissionsType>(
+                  value: value, child: new DeckPermissionDropdownItem(value));
             }).toList(),
-            onChanged: (_UsersDeckPermissionsType newValue) {
+            onChanged: (SharingDeckPermissionsType newValue) {
               setState(() {
                 sharedPermission = newValue;
               });
             },
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildUsersPermissionsDropDownItem(
-      _UsersDeckPermissionsType permission) {
-    String text;
-    Icon icon;
-    switch (permission) {
-      case _UsersDeckPermissionsType.read:
-        text = AppLocalizations.of(context).canEdit;
-        icon = new Icon(Icons.edit);
-        break;
-      case _UsersDeckPermissionsType.write:
-        text = AppLocalizations.of(context).canView;
-        icon = new Icon(Icons.remove_red_eye);
-        break;
-      case _UsersDeckPermissionsType.no_access:
-        text = 'No access';
-        icon = new Icon(Icons.clear);
-    }
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        new Text(text),
-        icon,
       ],
     );
   }
