@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../pages/card_create_update.dart';
 import '../view_models/card_view_model.dart';
 import '../view_models/deck_view_model.dart';
 import '../widgets/observing_grid_view.dart';
@@ -49,11 +50,15 @@ class _CardsListState extends State<CardsListPage> {
       body: new ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: viewModel.cards,
-        itemBuilder: (item) => new CardGridItem(item),
+        itemBuilder: (item) => new CardGridItem(item, widget._deckViewModel),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: null,
+        onPressed: () => Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) =>
+                    new CreateUpdateCard(widget._deckViewModel, null))),
         child: new Icon(Icons.add),
       ),
     );
@@ -62,8 +67,9 @@ class _CardsListState extends State<CardsListPage> {
 
 class CardGridItem extends StatelessWidget {
   final CardViewModel card;
+  final DeckViewModel deck;
 
-  CardGridItem(this.card);
+  CardGridItem(this.card, this.deck);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +79,10 @@ class CardGridItem extends StatelessWidget {
         color: Colors.greenAccent,
         child: new InkWell(
           splashColor: Theme.of(context).splashColor,
-          onTap: () => print(card.front),
+          onTap: () => Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new CreateUpdateCard(deck, card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(
