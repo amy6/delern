@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import 'deck_access.dart';
 import 'keyed_list.dart';
 import 'observable_list.dart';
 
@@ -88,14 +89,14 @@ class Deck implements KeyedListItem {
         .set({'access': 'owner'}));
   }
 
-  Stream<String> getAccess() => FirebaseDatabase.instance
+  Stream<AccessType> getAccess() => FirebaseDatabase.instance
       .reference()
       .child('deck_access')
       .child(key)
       .child(uid)
       .child('access')
       .onValue
-      .map((evt) => evt.snapshot.value as String);
+      .map((evt) => DeckAccess.stringToAccessType(evt.snapshot.value));
 
   static DeckType _stringToDeckType(String value) => DeckType.values.firstWhere(
       (deckType) => deckType.toString().split('.').last.toUpperCase() == value,
