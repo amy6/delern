@@ -46,16 +46,16 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       return new AppBar(
         title: new Text(widget._deckViewModel.name),
         actions: <Widget>[
-          new MaterialButton(
-            onPressed: (_frontTextController.text.isEmpty ||
-                    _backTextController.text.isEmpty)
-                ? null
-                : () {
-                    // TODO(ksheremet): Add card to db
-                    print(_frontTextController.text + _backTextController.text);
-                  },
-            child: new Text('SAVE'),
-          )
+          new IconButton(
+              icon: new Icon(Icons.check),
+              onPressed: (_frontTextController.text.isEmpty ||
+                      _backTextController.text.isEmpty)
+                  ? null
+                  : () {
+                      // TODO(ksheremet): Add card to db
+                      print(
+                          _frontTextController.text + _backTextController.text);
+                    })
         ],
       );
     } else {
