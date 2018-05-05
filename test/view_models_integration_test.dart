@@ -83,28 +83,28 @@ void main() {
       expect(
           list,
           equals([
-            new TestFixture('A', data: 5),
-            new TestFixture('C', data: 3),
-            new TestFixture('E', data: 1),
+            new TestFixture('A', data: 5, updateCount: 2),
+            new TestFixture('C', data: 3, updateCount: 2),
+            new TestFixture('E', data: 1, updateCount: 2),
           ]));
 
       list.comparator = null;
       expect(
           list,
           equals([
-            new TestFixture('E', data: 1),
-            new TestFixture('A', data: 5),
-            new TestFixture('C', data: 3),
+            new TestFixture('E', data: 1, updateCount: 2),
+            new TestFixture('A', data: 5, updateCount: 2),
+            new TestFixture('C', data: 3, updateCount: 2),
           ]));
 
       list.filter = null;
       expect(
           list,
           equals([
-            new TestFixture('F', data: 0),
-            new TestFixture('E', data: 1),
-            new TestFixture('A', data: 5),
-            new TestFixture('C', data: 3),
+            new TestFixture('F', data: 0, updateCount: 1),
+            new TestFixture('E', data: 1, updateCount: 2),
+            new TestFixture('A', data: 5, updateCount: 2),
+            new TestFixture('C', data: 3, updateCount: 2),
           ]));
     })
           ..activate());
@@ -115,10 +115,10 @@ void main() {
     expect(
         list,
         equals([
-          new TestFixture('F', data: 0),
-          new TestFixture('E', data: 1),
-          new TestFixture('A', data: 5),
-          new TestFixture('C', data: 3),
+          new TestFixture('F', data: 0, updateCount: 1),
+          new TestFixture('E', data: 1, updateCount: 2),
+          new TestFixture('A', data: 5, updateCount: 2),
+          new TestFixture('C', data: 3, updateCount: 2),
         ]));
 
     list.dispose();

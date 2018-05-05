@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
-import 'helpers.dart';
 import '../lib/models/observable_list.dart';
+import 'helpers.dart';
 
 void main() {
   test('events', () {
@@ -18,41 +18,39 @@ void main() {
           eventMatcher(ListEventType.itemAdded, 3),
           eventMatcher(ListEventType.itemAdded, 4),
           eventMatcher(ListEventType.itemMoved, 0),
-          eventMatcher(ListEventType.itemMoved, 2),
-          eventMatcher(ListEventType.itemChanged, 2, 17),
+          eventMatcher(ListEventType.itemMoved, 4),
+          eventMatcher(ListEventType.itemChanged, 2, 2),
           eventMatcher(ListEventType.set, 0),
           emitsDone,
         ]));
 
-    expect(list.changed, equals(false));
+    expect(list.changed, false);
     list.add(42);
     expect(list.changed, true);
-
-    // 42
+    expect(list, equals([42]));
     list.insert(0, 17);
-    // 17 42
+    expect(list, equals([17, 42]));
     list.insert(2, -1);
-    // 17 42 -1
+    expect(list, equals([17, 42, -1]));
     list.removeAt(1);
-    // 17 -1
-    list.addAll(<int>[1, 2, 3]);
-    // 17 -1 1 2 3
+    expect(list, equals([17, -1]));
+    list.addAll([1, 2, 3]);
+    expect(list, equals([17, -1, 1, 2, 3]));
     list.move(2, 0);
-    // 1 17 -1 2 3
-    list.move(1, 2);
-    // 1 -1 17 2 3
+    expect(list, equals([1, 17, -1, 2, 3]));
+    list.move(1, 5);
+    expect(list, equals([1, -1, 2, 3, 17]));
     list.setAt(2, 0);
-    expect(list, equals(<int>[1, -1, 0, 2, 3]));
-
-    list.setAll(0, <int>[1, 2, 3]);
-    expect(list, equals(<int>[1, 2, 3]));
+    expect(list, equals([1, -1, 0, 3, 17]));
+    list.setAll(0, [1, 2, 3]);
+    expect(list, equals([1, 2, 3]));
 
     list.dispose();
   });
 
   test('disallowed methods', () {
     var list = new ObservableList<int>();
-    list.setAll(0, <int>[1, -1, 0]);
+    list.setAll(0, [1, -1, 0]);
 
     expect(() => list.length += 1,
         throwsA(const isInstanceOf<UnsupportedError>()));

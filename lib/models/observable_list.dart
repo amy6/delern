@@ -82,15 +82,19 @@ class ObservableList<T> extends ListBase<T> {
     }
   }
 
-  void move(int index1, int index2) {
-    if (index1 == index2) {
+  void move(int takeFromIndex, int insertBeforeIndex) {
+    // Adjust because once we move, the index will decrease.
+    if (insertBeforeIndex > takeFromIndex) {
+      --insertBeforeIndex;
+    }
+    if (takeFromIndex == insertBeforeIndex) {
       return;
     }
-    _base.insert(index2, _base.removeAt(index1));
+    _base.insert(insertBeforeIndex, _base.removeAt(takeFromIndex));
     _changed = true;
     _events.add(new ListEvent(
       eventType: ListEventType.itemMoved,
-      index: index2,
+      index: insertBeforeIndex,
     ));
   }
 

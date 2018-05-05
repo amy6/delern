@@ -118,7 +118,7 @@ void main() {
           new TestFixture('B', data: 'updated'),
         ]));
 
-    baseList.move(2, 3);
+    baseList.move(2, 4);
     expect(
         list,
         equals([
@@ -278,7 +278,7 @@ void main() {
           new TestFixture('E', data: 4),
         ]));
 
-    baseList.move(0, 5);
+    baseList.move(0, 6);
     expect(
         list,
         equals([
@@ -300,7 +300,7 @@ void main() {
           new TestFixture('A', data: 6),
         ]));
 
-    baseList.move(1, 2);
+    baseList.move(1, 3);
     expect(
         list,
         equals([

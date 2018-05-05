@@ -90,7 +90,8 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
       }
     } else {
       for (var index = 0; index < length; ++index) {
-        if (_comparator(this[index], item) >= 0) {
+        if (this[index].key != item.key &&
+            _comparator(this[index], item) >= 0) {
           return index;
         }
       }
@@ -134,10 +135,6 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
       if (newIndex >= 0) {
         var oldIndex = indexOfKey(_base[newBaseIndex].key);
         assert(oldIndex >= 0, 'Item move adds it to the list.');
-        // Adjust indexes for the possible shift.
-        if (oldIndex < newIndex) {
-          --newIndex;
-        }
         move(oldIndex, newIndex);
       }
     }

@@ -72,13 +72,8 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
         }
         break;
       case ListEventType.itemMoved:
-        var oldIndex = indexOfKey(event.value.key);
-        var newIndex = indexOfKey(event.previousSiblingKey);
-        if (oldIndex > newIndex) {
-          move(oldIndex, newIndex + 1);
-        } else {
-          move(oldIndex, newIndex);
-        }
+        move(indexOfKey(event.value.key),
+            indexOfKey(event.previousSiblingKey) + 1);
         break;
       case ListEventType.set:
         _setAll(event.fullListValueForSet);
@@ -117,15 +112,20 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
       }
     }
 
-    var previousKey;
+    var index = 0;
     for (var element in newValue) {
-      var index = indexOfKey(element.key);
-      if (index < 0) {
-        _add(previousKey, element);
+      var existingIndex = indexOfKey(element.key);
+      if (existingIndex < 0) {
+        insert(index, element..activate());
       } else {
+        if (existingIndex != index) {
+          assert(existingIndex > index,
+              'ViewModelsList missed an item at re-arrangement');
+          move(existingIndex, index);
+        }
         _update(index, element);
       }
-      previousKey = element.key;
+      ++index;
     }
   }
 }
