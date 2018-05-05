@@ -145,7 +145,8 @@ class DeckListItem extends StatelessWidget {
       case _DeckMenuItemType.edit:
         Navigator.push(
           context,
-          new MaterialPageRoute(builder: (context) => new CardsListPage(model)),
+          new MaterialPageRoute(
+              builder: (context) => new CardsListPage(model.deck)),
         );
         break;
       case _DeckMenuItemType.setting:

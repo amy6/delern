@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/card_view_model.dart';
-import '../view_models/deck_view_model.dart';
 import '../widgets/observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
-  final DeckViewModel _deckViewModel;
+  final Deck _deck;
 
-  CardsListPage(this._deckViewModel);
+  CardsListPage(this._deck);
 
   @override
   _CardsListState createState() => new _CardsListState();
@@ -21,7 +21,7 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   void initState() {
-    viewModel = new CardsViewModel(widget._deckViewModel.key);
+    viewModel = new CardsViewModel(widget._deck.key);
     super.initState();
   }
 
@@ -46,11 +46,11 @@ class _CardsListState extends State<CardsListPage> {
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text(widget._deckViewModel.name)),
+      appBar: new AppBar(title: new Text(widget._deck.name)),
       body: new ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: viewModel.cards,
-        itemBuilder: (item) => new CardGridItem(item, widget._deckViewModel),
+        itemBuilder: (item) => new CardGridItem(item, widget._deck),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
       ),
       floatingActionButton: new FloatingActionButton(
@@ -58,7 +58,7 @@ class _CardsListState extends State<CardsListPage> {
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    new CreateUpdateCard(widget._deckViewModel, null))),
+                    new CreateUpdateCard(widget._deck, null))),
         child: new Icon(Icons.add),
       ),
     );
@@ -67,7 +67,7 @@ class _CardsListState extends State<CardsListPage> {
 
 class CardGridItem extends StatelessWidget {
   final CardViewModel card;
-  final DeckViewModel deck;
+  final Deck deck;
 
   CardGridItem(this.card, this.deck);
 

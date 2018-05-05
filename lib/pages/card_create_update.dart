@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
-import '../view_models/deck_view_model.dart';
 
 class CreateUpdateCard extends StatefulWidget {
-  final DeckViewModel _deckViewModel;
+  final Deck _deck;
   final CardViewModel _cardViewModel;
 
-  CreateUpdateCard(this._deckViewModel, this._cardViewModel);
+  CreateUpdateCard(this._deck, this._cardViewModel);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();
@@ -44,7 +44,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget buildAppBar() {
     if (widget._cardViewModel == null) {
       return new AppBar(
-        title: new Text(widget._deckViewModel.name),
+        title: new Text(widget._deck.name),
         actions: <Widget>[
           new IconButton(
               icon: new Icon(Icons.check),
@@ -60,7 +60,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       );
     } else {
       return new AppBar(
-        title: new Text(widget._deckViewModel.name),
+        title: new Text(widget._deck.name),
       );
     }
   }
