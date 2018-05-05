@@ -59,4 +59,17 @@ void main() {
     list.dispose();
     expect(() => list.add(0), throwsA(const isInstanceOf<StateError>()));
   });
+
+  test('empty changes', () {
+    var list = new ObservableList();
+
+    list.setAll(0, []);
+    expect(list.changed, false);
+
+    list.move(0, 0);
+    expect(list.changed, false);
+
+    list.move(0, 1);
+    expect(list.changed, false);
+  });
 }
