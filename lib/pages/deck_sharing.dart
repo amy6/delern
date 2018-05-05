@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../widgets/deck_permission_dropdown_item.dart';
+import '../models/deck_access.dart';
+import '../widgets/deck_access_dropdown.dart';
 
 class DeckSharingPage extends StatefulWidget {
   final String _deckName;
@@ -14,8 +15,7 @@ class DeckSharingPage extends StatefulWidget {
 
 class _DeckSharingState extends State<DeckSharingPage> {
   final TextEditingController _textController = new TextEditingController();
-  SharingDeckPermissionsType _permissionsValue =
-      SharingDeckPermissionsType.write;
+  AccessType _accessValue = AccessType.write;
 
   @override
   Widget build(BuildContext context) => new Scaffold(
@@ -24,9 +24,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
           actions: <Widget>[
             new IconButton(
                 icon: new Icon(Icons.send),
-                onPressed: _isEmailCorrect()
-                    ? () => _shareDeck(_permissionsValue)
-                    : null)
+                onPressed:
+                    _isEmailCorrect() ? () => _shareDeck(_accessValue) : null)
           ],
         ),
         body: new Column(
@@ -56,22 +55,13 @@ class _DeckSharingState extends State<DeckSharingPage> {
           hintText: AppLocalizations.of(context).emailAddressHint,
         ),
       ),
-      trailing: new DropdownButton<SharingDeckPermissionsType>(
-        value: _permissionsValue,
-        items: SharingDeckPermissionsType.values
-            .where(
-                (permission) => permission != SharingDeckPermissionsType.owner)
-            .map((SharingDeckPermissionsType value) {
-          return new DropdownMenuItem<SharingDeckPermissionsType>(
-            child: DeckPermissionDropdownItem(value),
-            value: value,
-          );
-        }).toList(),
-        onChanged: (SharingDeckPermissionsType newValue) {
-          setState(() {
-            _permissionsValue = newValue;
-          });
-        },
+      trailing: new DeckAccessDropdown(
+        value: _accessValue,
+        filter: (AccessType access) =>
+            (access != AccessType.owner && access != null),
+        valueChanged: (AccessType access) => setState(() {
+              _accessValue = access;
+            }),
       ),
     );
   }
@@ -80,7 +70,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
     return _textController.text.contains('@');
   }
 
-  _shareDeck(SharingDeckPermissionsType deckAccess) {
+  _shareDeck(AccessType deckAccess) {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     setState(() {
       _textController.clear();
@@ -94,8 +84,7 @@ class DeckUsersWidget extends StatefulWidget {
 }
 
 class _DeckUsersState extends State<DeckUsersWidget> {
-  SharingDeckPermissionsType _sharedPermission =
-      SharingDeckPermissionsType.write;
+  AccessType _sharedAccess = AccessType.write;
 
   @override
   Widget build(BuildContext context) {
@@ -115,20 +104,12 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             child: new Text('Test'.substring(0, 1)),
           ),
           title: new Text('Katarina'),
-          trailing: new DropdownButton<SharingDeckPermissionsType>(
-            value: _sharedPermission,
-            items: (SharingDeckPermissionsType.values + [null])
-                .where((permission) =>
-                    permission != SharingDeckPermissionsType.owner)
-                .map((SharingDeckPermissionsType value) {
-              return new DropdownMenuItem<SharingDeckPermissionsType>(
-                  value: value, child: new DeckPermissionDropdownItem(value));
-            }).toList(),
-            onChanged: (SharingDeckPermissionsType newValue) {
-              setState(() {
-                _sharedPermission = newValue;
-              });
-            },
+          trailing: new DeckAccessDropdown(
+            value: _sharedAccess,
+            filter: (AccessType access) => access != AccessType.owner,
+            valueChanged: (AccessType access) => setState(() {
+                  _sharedAccess = access;
+                }),
           ),
         ),
       ],

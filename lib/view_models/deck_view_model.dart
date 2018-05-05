@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 
 import '../models/deck.dart';
+import '../models/deck_access.dart';
 import '../models/stream_demuxer.dart';
 import 'activatable.dart';
 import 'proxy_keyed_list.dart';
@@ -12,11 +13,11 @@ class DeckViewModel implements ViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
   String get name => _deck?.name;
-  String get access => _access;
+  AccessType get access => _access;
   int get cardsToLearn => _cardsToLearn;
 
   Deck _deck;
-  String _access;
+  AccessType _access;
   int _cardsToLearn;
 
   final ViewModelsList<DeckViewModel> _owner;
