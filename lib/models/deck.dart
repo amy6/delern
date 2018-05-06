@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import 'base/enum.dart';
 import 'base/keyed_list.dart';
 import 'base/observable_list.dart';
 import 'deck_access.dart';
@@ -36,7 +37,9 @@ class Deck implements KeyedListItem {
   Deck.fromSnapshot(this.key, dynamic snapshotValue, this.uid)
       : name = snapshotValue['name'],
         markdown = snapshotValue['markdown'] ?? false,
-        type = _stringToDeckType(snapshotValue['deckType']),
+        type = Enum.fromString(
+            snapshotValue['deckType']?.toString()?.toLowerCase(),
+            DeckType.values),
         accepted = snapshotValue['accepted'] ?? false,
         lastSyncAt = new DateTime.fromMillisecondsSinceEpoch(
             snapshotValue['lastSyncAt'],
@@ -66,27 +69,25 @@ class Deck implements KeyedListItem {
         (snapshot) => new Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
   }
 
-  Future<void> updateExisting() => FirebaseDatabase.instance
-      .reference()
-      .child('decks')
-      .child(uid)
-      .child(key)
-      .set(_toMap());
+  Future<void> save() {
+    var data = new Map<String, dynamic>();
 
-  Future<void> saveAsNew() {
-    key = FirebaseDatabase.instance
-        .reference()
-        .child('decks')
-        .child(uid)
-        .push()
-        .key;
+    if (key == null) {
+      key = FirebaseDatabase.instance
+          .reference()
+          .child('decks')
+          .child(uid)
+          .push()
+          .key;
+      data['deck_access/$key'] = {
+        '$uid': {
+          'access': Enum.asString(AccessType.owner),
+        },
+      };
+    }
 
-    return updateExisting().then((_) => FirebaseDatabase.instance
-        .reference()
-        .child('deck_access')
-        .child(key)
-        .child(uid)
-        .set({'access': 'owner'}));
+    data['decks/$uid/$key'] = _toMap();
+    return FirebaseDatabase.instance.reference().update(data);
   }
 
   Stream<AccessType> getAccess() => FirebaseDatabase.instance
@@ -96,14 +97,7 @@ class Deck implements KeyedListItem {
       .child(uid)
       .child('access')
       .onValue
-      .map((evt) => DeckAccess.stringToAccessType(evt.snapshot.value));
-
-  static DeckType _stringToDeckType(String value) => DeckType.values.firstWhere(
-      (deckType) => deckType.toString().split('.').last.toUpperCase() == value,
-      orElse: () => DeckType.basic);
-
-  static String _deckTypeToString(DeckType value) =>
-      value.toString().split('.').last.toUpperCase();
+      .map((evt) => Enum.fromString(evt.snapshot.value, AccessType.values));
 
   Stream<int> getNumberOfCardsToLearn([int limit = 201]) =>
       FirebaseDatabase.instance
@@ -120,7 +114,7 @@ class Deck implements KeyedListItem {
   Map<String, dynamic> _toMap() => {
         'name': name,
         'markdown': markdown,
-        'type': _deckTypeToString(type),
+        'type': Enum.asString(type)?.toUpperCase(),
         'accepted': accepted,
         'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
         'category': category,

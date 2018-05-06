@@ -3,6 +3,7 @@ import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
 
+import 'base/enum.dart';
 import 'base/keyed_list.dart';
 import 'base/observable_list.dart';
 import 'user.dart';
@@ -19,7 +20,7 @@ class DeckAccess implements KeyedListItem {
   AccessType access;
 
   DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deckId)
-      : access = stringToAccessType(snapshotValue['access']);
+      : access = Enum.fromString(snapshotValue['access'], AccessType.values);
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(
       String deckId) async* {
@@ -53,12 +54,4 @@ class DeckAccess implements KeyedListItem {
       .child(key)
       .onValue
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
-
-  static AccessType stringToAccessType(String value) =>
-      AccessType.values.firstWhere(
-          (accessType) => accessType.toString().split('.').last == value,
-          orElse: () => null);
-
-  static String accessTypeToString(AccessType value) =>
-      value.toString().split('.').last;
 }
