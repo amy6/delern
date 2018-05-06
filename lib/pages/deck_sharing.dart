@@ -148,7 +148,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               list: _deckAccessesViewModel.deckAccesses,
               itemBuilder: (context, item, animation, index) =>
                   new SizeTransition(
-                    child: buildUserAccessInfo(item),
+                    child: _buildUserAccessInfo(item),
                     sizeFactor: animation,
                   )),
         ),
@@ -156,27 +156,25 @@ class _DeckUsersState extends State<DeckUsersWidget> {
     );
   }
 
-  Widget buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
+  Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;
     if (accessViewModel.access == AccessType.owner) {
-      filter = (AccessType access) => (access != AccessType.read &&
-          access != AccessType.write &&
-          access != null);
+      filter = (AccessType access) => access == AccessType.owner;
     } else {
       filter = (AccessType access) => access != AccessType.owner;
     }
 
-    if (accessViewModel.user == null) {
-      return new Center(
-        child: new CircularProgressIndicator(),
-      );
-    }
-
     return new ListTile(
-      leading: new CircleAvatar(
-        backgroundImage: new NetworkImage(accessViewModel.user.photoUrl),
-      ),
-      title: new Text(accessViewModel.user.name),
+      leading: (accessViewModel.user == null)
+          ? null
+          : new CircleAvatar(
+              backgroundImage: new NetworkImage(accessViewModel.user.photoUrl),
+            ),
+      title: (accessViewModel.user == null)
+          ? new Center(
+              child: new CircularProgressIndicator(),
+            )
+          : new Text(accessViewModel.user.name),
       trailing: new DeckAccessDropdown(
         value: accessViewModel.access,
         filter: filter,

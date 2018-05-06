@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import '../models/base/stream_demuxer.dart';
 import '../models/deck_access.dart';
 import '../models/user.dart';
 import 'base/activatable.dart';
@@ -10,7 +9,7 @@ import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
 class DeckAccessViewModel implements ViewModel {
-  String get key => _deckAccess?.key;
+  String get key => _deckAccess.key;
   AccessType get access => _deckAccess.access;
   User get user => _user;
 
@@ -18,7 +17,7 @@ class DeckAccessViewModel implements ViewModel {
   User _user;
 
   final ViewModelsList<DeckAccessViewModel> _owner;
-  StreamSubscription<StreamDemuxerEvent<String>> _internalUpdates;
+  StreamSubscription<User> _userUpdates;
 
   DeckAccessViewModel(this._owner, this._deckAccess);
 
@@ -38,20 +37,15 @@ class DeckAccessViewModel implements ViewModel {
   @override
   @mustCallSuper
   void activate() {
-    if (_internalUpdates != null) {
+    if (_userUpdates != null) {
       // This item is already activated. This must normally be only a side
       // effect of updateWith -> childUpdated cycle.
       return;
     }
 
-    _internalUpdates = new StreamDemuxer<String>({
-      'user': _deckAccess.getUser(),
-    }).listen((event) {
-      switch (event.stream) {
-        case 'user':
-          this._user = event.value;
-          break;
-      }
+    _userUpdates = _deckAccess.getUser().listen((user) {
+      this._user = user;
+
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
       _owner.childUpdated(this);
@@ -61,13 +55,13 @@ class DeckAccessViewModel implements ViewModel {
   @override
   @mustCallSuper
   void deactivate() {
-    _internalUpdates?.cancel();
-    _internalUpdates = null;
+    _userUpdates?.cancel();
+    _userUpdates = null;
   }
 
   @override
   String toString() {
-    return '#$key]';
+    return '#$key $access $_user';
   }
 }
 
