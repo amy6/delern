@@ -317,4 +317,53 @@ void main() {
     list.dispose();
     baseList.dispose();
   });
+
+  test('initial setAll with filter and comparator', () async {
+    var baseList = new ObservableList<TestFixture>();
+    var list = new ProxyKeyedList<TestFixture>(baseList);
+
+    expect(
+        list.events,
+        emitsInOrder([
+          // Initial set.
+          eventMatcher(ListEventType.set, 0),
+          // Filter removed.
+          eventMatcher(ListEventType.itemAdded, 4),
+          // Sort removed.
+          eventMatcher(ListEventType.set, 0),
+          emitsDone,
+        ]));
+
+    // Wait for all microtasks (listen()) to complete.
+    await new Future(() {});
+
+    expect(list, baseList);
+
+    list.filter = (f) => f.data > 0;
+    list.comparator = (a, b) => b.data.compareTo(a.data);
+
+    expect(list, baseList);
+    baseList.setAll(0, [
+      new TestFixture('A', data: 0),
+      new TestFixture('B', data: 1),
+      new TestFixture('C', data: 2),
+      new TestFixture('D', data: 3),
+      new TestFixture('E', data: 4),
+    ]);
+    expect(
+        list,
+        equals([
+          new TestFixture('E', data: 4),
+          new TestFixture('D', data: 3),
+          new TestFixture('C', data: 2),
+          new TestFixture('B', data: 1),
+        ]));
+
+    list.filter = null;
+    list.comparator = null;
+    expect(list, baseList);
+
+    list.dispose();
+    baseList.dispose();
+  });
 }

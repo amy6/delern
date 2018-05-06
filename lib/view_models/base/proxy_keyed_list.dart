@@ -147,10 +147,10 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     // TODO(dotdoom): force _base to be ViewModelsList?
     assert(!changed, 'ProxyKeyedList supports "set" only for initializing.');
 
-    var items = _base.toList();
+    var items = _base.toList(growable: false);
 
     if (_filter != null) {
-      items = items.where(_filter);
+      items = items.where(_filter).toList(growable: false);
     }
 
     if (_comparator != null) {
