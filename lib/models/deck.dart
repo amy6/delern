@@ -34,17 +34,21 @@ class Deck implements KeyedListItem {
     lastSyncAt ??= new DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  Deck.fromSnapshot(this.key, dynamic snapshotValue, this.uid)
-      : name = snapshotValue['name'],
-        markdown = snapshotValue['markdown'] ?? false,
-        type = Enum.fromString(
-            snapshotValue['deckType']?.toString()?.toLowerCase(),
-            DeckType.values),
-        accepted = snapshotValue['accepted'] ?? false,
-        lastSyncAt = new DateTime.fromMillisecondsSinceEpoch(
-            snapshotValue['lastSyncAt'],
-            isUtc: true),
-        category = snapshotValue['category'];
+  Deck.fromSnapshot(this.key, snapshotValue, this.uid) {
+    _parseSnapshot(snapshotValue);
+  }
+
+  void _parseSnapshot(snapshotValue) {
+    name = snapshotValue['name'];
+    markdown = snapshotValue['markdown'] ?? false;
+    type = Enum.fromString(
+        snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
+    accepted = snapshotValue['accepted'] ?? false;
+    lastSyncAt = new DateTime.fromMillisecondsSinceEpoch(
+        snapshotValue['lastSyncAt'],
+        isUtc: true);
+    category = snapshotValue['category'];
+  }
 
   static Stream<KeyedListEvent<Deck>> getDecks(String uid) async* {
     yield new KeyedListEvent(
@@ -68,6 +72,13 @@ class Deck implements KeyedListItem {
             .orderByKey(),
         (snapshot) => new Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
   }
+
+  Stream<void> get updates => FirebaseDatabase.instance
+      .reference()
+      .child('decks')
+      .child(key)
+      .onValue
+      .map((event) => _parseSnapshot(event.snapshot));
 
   Future<void> save() {
     var data = new Map<String, dynamic>();
