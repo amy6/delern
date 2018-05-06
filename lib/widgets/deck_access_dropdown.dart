@@ -55,11 +55,11 @@ class _DropdownState extends State<DeckAccessDropdown> {
       icon = new Icon(Icons.clear);
     } else {
       switch (access) {
-        case AccessType.read:
+        case AccessType.write:
           text = AppLocalizations.of(context).canEdit;
           icon = new Icon(Icons.edit);
           break;
-        case AccessType.write:
+        case AccessType.read:
           text = AppLocalizations.of(context).canView;
           icon = new Icon(Icons.remove_red_eye);
           break;

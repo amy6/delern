@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../models/deck.dart';
 import '../models/deck_access.dart';
+import '../view_models/deck_access_view_model.dart';
 import '../widgets/deck_access_dropdown.dart';
+import '../widgets/observing_animated_list.dart';
 
 class DeckSharingPage extends StatefulWidget {
-  final String _deckName;
+  final Deck _deck;
 
-  DeckSharingPage(this._deckName);
+  DeckSharingPage(this._deck);
 
   @override
   State<StatefulWidget> createState() => new _DeckSharingState();
@@ -20,7 +23,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   @override
   Widget build(BuildContext context) => new Scaffold(
         appBar: new AppBar(
-          title: new Text(widget._deckName),
+          title: new Text(widget._deck.name),
           actions: <Widget>[
             new IconButton(
                 icon: new Icon(Icons.send),
@@ -39,7 +42,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
               ),
             ),
             _sharingEmail(),
-            new DeckUsersWidget(),
+            new Expanded(child: new DeckUsersWidget(widget._deck)),
           ],
         ),
       );
@@ -79,15 +82,57 @@ class _DeckSharingState extends State<DeckSharingPage> {
 }
 
 class DeckUsersWidget extends StatefulWidget {
+  final Deck _deck;
+
+  DeckUsersWidget(this._deck);
+
   @override
   State<StatefulWidget> createState() => _DeckUsersState();
 }
 
 class _DeckUsersState extends State<DeckUsersWidget> {
-  AccessType _sharedAccess = AccessType.write;
+  DeckAccessesViewModel _deckAccessesViewModel;
+  bool _active = false;
+
+  @override
+  void initState() {
+    _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck.key);
+    _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
+      if (a.access == b.access) {
+        return (a.user?.name ?? '').compareTo(b.user?.name ?? '');
+      }
+
+      switch (a.access) {
+        case AccessType.owner:
+          return -1;
+        case AccessType.write:
+          return b.access == AccessType.owner ? 1 : -1;
+        default:
+          return 1;
+      }
+    };
+    super.initState();
+  }
+
+  @override
+  void deactivate() {
+    _deckAccessesViewModel.deactivate();
+    _active = false;
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _deckAccessesViewModel.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_active) {
+      _deckAccessesViewModel.activate();
+      _active = true;
+    }
     return new Column(
       children: <Widget>[
         new Padding(
@@ -98,21 +143,47 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ],
           ),
         ),
-        new ListTile(
-          leading: new CircleAvatar(
-            backgroundColor: Colors.greenAccent,
-            child: new Text('Test'.substring(0, 1)),
-          ),
-          title: new Text('Katarina'),
-          trailing: new DeckAccessDropdown(
-            value: _sharedAccess,
-            filter: (AccessType access) => access != AccessType.owner,
-            valueChanged: (AccessType access) => setState(() {
-                  _sharedAccess = access;
-                }),
-          ),
+        new Expanded(
+          child: new ObservingAnimatedList(
+              list: _deckAccessesViewModel.deckAccesses,
+              itemBuilder: (context, item, animation, index) =>
+                  new SizeTransition(
+                    child: buildUserAccessInfo(item),
+                    sizeFactor: animation,
+                  )),
         ),
       ],
+    );
+  }
+
+  Widget buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
+    Function filter;
+    if (accessViewModel.access == AccessType.owner) {
+      filter = (AccessType access) => (access != AccessType.read &&
+          access != AccessType.write &&
+          access != null);
+    } else {
+      filter = (AccessType access) => access != AccessType.owner;
+    }
+
+    if (accessViewModel.user == null) {
+      return new Center(
+        child: new CircularProgressIndicator(),
+      );
+    }
+
+    return new ListTile(
+      leading: new CircleAvatar(
+        backgroundImage: new NetworkImage(accessViewModel.user.photoUrl),
+      ),
+      title: new Text(accessViewModel.user.name),
+      trailing: new DeckAccessDropdown(
+        value: accessViewModel.access,
+        filter: filter,
+        valueChanged: (AccessType access) => setState(() {
+              // TODO(ksheremet): Save new access to deck.
+            }),
+      ),
     );
   }
 }

@@ -160,7 +160,7 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSharingPage(model.name)),
+              builder: (context) => new DeckSharingPage(model.deck)),
         );
         break;
     }

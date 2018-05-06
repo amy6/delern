@@ -48,8 +48,8 @@ class DeckViewModel implements ViewModel {
     }
 
     _internalUpdates = new StreamDemuxer<String>({
-      'access': deck.getAccess(),
-      'cardsToLearn': deck.getNumberOfCardsToLearn(),
+      'access': _deck.getAccess(),
+      'cardsToLearn': _deck.getNumberOfCardsToLearn(),
     }).listen((event) {
       switch (event.stream) {
         case 'access':
