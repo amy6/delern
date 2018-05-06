@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
-import '../lib/models/observable_list.dart';
-import '../lib/view_models/view_models_list.dart';
+import '../lib/models/base/observable_list.dart';
+import '../lib/view_models/base/view_models_list.dart';
 
 StreamMatcher eventMatcher(ListEventType eventType, int index,
     [previousValue]) {

@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'keyed_list.dart';
+import 'base/keyed_list.dart';
 
 class User implements KeyedListItem {
   final String key;

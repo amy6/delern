@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
-import '../lib/models/observable_list.dart';
-import '../lib/view_models/proxy_keyed_list.dart';
+import '../lib/models/base/observable_list.dart';
+import '../lib/view_models/base/proxy_keyed_list.dart';
 import 'helpers.dart';
 
 void main() {

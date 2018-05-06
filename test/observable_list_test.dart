@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import '../lib/models/observable_list.dart';
+import '../lib/models/base/observable_list.dart';
 import 'helpers.dart';
 
 void main() {

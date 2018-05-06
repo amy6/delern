@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
 import '../models/card.dart';
-import 'activatable.dart';
-import 'proxy_keyed_list.dart';
-import 'view_models_list.dart';
+import 'base/activatable.dart';
+import 'base/proxy_keyed_list.dart';
+import 'base/view_models_list.dart';
 
 class CardViewModel implements ViewModel {
   String get key => _card?.key;

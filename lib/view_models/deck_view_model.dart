@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
+import '../models/base/stream_demuxer.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
-import '../models/stream_demuxer.dart';
-import 'activatable.dart';
-import 'proxy_keyed_list.dart';
-import 'view_models_list.dart';
+import 'base/activatable.dart';
+import 'base/proxy_keyed_list.dart';
+import 'base/view_models_list.dart';
 
 class DeckViewModel implements ViewModel {
   String get key => _deck?.key;

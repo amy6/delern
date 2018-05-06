@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../models/observable_list.dart';
+import '../models/base/observable_list.dart';
 
 typedef Widget ObservingAnimatedListItemBuilder<T>(
   BuildContext context,

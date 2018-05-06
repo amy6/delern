@@ -4,9 +4,9 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import 'base/keyed_list.dart';
+import 'base/observable_list.dart';
 import 'deck_access.dart';
-import 'keyed_list.dart';
-import 'observable_list.dart';
 
 enum DeckType { basic, german, swiss }
 

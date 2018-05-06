@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import '../models/keyed_list.dart';
-import '../models/observable_list.dart';
+import '../../models/base/keyed_list.dart';
+import '../../models/base/observable_list.dart';
 
 typedef bool Filter<T>(T item);
 
