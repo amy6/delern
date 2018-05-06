@@ -32,6 +32,13 @@ void main() {
           value: new TestFixture('3'));
       expect(list, equals([new TestFixture('1'), new TestFixture('3')]));
 
+      // Add '3' after '1' again (should be ignored).
+      yield new KeyedListEvent(
+          eventType: ListEventType.itemAdded,
+          previousSiblingKey: '1',
+          value: new TestFixture('3'));
+      expect(list, equals([new TestFixture('1'), new TestFixture('3')]));
+
       // Add '2' after '1'.
       yield new KeyedListEvent(
         eventType: ListEventType.itemAdded,

@@ -57,6 +57,7 @@ class ViewModelsList<T extends ViewModel> extends ObservableList<T>
           // every child. We must therefore skip keys that we already got.
           assert(event.previousSiblingKey == null ||
               indexOfKey(event.previousSiblingKey) >= 0);
+          // TODO(dotdoom): should we update here?
         }
         break;
       case ListEventType.itemRemoved:
