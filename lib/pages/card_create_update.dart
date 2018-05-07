@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
@@ -90,7 +91,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         onChanged: (String text) {
           setState(() {});
         },
-        decoration: new InputDecoration(hintText: 'front side'),
+        decoration: new InputDecoration(
+            hintText: AppLocalizations.of(context).frontSideHint),
       ),
       new TextField(
         controller: _backTextController,
@@ -98,7 +100,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           setState(() {});
         },
         decoration: new InputDecoration(
-          hintText: 'back side',
+          hintText: AppLocalizations.of(context).backSideHint,
         ),
       ),
     ];
@@ -114,7 +116,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                   _addReversedCard = newValue;
                 });
               }),
-          new Text('Add reversed card'),
+          new Text(AppLocalizations.of(context).reversedCardLabel),
         ],
       ));
     }

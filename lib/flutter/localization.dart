@@ -170,6 +170,30 @@ class AppLocalizations {
       desc: 'Who has access label',
     );
   }
+
+  String get frontSideHint {
+    return Intl.message(
+      'front side',
+      name: 'frontSideHint',
+      desc: 'front side',
+    );
+  }
+
+  String get backSideHint {
+    return Intl.message(
+      'back side',
+      name: 'backSideHint',
+      desc: 'back side',
+    );
+  }
+
+  String get reversedCardLabel {
+    return Intl.message(
+      'Add reversed card',
+      name: 'reversedCardLabel',
+      desc: 'Add reversed card',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

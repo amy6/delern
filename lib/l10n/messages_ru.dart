@@ -19,12 +19,16 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "backSideHint":
+            MessageLookupByLibrary.simpleMessage("Обратная сторона"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Адрес электронной почты"),
+        "frontSideHint":
+            MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
         "navigationDrawerCommunicateGroup":
@@ -42,6 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Количество карточек:"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
+        "reversedCardLabel":
+            MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":

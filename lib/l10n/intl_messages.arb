@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-05-04T11:22:05.033257",
+  "@@last_modified": "2018-05-07T17:39:52.734770",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -105,6 +105,24 @@
   "whoHasAccessLabel": "Who has access",
   "@whoHasAccessLabel": {
     "description": "Who has access label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "frontSideHint": "front side",
+  "@frontSideHint": {
+    "description": "front side",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backSideHint": "back side",
+  "@backSideHint": {
+    "description": "back side",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reversedCardLabel": "Add reversed card",
+  "@reversedCardLabel": {
+    "description": "Add reversed card",
     "type": "text",
     "placeholders": {}
   }
