@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
 
@@ -31,7 +32,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        // TODO(ksheremet): Update card if it is editing
+        if (widget._cardViewModel != null) {
+          // TODO(ksheremet): Check callback that the card was added
+          var card = widget._cardViewModel.card;
+          card.front = _frontTextController.text;
+          card.back = _backTextController.text;
+          card.save();
+        }
         return true;
       },
       child: new Scaffold(
@@ -52,9 +59,20 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                       _backTextController.text.isEmpty)
                   ? null
                   : () {
-                      // TODO(ksheremet): Add card to db
-                      print(
-                          _frontTextController.text + _backTextController.text);
+                      setState(() {
+                        // TODO(ksheremet): Check callback that the card was added
+                        new model.Card(widget._deck.key,
+                            front: _frontTextController.text,
+                            back: _backTextController.text)
+                          ..save();
+                        if (_addReversedCard == true) {
+                          new model.Card(widget._deck.key,
+                              front: _backTextController.text,
+                              back: _frontTextController.text)
+                            ..save();
+                        }
+                        _clearFields();
+                      });
                     })
         ],
       );
@@ -107,5 +125,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         children: builder,
       ),
     );
+  }
+
+  void _clearFields() {
+    _frontTextController.clear();
+    _backTextController.clear();
   }
 }
