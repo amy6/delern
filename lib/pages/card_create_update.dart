@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
@@ -34,11 +36,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     return new WillPopScope(
       onWillPop: () async {
         if (widget._cardViewModel != null) {
-          // TODO(ksheremet): Check callback that the card was added
+          // TODO(ksheremet): Show user message that card was updated
           var card = widget._cardViewModel.card;
           card.front = _frontTextController.text;
           card.back = _backTextController.text;
-          card.save();
+          card.save().then((_) {
+            print("Card was added");
+          }).catchError((e) => print(e));
         }
         return true;
       },
@@ -60,19 +64,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                       _backTextController.text.isEmpty)
                   ? null
                   : () {
-                      setState(() {
-                        // TODO(ksheremet): Check callback that the card was added
-                        new model.Card(widget._deck.key,
-                            front: _frontTextController.text,
-                            back: _backTextController.text)
-                          ..save();
-                        if (_addReversedCard == true) {
-                          new model.Card(widget._deck.key,
-                              front: _backTextController.text,
-                              back: _frontTextController.text)
-                            ..save();
-                        }
-                        _clearFields();
+                      _addCardToDb().then((_) {
+                        setState(() {
+                          _clearFields();
+                        });
                       });
                     })
         ],
@@ -81,6 +76,23 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       return new AppBar(
         title: new Text(widget._deck.name),
       );
+    }
+  }
+
+  Future<void> _addCardToDb() async {
+    var card = model.Card(widget._deck.key,
+        front: _frontTextController.text, back: _backTextController.text);
+    try {
+      await card.save();
+      if (_addReversedCard == true) {
+        card = model.Card(widget._deck.key,
+            front: _backTextController.text, back: _frontTextController.text);
+        await card.save();
+      }
+    } catch (e) {
+      // TODO(ksheremet): Show snackbar to user on success and failure
+      // TODO(ksheremet): In case of error sent it to sentry
+      print(e);
     }
   }
 
