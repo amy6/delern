@@ -36,13 +36,17 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     return new WillPopScope(
       onWillPop: () async {
         if (widget._cardViewModel != null) {
-          // TODO(ksheremet): Show user message that card was updated
           var card = widget._cardViewModel.card;
           card.front = _frontTextController.text;
           card.back = _backTextController.text;
-          card.save().then((_) {
+          try {
+            await card.save();
+            // TODO(ksheremet): Show user message that card was updated
             print("Card was added");
-          }).catchError((e) => print(e));
+          } catch (e) {
+            // TODO(ksheremet): Report error
+            print(e);
+          }
         }
         return true;
       },
@@ -63,11 +67,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
               onPressed: (_frontTextController.text.isEmpty ||
                       _backTextController.text.isEmpty)
                   ? null
-                  : () {
-                      _addCardToDb().then((_) {
-                        setState(() {
-                          _clearFields();
-                        });
+                  : () async {
+                      await _addCardToDb();
+                      setState(() {
+                        _clearFields();
                       });
                     })
         ],
