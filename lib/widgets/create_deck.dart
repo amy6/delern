@@ -1,10 +1,16 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
+import '../models/deck.dart';
+import '../pages/card_create_update.dart';
+
+//TODO(ksheremet): Localization
 class CreateDeck extends StatelessWidget {
-  final FirebaseUser user;
+  final FirebaseUser _user;
 
-  CreateDeck(this.user);
+  CreateDeck(this._user);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,7 @@ class CreateDeck extends StatelessWidget {
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new CreateDeckDialog(),
+          builder: (_) => new CreateDeckDialog(_user),
         );
       },
     );
@@ -24,6 +30,10 @@ class CreateDeck extends StatelessWidget {
 }
 
 class CreateDeckDialog extends StatefulWidget {
+  final FirebaseUser _user;
+
+  CreateDeckDialog(this._user);
+
   @override
   _CreateDeckDialogState createState() => new _CreateDeckDialogState();
 }
@@ -31,8 +41,23 @@ class CreateDeckDialog extends StatefulWidget {
 class _CreateDeckDialogState extends State<CreateDeckDialog> {
   final TextEditingController _textController = new TextEditingController();
 
-  _addDeckToDb(String deckName) {
-    print(deckName);
+  Future<void> _addDeckToDb(String deckName) async {
+    var deck = new Deck(widget._user.uid, name: deckName);
+    try {
+      await deck.save();
+      // Close Dialog.
+      Navigator.of(context).pop();
+      // Start adding cards to the deck.
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => new CreateUpdateCard(deck, null)));
+    } catch (e) {
+      // TODO(ksheremet): show snackbar
+      // TODO(ksheremet): fix permission denied
+      print(e);
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -62,7 +87,6 @@ class _CreateDeckDialogState extends State<CreateDeckDialog> {
           onPressed: _textController.text.isNotEmpty
               ? () {
                   _addDeckToDb(_textController.text);
-                  Navigator.of(context).pop();
                 }
               : null,
         ),
