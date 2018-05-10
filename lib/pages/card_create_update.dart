@@ -86,11 +86,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     var card = model.Card(widget._deck.key,
         front: _frontTextController.text, back: _backTextController.text);
     try {
-      await card.save();
+      await card.save(widget._deck.uid);
       if (_addReversedCard == true) {
         card = model.Card(widget._deck.key,
             front: _backTextController.text, back: _frontTextController.text);
-        await card.save();
+        await card.save(widget._deck.uid);
       }
     } catch (e) {
       // TODO(ksheremet): Show snackbar to user on success and failure

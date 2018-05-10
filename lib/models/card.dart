@@ -10,13 +10,18 @@ class Card implements KeyedListItem {
   String key;
   String front;
   String back;
+  DateTime createdAt;
   final String deckId;
 
   Card(this.deckId, {this.front, this.back});
 
   Card.fromSnapshot(this.key, dynamic snapshotValue, this.deckId)
       : front = snapshotValue['front'],
-        back = snapshotValue['back'];
+        back = snapshotValue['back'],
+        createdAt = snapshotValue['createdAt'] == null
+            ? null
+            : new DateTime.fromMillisecondsSinceEpoch(
+                snapshotValue['createdAt']);
 
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
@@ -44,26 +49,33 @@ class Card implements KeyedListItem {
             new Card.fromSnapshot(snapshot.key, snapshot.value, deckId));
   }
 
-  Future<void> save() {
+  // TODO(dotdoom): replace deckId with Deck model.
+  Future<void> save([String uid]) {
+    var data = new Map<String, dynamic>();
+
     if (key == null) {
+      assert(uid != null, 'User ID null when creating a card');
+
       key = FirebaseDatabase.instance
           .reference()
           .child('cards')
           .child(deckId)
           .push()
           .key;
+
+      data['learning/$uid/$deckId/$key'] = {
+        'level': 'L0',
+        'repeatAt': 0,
+      };
     }
 
-    return FirebaseDatabase.instance
-        .reference()
-        .child('cards')
-        .child(deckId)
-        .child(key)
-        .set(_toMap());
+    data['cards/$deckId/$key'] = _toMap();
+    return FirebaseDatabase.instance.reference().update(data);
   }
 
   Map<String, dynamic> _toMap() => {
         'front': front,
         'back': back,
+        'createdAt': createdAt?.millisecondsSinceEpoch ?? ServerValue.timestamp,
       };
 }

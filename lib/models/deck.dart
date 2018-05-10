@@ -44,9 +44,8 @@ class Deck implements KeyedListItem {
     type = Enum.fromString(
         snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
     accepted = snapshotValue['accepted'] ?? false;
-    lastSyncAt = new DateTime.fromMillisecondsSinceEpoch(
-        snapshotValue['lastSyncAt'],
-        isUtc: true);
+    lastSyncAt =
+        new DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt']);
     category = snapshotValue['category'];
   }
 
@@ -90,10 +89,8 @@ class Deck implements KeyedListItem {
           .child(uid)
           .push()
           .key;
-      data['deck_access/$key'] = {
-        '$uid': {
-          'access': Enum.asString(AccessType.owner),
-        },
+      data['deck_access/$key/$uid'] = {
+        'access': Enum.asString(AccessType.owner),
       };
     }
 
@@ -125,7 +122,7 @@ class Deck implements KeyedListItem {
   Map<String, dynamic> _toMap() => {
         'name': name,
         'markdown': markdown,
-        'type': Enum.asString(type)?.toUpperCase(),
+        'deckType': Enum.asString(type)?.toUpperCase(),
         'accepted': accepted,
         'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
         'category': category,
