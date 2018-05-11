@@ -22,27 +22,27 @@ class CreateDeck extends StatelessWidget {
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new CreateDeckDialog(_user),
+          builder: (_) => new CreateDeckButton(_user),
         );
       },
     );
   }
 }
 
-class CreateDeckDialog extends StatefulWidget {
+class CreateDeckButton extends StatefulWidget {
   final FirebaseUser _user;
 
-  CreateDeckDialog(this._user);
+  CreateDeckButton(this._user);
 
   @override
   _CreateDeckDialogState createState() => new _CreateDeckDialogState();
 }
 
-class _CreateDeckDialogState extends State<CreateDeckDialog> {
+class _CreateDeckDialogState extends State<CreateDeckButton> {
   final TextEditingController _textController = new TextEditingController();
 
-  Future<void> _addDeckToDb(String deckName) async {
-    var deck = new Deck(widget._user.uid, name: deckName);
+  Future<void> _addButtonPressed() async {
+    var deck = new Deck(widget._user.uid, name: _textController.text);
     try {
       await deck.save();
       // Close Dialog.
@@ -54,8 +54,6 @@ class _CreateDeckDialogState extends State<CreateDeckDialog> {
               builder: (context) => new CreateUpdateCard(deck, null)));
     } catch (e) {
       // TODO(ksheremet): show snackbar
-      // TODO(ksheremet): fix permission denied
-      print(e);
       Navigator.of(context).pop();
     }
   }
@@ -83,13 +81,8 @@ class _CreateDeckDialogState extends State<CreateDeckDialog> {
             },
             child: new Text('Cancel'.toUpperCase())),
         new FlatButton(
-          child: new Text('Add'.toUpperCase()),
-          onPressed: _textController.text.isNotEmpty
-              ? () {
-                  _addDeckToDb(_textController.text);
-                }
-              : null,
-        ),
+            child: new Text('Add'.toUpperCase()),
+            onPressed: _textController.text.isEmpty ? null : _addButtonPressed),
       ],
     );
   }
