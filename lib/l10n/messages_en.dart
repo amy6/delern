@@ -19,9 +19,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "add": MessageLookupByLibrary.simpleMessage("Add"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Email address"),

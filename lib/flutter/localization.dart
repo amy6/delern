@@ -194,6 +194,30 @@ class AppLocalizations {
       desc: 'Add reversed card',
     );
   }
+
+  String get deck {
+    return Intl.message(
+      'Deck',
+      name: 'deck',
+      desc: 'Deck label',
+    );
+  }
+
+  String get add {
+    return Intl.message(
+      'Add',
+      name: 'add',
+      desc: 'Add',
+    );
+  }
+
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: 'Cancel',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 
-//TODO(ksheremet): Localization
 class CreateDeck extends StatelessWidget {
   final FirebaseUser _user;
 
@@ -14,7 +14,6 @@ class CreateDeck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(ksheremet): add ripple
     return new FloatingActionButton(
       child: new Icon(Icons.add),
       onPressed: () {
@@ -62,7 +61,7 @@ class _CreateDeckDialogState extends State<CreateDeckButton> {
   Widget build(BuildContext context) {
     return new AlertDialog(
       title: new Text(
-        'Deck',
+        AppLocalizations.of(context).deck,
         style: new TextStyle(fontWeight: FontWeight.w600),
       ),
       content: new SingleChildScrollView(
@@ -79,9 +78,9 @@ class _CreateDeckDialogState extends State<CreateDeckButton> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: new Text('Cancel'.toUpperCase())),
+            child: new Text(AppLocalizations.of(context).cancel.toUpperCase())),
         new FlatButton(
-            child: new Text('Add'.toUpperCase()),
+            child: new Text(AppLocalizations.of(context).add.toUpperCase()),
             onPressed: _textController.text.isEmpty ? null : _addButtonPressed),
       ],
     );

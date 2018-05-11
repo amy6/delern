@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-05-07T17:39:52.734770",
+  "@@last_modified": "2018-05-11T11:17:01.087047",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -123,6 +123,24 @@
   "reversedCardLabel": "Add reversed card",
   "@reversedCardLabel": {
     "description": "Add reversed card",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deck": "Deck",
+  "@deck": {
+    "description": "Deck label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel",
     "type": "text",
     "placeholders": {}
   }

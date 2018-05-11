@@ -147,5 +147,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "deck": "Deck",
+  "@deck": {
+    "description": "Deck label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

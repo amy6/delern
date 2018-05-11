@@ -146,5 +146,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "deck": "Список",
+  "@deck": {
+    "description": "Deck label",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "add": "Добавить",
+  "@add": {
+    "description": "Add",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cancel": "Отмена",
+  "@cancel": {
+    "description": "Cancel",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
