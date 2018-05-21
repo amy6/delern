@@ -37,8 +37,9 @@ jobs:
     - run:
         name: "Install dependencies"
         command: |
+          ( cd firebase && npm install --no-save )
           ( cd firebase/functions && npm install --no-save )
-          ( cd firebase/www && bower --allow-root install )
+          ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
 
           bundle install
 
@@ -60,6 +61,7 @@ jobs:
         - ~/.gradle
         - ~/.npm
         - ~/.pub-cache
+        - ~/project/firebase/node_modules
         - ~/project/firebase/functions/node_modules
         - ~/project/firebase/www/bower_components
         - ~/project/vendor/bundle
