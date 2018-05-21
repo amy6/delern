@@ -10,11 +10,10 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 const nodemailer = require('nodemailer');
-const mailEmail = functions.config().gmail.email;
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: mailEmail,
+    user: functions.config().gmail.email,
     pass: functions.config().gmail.password,
   },
 });
@@ -130,6 +129,7 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
   }
   let numberOfCards = 0;
   let actorUser = null;
+  let actorUserRecord = null;
   let deckName = null;
 
   return admin.database().ref('decks').child(userId).child(deckId).child('name')
@@ -151,6 +151,10 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
       }
     })
     .then(() => {
+      return admin.auth().getUser(actorUserId);
+    })
+    .then((actorUserRecordReceived) => {
+      actorUserRecord = actorUserRecordReceived;
       return admin.auth().getUser(userId);
     })
     .then((userRecord) => {
@@ -166,8 +170,12 @@ exports.deckShared = functions.database.ref('/deck_access/{deckId}/{userId}').on
       }
 
       let mailOptions = {
-        // TODO(dotdoom): <mailEmail>+<actorUser.name>@gmail.com (avoid filters)
-        from: actorUser.name + ' via Delern <' + mailEmail + '>',
+        // Either "from" or "reply-to" will work with most servers/clients.
+        from: {
+          name: actorUser.name + ' via Delern',
+          address: actorUserRecord.email,
+        },
+        replyTo: actorUserRecord.email,
         to: user.email,
         subject: actorUser.name + ' shared a Delern deck with you',
         text: 'Hello! ' + actorUser.name + ' has shared a Delern deck "' +
