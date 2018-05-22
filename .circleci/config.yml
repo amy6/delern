@@ -87,7 +87,8 @@ jobs:
           flutter test --coverage
           bash <(curl -s https://codecov.io/bash)
 
-          ( cd firebase/www && polymer lint && polymer build )
+          ( cd firebase && npm run build )
+          ( cd firebase/www && ../node_modules/.bin/polymer lint )
 
     - run:
         name: "[if branch=master] Deploy Firebase and build Release APK"
