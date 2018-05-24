@@ -97,12 +97,11 @@
   added to the data object
 -->
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-    <paper-input value="{{language}}"></paper-input>
     <app-localstorage-document key="language" data="{{language}}">
     </app-localstorage-document>
 
-    <!-- Main content -->
     <app-header-layout fullbleed has-scrolling-region>
+      <!-- Header content -->
       <app-header slot="header" condenses reveals effects="waterfall">
         <app-toolbar>
           <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
@@ -116,7 +115,8 @@
       <app-drawer-layout id="drawerlayout">
         <!-- Drawer content -->
         <app-drawer id="drawer" position="left" slot="drawer">
-          <app-toolbar>Меню</app-toolbar>
+          <!-- Spacer to keep drawer contents below the app-header :( -->
+          <app-toolbar>&nbsp;</app-toolbar>
           <template is="dom-if" if="{{firebaseUser}}">
             <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
               <a id="add-card" href="/add-card">[[localize('add_cards_button_text')]]</a>
@@ -126,14 +126,13 @@
           </template>
         </app-drawer>
 
+        <!-- Main content -->
         <!-- iron-pages selects the view based on the active route -->
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
           <add-card name="add-card" firebase-user="[[firebaseUser]]" language="[[language]]"></add-card>
           <sign-in name="sign-in" route-data="{{routeData}}" language="[[language]]"></sign-in>
           <share-deck name="share-deck" firebase-user="[[firebaseUser]]" language="[[language]]" firebase-project-id="[[firebaseApp.options.projectId]]"></share-deck>
-
         </iron-pages>
-
       </app-drawer-layout>
     </app-header-layout>
   </template>
