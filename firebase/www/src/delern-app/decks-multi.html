@@ -65,10 +65,11 @@
       }
 
       _dataArrived(evt, data) {
-        if (data.value.length) {
-          this.set('decks', data.value);
-        } else {
+        if (data.path === 'data.splices') {
           this.notifySplices('decks', data.value);
+        } else if (!data.path) {
+          // This means we got full data set.
+          this.set('decks', data.value);
         }
       }
 
