@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-  - image: dasfoo/firebase:latest
+  - image: dasfoo/firebase:58
   environment:
   - ANDROID_HOME: /root/android-sdk
   - TERM: dumb
