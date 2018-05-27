@@ -56,7 +56,7 @@ public class FirebaseOperationInProgressRule extends ExternalResource {
             mResourceCallback = callback;
         }
     };
-    private boolean mDefaultEnabled;
+    private final boolean mDefaultEnabled;
 
     public FirebaseOperationInProgressRule(final boolean defaultEnabled) {
         mDefaultEnabled = defaultEnabled;

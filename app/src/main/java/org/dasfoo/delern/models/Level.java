@@ -64,7 +64,7 @@ public enum Level {
      */
     L7;
 
-    private static Level[] sValues = values();
+    private static final Level[] LEVELS = values();
 
     /**
      * Specifies next level in repetition intervals using current.
@@ -86,6 +86,6 @@ public enum Level {
      * @return next level of card.
      */
     private Level next() {
-        return sValues[(this.ordinal() + 1) % sValues.length];
+        return LEVELS[(this.ordinal() + 1) % LEVELS.length];
     }
 }

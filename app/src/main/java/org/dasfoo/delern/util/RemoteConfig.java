@@ -44,7 +44,7 @@ public enum RemoteConfig {
     private static final long TIMEOUT_MILLIS = TimeUnit.SECONDS.toMillis(2);
 
     private long mCacheExpirationSeconds = TimeUnit.HOURS.toSeconds(1);
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private final FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     RemoteConfig() {
         // Get Remote Config instance.

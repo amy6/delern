@@ -31,7 +31,7 @@ public final class RepetitionIntervals {
 
     private static final long ONE_HOUR = 60 * 60 * 1000;
     private static final long ONE_DAY = 24 * ONE_HOUR;
-    private static RepetitionIntervals sOurInstance = new RepetitionIntervals();
+    private static final RepetitionIntervals INSTANCE = new RepetitionIntervals();
     private final Map<String, Long> mIntervals = new ConcurrentHashMap<>();
 
     @SuppressWarnings(/* boilerplate */ "checkstyle:MagicNumber")
@@ -52,7 +52,7 @@ public final class RepetitionIntervals {
      * @return instance of this class
      */
     public static RepetitionIntervals getInstance() {
-        return sOurInstance;
+        return INSTANCE;
     }
 
     /**

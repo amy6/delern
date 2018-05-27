@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class PerfEventTracker {
     private static final Logger LOGGER = LoggerFactory.getLogger(PerfEventTracker.class);
-    private static Map<Event, Trace> sRunningEvents = new ConcurrentHashMap<>();
+    private static final Map<Event, Trace> RUNNING_EVENTS = new ConcurrentHashMap<>();
 
     private PerfEventTracker() {
     }
@@ -72,14 +72,14 @@ public final class PerfEventTracker {
                                        @Nullable final Bundle bundle,
                                        @Nullable final LifecycleOwner container) {
         trackEvent(event, context, bundle);
-        if (sRunningEvents.containsKey(event)) {
+        if (RUNNING_EVENTS.containsKey(event)) {
             LOGGER.error("Event {} triggered while performance counting for it was already in " +
                     "progress! Finishing now", event, new Throwable());
             trackEventFinish(event);
         }
 
         Trace t = FirebasePerformance.startTrace(event.track());
-        sRunningEvents.put(event, t);
+        RUNNING_EVENTS.put(event, t);
         t.start();
 
         if (container != null) {
@@ -102,7 +102,7 @@ public final class PerfEventTracker {
      */
     public static void trackEventCounter(@NonNull final Event event,
                                          @NonNull final Counter counter) {
-        Trace t = sRunningEvents.get(event);
+        Trace t = RUNNING_EVENTS.get(event);
         if (t == null) {
             LOGGER.error("Attempt to increment counter {} for trace event {}, but trace is not " +
                     "running! Ignoring", counter, event, new Throwable());
@@ -117,7 +117,7 @@ public final class PerfEventTracker {
      * @param event {@link #trackEventStart(Event, Context, Bundle, LifecycleOwner)}
      */
     public static void trackEventFinish(@NonNull final Event event) {
-        Trace t = sRunningEvents.remove(event);
+        Trace t = RUNNING_EVENTS.remove(event);
         // Do not log error for already stopped events, this unnecessarily complicates caller code.
         if (t != null) {
             t.stop();
