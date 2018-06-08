@@ -7,6 +7,7 @@ jobs:
     environment:
     - ANDROID_HOME: /root/android-sdk
     - TERM: dumb
+    - PAGER: cat
     # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
     # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
     - GRADLE_OPTS: -Dorg.gradle.daemon=false
