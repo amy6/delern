@@ -82,6 +82,15 @@
         font-weight: bold;
       }
 
+      /* Automatically hide "drawer toggle" button when drawer is persistent
+       * (i.e. wide screen), see "app-layout 2.0" snippet at:
+       * https://www.webcomponents.org/element/PolymerElements/app-layout/elements/app-drawer-layout
+       */
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
     </style>
     <!-- app-location binds to the app's URL -->
     <app-location route="{{route}}"></app-location>
@@ -100,41 +109,39 @@
     <app-localstorage-document key="language" data="{{language}}">
     </app-localstorage-document>
 
-    <app-header-layout fullbleed has-scrolling-region>
-      <!-- Header content -->
-      <app-header slot="header" condenses reveals effects="waterfall">
-        <app-toolbar>
-          <paper-icon-button icon="icons:menu" on-tap="_toggleDrawer"></paper-icon-button>
-          <div main-title>[[localize('delern_main_title')]]</div>
-          <!-- Language -->
-          <paper-item raised on-click="changeLang" select-language="en">en</paper-item>
-          <paper-item raised on-click="changeLang" select-language="ru">ru</paper-item>
-        </app-toolbar>
-      </app-header>
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer">
+        <template is="dom-if" if="{{firebaseUser}}">
+          <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
+            <a id="add-card" href="/add-card">[[localize('add_cards_button_text')]]</a>
+            <a id="share-deck" href="/share-deck">[[localize('share_decks_button_text')]]</a>
+            <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
+          </iron-selector>
+        </template>
+      </app-drawer>
 
-      <app-drawer-layout id="drawerlayout">
-        <!-- Drawer content -->
-        <app-drawer id="drawer" position="left" slot="drawer">
-          <!-- Spacer to keep drawer contents below the app-header :( -->
-          <app-toolbar>&nbsp;</app-toolbar>
-          <template is="dom-if" if="{{firebaseUser}}">
-            <iron-selector selected="{{routeData.page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-              <a id="add-card" href="/add-card">[[localize('add_cards_button_text')]]</a>
-              <a id="share-deck" href="/share-deck">[[localize('share_decks_button_text')]]</a>
-              <a id="sign-in" href="/sign-in">[[localize('sign_out_button_text')]]</a>
-            </iron-selector>
-          </template>
-        </app-drawer>
+      <app-header-layout id="header" fullbleed>
+        <!-- Header content -->
+        <app-header slot="header" fixed>
+          <app-toolbar>
+            <paper-icon-button icon="icons:menu" drawer-toggle></paper-icon-button>
+            <div main-title>[[localize('delern_main_title')]]</div>
+            <!-- Language -->
+            <paper-item raised on-click="changeLang" select-language="en">en</paper-item>
+            <paper-item raised on-click="changeLang" select-language="ru">ru</paper-item>
+          </app-toolbar>
+        </app-header>
 
         <!-- Main content -->
         <!-- iron-pages selects the view based on the active route -->
-        <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        <iron-pages selected="[[routeData.page]]" attr-for-selected="name" fallback-selection="add-card" role="main">
           <add-card name="add-card" firebase-user="[[firebaseUser]]" language="[[language]]"></add-card>
           <sign-in name="sign-in" route-data="{{routeData}}" language="[[language]]"></sign-in>
           <share-deck name="share-deck" firebase-user="[[firebaseUser]]" language="[[language]]" firebase-project-id="[[firebaseApp.options.projectId]]"></share-deck>
         </iron-pages>
-      </app-drawer-layout>
-    </app-header-layout>
+      </app-header-layout>
+    </app-drawer-layout>
   </template>
 
   <script>
@@ -171,6 +178,12 @@
         } else {
           this.language = 'en';
         }
+
+        // Need to reset the layout to adjust for app-header bug.
+        let header = this.$.header;
+        setTimeout(function() {
+          header.resetLayout();
+        }, 1000);
       }
 
       _userChanged(user, statusKnown) {
@@ -223,14 +236,6 @@
           console.log('user landed on page ' + page + ', re-routing to add-card');
           this.set('routeData.page', 'add-card');
           return;
-        }
-      }
-
-      _toggleDrawer() {
-        if (this.$.drawerlayout.forceNarrow || !this.$.drawerlayout.narrow) {
-          this.$.drawerlayout.forceNarrow = !this.$.drawerlayout.forceNarrow;
-        } else {
-          this.$.drawer.toggle();
         }
       }
 
