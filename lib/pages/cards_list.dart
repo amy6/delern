@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
+import '../pages/card_preview.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/observing_grid_view.dart';
 
@@ -82,7 +83,7 @@ class CardGridItem extends StatelessWidget {
           onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CreateUpdateCard(deck, card))),
+                  builder: (context) => new PreviewCard(deck, card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(

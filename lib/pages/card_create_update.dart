@@ -7,6 +7,7 @@ import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
 
+// TODO(ksheremet): test adding big text with a few lines
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
   final CardViewModel _cardViewModel;
