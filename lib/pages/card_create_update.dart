@@ -7,7 +7,6 @@ import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
 
-// TODO(ksheremet): test adding big text with a few lines
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
   final CardViewModel _cardViewModel;
@@ -58,6 +57,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     );
   }
 
+  //TODO(ksheremet): Add SAVE button for updating card
   Widget buildAppBar() {
     if (widget._cardViewModel == null) {
       return new AppBar(
@@ -102,7 +102,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   Widget buildBody() {
     List<Widget> builder = [
+      // TODO(ksheremet): limit lines in TextField
       new TextField(
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
         controller: _frontTextController,
         onChanged: (String text) {
           setState(() {});
@@ -111,6 +114,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
       new TextField(
+        maxLines: null,
+        keyboardType: TextInputType.multiline,
         controller: _backTextController,
         onChanged: (String text) {
           setState(() {});
@@ -137,11 +142,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       ));
     }
 
-    return new Padding(
+    return new ListView(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: new Column(
-        children: builder,
-      ),
+      children: builder,
     );
   }
 

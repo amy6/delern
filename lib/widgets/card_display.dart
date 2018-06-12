@@ -13,7 +13,6 @@ class DisplayCard extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       child: new ListView(
         padding: const EdgeInsets.all(20.0),
-        shrinkWrap: true,
         children: <Widget>[
           placeText(_front),
           new Padding(
