@@ -8,24 +8,22 @@ class DisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(ksheremet): Make content scrollable
     return new Card(
       color: Colors.greenAccent,
       margin: const EdgeInsets.all(8.0),
-      child: new Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: new Column(
-          children: <Widget>[
-            placeText(_front),
-            new Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Divider(
-                height: 1.0,
-              ),
+      child: new ListView(
+        padding: const EdgeInsets.all(20.0),
+        shrinkWrap: true,
+        children: <Widget>[
+          placeText(_front),
+          new Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Divider(
+              height: 1.0,
             ),
-            placeText(_back),
-          ],
-        ),
+          ),
+          placeText(_back),
+        ],
       ),
     );
   }

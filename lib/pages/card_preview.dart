@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/card_view_model.dart';
-import '../widgets/card.dart';
+import '../widgets/card_display.dart';
 
 class PreviewCard extends StatefulWidget {
   final Deck _deck;
@@ -38,9 +38,13 @@ class PreviewCardState extends State<PreviewCard> {
           new IconButton(icon: new Icon(Icons.delete), onPressed: _deleteCard)
         ],
       ),
-      body: new Padding(
-        padding: const EdgeInsets.only(bottom: 100.0),
-        child: new DisplayCard(widget._cardView.front, widget._cardView.back),
+      body: Column(
+        children: <Widget>[
+          new Expanded(
+              child: new DisplayCard(
+                  widget._cardView.front, widget._cardView.back)),
+          new Padding(padding: const EdgeInsets.only(bottom: 100.0))
+        ],
       ),
       floatingActionButton: new FloatingActionButton(
         child: new Icon(Icons.edit),
