@@ -47,6 +47,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Add reversed card"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "saveChangesQuestion": MessageLookupByLibrary
+            .simpleMessage("Do you want to save changes?"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":

@@ -19,6 +19,7 @@ class CreateUpdateCard extends StatefulWidget {
 
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _addReversedCard;
+  bool _isTextChanged = false;
   TextEditingController _frontTextController = new TextEditingController();
   TextEditingController _backTextController = new TextEditingController();
 
@@ -35,18 +36,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        if (widget._cardViewModel != null) {
-          var card = widget._cardViewModel.card;
-          card.front = _frontTextController.text;
-          card.back = _backTextController.text;
-          try {
-            await card.save();
-            // TODO(ksheremet): Show user message that card was updated
-            print("Card was added");
-          } catch (e) {
-            // TODO(ksheremet): Report error
-            print(e);
-          }
+        if (widget._cardViewModel != null && _isTextChanged) {
+          return _updateCardDialog();
         }
         return true;
       },
@@ -57,32 +48,45 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     );
   }
 
-  //TODO(ksheremet): Add SAVE button for updating card
   Widget buildAppBar() {
-    if (widget._cardViewModel == null) {
-      return new AppBar(
-        title: new Text(widget._deck.name),
-        actions: <Widget>[
-          new IconButton(
-              icon: new Icon(Icons.check),
-              onPressed: (_frontTextController.text.isEmpty ||
-                      _backTextController.text.isEmpty)
-                  ? null
-                  : () async {
-                      await _addCardToDb();
-                      setState(() {
-                        _clearFields();
-                      });
-                    })
-        ],
-      );
-    } else {
-      return new AppBar(
-        title: new Text(widget._deck.name),
-      );
-    }
+    return new AppBar(
+      title: new Text(widget._deck.name),
+      actions: <Widget>[
+        widget._cardViewModel == null
+            ? new IconButton(
+                icon: new Icon(Icons.check),
+                onPressed: (_frontTextController.text.isEmpty ||
+                        _backTextController.text.isEmpty)
+                    ? null
+                    : () async {
+                        await _addCardToDb();
+                        setState(() {
+                          _clearFields();
+                        });
+                      })
+            : new FlatButton(
+                child: new Text(
+                  AppLocalizations.of(context).save.toUpperCase(),
+                  style: _isTextChanged
+                      ? new TextStyle(color: Colors.white)
+                      : null,
+                ),
+                onPressed: _isTextChanged
+                    ? () async {
+                        var updated = await _updateCard();
+                        if (updated) {
+                          _isTextChanged = false;
+                          Navigator.of(context).pop();
+                        } else {
+                          // TODO(kheremet): print user message that card wasn't updated
+                        }
+                      }
+                    : null)
+      ],
+    );
   }
 
+  // TODO(ksheremet): return Future<bool>
   Future<void> _addCardToDb() async {
     var card = model.Card(widget._deck.key,
         front: _frontTextController.text, back: _backTextController.text);
@@ -100,6 +104,54 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     }
   }
 
+  Future<bool> _updateCardDialog() {
+    return showDialog<bool>(
+      context: context,
+      // user must tap button!
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text(AppLocalizations.of(context).saveChangesQuestion),
+          actions: <Widget>[
+            new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text(
+                    AppLocalizations.of(context).cancel.toUpperCase())),
+            new FlatButton(
+                child:
+                    new Text(AppLocalizations.of(context).save.toUpperCase()),
+                onPressed: () async {
+                  var updated = await _updateCard();
+                  if (updated) {
+                    // TODO(ksheremet): Print user info that card was updated
+                    return Navigator.of(context).pop(true);
+                  } else {
+                    return Navigator.of(context).pop(false);
+                    // TODO(ksheremet): Print user info that card wasn't updated
+                  }
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _updateCard() async {
+    var card = widget._cardViewModel.card;
+    card.front = _frontTextController.text;
+    card.back = _backTextController.text;
+    try {
+      await card.save();
+      // TODO(ksheremet): Show user message that card was updated
+      print("Card was updated");
+      return true;
+    } catch (e) {
+      // TODO(ksheremet): Report error
+      print(e);
+      return false;
+    }
+  }
+
   Widget buildBody() {
     List<Widget> builder = [
       // TODO(ksheremet): limit lines in TextField
@@ -109,6 +161,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         controller: _frontTextController,
         onChanged: (String text) {
           setState(() {});
+          _isTextChanged = true;
         },
         decoration: new InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
@@ -119,6 +172,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         controller: _backTextController,
         onChanged: (String text) {
           setState(() {});
+          _isTextChanged = true;
         },
         decoration: new InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,

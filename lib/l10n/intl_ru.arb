@@ -167,5 +167,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "save": "Сохранить",
+  "@save": {
+    "description": "Save",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "saveChangesQuestion": "Вы хотите сохранить изменения?",
+  "@saveChangesQuestion": {
+    "description": "Do you want to save changes?",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -51,6 +51,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
+        "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
+        "saveChangesQuestion": MessageLookupByLibrary
+            .simpleMessage("Вы хотите сохранить изменения?"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":

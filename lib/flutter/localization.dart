@@ -218,6 +218,22 @@ class AppLocalizations {
       desc: 'Cancel',
     );
   }
+
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: 'Save',
+    );
+  }
+
+  String get saveChangesQuestion {
+    return Intl.message(
+      'Do you want to save changes?',
+      name: 'saveChangesQuestion',
+      desc: 'Do you want to save changes?',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
