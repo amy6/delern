@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class DisplayCard extends StatelessWidget {
+class CardDisplay extends StatelessWidget {
   final String _front;
   final String _back;
 
-  DisplayCard(this._front, this._back);
+  CardDisplay(this._front, this._back);
 
   @override
   Widget build(BuildContext context) {
@@ -14,20 +14,20 @@ class DisplayCard extends StatelessWidget {
       child: new ListView(
         padding: const EdgeInsets.all(20.0),
         children: <Widget>[
-          placeText(_front),
+          sideText(_front),
           new Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Divider(
               height: 1.0,
             ),
           ),
-          placeText(_back),
+          sideText(_back),
         ],
       ),
     );
   }
 
-  Widget placeText(String text) {
+  Widget sideText(String text) {
     return new Text(
       text,
       textAlign: TextAlign.center,

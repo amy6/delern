@@ -19,7 +19,7 @@ class CreateUpdateCard extends StatefulWidget {
 
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _addReversedCard;
-  bool _isTextChanged = false;
+  bool _isChanged = false;
   TextEditingController _frontTextController = new TextEditingController();
   TextEditingController _backTextController = new TextEditingController();
 
@@ -36,8 +36,15 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        if (widget._cardViewModel != null && _isTextChanged) {
-          return _updateCardDialog();
+        if (_isChanged && await _saveChangesDialog()) {
+          if (widget._cardViewModel == null) {
+            // TODO(ksheremet): Consider to check that front or back are empty.
+            // TODO(ksheremet): Return result from adding
+            await _addCard();
+            return true;
+          } else {
+            return _updateCard();
+          }
         }
         return true;
       },
@@ -59,7 +66,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                         _backTextController.text.isEmpty)
                     ? null
                     : () async {
-                        await _addCardToDb();
+                        // TODO(ksheremer): disable button when writing to db
+                        await _addCard();
+                        _isChanged = false;
                         setState(() {
                           _clearFields();
                         });
@@ -67,15 +76,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             : new FlatButton(
                 child: new Text(
                   AppLocalizations.of(context).save.toUpperCase(),
-                  style: _isTextChanged
-                      ? new TextStyle(color: Colors.white)
-                      : null,
+                  style: _isChanged ? new TextStyle(color: Colors.white) : null,
                 ),
-                onPressed: _isTextChanged
+                onPressed: _isChanged
                     ? () async {
                         var updated = await _updateCard();
                         if (updated) {
-                          _isTextChanged = false;
+                          _isChanged = false;
                           Navigator.of(context).pop();
                         } else {
                           // TODO(kheremet): print user message that card wasn't updated
@@ -87,7 +94,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   // TODO(ksheremet): return Future<bool>
-  Future<void> _addCardToDb() async {
+  Future<void> _addCard() async {
     var card = model.Card(widget._deck.key,
         front: _frontTextController.text, back: _backTextController.text);
     try {
@@ -104,7 +111,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     }
   }
 
-  Future<bool> _updateCardDialog() {
+  // TODO(ksheremet): Consider to move to separate widget in package widgets
+  Future<bool> _saveChangesDialog() {
     return showDialog<bool>(
       context: context,
       // user must tap button!
@@ -114,22 +122,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           title: new Text(AppLocalizations.of(context).saveChangesQuestion),
           actions: <Widget>[
             new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(
                     AppLocalizations.of(context).cancel.toUpperCase())),
             new FlatButton(
-                child:
-                    new Text(AppLocalizations.of(context).save.toUpperCase()),
-                onPressed: () async {
-                  var updated = await _updateCard();
-                  if (updated) {
-                    // TODO(ksheremet): Print user info that card was updated
-                    return Navigator.of(context).pop(true);
-                  } else {
-                    return Navigator.of(context).pop(false);
-                    // TODO(ksheremet): Print user info that card wasn't updated
-                  }
-                }),
+              child: new Text(AppLocalizations.of(context).save.toUpperCase()),
+              onPressed: () => Navigator.of(context).pop(true),
+            )
           ],
         );
       },
@@ -153,7 +152,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Widget buildBody() {
-    List<Widget> builder = [
+    List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       new TextField(
         maxLines: null,
@@ -161,7 +160,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         controller: _frontTextController,
         onChanged: (String text) {
           setState(() {});
-          _isTextChanged = true;
+          _isChanged = true;
         },
         decoration: new InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
@@ -172,7 +171,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         controller: _backTextController,
         onChanged: (String text) {
           setState(() {});
-          _isTextChanged = true;
+          _isChanged = true;
         },
         decoration: new InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,
@@ -182,7 +181,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
     // Add reversed card widget it it is adding new cards
     if (widget._cardViewModel == null) {
-      builder.add(new Row(
+      widgetsList.add(new Row(
         children: <Widget>[
           new Checkbox(
               value: _addReversedCard == null ? false : _addReversedCard,
@@ -198,7 +197,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
     return new ListView(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      children: builder,
+      children: widgetsList,
     );
   }
 

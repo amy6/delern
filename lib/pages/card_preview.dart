@@ -5,22 +5,22 @@ import '../pages/card_create_update.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/card_display.dart';
 
-class PreviewCard extends StatefulWidget {
+class CardPreview extends StatefulWidget {
   final Deck _deck;
-  final CardViewModel _cardView;
+  final CardViewModel _cardViewModel;
 
-  PreviewCard(this._deck, this._cardView);
+  CardPreview(this._deck, this._cardViewModel);
 
   @override
-  State<StatefulWidget> createState() => new PreviewCardState();
+  State<StatefulWidget> createState() => new _CardPreviewState();
 }
 
-class PreviewCardState extends State<PreviewCard> {
+class _CardPreviewState extends State<CardPreview> {
   bool _active = false;
 
   @override
   void deactivate() {
-    widget._cardView.deactivate();
+    widget._cardViewModel.deactivate();
     _active = false;
     super.deactivate();
   }
@@ -28,7 +28,7 @@ class PreviewCardState extends State<PreviewCard> {
   @override
   Widget build(BuildContext context) {
     if (!_active) {
-      widget._cardView.activate();
+      widget._cardViewModel.activate();
       _active = true;
     }
     return new Scaffold(
@@ -41,8 +41,8 @@ class PreviewCardState extends State<PreviewCard> {
       body: Column(
         children: <Widget>[
           new Expanded(
-              child: new DisplayCard(
-                  widget._cardView.front, widget._cardView.back)),
+              child: new CardDisplay(
+                  widget._cardViewModel.front, widget._cardViewModel.back)),
           new Padding(padding: const EdgeInsets.only(bottom: 100.0))
         ],
       ),
@@ -52,7 +52,8 @@ class PreviewCardState extends State<PreviewCard> {
             context,
             new MaterialPageRoute(
                 builder: (context) =>
-                    new CreateUpdateCard(widget._deck, widget._cardView))),
+                    //TODO(ksheremet): pass appropriate viewModel instead of _deck
+                    new CreateUpdateCard(widget._deck, widget._cardViewModel))),
       ),
     );
   }

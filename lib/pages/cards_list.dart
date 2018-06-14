@@ -83,7 +83,7 @@ class CardGridItem extends StatelessWidget {
           onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new PreviewCard(deck, card))),
+                  builder: (context) => new CardPreview(deck, card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(
