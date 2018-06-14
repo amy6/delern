@@ -60,5 +60,6 @@ class _CardPreviewState extends State<CardPreview> {
 
   _deleteCard() {
     //TODO(ksheremet): delete card
+    widget._cardView.card.delete(widget._deck.uid);
   }
 }

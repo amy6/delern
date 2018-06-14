@@ -73,6 +73,15 @@ class Card implements KeyedListItem {
     return FirebaseDatabase.instance.reference().update(data);
   }
 
+  Future<void> delete([String uid]) {
+    var data = new Map<String, dynamic>();
+
+    data['learning/$uid/$deckId/$key'] = null;
+    data['cards/$deckId/$key'] = null;
+    data['learning/$uid/$deckId/$key'] = null;
+    return FirebaseDatabase.instance.reference().update(data);
+  }
+
   Map<String, dynamic> _toMap() => {
         'front': front,
         'back': back,
