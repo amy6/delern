@@ -41,3 +41,7 @@ Icon?
 
 Pods/
 /Runner.xcworkspace/xcshareddata
+/Runner.xcodeproj
+/.symlinks
+/Podfile.lock
+# TODO(dotdoom): figure out which files can be ignored here

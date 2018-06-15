@@ -1,13 +1,15 @@
 PODS:
-  - Firebase/Auth (4.11.0):
-    - Firebase/Core
-    - FirebaseAuth (= 4.5.0)
-  - Firebase/Core (4.11.0):
-    - FirebaseAnalytics (= 4.1.0)
-    - FirebaseCore (= 4.0.18)
-  - Firebase/Database (4.11.0):
-    - Firebase/Core
-    - FirebaseDatabase (= 4.1.5)
+  - Firebase/Auth (5.2.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (= 5.0.1)
+  - Firebase/Core (5.2.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.2.0):
+    - FirebaseCore (= 5.0.3)
+  - Firebase/Database (5.2.0):
+    - Firebase/CoreOnly
+    - FirebaseDatabase (= 5.0.1)
   - firebase_auth (0.0.1):
     - Firebase/Auth
     - Firebase/Core
@@ -18,23 +20,21 @@ PODS:
   - firebase_database (0.0.1):
     - Firebase/Database
     - Flutter
-  - FirebaseAnalytics (4.1.0):
-    - FirebaseCore (~> 4.0)
-    - FirebaseInstanceID (~> 2.0)
+  - FirebaseAnalytics (5.0.1):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.5.0):
-    - FirebaseAnalytics (~> 4.1)
-    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+  - FirebaseAuth (5.0.1):
+    - FirebaseCore (~> 5.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.18):
+  - FirebaseCore (5.0.3):
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-  - FirebaseDatabase (4.1.5):
-    - FirebaseAnalytics (~> 4.1)
-    - FirebaseCore (~> 4.0)
+  - FirebaseDatabase (5.0.1):
+    - FirebaseCore (~> 5.0)
     - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (2.0.10):
-    - FirebaseCore (~> 4.0)
+  - FirebaseInstanceID (3.1.0):
+    - FirebaseCore (~> 5.0)
   - Flutter (1.0.0)
   - google_sign_in (0.0.1):
     - Flutter
@@ -44,23 +44,23 @@ PODS:
     - "GoogleToolboxForMac/NSString+URLArguments (~> 2.1)"
     - GTMOAuth2 (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GoogleToolboxForMac/DebugUtils (2.1.3):
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/Defines (2.1.3)
-  - "GoogleToolboxForMac/NSData+zlib (2.1.3)":
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3)":
-    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)"
-  - "GoogleToolboxForMac/NSString+URLArguments (2.1.3)"
+  - GoogleToolboxForMac/DebugUtils (2.1.4):
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.1.4)":
+    - GoogleToolboxForMac/DebugUtils (= 2.1.4)
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.1.4)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.1.4)"
   - GTMOAuth2 (1.1.6):
     - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.1.14):
-    - GTMSessionFetcher/Full (= 1.1.14)
-  - GTMSessionFetcher/Core (1.1.14)
-  - GTMSessionFetcher/Full (1.1.14):
-    - GTMSessionFetcher/Core (= 1.1.14)
+  - GTMSessionFetcher (1.1.15):
+    - GTMSessionFetcher/Full (= 1.1.15)
+  - GTMSessionFetcher/Core (1.1.15)
+  - GTMSessionFetcher/Full (1.1.15):
+    - GTMSessionFetcher/Core (= 1.1.15)
   - leveldb-library (1.20)
   - nanopb (0.3.8):
     - nanopb/decode (= 0.3.8)
@@ -71,12 +71,12 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - firebase_auth (from `Pods/.symlinks/plugins/firebase_auth-0.5.1/ios`)
-  - firebase_core (from `Pods/.symlinks/plugins/firebase_core-0.0.7/ios`)
-  - firebase_database (from `Pods/.symlinks/plugins/firebase_database-0.4.0/ios`)
-  - Flutter (from `Pods/.symlinks/flutter/ios`)
-  - google_sign_in (from `Pods/.symlinks/plugins/google_sign_in-3.0.0/ios`)
-  - package_info (from `Pods/.symlinks/plugins/package_info-0.3.2/ios`)
+  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
+  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
+  - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -95,38 +95,38 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   firebase_auth:
-    :path: Pods/.symlinks/plugins/firebase_auth-0.5.1/ios
+    :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
-    :path: Pods/.symlinks/plugins/firebase_core-0.0.7/ios
+    :path: ".symlinks/plugins/firebase_core/ios"
   firebase_database:
-    :path: Pods/.symlinks/plugins/firebase_database-0.4.0/ios
+    :path: ".symlinks/plugins/firebase_database/ios"
   Flutter:
-    :path: Pods/.symlinks/flutter/ios
+    :path: ".symlinks/flutter/ios-release"
   google_sign_in:
-    :path: Pods/.symlinks/plugins/google_sign_in-3.0.0/ios
+    :path: ".symlinks/plugins/google_sign_in/ios"
   package_info:
-    :path: Pods/.symlinks/plugins/package_info-0.3.2/ios
+    :path: ".symlinks/plugins/package_info/ios"
 
 SPEC CHECKSUMS:
-  Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
-  firebase_auth: 499d5bfb249606a276f6bddf292a3b2d44139f75
-  firebase_core: eb181e4f329c1806efdf2aed9e59ea98fe924ef5
-  firebase_database: bc8d2848137c7f4b4322fbe3e39fdc68d2518a37
-  FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
-  FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
-  FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
-  FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
-  FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
+  Firebase: 25ed0412036d7d008568d1fb4d2e9d81ea8a0a2c
+  firebase_auth: 27a5a77a032d557c18f8e223aaf8ec1368f6cdbc
+  firebase_core: c96aa8b2fcf7f5167d32f22034f502f9304952b8
+  firebase_database: dd62ab9f71967c9011ce2fd03a89e762dcc364df
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
+  FirebaseAuth: 463b8ce33bd5d05f706dcd4615499e3212b4132b
+  FirebaseCore: a3c87242451633fff8490183898075ce77d168d2
+  FirebaseDatabase: 482bad9c2abd422bb2321194fb8c937e67426a89
+  FirebaseInstanceID: 05d779cbb97bd5bd5c51a38a903fc9cfe1b2454a
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  google_sign_in: 64523e9b42c475b01b726ff87e450425ea6d15bc
+  google_sign_in: cbeb57b96679823d14df6b2240b629b983a42d79
   GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
-  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
-  GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
+  GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
 
-PODFILE CHECKSUM: 0420ab312a523ae0eecfb1fc19ea51dd82cc17c7
+PODFILE CHECKSUM: 1e5af4103afd21ca5ead147d7b81d06f494f51a2
 
 COCOAPODS: 1.5.3
