@@ -175,9 +175,23 @@
     "placeholders": {
     }
   },
+  "delete": "Удалить",
+  "@delete": {
+    "description": "Delete",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "saveChangesQuestion": "Вы хотите сохранить изменения?",
   "@saveChangesQuestion": {
     "description": "Do you want to save changes?",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteCardQuestion": "Вы хотите удалить карточку?",
+  "@deleteCardQuestion": {
+    "description": "Do you want to delete card?",
     "type": "text",
     "placeholders": {
     }

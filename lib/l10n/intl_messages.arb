@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-06-13T10:19:45.364641",
+  "@@last_modified": "2018-06-17T12:06:54.674585",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -150,9 +150,21 @@
     "type": "text",
     "placeholders": {}
   },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete",
+    "type": "text",
+    "placeholders": {}
+  },
   "saveChangesQuestion": "Do you want to save changes?",
   "@saveChangesQuestion": {
     "description": "Do you want to save changes?",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteCardQuestion": "Do you want to delete card?",
+  "@deleteCardQuestion": {
+    "description": "Do you want to delete card?",
     "type": "text",
     "placeholders": {}
   }

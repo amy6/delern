@@ -176,9 +176,23 @@
     "placeholders": {
     }
   },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete",
+    "type": "text",
+    "placeholders": {
+    }
+  },
   "saveChangesQuestion": "Do you want to save changes?",
   "@saveChangesQuestion": {
     "description": "Do you want to save changes?",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteCardQuestion": "Do you want to delete card?",
+  "@deleteCardQuestion": {
+    "description": "Do you want to delete card?",
     "type": "text",
     "placeholders": {
     }
