@@ -75,6 +75,7 @@ class Card implements KeyedListItem {
 
   Future<void> delete([String uid]) {
     var data = new Map<String, dynamic>();
+    assert(uid != null, 'User ID null when creating a card');
 
     data['learning/$uid/$deckId/$key'] = null;
     data['cards/$deckId/$key'] = null;

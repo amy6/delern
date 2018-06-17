@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/deck.dart';
@@ -35,7 +37,13 @@ class _CardPreviewState extends State<CardPreview> {
       appBar: new AppBar(
         title: new Text(widget._deck.name),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.delete), onPressed: _deleteCard)
+          new IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: () {
+                // TODO(ksheremet): Confirm that user wants to delete the card.
+                _deleteCard();
+                Navigator.of(context).pop();
+              })
         ],
       ),
       body: Column(
@@ -58,8 +66,14 @@ class _CardPreviewState extends State<CardPreview> {
     );
   }
 
-  _deleteCard() {
-    //TODO(ksheremet): delete card
-    widget._cardView.card.delete(widget._deck.uid);
+  Future<bool> _deleteCard() async {
+    try {
+      await widget._cardViewModel.card.delete(widget._deck.uid);
+      print("Card was deleted");
+      return true;
+    } catch (e) {
+      print("Error occurred by deleting");
+      return false;
+    }
   }
 }
