@@ -6,6 +6,7 @@ import '../flutter/localization.dart';
 import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
+import '../widgets/save_updates_dialog.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
@@ -36,7 +37,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        if (_isChanged && await _saveChangesDialog()) {
+        SaveUpdatesDialog saveChagesDilog = new SaveUpdatesDialog(
+            context,
+            AppLocalizations.of(context).saveChangesQuestion,
+            AppLocalizations.of(context).save,
+            AppLocalizations.of(context).cancel);
+        if (_isChanged && await saveChagesDilog.show()) {
           if (widget._cardViewModel == null) {
             // TODO(ksheremet): Consider to check that front or back are empty.
             // TODO(ksheremet): Return result from adding
@@ -109,30 +115,6 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       // TODO(ksheremet): In case of error sent it to sentry
       print(e);
     }
-  }
-
-  // TODO(ksheremet): Consider to move to separate widget in package widgets
-  Future<bool> _saveChangesDialog() {
-    return showDialog<bool>(
-      context: context,
-      // user must tap button!
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text(AppLocalizations.of(context).saveChangesQuestion),
-          actions: <Widget>[
-            new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text(
-                    AppLocalizations.of(context).cancel.toUpperCase())),
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context).save.toUpperCase()),
-              onPressed: () => Navigator.of(context).pop(true),
-            )
-          ],
-        );
-      },
-    );
   }
 
   Future<bool> _updateCard() async {

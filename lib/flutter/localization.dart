@@ -227,11 +227,27 @@ class AppLocalizations {
     );
   }
 
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: 'Delete',
+    );
+  }
+
   String get saveChangesQuestion {
     return Intl.message(
       'Do you want to save changes?',
       name: 'saveChangesQuestion',
       desc: 'Do you want to save changes?',
+    );
+  }
+
+  String get deleteCardQuestion {
+    return Intl.message(
+      'Do you want to delete card?',
+      name: 'deleteCardQuestion',
+      desc: 'Do you want to delete card?',
     );
   }
 }

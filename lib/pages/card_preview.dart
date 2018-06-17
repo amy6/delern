@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/card_display.dart';
+import '../widgets/save_updates_dialog.dart';
 
 class CardPreview extends StatefulWidget {
   final Deck _deck;
@@ -39,10 +41,16 @@ class _CardPreviewState extends State<CardPreview> {
         actions: <Widget>[
           new IconButton(
               icon: new Icon(Icons.delete),
-              onPressed: () {
-                // TODO(ksheremet): Confirm that user wants to delete the card.
-                _deleteCard();
-                Navigator.of(context).pop();
+              onPressed: () async {
+                bool saveChanges = await new SaveUpdatesDialog(
+                        context,
+                        AppLocalizations.of(context).deleteCardQuestion,
+                        AppLocalizations.of(context).delete,
+                        AppLocalizations.of(context).cancel)
+                    .show();
+                if (saveChanges && await _deleteCard()) {
+                  Navigator.of(context).pop();
+                }
               })
         ],
       ),
@@ -69,9 +77,11 @@ class _CardPreviewState extends State<CardPreview> {
   Future<bool> _deleteCard() async {
     try {
       await widget._cardViewModel.card.delete(widget._deck.uid);
+      // TODO(ksheremet): Show user message
       print("Card was deleted");
       return true;
     } catch (e) {
+      // TODO(ksheremet): Show user message
       print("Error occurred by deleting");
       return false;
     }
