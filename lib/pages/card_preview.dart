@@ -42,12 +42,12 @@ class _CardPreviewState extends State<CardPreview> {
           new IconButton(
               icon: new Icon(Icons.delete),
               onPressed: () async {
-                bool saveChanges = await new SaveUpdatesDialog(
-                        context,
-                        AppLocalizations.of(context).deleteCardQuestion,
-                        AppLocalizations.of(context).delete,
-                        AppLocalizations.of(context).cancel)
-                    .show();
+                var locale = AppLocalizations.of(context);
+                bool saveChanges = await showSaveUpdatesDialog(
+                    context: context,
+                    changesQuestion: locale.deleteCardQuestion,
+                    yesAnswer: locale.delete,
+                    noAnswer: locale.cancel);
                 if (saveChanges && await _deleteCard()) {
                   Navigator.of(context).pop();
                 }

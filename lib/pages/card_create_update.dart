@@ -37,19 +37,15 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        var saveChangesDialog = new SaveUpdatesDialog(
-            context,
-            AppLocalizations.of(context).saveChangesQuestion,
-            AppLocalizations.of(context).save,
-            AppLocalizations.of(context).cancel);
-        if (_isChanged && await saveChangesDialog.show()) {
-          if (widget._cardViewModel == null) {
-            // TODO(ksheremet): Consider to check that front or back are empty.
-            // TODO(ksheremet): Return result from adding
-            await _addCard();
-            return true;
-          } else {
-            return _updateCard();
+        if (_isChanged) {
+          var locale = AppLocalizations.of(context);
+          var saveChangesDialog = await showSaveUpdatesDialog(
+              context: context,
+              changesQuestion: locale.saveChangesQuestion,
+              yesAnswer: locale.save,
+              noAnswer: locale.cancel);
+          if (saveChangesDialog) {
+            return await _saveCard();
           }
         }
         return true;
@@ -73,11 +69,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                     ? null
                     : () async {
                         // TODO(ksheremer): disable button when writing to db
-                        await _addCard();
-                        _isChanged = false;
-                        setState(() {
-                          _clearFields();
-                        });
+                        if (await _saveCard()) {
+                          _isChanged = false;
+                          setState(() {
+                            _clearFields();
+                          });
+                        }
                       })
             : new FlatButton(
                 child: new Text(
@@ -86,12 +83,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                 ),
                 onPressed: _isChanged
                     ? () async {
-                        var updated = await _updateCard();
-                        if (updated) {
+                        if (await _saveCard()) {
                           _isChanged = false;
                           Navigator.of(context).pop();
-                        } else {
-                          // TODO(kheremet): print user message that card wasn't updated
                         }
                       }
                     : null)
@@ -99,38 +93,38 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     );
   }
 
-  // TODO(ksheremet): return Future<bool>
-  Future<void> _addCard() async {
-    var card = model.Card(widget._deck.key,
-        front: _frontTextController.text, back: _backTextController.text);
+  Future<bool> _saveCard() async {
     try {
-      await card.save(widget._deck.uid);
-      if (_addReversedCard == true) {
-        card = model.Card(widget._deck.key,
-            front: _backTextController.text, back: _frontTextController.text);
-        await card.save(widget._deck.uid);
+      if (widget._cardViewModel == null) {
+        // TODO(ksheremet): Consider to check that front or back are empty.
+        await _addCard();
+      } else {
+        await _updateCard();
       }
+      // TODO(ksheremet): Print message for user
+      return true;
     } catch (e) {
-      // TODO(ksheremet): Show snackbar to user on success and failure
-      // TODO(ksheremet): In case of error sent it to sentry
-      print(e);
+      // TODO(ksheremet): Print message for user
+      return false;
     }
   }
 
-  Future<bool> _updateCard() async {
+  Future<void> _addCard() async {
+    var card = model.Card(widget._deck.key,
+        front: _frontTextController.text, back: _backTextController.text);
+    card.save(widget._deck.uid);
+    if (_addReversedCard == true) {
+      card = model.Card(widget._deck.key,
+          front: _backTextController.text, back: _frontTextController.text);
+      card.save(widget._deck.uid);
+    }
+  }
+
+  Future<void> _updateCard() async {
     var card = widget._cardViewModel.card;
     card.front = _frontTextController.text;
     card.back = _backTextController.text;
-    try {
-      await card.save();
-      // TODO(ksheremet): Show user message that card was updated
-      print("Card was updated");
-      return true;
-    } catch (e) {
-      // TODO(ksheremet): Report error
-      print(e);
-      return false;
-    }
+    return card.save();
   }
 
   Widget buildBody() {
