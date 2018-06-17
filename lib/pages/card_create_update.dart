@@ -37,12 +37,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () async {
-        SaveUpdatesDialog saveChagesDilog = new SaveUpdatesDialog(
+        var saveChangesDialog = new SaveUpdatesDialog(
             context,
             AppLocalizations.of(context).saveChangesQuestion,
             AppLocalizations.of(context).save,
             AppLocalizations.of(context).cancel);
-        if (_isChanged && await saveChagesDilog.show()) {
+        if (_isChanged && await saveChangesDialog.show()) {
           if (widget._cardViewModel == null) {
             // TODO(ksheremet): Consider to check that front or back are empty.
             // TODO(ksheremet): Return result from adding
