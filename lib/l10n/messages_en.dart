@@ -30,6 +30,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete card?"),
+        "deleteDeckQuestion":
+            MessageLookupByLibrary.simpleMessage("Do you want to delete deck?"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":

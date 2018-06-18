@@ -306,6 +306,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'watchedCards',
     );
   }
+
+  String get deleteDeckQuestion {
+    return Intl.message(
+      'Do you want to delete deck?',
+      name: 'deleteDeckQuestion',
+      desc: 'Do you want to delete deck?',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

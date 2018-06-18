@@ -237,5 +237,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "deleteDeckQuestion": "Вы хотите удалить список?",
+  "@deleteDeckQuestion": {
+    "description": "Do you want to delete deck?",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

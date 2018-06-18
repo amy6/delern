@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../models/deck.dart';
+import '../widgets/save_updates_dialog.dart';
 
 class DeckSettingsPage extends StatelessWidget {
   final Deck _deck;
@@ -17,8 +19,13 @@ class DeckSettingsPage extends StatelessWidget {
             new IconButton(
                 icon: new Icon(Icons.delete),
                 onPressed: () async {
-                  // TODO(ksheremet): Show dialog
-                  if (await _deleteDeck()) {
+                  var locale = AppLocalizations.of(context);
+                  var deleteDeckDialog = await showSaveUpdatesDialog(
+                      context: context,
+                      changesQuestion: locale.deleteDeckQuestion,
+                      yesAnswer: locale.delete,
+                      noAnswer: locale.cancel);
+                  if (deleteDeckDialog && await _deleteDeck()) {
                     Navigator.of(context).pop();
                   }
                 })
