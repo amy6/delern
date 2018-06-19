@@ -195,5 +195,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "errorUserMessage": "Произошла ошибка. Попробуйте позже",
+  "@errorUserMessage": {
+    "description": "Error occurred. Try it later",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

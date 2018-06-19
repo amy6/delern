@@ -196,5 +196,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "errorUserMessage": "Error occurred. Try it later",
+  "@errorUserMessage": {
+    "description": "Error occurred. Try it later",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -250,6 +250,14 @@ class AppLocalizations {
       desc: 'Do you want to delete card?',
     );
   }
+
+  String get errorUserMessage {
+    return Intl.message(
+      'Error occurred. Try it later',
+      name: 'errorUserMessage',
+      desc: 'Error occurred. Try it later',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

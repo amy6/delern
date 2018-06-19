@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-06-17T12:06:54.674585",
+  "@@last_modified": "2018-06-19T10:37:50.666144",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -165,6 +165,12 @@
   "deleteCardQuestion": "Do you want to delete card?",
   "@deleteCardQuestion": {
     "description": "Do you want to delete card?",
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorUserMessage": "Error occurred. Try it later",
+  "@errorUserMessage": {
+    "description": "Error occurred. Try it later",
     "type": "text",
     "placeholders": {}
   }

@@ -33,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Адрес электронной почты"),
+        "errorUserMessage": MessageLookupByLibrary
+            .simpleMessage("Произошла ошибка. Попробуйте позже"),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "navigationDrawerAbout":

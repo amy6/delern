@@ -7,6 +7,7 @@ import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_list_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
+import '../widgets/simple_text_snackbar.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
@@ -23,6 +24,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _isChanged = false;
   TextEditingController _frontTextController = new TextEditingController();
   TextEditingController _backTextController = new TextEditingController();
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -51,13 +53,14 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         return true;
       },
       child: new Scaffold(
-        appBar: buildAppBar(),
-        body: buildBody(),
+        key: _scaffoldKey,
+        appBar: _buildAppBar(),
+        body: _buildBody(),
       ),
     );
   }
 
-  Widget buildAppBar() {
+  Widget _buildAppBar() {
     return new AppBar(
       title: new Text(widget._deck.name),
       actions: <Widget>[
@@ -101,10 +104,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       } else {
         await _updateCard();
       }
-      // TODO(ksheremet): Print message for user
       return true;
     } catch (e) {
-      // TODO(ksheremet): Print message for user
+      _scaffoldKey.currentState.showSnackBar(
+          simpleTextSnackBar(AppLocalizations.of(context).errorUserMessage));
       return false;
     }
   }
@@ -127,7 +130,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     return card.save();
   }
 
-  Widget buildBody() {
+  Widget _buildBody() {
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       new TextField(
