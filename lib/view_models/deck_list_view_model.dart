@@ -9,7 +9,7 @@ import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class DeckViewModel implements ViewModel {
+class DeckListItemViewModel implements ViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
   String get name => _deck?.name;
@@ -20,13 +20,13 @@ class DeckViewModel implements ViewModel {
   AccessType _access;
   int _cardsToLearn;
 
-  final ViewModelsList<DeckViewModel> _owner;
+  final ViewModelsList<DeckListItemViewModel> _owner;
   StreamSubscription<StreamDemuxerEvent<String>> _internalUpdates;
 
-  DeckViewModel(this._owner, this._deck);
+  DeckListItemViewModel(this._owner, this._deck);
 
   @override
-  DeckViewModel updateWith(DeckViewModel value) {
+  DeckListItemViewModel updateWith(DeckListItemViewModel value) {
     if (identical(this, value)) {
       // This will happen when we sent an internal update event to the owner.
       return this;
@@ -78,20 +78,20 @@ class DeckViewModel implements ViewModel {
   }
 }
 
-class DecksViewModel implements Activatable {
+class DeckListViewModel implements Activatable {
   final String uid;
 
-  ViewModelsList<DeckViewModel> _deckViewModels;
-  ProxyKeyedList<DeckViewModel> _decksProxy;
+  ViewModelsList<DeckListItemViewModel> _deckViewModels;
+  ProxyKeyedList<DeckListItemViewModel> _decksProxy;
 
-  ProxyKeyedList<DeckViewModel> get decks =>
+  ProxyKeyedList<DeckListItemViewModel> get decks =>
       _decksProxy ??= new ProxyKeyedList(_deckViewModels);
 
-  DecksViewModel(this.uid) {
-    _deckViewModels = new ViewModelsList<DeckViewModel>(() => Deck
+  DeckListViewModel(this.uid) {
+    _deckViewModels = new ViewModelsList<DeckListItemViewModel>(() => Deck
         .getDecks(uid)
-        .map((deckEvent) =>
-            deckEvent.map((deck) => new DeckViewModel(_deckViewModels, deck))));
+        .map((deckEvent) => deckEvent
+            .map((deck) => new DeckListItemViewModel(_deckViewModels, deck))));
   }
 
   @override

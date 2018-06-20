@@ -7,7 +7,7 @@ import '../pages/cards.dart';
 import '../pages/cards_list.dart';
 import '../pages/deck_settings.dart';
 import '../pages/deck_sharing.dart';
-import '../view_models/deck_view_model.dart';
+import '../view_models/deck_list_view_model.dart';
 import 'observing_animated_list.dart';
 
 class DecksWidget extends StatefulWidget {
@@ -20,12 +20,12 @@ class DecksWidget extends StatefulWidget {
 }
 
 class _DecksWidgetState extends State<DecksWidget> {
-  DecksViewModel viewModel;
+  DeckListViewModel viewModel;
   bool _active = false;
 
   @override
   void initState() {
-    viewModel = new DecksViewModel(widget.uid)
+    viewModel = new DeckListViewModel(widget.uid)
       ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.initState();
   }
@@ -60,7 +60,7 @@ class _DecksWidgetState extends State<DecksWidget> {
 }
 
 class DeckListItem extends StatelessWidget {
-  final DeckViewModel model;
+  final DeckListItemViewModel model;
 
   DeckListItem(this.model);
 
