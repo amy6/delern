@@ -15,13 +15,17 @@ class Card implements KeyedListItem {
 
   Card(this.deckId, {this.front, this.back});
 
-  Card.fromSnapshot(this.key, dynamic snapshotValue, this.deckId)
-      : front = snapshotValue['front'],
-        back = snapshotValue['back'],
-        createdAt = snapshotValue['createdAt'] == null
-            ? null
-            : new DateTime.fromMillisecondsSinceEpoch(
-                snapshotValue['createdAt']);
+  Card.fromSnapshot(this.key, dynamic snapshotValue, this.deckId) {
+    _parseSnapshot(snapshotValue);
+  }
+
+  void _parseSnapshot(snapshotValue) {
+    front = snapshotValue['front'];
+    back = snapshotValue['back'];
+    createdAt = snapshotValue['createdAt'] == null
+        ? null
+        : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
+  }
 
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
@@ -72,6 +76,14 @@ class Card implements KeyedListItem {
     data['cards/$deckId/$key'] = _toMap();
     return FirebaseDatabase.instance.reference().update(data);
   }
+
+  Stream<void> get updates => FirebaseDatabase.instance
+      .reference()
+      .child('cards')
+      .child(deckId)
+      .child(key)
+      .onValue
+      .map((event) => _parseSnapshot(event.snapshot));
 
   Future<void> delete(String uid) {
     var data = new Map<String, dynamic>();
