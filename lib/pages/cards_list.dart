@@ -4,7 +4,7 @@ import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../pages/card_preview.dart';
-import '../view_models/card_view_model.dart';
+import '../view_models/card_list_view_model.dart';
 import '../widgets/observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
@@ -17,12 +17,12 @@ class CardsListPage extends StatefulWidget {
 }
 
 class _CardsListState extends State<CardsListPage> {
-  CardsViewModel viewModel;
+  CardListViewModel viewModel;
   bool _active = false;
 
   @override
   void initState() {
-    viewModel = new CardsViewModel(widget._deck.key);
+    viewModel = new CardListViewModel(widget._deck.key);
     super.initState();
   }
 
@@ -67,7 +67,7 @@ class _CardsListState extends State<CardsListPage> {
 }
 
 class CardGridItem extends StatelessWidget {
-  final CardViewModel card;
+  final CardListItemViewModel card;
   final Deck deck;
 
   CardGridItem(this.card, this.deck);

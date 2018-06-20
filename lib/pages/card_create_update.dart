@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../models/card.dart' as model;
 import '../models/deck.dart';
-import '../view_models/card_view_model.dart';
+import '../view_models/card_list_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
-  final CardViewModel _cardViewModel;
+  final CardListItemViewModel _cardViewModel;
 
   CreateUpdateCard(this._deck, this._cardViewModel);
 

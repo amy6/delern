@@ -5,7 +5,7 @@ import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class CardViewModel implements ViewModel {
+class CardListItemViewModel implements ViewModel {
   String get key => _card?.key;
   Card get card => _card;
   String get front => _card?.front;
@@ -13,10 +13,10 @@ class CardViewModel implements ViewModel {
 
   Card _card;
 
-  CardViewModel(this._card);
+  CardListItemViewModel(this._card);
 
   @override
-  CardViewModel updateWith(CardViewModel value) => value;
+  CardListItemViewModel updateWith(CardListItemViewModel value) => value;
 
   @override
   @mustCallSuper
@@ -32,19 +32,20 @@ class CardViewModel implements ViewModel {
   }
 }
 
-class CardsViewModel implements Activatable {
+class CardListViewModel implements Activatable {
   final String deckId;
 
-  ViewModelsList<CardViewModel> _cardViewModels;
-  ProxyKeyedList<CardViewModel> _cardsProxy;
+  ViewModelsList<CardListItemViewModel> _cardViewModels;
+  ProxyKeyedList<CardListItemViewModel> _cardsProxy;
 
-  ProxyKeyedList<CardViewModel> get cards =>
+  ProxyKeyedList<CardListItemViewModel> get cards =>
       _cardsProxy ??= new ProxyKeyedList(_cardViewModels);
 
-  CardsViewModel(this.deckId) {
-    _cardViewModels = new ViewModelsList<CardViewModel>(() => Card
+  CardListViewModel(this.deckId) {
+    _cardViewModels = new ViewModelsList<CardListItemViewModel>(() => Card
         .getCards(deckId)
-        .map((cardEvent) => cardEvent.map((card) => new CardViewModel(card))));
+        .map((cardEvent) =>
+            cardEvent.map((card) => new CardListItemViewModel(card))));
   }
 
   @override

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
-import '../view_models/card_view_model.dart';
+import '../view_models/card_list_view_model.dart';
 import '../widgets/card_display.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class CardPreview extends StatefulWidget {
   final Deck _deck;
-  final CardViewModel _cardViewModel;
+  final CardListItemViewModel _cardViewModel;
 
   CardPreview(this._deck, this._cardViewModel);
 
