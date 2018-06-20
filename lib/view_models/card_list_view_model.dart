@@ -5,7 +5,7 @@ import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class CardListItemViewModel implements ViewModel {
+class CardListItemViewModel implements ListItemViewModel {
   String get key => _card?.key;
   Card get card => _card;
   String get front => _card?.front;
@@ -27,9 +27,7 @@ class CardListItemViewModel implements ViewModel {
   void deactivate() {}
 
   @override
-  String toString() {
-    return '#$key $front $back';
-  }
+  String toString() => _card?.toString();
 }
 
 class CardListViewModel implements Activatable {

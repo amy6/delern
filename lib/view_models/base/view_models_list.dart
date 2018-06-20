@@ -6,15 +6,15 @@ import '../../models/base/keyed_list.dart';
 import '../../models/base/observable_list.dart';
 import 'activatable.dart';
 
-abstract class ViewModel implements KeyedListItem, Activatable {
+abstract class ListItemViewModel implements KeyedListItem, Activatable {
   String get key;
-  ViewModel updateWith(covariant ViewModel value);
+  ListItemViewModel updateWith(covariant ListItemViewModel value);
 }
 
 typedef Stream<T> StreamGetter<T>();
 
 // TODO(dotdoom): make list interface readonly.
-class ViewModelsList<T extends ViewModel> extends ObservableList<T>
+class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
     with KeyedListMixin<T>
     implements Activatable {
   final StreamGetter<KeyedListEvent<T>> _stream;

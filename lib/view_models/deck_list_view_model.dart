@@ -9,7 +9,7 @@ import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class DeckListItemViewModel implements ViewModel {
+class DeckListItemViewModel implements ListItemViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
   String get name => _deck?.name;

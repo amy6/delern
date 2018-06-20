@@ -8,7 +8,7 @@ import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class DeckAccessViewModel implements ViewModel {
+class DeckAccessViewModel implements ListItemViewModel {
   String get key => _deckAccess.key;
   AccessType get access => _deckAccess.access;
   User get user => _user;

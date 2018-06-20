@@ -21,7 +21,7 @@ StreamMatcher eventMatcher(ListEventType eventType, int index,
   }, 'match $expected');
 }
 
-class TestFixture extends ViewModel {
+class TestFixture extends ListItemViewModel {
   final String key;
   dynamic data;
   int updateCount;
@@ -38,7 +38,7 @@ class TestFixture extends ViewModel {
   void deactivate() => _active = false;
 
   @override
-  ViewModel updateWith(TestFixture value) {
+  ListItemViewModel updateWith(TestFixture value) {
     expect(value.key, key);
     data = value.data;
     updateCount = (updateCount ?? 0) + 1;
