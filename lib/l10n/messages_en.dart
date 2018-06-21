@@ -31,8 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Email address"),
-        "errorUserMessage": MessageLookupByLibrary
-            .simpleMessage("Error occurred. Try it later"),
+        "errorUserMessage":
+            MessageLookupByLibrary.simpleMessage("Error occurred: "),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":

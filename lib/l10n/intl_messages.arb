@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-06-19T10:37:50.666144",
+  "@@last_modified": "2018-06-21T11:30:35.348308",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -168,9 +168,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "errorUserMessage": "Error occurred. Try it later",
+  "errorUserMessage": "Error occurred: ",
   "@errorUserMessage": {
-    "description": "Error occurred. Try it later",
+    "description": "Error occurred.",
     "type": "text",
     "placeholders": {}
   }

@@ -253,9 +253,9 @@ class AppLocalizations {
 
   String get errorUserMessage {
     return Intl.message(
-      'Error occurred. Try it later',
+      'Error occurred: ',
       name: 'errorUserMessage',
-      desc: 'Error occurred. Try it later',
+      desc: 'Error occurred.',
     );
   }
 }

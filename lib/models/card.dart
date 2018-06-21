@@ -27,6 +27,7 @@ class Card implements KeyedListItem {
         : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
+  //TODO(asheremet): Check when no cards in deck (entries=null)
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,

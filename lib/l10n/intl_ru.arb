@@ -196,9 +196,9 @@
     "placeholders": {
     }
   },
-  "errorUserMessage": "Произошла ошибка. Попробуйте позже",
+  "errorUserMessage": "Произошла ошибка: ",
   "@errorUserMessage": {
-    "description": "Error occurred. Try it later",
+    "description": "Error occurred.",
     "type": "text",
     "placeholders": {
     }

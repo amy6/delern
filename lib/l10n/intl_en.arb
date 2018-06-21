@@ -197,9 +197,9 @@
     "placeholders": {
     }
   },
-  "errorUserMessage": "Error occurred. Try it later",
+  "errorUserMessage": "Error occurred: ",
   "@errorUserMessage": {
-    "description": "Error occurred. Try it later",
+    "description": "Error occurred.",
     "type": "text",
     "placeholders": {
     }

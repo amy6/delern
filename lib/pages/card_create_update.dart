@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../flutter/show_error.dart';
 import '../models/card.dart' as model;
 import '../models/deck.dart';
 import '../view_models/card_list_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
-import '../widgets/simple_text_snackbar.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
@@ -105,9 +105,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         await _updateCard();
       }
       return true;
-    } catch (e) {
-      _scaffoldKey.currentState.showSnackBar(
-          simpleTextSnackBar(AppLocalizations.of(context).errorUserMessage));
+    } catch (e, stacktrace) {
+      showError(_scaffoldKey.currentState, e, stacktrace);
+
       return false;
     }
   }
@@ -115,11 +115,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Future<void> _addCard() async {
     var card = model.Card(widget._deck.key,
         front: _frontTextController.text, back: _backTextController.text);
-    card.save(widget._deck.uid);
+    await card.save(widget._deck.uid);
     if (_addReversedCard == true) {
       card = model.Card(widget._deck.key,
           front: _backTextController.text, back: _frontTextController.text);
-      card.save(widget._deck.uid);
+      await card.save(widget._deck.uid);
     }
   }
 
