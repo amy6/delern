@@ -107,7 +107,6 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       return true;
     } catch (e, stacktrace) {
       showError(_scaffoldKey.currentState, e, stacktrace);
-
       return false;
     }
   }
