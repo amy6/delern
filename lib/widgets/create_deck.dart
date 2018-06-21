@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 
@@ -16,46 +17,47 @@ class CreateDeck extends StatelessWidget {
   Widget build(BuildContext context) {
     return new FloatingActionButton(
       child: new Icon(Icons.add),
-      onPressed: () {
-        showDialog<Null>(
+      onPressed: () async {
+        Deck newDeck = await showDialog<Deck>(
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new CreateDeckButton(_user),
+          builder: (_) => new CreateDeckDialog(_user),
         );
+        if (newDeck != null &&
+            await _createDeck(deck: newDeck, context: context)) {
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new CreateUpdateCard(newDeck, null)));
+        }
       },
     );
   }
+
+  Future<bool> _createDeck(
+      {@required Deck deck, @required BuildContext context}) async {
+    try {
+      await deck.save();
+      return true;
+    } catch (e, stackTrace) {
+      showError(Scaffold.of(context), e, stackTrace);
+      return false;
+    }
+  }
 }
 
-class CreateDeckButton extends StatefulWidget {
+class CreateDeckDialog extends StatefulWidget {
   final FirebaseUser _user;
 
-  CreateDeckButton(this._user);
+  CreateDeckDialog(this._user);
 
   @override
   _CreateDeckDialogState createState() => new _CreateDeckDialogState();
 }
 
-class _CreateDeckDialogState extends State<CreateDeckButton> {
+class _CreateDeckDialogState extends State<CreateDeckDialog> {
   final TextEditingController _textController = new TextEditingController();
-
-  Future<void> _addButtonPressed() async {
-    var deck = new Deck(widget._user.uid, name: _textController.text);
-    try {
-      await deck.save();
-      // Close Dialog.
-      Navigator.of(context).pop();
-      // Start adding cards to the deck.
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => new CreateUpdateCard(deck, null)));
-    } catch (e) {
-      // TODO(ksheremet): show snackbar
-      Navigator.of(context).pop();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +78,17 @@ class _CreateDeckDialogState extends State<CreateDeckButton> {
       actions: <Widget>[
         new FlatButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(null);
             },
             child: new Text(AppLocalizations.of(context).cancel.toUpperCase())),
         new FlatButton(
             child: new Text(AppLocalizations.of(context).add.toUpperCase()),
-            onPressed: _textController.text.isEmpty ? null : _addButtonPressed),
+            onPressed: _textController.text.isEmpty
+                ? null
+                : () {
+                    Navigator.of(context).pop(
+                        new Deck(widget._user.uid, name: _textController.text));
+                  }),
       ],
     );
   }
