@@ -26,9 +26,9 @@ class CardViewModel {
 
   Future<void> saveCard(bool addReverse) async {
     assert(card.deckId == _deck.key);
-    await card.save();
+    await card.save(_deck.uid);
     if (addReverse) {
-      await Card(_deck.key, front: card.back, back: card.front).save();
+      await Card(_deck.key, front: card.back, back: card.front).save(_deck.uid);
     }
   }
 
