@@ -73,9 +73,19 @@ class Card implements KeyedListItem {
         'level': 'L0',
         'repeatAt': 0,
       };
+
+      // Important note: we ask server to fill in the timestamp, but we do not
+      // update it in our object. Something trivial like 'await updates.first'
+      // would work most of the time. But when offline, Firebase "lies" to the
+      // application, replacing ServerValue.TIMESTAMP with phone's time,
+      // although later it saves to the server correctly.
+      data['cards/$deckId/$key/createdAt'] = ServerValue.timestamp;
     }
 
-    data['cards/$deckId/$key'] = _toMap();
+    // We should never *update* createdAt because we risk changing it (see the
+    // note above), in which case Firebase Database will reject the update.
+    data['cards/$deckId/$key/front'] = front;
+    data['cards/$deckId/$key/back'] = back;
     return FirebaseDatabase.instance.reference().update(data);
   }
 
@@ -95,10 +105,4 @@ class Card implements KeyedListItem {
     data['views/$uid/$deckId/$key'] = null;
     return FirebaseDatabase.instance.reference().update(data);
   }
-
-  Map<String, dynamic> _toMap() => {
-        'front': front,
-        'back': back,
-        'createdAt': createdAt?.millisecondsSinceEpoch ?? ServerValue.timestamp,
-      };
 }

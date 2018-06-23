@@ -138,11 +138,7 @@ type CreatedAtTimestamp extends Number {
 type Card {
   front: String,
   back: String,
-  // TODO(dotdoom): CreatedAtTimestamp. Firebase Offline "lies" to the
-  //                application, replacing ServerValue.TIMESTAMP with
-  //                phone's time when fetched (although it saves it
-  //                to the server correctly when online). Have to do our
-  //                own object mapping to avoid resetting this value.
+  // TODO(dotdoom): CreatedAtTimestamp when Flutter app is released.
   createdAt: Number | Null,
 }
 
