@@ -1,33 +1,46 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sentry/sentry.dart';
 
-// Error reporting inspired (or rather, copied 1:1)
-// by https://github.com/yjbanov/crashy/
-final SentryClient _sentry = new SentryClient(
-    dsn: "https://36d72a65344d439d86ee65d623d050ce:" +
-        "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345");
+// Error reporting inspired by https://github.com/yjbanov/crashy/.
+
+SentryClient _sentry;
 
 Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
   debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $error');
 
-  bool sendToServer = true;
-  assert(() {
-        sendToServer = false;
-        return true;
-      }() !=
-      null);
-  if (!sendToServer) {
+  if (_sentry == null) {
+    String environment = 'production';
+    assert(() {
+          environment = 'dev';
+          return true;
+        }() !=
+        null);
+
+    var packageInfo = await PackageInfo.fromPlatform();
+    var environmentAttributes = Event(
+      release: '${packageInfo.version} (${packageInfo.buildNumber})',
+      environment: environment,
+    );
+    _sentry = SentryClient(
+        dsn: "https://36d72a65344d439d86ee65d623d050ce:" +
+            "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345",
+        environmentAttributes: environmentAttributes);
+  }
+
+  if (_sentry.environmentAttributes.environment == 'dev') {
     debugPrint('$stackTrace\n' + '-' * 80);
-    return;
   }
 
   print('Reporting to Sentry.io...');
-  final SentryResponse response = await _sentry.captureException(
+  final SentryResponse response = await _sentry.capture(
+      event: Event(
     exception: error,
     stackTrace: stackTrace,
-  );
+    loggerName: src,
+  ));
   if (response.isSuccessful) {
     print('Success! Event ID: ${response.eventId}');
   } else {
