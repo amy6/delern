@@ -28,19 +28,19 @@ class Card implements KeyedListItem {
         : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
-  //TODO(dotdoom): Check when no cards in deck (snapshot.value == null)
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
-                    .reference()
-                    .child('cards')
-                    .child(deckId)
-                    .orderByKey()
-                    .onValue
-                    .first)
-                .snapshot
-                .value as Map)
+                        .reference()
+                        .child('cards')
+                        .child(deckId)
+                        .orderByKey()
+                        .onValue
+                        .first)
+                    .snapshot
+                    .value as Map ??
+                {})
             .entries
             .map(
                 (item) => new Card.fromSnapshot(item.key, item.value, deckId)));

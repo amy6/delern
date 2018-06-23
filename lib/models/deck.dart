@@ -53,14 +53,15 @@ class Deck implements KeyedListItem {
     yield new KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
-                    .reference()
-                    .child('decks')
-                    .child(uid)
-                    .orderByKey()
-                    .onValue
-                    .first)
-                .snapshot
-                .value as Map)
+                        .reference()
+                        .child('decks')
+                        .child(uid)
+                        .orderByKey()
+                        .onValue
+                        .first)
+                    .snapshot
+                    .value as Map ??
+                {})
             .entries
             .map((item) => new Deck.fromSnapshot(item.key, item.value, uid)));
     yield* childEventsStream(
