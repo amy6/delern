@@ -20,7 +20,7 @@ class CreateUpdateCard extends StatefulWidget {
 }
 
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
-  bool _addReversedCard;
+  bool _addReversedCard = false;
   bool _isChanged = false;
   TextEditingController _frontTextController = new TextEditingController();
   TextEditingController _backTextController = new TextEditingController();
@@ -145,7 +145,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       widgetsList.add(new Row(
         children: <Widget>[
           new Checkbox(
-              value: _addReversedCard == null ? false : _addReversedCard,
+              value: _addReversedCard,
               onChanged: (bool newValue) {
                 setState(() {
                   _addReversedCard = newValue;
