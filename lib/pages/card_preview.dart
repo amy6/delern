@@ -3,41 +3,48 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../models/deck.dart';
 import '../pages/card_create_update.dart';
-import '../view_models/card_list_view_model.dart';
+import '../view_models/card_view_model.dart';
+import '../models/card.dart' as cardModel;
+import '../models/deck.dart';
 import '../widgets/card_display.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class CardPreview extends StatefulWidget {
   final Deck _deck;
-  final CardListItemViewModel _cardViewModel;
+  final cardModel.Card _card;
 
-  CardPreview(this._deck, this._cardViewModel);
+  CardPreview(this._deck, this._card);
 
   @override
   State<StatefulWidget> createState() => new _CardPreviewState();
 }
 
 class _CardPreviewState extends State<CardPreview> {
-  bool _active = false;
+  CardViewModel _viewModel;
+  StreamSubscription<void> _viewModelUpdates;
+
+  @override
+  void initState() {
+    _viewModel = CardViewModel(widget._deck, widget._card);
+    super.initState();
+  }
 
   @override
   void deactivate() {
-    widget._cardViewModel.deactivate();
-    _active = false;
+    _viewModelUpdates?.cancel();
+    _viewModelUpdates = null;
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_active) {
-      widget._cardViewModel.activate();
-      _active = true;
+    if (_viewModelUpdates == null) {
+      _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
     }
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget._deck.name),
+        title: new Text(_viewModel.deck.name),
         actions: <Widget>[
           new IconButton(
               icon: new Icon(Icons.delete),
@@ -57,8 +64,7 @@ class _CardPreviewState extends State<CardPreview> {
       body: Column(
         children: <Widget>[
           new Expanded(
-              child: new CardDisplay(
-                  widget._cardViewModel.front, widget._cardViewModel.back)),
+              child: new CardDisplay(_viewModel.front, _viewModel.back)),
           new Padding(padding: const EdgeInsets.only(bottom: 100.0))
         ],
       ),
@@ -69,14 +75,14 @@ class _CardPreviewState extends State<CardPreview> {
             new MaterialPageRoute(
                 builder: (context) =>
                     //TODO(ksheremet): pass appropriate viewModel instead of _deck
-                    new CreateUpdateCard(widget._deck, widget._cardViewModel))),
+                    new CreateUpdateCard(_viewModel.deck, _viewModel.card))),
       ),
     );
   }
 
   Future<bool> _deleteCard() async {
     try {
-      await widget._cardViewModel.card.delete(widget._deck.uid);
+      await _viewModel.deleteCard();
       // TODO(ksheremet): Show user message
       print("Card was deleted");
       return true;

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 
 import '../models/card.dart';
+import '../models/deck.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -31,7 +34,7 @@ class CardListItemViewModel implements ListItemViewModel {
 }
 
 class CardListViewModel implements Activatable {
-  final String deckId;
+  final Deck deck;
 
   ViewModelsList<CardListItemViewModel> _cardViewModels;
   ProxyKeyedList<CardListItemViewModel> _cardsProxy;
@@ -39,9 +42,9 @@ class CardListViewModel implements Activatable {
   ProxyKeyedList<CardListItemViewModel> get cards =>
       _cardsProxy ??= new ProxyKeyedList(_cardViewModels);
 
-  CardListViewModel(this.deckId) {
+  CardListViewModel(this.deck) {
     _cardViewModels = new ViewModelsList<CardListItemViewModel>(() => Card
-        .getCards(deckId)
+        .getCards(deck.key)
         .map((cardEvent) =>
             cardEvent.map((card) => new CardListItemViewModel(card))));
   }
@@ -62,4 +65,6 @@ class CardListViewModel implements Activatable {
     deactivate();
     _cardsProxy?.dispose();
   }
+
+  Stream<void> get updates => deck.updates;
 }

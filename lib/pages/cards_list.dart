@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
@@ -17,49 +19,56 @@ class CardsListPage extends StatefulWidget {
 }
 
 class _CardsListState extends State<CardsListPage> {
-  CardListViewModel viewModel;
   bool _active = false;
+  CardListViewModel _viewModel;
+  StreamSubscription<void> _updates;
 
   @override
   void initState() {
-    viewModel = new CardListViewModel(widget._deck.key);
+    _viewModel = CardListViewModel(widget._deck);
     super.initState();
   }
 
   @override
   void deactivate() {
-    viewModel.deactivate();
+    _viewModel.deactivate();
     _active = false;
+
+    _updates?.cancel();
+    _updates = null;
+
     super.deactivate();
   }
 
   @override
   void dispose() {
     super.dispose();
-    viewModel.dispose();
+    _viewModel.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_active) {
-      viewModel.activate();
+      _viewModel.activate();
       _active = true;
+    }
+    if (_updates == null) {
+      _updates = _viewModel.updates.listen((_) => setState(() {}));
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text(widget._deck.name)),
+      appBar: new AppBar(title: new Text(_viewModel.deck.name)),
       body: new ObservingGrid(
         maxCrossAxisExtent: 240.0,
-        items: viewModel.cards,
-        itemBuilder: (item) => new CardGridItem(item, widget._deck),
+        items: _viewModel.cards,
+        itemBuilder: (item) => new CardGridItem(item, _viewModel.deck),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) =>
-                    new CreateUpdateCard(widget._deck, null))),
+                builder: (context) => new CreateUpdateCard(_viewModel.deck))),
         child: new Icon(Icons.add),
       ),
     );
@@ -83,7 +92,7 @@ class CardGridItem extends StatelessWidget {
           onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardPreview(deck, card))),
+                  builder: (context) => new CardPreview(deck, card.card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(

@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../flutter/show_error.dart';
-import '../models/card.dart' as model;
 import '../models/deck.dart';
-import '../view_models/card_list_view_model.dart';
+import '../models/card.dart' as cardModel;
+import '../view_models/card_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final Deck _deck;
-  final CardListItemViewModel _cardViewModel;
+  final cardModel.Card _card;
 
-  CreateUpdateCard(this._deck, this._cardViewModel);
+  CreateUpdateCard(this._deck, [this._card]);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();
@@ -25,13 +25,15 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   TextEditingController _frontTextController = new TextEditingController();
   TextEditingController _backTextController = new TextEditingController();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  CardViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    if (widget._cardViewModel != null) {
-      _frontTextController.text = widget._cardViewModel.front;
-      _backTextController.text = widget._cardViewModel.back;
+    _viewModel = CardViewModel(widget._deck, widget._card);
+    if (_viewModel.card != null) {
+      _frontTextController.text = _viewModel.card.front;
+      _backTextController.text = _viewModel.card.back;
     }
   }
 
@@ -62,9 +64,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   Widget _buildAppBar() {
     return new AppBar(
-      title: new Text(widget._deck.name),
+      title: new Text(_viewModel.deck.name),
       actions: <Widget>[
-        widget._cardViewModel == null
+        _viewModel.card == null
             ? new IconButton(
                 icon: new Icon(Icons.check),
                 onPressed: (_frontTextController.text.isEmpty ||
@@ -98,35 +100,16 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   Future<bool> _saveCard() async {
     try {
-      if (widget._cardViewModel == null) {
-        // TODO(ksheremet): Consider to check that front or back are empty.
-        await _addCard();
-      } else {
-        await _updateCard();
-      }
+      _viewModel.card ??= cardModel.Card(_viewModel.deck.key);
+      // TODO(ksheremet): Consider to check that front or back are empty.
+      _viewModel.card.front = _frontTextController.text;
+      _viewModel.card.back = _backTextController.text;
+      _viewModel.saveCard(_addReversedCard);
       return true;
     } catch (e, stacktrace) {
       showError(_scaffoldKey.currentState, e, stacktrace);
       return false;
     }
-  }
-
-  Future<void> _addCard() async {
-    var card = model.Card(widget._deck.key,
-        front: _frontTextController.text, back: _backTextController.text);
-    await card.save(widget._deck.uid);
-    if (_addReversedCard == true) {
-      card = model.Card(widget._deck.key,
-          front: _backTextController.text, back: _frontTextController.text);
-      await card.save(widget._deck.uid);
-    }
-  }
-
-  Future<void> _updateCard() async {
-    var card = widget._cardViewModel.card;
-    card.front = _frontTextController.text;
-    card.back = _backTextController.text;
-    return card.save();
   }
 
   Widget _buildBody() {
@@ -158,7 +141,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     ];
 
     // Add reversed card widget it it is adding new cards
-    if (widget._cardViewModel == null) {
+    if (_viewModel.card == null) {
       widgetsList.add(new Row(
         children: <Widget>[
           new Checkbox(
