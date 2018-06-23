@@ -15,11 +15,12 @@ class Card implements KeyedListItem {
 
   Card(this.deckId, {this.front, this.back});
 
-  Card.fromSnapshot(this.key, dynamic snapshotValue, this.deckId) {
+  Card.fromSnapshot(this.key, snapshotValue, this.deckId) {
     _parseSnapshot(snapshotValue);
   }
 
   void _parseSnapshot(snapshotValue) {
+    // TODO(dotdoom): snapshotValue can be null if card was removed during 'updates'.
     front = snapshotValue['front'];
     back = snapshotValue['back'];
     createdAt = snapshotValue['createdAt'] == null
@@ -27,7 +28,7 @@ class Card implements KeyedListItem {
         : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
-  //TODO(asheremet): Check when no cards in deck (entries=null)
+  //TODO(dotdoom): Check when no cards in deck (snapshot.value == null)
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,
@@ -84,7 +85,7 @@ class Card implements KeyedListItem {
       .child(deckId)
       .child(key)
       .onValue
-      .map((event) => _parseSnapshot(event.snapshot));
+      .map((event) => _parseSnapshot(event.snapshot.value));
 
   Future<void> delete(String uid) {
     var data = new Map<String, dynamic>();

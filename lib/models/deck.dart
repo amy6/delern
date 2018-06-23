@@ -75,9 +75,10 @@ class Deck implements KeyedListItem {
   Stream<void> get updates => FirebaseDatabase.instance
       .reference()
       .child('decks')
+      .child(uid)
       .child(key)
       .onValue
-      .map((event) => _parseSnapshot(event.snapshot));
+      .map((event) => _parseSnapshot(event.snapshot.value));
 
   Future<void> save() {
     var data = new Map<String, dynamic>();
