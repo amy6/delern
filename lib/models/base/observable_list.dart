@@ -100,11 +100,6 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   void setAll(int index, Iterable<T> newValue) {
-    if (isEmpty && newValue.isEmpty) {
-      // Shortcut to avoid excessive events and 'changed' flips.
-      return;
-    }
-
     _base.length = index + newValue.length;
     _base.setAll(index, newValue);
     _changed = true;

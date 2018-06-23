@@ -62,6 +62,10 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
 
   set comparator(Comparator<T> value) {
     _comparator = value;
+    if (isEmpty) {
+      // Shortcut to avoid flipping 'changed' before any data has arrived.
+      return;
+    }
     if (_comparator == null) {
       Iterable<T> newValue = _base;
       if (_filter != null) {

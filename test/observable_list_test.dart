@@ -10,6 +10,7 @@ void main() {
     expect(
         list.events,
         emitsInOrder([
+          eventMatcher(ListEventType.set, 0),
           eventMatcher(ListEventType.itemAdded, 0),
           eventMatcher(ListEventType.itemAdded, 0),
           eventMatcher(ListEventType.itemAdded, 2),
@@ -25,6 +26,11 @@ void main() {
         ]));
 
     expect(list.changed, false);
+    list.setAll(0, []);
+    // Even an empty setAll must flip 'changed' because we use 'changed' as an
+    // indicator that data has arrived (and therefore stop showing 'loading').
+    // TODO(dotdoom): consider renaming 'changed' to 'dataArrived' or such
+    expect(list.changed, true);
     list.add(42);
     expect(list.changed, true);
     expect(list, equals([42]));
@@ -62,9 +68,6 @@ void main() {
 
   test('empty changes', () {
     var list = new ObservableList();
-
-    list.setAll(0, []);
-    expect(list.changed, false);
 
     list.move(0, 0);
     expect(list.changed, false);
