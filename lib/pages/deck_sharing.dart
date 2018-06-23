@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
+import '../remote/error_reporting.dart';
+import '../remote/user_lookup.dart';
 import '../view_models/deck_access_view_model.dart';
 import '../widgets/deck_access_dropdown.dart';
 import '../widgets/observing_animated_list.dart';
@@ -73,11 +75,24 @@ class _DeckSharingState extends State<DeckSharingPage> {
     return _textController.text.contains('@');
   }
 
-  _shareDeck(AccessType deckAccess) {
+  //TODO(ksheremet): Disable sharing button
+  _shareDeck(AccessType deckAccess) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
-    setState(() {
-      _textController.clear();
-    });
+    try {
+      String uid = await userLookup(_textController.text.toString());
+      print(uid);
+      if (uid == null) {
+        print("Invite user to Delern");
+        //TODO(ksheremet): Send invite
+      } else {
+        //TODO(ksheremet): Share deck
+      }
+      setState(() {
+        _textController.clear();
+      });
+    } catch (e, stackTrace) {
+      reportError("Deck sharing exception:", e, stackTrace);
+    }
   }
 }
 
