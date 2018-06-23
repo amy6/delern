@@ -5,30 +5,34 @@ import '../models/deck.dart';
 import '../models/base/stream_demuxer.dart';
 
 class CardViewModel {
-  String get key => card?.key;
   Deck get deck => _deck;
+  Card get card => _card;
 
-  // TODO(dotdoom): make this readonly, fill in on creation, introduce 'exists' method.
-  Card card;
-  Deck _deck;
+  final Deck _deck;
+  Card _card;
 
-  CardViewModel(this._deck, [this.card]);
+  CardViewModel(this._deck, [this._card]) {
+    _card ??= Card(_deck.key);
+  }
 
-  Stream<void> get updates => StreamDemuxer(Map.fromIterable([
-        _deck?.updates,
-        card?.updates,
-      ].where((stream) => stream != null)));
+  Stream<void> get updates => _card.key == null
+      ? _deck.updates
+      : StreamDemuxer({
+          0: _deck.updates,
+          1: _card.updates,
+        });
 
   @override
-  String toString() => (card ?? _deck).toString();
+  String toString() => (_card.key == null ? _deck : _card).toString();
 
   Future<void> saveCard(bool addReverse) async {
-    assert(card.deckId == _deck.key);
-    await card.save(_deck.uid);
+    assert(_card.deckId == _deck.key);
+    await _card.save(_deck.uid);
     if (addReverse) {
-      await Card(_deck.key, front: card.back, back: card.front).save(_deck.uid);
+      await Card(_deck.key, front: _card.back, back: _card.front)
+          .save(_deck.uid);
     }
   }
 
-  Future<void> deleteCard() => card.delete(_deck.uid);
+  Future<void> deleteCard() => _card.delete(_deck.uid);
 }

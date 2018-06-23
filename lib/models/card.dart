@@ -101,12 +101,13 @@ class Card implements KeyedListItem {
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
 
-  Future<void> delete(String uid) {
+  Future<void> delete(String uid) async {
     var data = new Map<String, dynamic>();
 
     data['learning/$uid/$deckId/$key'] = null;
     data['cards/$deckId/$key'] = null;
     data['views/$uid/$deckId/$key'] = null;
-    return FirebaseDatabase.instance.reference().update(data);
+    await FirebaseDatabase.instance.reference().update(data);
+    key = null;
   }
 }

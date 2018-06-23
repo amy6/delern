@@ -31,7 +31,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   void initState() {
     super.initState();
     _viewModel = CardViewModel(widget._deck, widget._card);
-    if (_viewModel.card != null) {
+    if (_viewModel.card.key != null) {
       _frontTextController.text = _viewModel.card.front;
       _backTextController.text = _viewModel.card.back;
     }
@@ -66,7 +66,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     return new AppBar(
       title: new Text(_viewModel.deck.name),
       actions: <Widget>[
-        _viewModel.card == null
+        _viewModel.card.key == null
             ? new IconButton(
                 icon: new Icon(Icons.check),
                 onPressed: (_frontTextController.text.isEmpty ||
@@ -100,7 +100,6 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   Future<bool> _saveCard() async {
     try {
-      _viewModel.card ??= cardModel.Card(_viewModel.deck.key);
       // TODO(ksheremet): Consider to check that front or back are empty.
       _viewModel.card.front = _frontTextController.text;
       _viewModel.card.back = _backTextController.text;
@@ -141,7 +140,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     ];
 
     // Add reversed card widget it it is adding new cards
-    if (_viewModel.card == null) {
+    if (_viewModel.card.key == null) {
       widgetsList.add(new Row(
         children: <Widget>[
           new Checkbox(
