@@ -20,7 +20,11 @@ class Card implements KeyedListItem {
   }
 
   void _parseSnapshot(snapshotValue) {
-    // TODO(dotdoom): snapshotValue can be null if card was removed during 'updates'.
+    if (snapshotValue == null) {
+      // Assume the card doesn't exist anymore.
+      key = null;
+      return;
+    }
     front = snapshotValue['front'];
     back = snapshotValue['back'];
     createdAt = snapshotValue['createdAt'] == null

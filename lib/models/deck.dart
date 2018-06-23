@@ -39,6 +39,11 @@ class Deck implements KeyedListItem {
   }
 
   void _parseSnapshot(snapshotValue) {
+    if (snapshotValue == null) {
+      // Assume the deck doesn't exist anymore.
+      key = null;
+      return;
+    }
     name = snapshotValue['name'];
     markdown = snapshotValue['markdown'] ?? false;
     type = Enum.fromString(
