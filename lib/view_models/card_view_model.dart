@@ -6,8 +6,6 @@ import '../models/base/stream_demuxer.dart';
 
 class CardViewModel {
   String get key => card?.key;
-  String get front => card?.front;
-  String get back => card?.back;
   Deck get deck => _deck;
 
   // TODO(dotdoom): make this readonly, fill in on creation, introduce 'exists' method.

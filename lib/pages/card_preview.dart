@@ -64,7 +64,8 @@ class _CardPreviewState extends State<CardPreview> {
       body: Column(
         children: <Widget>[
           new Expanded(
-              child: new CardDisplay(_viewModel.front, _viewModel.back)),
+              child:
+                  new CardDisplay(_viewModel.card.front, _viewModel.card.back)),
           new Padding(padding: const EdgeInsets.only(bottom: 100.0))
         ],
       ),

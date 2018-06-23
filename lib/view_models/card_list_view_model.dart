@@ -11,9 +11,6 @@ import 'base/view_models_list.dart';
 class CardListItemViewModel implements ListItemViewModel {
   String get key => _card?.key;
   Card get card => _card;
-  String get front => _card?.front;
-  String get back => _card?.back;
-
   Card _card;
 
   CardListItemViewModel(this._card);

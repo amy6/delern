@@ -12,7 +12,6 @@ import 'base/view_models_list.dart';
 class DeckListItemViewModel implements ListItemViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
-  String get name => _deck?.name;
   AccessType get access => _access;
   int get cardsToLearn => _cardsToLearn;
 
@@ -74,7 +73,7 @@ class DeckListItemViewModel implements ListItemViewModel {
 
   @override
   String toString() {
-    return '#$key $name [$access $cardsToLearn]';
+    return '#$key ${deck?.name} [$access $cardsToLearn]';
   }
 }
 

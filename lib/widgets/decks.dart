@@ -60,9 +60,9 @@ class _DecksWidgetState extends State<DecksWidget> {
 }
 
 class DeckListItem extends StatelessWidget {
-  final DeckListItemViewModel model;
+  final DeckListItemViewModel viewModel;
 
-  DeckListItem(this.model);
+  DeckListItem(this.viewModel);
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +92,13 @@ class DeckListItem extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardsPage(model.name)),
+                  builder: (context) => new CardsPage(viewModel.deck.name)),
             ),
         child: new Container(
           padding: const EdgeInsets.only(
               top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
           child: new Text(
-            model.name,
+            viewModel.deck.name,
             style: new TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w400,
@@ -111,7 +111,7 @@ class DeckListItem extends StatelessWidget {
 
   Widget _buildNumberOfCards() {
     return new Container(
-      child: new Text(model.cardsToLearn?.toString() ?? 'N/A',
+      child: new Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
           style: new TextStyle(
             fontSize: 18.0,
           )),
@@ -146,21 +146,21 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new CardsListPage(model.deck)),
+              builder: (context) => new CardsListPage(viewModel.deck)),
         );
         break;
       case _DeckMenuItemType.setting:
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSettingsPage(model.name)),
+              builder: (context) => new DeckSettingsPage(viewModel.deck.name)),
         );
         break;
       case _DeckMenuItemType.share:
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSharingPage(model.deck)),
+              builder: (context) => new DeckSharingPage(viewModel.deck)),
         );
         break;
     }

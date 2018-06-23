@@ -76,10 +76,10 @@ class _CardsListState extends State<CardsListPage> {
 }
 
 class CardGridItem extends StatelessWidget {
-  final CardListItemViewModel card;
+  final CardListItemViewModel viewModel;
   final Deck deck;
 
-  CardGridItem(this.card, this.deck);
+  CardGridItem(this.viewModel, this.deck);
 
   @override
   Widget build(BuildContext context) {
@@ -92,14 +92,14 @@ class CardGridItem extends StatelessWidget {
           onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardPreview(deck, card.card))),
+                  builder: (context) => new CardPreview(deck, viewModel.card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Text(
-                  card.front,
+                  viewModel.card.front,
                   maxLines: 3,
                   softWrap: true,
                   textAlign: TextAlign.center,
@@ -110,7 +110,7 @@ class CardGridItem extends StatelessWidget {
                 new Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: new Text(
-                    card.back,
+                    viewModel.card.back ?? '',
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
