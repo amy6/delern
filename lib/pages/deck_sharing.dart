@@ -80,6 +80,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
       String uid = await userLookup(_textController.text.toString());
+      //TODO(ksheremet): remove print
       print(uid);
       if (uid == null) {
         print("Invite user to Delern");
@@ -87,10 +88,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
       } else {
         //TODO(ksheremet): Share deck
       }
+      //TODO(ksheremet): do not clear if user declines to send invite
       setState(() {
         _textController.clear();
       });
     } catch (e, stackTrace) {
+      //TODO(ksheremet): show error message to the user
       reportError("Deck sharing exception:", e, stackTrace);
     }
   }
