@@ -8,6 +8,8 @@ import '../remote/user_lookup.dart';
 import '../view_models/deck_access_view_model.dart';
 import '../widgets/deck_access_dropdown.dart';
 import '../widgets/observing_animated_list.dart';
+import '../widgets/save_updates_dialog.dart';
+import '../widgets/send_invite.dart';
 
 class DeckSharingPage extends StatefulWidget {
   final Deck _deck;
@@ -80,10 +82,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
       String uid = await userLookup(_textController.text.toString());
-      //TODO(ksheremet): remove print
-      print(uid);
       if (uid == null) {
-        print("Invite user to Delern");
+        await _inviteUser();
         //TODO(ksheremet): Send invite
       } else {
         //TODO(ksheremet): Share deck
@@ -95,6 +95,21 @@ class _DeckSharingState extends State<DeckSharingPage> {
     } catch (e, stackTrace) {
       //TODO(ksheremet): show error message to the user
       reportError("Deck sharing exception:", e, stackTrace);
+    }
+  }
+
+  _inviteUser() async {
+    var inviteUser = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion:
+            AppLocalizations.of(context).appNotInstalledSharingDeck,
+        yesAnswer: AppLocalizations.of(context).send,
+        noAnswer: AppLocalizations.of(context).cancel);
+    if (inviteUser) {
+      sendInvite(context);
+      setState(() {
+        _textController.clear();
+      });
     }
   }
 }
