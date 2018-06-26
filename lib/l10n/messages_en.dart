@@ -20,6 +20,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "add": MessageLookupByLibrary.simpleMessage("Add"),
+        "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
+            "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
@@ -34,6 +36,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Error occurred: "),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
+        "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
+            "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n  \n  Proceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \n  After install, follow Delern latest news on:\n  Facebook: https://fb.me/das.delern\n  VKontakte: https://vk.com/delern\n  Google+: https://plus.google.com/communities/104603840044649051798\n  Twitter: https://twitter.com/dasdelern"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":
             MessageLookupByLibrary.simpleMessage("Communicate"),
@@ -55,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saveChangesQuestion": MessageLookupByLibrary
             .simpleMessage("Do you want to save changes?"),
+        "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":

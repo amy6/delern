@@ -84,7 +84,6 @@ class _DeckSharingState extends State<DeckSharingPage> {
       String uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         await _inviteUser();
-        //TODO(ksheremet): Send invite
       } else {
         //TODO(ksheremet): Share deck
       }
@@ -99,12 +98,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
   }
 
   _inviteUser() async {
+    var locale = AppLocalizations.of(context);
     var inviteUser = await showSaveUpdatesDialog(
         context: context,
-        changesQuestion:
-            AppLocalizations.of(context).appNotInstalledSharingDeck,
-        yesAnswer: AppLocalizations.of(context).send,
-        noAnswer: AppLocalizations.of(context).cancel);
+        changesQuestion: locale.appNotInstalledSharingDeck,
+        yesAnswer: locale.send,
+        noAnswer: locale.cancel);
     if (inviteUser) {
       sendInvite(context);
       setState(() {

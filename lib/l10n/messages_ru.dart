@@ -20,6 +20,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
+        "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
+            "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":
             MessageLookupByLibrary.simpleMessage("Обратная сторона"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
@@ -37,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
+        "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
+            "Я приглашаю Вас установить Delern, система интервального изучения, которая позволяет изучать быстро и легко!\n  \n  Пройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \n  После установки, следите за последними новостями Delern:\n  Facebook: https://fb.me/das.delern\n  VKontakte: https://vk.com/delern\n  Google+: https://plus.google.com/communities/104603840044649051798\n  Twitter: https://twitter.com/dasdelern"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
         "navigationDrawerCommunicateGroup":
@@ -59,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saveChangesQuestion": MessageLookupByLibrary
             .simpleMessage("Вы хотите сохранить изменения?"),
+        "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
