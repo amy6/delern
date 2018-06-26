@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info/package_info.dart';
+
 import '../flutter/localization.dart';
+import '../widgets/send_invite.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final FirebaseUser user;
@@ -59,6 +61,7 @@ class _NavDrawerState extends State<NavigationDrawer> {
           title: new Text(
               AppLocalizations.of(context).navigationDrawerInviteFriends),
           onTap: () {
+            sendInvite(context);
             Navigator.pop(context);
           },
         ),
