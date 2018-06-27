@@ -278,14 +278,14 @@ class AppLocalizations {
   String get inviteToAppMessage {
     return Intl.message(
       '''I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!
+     
+Proceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!
   
-  Proceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!
-  
-  After install, follow Delern latest news on:
-  Facebook: https://fb.me/das.delern
-  VKontakte: https://vk.com/delern
-  Google+: https://plus.google.com/communities/104603840044649051798
-  Twitter: https://twitter.com/dasdelern''',
+After install, follow Delern latest news on:
+Facebook: https://fb.me/das.delern
+VK: https://vk.com/delern
+Google+: https://plus.google.com/communities/104603840044649051798
+Twitter: https://twitter.com/dasdelern''',
       name: 'inviteToAppMessage',
       desc: 'Invite to the App message',
     );

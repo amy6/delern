@@ -218,7 +218,7 @@
     "placeholders": {
     }
   },
-  "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n  \n  Proceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \n  After install, follow Delern latest news on:\n  Facebook: https://fb.me/das.delern\n  VKontakte: https://vk.com/delern\n  Google+: https://plus.google.com/communities/104603840044649051798\n  Twitter: https://twitter.com/dasdelern",
+  "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern",
   "@inviteToAppMessage": {
     "description": "Invite to the App message",
     "type": "text",

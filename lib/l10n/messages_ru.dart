@@ -40,7 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
-            "Я приглашаю Вас установить Delern, система интервального изучения, которая позволяет изучать быстро и легко!\n  \n  Пройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \n  После установки, следите за последними новостями Delern:\n  Facebook: https://fb.me/das.delern\n  VKontakte: https://vk.com/delern\n  Google+: https://plus.google.com/communities/104603840044649051798\n  Twitter: https://twitter.com/dasdelern"),
+            "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
         "navigationDrawerCommunicateGroup":

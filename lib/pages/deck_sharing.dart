@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
-import '../remote/error_reporting.dart';
 import '../remote/user_lookup.dart';
 import '../view_models/deck_access_view_model.dart';
 import '../widgets/deck_access_dropdown.dart';
@@ -78,26 +80,27 @@ class _DeckSharingState extends State<DeckSharingPage> {
   }
 
   //TODO(ksheremet): Disable sharing button
-  _shareDeck(AccessType deckAccess) async {
+  Future<void> _shareDeck(AccessType deckAccess) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
       String uid = await userLookup(_textController.text.toString());
       if (uid == null) {
-        await _inviteUser();
+        if (await _inviteUser()) {
+          setState(() {
+            _textController.clear();
+          });
+        }
+        // Do not clear the field if user didn't send an invite.
+        // Maybe user made a typo in email address and needs to correct it.
       } else {
         //TODO(ksheremet): Share deck
       }
-      //TODO(ksheremet): do not clear if user declines to send invite
-      setState(() {
-        _textController.clear();
-      });
     } catch (e, stackTrace) {
-      //TODO(ksheremet): show error message to the user
-      reportError("Deck sharing exception:", e, stackTrace);
+      showError(Scaffold.of(context), e, stackTrace);
     }
   }
 
-  _inviteUser() async {
+  Future<bool> _inviteUser() async {
     var locale = AppLocalizations.of(context);
     var inviteUser = await showSaveUpdatesDialog(
         context: context,
@@ -105,11 +108,10 @@ class _DeckSharingState extends State<DeckSharingPage> {
         yesAnswer: locale.send,
         noAnswer: locale.cancel);
     if (inviteUser) {
-      sendInvite(context);
-      setState(() {
-        _textController.clear();
-      });
+      await sendInvite(context);
+      return true;
     }
+    return false;
   }
 }
 
