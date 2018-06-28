@@ -290,6 +290,22 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Invite to the App message',
     );
   }
+
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: 'Edit',
+    );
+  }
+
+  String get watchedCards {
+    return Intl.message(
+      'Watched: ',
+      name: 'watchedCards',
+      desc: 'watchedCards',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../widgets/card_display.dart';
 
 class CardsLearning extends StatefulWidget {
@@ -17,7 +20,10 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(title: new Text(widget._deckName)),
+        appBar: new AppBar(
+          title: new Text(widget._deckName),
+          actions: <Widget>[_buildPopupMenu()],
+        ),
         body: new Column(
           children: <Widget>[
             new Expanded(child: CardDisplay("test", "test2")),
@@ -30,12 +36,28 @@ class CardsLearningState extends State<CardsLearning> {
             ),
             new Row(
               children: <Widget>[
-                new Text("Watched: $_watchedCount"),
+                new Text(AppLocalizations.of(context).watchedCards +
+                    '$_watchedCount'),
               ],
             )
           ],
         ),
       );
+
+  Widget _buildPopupMenu() {
+    return new PopupMenuButton<_CardMenuItemType>(
+      onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
+      itemBuilder: (BuildContext context) {
+        return _buildMenu(context)
+            .entries
+            .map((entry) => new PopupMenuItem<_CardMenuItemType>(
+                  value: entry.key,
+                  child: new Text(entry.value),
+                ))
+            .toList();
+      },
+    );
+  }
 
   List<Widget> _displayButtons() {
     if (_isBackShown) {
@@ -73,4 +95,22 @@ class CardsLearningState extends State<CardsLearning> {
             })
       ];
   }
+
+  void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
+    switch (item) {
+      case _CardMenuItemType.edit:
+        // TODO(ksheremet): Show edit card page
+        break;
+      case _CardMenuItemType.delete:
+        // TODO(ksheremet): Delete card
+        break;
+    }
+  }
 }
+
+enum _CardMenuItemType { edit, delete }
+
+Map<_CardMenuItemType, String> _buildMenu(BuildContext context) =>
+    new LinkedHashMap<_CardMenuItemType, String>()
+      ..[_CardMenuItemType.edit] = AppLocalizations.of(context).edit
+      ..[_CardMenuItemType.delete] = AppLocalizations.of(context).delete;
