@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../pages/cards.dart';
+import '../pages/cards_learning.dart';
 import '../pages/cards_list.dart';
 import '../pages/deck_settings.dart';
 import '../pages/deck_sharing.dart';
@@ -92,7 +92,7 @@ class DeckListItem extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardsPage(viewModel.deck.name)),
+                  builder: (context) => new CardsLearning(viewModel.deck.name)),
             ),
         child: new Container(
           padding: const EdgeInsets.only(
