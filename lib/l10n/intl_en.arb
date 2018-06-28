@@ -224,5 +224,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "watchedCards": "Watched: ",
+  "@watchedCards": {
+    "description": "watchedCards",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

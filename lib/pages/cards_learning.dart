@@ -26,6 +26,7 @@ class CardsLearningState extends State<CardsLearning> {
         ),
         body: new Column(
           children: <Widget>[
+            //TODO(ksheremet): Implement showing front and back sides
             new Expanded(child: CardDisplay("test", "test2")),
             Padding(
               padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
@@ -59,6 +60,7 @@ class CardsLearningState extends State<CardsLearning> {
     );
   }
 
+  //heroTag - https://stackoverflow.com/questions/46509553/
   List<Widget> _displayButtons() {
     if (_isBackShown) {
       _watchedCount++;

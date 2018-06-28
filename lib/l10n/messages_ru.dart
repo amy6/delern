@@ -31,6 +31,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить карточку?"),
+        "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
         "emailAddressHint":
@@ -68,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "watchedCards": MessageLookupByLibrary.simpleMessage("Просмотрено: "),
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ")
       };

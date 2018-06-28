@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete card?"),
+        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Email address"),
@@ -64,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+        "watchedCards": MessageLookupByLibrary.simpleMessage("Watched: "),
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access")
       };

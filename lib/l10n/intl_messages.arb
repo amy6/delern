@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-06-27T17:07:35.489412",
+  "@@last_modified": "2018-06-28T13:52:25.240726",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -189,6 +189,18 @@
   "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern",
   "@inviteToAppMessage": {
     "description": "Invite to the App message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "watchedCards": "Watched: ",
+  "@watchedCards": {
+    "description": "watchedCards",
     "type": "text",
     "placeholders": {}
   }
