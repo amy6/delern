@@ -32,7 +32,7 @@ class CardsLearningState extends State<CardsLearning> {
               padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _displayButtons(),
+                children: _buildButtons(),
               ),
             ),
             new Row(
@@ -61,9 +61,8 @@ class CardsLearningState extends State<CardsLearning> {
   }
 
   //heroTag - https://stackoverflow.com/questions/46509553/
-  List<Widget> _displayButtons() {
+  List<Widget> _buildButtons() {
     if (_isBackShown) {
-      _watchedCount++;
       return [
         new FloatingActionButton(
             heroTag: "dontknow",
@@ -71,7 +70,9 @@ class CardsLearningState extends State<CardsLearning> {
             child: new Icon(Icons.clear),
             onPressed: () {
               setState(() {
+                // TODO(ksheremet): Consider to move to separate method
                 _isBackShown = false;
+                _watchedCount++;
               });
             }),
         new FloatingActionButton(
@@ -81,6 +82,7 @@ class CardsLearningState extends State<CardsLearning> {
             onPressed: () {
               setState(() {
                 _isBackShown = false;
+                _watchedCount++;
               });
             })
       ];
