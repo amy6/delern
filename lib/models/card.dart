@@ -32,6 +32,12 @@ class Card implements KeyedListItem {
         : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
+  static Future<Card> fetch(String deckId, String cardId) async {
+    var card = Card(deckId)..key = cardId;
+    await card.updates.first;
+    return card;
+  }
+
   static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,

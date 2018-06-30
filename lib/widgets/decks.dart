@@ -92,7 +92,7 @@ class DeckListItem extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardsLearning(viewModel.deck.name)),
+                  builder: (context) => new CardsLearning(viewModel.deck)),
             ),
         child: new Container(
           padding: const EdgeInsets.only(
