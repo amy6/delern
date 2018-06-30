@@ -31,7 +31,8 @@ Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
   }
 
   if (_sentry.environmentAttributes.environment == 'dev') {
-    debugPrint('$stackTrace\n' + '-' * 80);
+    debugPrint(
+        'Stack trace follows on the next line:\n$stackTrace\n${'-' * 80}');
   }
 
   print('Reporting to Sentry.io...');
