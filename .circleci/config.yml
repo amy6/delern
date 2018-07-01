@@ -16,12 +16,6 @@ jobs:
     - run:
         name: "Prepare checked out Git repository"
         command: |
-          # --invert-grep appeared only in Git 2.4
-          if git log --format=%H "origin/master.." |
-              grep -x -v -f <(git log --format=%H "origin/master.." -E --grep '^relnote: (.*[.]|none[.]?)$'); then
-            echo "Found commits without (or with invalid) Release Notes, aborting"
-            exit 1
-          fi
           git submodule sync
           git submodule update --init
           # We count tags to compute a version number; make sure renamed tags
