@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import '../models/base/stream_demuxer.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
+import '../models/base/transaction.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -108,5 +109,12 @@ class DeckListViewModel implements Activatable {
   void dispose() {
     deactivate();
     _decksProxy?.dispose();
+  }
+
+  static Future<void> createDeck(Deck deck) {
+    var t = Transaction();
+    t.save(deck);
+    t.save(DeckAccess(deck, AccessType.owner)..key = deck.uid);
+    return t.commit();
   }
 }

@@ -7,11 +7,13 @@ import 'package:meta/meta.dart';
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
 import 'base/observable_list.dart';
+import 'base/model.dart';
 import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
 
-class Deck implements KeyedListItem {
+class Deck implements KeyedListItem, Model {
+  // TODO(dotdoom): remove uid (Deck object doesn't need it for DB operations).
   final String uid;
   String key;
 
@@ -86,25 +88,6 @@ class Deck implements KeyedListItem {
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
 
-  Future<void> save() {
-    var data = new Map<String, dynamic>();
-
-    if (key == null) {
-      key = FirebaseDatabase.instance
-          .reference()
-          .child('decks')
-          .child(uid)
-          .push()
-          .key;
-      data['deck_access/$key/$uid'] = {
-        'access': Enum.asString(AccessType.owner),
-      };
-    }
-
-    data['decks/$uid/$key'] = _toMap();
-    return FirebaseDatabase.instance.reference().update(data);
-  }
-
   Stream<AccessType> getAccess() => FirebaseDatabase.instance
       .reference()
       .child('deck_access')
@@ -126,12 +109,17 @@ class Deck implements KeyedListItem {
           .onValue
           .map((evt) => (evt.snapshot.value as Map)?.length ?? 0);
 
-  Map<String, dynamic> _toMap() => {
-        'name': name,
-        'markdown': markdown,
-        'deckType': Enum.asString(type)?.toUpperCase(),
-        'accepted': accepted,
-        'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
-        'category': category,
+  Map<String, dynamic> toMap(bool isNew) => {
+        'decks/$uid/$key': {
+          'name': name,
+          'markdown': markdown,
+          'deckType': Enum.asString(type)?.toUpperCase(),
+          'accepted': accepted,
+          'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
+          'category': category,
+        }
       };
+
+  @override
+  String get rootPath => 'decks/$uid';
 }

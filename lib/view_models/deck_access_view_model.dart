@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 
 import '../models/deck_access.dart';
 import '../models/user.dart';
+import '../models/deck.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -66,7 +67,7 @@ class DeckAccessViewModel implements ListItemViewModel {
 }
 
 class DeckAccessesViewModel implements Activatable {
-  final String deckId;
+  final Deck deck;
 
   ViewModelsList<DeckAccessViewModel> _deckAccessViewModels;
   ProxyKeyedList<DeckAccessViewModel> _deckAccessesProxy;
@@ -74,9 +75,9 @@ class DeckAccessesViewModel implements Activatable {
   ProxyKeyedList<DeckAccessViewModel> get deckAccesses =>
       _deckAccessesProxy ??= new ProxyKeyedList(_deckAccessViewModels);
 
-  DeckAccessesViewModel(this.deckId) {
+  DeckAccessesViewModel(this.deck) {
     _deckAccessViewModels = new ViewModelsList<DeckAccessViewModel>(() =>
-        DeckAccess.getDeckAccesses(deckId).map((deckAccessEvent) =>
+        DeckAccess.getDeckAccesses(deck).map((deckAccessEvent) =>
             deckAccessEvent.map((deckAccess) =>
                 new DeckAccessViewModel(_deckAccessViewModels, deckAccess))));
   }

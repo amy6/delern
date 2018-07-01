@@ -5,7 +5,9 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
+import 'base/model.dart';
 import 'base/observable_list.dart';
+import 'deck.dart';
 import 'user.dart';
 
 enum AccessType {
@@ -14,22 +16,24 @@ enum AccessType {
   owner,
 }
 
-class DeckAccess implements KeyedListItem {
-  final String key;
-  final String deckId;
+class DeckAccess implements KeyedListItem, Model {
+  // TODO(dotdoom): relay this to User model associated with this object.
+  String key;
+  Deck deck;
   AccessType access;
 
-  DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deckId)
+  DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deck)
       : access = Enum.fromString(snapshotValue['access'], AccessType.values);
 
-  static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(
-      String deckId) async* {
+  DeckAccess(this.deck, this.access);
+
+  static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
                     .reference()
                     .child('deck_access')
-                    .child(deckId)
+                    .child(deck.key)
                     .orderByKey()
                     .onValue
                     .first)
@@ -37,15 +41,15 @@ class DeckAccess implements KeyedListItem {
                 .value as Map)
             .entries
             .map((item) =>
-                new DeckAccess.fromSnapshot(item.key, item.value, deckId)));
+                new DeckAccess.fromSnapshot(item.key, item.value, deck)));
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()
             .child('deck_access')
-            .child(deckId)
+            .child(deck.key)
             .orderByKey(),
         (snapshot) =>
-            new DeckAccess.fromSnapshot(snapshot.key, snapshot.value, deckId));
+            new DeckAccess.fromSnapshot(snapshot.key, snapshot.value, deck));
   }
 
   Stream<User> getUser() => FirebaseDatabase.instance
@@ -54,4 +58,12 @@ class DeckAccess implements KeyedListItem {
       .child(key)
       .onValue
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
+
+  @override
+  String get rootPath => 'deck_access/${deck.key}';
+
+  @override
+  Map<String, dynamic> toMap(bool isNew) => {
+        'deck_access/${deck.key}/$key/access': Enum.asString(access),
+      };
 }
