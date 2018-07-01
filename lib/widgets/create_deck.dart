@@ -7,6 +7,7 @@ import '../flutter/localization.dart';
 import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
+import '../view_models/deck_list_view_model.dart';
 
 class CreateDeck extends StatelessWidget {
   final FirebaseUser _user;
@@ -38,7 +39,7 @@ class CreateDeck extends StatelessWidget {
   Future<bool> _createDeck(
       {@required Deck deck, @required BuildContext context}) async {
     try {
-      await deck.save();
+      DeckListViewModel.createDeck(deck);
       return true;
     } catch (e, stackTrace) {
       showError(Scaffold.of(context), e, stackTrace);

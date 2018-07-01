@@ -130,7 +130,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
 
   @override
   void initState() {
-    _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck.key);
+    _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
       if (a.access == b.access) {
         return (a.user?.name ?? '').compareTo(b.user?.name ?? '');

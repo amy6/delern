@@ -5,12 +5,15 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'base/keyed_list.dart';
 import 'base/observable_list.dart';
+import 'base/model.dart';
 
-class Card implements KeyedListItem {
+class Card implements KeyedListItem, Model {
   String key;
   String front;
   String back;
   DateTime createdAt;
+  // TODO(dotdoom): replace deckId with Deck model, so that they can both
+  //                be present in a single 'CREATE' transaction.
   final String deckId;
 
   Card(this.deckId, {this.front, this.back});
@@ -65,38 +68,22 @@ class Card implements KeyedListItem {
             new Card.fromSnapshot(snapshot.key, snapshot.value, deckId));
   }
 
-  // TODO(dotdoom): replace deckId with Deck model.
-  Future<void> save([String uid]) {
-    var data = new Map<String, dynamic>();
-
-    if (key == null) {
-      assert(uid != null, 'User ID null when creating a card');
-
-      key = FirebaseDatabase.instance
-          .reference()
-          .child('cards')
-          .child(deckId)
-          .push()
-          .key;
-
-      data['learning/$uid/$deckId/$key'] = {
-        'level': 'L0',
-        'repeatAt': 0,
-      };
-
+  Map<String, dynamic> toMap(bool isNew) {
+    var map = new Map<String, dynamic>()
+      ..['cards/$deckId/$key/front'] = front
+      ..['cards/$deckId/$key/back'] = back;
+    if (isNew) {
       // Important note: we ask server to fill in the timestamp, but we do not
-      // update it in our object. Something trivial like 'await updates.first'
-      // would work most of the time. But when offline, Firebase "lies" to the
-      // application, replacing ServerValue.TIMESTAMP with phone's time,
-      // although later it saves to the server correctly.
-      data['cards/$deckId/$key/createdAt'] = ServerValue.timestamp;
+      // update it in our object immediately. Something trivial like
+      // 'await updates.first' would work most of the time. But when offline,
+      // Firebase "lies" to the application, replacing ServerValue.TIMESTAMP
+      // with phone's time, although later it saves to the server correctly.
+      // For this reason, we should never *update* createdAt because we risk
+      // changing it (see the note above), in which case Firebase Database will
+      // reject the update.
+      map['cards/$deckId/$key/createdAt'] = ServerValue.timestamp;
     }
-
-    // We should never *update* createdAt because we risk changing it (see the
-    // note above), in which case Firebase Database will reject the update.
-    data['cards/$deckId/$key/front'] = front;
-    data['cards/$deckId/$key/back'] = back;
-    return FirebaseDatabase.instance.reference().update(data);
+    return map;
   }
 
   Stream<void> get updates => FirebaseDatabase.instance
@@ -107,13 +94,6 @@ class Card implements KeyedListItem {
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
 
-  Future<void> delete(String uid) async {
-    var data = new Map<String, dynamic>();
-
-    data['learning/$uid/$deckId/$key'] = null;
-    data['cards/$deckId/$key'] = null;
-    data['views/$uid/$deckId/$key'] = null;
-    await FirebaseDatabase.instance.reference().update(data);
-    key = null;
-  }
+  @override
+  String get rootPath => 'cards/$deckId';
 }

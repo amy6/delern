@@ -5,9 +5,11 @@ import 'package:meta/meta.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'base/keyed_list.dart';
+import 'base/model.dart';
+import 'card.dart';
 import '../remote/error_reporting.dart';
 
-class ScheduledCard implements KeyedListItem {
+class ScheduledCard implements KeyedListItem, Model {
   static const levelDurations = [
     Duration(hours: 4),
     Duration(days: 1),
@@ -18,16 +20,21 @@ class ScheduledCard implements KeyedListItem {
     Duration(days: 60),
   ];
 
-  String key;
+  String get key => card.key;
+  set key(_) => throw Exception('ScheduledCard key is always set via "card"');
+  Card card;
   int level;
   DateTime repeatAt;
-
-  String get cardId => key;
+  // TODO(dotdoom): this should come from card.deck.uid or similar.
   final String uid;
 
-  ScheduledCard({@required this.uid, this.level, this.repeatAt});
+  ScheduledCard(
+      {@required this.uid, @required this.card, this.level, this.repeatAt});
 
-  ScheduledCard.fromSnapshot(this.key, snapshotValue, {@required this.uid}) {
+  ScheduledCard.fromSnapshot(snapshotValue,
+      {@required this.uid, @required this.card}) {
+    assert(uid != null);
+    assert(card != null);
     _parseSnapshot(snapshotValue);
   }
 
@@ -57,11 +64,34 @@ class ScheduledCard implements KeyedListItem {
           .endAt(DateTime.now().millisecondsSinceEpoch)
           .limitToFirst(1)
           .onValue
-          .map((event) {
+          .transform(StreamTransformer.fromHandlers(
+              handleData: (event, EventSink<ScheduledCard> sink) async {
+        if (event.snapshot.key == null) {
+          // No more learning!
+          // TODO(dotdoom): does this close the original stream, too?
+          sink.close();
+          return;
+        }
+
         // Since we 'limitToFirst(1)', there must always be only 1 child.
         var firstChildSnapshot = event.snapshot.value.entries.first;
-        return ScheduledCard.fromSnapshot(
-            firstChildSnapshot.key, firstChildSnapshot.value,
-            uid: uid);
-      });
+        if (firstChildSnapshot.key == null) {
+          // TODO(dotdoom): delete dangling 'learning'. Also brings next.
+        } else {
+          sink.add(ScheduledCard.fromSnapshot(firstChildSnapshot.value,
+              uid: uid,
+              card: await Card.fetch(deckId, firstChildSnapshot.key)));
+        }
+      }));
+
+  @override
+  String get rootPath => 'learning/$uid/${card.deckId}';
+
+  @override
+  Map<String, dynamic> toMap(bool isNew) => {
+        'learning/$uid/${card.deckId}/$key': {
+          'level': 'L$level',
+          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
+        }
+      };
 }

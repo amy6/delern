@@ -75,8 +75,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                     : () async {
                         // TODO(ksheremer): disable button when writing to db
                         if (await _saveCard()) {
-                          _isChanged = false;
                           setState(() {
+                            _isChanged = false;
                             _clearFields();
                           });
                         }
@@ -89,7 +89,6 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                 onPressed: _isChanged
                     ? () async {
                         if (await _saveCard()) {
-                          _isChanged = false;
                           Navigator.of(context).pop();
                         }
                       }
@@ -103,7 +102,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       // TODO(ksheremet): Consider to check that front or back are empty.
       _viewModel.card.front = _frontTextController.text;
       _viewModel.card.back = _backTextController.text;
-      _viewModel.saveCard(_addReversedCard);
+      await _viewModel.saveCard(_addReversedCard);
       return true;
     } catch (e, stacktrace) {
       showError(_scaffoldKey.currentState, e, stacktrace);
@@ -119,8 +118,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         keyboardType: TextInputType.multiline,
         controller: _frontTextController,
         onChanged: (String text) {
-          setState(() {});
-          _isChanged = true;
+          setState(() {
+            _isChanged = true;
+          });
         },
         decoration: new InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
@@ -130,8 +130,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         keyboardType: TextInputType.multiline,
         controller: _backTextController,
         onChanged: (String text) {
-          setState(() {});
-          _isChanged = true;
+          setState(() {
+            _isChanged = true;
+          });
         },
         decoration: new InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,
@@ -164,5 +165,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   void _clearFields() {
     _frontTextController.clear();
     _backTextController.clear();
+    // Unset Card key so that we create a new one.
+    _viewModel.card.key = null;
   }
 }
