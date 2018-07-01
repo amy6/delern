@@ -23,7 +23,7 @@ class CreateDeck extends StatelessWidget {
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new CreateDeckDialog(_user),
+          builder: (_) => new _CreateDeckDialog(_user),
         );
         if (newDeck != null &&
             await _createDeck(deck: newDeck, context: context)) {
@@ -48,16 +48,16 @@ class CreateDeck extends StatelessWidget {
   }
 }
 
-class CreateDeckDialog extends StatefulWidget {
+class _CreateDeckDialog extends StatefulWidget {
   final FirebaseUser _user;
 
-  CreateDeckDialog(this._user);
+  _CreateDeckDialog(this._user);
 
   @override
   _CreateDeckDialogState createState() => new _CreateDeckDialogState();
 }
 
-class _CreateDeckDialogState extends State<CreateDeckDialog> {
+class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   final TextEditingController _textController = new TextEditingController();
 
   @override
