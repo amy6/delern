@@ -8,6 +8,7 @@ class StreamDemuxerEvent<T> {
 
   @override
   String toString() {
+    // TODO(dotdoom): find a way to report real stack trace for error events.
     return 'Stream "$stream" emits: $value';
   }
 }
