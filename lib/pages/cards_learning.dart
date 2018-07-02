@@ -39,7 +39,9 @@ class CardsLearningState extends State<CardsLearning> {
   @override
   Widget build(BuildContext context) {
     if (_updates == null) {
-      _updates = _viewModel.updates.listen((_) => setState(() {}));
+      _updates = _viewModel.updates.listen((_) => setState(() {}),
+          // TODO(ksheremet): close the route?
+          onDone: () => print('All cards learned!'));
     }
     return new Scaffold(
       appBar: new AppBar(
@@ -94,7 +96,8 @@ class CardsLearningState extends State<CardsLearning> {
             heroTag: "dontknow",
             backgroundColor: Colors.red,
             child: new Icon(Icons.clear),
-            onPressed: () {
+            onPressed: () async {
+              await _viewModel.answer(false);
               setState(() {
                 // TODO(ksheremet): Consider to move to separate method
                 _isBackShown = false;
@@ -105,7 +108,8 @@ class CardsLearningState extends State<CardsLearning> {
             heroTag: "know",
             backgroundColor: Colors.green,
             child: new Icon(Icons.check),
-            onPressed: () {
+            onPressed: () async {
+              await _viewModel.answer(true);
               setState(() {
                 _isBackShown = false;
                 _watchedCount++;
