@@ -8,7 +8,6 @@ import 'base/enum.dart';
 import 'base/keyed_list.dart';
 import 'base/model.dart';
 import 'base/observable_list.dart';
-import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
 
@@ -87,15 +86,6 @@ class Deck implements KeyedListItem, Model {
       .child(key)
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
-
-  Stream<AccessType> getAccess() => FirebaseDatabase.instance
-      .reference()
-      .child('deck_access')
-      .child(key)
-      .child(uid)
-      .child('access')
-      .onValue
-      .map((evt) => Enum.fromString(evt.snapshot.value, AccessType.values));
 
   Stream<int> getNumberOfCardsToLearn([int limit = 201]) =>
       FirebaseDatabase.instance

@@ -13,17 +13,19 @@ import 'base/view_models_list.dart';
 class DeckListItemViewModel implements ListItemViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
-  AccessType get access => _access;
+  DeckAccess get access => _access;
   int get cardsToLearn => _cardsToLearn;
 
   Deck _deck;
-  AccessType _access;
+  DeckAccess _access;
   int _cardsToLearn;
 
   final ViewModelsList<DeckListItemViewModel> _owner;
-  StreamSubscription<StreamDemuxerEvent<String>> _internalUpdates;
+  StreamSubscription<StreamDemuxerEvent<bool>> _internalUpdates;
 
-  DeckListItemViewModel(this._owner, this._deck);
+  DeckListItemViewModel(this._owner, this._deck) {
+    _access = DeckAccess(_deck);
+  }
 
   @override
   DeckListItemViewModel updateWith(DeckListItemViewModel value) {
@@ -47,17 +49,12 @@ class DeckListItemViewModel implements ListItemViewModel {
       return;
     }
 
-    _internalUpdates = new StreamDemuxer<String>({
-      'access': _deck.getAccess(),
-      'cardsToLearn': _deck.getNumberOfCardsToLearn(),
+    _internalUpdates = StreamDemuxer({
+      false: _access.updates,
+      true: _deck.getNumberOfCardsToLearn(),
     }).listen((event) {
-      switch (event.stream) {
-        case 'access':
-          this._access = event.value;
-          break;
-        case 'cardsToLearn':
-          this._cardsToLearn = event.value;
-          break;
+      if (event.stream) {
+        this._cardsToLearn = event.value;
       }
       // Send event to the owner list so that it can find our index
       // and notify subscribers.
@@ -114,7 +111,7 @@ class DeckListViewModel implements Activatable {
   static Future<void> createDeck(Deck deck) {
     var t = Transaction();
     t.save(deck);
-    t.save(DeckAccess(deck, AccessType.owner)..key = deck.uid);
+    t.save(DeckAccess(deck, access: AccessType.owner)..key = deck.uid);
     return t.commit();
   }
 }
