@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 
 import 'package:meta/meta.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -68,14 +69,14 @@ class ScheduledCard implements KeyedListItem, Model {
           .onValue
           .transform(StreamTransformer.fromHandlers(
               handleData: (event, EventSink<ScheduledCard> sink) async {
+        // TODO(dotdoom): figure out why snapshot.value is occasionally null.
         if (event.snapshot.key == null) {
           // No more learning!
-          // TODO(dotdoom): does this close the original stream, too?
           sink.close();
           return;
         }
 
-        // Since we 'limitToFirst(1)', there must always be only 1 child.
+        // Since we 'limitToFirst(1)', there must always be at most 1 child.
         var firstChildSnapshot = event.snapshot.value.entries.first;
         if (firstChildSnapshot.key == null) {
           // TODO(dotdoom): delete dangling 'learning'. Also brings next.
@@ -96,4 +97,13 @@ class ScheduledCard implements KeyedListItem, Model {
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
+
+  void answer(bool knows) {
+    if (knows) {
+      level = min(level + 1, levelDurations.length - 1);
+    } else {
+      level = 0;
+    }
+    repeatAt = DateTime.now().toUtc().add(levelDurations[level]);
+  }
 }
