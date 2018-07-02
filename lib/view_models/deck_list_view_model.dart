@@ -24,7 +24,7 @@ class DeckListItemViewModel implements ListItemViewModel {
   StreamSubscription<StreamDemuxerEvent<bool>> _internalUpdates;
 
   DeckListItemViewModel(this._owner, this._deck) {
-    _access = DeckAccess(_deck);
+    _access = DeckAccess(_deck)..key = _deck.uid;
   }
 
   @override
