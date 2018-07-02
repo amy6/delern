@@ -9,8 +9,14 @@ class Transaction {
   final List<Model> _toDelete = List<Model>();
 
   void save(Model m) => _toSave.add(m);
+
   void delete(Model m) {
     assert(m.key != null);
+    _toDelete.add(m);
+  }
+
+  void deleteAll(Model m) {
+    assert(m.key == null);
     _toDelete.add(m);
   }
 
@@ -25,7 +31,13 @@ class Transaction {
         updates.addAll(m.toMap(false));
       }
     });
-    _toDelete.forEach((m) => updates['${m.rootPath}/${m.key}'] = null);
+    _toDelete.forEach((m) {
+      if (m.key == null) {
+        updates['${m.rootPath}'] = null;
+      } else {
+        updates['${m.rootPath}/${m.key}'] = null;
+      }
+    });
     return root.update(updates);
   }
 }
