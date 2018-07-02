@@ -18,7 +18,6 @@ enum AccessType {
 
 class DeckAccess implements KeyedListItem, Model {
   // TODO(dotdoom): relay this to User model associated with this object.
-  // TODO(dotdoom): relay this to Deck model associated with this object.
   String key;
   Deck deck;
   AccessType access;

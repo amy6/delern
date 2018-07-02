@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
@@ -25,7 +24,7 @@ class Deck implements KeyedListItem, Model {
 
   Deck(
     this.uid, {
-    @required this.name,
+    this.name,
     this.markdown: false,
     this.type: DeckType.basic,
     this.accepted: true,
