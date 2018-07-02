@@ -33,11 +33,7 @@ class CardViewModel {
 
     var t = Transaction();
     t.save(_card);
-    t.save(ScheduledCard(
-        level: 0,
-        repeatAt: DateTime.fromMillisecondsSinceEpoch(0),
-        uid: _deck.uid,
-        card: _card));
+    t.save(ScheduledCard(uid: _deck.uid, card: _card));
     if (addReverse) {
       var reverse = Card(
         _deck.key,
@@ -46,8 +42,6 @@ class CardViewModel {
       );
       t.save(reverse);
       t.save(ScheduledCard(
-        level: 0,
-        repeatAt: DateTime.fromMillisecondsSinceEpoch(0),
         uid: _deck.uid,
         card: reverse,
       ));
