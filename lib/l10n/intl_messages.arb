@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-06-28T13:52:25.240726",
+  "@@last_modified": "2018-07-02T10:18:01.279227",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -201,6 +201,12 @@
   "watchedCards": "Watched: ",
   "@watchedCards": {
     "description": "watchedCards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteDeckQuestion": "Do you want to delete deck?",
+  "@deleteDeckQuestion": {
+    "description": "Do you want to delete deck?",
     "type": "text",
     "placeholders": {}
   }

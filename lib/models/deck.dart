@@ -6,8 +6,8 @@ import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
-import 'base/observable_list.dart';
 import 'base/model.dart';
+import 'base/observable_list.dart';
 import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
