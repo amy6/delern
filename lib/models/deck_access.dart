@@ -18,14 +18,16 @@ enum AccessType {
 
 class DeckAccess implements KeyedListItem, Model {
   // TODO(dotdoom): relay this to User model associated with this object.
+  // TODO(dotdoom): relay this to Deck model associated with this object.
   String key;
   Deck deck;
   AccessType access;
 
-  DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deck)
-      : access = Enum.fromString(snapshotValue['access'], AccessType.values);
+  DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deck) {
+    _parseSnapshot(snapshotValue);
+  }
 
-  DeckAccess(this.deck, this.access);
+  DeckAccess(this.deck, {this.access});
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
     yield new KeyedListEvent(
@@ -58,6 +60,25 @@ class DeckAccess implements KeyedListItem, Model {
       .child(key)
       .onValue
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
+
+  static Future<DeckAccess> fetch(Deck deck) async {
+    var access = DeckAccess(deck)..key = deck.uid;
+    await access.updates.first;
+    return access;
+  }
+
+  void _parseSnapshot(snapshotValue) {
+    // TODO(dotdoom): snapshotValue can be null.
+    access = Enum.fromString(snapshotValue['access'], AccessType.values);
+  }
+
+  Stream<void> get updates => FirebaseDatabase.instance
+      .reference()
+      .child('deck_access')
+      .child(deck.key)
+      .child(key)
+      .onValue
+      .map((evt) => _parseSnapshot(evt.snapshot.value));
 
   @override
   String get rootPath => 'deck_access/${deck.key}';
