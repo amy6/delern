@@ -6,8 +6,8 @@ import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
-import 'base/observable_list.dart';
 import 'base/model.dart';
+import 'base/observable_list.dart';
 import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
@@ -87,18 +87,6 @@ class Deck implements KeyedListItem, Model {
       .child(key)
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
-
-  Future<void> delete() {
-    var data = new Map<String, dynamic>();
-
-    data['deck_access/$key'] = null;
-    data['decks/$uid/$key'] = null;
-    data['learning/$uid/$key'] = null;
-    data['cards/$key'] = null;
-    data['views/$uid/$key'] = null;
-
-    return FirebaseDatabase.instance.reference().update(data);
-  }
 
   Stream<AccessType> getAccess() => FirebaseDatabase.instance
       .reference()

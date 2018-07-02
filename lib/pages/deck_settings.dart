@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
@@ -25,7 +23,8 @@ class DeckSettingsPage extends StatelessWidget {
                       changesQuestion: locale.deleteDeckQuestion,
                       yesAnswer: locale.delete,
                       noAnswer: locale.cancel);
-                  if (deleteDeckDialog && await _deleteDeck()) {
+                  // TODO(ksheremet): Implement deleting deck
+                  if (deleteDeckDialog) {
                     Navigator.of(context).pop();
                   }
                 })
@@ -33,15 +32,4 @@ class DeckSettingsPage extends StatelessWidget {
         ),
         body: new Center(child: new Text('Settings of deck will be here')),
       );
-
-  Future<bool> _deleteDeck() async {
-    try {
-      await _deck.delete();
-      // TODO(ksheremet): print user message
-      return true;
-    } catch (e) {
-      // TODO(ksheremet): print user message
-      return false;
-    }
-  }
 }
