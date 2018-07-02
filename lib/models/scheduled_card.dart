@@ -29,7 +29,9 @@ class ScheduledCard implements KeyedListItem, Model {
   final String uid;
 
   ScheduledCard(
-      {@required this.uid, @required this.card, this.level, this.repeatAt});
+      {@required this.uid, @required this.card, this.level: 0, this.repeatAt}) {
+    repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
+  }
 
   ScheduledCard.fromSnapshot(snapshotValue,
       {@required this.uid, @required this.card}) {
