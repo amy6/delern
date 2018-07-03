@@ -314,6 +314,38 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Do you want to delete deck?',
     );
   }
+
+  String get basicDeckType {
+    return Intl.message(
+      'Basic',
+      name: 'basicDeckType',
+      desc: 'basic decktype name',
+    );
+  }
+
+  String get germanDeckType {
+    return Intl.message(
+      'German',
+      name: 'germanDeckType',
+      desc: 'german decktype name',
+    );
+  }
+
+  String get swissDeckType {
+    return Intl.message(
+      'Swiss',
+      name: 'swissDeckType',
+      desc: 'swiss decktype name',
+    );
+  }
+
+  String get deckType {
+    return Intl.message(
+      'Deck Type',
+      name: 'deckType',
+      desc: 'Deck Type',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

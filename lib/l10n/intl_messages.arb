@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-07-02T10:18:01.279227",
+  "@@last_modified": "2018-07-03T10:53:57.354024",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -207,6 +207,30 @@
   "deleteDeckQuestion": "Do you want to delete deck?",
   "@deleteDeckQuestion": {
     "description": "Do you want to delete deck?",
+    "type": "text",
+    "placeholders": {}
+  },
+  "basicDeckType": "Basic",
+  "@basicDeckType": {
+    "description": "basic decktype name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "germanDeckType": "German",
+  "@germanDeckType": {
+    "description": "german decktype name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "swissDeckType": "Swiss",
+  "@swissDeckType": {
+    "description": "swiss decktype name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deckType": "Deck Type",
+  "@deckType": {
+    "description": "Deck Type",
     "type": "text",
     "placeholders": {}
   }

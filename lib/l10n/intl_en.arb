@@ -245,5 +245,33 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "basicDeckType": "Basic",
+  "@basicDeckType": {
+    "description": "basic decktype name",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "germanDeckType": "German",
+  "@germanDeckType": {
+    "description": "german decktype name",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "swissDeckType": "Swiss",
+  "@swissDeckType": {
+    "description": "swiss decktype name",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deckType": "Deck Type",
+  "@deckType": {
+    "description": "Deck Type",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

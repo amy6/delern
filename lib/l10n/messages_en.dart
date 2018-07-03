@@ -23,10 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side"),
+        "basicDeckType": MessageLookupByLibrary.simpleMessage("Basic"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
+        "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete card?"),
@@ -39,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Error occurred: "),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
+        "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
@@ -67,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+        "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Watched: "),
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access")
