@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flutter/localization.dart';
 import '../models/deck.dart';
 
 typedef void DeckTypeCallback(DeckType t);
@@ -20,12 +21,11 @@ class DeckTypeDropdown extends StatefulWidget {
 class _DeckTypeDropdownState extends State<DeckTypeDropdown> {
   @override
   Widget build(BuildContext context) => DropdownButton<DeckType>(
-        hint: Text('Select'),
         // Provide default value.
         value: widget.value,
         items: (DeckType.values).map((DeckType value) {
           return new DropdownMenuItem<DeckType>(
-            child: buildDropdownItem(value),
+            child: _buildDropdownItem(value),
             value: value,
           );
         }).toList(),
@@ -36,18 +36,19 @@ class _DeckTypeDropdownState extends State<DeckTypeDropdown> {
         },
       );
 
-  Widget buildDropdownItem(DeckType deckType) {
+  Widget _buildDropdownItem(DeckType deckType) {
     String text;
+    var locale = AppLocalizations.of(context);
 
     switch (deckType) {
       case DeckType.basic:
-        text = 'basic';
+        text = locale.basicDeckType;
         break;
       case DeckType.german:
-        text = 'german';
+        text = locale.germanDeckType;
         break;
       case DeckType.swiss:
-        text = 'swiss';
+        text = locale.swissDeckType;
         break;
     }
     // TODO(ksheremet): Expand to fill parent

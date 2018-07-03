@@ -24,10 +24,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":
             MessageLookupByLibrary.simpleMessage("Обратная сторона"),
+        "basicDeckType": MessageLookupByLibrary.simpleMessage("Базовый"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
         "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
+        "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить карточку?"),
@@ -42,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
+        "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
         "navigationDrawerAbout":
@@ -71,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Просмотрено: "),
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ")

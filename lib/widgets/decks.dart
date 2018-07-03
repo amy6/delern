@@ -153,7 +153,8 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new DeckSettingsPage(viewModel.deck)),
+              builder: (context) =>
+                  new DeckSettingsPage(viewModel.deck, viewModel.access)),
         );
         break;
       case _DeckMenuItemType.share:

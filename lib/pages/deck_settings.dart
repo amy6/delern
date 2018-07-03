@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../models/deck.dart';
+import '../models/deck_access.dart';
 import '../view_models/deck_view_model.dart';
 import '../widgets/deck_type_dropdown.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class DeckSettingsPage extends StatefulWidget {
   final Deck _deck;
+  final DeckAccess _access;
 
-  DeckSettingsPage(this._deck);
+  DeckSettingsPage(this._deck, this._access);
 
   @override
   State<StatefulWidget> createState() => _DeckSettingsPageState();
@@ -26,7 +28,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
-    _viewModel = DeckViewModel(widget._deck);
+    _viewModel = DeckViewModel(widget._deck, widget._access);
     _deckTypeValue = _viewModel.deck.type;
     super.initState();
   }
@@ -84,7 +86,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
-                child: Text('Deck Type'),
+                child: Text(AppLocalizations.of(context).deckType),
               ),
             ],
           ),
