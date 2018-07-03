@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import '../models/deck.dart';
+import '../models/base/stream_demuxer.dart';
+import '../models/base/transaction.dart';
 import '../models/card.dart';
+import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/scheduled_card.dart';
-import '../models/base/transaction.dart';
-import '../models/base/stream_demuxer.dart';
 
 class DeckViewModel {
   final Deck deck;
@@ -21,6 +21,7 @@ class DeckViewModel {
         1: access.updates,
       });
 
+  //TODO(dotdoom): Check deletion when deck is without cards
   Future<void> delete() async {
     var t = Transaction();
     t.delete(deck);
