@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../view_models/deck_view_model.dart';
@@ -58,8 +59,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                       changesQuestion: locale.deleteDeckQuestion,
                       yesAnswer: locale.delete,
                       noAnswer: locale.cancel);
-                  // TODO(ksheremet): Implement deleting deck
-                  if (deleteDeckDialog) {
+                  if (deleteDeckDialog && await _deleteDeck()) {
                     Navigator.of(context).pop();
                   }
                 })
@@ -104,5 +104,15 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
         ],
       ),
     );
+  }
+
+  Future<bool> _deleteDeck() async {
+    try {
+      await _viewModel.delete();
+      return true;
+    } catch (e, stacktrace) {
+      showError(Scaffold.of(context), e, stacktrace);
+      return false;
+    }
   }
 }
