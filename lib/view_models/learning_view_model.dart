@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import '../models/base/stream_demuxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
 import '../models/deck.dart';
 import '../models/scheduled_card.dart';
-import '../models/base/stream_demuxer.dart';
 
 class LearningViewModel {
   ScheduledCard _scheduledCard;
@@ -22,8 +22,7 @@ class LearningViewModel {
       });
 
   Future<void> answer(bool knows) {
-    _scheduledCard.answer(knows);
-    // TODO(dotdoom): add View
-    return (Transaction()..save(_scheduledCard)).commit();
+    var cv = _scheduledCard.answer(knows);
+    return (Transaction()..save(_scheduledCard)..save(cv)).commit();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import '../models/base/stream_demuxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
+import '../models/card_view.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/scheduled_card.dart';
@@ -35,7 +36,7 @@ class DeckViewModel {
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
     t.deleteAll(ScheduledCard(uid: deck.uid, card: card));
-    // TODO(dotdoom): delete views.
+    t.deleteAll(CardView(card, deck.uid));
     await t.commit();
   }
 }

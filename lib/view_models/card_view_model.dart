@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import '../models/base/stream_demuxer.dart';
+import '../models/base/transaction.dart';
 import '../models/card.dart';
+import '../models/card_view.dart';
 import '../models/deck.dart';
 import '../models/scheduled_card.dart';
-import '../models/base/transaction.dart';
-import '../models/base/stream_demuxer.dart';
 
 class CardViewModel {
   Deck get deck => _deck;
@@ -50,9 +51,9 @@ class CardViewModel {
     return t.commit();
   }
 
-  // TODO(dotdoom): delete views
   Future<void> deleteCard() => (Transaction()
         ..delete(_card)
-        ..delete(ScheduledCard(card: _card, uid: _deck.uid)))
+        ..delete(ScheduledCard(card: _card, uid: _deck.uid))
+        ..delete(CardView(_card, _deck.uid)))
       .commit();
 }
