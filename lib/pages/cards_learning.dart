@@ -1,12 +1,13 @@
-import 'dart:collection';
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../widgets/card_display.dart';
+import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../view_models/learning_view_model.dart';
+import '../widgets/card_display.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck _deck;
@@ -96,23 +97,18 @@ class CardsLearningState extends State<CardsLearning> {
             heroTag: "dontknow",
             backgroundColor: Colors.red,
             child: new Icon(Icons.clear),
-            onPressed: () async {
-              await _viewModel.answer(false);
-              setState(() {
-                // TODO(ksheremet): Consider to move to separate method
-                _isBackShown = false;
-                _watchedCount++;
+            onPressed: () {
+              setState(() async {
+                await _answerCard(false);
               });
             }),
         new FloatingActionButton(
             heroTag: "know",
             backgroundColor: Colors.green,
             child: new Icon(Icons.check),
-            onPressed: () async {
-              await _viewModel.answer(true);
-              setState(() {
-                _isBackShown = false;
-                _watchedCount++;
+            onPressed: () {
+              setState(() async {
+                await _answerCard(true);
               });
             })
       ];
@@ -128,6 +124,17 @@ class CardsLearningState extends State<CardsLearning> {
               });
             })
       ];
+  }
+
+  Future<void> _answerCard(bool answer) async {
+    try {
+      await _viewModel.answer(answer);
+      _isBackShown = false;
+      _watchedCount++;
+    } catch (e, stacktrace) {
+      // TODO(ksheremet): Figure out why it doesn't show Snackbar
+      showError(Scaffold.of(context), e, stacktrace);
+    }
   }
 
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
