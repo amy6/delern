@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:meta/meta.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
+import '../remote/error_reporting.dart';
 import 'base/keyed_list.dart';
 import 'base/model.dart';
 import 'card.dart';
-import '../remote/error_reporting.dart';
+import 'card_view.dart';
 
 class ScheduledCard implements KeyedListItem, Model {
   static const levelDurations = [
@@ -98,12 +99,16 @@ class ScheduledCard implements KeyedListItem, Model {
         }
       };
 
-  void answer(bool knows) {
+  CardView answer(bool knows) {
+    var cv = CardView(card, uid);
+    cv.reply = knows;
+    cv.levelBefore = level;
     if (knows) {
       level = min(level + 1, levelDurations.length - 1);
     } else {
       level = 0;
     }
     repeatAt = DateTime.now().toUtc().add(levelDurations[level]);
+    return cv;
   }
 }
