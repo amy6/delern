@@ -20,17 +20,20 @@ class DeckSettingsPage extends StatefulWidget {
   State<StatefulWidget> createState() => _DeckSettingsPageState();
 }
 
+//TODO(ksheremet): Save changes to DB
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
   TextEditingController _deckNameController = new TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
   DeckType _deckTypeValue;
+  bool _isMarkdown;
 
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
     _viewModel = DeckViewModel(widget._deck, widget._access);
     _deckTypeValue = _viewModel.deck.type;
+    _isMarkdown = _viewModel.deck.markdown;
     super.initState();
   }
 
@@ -98,6 +101,18 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                 valueChanged: (DeckType newDeckType) => setState(() {
                       _deckTypeValue = newDeckType;
                     }),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(AppLocalizations.of(context).markdown),
+              Switch(
+                value: _isMarkdown ??= false,
+                onChanged: (newValue) {
+                  _isMarkdown = newValue;
+                },
               ),
             ],
           ),

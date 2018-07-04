@@ -272,5 +272,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "markdown": "Маркдаун",
+  "@markdown": {
+    "description": "Markdown",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
