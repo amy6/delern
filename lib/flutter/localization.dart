@@ -346,6 +346,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Deck Type',
     );
   }
+
+  String get markdown {
+    return Intl.message(
+      'Markdown',
+      name: 'markdown',
+      desc: 'Markdown',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

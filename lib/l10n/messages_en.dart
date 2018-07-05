@@ -44,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
+        "markdown": MessageLookupByLibrary.simpleMessage("Markdown"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":
             MessageLookupByLibrary.simpleMessage("Communicate"),
