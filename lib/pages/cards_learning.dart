@@ -51,11 +51,10 @@ class CardsLearningState extends State<CardsLearning> {
       ),
       body: new Column(
         children: <Widget>[
-          //TODO(ksheremet): Implement showing front and back sides
           new Expanded(
               // TODO(ksheremet): show loading spinner instead of this
               child: CardDisplay(_viewModel.card?.front ?? 'Loading...',
-                  _viewModel.card?.back ?? '')),
+                  _viewModel.card?.back ?? '', _isBackShown)),
           Padding(
             padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
             child: new Row(
@@ -93,6 +92,7 @@ class CardsLearningState extends State<CardsLearning> {
   List<Widget> _buildButtons() {
     if (_isBackShown) {
       return [
+        // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
         new FloatingActionButton(
             heroTag: "dontknow",
             backgroundColor: Colors.red,
