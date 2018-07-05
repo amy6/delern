@@ -41,8 +41,8 @@ class CardsLearningState extends State<CardsLearning> {
   Widget build(BuildContext context) {
     if (_updates == null) {
       _updates = _viewModel.updates.listen((_) => setState(() {}),
-          // TODO(ksheremet): close the route?
-          onDone: () => print('All cards learned!'));
+          // TODO(dotdoom): onDone doesn't execute
+          onDone: () => Navigator.of(context).pop());
     }
     return new Scaffold(
       appBar: new AppBar(
@@ -97,19 +97,17 @@ class CardsLearningState extends State<CardsLearning> {
             heroTag: "dontknow",
             backgroundColor: Colors.red,
             child: new Icon(Icons.clear),
-            onPressed: () {
-              setState(() async {
-                await _answerCard(false);
-              });
+            onPressed: () async {
+              await _answerCard(false);
+              setState(() {});
             }),
         new FloatingActionButton(
             heroTag: "know",
             backgroundColor: Colors.green,
             child: new Icon(Icons.check),
-            onPressed: () {
-              setState(() async {
-                await _answerCard(true);
-              });
+            onPressed: () async {
+              await _answerCard(true);
+              setState(() {});
             })
       ];
     } else
