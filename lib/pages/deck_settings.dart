@@ -26,7 +26,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
   DeckType _deckTypeValue;
-  bool _isMarkdown;
+  bool _isMarkdown = false;
 
   @override
   void initState() {
@@ -109,11 +109,13 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             children: <Widget>[
               Text(AppLocalizations.of(context).markdown),
               Switch(
-                value: _isMarkdown ??= false,
+                value: _isMarkdown,
                 onChanged: (newValue) {
-                  _isMarkdown = newValue;
+                  setState(() {
+                    _isMarkdown = newValue;
+                  });
                 },
-              ),
+              )
             ],
           ),
         ],
