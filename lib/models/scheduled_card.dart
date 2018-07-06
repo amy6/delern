@@ -78,6 +78,7 @@ class ScheduledCard implements KeyedListItem, Model {
         }
 
         // Since we 'limitToFirst(1)', there must always be at most 1 child.
+        // TODO(dotdoom): Check error: The getter 'entries' was called on null
         var firstChildSnapshot = event.snapshot.value.entries.first;
         if (firstChildSnapshot.key == null) {
           // TODO(dotdoom): delete dangling 'learning'. Also brings next.

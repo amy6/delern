@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../pages/card_create_update.dart';
-import '../view_models/card_view_model.dart';
 import '../models/card.dart' as cardModel;
 import '../models/deck.dart';
+import '../pages/card_create_update.dart';
+import '../view_models/card_view_model.dart';
 import '../widgets/card_display.dart';
 import '../widgets/save_updates_dialog.dart';
 
@@ -64,8 +64,8 @@ class _CardPreviewState extends State<CardPreview> {
       body: Column(
         children: <Widget>[
           new Expanded(
-              child:
-                  new CardDisplay(_viewModel.card.front, _viewModel.card.back)),
+              child: new CardDisplay(_viewModel.card.front,
+                  _viewModel.card.back, /*show back*/ true)),
           new Padding(padding: const EdgeInsets.only(bottom: 100.0))
         ],
       ),

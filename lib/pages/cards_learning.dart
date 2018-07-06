@@ -1,12 +1,13 @@
-import 'dart:collection';
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../widgets/card_display.dart';
+import '../flutter/show_error.dart';
 import '../models/deck.dart';
 import '../view_models/learning_view_model.dart';
+import '../widgets/card_display.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck _deck;
@@ -40,8 +41,8 @@ class CardsLearningState extends State<CardsLearning> {
   Widget build(BuildContext context) {
     if (_updates == null) {
       _updates = _viewModel.updates.listen((_) => setState(() {}),
-          // TODO(ksheremet): close the route?
-          onDone: () => print('All cards learned!'));
+          // TODO(dotdoom): onDone doesn't execute
+          onDone: () => Navigator.of(context).pop());
     }
     return new Scaffold(
       appBar: new AppBar(
@@ -50,11 +51,10 @@ class CardsLearningState extends State<CardsLearning> {
       ),
       body: new Column(
         children: <Widget>[
-          //TODO(ksheremet): Implement showing front and back sides
           new Expanded(
               // TODO(ksheremet): show loading spinner instead of this
               child: CardDisplay(_viewModel.card?.front ?? 'Loading...',
-                  _viewModel.card?.back ?? '')),
+                  _viewModel.card?.back ?? '', _isBackShown)),
           Padding(
             padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
             child: new Row(
@@ -92,28 +92,22 @@ class CardsLearningState extends State<CardsLearning> {
   List<Widget> _buildButtons() {
     if (_isBackShown) {
       return [
+        // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
         new FloatingActionButton(
             heroTag: "dontknow",
             backgroundColor: Colors.red,
             child: new Icon(Icons.clear),
             onPressed: () async {
-              await _viewModel.answer(false);
-              setState(() {
-                // TODO(ksheremet): Consider to move to separate method
-                _isBackShown = false;
-                _watchedCount++;
-              });
+              await _answerCard(false);
+              setState(() {});
             }),
         new FloatingActionButton(
             heroTag: "know",
             backgroundColor: Colors.green,
             child: new Icon(Icons.check),
             onPressed: () async {
-              await _viewModel.answer(true);
-              setState(() {
-                _isBackShown = false;
-                _watchedCount++;
-              });
+              await _answerCard(true);
+              setState(() {});
             })
       ];
     } else
@@ -128,6 +122,17 @@ class CardsLearningState extends State<CardsLearning> {
               });
             })
       ];
+  }
+
+  Future<void> _answerCard(bool answer) async {
+    try {
+      await _viewModel.answer(answer);
+      _isBackShown = false;
+      _watchedCount++;
+    } catch (e, stacktrace) {
+      // TODO(ksheremet): Figure out why it doesn't show Snackbar
+      showError(Scaffold.of(context), e, stacktrace);
+    }
   }
 
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
