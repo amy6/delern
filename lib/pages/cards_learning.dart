@@ -9,6 +9,7 @@ import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/learning_view_model.dart';
 import '../widgets/card_display.dart';
+import '../widgets/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck _deck;
@@ -41,7 +42,10 @@ class CardsLearningState extends State<CardsLearning> {
   @override
   Widget build(BuildContext context) {
     if (_updates == null) {
-      _updates = _viewModel.updates.listen((_) => setState(() {}),
+      _updates = _viewModel.updates.listen(
+          (_) => setState(() {
+                _isBackShown = false;
+              }),
           // TODO(dotdoom): onDone doesn't execute
           onDone: () => Navigator.of(context).pop());
     }
@@ -146,8 +150,20 @@ class CardsLearningState extends State<CardsLearning> {
                     new CreateUpdateCard(widget._deck, _viewModel.card)));
         break;
       case _CardMenuItemType.delete:
-        // TODO(ksheremet): Delete card
+        _deleteCard();
         break;
+    }
+  }
+
+  void _deleteCard() async {
+    var locale = AppLocalizations.of(context);
+    bool saveChanges = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: locale.deleteCardQuestion,
+        yesAnswer: locale.delete,
+        noAnswer: locale.cancel);
+    if (saveChanges && await _viewModel.deleteCard()) {
+      // TODO(ksheremet): show user message
     }
   }
 }
