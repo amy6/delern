@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../flutter/show_error.dart';
 import '../models/deck.dart';
+import '../pages/card_create_update.dart';
 import '../view_models/learning_view_model.dart';
 import '../widgets/card_display.dart';
 
@@ -138,7 +139,11 @@ class CardsLearningState extends State<CardsLearning> {
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
     switch (item) {
       case _CardMenuItemType.edit:
-        // TODO(ksheremet): Show edit card page
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    new CreateUpdateCard(widget._deck, _viewModel.card)));
         break;
       case _CardMenuItemType.delete:
         // TODO(ksheremet): Delete card
