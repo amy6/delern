@@ -27,7 +27,6 @@ class LearningViewModel {
     return (Transaction()..save(_scheduledCard)..save(cv)).commit();
   }
 
-  //TODO(ksheremet): Throws error. Check it
   Future<void> deleteCard() => (Transaction()
         ..delete(card)
         ..delete(_scheduledCard)

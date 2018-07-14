@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../flutter/show_error.dart';
+import '../flutter/show_message.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/learning_view_model.dart';
@@ -54,47 +55,52 @@ class CardsLearningState extends State<CardsLearning> {
         title: new Text(_viewModel.deck.name),
         actions: <Widget>[_buildPopupMenu()],
       ),
-      body: new Column(
-        children: <Widget>[
-          new Expanded(
-              // TODO(ksheremet): show loading spinner instead of this
-              child: CardDisplay(_viewModel.card?.front ?? 'Loading...',
-                  _viewModel.card?.back ?? '', _isBackShown)),
-          Padding(
-            padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: _buildButtons(),
+      body: Builder(
+        builder: (context) => new Column(
+              children: <Widget>[
+                new Expanded(
+                    // TODO(ksheremet): show loading spinner instead of this
+                    child: CardDisplay(_viewModel.card?.front ?? 'Loading...',
+                        _viewModel.card?.back ?? '', _isBackShown)),
+                Padding(
+                  padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: _buildButtons(context),
+                  ),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Text(AppLocalizations.of(context).watchedCards +
+                        '$_watchedCount'),
+                  ],
+                )
+              ],
             ),
-          ),
-          new Row(
-            children: <Widget>[
-              new Text(
-                  AppLocalizations.of(context).watchedCards + '$_watchedCount'),
-            ],
-          )
-        ],
       ),
     );
   }
 
   Widget _buildPopupMenu() {
-    return new PopupMenuButton<_CardMenuItemType>(
-      onSelected: (itemType) => _onCardMenuItemSelected(context, itemType),
-      itemBuilder: (BuildContext context) {
-        return _buildMenu(context)
-            .entries
-            .map((entry) => new PopupMenuItem<_CardMenuItemType>(
-                  value: entry.key,
-                  child: new Text(entry.value),
-                ))
-            .toList();
-      },
+    return Builder(
+      builder: (context) => new PopupMenuButton<_CardMenuItemType>(
+            onSelected: (itemType) =>
+                _onCardMenuItemSelected(context, itemType),
+            itemBuilder: (BuildContext context) {
+              return _buildMenu(context)
+                  .entries
+                  .map((entry) => new PopupMenuItem<_CardMenuItemType>(
+                        value: entry.key,
+                        child: new Text(entry.value),
+                      ))
+                  .toList();
+            },
+          ),
     );
   }
 
   //heroTag - https://stackoverflow.com/questions/46509553/
-  List<Widget> _buildButtons() {
+  List<Widget> _buildButtons(BuildContext context) {
     if (_isBackShown) {
       return [
         // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
@@ -103,7 +109,7 @@ class CardsLearningState extends State<CardsLearning> {
             backgroundColor: Colors.red,
             child: new Icon(Icons.clear),
             onPressed: () async {
-              await _answerCard(false);
+              await _answerCard(false, context);
               setState(() {});
             }),
         new FloatingActionButton(
@@ -111,7 +117,7 @@ class CardsLearningState extends State<CardsLearning> {
             backgroundColor: Colors.green,
             child: new Icon(Icons.check),
             onPressed: () async {
-              await _answerCard(true);
+              await _answerCard(true, context);
               setState(() {});
             })
       ];
@@ -129,13 +135,12 @@ class CardsLearningState extends State<CardsLearning> {
       ];
   }
 
-  Future<void> _answerCard(bool answer) async {
+  Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
       await _viewModel.answer(answer);
       _isBackShown = false;
       _watchedCount++;
     } catch (e, stacktrace) {
-      // TODO(ksheremet): Figure out why it doesn't show Snackbar
       showError(Scaffold.of(context), e, stacktrace);
     }
   }
@@ -150,20 +155,25 @@ class CardsLearningState extends State<CardsLearning> {
                     new CreateUpdateCard(widget._deck, _viewModel.card)));
         break;
       case _CardMenuItemType.delete:
-        _deleteCard();
+        _deleteCard(context);
         break;
     }
   }
 
-  void _deleteCard() async {
+  void _deleteCard(BuildContext context) async {
     var locale = AppLocalizations.of(context);
     bool saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
         yesAnswer: locale.delete,
         noAnswer: locale.cancel);
-    if (saveChanges && await _viewModel.deleteCard()) {
-      // TODO(ksheremet): show user message
+    if (saveChanges) {
+      try {
+        await _viewModel.deleteCard();
+        showMessage(Scaffold.of(context), "Card was deleted");
+      } catch (e, stackTrace) {
+        showError(Scaffold.of(context), e, stackTrace);
+      }
     }
   }
 }
