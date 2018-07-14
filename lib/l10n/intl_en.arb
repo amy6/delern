@@ -280,5 +280,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "cardDeletedUserMessage": "Card was deleted",
+  "@cardDeletedUserMessage": {
+    "description": "Card was deleted",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -279,5 +279,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "cardDeletedUserMessage": "Карточка удалена",
+  "@cardDeletedUserMessage": {
+    "description": "Card was deleted",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

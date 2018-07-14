@@ -27,6 +27,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cardDeletedUserMessage":
+            MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),

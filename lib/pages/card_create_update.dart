@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../flutter/show_error.dart';
-import '../models/deck.dart';
+import '../flutter/user_messages.dart';
 import '../models/card.dart' as cardModel;
+import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
 
@@ -105,7 +105,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       await _viewModel.saveCard(_addReversedCard);
       return true;
     } catch (e, stacktrace) {
-      showError(_scaffoldKey.currentState, e, stacktrace);
+      UserMessages.showError(_scaffoldKey.currentState, e, stacktrace);
       return false;
     }
   }

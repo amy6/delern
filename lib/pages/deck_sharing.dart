@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../flutter/show_error.dart';
+import '../flutter/user_messages.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../remote/user_lookup.dart';
@@ -96,7 +96,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         //TODO(ksheremet): Share deck
       }
     } catch (e, stackTrace) {
-      showError(Scaffold.of(context), e, stackTrace);
+      UserMessages.showError(Scaffold.of(context), e, stackTrace);
     }
   }
 
