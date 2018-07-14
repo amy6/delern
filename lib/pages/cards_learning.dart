@@ -4,8 +4,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../flutter/show_error.dart';
-import '../flutter/show_message.dart';
+import '../flutter/user_messages.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/learning_view_model.dart';
@@ -141,7 +140,7 @@ class CardsLearningState extends State<CardsLearning> {
       _isBackShown = false;
       _watchedCount++;
     } catch (e, stacktrace) {
-      showError(Scaffold.of(context), e, stacktrace);
+      UserMessages.showError(Scaffold.of(context), e, stacktrace);
     }
   }
 
@@ -170,10 +169,10 @@ class CardsLearningState extends State<CardsLearning> {
     if (saveChanges) {
       try {
         await _viewModel.deleteCard();
-        showMessage(Scaffold.of(context),
+        UserMessages.showMessage(Scaffold.of(context),
             AppLocalizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
-        showError(Scaffold.of(context), e, stackTrace);
+        UserMessages.showError(Scaffold.of(context), e, stackTrace);
       }
     }
   }

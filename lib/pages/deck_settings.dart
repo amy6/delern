@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../flutter/show_error.dart';
+import '../flutter/user_messages.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../view_models/deck_view_model.dart';
@@ -128,7 +128,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
       await _viewModel.delete();
       return true;
     } catch (e, stacktrace) {
-      showError(Scaffold.of(context), e, stacktrace);
+      UserMessages.showError(Scaffold.of(context), e, stacktrace);
       return false;
     }
   }

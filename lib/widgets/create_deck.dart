@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
-import '../flutter/show_error.dart';
+import '../flutter/user_messages.dart';
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/deck_list_view_model.dart';
@@ -42,7 +42,7 @@ class CreateDeck extends StatelessWidget {
       DeckListViewModel.createDeck(deck);
       return true;
     } catch (e, stackTrace) {
-      showError(Scaffold.of(context), e, stackTrace);
+      UserMessages.showError(Scaffold.of(context), e, stackTrace);
       return false;
     }
   }
