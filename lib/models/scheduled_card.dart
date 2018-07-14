@@ -62,31 +62,33 @@ class ScheduledCard implements KeyedListItem, Model {
           .child(uid)
           .child(deckId)
           .orderByChild('repeatAt')
-          // TODO(dotdoom): do not endAt and instead let ViewModel decide when
-          // to stop. This will make it (a) realtime and (b) possible to learn
-          // cards beyond the intervals.
-          .endAt(DateTime.now().millisecondsSinceEpoch)
-          .limitToFirst(1)
+          // Need at least 2 because of how Firebase local cache works.
+          // After we pick up the latest ScheduledCard and update it, it
+          // triggers onValue twice: once with the updated ScheduledCard (most
+          // likely triggered by local cache) and the second time with the next
+          // ScheduledCard (fetched from the server). Doing keepSynced(true) on
+          // the learning tree fixes this because local cache gets all entries.
+          .limitToFirst(2)
           .onValue
           .transform(StreamTransformer.fromHandlers(
               handleData: (event, EventSink<ScheduledCard> sink) async {
-        // TODO(dotdoom): figure out why snapshot.value is occasionally null.
-        if (event.snapshot.key == null) {
-          // No more learning!
+        if (event.snapshot.value == null) {
+          // The deck is empty. Should we offer the user to re-sync?
           sink.close();
           return;
         }
 
-        // Since we 'limitToFirst(1)', there must always be at most 1 child.
-        // TODO(dotdoom): Check error: The getter 'entries' was called on null
-        var firstChildSnapshot = event.snapshot.value.entries.first;
-        if (firstChildSnapshot.key == null) {
-          // TODO(dotdoom): delete dangling 'learning'. Also brings next.
-        } else {
-          sink.add(ScheduledCard.fromSnapshot(firstChildSnapshot.value,
-              uid: uid,
-              card: await Card.fetch(deckId, firstChildSnapshot.key)));
-        }
+        // TODO(dotdoom): remove sorting once Flutter Firebase issue is fixed.
+        // Workaround for https://github.com/flutter/flutter/issues/19389.
+        var latestScheduledCard =
+            ((event.snapshot.value.entries.toList() as List<MapEntry>)
+                  ..sort((s1, s2) =>
+                      s1.value['repeatAt'].compareTo(s2.value['repeatAt'])))
+                .first;
+
+        // TODO(dotdoom): delete dangling 'learning' if Card.fetch returns null.
+        sink.add(ScheduledCard.fromSnapshot(latestScheduledCard.value,
+            uid: uid, card: await Card.fetch(deckId, latestScheduledCard.key)));
       }));
 
   @override

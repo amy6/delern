@@ -17,9 +17,16 @@ class LearningViewModel {
 
   Stream<void> get updates => StreamDemuxer({
         0: deck.updates,
-        1: ScheduledCard
-            .next(deck.key, deck.uid)
-            .map((sc) => _scheduledCard = sc),
+        1: ScheduledCard.next(deck.key, deck.uid).transform(StreamTransformer
+            .fromHandlers(handleData: (sc, EventSink<void> sink) {
+          // TODO(ksheremet): allow users to learn beyond the time horizon.
+          if (sc.repeatAt.isAfter(DateTime.now().toUtc())) {
+            sink.close();
+            return;
+          }
+          _scheduledCard = sc;
+          sink.add(null);
+        })),
       });
 
   Future<void> answer(bool knows) {
