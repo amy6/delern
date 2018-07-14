@@ -170,7 +170,8 @@ class CardsLearningState extends State<CardsLearning> {
     if (saveChanges) {
       try {
         await _viewModel.deleteCard();
-        showMessage(Scaffold.of(context), "Card was deleted");
+        showMessage(Scaffold.of(context),
+            AppLocalizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
         showError(Scaffold.of(context), e, stackTrace);
       }
