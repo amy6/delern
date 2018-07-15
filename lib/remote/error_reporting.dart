@@ -11,6 +11,10 @@ SentryClient _sentry;
 Future<Null> reportError(String src, dynamic error, dynamic stackTrace) async {
   debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $error');
 
+  if (stackTrace == null && error is Error) {
+    stackTrace = error.stackTrace;
+  }
+
   if (_sentry == null) {
     String environment = 'production';
     assert(() {
