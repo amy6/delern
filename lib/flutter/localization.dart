@@ -362,6 +362,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Card was deleted',
     );
   }
+
+  String get cardAddedUserMessage {
+    return Intl.message(
+      'Card was added',
+      name: 'cardAddedUserMessage',
+      desc: 'Card was added',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

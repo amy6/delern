@@ -287,5 +287,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "cardAddedUserMessage": "Card was added",
+  "@cardAddedUserMessage": {
+    "description": "Card was added",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
