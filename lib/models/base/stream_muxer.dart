@@ -1,10 +1,10 @@
 import 'dart:async';
 
-class StreamDemuxerEvent<T> implements Error {
+class StreamMuxerEvent<T> implements Error {
   final T stream;
   final dynamic value;
 
-  StreamDemuxerEvent(this.stream, this.value);
+  StreamMuxerEvent(this.stream, this.value);
 
   @override
   String toString() {
@@ -21,14 +21,14 @@ class StreamDemuxerEvent<T> implements Error {
   }
 }
 
-class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
+class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
   final Map<T, Stream> streams;
 
-  StreamController<StreamDemuxerEvent<T>> _controller;
+  StreamController<StreamMuxerEvent<T>> _controller;
   Map<T, StreamSubscription> _subscriptions;
 
-  StreamDemuxer(this.streams) {
-    _controller = new StreamController<StreamDemuxerEvent<T>>(
+  StreamMuxer(this.streams) {
+    _controller = new StreamController<StreamMuxerEvent<T>>(
       onCancel: _onCancel,
       onListen: _onListen,
       onPause: () => _subscriptions.values.forEach((s) => s.pause()),
@@ -37,8 +37,8 @@ class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
   }
 
   @override
-  StreamSubscription<StreamDemuxerEvent<T>> listen(
-      void Function(StreamDemuxerEvent<T> event) onData,
+  StreamSubscription<StreamMuxerEvent<T>> listen(
+      void Function(StreamMuxerEvent<T> event) onData,
       {Function onError,
       void Function() onDone,
       bool cancelOnError}) {
@@ -50,11 +50,11 @@ class StreamDemuxer<T> extends Stream<StreamDemuxerEvent<T>> {
     _subscriptions = streams.map((key, stream) => new MapEntry(
         key,
         stream.listen(
-          (evt) => _controller.add(new StreamDemuxerEvent<T>(key, evt)),
+          (evt) => _controller.add(new StreamMuxerEvent<T>(key, evt)),
           // TODO(dotdoom): should we cancel only when all of them are done?
           onDone: _onCancel,
           onError: (err) =>
-              _controller.addError(new StreamDemuxerEvent<T>(key, err)),
+              _controller.addError(new StreamMuxerEvent<T>(key, err)),
         )));
   }
 

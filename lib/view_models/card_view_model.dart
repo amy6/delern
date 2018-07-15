@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models/base/stream_demuxer.dart';
+import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
 import '../models/deck.dart';
@@ -19,7 +19,7 @@ class CardViewModel {
 
   Stream<void> get updates => _card.key == null
       ? _deck.updates
-      : StreamDemuxer({
+      : StreamMuxer({
           0: _deck.updates,
           1: _card.updates,
         });

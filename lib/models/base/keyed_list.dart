@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
 import 'observable_list.dart';
-import 'stream_demuxer.dart';
+import 'stream_muxer.dart';
 
 abstract class KeyedListItem {
   String get key;
@@ -43,15 +43,15 @@ abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
 
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
     Query query, T snapshotParser(DataSnapshot s)) {
-  return new StreamDemuxer<ListEventType>({
+  return new StreamMuxer<ListEventType>({
     ListEventType.itemAdded: query.onChildAdded,
     ListEventType.itemRemoved: query.onChildRemoved,
     ListEventType.itemMoved: query.onChildMoved,
     ListEventType.itemChanged: query.onChildChanged,
-  }).map((demuxerEvent) {
-    Event dbEvent = demuxerEvent.value;
+  }).map((muxerEvent) {
+    Event dbEvent = muxerEvent.value;
     return new KeyedListEvent(
-      eventType: demuxerEvent.stream,
+      eventType: muxerEvent.stream,
       value: snapshotParser(dbEvent.snapshot),
       previousSiblingKey: dbEvent.previousSiblingKey,
     );
