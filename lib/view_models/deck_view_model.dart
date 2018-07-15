@@ -22,7 +22,6 @@ class DeckViewModel {
         1: access.updates,
       });
 
-  //TODO(dotdoom): Check deletion when deck is without cards
   Future<void> delete() async {
     var t = Transaction();
     t.delete(deck);

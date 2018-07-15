@@ -1,6 +1,6 @@
 import 'dart:async';
 
-class StreamDemuxerEvent<T> {
+class StreamDemuxerEvent<T> implements Error {
   final T stream;
   final dynamic value;
 
@@ -8,8 +8,16 @@ class StreamDemuxerEvent<T> {
 
   @override
   String toString() {
-    // TODO(dotdoom): find a way to report real stack trace for error events.
-    return 'Stream "$stream" emits: $value';
+    return '[muxed stream "$stream"]: $value';
+  }
+
+  // Forward to 'value' to provide stack trace to error reporting facilities.
+  @override
+  StackTrace get stackTrace {
+    if (value is Error) {
+      return value.stackTrace;
+    }
+    return null;
   }
 }
 
