@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import '../remote/error_reporting.dart';
 import 'base/keyed_list.dart';
 import 'base/model.dart';
+import 'base/transaction.dart';
 import 'card.dart';
 import 'card_view.dart';
 
@@ -86,9 +87,21 @@ class ScheduledCard implements KeyedListItem, Model {
                       s1.value['repeatAt'].compareTo(s2.value['repeatAt'])))
                 .first;
 
-        // TODO(dotdoom): delete dangling 'learning' if Card.fetch returns null.
-        sink.add(ScheduledCard.fromSnapshot(latestScheduledCard.value,
-            uid: uid, card: await Card.fetch(deckId, latestScheduledCard.key)));
+        var card = await Card.fetch(deckId, latestScheduledCard.key);
+        var scheduledCard = ScheduledCard
+            .fromSnapshot(latestScheduledCard.value, uid: uid, card: card);
+
+        if (card.key == null) {
+          // Card has been removed but we still have ScheduledCard for it.
+
+          // card.key is used within ScheduledCard and must be set.
+          card.key = latestScheduledCard.key;
+          print('Removing dangling ScheduledCard ${scheduledCard.key}');
+          (Transaction()..delete(scheduledCard)).commit();
+          return;
+        }
+
+        sink.add(scheduledCard);
       }));
 
   @override
