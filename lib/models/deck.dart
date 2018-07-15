@@ -11,7 +11,6 @@ import 'base/observable_list.dart';
 enum DeckType { basic, german, swiss }
 
 class Deck implements KeyedListItem, Model {
-  // TODO(dotdoom): remove uid (Deck object doesn't need it for DB operations).
   final String uid;
   String key;
 

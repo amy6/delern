@@ -44,8 +44,11 @@ class ScheduledCard implements KeyedListItem, Model {
   }
 
   void _parseSnapshot(snapshotValue) {
-    // TODO(dotdoom): snapshotValue can be null if scard was removed during
-    // 'updates'.
+    if (snapshotValue == null) {
+      // Assume the ScheduledCard doesn't exist anymore.
+      key = null;
+      return;
+    }
     try {
       level = int.parse(snapshotValue['level'].toString().substring(1));
     } on FormatException catch (e, stackTrace) {
