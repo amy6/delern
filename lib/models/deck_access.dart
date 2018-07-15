@@ -67,7 +67,11 @@ class DeckAccess implements KeyedListItem, Model {
   }
 
   void _parseSnapshot(snapshotValue) {
-    // TODO(dotdoom): snapshotValue can be null.
+    if (snapshotValue == null) {
+      // Assume the DeckAccess doesn't exist anymore.
+      key = null;
+      return;
+    }
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
