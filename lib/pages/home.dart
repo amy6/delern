@@ -1,13 +1,18 @@
+import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../models/base/transaction.dart';
+import '../models/fcm.dart';
 import '../models/user.dart';
 import '../remote/sign_in.dart';
 import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
 import '../widgets/sign_in.dart';
+
+final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -27,17 +32,36 @@ class _HomePageState extends State<HomePage> {
 
     signInSilently();
 
-    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) {
+    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
+      setState(() => _user = firebaseUser);
       if (firebaseUser != null) {
-        // TODO(dotdoom): this is the place where we should upload FCM tokens,
-        //                install keepSync etc.
+        // TODO(dotdoom): move this elsewhere, and install keepSync etc.
+
+        DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
+
+        String deviceName;
+        try {
+          var info = await deviceInfo.androidInfo;
+          deviceName = '${info.manufacturer} ${info.model}';
+        } catch (_) {
+          var info = await deviceInfo.iosInfo;
+          deviceName = info.model;
+        }
+
+        var locale = Localizations.localeOf(context);
+        var fcm = FCM(firebaseUser.uid,
+            language: '${locale.languageCode}_${locale.countryCode}',
+            name: deviceName);
+
+        print('Registering for FCM as ${fcm.name} in ${fcm.language}');
         (Transaction()
               ..save(User(firebaseUser.uid,
                   name: firebaseUser.displayName,
-                  photoUrl: firebaseUser.photoUrl)))
+                  photoUrl: firebaseUser.photoUrl))
+              ..save(fcm))
             .commit();
+        _firebaseMessaging.getToken();
       }
-      setState(() => _user = firebaseUser);
     });
   }
 
