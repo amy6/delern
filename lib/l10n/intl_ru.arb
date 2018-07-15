@@ -286,5 +286,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "cardAddedUserMessage": "Карточка добавлена",
+  "@cardAddedUserMessage": {
+    "description": "Card was added",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

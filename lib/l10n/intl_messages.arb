@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-07-14T18:31:30.911668",
+  "@@last_modified": "2018-07-15T12:38:55.791963",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -243,6 +243,12 @@
   "cardDeletedUserMessage": "Card was deleted",
   "@cardDeletedUserMessage": {
     "description": "Card was deleted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cardAddedUserMessage": "Card was added",
+  "@cardAddedUserMessage": {
+    "description": "Card was added",
     "type": "text",
     "placeholders": {}
   }

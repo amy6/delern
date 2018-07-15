@@ -49,7 +49,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
               yesAnswer: locale.save,
               noAnswer: locale.cancel);
           if (saveChangesDialog) {
-            return await _saveCard();
+            try {
+              await _saveCard();
+              return true;
+            } catch (e, stackTrace) {
+              UserMessages.showError(_scaffoldKey.currentState, e, stackTrace);
+              return false;
+            }
           }
         }
         return true;
@@ -74,11 +80,20 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                     ? null
                     : () async {
                         // TODO(ksheremer): disable button when writing to db
-                        if (await _saveCard()) {
+                        try {
+                          await _saveCard();
+                          UserMessages.showMessage(
+                              _scaffoldKey.currentState,
+                              AppLocalizations
+                                  .of(context)
+                                  .cardAddedUserMessage);
                           setState(() {
                             _isChanged = false;
                             _clearFields();
                           });
+                        } catch (e, stackTrace) {
+                          UserMessages.showError(
+                              _scaffoldKey.currentState, e, stackTrace);
                         }
                       })
             : new FlatButton(
@@ -88,8 +103,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                 ),
                 onPressed: _isChanged
                     ? () async {
-                        if (await _saveCard()) {
+                        try {
+                          await _saveCard();
                           Navigator.of(context).pop();
+                        } catch (e, stackTrace) {
+                          UserMessages.showError(
+                              _scaffoldKey.currentState, e, stackTrace);
                         }
                       }
                     : null)
@@ -97,17 +116,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     );
   }
 
-  Future<bool> _saveCard() async {
-    try {
-      // TODO(ksheremet): Consider to check that front or back are empty.
-      _viewModel.card.front = _frontTextController.text;
-      _viewModel.card.back = _backTextController.text;
-      await _viewModel.saveCard(_addReversedCard);
-      return true;
-    } catch (e, stacktrace) {
-      UserMessages.showError(_scaffoldKey.currentState, e, stacktrace);
-      return false;
-    }
+  Future<void> _saveCard() async {
+    // TODO(ksheremet): Consider to check that front or back are empty.
+    _viewModel.card.front = _frontTextController.text;
+    _viewModel.card.back = _backTextController.text;
+    await _viewModel.saveCard(_addReversedCard);
   }
 
   Widget _buildBody() {

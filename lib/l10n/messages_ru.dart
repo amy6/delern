@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "canEdit": MessageLookupByLibrary.simpleMessage("Может редактировать"),
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
         "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
+        "cardAddedUserMessage":
+            MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
