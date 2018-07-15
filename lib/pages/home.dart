@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../models/base/transaction.dart';
+import '../models/user.dart';
 import '../remote/sign_in.dart';
 import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
@@ -26,8 +28,15 @@ class _HomePageState extends State<HomePage> {
     signInSilently();
 
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) {
-      // TODO(dotdoom): this is the place where we should update User model in
-      //                DB, upload FCM tokens, install keepSync etc.
+      if (firebaseUser != null) {
+        // TODO(dotdoom): this is the place where we should upload FCM tokens,
+        //                install keepSync etc.
+        (Transaction()
+              ..save(User(firebaseUser.uid,
+                  name: firebaseUser.displayName,
+                  photoUrl: firebaseUser.photoUrl)))
+            .commit();
+      }
       setState(() => _user = firebaseUser);
     });
   }
