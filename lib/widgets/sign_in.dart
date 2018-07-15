@@ -1,16 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
 import '../remote/sign_in.dart';
 
-typedef void OnSignedIn(FirebaseUser user);
-
 class SignInWidget extends StatelessWidget {
-  final OnSignedIn onSignedIn;
-
-  SignInWidget(this.onSignedIn, {Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return new Stack(
@@ -40,8 +33,7 @@ class SignInWidget extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: new RaisedButton(
                         color: Colors.white,
-                        onPressed: () async =>
-                            onSignedIn(await signInGoogleUser()),
+                        onPressed: signInGoogleUser,
                         child: new Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[

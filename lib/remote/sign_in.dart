@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
-Future<FirebaseUser> _googleUserToFirebaseUser(GoogleSignInAccount a) async {
+Future<FirebaseUser> _signInToFirebaseWithGoogle(GoogleSignInAccount a) async {
   final GoogleSignInAuthentication googleAuth = await a.authentication;
   return await FirebaseAuth.instance.signInWithGoogle(
     accessToken: googleAuth.accessToken,
@@ -13,7 +13,7 @@ Future<FirebaseUser> _googleUserToFirebaseUser(GoogleSignInAccount a) async {
   );
 }
 
-Future<FirebaseUser> getCurrentUser() async {
+Future<FirebaseUser> signInSilently() async {
   final firebaseUser = await FirebaseAuth.instance.currentUser();
   if (firebaseUser != null) {
     return firebaseUser;
@@ -23,7 +23,7 @@ Future<FirebaseUser> getCurrentUser() async {
   if (googleUser == null) {
     return null;
   }
-  return _googleUserToFirebaseUser(googleUser);
+  return _signInToFirebaseWithGoogle(googleUser);
 }
 
 Future<FirebaseUser> signInGoogleUser() async {
@@ -31,7 +31,7 @@ Future<FirebaseUser> signInGoogleUser() async {
   if (googleUser == null) {
     return null;
   }
-  return _googleUserToFirebaseUser(googleUser);
+  return _signInToFirebaseWithGoogle(googleUser);
 }
 
 Future<Null> signOut() async {

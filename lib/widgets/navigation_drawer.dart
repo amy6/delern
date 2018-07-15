@@ -5,11 +5,11 @@ import 'package:package_info/package_info.dart';
 
 import '../flutter/localization.dart';
 import '../widgets/send_invite.dart';
+import '../remote/sign_in.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final FirebaseUser user;
-  final Function signOutCallback;
-  NavigationDrawer(this.user, this.signOutCallback);
+  NavigationDrawer(this.user);
 
   @override
   _NavDrawerState createState() => new _NavDrawerState();
@@ -42,7 +42,7 @@ class _NavDrawerState extends State<NavigationDrawer> {
           leading: new Icon(Icons.perm_identity),
           title: new Text(AppLocalizations.of(context).navigationDrawerSignOut),
           onTap: () {
-            widget.signOutCallback();
+            signOut();
             Navigator.pop(context);
           },
         ),

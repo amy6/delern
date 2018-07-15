@@ -1,12 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 import '../remote/sign_in.dart';
-import '../widgets/sign_in.dart';
+import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
-import '../widgets/create_deck.dart';
+import '../widgets/sign_in.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -18,38 +17,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FirebaseUser user;
-
-  void signOutUser() {
-    signOut().then((nothing) => setState(() => user = null));
-  }
+  FirebaseUser _user;
 
   @override
   void initState() {
     super.initState();
 
-    getCurrentUser()
-        .then((currentUser) => setState(() {
-              user = currentUser;
-            }))
-        .catchError((e) {/* TODO(dotdoom): not currently signed in */});
+    signInSilently();
+
+    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) {
+      // TODO(dotdoom): this is the place where we should update User model in
+      //                DB, upload FCM tokens, install keepSync etc.
+      setState(() => _user = firebaseUser);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var appBar = new AppBar(title: new Text(widget.title));
-    if (user == null) {
+    if (_user == null) {
       return new Scaffold(
         appBar: appBar,
-        body: new SignInWidget((u) => setState(() => user = u)),
+        body: new SignInWidget(),
       );
     }
 
     return new Scaffold(
       appBar: appBar,
-      drawer: new NavigationDrawer(user, signOutUser),
-      body: new DecksWidget(user.uid),
-      floatingActionButton: new CreateDeck(user),
+      drawer: new NavigationDrawer(_user),
+      body: new DecksWidget(_user.uid),
+      floatingActionButton: new CreateDeck(_user),
     );
   }
 }
