@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import '../models/base/stream_demuxer.dart';
+import '../models/base/stream_muxer.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/base/transaction.dart';
@@ -21,7 +21,7 @@ class DeckListItemViewModel implements ListItemViewModel {
   int _cardsToLearn;
 
   final ViewModelsList<DeckListItemViewModel> _owner;
-  StreamSubscription<StreamDemuxerEvent<bool>> _internalUpdates;
+  StreamSubscription<StreamMuxerEvent<bool>> _internalUpdates;
 
   DeckListItemViewModel(this._owner, this._deck) {
     _access = DeckAccess(_deck)..key = _deck.uid;
@@ -49,7 +49,7 @@ class DeckListItemViewModel implements ListItemViewModel {
       return;
     }
 
-    _internalUpdates = StreamDemuxer({
+    _internalUpdates = StreamMuxer({
       false: _access.updates,
       true: _deck.getNumberOfCardsToLearn(),
     }).listen((event) {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models/base/stream_demuxer.dart';
+import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
 import '../models/deck.dart';
@@ -14,7 +14,7 @@ class LearningViewModel {
 
   LearningViewModel(this.deck);
 
-  Stream<void> get updates => StreamDemuxer({
+  Stream<void> get updates => StreamMuxer({
         0: deck.updates,
         1: ScheduledCard.next(deck.key, deck.uid).transform(StreamTransformer
             .fromHandlers(handleData: (sc, EventSink<void> sink) {
