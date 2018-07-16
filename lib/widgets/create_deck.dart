@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,26 +23,19 @@ class CreateDeck extends StatelessWidget {
           barrierDismissible: false,
           builder: (_) => new _CreateDeckDialog(_user),
         );
-        if (newDeck != null &&
-            await _createDeck(deck: newDeck, context: context)) {
-          Navigator.push(
-              context,
-              new MaterialPageRoute(
-                  builder: (context) => new CreateUpdateCard(newDeck, null)));
+        if (newDeck != null) {
+          try {
+            DeckListViewModel.createDeck(newDeck);
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => new CreateUpdateCard(newDeck, null)));
+          } catch (e, stackTrace) {
+            UserMessages.showError(Scaffold.of(context), e, stackTrace);
+          }
         }
       },
     );
-  }
-
-  Future<bool> _createDeck(
-      {@required Deck deck, @required BuildContext context}) async {
-    try {
-      DeckListViewModel.createDeck(deck);
-      return true;
-    } catch (e, stackTrace) {
-      UserMessages.showError(Scaffold.of(context), e, stackTrace);
-      return false;
-    }
   }
 }
 
