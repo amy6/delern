@@ -1,12 +1,11 @@
-import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import '../models/base/transaction.dart';
+import '../flutter/device_info.dart';
 import '../models/fcm.dart';
-import '../models/user.dart';
 import '../remote/sign_in.dart';
+import '../view_models/home_view_model.dart';
 import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
@@ -34,33 +33,13 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       setState(() => _user = firebaseUser);
-      if (firebaseUser != null) {
-        // TODO(dotdoom): move this elsewhere, and install keepSync etc.
-
-        DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
-
-        String deviceName;
-        try {
-          var info = await deviceInfo.androidInfo;
-          deviceName = '${info.manufacturer} ${info.model}';
-        } catch (_) {
-          var info = await deviceInfo.iosInfo;
-          deviceName = info.model;
-        }
-
-        var locale = Localizations.localeOf(context);
-        var fcm = FCM(firebaseUser.uid,
-            language: '${locale.languageCode}_${locale.countryCode}',
-            name: deviceName);
-
-        print('Registering for FCM as ${fcm.name} in ${fcm.language}');
-        (Transaction()
-              ..save(User(firebaseUser.uid,
-                  name: firebaseUser.displayName,
-                  photoUrl: firebaseUser.photoUrl))
-              ..save(fcm))
-            .commit();
-        _firebaseMessaging.getToken();
+      if (_user != null) {
+        HomeViewModel.userSignedIn(
+            _user,
+            FCM(_user.uid,
+                language: Localizations.localeOf(context).toString(),
+                name: await DeviceInfo.getDeviceManufactureName())
+              ..key = await _firebaseMessaging.getToken());
       }
     });
   }
