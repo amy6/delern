@@ -12,7 +12,7 @@ dependencies:
   firebase_auth: 0.5.11
   firebase_database: 1.0.1
   google_sign_in: 3.0.4
-
+  device_info: ^0.2.1
   package_info: ^0.3.0
 
   flutter:

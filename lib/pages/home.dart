@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../flutter/device_info.dart';
+import '../models/fcm.dart';
 import '../remote/sign_in.dart';
+import '../view_models/home_view_model.dart';
 import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
@@ -23,13 +26,20 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    signInSilently();
-
-    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) {
-      // TODO(dotdoom): this is the place where we should update User model in
-      //                DB, upload FCM tokens, install keepSync etc.
+    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       setState(() => _user = firebaseUser);
+      if (firebaseUser != null) {
+        HomeViewModel.userSignedIn(
+            firebaseUser,
+            FCM(firebaseUser.uid,
+                language: Localizations.localeOf(context).toString(),
+                name: await DeviceInfo.getDeviceManufactureName())
+              // TODO(ksheremet): await _firebaseMessaging.getToken()
+              ..key = 'fake');
+      }
     });
+
+    signInSilently();
   }
 
   @override

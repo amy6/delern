@@ -46,7 +46,6 @@ class CardsLearningState extends State<CardsLearning> {
           (_) => setState(() {
                 _isBackShown = false;
               }),
-          // TODO(dotdoom): onDone doesn't execute
           onDone: () => Navigator.of(context).pop());
     }
     return new Scaffold(
