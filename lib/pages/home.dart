@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/device_info.dart';
@@ -10,8 +9,6 @@ import '../widgets/create_deck.dart';
 import '../widgets/decks.dart';
 import '../widgets/navigation_drawer.dart';
 import '../widgets/sign_in.dart';
-
-final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -29,19 +26,20 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    signInSilently();
-
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       setState(() => _user = firebaseUser);
-      if (_user != null) {
+      if (firebaseUser != null) {
         HomeViewModel.userSignedIn(
-            _user,
-            FCM(_user.uid,
+            firebaseUser,
+            FCM(firebaseUser.uid,
                 language: Localizations.localeOf(context).toString(),
                 name: await DeviceInfo.getDeviceManufactureName())
-              ..key = await _firebaseMessaging.getToken());
+              // TODO(ksheremet): await _firebaseMessaging.getToken()
+              ..key = 'fake');
       }
     });
+
+    signInSilently();
   }
 
   @override

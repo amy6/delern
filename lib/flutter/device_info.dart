@@ -7,8 +7,8 @@ import '../remote/error_reporting.dart';
 
 class DeviceInfo {
   static Future<String> getDeviceManufactureName() async {
-    DeviceInfoPlugin deviceInfo = new DeviceInfoPlugin();
     try {
+      var deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
         var info = await deviceInfo.androidInfo;
         return '${info.manufacturer} ${info.model}';
@@ -17,7 +17,7 @@ class DeviceInfo {
         return info.model.toString();
       }
     } catch (e, stackTrace) {
-      reportError('getDeviceManufactureName', e, stackTrace);
+      reportError('DeviceInfo', e, stackTrace);
     }
     return 'Unknown';
   }
