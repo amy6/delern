@@ -38,4 +38,10 @@ class DeckViewModel {
     t.deleteAll(CardView(card, deck.uid));
     await t.commit();
   }
+
+  Future<void> saveDeck() async {
+    var t = Transaction();
+    t.save(deck);
+    return t.commit();
+  }
 }
