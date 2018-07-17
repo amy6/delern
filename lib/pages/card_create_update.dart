@@ -105,11 +105,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                     ? () async {
                         try {
                           await _saveCard();
-                          Navigator.of(context).pop();
                         } catch (e, stackTrace) {
                           UserMessages.showError(
                               _scaffoldKey.currentState, e, stackTrace);
+                          return;
                         }
+                        Navigator.of(context).pop();
                       }
                     : null)
       ],

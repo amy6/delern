@@ -66,11 +66,12 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                     if (deleteDeckDialog) {
                       try {
                         await _viewModel.delete();
-                        Navigator.of(context).pop();
                       } catch (e, stackTrace) {
                         UserMessages.showError(
                             Scaffold.of(context), e, stackTrace);
+                        return;
                       }
+                      Navigator.of(context).pop();
                     }
                   }),
             )

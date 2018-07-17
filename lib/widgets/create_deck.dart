@@ -25,14 +25,15 @@ class CreateDeck extends StatelessWidget {
         );
         if (newDeck != null) {
           try {
-            DeckListViewModel.createDeck(newDeck);
-            Navigator.push(
-                context,
-                new MaterialPageRoute(
-                    builder: (context) => new CreateUpdateCard(newDeck, null)));
+            await DeckListViewModel.createDeck(newDeck);
           } catch (e, stackTrace) {
             UserMessages.showError(Scaffold.of(context), e, stackTrace);
+            return;
           }
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new CreateUpdateCard(newDeck, null)));
         }
       },
     );
