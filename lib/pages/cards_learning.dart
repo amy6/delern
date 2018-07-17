@@ -9,6 +9,7 @@ import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../view_models/learning_view_model.dart';
 import '../widgets/card_display.dart';
+import '../widgets/progress_indicator.dart' as progressBar;
 import '../widgets/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
@@ -53,29 +54,30 @@ class CardsLearningState extends State<CardsLearning> {
         title: new Text(_viewModel.deck.name),
         actions: <Widget>[_buildPopupMenu()],
       ),
-      body: Builder(
-        builder: (context) => new Column(
-              children: <Widget>[
-                new Expanded(
-                    // TODO(ksheremet): show loading spinner instead of this
-                    child: CardDisplay(_viewModel.card?.front ?? 'Loading...',
-                        _viewModel.card?.back ?? '', _isBackShown)),
-                Padding(
-                  padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: _buildButtons(context),
+      body: _viewModel.card == null
+          ? progressBar.ProgressIndicator()
+          : Builder(
+              builder: (context) => Column(
+                    children: <Widget>[
+                      new Expanded(
+                          child: CardDisplay(_viewModel.card.front,
+                              _viewModel.card?.back ?? '', _isBackShown)),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: _buildButtons(context),
+                        ),
+                      ),
+                      new Row(
+                        children: <Widget>[
+                          new Text(AppLocalizations.of(context).watchedCards +
+                              '$_watchedCount'),
+                        ],
+                      )
+                    ],
                   ),
-                ),
-                new Row(
-                  children: <Widget>[
-                    new Text(AppLocalizations.of(context).watchedCards +
-                        '$_watchedCount'),
-                  ],
-                )
-              ],
             ),
-      ),
     );
   }
 
