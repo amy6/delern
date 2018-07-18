@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../models/base/observable_list.dart';
+import '../widgets/progress_indicator.dart' as progressBar;
 
 typedef Widget ObservingGridItemBuilder<T>(
   T item,
@@ -55,7 +56,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.items.changed) {
-      return new Center(child: new CircularProgressIndicator());
+      return progressBar.ProgressIndicator();
     }
 
     // TODO(ksheremet): for an empty list, return 'Add your items'
