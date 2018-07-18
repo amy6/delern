@@ -61,7 +61,7 @@ class CardsLearningState extends State<CardsLearning> {
                     children: <Widget>[
                       new Expanded(
                           child: CardDisplay(_viewModel.card.front,
-                              _viewModel.card?.back ?? '', _isBackShown)),
+                              _viewModel.card.back ?? '', _isBackShown)),
                       Padding(
                         padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
                         child: new Row(

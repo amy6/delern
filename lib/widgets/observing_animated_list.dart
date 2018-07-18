@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../models/base/observable_list.dart';
+import '../widgets/progress_indicator.dart' as progressBar;
 
 typedef Widget ObservingAnimatedListItemBuilder<T>(
   BuildContext context,
@@ -78,11 +79,10 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.list.changed) {
-      return new Center(child: new CircularProgressIndicator());
+      return progressBar.ProgressIndicator();
     }
 
     // TODO(ksheremet): for an empty list, return 'Add your items'
-
     return new AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,
