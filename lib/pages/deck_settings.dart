@@ -20,7 +20,6 @@ class DeckSettingsPage extends StatefulWidget {
   State<StatefulWidget> createState() => _DeckSettingsPageState();
 }
 
-//TODO(ksheremet): Save changes to DB
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _deckNameController = new TextEditingController();
