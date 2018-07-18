@@ -26,16 +26,12 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   TextEditingController _deckNameController = new TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
-  DeckType _deckTypeValue;
-  bool _isMarkdown = false;
   bool _isDeckChanged = false;
 
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
     _viewModel = DeckViewModel(widget._deck, widget._access);
-    _deckTypeValue = _viewModel.deck.type;
-    _isMarkdown = _viewModel.deck.markdown;
     super.initState();
   }
 
@@ -55,8 +51,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
       onWillPop: () async {
         if (_isDeckChanged) {
           try {
-            await _viewModel.saveDeck();
-            return true;
+            await _viewModel.save();
           } catch (e, stackTrace) {
             UserMessages.showError(_scaffoldKey.currentState, e, stackTrace);
             return false;
@@ -104,6 +99,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             onChanged: (String text) {
               setState(() {
                 _isDeckChanged = true;
+                _viewModel.deck.name = text;
               });
             },
           ),
@@ -120,9 +116,10 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               DeckTypeDropdown(
-                value: _deckTypeValue,
+                value: _viewModel.deck.type,
                 valueChanged: (DeckType newDeckType) => setState(() {
-                      _deckTypeValue = newDeckType;
+                      _isDeckChanged = true;
+                      _viewModel.deck.type = newDeckType;
                     }),
               ),
             ],
@@ -132,10 +129,11 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             children: <Widget>[
               Text(AppLocalizations.of(context).markdown),
               Switch(
-                value: _isMarkdown,
+                value: _viewModel.deck.markdown,
                 onChanged: (newValue) {
                   setState(() {
-                    _isMarkdown = newValue;
+                    _isDeckChanged = true;
+                    _viewModel.deck.markdown = newValue;
                   });
                 },
               )

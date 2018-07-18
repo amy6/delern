@@ -39,9 +39,10 @@ class DeckViewModel {
     await t.commit();
   }
 
-  Future<void> saveDeck() async {
+  Future<void> save() async {
     var t = Transaction();
+    //TODO(ksheremet): Check whether user has access to update
     t.save(deck);
-    return t.commit();
+    await t.commit();
   }
 }
