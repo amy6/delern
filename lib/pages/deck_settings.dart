@@ -20,20 +20,17 @@ class DeckSettingsPage extends StatefulWidget {
   State<StatefulWidget> createState() => _DeckSettingsPageState();
 }
 
-//TODO(ksheremet): Save changes to DB
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _deckNameController = new TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
-  DeckType _deckTypeValue;
-  bool _isMarkdown = false;
+  bool _isDeckChanged = false;
 
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
     _viewModel = DeckViewModel(widget._deck, widget._access);
-    _deckTypeValue = _viewModel.deck.type;
-    _isMarkdown = _viewModel.deck.markdown;
     super.initState();
   }
 
@@ -49,35 +46,44 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
     if (_viewModelUpdates == null) {
       _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
     }
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_viewModel.deck.name),
-          actions: <Widget>[
-            Builder(
-              builder: (context) => IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () async {
-                    var locale = AppLocalizations.of(context);
-                    var deleteDeckDialog = await showSaveUpdatesDialog(
-                        context: context,
-                        changesQuestion: locale.deleteDeckQuestion,
-                        yesAnswer: locale.delete,
-                        noAnswer: locale.cancel);
-                    if (deleteDeckDialog) {
-                      try {
-                        await _viewModel.delete();
-                      } catch (e, stackTrace) {
-                        UserMessages.showError(
-                            Scaffold.of(context), e, stackTrace);
-                        return;
-                      }
-                      Navigator.of(context).pop();
+    return WillPopScope(
+      onWillPop: () async {
+        if (_isDeckChanged) {
+          try {
+            await _viewModel.save();
+          } catch (e, stackTrace) {
+            UserMessages.showError(_scaffoldKey.currentState, e, stackTrace);
+            return false;
+          }
+        }
+        return true;
+      },
+      child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () async {
+                  var locale = AppLocalizations.of(context);
+                  var deleteDeckDialog = await showSaveUpdatesDialog(
+                      context: context,
+                      changesQuestion: locale.deleteDeckQuestion,
+                      yesAnswer: locale.delete,
+                      noAnswer: locale.cancel);
+                  if (deleteDeckDialog) {
+                    try {
+                      await _viewModel.delete();
+                    } catch (e, stackTrace) {
+                      UserMessages.showError(
+                          Scaffold.of(context), e, stackTrace);
+                      return;
                     }
-                  }),
-            )
-          ],
-        ),
-        body: _buildBody());
+                    Navigator.of(context).pop();
+                  }
+                }),
+          ]),
+          body: _buildBody()),
+    );
   }
 
   Widget _buildBody() {
@@ -90,7 +96,10 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             keyboardType: TextInputType.multiline,
             controller: _deckNameController,
             onChanged: (String text) {
-              setState(() {});
+              setState(() {
+                _isDeckChanged = true;
+                _viewModel.deck.name = text;
+              });
             },
           ),
           Row(
@@ -106,9 +115,10 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               DeckTypeDropdown(
-                value: _deckTypeValue,
+                value: _viewModel.deck.type,
                 valueChanged: (DeckType newDeckType) => setState(() {
-                      _deckTypeValue = newDeckType;
+                      _isDeckChanged = true;
+                      _viewModel.deck.type = newDeckType;
                     }),
               ),
             ],
@@ -118,10 +128,11 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             children: <Widget>[
               Text(AppLocalizations.of(context).markdown),
               Switch(
-                value: _isMarkdown,
+                value: _viewModel.deck.markdown,
                 onChanged: (newValue) {
                   setState(() {
-                    _isMarkdown = newValue;
+                    _isDeckChanged = true;
+                    _viewModel.deck.markdown = newValue;
                   });
                 },
               )
