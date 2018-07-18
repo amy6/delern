@@ -49,23 +49,32 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
     if (_viewModelUpdates == null) {
       _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
     }
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(_viewModel.deck.name),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(_viewModel.deck.name),
           actions: <Widget>[
-            new IconButton(
-                icon: new Icon(Icons.delete),
-                onPressed: () async {
-                  var locale = AppLocalizations.of(context);
-                  var deleteDeckDialog = await showSaveUpdatesDialog(
-                      context: context,
-                      changesQuestion: locale.deleteDeckQuestion,
-                      yesAnswer: locale.delete,
-                      noAnswer: locale.cancel);
-                  if (deleteDeckDialog && await _deleteDeck()) {
-                    Navigator.of(context).pop();
-                  }
-                })
+            Builder(
+              builder: (context) => IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () async {
+                    var locale = AppLocalizations.of(context);
+                    var deleteDeckDialog = await showSaveUpdatesDialog(
+                        context: context,
+                        changesQuestion: locale.deleteDeckQuestion,
+                        yesAnswer: locale.delete,
+                        noAnswer: locale.cancel);
+                    if (deleteDeckDialog) {
+                      try {
+                        await _viewModel.delete();
+                      } catch (e, stackTrace) {
+                        UserMessages.showError(
+                            Scaffold.of(context), e, stackTrace);
+                        return;
+                      }
+                      Navigator.of(context).pop();
+                    }
+                  }),
+            )
           ],
         ),
         body: _buildBody());
@@ -121,15 +130,5 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
         ],
       ),
     );
-  }
-
-  Future<bool> _deleteDeck() async {
-    try {
-      await _viewModel.delete();
-      return true;
-    } catch (e, stacktrace) {
-      UserMessages.showError(Scaffold.of(context), e, stacktrace);
-      return false;
-    }
   }
 }

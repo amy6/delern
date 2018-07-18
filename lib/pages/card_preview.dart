@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../flutter/user_messages.dart';
 import '../models/card.dart' as cardModel;
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
@@ -46,19 +47,28 @@ class _CardPreviewState extends State<CardPreview> {
       appBar: new AppBar(
         title: new Text(_viewModel.deck.name),
         actions: <Widget>[
-          new IconButton(
-              icon: new Icon(Icons.delete),
-              onPressed: () async {
-                var locale = AppLocalizations.of(context);
-                bool saveChanges = await showSaveUpdatesDialog(
-                    context: context,
-                    changesQuestion: locale.deleteCardQuestion,
-                    yesAnswer: locale.delete,
-                    noAnswer: locale.cancel);
-                if (saveChanges && await _deleteCard()) {
-                  Navigator.of(context).pop();
-                }
-              })
+          Builder(
+            builder: (context) => IconButton(
+                icon: new Icon(Icons.delete),
+                onPressed: () async {
+                  var locale = AppLocalizations.of(context);
+                  bool saveChanges = await showSaveUpdatesDialog(
+                      context: context,
+                      changesQuestion: locale.deleteCardQuestion,
+                      yesAnswer: locale.delete,
+                      noAnswer: locale.cancel);
+                  if (saveChanges) {
+                    try {
+                      await _viewModel.deleteCard();
+                    } catch (e, stackTrace) {
+                      UserMessages.showError(
+                          Scaffold.of(context), e, stackTrace);
+                      return;
+                    }
+                    Navigator.of(context).pop();
+                  }
+                }),
+          )
         ],
       ),
       body: Column(
@@ -79,18 +89,5 @@ class _CardPreviewState extends State<CardPreview> {
                     new CreateUpdateCard(_viewModel.deck, _viewModel.card))),
       ),
     );
-  }
-
-  Future<bool> _deleteCard() async {
-    try {
-      await _viewModel.deleteCard();
-      // TODO(ksheremet): Show user message
-      print("Card was deleted");
-      return true;
-    } catch (e) {
-      // TODO(ksheremet): Show user message
-      print("Error occurred by deleting");
-      return false;
-    }
   }
 }
