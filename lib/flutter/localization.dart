@@ -370,6 +370,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Card was added',
     );
   }
+
+  String get searchHint {
+    return Intl.message(
+      'Search...',
+      name: 'searchHint',
+      desc: 'Search...',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

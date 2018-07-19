@@ -294,5 +294,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "searchHint": "Search...",
+  "@searchHint": {
+    "description": "Search...",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

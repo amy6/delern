@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saveChangesQuestion": MessageLookupByLibrary
             .simpleMessage("Do you want to save changes?"),
+        "searchHint": MessageLookupByLibrary.simpleMessage("Search..."),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),

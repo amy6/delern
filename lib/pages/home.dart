@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/device_info.dart';
+import '../flutter/localization.dart';
 import '../models/fcm.dart';
 import '../remote/sign_in.dart';
 import '../view_models/home_view_model.dart';
@@ -21,10 +22,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseUser _user;
+  Widget appBarTitle;
+  Icon actionIcon;
 
   @override
   void initState() {
     super.initState();
+
+    appBarTitle = Text(widget.title);
+    actionIcon = Icon(Icons.search);
 
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       setState(() => _user = firebaseUser);
@@ -44,19 +50,46 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBar = new AppBar(title: new Text(widget.title));
     if (_user == null) {
       return new Scaffold(
-        appBar: appBar,
+        appBar: AppBar(title: Text(widget.title)),
         body: new SignInWidget(),
       );
     }
 
-    return new Scaffold(
-      appBar: appBar,
-      drawer: new NavigationDrawer(_user),
-      body: new DecksWidget(_user.uid),
-      floatingActionButton: new CreateDeck(_user),
+    return Scaffold(
+      appBar: _buildAppBarWithSearch(),
+      drawer: NavigationDrawer(_user),
+      body: DecksWidget(_user.uid),
+      floatingActionButton: CreateDeck(_user),
+    );
+  }
+
+  Widget _buildAppBarWithSearch() {
+    return AppBar(
+      title: appBarTitle,
+      actions: <Widget>[
+        IconButton(
+          icon: actionIcon,
+          onPressed: () {
+            setState(() {
+              if (actionIcon.icon == Icons.search) {
+                actionIcon = Icon(Icons.close);
+                appBarTitle = TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search, color: Colors.white),
+                      hintText: AppLocalizations.of(context).searchHint,
+                      hintStyle: TextStyle(color: Colors.white)),
+                );
+              } else {
+                actionIcon = Icon(Icons.search);
+                appBarTitle = Text(widget.title);
+              }
+            });
+          },
+        )
+      ],
     );
   }
 }

@@ -293,5 +293,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "searchHint": "Поиск...",
+  "@searchHint": {
+    "description": "Search...",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
