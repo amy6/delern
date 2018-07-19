@@ -19,12 +19,28 @@ class DecksListPage extends StatefulWidget {
 class _DecksListState extends State<DecksListPage> {
   Widget _appBarTitle;
   Icon _actionIcon;
+  TextEditingController _searchController = new TextEditingController();
+  String _searchText = '';
+
+  _searchTextChanged() {
+    setState(() {
+      _searchText = _searchController.text;
+    });
+  }
 
   @override
   void initState() {
     _appBarTitle = Text(widget.title);
     _actionIcon = Icon(Icons.search);
+    _searchController.addListener(_searchTextChanged);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_searchTextChanged);
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,7 +48,7 @@ class _DecksListState extends State<DecksListPage> {
     return Scaffold(
       appBar: _buildAppBarWithSearch(),
       drawer: NavigationDrawer(widget.user),
-      body: DecksWidget(widget.user.uid),
+      body: DecksWidget(uid: widget.user.uid, searchText: _searchText),
       floatingActionButton: CreateDeck(widget.user),
     );
   }
@@ -48,6 +64,7 @@ class _DecksListState extends State<DecksListPage> {
               if (_actionIcon.icon == Icons.search) {
                 _actionIcon = Icon(Icons.close);
                 _appBarTitle = TextField(
+                  controller: _searchController,
                   style: TextStyle(color: Colors.white, fontSize: 16.0),
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.search, color: Colors.white),
@@ -55,6 +72,7 @@ class _DecksListState extends State<DecksListPage> {
                       hintStyle: TextStyle(color: Colors.white)),
                 );
               } else {
+                _searchController.clear();
                 _actionIcon = Icon(Icons.search);
                 _appBarTitle = Text(widget.title);
               }
