@@ -2,13 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../flutter/device_info.dart';
-import '../flutter/localization.dart';
 import '../models/fcm.dart';
+import '../pages/decks_list.dart';
 import '../remote/sign_in.dart';
 import '../view_models/home_view_model.dart';
-import '../widgets/create_deck.dart';
-import '../widgets/decks.dart';
-import '../widgets/navigation_drawer.dart';
 import '../widgets/sign_in.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,15 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseUser _user;
-  Widget appBarTitle;
-  Icon actionIcon;
 
   @override
   void initState() {
     super.initState();
-
-    appBarTitle = Text(widget.title);
-    actionIcon = Icon(Icons.search);
 
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
       setState(() => _user = firebaseUser);
@@ -57,39 +49,6 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return Scaffold(
-      appBar: _buildAppBarWithSearch(),
-      drawer: NavigationDrawer(_user),
-      body: DecksWidget(_user.uid),
-      floatingActionButton: CreateDeck(_user),
-    );
-  }
-
-  Widget _buildAppBarWithSearch() {
-    return AppBar(
-      title: appBarTitle,
-      actions: <Widget>[
-        IconButton(
-          icon: actionIcon,
-          onPressed: () {
-            setState(() {
-              if (actionIcon.icon == Icons.search) {
-                actionIcon = Icon(Icons.close);
-                appBarTitle = TextField(
-                  style: TextStyle(color: Colors.white, fontSize: 16.0),
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.white),
-                      hintText: AppLocalizations.of(context).searchHint,
-                      hintStyle: TextStyle(color: Colors.white)),
-                );
-              } else {
-                actionIcon = Icon(Icons.search);
-                appBarTitle = Text(widget.title);
-              }
-            });
-          },
-        )
-      ],
-    );
+    return DecksListPage(user: _user, title: widget.title);
   }
 }
