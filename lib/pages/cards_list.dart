@@ -23,10 +23,22 @@ class _CardsListState extends State<CardsListPage> {
   bool _active = false;
   CardListViewModel _viewModel;
   StreamSubscription<void> _updates;
+  Widget _appBarTitle;
+  Icon _actionIcon;
+  TextEditingController _searchController = new TextEditingController();
+
+  _searchTextChanged() {
+    setState(() {
+      print(_searchController.text);
+    });
+  }
 
   @override
   void initState() {
     _viewModel = CardListViewModel(widget._deck);
+    _appBarTitle = Text(_viewModel.deck.name);
+    _actionIcon = Icon(Icons.search);
+    _searchController.addListener(_searchTextChanged);
     super.initState();
   }
 
@@ -45,6 +57,8 @@ class _CardsListState extends State<CardsListPage> {
   void dispose() {
     super.dispose();
     _viewModel.dispose();
+    _searchController.removeListener(_searchTextChanged);
+    _searchController.dispose();
   }
 
   @override
@@ -57,8 +71,16 @@ class _CardsListState extends State<CardsListPage> {
       _updates = _viewModel.updates.listen((_) => setState(() {}));
     }
 
+    _viewModel.cards.filter = (c) =>
+        c.card.front
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase()) ||
+        c.card.back
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
+
     return new Scaffold(
-      appBar: new AppBar(title: new Text(_viewModel.deck.name)),
+      appBar: _buildAppBarWithSearch(),
       body: new ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: _viewModel.cards,
@@ -73,6 +95,36 @@ class _CardsListState extends State<CardsListPage> {
                     new CreateUpdateCard(cardModel.Card(_viewModel.deck)))),
         child: new Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildAppBarWithSearch() {
+    return AppBar(
+      title: _appBarTitle,
+      actions: <Widget>[
+        IconButton(
+          icon: _actionIcon,
+          onPressed: () {
+            setState(() {
+              if (_actionIcon.icon == Icons.search) {
+                _actionIcon = Icon(Icons.close);
+                _appBarTitle = TextField(
+                  controller: _searchController,
+                  style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search, color: Colors.white),
+                      hintText: AppLocalizations.of(context).searchHint,
+                      hintStyle: TextStyle(color: Colors.white)),
+                );
+              } else {
+                _searchController.clear();
+                _actionIcon = Icon(Icons.search);
+                _appBarTitle = Text(_viewModel.deck.name);
+              }
+            });
+          },
+        )
+      ],
     );
   }
 }

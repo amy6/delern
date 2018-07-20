@@ -20,12 +20,9 @@ class _DecksListState extends State<DecksListPage> {
   Widget _appBarTitle;
   Icon _actionIcon;
   TextEditingController _searchController = new TextEditingController();
-  String _searchText = '';
 
   _searchTextChanged() {
-    setState(() {
-      _searchText = _searchController.text;
-    });
+    setState(() {});
   }
 
   @override
@@ -48,7 +45,8 @@ class _DecksListState extends State<DecksListPage> {
     return Scaffold(
       appBar: _buildAppBarWithSearch(),
       drawer: NavigationDrawer(widget.user),
-      body: DecksWidget(uid: widget.user.uid, searchText: _searchText),
+      body:
+          DecksWidget(uid: widget.user.uid, searchText: _searchController.text),
       floatingActionButton: CreateDeck(widget.user),
     );
   }
