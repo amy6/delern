@@ -59,6 +59,7 @@ class _DecksListState extends State<DecksListPage> {
           icon: _actionIcon,
           onPressed: () {
             setState(() {
+              //TODO(ksheremet): Show keyboard when user press on search
               if (_actionIcon.icon == Icons.search) {
                 _actionIcon = Icon(Icons.close);
                 _appBarTitle = TextField(
