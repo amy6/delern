@@ -86,8 +86,21 @@ class ScheduledCard implements KeyedListItem, Model {
         // Workaround for https://github.com/flutter/flutter/issues/19389.
         var latestScheduledCard =
             ((event.snapshot.value.entries.toList() as List<MapEntry>)
-                  ..sort((s1, s2) =>
-                      s1.value['repeatAt'].compareTo(s2.value['repeatAt'])))
+                  ..sort((s1, s2) {
+                    var repeatAtComparison =
+                        s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
+                    // Sometimes repeatAt of 2 cards may be the same, which
+                    // will result in unstable order. Most often this is
+                    // happening to the newly added cards, which have
+                    // repeatAt = 0.
+                    // We mimic Firebase behavior here, which falls back to
+                    // sorting lexicographically by key.
+                    // TODO(dotdoom): do not set repeatAt = 0?
+                    if (repeatAtComparison == 0) {
+                      return s1.key.compareTo(s2.key);
+                    }
+                    return repeatAtComparison;
+                  }))
                 .first;
 
         var card = await Card.fetch(deckId, latestScheduledCard.key);
