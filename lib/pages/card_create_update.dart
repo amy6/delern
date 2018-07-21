@@ -156,17 +156,18 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
     // Add reversed card widget it it is adding new cards
     if (_viewModel.card.key == null) {
-      widgetsList.add(new Row(
-        children: <Widget>[
-          new Checkbox(
-              value: _addReversedCard,
-              onChanged: (bool newValue) {
-                setState(() {
-                  _addReversedCard = newValue;
-                });
-              }),
-          new Text(AppLocalizations.of(context).reversedCardLabel),
-        ],
+      // https://github.com/flutter/flutter/issues/254 suggests using
+      // CheckboxListTile to have a clickable checkbox label.
+      widgetsList.add(CheckboxListTile(
+        title: Text(AppLocalizations.of(context).reversedCardLabel),
+        value: _addReversedCard,
+        onChanged: (bool newValue) {
+          setState(() {
+            _addReversedCard = newValue;
+          });
+        },
+        // Position checkbox before the text.
+        controlAffinity: ListTileControlAffinity.leading,
       ));
     }
 
