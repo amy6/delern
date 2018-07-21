@@ -41,7 +41,7 @@ class CardListViewModel implements Activatable {
 
   CardListViewModel(this.deck) {
     _cardViewModels = new ViewModelsList<CardListItemViewModel>(() => Card
-        .getCards(deck.key)
+        .getCards(deck)
         .map((cardEvent) =>
             cardEvent.map((card) => new CardListItemViewModel(card))));
   }

@@ -14,7 +14,7 @@ class CardViewModel {
   Card _card;
 
   CardViewModel(this._deck, [this._card]) {
-    _card ??= Card(_deck.key);
+    _card ??= Card(_deck);
   }
 
   Stream<void> get updates => _card.key == null
@@ -29,29 +29,24 @@ class CardViewModel {
 
   Future<void> saveCard(bool addReverse) {
     // TODO(dotdoom): this won't be necessary once we s/_deck/_card.deck/.
-    assert(_card.deckId == _deck.key);
+    assert(_card.deck.key == _deck.key);
 
     var t = Transaction();
     t.save(_card);
-    t.save(ScheduledCard(uid: _deck.uid, card: _card));
+    t.save(ScheduledCard(_card));
     if (addReverse) {
       var reverse = Card(
-        _deck.key,
+        _deck,
         front: _card.back,
         back: _card.front,
       );
       t.save(reverse);
-      t.save(ScheduledCard(
-        uid: _deck.uid,
-        card: reverse,
-      ));
+      t.save(ScheduledCard(reverse));
     }
 
     return t.commit();
   }
 
-  Future<void> deleteCard() => (Transaction()
-        ..delete(_card)
-        ..delete(ScheduledCard(card: _card, uid: _deck.uid)))
-      .commit();
+  Future<void> deleteCard() =>
+      (Transaction()..delete(_card)..delete(ScheduledCard(_card))).commit();
 }
