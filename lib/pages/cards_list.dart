@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../flutter/localization.dart';
+import '../models/card.dart' as cardModel;
 import '../models/deck.dart';
 import '../pages/card_create_update.dart';
 import '../pages/card_preview.dart';
@@ -68,7 +69,8 @@ class _CardsListState extends State<CardsListPage> {
         onPressed: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) => new CreateUpdateCard(_viewModel.deck))),
+                builder: (context) =>
+                    new CreateUpdateCard(cardModel.Card(_viewModel.deck)))),
         child: new Icon(Icons.add),
       ),
     );
@@ -92,7 +94,7 @@ class CardGridItem extends StatelessWidget {
           onTap: () => Navigator.push(
               context,
               new MaterialPageRoute(
-                  builder: (context) => new CardPreview(deck, viewModel.card))),
+                  builder: (context) => new CardPreview(viewModel.card))),
           child: new Container(
             padding: const EdgeInsets.all(5.0),
             child: new Column(

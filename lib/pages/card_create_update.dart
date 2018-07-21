@@ -5,15 +5,13 @@ import 'package:flutter/material.dart';
 import '../flutter/localization.dart';
 import '../flutter/user_messages.dart';
 import '../models/card.dart' as cardModel;
-import '../models/deck.dart';
 import '../view_models/card_view_model.dart';
 import '../widgets/save_updates_dialog.dart';
 
 class CreateUpdateCard extends StatefulWidget {
-  final Deck _deck;
   final cardModel.Card _card;
 
-  CreateUpdateCard(this._deck, [this._card]);
+  CreateUpdateCard(this._card);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();
@@ -30,7 +28,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   @override
   void initState() {
     super.initState();
-    _viewModel = CardViewModel(widget._deck, widget._card);
+    _viewModel = CardViewModel(widget._card);
     if (_viewModel.card.key != null) {
       _frontTextController.text = _viewModel.card.front;
       _backTextController.text = _viewModel.card.back;
@@ -70,7 +68,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   Widget _buildAppBar() {
     return new AppBar(
-      title: new Text(_viewModel.deck.name),
+      title: new Text(_viewModel.card.deck.name),
       actions: <Widget>[
         _viewModel.card.key == null
             ? new IconButton(

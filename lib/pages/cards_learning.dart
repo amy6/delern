@@ -151,8 +151,7 @@ class CardsLearningState extends State<CardsLearning> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    new CreateUpdateCard(widget._deck, _viewModel.card)));
+                builder: (context) => new CreateUpdateCard(_viewModel.card)));
         break;
       case _CardMenuItemType.delete:
         _deleteCard(context);
