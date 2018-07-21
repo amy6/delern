@@ -10,20 +10,17 @@ class CardView implements Model {
   DateTime timestamp;
 
   Card card;
-  // TODO(dotdoom): User.
-  String uid;
 
-  CardView(this.card, this.uid,
-      {this.levelBefore, this.reply, this.timestamp}) {
+  CardView(this.card, {this.levelBefore, this.reply, this.timestamp}) {
     timestamp ??= DateTime.now();
   }
 
   @override
-  String get rootPath => 'views/$uid/${card.deckId}/${card.key}';
+  String get rootPath => 'views/${card.deck.uid}/${card.deck.key}/${card.key}';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
-        'views/$uid/${card.deckId}/${card.key}/$key': {
+        'views/${card.deck.uid}/${card.deck.key}/${card.key}/$key': {
           'levelBefore': 'L$levelBefore',
           'reply': reply ? 'Y' : 'N',
           'timestamp': timestamp.toUtc().millisecondsSinceEpoch,

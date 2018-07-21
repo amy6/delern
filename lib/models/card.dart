@@ -4,21 +4,22 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'base/keyed_list.dart';
-import 'base/observable_list.dart';
 import 'base/model.dart';
+import 'base/observable_list.dart';
+import 'deck.dart';
 
 class Card implements KeyedListItem, Model {
   String key;
   String front;
   String back;
   DateTime createdAt;
-  // TODO(dotdoom): replace deckId with Deck model, so that they can both
-  //                be present in a single 'CREATE' transaction.
-  final String deckId;
+  final Deck deck;
 
-  Card(this.deckId, {this.front, this.back});
+  Card(this.deck, {this.front, this.back}) {
+    assert(deck != null);
+  }
 
-  Card.fromSnapshot(this.key, snapshotValue, this.deckId) {
+  Card.fromSnapshot(this.key, snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);
   }
 
@@ -35,19 +36,19 @@ class Card implements KeyedListItem, Model {
         : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
-  static Future<Card> fetch(String deckId, String cardId) async {
-    var card = Card(deckId)..key = cardId;
+  static Future<Card> fetch(Deck deck, String cardId) async {
+    var card = Card(deck)..key = cardId;
     await card.updates.first;
     return card;
   }
 
-  static Stream<KeyedListEvent<Card>> getCards(String deckId) async* {
+  static Stream<KeyedListEvent<Card>> getCards(Deck deck) async* {
     yield new KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
                         .reference()
                         .child('cards')
-                        .child(deckId)
+                        .child(deck.key)
                         .orderByKey()
                         .onValue
                         .first)
@@ -55,23 +56,22 @@ class Card implements KeyedListItem, Model {
                     .value as Map ??
                 {})
             .entries
-            .map(
-                (item) => new Card.fromSnapshot(item.key, item.value, deckId)));
+            .map((item) => new Card.fromSnapshot(item.key, item.value, deck)));
 
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()
             .child('cards')
-            .child(deckId)
+            .child(deck.key)
             .orderByKey(),
         (snapshot) =>
-            new Card.fromSnapshot(snapshot.key, snapshot.value, deckId));
+            new Card.fromSnapshot(snapshot.key, snapshot.value, deck));
   }
 
   Map<String, dynamic> toMap(bool isNew) {
     var map = new Map<String, dynamic>()
-      ..['cards/$deckId/$key/front'] = front
-      ..['cards/$deckId/$key/back'] = back;
+      ..['cards/${deck.key}/$key/front'] = front
+      ..['cards/${deck.key}/$key/back'] = back;
     if (isNew) {
       // Important note: we ask server to fill in the timestamp, but we do not
       // update it in our object immediately. Something trivial like
@@ -81,7 +81,7 @@ class Card implements KeyedListItem, Model {
       // For this reason, we should never *update* createdAt because we risk
       // changing it (see the note above), in which case Firebase Database will
       // reject the update.
-      map['cards/$deckId/$key/createdAt'] = ServerValue.timestamp;
+      map['cards/${deck.key}/$key/createdAt'] = ServerValue.timestamp;
     }
     return map;
   }
@@ -89,11 +89,11 @@ class Card implements KeyedListItem, Model {
   Stream<void> get updates => FirebaseDatabase.instance
       .reference()
       .child('cards')
-      .child(deckId)
+      .child(deck.key)
       .child(key)
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
 
   @override
-  String get rootPath => 'cards/$deckId';
+  String get rootPath => 'cards/${deck.key}';
 }

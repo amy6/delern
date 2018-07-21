@@ -11,6 +11,7 @@ import 'base/model.dart';
 import 'base/transaction.dart';
 import 'card.dart';
 import 'card_view.dart';
+import 'deck.dart';
 
 class ScheduledCard implements KeyedListItem, Model {
   static const levelDurations = [
@@ -28,17 +29,12 @@ class ScheduledCard implements KeyedListItem, Model {
   Card card;
   int level;
   DateTime repeatAt;
-  // TODO(dotdoom): this should come from card.deck.uid or similar.
-  final String uid;
 
-  ScheduledCard(
-      {@required this.uid, @required this.card, this.level: 0, this.repeatAt}) {
+  ScheduledCard(this.card, {this.level: 0, this.repeatAt}) {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  ScheduledCard.fromSnapshot(snapshotValue,
-      {@required this.uid, @required this.card}) {
-    assert(uid != null);
+  ScheduledCard.fromSnapshot(snapshotValue, {@required this.card}) {
     assert(card != null);
     _parseSnapshot(snapshotValue);
   }
@@ -59,12 +55,11 @@ class ScheduledCard implements KeyedListItem, Model {
         new DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
 
-  static Stream<ScheduledCard> next(String deckId, String uid) =>
-      FirebaseDatabase.instance
+  static Stream<ScheduledCard> next(Deck deck) => FirebaseDatabase.instance
           .reference()
           .child('learning')
-          .child(uid)
-          .child(deckId)
+          .child(deck.uid)
+          .child(deck.key)
           .orderByChild('repeatAt')
           // Need at least 2 because of how Firebase local cache works.
           // After we pick up the latest ScheduledCard and update it, it
@@ -103,9 +98,9 @@ class ScheduledCard implements KeyedListItem, Model {
                   }))
                 .first;
 
-        var card = await Card.fetch(deckId, latestScheduledCard.key);
-        var scheduledCard = ScheduledCard
-            .fromSnapshot(latestScheduledCard.value, uid: uid, card: card);
+        var card = await Card.fetch(deck, latestScheduledCard.key);
+        var scheduledCard =
+            ScheduledCard.fromSnapshot(latestScheduledCard.value, card: card);
 
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
@@ -121,18 +116,18 @@ class ScheduledCard implements KeyedListItem, Model {
       }));
 
   @override
-  String get rootPath => 'learning/$uid/${card.deckId}';
+  String get rootPath => 'learning/${card.deck.uid}/${card.deck.uid}';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
-        'learning/$uid/${card.deckId}/$key': {
+        'learning/${card.deck.uid}/${card.deck.key}/$key': {
           'level': 'L$level',
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
 
   CardView answer(bool knows) {
-    var cv = CardView(card, uid);
+    var cv = CardView(card);
     cv.reply = knows;
     cv.levelBefore = level;
     if (knows) {
