@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
-import 'remote/error_reporting.dart';
 import 'pages/home.dart';
+import 'remote/error_reporting.dart';
 
 class App extends StatelessWidget {
   @override
@@ -44,6 +45,7 @@ void main() {
     );
   }).sendPort);
   runZoned<Future>(() async {
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
     runApp(new App());
   }, onError: (error, stackTrace) async {
     await reportError('Zone', error, stackTrace);
