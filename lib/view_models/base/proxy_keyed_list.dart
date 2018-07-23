@@ -45,6 +45,8 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     });
   }
 
+  Filter<T> get filter => _filter;
+
   set filter(final Filter<T> value) {
     _filter = value;
     for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {

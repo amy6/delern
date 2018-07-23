@@ -24,10 +24,15 @@ class _CardsListState extends State<CardsListPage> {
   CardListViewModel _viewModel;
   StreamSubscription<void> _updates;
   TextEditingController _searchController = new TextEditingController();
-  bool _isSearchMode = false;
 
   _searchTextChanged() {
-    setState(() {});
+    _viewModel.cards.filter = (c) =>
+        c.card.front
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase()) ||
+        c.card.back
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
   }
 
   @override
@@ -66,14 +71,6 @@ class _CardsListState extends State<CardsListPage> {
       _updates = _viewModel.updates.listen((_) => setState(() {}));
     }
 
-    _viewModel.cards.filter = (c) =>
-        c.card.front
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase()) ||
-        c.card.back
-            .toLowerCase()
-            .contains(_searchController.text.toLowerCase());
-
     return new Scaffold(
       appBar: _buildAppBarWithSearch(),
       body: new ObservingGrid(
@@ -97,7 +94,7 @@ class _CardsListState extends State<CardsListPage> {
     Widget appBarTitle;
     Icon actionIcon;
 
-    if (_isSearchMode) {
+    if (_viewModel.cards.filter != null) {
       actionIcon = Icon(Icons.close);
       appBarTitle = TextField(
         controller: _searchController,
@@ -121,10 +118,10 @@ class _CardsListState extends State<CardsListPage> {
             setState(() {
               //TODO(ksheremet): Show keyboard when user press on search
               if (actionIcon.icon == Icons.search) {
-                _isSearchMode = true;
+                _searchTextChanged();
               } else {
                 _searchController.clear();
-                _isSearchMode = false;
+                _viewModel.cards.filter = null;
               }
             });
           },
