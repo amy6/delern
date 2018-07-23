@@ -34,8 +34,8 @@ class ScheduledCard implements KeyedListItem, Model {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  ScheduledCard.fromSnapshot(snapshotValue, {@required this.card}) {
-    assert(card != null);
+  ScheduledCard.fromSnapshot(snapshotValue, {@required this.card})
+      : assert(card != null) {
     _parseSnapshot(snapshotValue);
   }
 

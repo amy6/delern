@@ -9,9 +9,7 @@ class CardViewModel {
   Card get card => _card;
   Card _card;
 
-  CardViewModel(this._card) {
-    assert(card != null);
-  }
+  CardViewModel(this._card) : assert(card != null);
 
   Stream<void> get updates => _card.key == null
       ? _card.deck.updates

@@ -15,9 +15,7 @@ class Card implements KeyedListItem, Model {
   DateTime createdAt;
   final Deck deck;
 
-  Card(this.deck, {this.front, this.back}) {
-    assert(deck != null);
-  }
+  Card(this.deck, {this.front, this.back}) : assert(deck != null);
 
   Card.fromSnapshot(this.key, snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);

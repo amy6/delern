@@ -12,10 +12,9 @@ class DeckViewModel {
   final Deck deck;
   final DeckAccess access;
 
-  DeckViewModel(this.deck, this.access) {
-    assert(deck != null);
-    assert(access != null);
-  }
+  DeckViewModel(this.deck, this.access)
+      : assert(deck != null),
+        assert(access != null);
 
   Stream<void> get updates => StreamMuxer({
         0: deck.updates,

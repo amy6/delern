@@ -10,10 +10,9 @@ class DecksListPage extends StatefulWidget {
   final FirebaseUser user;
   final String title;
 
-  DecksListPage({@required this.user, @required this.title}) {
-    assert(this.user != null);
-    assert(this.title != null);
-  }
+  DecksListPage({@required this.user, @required this.title})
+      : assert(user != null),
+        assert(title != null);
 
   @override
   State<StatefulWidget> createState() => _DecksListPageState();

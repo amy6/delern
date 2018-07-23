@@ -18,9 +18,8 @@ class ObservingAnimatedList<T> extends StatefulWidget {
     Key key,
     @required this.list,
     @required this.itemBuilder,
-  }) : super(key: key) {
-    assert(itemBuilder != null);
-  }
+  })  : assert(itemBuilder != null),
+        super(key: key);
 
   final ObservableList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
