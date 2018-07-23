@@ -23,10 +23,22 @@ class _CardsListState extends State<CardsListPage> {
   bool _active = false;
   CardListViewModel _viewModel;
   StreamSubscription<void> _updates;
+  TextEditingController _searchController = new TextEditingController();
+
+  _searchTextChanged() {
+    _viewModel.cards.filter = (c) =>
+        c.card.front
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase()) ||
+        c.card.back
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
+  }
 
   @override
   void initState() {
     _viewModel = CardListViewModel(widget._deck);
+    _searchController.addListener(_searchTextChanged);
     super.initState();
   }
 
@@ -45,6 +57,8 @@ class _CardsListState extends State<CardsListPage> {
   void dispose() {
     super.dispose();
     _viewModel.dispose();
+    _searchController.removeListener(_searchTextChanged);
+    _searchController.dispose();
   }
 
   @override
@@ -58,7 +72,7 @@ class _CardsListState extends State<CardsListPage> {
     }
 
     return new Scaffold(
-      appBar: new AppBar(title: new Text(_viewModel.deck.name)),
+      appBar: _buildAppBarWithSearch(),
       body: new ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: _viewModel.cards,
@@ -73,6 +87,46 @@ class _CardsListState extends State<CardsListPage> {
                     new CreateUpdateCard(cardModel.Card(_viewModel.deck)))),
         child: new Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildAppBarWithSearch() {
+    Widget appBarTitle;
+    Icon actionIcon;
+
+    if (_viewModel.cards.filter != null) {
+      actionIcon = Icon(Icons.close);
+      appBarTitle = TextField(
+        controller: _searchController,
+        style: TextStyle(color: Colors.white, fontSize: 19.0),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: AppLocalizations.of(context).searchHint,
+            hintStyle: TextStyle(color: Colors.white)),
+      );
+    } else {
+      appBarTitle = Text(_viewModel.deck.name);
+      actionIcon = Icon(Icons.search);
+    }
+
+    return AppBar(
+      title: appBarTitle,
+      actions: <Widget>[
+        IconButton(
+          icon: actionIcon,
+          onPressed: () {
+            setState(() {
+              //TODO(ksheremet): Show keyboard when user press on search
+              if (actionIcon.icon == Icons.search) {
+                _searchTextChanged();
+              } else {
+                _searchController.clear();
+                _viewModel.cards.filter = null;
+              }
+            });
+          },
+        )
+      ],
     );
   }
 }

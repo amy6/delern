@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../flutter/device_info.dart';
 import '../models/fcm.dart';
+import '../pages/decks_list.dart';
 import '../remote/sign_in.dart';
 import '../view_models/home_view_model.dart';
-import '../widgets/create_deck.dart';
-import '../widgets/decks.dart';
-import '../widgets/navigation_drawer.dart';
 import '../widgets/sign_in.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,19 +42,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBar = new AppBar(title: new Text(widget.title));
     if (_user == null) {
       return new Scaffold(
-        appBar: appBar,
+        appBar: AppBar(title: Text(widget.title)),
         body: new SignInWidget(),
       );
     }
 
-    return new Scaffold(
-      appBar: appBar,
-      drawer: new NavigationDrawer(_user),
-      body: new DecksWidget(_user.uid),
-      floatingActionButton: new CreateDeck(_user),
-    );
+    return DecksListPage(user: _user, title: widget.title);
   }
 }

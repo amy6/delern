@@ -12,8 +12,12 @@ import 'observing_animated_list.dart';
 
 class DecksWidget extends StatefulWidget {
   final String uid;
+  final String searchText;
 
-  DecksWidget(this.uid);
+  DecksWidget({@required this.uid, @required this.searchText}) {
+    assert(this.uid != null);
+    assert(this.searchText != null);
+  }
 
   @override
   _DecksWidgetState createState() => new _DecksWidgetState();
@@ -43,6 +47,11 @@ class _DecksWidgetState extends State<DecksWidget> {
       viewModel.activate();
       _active = true;
     }
+
+    viewModel.decks.filter = (d) =>
+        // Case insensitive filter
+        d.deck.name.toLowerCase().contains(widget.searchText.toLowerCase());
+
     return new ObservingAnimatedList(
       list: viewModel.decks,
       itemBuilder: (context, item, animation, index) => new SizeTransition(
