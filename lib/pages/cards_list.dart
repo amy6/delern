@@ -111,9 +111,9 @@ class _CardsListState extends State<CardsListPage> {
                 _actionIcon = Icon(Icons.close);
                 _appBarTitle = TextField(
                   controller: _searchController,
-                  style: TextStyle(color: Colors.white, fontSize: 16.0),
+                  style: TextStyle(color: Colors.white, fontSize: 19.0),
                   decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.white),
+                      border: InputBorder.none,
                       hintText: AppLocalizations.of(context).searchHint,
                       hintStyle: TextStyle(color: Colors.white)),
                 );
