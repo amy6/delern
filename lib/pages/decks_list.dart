@@ -13,10 +13,10 @@ class DecksListPage extends StatefulWidget {
   DecksListPage({this.user, this.title});
 
   @override
-  State<StatefulWidget> createState() => _DecksListState();
+  State<StatefulWidget> createState() => _DecksListPageState();
 }
 
-class _DecksListState extends State<DecksListPage> {
+class _DecksListPageState extends State<DecksListPage> {
   Widget _appBarTitle;
   Icon _actionIcon;
   TextEditingController _searchController = new TextEditingController();
