@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../models/base/observable_list.dart';
-import '../widgets/progress_indicator.dart' as progressBar;
+import '../../models/base/observable_list.dart';
+import '../helpers/progress_indicator.dart' as progressBar;
 
 typedef Widget ObservingGridItemBuilder<T>(
   T item,

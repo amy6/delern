@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
-import 'pages/home.dart';
 import 'remote/error_reporting.dart';
+import 'views/home/home.dart';
 
 class App extends StatelessWidget {
   @override

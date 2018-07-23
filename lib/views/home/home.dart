@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter/device_info.dart';
-import '../models/fcm.dart';
-import '../pages/decks_list.dart';
-import '../remote/sign_in.dart';
-import '../view_models/home_view_model.dart';
-import '../widgets/sign_in.dart';
+import '../../flutter/device_info.dart';
+import '../../models/fcm.dart';
+import '../../remote/sign_in.dart';
+import '../../view_models/home_view_model.dart';
+import '../decks_list/decks_list.dart';
+import 'sign_in.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
