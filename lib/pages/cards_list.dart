@@ -23,21 +23,16 @@ class _CardsListState extends State<CardsListPage> {
   bool _active = false;
   CardListViewModel _viewModel;
   StreamSubscription<void> _updates;
-  Widget _appBarTitle;
-  Icon _actionIcon;
   TextEditingController _searchController = new TextEditingController();
+  bool _isSearchMode = false;
 
   _searchTextChanged() {
-    setState(() {
-      print(_searchController.text);
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     _viewModel = CardListViewModel(widget._deck);
-    _appBarTitle = Text(_viewModel.deck.name);
-    _actionIcon = Icon(Icons.search);
     _searchController.addListener(_searchTextChanged);
     super.initState();
   }
@@ -99,28 +94,37 @@ class _CardsListState extends State<CardsListPage> {
   }
 
   Widget _buildAppBarWithSearch() {
+    Widget appBarTitle;
+    Icon actionIcon;
+
+    if (_isSearchMode) {
+      actionIcon = Icon(Icons.close);
+      appBarTitle = TextField(
+        controller: _searchController,
+        style: TextStyle(color: Colors.white, fontSize: 19.0),
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: AppLocalizations.of(context).searchHint,
+            hintStyle: TextStyle(color: Colors.white)),
+      );
+    } else {
+      appBarTitle = Text(_viewModel.deck.name);
+      actionIcon = Icon(Icons.search);
+    }
+
     return AppBar(
-      title: _appBarTitle,
+      title: appBarTitle,
       actions: <Widget>[
         IconButton(
-          icon: _actionIcon,
+          icon: actionIcon,
           onPressed: () {
             setState(() {
               //TODO(ksheremet): Show keyboard when user press on search
-              if (_actionIcon.icon == Icons.search) {
-                _actionIcon = Icon(Icons.close);
-                _appBarTitle = TextField(
-                  controller: _searchController,
-                  style: TextStyle(color: Colors.white, fontSize: 19.0),
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: AppLocalizations.of(context).searchHint,
-                      hintStyle: TextStyle(color: Colors.white)),
-                );
+              if (actionIcon.icon == Icons.search) {
+                _isSearchMode = true;
               } else {
                 _searchController.clear();
-                _actionIcon = Icon(Icons.search);
-                _appBarTitle = Text(_viewModel.deck.name);
+                _isSearchMode = false;
               }
             });
           },
