@@ -16,10 +16,8 @@ class DeckAccessDropdown extends StatefulWidget {
       {@required this.value,
       @required this.valueChanged,
       @required this.filter})
-      : super() {
-    assert(filter != null);
-    assert(valueChanged != null);
-  }
+      : assert(filter != null),
+        assert(valueChanged != null);
 
   @override
   State<StatefulWidget> createState() => _DropdownState();
