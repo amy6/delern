@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../models/deck.dart';
+import '../../flutter/localization.dart';
+import '../../models/deck.dart';
 
 typedef void DeckTypeCallback(DeckType t);
 

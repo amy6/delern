@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../widgets/create_deck.dart';
-import '../widgets/decks.dart';
-import '../widgets/navigation_drawer.dart';
+import '../../flutter/localization.dart';
+import 'create_deck.dart';
+import 'decks.dart';
+import 'navigation_drawer.dart';
+// TODO(dotdoom): move navigation_drawer into home
 
 class DecksListPage extends StatefulWidget {
   final FirebaseUser user;

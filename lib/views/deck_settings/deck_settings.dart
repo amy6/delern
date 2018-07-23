@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../flutter/user_messages.dart';
-import '../models/deck.dart';
-import '../models/deck_access.dart';
-import '../view_models/deck_view_model.dart';
-import '../widgets/deck_type_dropdown.dart';
-import '../widgets/save_updates_dialog.dart';
+import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/deck.dart';
+import '../../models/deck_access.dart';
+import '../../view_models/deck_view_model.dart';
+import '../helpers/save_updates_dialog.dart';
+import 'deck_type_dropdown.dart';
 
 class DeckSettingsPage extends StatefulWidget {
   final Deck _deck;

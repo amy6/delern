@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../flutter/localization.dart';
-import '../models/deck_access.dart';
+import '../../flutter/localization.dart';
+import '../../models/deck_access.dart';
 
 typedef bool AccessTypeFilter(AccessType t);
 typedef void AccessTypeCallback(AccessType t);

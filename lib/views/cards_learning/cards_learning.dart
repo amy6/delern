@@ -3,14 +3,14 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../flutter/user_messages.dart';
-import '../models/deck.dart';
-import '../pages/card_create_update.dart';
-import '../view_models/learning_view_model.dart';
-import '../widgets/card_display.dart';
-import '../widgets/progress_indicator.dart' as progressBar;
-import '../widgets/save_updates_dialog.dart';
+import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/deck.dart';
+import '../../view_models/learning_view_model.dart';
+import '../card_create_update/card_create_update.dart';
+import '../helpers/card_display.dart';
+import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck _deck;

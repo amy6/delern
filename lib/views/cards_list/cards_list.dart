@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../models/card.dart' as cardModel;
-import '../models/deck.dart';
-import '../pages/card_create_update.dart';
-import '../pages/card_preview.dart';
-import '../view_models/card_list_view_model.dart';
-import '../widgets/observing_grid_view.dart';
+import '../../flutter/localization.dart';
+import '../../models/card.dart' as cardModel;
+import '../../models/deck.dart';
+import '../../view_models/card_list_view_model.dart';
+import '../card_create_update/card_create_update.dart';
+import '../card_preview/card_preview.dart';
+import 'observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
   final Deck _deck;

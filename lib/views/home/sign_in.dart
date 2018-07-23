@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../remote/sign_in.dart';
+import '../../flutter/localization.dart';
+import '../../remote/sign_in.dart';
 
 class SignInWidget extends StatelessWidget {
   @override

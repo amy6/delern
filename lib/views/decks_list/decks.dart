@@ -2,13 +2,13 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../pages/cards_learning.dart';
-import '../pages/cards_list.dart';
-import '../pages/deck_settings.dart';
-import '../pages/deck_sharing.dart';
-import '../view_models/deck_list_view_model.dart';
-import 'observing_animated_list.dart';
+import '../../flutter/localization.dart';
+import '../../view_models/deck_list_view_model.dart';
+import '../cards_learning/cards_learning.dart';
+import '../cards_list/cards_list.dart';
+import '../deck_settings/deck_settings.dart';
+import '../deck_sharing/deck_sharing.dart';
+import '../helpers/observing_animated_list.dart';
 
 class DecksWidget extends StatefulWidget {
   final String uid;

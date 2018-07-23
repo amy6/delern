@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../flutter/user_messages.dart';
-import '../models/card.dart' as cardModel;
-import '../view_models/card_view_model.dart';
-import '../widgets/save_updates_dialog.dart';
+import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/card.dart' as cardModel;
+import '../../view_models/card_view_model.dart';
+import '../helpers/save_updates_dialog.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final cardModel.Card _card;

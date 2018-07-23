@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 
-import '../flutter/localization.dart';
-import '../widgets/send_invite.dart';
-import '../remote/sign_in.dart';
+import '../../flutter/localization.dart';
+import '../../remote/sign_in.dart';
+import '../helpers/send_invite.dart';
 
 class NavigationDrawer extends StatefulWidget {
   final FirebaseUser user;

@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../flutter/user_messages.dart';
-import '../models/deck.dart';
-import '../models/deck_access.dart';
-import '../remote/user_lookup.dart';
-import '../view_models/deck_access_view_model.dart';
-import '../widgets/deck_access_dropdown.dart';
-import '../widgets/observing_animated_list.dart';
-import '../widgets/save_updates_dialog.dart';
-import '../widgets/send_invite.dart';
+import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/deck.dart';
+import '../../models/deck_access.dart';
+import '../../remote/user_lookup.dart';
+import '../../view_models/deck_access_view_model.dart';
+import '../helpers/observing_animated_list.dart';
+import '../helpers/save_updates_dialog.dart';
+import '../helpers/send_invite.dart';
+import 'deck_access_dropdown.dart';
 
 class DeckSharingPage extends StatefulWidget {
   final Deck _deck;

@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../flutter/localization.dart';
-import '../flutter/user_messages.dart';
-import '../models/card.dart' as cardModel;
-import '../models/deck.dart';
-import '../pages/card_create_update.dart';
-import '../view_models/deck_list_view_model.dart';
+import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/card.dart' as cardModel;
+import '../../models/deck.dart';
+import '../../view_models/deck_list_view_model.dart';
+import '../card_create_update/card_create_update.dart';
 
 class CreateDeck extends StatelessWidget {
   final FirebaseUser _user;
