@@ -14,7 +14,10 @@ class DecksWidget extends StatefulWidget {
   final String uid;
   final String searchText;
 
-  DecksWidget({this.uid, this.searchText});
+  DecksWidget({@required this.uid, @required this.searchText}) {
+    assert(this.uid != null);
+    assert(this.searchText != null);
+  }
 
   @override
   _DecksWidgetState createState() => new _DecksWidgetState();
