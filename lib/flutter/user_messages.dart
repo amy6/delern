@@ -7,14 +7,17 @@ import '../flutter/localization.dart';
 import '../remote/error_reporting.dart';
 
 class UserMessages {
+  // TODO(dotdoom): if Scaffold.of() fails, the error is not reported!
   static Future<Null> showError(
       ScaffoldState scaffoldState, dynamic e, StackTrace stackTrace) {
+    var errorFuture = reportError('showError', e, stackTrace);
+
     String message =
         AppLocalizations.of(scaffoldState.context).errorUserMessage +
             e.toString().substring(0, min(e.toString().length, 50));
-
     showMessage(scaffoldState, message);
-    return reportError('showError', e, stackTrace);
+
+    return errorFuture;
   }
 
   static void showMessage(ScaffoldState scaffoldState, String message) {
