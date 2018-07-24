@@ -29,7 +29,8 @@ class _HomePageState extends State<HomePage> {
       if (firebaseUser != null) {
         HomeViewModel.userSignedIn(
             firebaseUser,
-            FCM(firebaseUser.uid,
+            FCM(
+                uid: firebaseUser.uid,
                 language: Localizations.localeOf(context).toString(),
                 name: await DeviceInfo.getDeviceManufactureName())
               // TODO(ksheremet): await _firebaseMessaging.getToken()

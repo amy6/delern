@@ -24,17 +24,17 @@ class DeckViewModel {
   Future<void> delete() async {
     var t = Transaction();
     t.delete(deck);
-    var card = Card(deck);
+    var card = Card(deck: deck);
     if (access.access == AccessType.owner) {
       (await DeckAccess.getDeckAccesses(deck).first)
           .fullListValueForSet
-          .forEach((a) => t.delete(Deck(a.key)..key = deck.key));
-      t.deleteAll(DeckAccess(deck));
+          .forEach((a) => t.delete(Deck(uid: a.key)..key = deck.key));
+      t.deleteAll(DeckAccess(deck: deck)..key = null);
       t.deleteAll(card);
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
-    t.deleteAll(ScheduledCard(card));
-    t.deleteAll(CardView(card));
+    t.deleteAll(ScheduledCard(card: card));
+    t.deleteAll(CardView(card: card));
     await t.commit();
   }
 

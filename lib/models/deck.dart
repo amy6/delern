@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
@@ -21,15 +22,15 @@ class Deck implements KeyedListItem, Model {
   DateTime lastSyncAt;
   String category;
 
-  Deck(
-    this.uid, {
+  Deck({
+    @required this.uid,
     this.name,
     this.markdown: false,
     this.type: DeckType.basic,
     this.accepted: true,
     this.lastSyncAt,
     this.category,
-  }) {
+  }) : assert(uid != null) {
     lastSyncAt ??= new DateTime.fromMillisecondsSinceEpoch(0);
   }
 

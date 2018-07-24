@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
 import 'base/keyed_list.dart';
 import 'base/model.dart';
@@ -11,7 +12,7 @@ class User implements KeyedListItem, Model {
   String name;
   String photoUrl;
 
-  User(this.key, {this.name, this.photoUrl});
+  User({@required this.key, this.name, this.photoUrl}) : assert(key != null);
 
   User.fromSnapshot(this.key, dynamic snapshotValue) {
     _parseSnapshot(snapshotValue);

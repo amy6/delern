@@ -30,7 +30,8 @@ class ScheduledCard implements KeyedListItem, Model {
   int level;
   DateTime repeatAt;
 
-  ScheduledCard(this.card, {this.level: 0, this.repeatAt}) {
+  ScheduledCard({@required this.card, this.level: 0, this.repeatAt})
+      : assert(card != null) {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
@@ -127,7 +128,7 @@ class ScheduledCard implements KeyedListItem, Model {
       };
 
   CardView answer(bool knows) {
-    var cv = CardView(card);
+    var cv = CardView(card: card);
     cv.reply = knows;
     cv.levelBefore = level;
     if (knows) {

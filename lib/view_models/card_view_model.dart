@@ -24,20 +24,21 @@ class CardViewModel {
   Future<void> saveCard(bool addReverse) {
     var t = Transaction();
     t.save(_card);
-    t.save(ScheduledCard(_card));
+    t.save(ScheduledCard(card: _card));
     if (addReverse) {
       var reverse = Card(
-        _card.deck,
+        deck: _card.deck,
         front: _card.back,
         back: _card.front,
       );
       t.save(reverse);
-      t.save(ScheduledCard(reverse));
+      t.save(ScheduledCard(card: reverse));
     }
 
     return t.commit();
   }
 
   Future<void> deleteCard() =>
-      (Transaction()..delete(_card)..delete(ScheduledCard(_card))).commit();
+      (Transaction()..delete(_card)..delete(ScheduledCard(card: _card)))
+          .commit();
 }
