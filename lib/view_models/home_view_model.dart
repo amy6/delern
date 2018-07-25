@@ -11,8 +11,10 @@ class HomeViewModel {
     // TODO(dotdoom): install keepSync etc.
     print('Registering for FCM as ${fcm.name} in ${fcm.language}');
     return (Transaction()
-          ..save(User(firebaseUser.uid,
-              name: firebaseUser.displayName, photoUrl: firebaseUser.photoUrl))
+          ..save(User(
+              key: firebaseUser.uid,
+              name: firebaseUser.displayName,
+              photoUrl: firebaseUser.photoUrl))
           ..save(fcm))
         .commit();
   }

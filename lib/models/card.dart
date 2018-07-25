@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
 import 'base/keyed_list.dart';
 import 'base/model.dart';
@@ -15,7 +16,7 @@ class Card implements KeyedListItem, Model {
   DateTime createdAt;
   final Deck deck;
 
-  Card(this.deck, {this.front, this.back}) : assert(deck != null);
+  Card({@required this.deck, this.front, this.back}) : assert(deck != null);
 
   Card.fromSnapshot(this.key, snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);
@@ -35,7 +36,7 @@ class Card implements KeyedListItem, Model {
   }
 
   static Future<Card> fetch(Deck deck, String cardId) async {
-    var card = Card(deck)..key = cardId;
+    var card = Card(deck: deck)..key = cardId;
     await card.updates.first;
     return card;
   }

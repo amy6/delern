@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:meta/meta.dart';
+
 import 'base/model.dart';
 import 'card.dart';
 
@@ -11,7 +13,8 @@ class CardView implements Model {
 
   Card card;
 
-  CardView(this.card, {this.levelBefore, this.reply, this.timestamp}) {
+  CardView({@required this.card, this.levelBefore, this.reply, this.timestamp})
+      : assert(card != null) {
     timestamp ??= DateTime.now();
   }
 

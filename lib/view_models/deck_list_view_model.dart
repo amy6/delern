@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 
 import '../models/base/stream_muxer.dart';
+import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
-import '../models/base/transaction.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -23,9 +23,8 @@ class DeckListItemViewModel implements ListItemViewModel {
   final ViewModelsList<DeckListItemViewModel> _owner;
   StreamSubscription<StreamMuxerEvent<bool>> _internalUpdates;
 
-  DeckListItemViewModel(this._owner, this._deck) {
-    _access = DeckAccess(_deck)..key = _deck.uid;
-  }
+  DeckListItemViewModel(this._owner, this._deck)
+      : _access = DeckAccess(deck: _deck);
 
   @override
   DeckListItemViewModel updateWith(DeckListItemViewModel value) {
@@ -108,10 +107,8 @@ class DeckListViewModel implements Activatable {
     _decksProxy?.dispose();
   }
 
-  static Future<void> createDeck(Deck deck) {
-    var t = Transaction();
-    t.save(deck);
-    t.save(DeckAccess(deck, access: AccessType.owner)..key = deck.uid);
-    return t.commit();
-  }
+  static Future<void> createDeck(Deck deck) => (Transaction()
+        ..save(deck)
+        ..save(DeckAccess(deck: deck, access: AccessType.owner)))
+      .commit();
 }

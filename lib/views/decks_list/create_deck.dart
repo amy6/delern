@@ -35,7 +35,7 @@ class CreateDeck extends StatelessWidget {
               context,
               new MaterialPageRoute(
                   builder: (context) =>
-                      new CreateUpdateCard(cardModel.Card(newDeck))));
+                      new CreateUpdateCard(cardModel.Card(deck: newDeck))));
         }
       },
     );
@@ -81,8 +81,8 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
             onPressed: _textController.text.isEmpty
                 ? null
                 : () {
-                    Navigator.of(context).pop(
-                        new Deck(widget._user.uid, name: _textController.text));
+                    Navigator.of(context).pop(new Deck(
+                        uid: widget._user.uid, name: _textController.text));
                   }),
       ],
     );

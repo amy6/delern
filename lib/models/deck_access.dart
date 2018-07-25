@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
 import 'base/keyed_list.dart';
@@ -26,7 +27,9 @@ class DeckAccess implements KeyedListItem, Model {
     _parseSnapshot(snapshotValue);
   }
 
-  DeckAccess(this.deck, {this.access});
+  DeckAccess({@required this.deck, this.access}) : assert(deck != null) {
+    key ??= deck.uid;
+  }
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
     yield new KeyedListEvent(
@@ -61,7 +64,7 @@ class DeckAccess implements KeyedListItem, Model {
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
 
   static Future<DeckAccess> fetch(Deck deck) async {
-    var access = DeckAccess(deck)..key = deck.uid;
+    var access = DeckAccess(deck: deck);
     await access.updates.first;
     return access;
   }

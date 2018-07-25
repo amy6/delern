@@ -83,8 +83,8 @@ class _CardsListState extends State<CardsListPage> {
         onPressed: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (context) =>
-                    new CreateUpdateCard(cardModel.Card(_viewModel.deck)))),
+                builder: (context) => new CreateUpdateCard(
+                    cardModel.Card(deck: _viewModel.deck)))),
         child: new Icon(Icons.add),
       ),
     );
