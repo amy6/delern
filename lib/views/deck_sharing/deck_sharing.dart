@@ -79,7 +79,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
     return _textController.text.contains('@');
   }
 
-  //TODO(ksheremet): Disable sharing button
+  // TODO(ksheremet): Disable sharing button
   Future<void> _shareDeck(AccessType deckAccess) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
@@ -93,7 +93,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        //TODO(ksheremet): Share deck
+        await DeckAccessesViewModel.shareDeck(
+            DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
       }
     } catch (e, stackTrace) {
       // TODO(ksheremet): Scaffold.of is unavailable here
@@ -207,6 +208,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
       title: (accessViewModel.user == null)
           ? new Center(
+              // TODO(ksheremet): use the shared ProgressIndicator
               child: new CircularProgressIndicator(),
             )
           : new Text(accessViewModel.user.name),
@@ -214,7 +216,10 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         value: accessViewModel.deckAccess.access,
         filter: filter,
         valueChanged: (AccessType access) => setState(() {
-              // TODO(ksheremet): Save new access to deck.
+              DeckAccessesViewModel.shareDeck(DeckAccess(
+                  deck: _deckAccessesViewModel.deck,
+                  uid: accessViewModel.deckAccess.uid,
+                  access: access));
             }),
       ),
     );
