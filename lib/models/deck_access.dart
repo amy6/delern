@@ -19,16 +19,26 @@ enum AccessType {
 
 class DeckAccess implements KeyedListItem, Model {
   // TODO(dotdoom): relay this to User model associated with this object.
-  String key;
+  String uid;
   Deck deck;
   AccessType access;
 
-  DeckAccess.fromSnapshot(this.key, dynamic snapshotValue, this.deck) {
+  String get key => uid;
+  set key(String newValue) {
+    if (newValue != null) {
+      throw UnsupportedError(
+          'DeckAccess must always be bound to an existing user');
+    }
+    uid = null;
+  }
+
+  DeckAccess.fromSnapshot(this.uid, dynamic snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);
   }
 
-  DeckAccess({@required this.deck, this.access}) : assert(deck != null) {
-    key ??= deck.uid;
+  DeckAccess({@required this.deck, this.uid, this.access})
+      : assert(deck != null) {
+    uid ??= deck.uid;
   }
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
