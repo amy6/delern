@@ -133,15 +133,15 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   void initState() {
     _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
-      if (a.access == b.access) {
+      if (a.deckAccess.access == b.deckAccess.access) {
         return (a.user?.name ?? '').compareTo(b.user?.name ?? '');
       }
 
-      switch (a.access) {
+      switch (a.deckAccess.access) {
         case AccessType.owner:
           return -1;
         case AccessType.write:
-          return b.access == AccessType.owner ? 1 : -1;
+          return b.deckAccess.access == AccessType.owner ? 1 : -1;
         default:
           return 1;
       }
@@ -193,7 +193,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
 
   Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;
-    if (accessViewModel.access == AccessType.owner) {
+    if (accessViewModel.deckAccess.access == AccessType.owner) {
       filter = (AccessType access) => access == AccessType.owner;
     } else {
       filter = (AccessType access) => access != AccessType.owner;
@@ -211,7 +211,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             )
           : new Text(accessViewModel.user.name),
       trailing: new DeckAccessDropdown(
-        value: accessViewModel.access,
+        value: accessViewModel.deckAccess.access,
         filter: filter,
         valueChanged: (AccessType access) => setState(() {
               // TODO(ksheremet): Save new access to deck.
