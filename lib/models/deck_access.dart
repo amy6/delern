@@ -73,8 +73,11 @@ class DeckAccess implements KeyedListItem, Model {
       .onValue
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
 
-  static Future<DeckAccess> fetch(Deck deck) async {
+  static Future<DeckAccess> fetch(Deck deck, [String uid]) async {
     var access = DeckAccess(deck: deck);
+    if (uid != null) {
+      access.uid = uid;
+    }
     await access.updates.first;
     return access;
   }
