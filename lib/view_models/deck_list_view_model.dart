@@ -49,6 +49,7 @@ class DeckListItemViewModel implements ListItemViewModel {
     }
 
     _internalUpdates = StreamMuxer({
+      // TODO(dotdoom): investigate _access.key == null
       false: _access.updates,
       true: _deck.getNumberOfCardsToLearn(),
     }).listen((event) {

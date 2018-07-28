@@ -79,7 +79,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
     return _textController.text.contains('@');
   }
 
-  //TODO(ksheremet): Disable sharing button
+  // TODO(ksheremet): Disable sharing button
   Future<void> _shareDeck(AccessType deckAccess) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
@@ -93,7 +93,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        //TODO(ksheremet): Share deck
+        await DeckAccessesViewModel.shareDeck(
+            DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
       }
     } catch (e, stackTrace) {
       // TODO(ksheremet): Scaffold.of is unavailable here
@@ -133,15 +134,15 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   void initState() {
     _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
-      if (a.access == b.access) {
+      if (a.deckAccess.access == b.deckAccess.access) {
         return (a.user?.name ?? '').compareTo(b.user?.name ?? '');
       }
 
-      switch (a.access) {
+      switch (a.deckAccess.access) {
         case AccessType.owner:
           return -1;
         case AccessType.write:
-          return b.access == AccessType.owner ? 1 : -1;
+          return b.deckAccess.access == AccessType.owner ? 1 : -1;
         default:
           return 1;
       }
@@ -193,7 +194,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
 
   Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;
-    if (accessViewModel.access == AccessType.owner) {
+    if (accessViewModel.deckAccess.access == AccessType.owner) {
       filter = (AccessType access) => access == AccessType.owner;
     } else {
       filter = (AccessType access) => access != AccessType.owner;
@@ -207,14 +208,18 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
       title: (accessViewModel.user == null)
           ? new Center(
+              // TODO(ksheremet): use the shared ProgressIndicator
               child: new CircularProgressIndicator(),
             )
           : new Text(accessViewModel.user.name),
       trailing: new DeckAccessDropdown(
-        value: accessViewModel.access,
+        value: accessViewModel.deckAccess.access,
         filter: filter,
         valueChanged: (AccessType access) => setState(() {
-              // TODO(ksheremet): Save new access to deck.
+              DeckAccessesViewModel.shareDeck(DeckAccess(
+                  deck: _deckAccessesViewModel.deck,
+                  uid: accessViewModel.deckAccess.uid,
+                  access: access));
             }),
       ),
     );
