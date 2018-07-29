@@ -6,6 +6,7 @@ import '../../models/fcm.dart';
 import '../../remote/sign_in.dart';
 import '../../view_models/home_view_model.dart';
 import '../decks_list/decks_list.dart';
+import '../helpers/progress_indicator.dart' as progressIndicator;
 import 'sign_in.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,13 +20,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseUser _user;
+  bool _authStateKnown = false;
 
   @override
   void initState() {
     super.initState();
 
     FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
-      setState(() => _user = firebaseUser);
+      setState(() {
+        _user = firebaseUser;
+        _authStateKnown = true;
+      });
       if (firebaseUser != null) {
         HomeViewModel.userSignedIn(
             firebaseUser,
@@ -44,9 +49,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (_user == null) {
-      return new Scaffold(
+      return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        body: new SignInWidget(),
+        body: _authStateKnown
+            ? SignInWidget()
+            : progressIndicator.ProgressIndicator(),
       );
     }
 
