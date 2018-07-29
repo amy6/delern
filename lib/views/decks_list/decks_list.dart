@@ -22,7 +22,7 @@ class DecksListPage extends StatefulWidget {
         super(key: key);
 
   @override
-  DecksListPageState createState() => new DecksListPageState();
+  DecksListPageState createState() => DecksListPageState();
 }
 
 class DecksListPageState extends State<DecksListPage> {
@@ -32,7 +32,7 @@ class DecksListPageState extends State<DecksListPage> {
   @override
   void didChangeDependencies() {
     // TODO(dotdoom): find out deactivate/build/didChangeDependencies flow.
-    viewModel ??= new DeckListViewModel(CurrentUserWidget.of(context).user.uid)
+    viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid)
       ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.didChangeDependencies();
   }
@@ -65,10 +65,10 @@ class DecksListPageState extends State<DecksListPage> {
     return Scaffold(
       appBar: SearchBarWidget(title: widget.title, search: setFilter),
       drawer: NavigationDrawer(),
-      body: new ObservingAnimatedList(
+      body: ObservingAnimatedList(
         list: viewModel.decks,
-        itemBuilder: (context, item, animation, index) => new SizeTransition(
-              child: new DeckListItem(item),
+        itemBuilder: (context, item, animation, index) => SizeTransition(
+              child: DeckListItem(item),
               sizeFactor: animation,
             ),
       ),
@@ -90,13 +90,13 @@ class DeckListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Column(
+    return Column(
       children: <Widget>[
-        new Container(
-          child: new Row(
+        Container(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new Expanded(
+              Expanded(
                 child: _buildDeckName(context),
               ),
               _buildNumberOfCards(),
@@ -104,26 +104,26 @@ class DeckListItem extends StatelessWidget {
             ],
           ),
         ),
-        new Divider(height: 1.0),
+        Divider(height: 1.0),
       ],
     );
   }
 
   Widget _buildDeckName(BuildContext context) {
-    return new Material(
-      child: new InkWell(
+    return Material(
+      child: InkWell(
         splashColor: Theme.of(context).splashColor,
         onTap: () => Navigator.push(
               context,
-              new MaterialPageRoute(
-                  builder: (context) => new CardsLearning(viewModel.deck)),
+              MaterialPageRoute(
+                  builder: (context) => CardsLearning(viewModel.deck)),
             ),
-        child: new Container(
-          padding: const EdgeInsets.only(
-              top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
-          child: new Text(
+        child: Container(
+          padding:
+              EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+          child: Text(
             viewModel.deck.name,
-            style: new TextStyle(
+            style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w400,
             ),
@@ -134,28 +134,28 @@ class DeckListItem extends StatelessWidget {
   }
 
   Widget _buildNumberOfCards() {
-    return new Container(
-      child: new Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
-          style: new TextStyle(
+    return Container(
+      child: Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
+          style: TextStyle(
             fontSize: 18.0,
           )),
     );
   }
 
   Widget _buildDeckMenu(BuildContext context) {
-    return new Material(
-      child: new InkResponse(
+    return Material(
+      child: InkResponse(
         splashColor: Theme.of(context).splashColor,
         radius: 15.0,
         onTap: () {},
-        child: new PopupMenuButton<_DeckMenuItemType>(
+        child: PopupMenuButton<_DeckMenuItemType>(
           onSelected: (itemType) => _onDeckMenuItemSelected(context, itemType),
           itemBuilder: (BuildContext context) {
             return _buildMenu(context)
                 .entries
-                .map((entry) => new PopupMenuItem<_DeckMenuItemType>(
+                .map((entry) => PopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,
-                      child: new Text(entry.value),
+                      child: Text(entry.value),
                     ))
                 .toList();
           },
@@ -169,23 +169,23 @@ class DeckListItem extends StatelessWidget {
       case _DeckMenuItemType.edit:
         Navigator.push(
           context,
-          new MaterialPageRoute(
-              builder: (context) => new CardsListPage(viewModel.deck)),
+          MaterialPageRoute(
+              builder: (context) => CardsListPage(viewModel.deck)),
         );
         break;
       case _DeckMenuItemType.setting:
         Navigator.push(
           context,
-          new MaterialPageRoute(
+          MaterialPageRoute(
               builder: (context) =>
-                  new DeckSettingsPage(viewModel.deck, viewModel.access)),
+                  DeckSettingsPage(viewModel.deck, viewModel.access)),
         );
         break;
       case _DeckMenuItemType.share:
         Navigator.push(
           context,
-          new MaterialPageRoute(
-              builder: (context) => new DeckSharingPage(viewModel.deck)),
+          MaterialPageRoute(
+              builder: (context) => DeckSharingPage(viewModel.deck)),
         );
         break;
     }
@@ -195,7 +195,7 @@ class DeckListItem extends StatelessWidget {
 enum _DeckMenuItemType { edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) =>
-    new LinkedHashMap<_DeckMenuItemType, String>()
+    LinkedHashMap<_DeckMenuItemType, String>()
       ..[_DeckMenuItemType.edit] =
           AppLocalizations.of(context).editCardsDeckMenu
       ..[_DeckMenuItemType.setting] =

@@ -49,9 +49,9 @@ class CardsLearningState extends State<CardsLearning> {
               }),
           onDone: () => Navigator.of(context).pop());
     }
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(_viewModel.deck.name),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_viewModel.deck.name),
         actions: <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
@@ -59,19 +59,19 @@ class CardsLearningState extends State<CardsLearning> {
           : Builder(
               builder: (context) => Column(
                     children: <Widget>[
-                      new Expanded(
+                      Expanded(
                           child: CardDisplay(_viewModel.card.front,
                               _viewModel.card.back ?? '', _isBackShown)),
                       Padding(
                         padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
-                        child: new Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: _buildButtons(context),
                         ),
                       ),
-                      new Row(
+                      Row(
                         children: <Widget>[
-                          new Text(AppLocalizations.of(context).watchedCards +
+                          Text(AppLocalizations.of(context).watchedCards +
                               '$_watchedCount'),
                         ],
                       )
@@ -83,15 +83,15 @@ class CardsLearningState extends State<CardsLearning> {
 
   Widget _buildPopupMenu() {
     return Builder(
-      builder: (context) => new PopupMenuButton<_CardMenuItemType>(
+      builder: (context) => PopupMenuButton<_CardMenuItemType>(
             onSelected: (itemType) =>
                 _onCardMenuItemSelected(context, itemType),
             itemBuilder: (BuildContext context) {
               return _buildMenu(context)
                   .entries
-                  .map((entry) => new PopupMenuItem<_CardMenuItemType>(
+                  .map((entry) => PopupMenuItem<_CardMenuItemType>(
                         value: entry.key,
-                        child: new Text(entry.value),
+                        child: Text(entry.value),
                       ))
                   .toList();
             },
@@ -104,18 +104,18 @@ class CardsLearningState extends State<CardsLearning> {
     if (_isBackShown) {
       return [
         // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
-        new FloatingActionButton(
+        FloatingActionButton(
             heroTag: "dontknow",
             backgroundColor: Colors.red,
-            child: new Icon(Icons.clear),
+            child: Icon(Icons.clear),
             onPressed: () async {
               await _answerCard(false, context);
               setState(() {});
             }),
-        new FloatingActionButton(
+        FloatingActionButton(
             heroTag: "know",
             backgroundColor: Colors.green,
-            child: new Icon(Icons.check),
+            child: Icon(Icons.check),
             onPressed: () async {
               await _answerCard(true, context);
               setState(() {});
@@ -123,10 +123,10 @@ class CardsLearningState extends State<CardsLearning> {
       ];
     } else
       return [
-        new FloatingActionButton(
+        FloatingActionButton(
             backgroundColor: Colors.orange,
             heroTag: "turn",
-            child: new Icon(Icons.cached),
+            child: Icon(Icons.cached),
             onPressed: () {
               setState(() {
                 _isBackShown = true;
@@ -151,7 +151,7 @@ class CardsLearningState extends State<CardsLearning> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => new CreateUpdateCard(_viewModel.card)));
+                builder: (context) => CreateUpdateCard(_viewModel.card)));
         break;
       case _CardMenuItemType.delete:
         _deleteCard(context);
@@ -181,6 +181,6 @@ class CardsLearningState extends State<CardsLearning> {
 enum _CardMenuItemType { edit, delete }
 
 Map<_CardMenuItemType, String> _buildMenu(BuildContext context) =>
-    new LinkedHashMap<_CardMenuItemType, String>()
+    LinkedHashMap<_CardMenuItemType, String>()
       ..[_CardMenuItemType.edit] = AppLocalizations.of(context).edit
       ..[_CardMenuItemType.delete] = AppLocalizations.of(context).delete;

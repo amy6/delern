@@ -20,9 +20,9 @@ class CreateUpdateCard extends StatefulWidget {
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _addReversedCard = false;
   bool _isChanged = false;
-  TextEditingController _frontTextController = new TextEditingController();
-  TextEditingController _backTextController = new TextEditingController();
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  TextEditingController _frontTextController = TextEditingController();
+  TextEditingController _backTextController = TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   CardViewModel _viewModel;
 
   @override
@@ -37,7 +37,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return WillPopScope(
       onWillPop: () async {
         if (_isChanged) {
           var locale = AppLocalizations.of(context);
@@ -58,7 +58,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         }
         return true;
       },
-      child: new Scaffold(
+      child: Scaffold(
         key: _scaffoldKey,
         appBar: _buildAppBar(),
         body: _buildBody(),
@@ -67,12 +67,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Widget _buildAppBar() {
-    return new AppBar(
-      title: new Text(_viewModel.card.deck.name),
+    return AppBar(
+      title: Text(_viewModel.card.deck.name),
       actions: <Widget>[
         _viewModel.card.key == null
-            ? new IconButton(
-                icon: new Icon(Icons.check),
+            ? IconButton(
+                icon: Icon(Icons.check),
                 onPressed: (_frontTextController.text.isEmpty ||
                         _backTextController.text.isEmpty)
                     ? null
@@ -94,10 +94,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                               _scaffoldKey.currentState, e, stackTrace);
                         }
                       })
-            : new FlatButton(
-                child: new Text(
+            : FlatButton(
+                child: Text(
                   AppLocalizations.of(context).save.toUpperCase(),
-                  style: _isChanged ? new TextStyle(color: Colors.white) : null,
+                  style: _isChanged ? TextStyle(color: Colors.white) : null,
                 ),
                 onPressed: _isChanged
                     ? () async {
@@ -125,7 +125,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   Widget _buildBody() {
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
-      new TextField(
+      TextField(
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _frontTextController,
@@ -134,10 +134,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             _isChanged = true;
           });
         },
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
-      new TextField(
+      TextField(
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _backTextController,
@@ -146,13 +146,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             _isChanged = true;
           });
         },
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,
         ),
       ),
     ];
 
-    // Add reversed card widget it it is adding new cards
+    // Add reversed card widget it it is adding cards
     if (_viewModel.card.key == null) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.
@@ -169,8 +169,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       ));
     }
 
-    return new ListView(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+    return ListView(
+      padding: EdgeInsets.only(left: 8.0, right: 8.0),
       children: widgetsList,
     );
   }
@@ -178,7 +178,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   void _clearFields() {
     _frontTextController.clear();
     _backTextController.clear();
-    // Unset Card key so that we create a new one.
+    // Unset Card key so that we create a one.
     _viewModel.card.key = null;
   }
 }

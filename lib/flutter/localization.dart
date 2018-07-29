@@ -19,7 +19,7 @@ class AppLocalizations {
 
     return initializeMessages(localeName).then((bool _) {
       Intl.defaultLocale = localeName;
-      return new AppLocalizations();
+      return AppLocalizations();
     });
   }
 
@@ -381,7 +381,7 @@ Twitter: https://twitter.com/dasdelern''',
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
-  const AppLocalizationsDelegate();
+  AppLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => ['en', 'ru'].contains(locale.languageCode);

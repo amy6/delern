@@ -11,14 +11,14 @@ import '../helpers/sign_in.dart';
 class CreateDeck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new FloatingActionButton(
-      child: new Icon(Icons.add),
+    return FloatingActionButton(
+      child: Icon(Icons.add),
       onPressed: () async {
         Deck newDeck = await showDialog<Deck>(
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new _CreateDeckDialog(),
+          builder: (_) => _CreateDeckDialog(),
         );
         if (newDeck != null) {
           try {
@@ -29,9 +29,9 @@ class CreateDeck extends StatelessWidget {
           }
           Navigator.push(
               context,
-              new MaterialPageRoute(
+              MaterialPageRoute(
                   builder: (context) =>
-                      new CreateUpdateCard(cardModel.Card(deck: newDeck))));
+                      CreateUpdateCard(cardModel.Card(deck: newDeck))));
         }
       },
     );
@@ -40,21 +40,21 @@ class CreateDeck extends StatelessWidget {
 
 class _CreateDeckDialog extends StatefulWidget {
   @override
-  _CreateDeckDialogState createState() => new _CreateDeckDialogState();
+  _CreateDeckDialogState createState() => _CreateDeckDialogState();
 }
 
 class _CreateDeckDialogState extends State<_CreateDeckDialog> {
-  final TextEditingController _textController = new TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return new AlertDialog(
-      title: new Text(
+    return AlertDialog(
+      title: Text(
         AppLocalizations.of(context).deck,
-        style: new TextStyle(fontWeight: FontWeight.w600),
+        style: TextStyle(fontWeight: FontWeight.w600),
       ),
-      content: new SingleChildScrollView(
-        child: new TextField(
+      content: SingleChildScrollView(
+        child: TextField(
           autofocus: true,
           controller: _textController,
           onChanged: (String text) {
@@ -63,17 +63,17 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         ),
       ),
       actions: <Widget>[
-        new FlatButton(
+        FlatButton(
             onPressed: () {
               Navigator.of(context).pop(null);
             },
-            child: new Text(AppLocalizations.of(context).cancel.toUpperCase())),
-        new FlatButton(
-            child: new Text(AppLocalizations.of(context).add.toUpperCase()),
+            child: Text(AppLocalizations.of(context).cancel.toUpperCase())),
+        FlatButton(
+            child: Text(AppLocalizations.of(context).add.toUpperCase()),
             onPressed: _textController.text.isEmpty
                 ? null
                 : () {
-                    Navigator.of(context).pop(new Deck(
+                    Navigator.of(context).pop(Deck(
                         uid: CurrentUserWidget.of(context).user.uid,
                         name: _textController.text));
                   }),

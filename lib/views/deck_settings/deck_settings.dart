@@ -21,8 +21,8 @@ class DeckSettingsPage extends StatefulWidget {
 }
 
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
-  final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _deckNameController = new TextEditingController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
   bool _isDeckChanged = false;
@@ -88,7 +88,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
 
   Widget _buildBody() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
           TextField(
@@ -106,7 +106,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 24.0),
+                padding: EdgeInsets.only(top: 24.0),
                 child: Text(AppLocalizations.of(context).deckType),
               ),
             ],

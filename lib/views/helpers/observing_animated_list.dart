@@ -26,12 +26,12 @@ class ObservingAnimatedList<T> extends StatefulWidget {
 
   @override
   ObservingAnimatedListState<T> createState() =>
-      new ObservingAnimatedListState<T>();
+      ObservingAnimatedListState<T>();
 }
 
 class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   final GlobalKey<AnimatedListState> _animatedListKey =
-      new GlobalKey<AnimatedListState>();
+      GlobalKey<AnimatedListState>();
 
   StreamSubscription<ListEvent<T>> _listSubscription;
 
@@ -82,7 +82,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
     }
 
     // TODO(ksheremet): for an empty list, return 'Add your items'
-    return new AnimatedList(
+    return AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,
       initialItemCount: widget.list.length,

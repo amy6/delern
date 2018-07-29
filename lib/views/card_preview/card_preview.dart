@@ -16,7 +16,7 @@ class CardPreview extends StatefulWidget {
   CardPreview(this._card);
 
   @override
-  State<StatefulWidget> createState() => new _CardPreviewState();
+  State<StatefulWidget> createState() => _CardPreviewState();
 }
 
 class _CardPreviewState extends State<CardPreview> {
@@ -41,13 +41,13 @@ class _CardPreviewState extends State<CardPreview> {
     if (_viewModelUpdates == null) {
       _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
     }
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(_viewModel.card.deck.name),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_viewModel.card.deck.name),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                icon: new Icon(Icons.delete),
+                icon: Icon(Icons.delete),
                 onPressed: () async {
                   var locale = AppLocalizations.of(context);
                   bool saveChanges = await showSaveUpdatesDialog(
@@ -71,18 +71,20 @@ class _CardPreviewState extends State<CardPreview> {
       ),
       body: Column(
         children: <Widget>[
-          new Expanded(
-              child: new CardDisplay(_viewModel.card.front,
-                  _viewModel.card.back, /*show back*/ true)),
-          new Padding(padding: const EdgeInsets.only(bottom: 100.0))
+          Expanded(
+              child: CardDisplay(
+                  _viewModel.card.front,
+                  _viewModel.card.back,
+                  /*show back*/ true)),
+          Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
-      floatingActionButton: new FloatingActionButton(
-        child: new Icon(Icons.edit),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.edit),
         onPressed: () => Navigator.push(
             context,
-            new MaterialPageRoute(
-                builder: (context) => new CreateUpdateCard(_viewModel.card))),
+            MaterialPageRoute(
+                builder: (context) => CreateUpdateCard(_viewModel.card))),
       ),
     );
   }

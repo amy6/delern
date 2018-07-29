@@ -77,7 +77,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
           'Sorting must not change the size of the list');
       setAll(0, newValue);
     } else {
-      setAll(0, new List<T>.from(this)..sort(_comparator));
+      setAll(0, List<T>.from(this)..sort(_comparator));
     }
   }
 

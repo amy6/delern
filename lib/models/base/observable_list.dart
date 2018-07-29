@@ -16,7 +16,7 @@ class ListEvent<T> {
   final int index;
   final T previousValue;
 
-  const ListEvent({
+  ListEvent({
     @required this.eventType,
     @required this.index,
     this.previousValue,
@@ -34,9 +34,9 @@ class ObservableList<T> extends ListBase<T> {
 
   bool get changed => _changed;
 
-  final List<T> _base = new List<T>();
+  final List<T> _base = List<T>();
   final StreamController<ListEvent<T>> _events =
-      new StreamController<ListEvent<T>>.broadcast(sync: true);
+      StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;
 
   T operator [](int index) {
@@ -57,7 +57,7 @@ class ObservableList<T> extends ListBase<T> {
   T removeAt(int index) {
     T value = _base.removeAt(index);
     _changed = true;
-    _events.add(new ListEvent(
+    _events.add(ListEvent(
       eventType: ListEventType.itemRemoved,
       index: index,
       previousValue: value,
@@ -69,7 +69,7 @@ class ObservableList<T> extends ListBase<T> {
   void insert(int index, T element) {
     _base.insert(index, element);
     _changed = true;
-    _events.add(new ListEvent(
+    _events.add(ListEvent(
       eventType: ListEventType.itemAdded,
       index: index,
     ));
@@ -92,7 +92,7 @@ class ObservableList<T> extends ListBase<T> {
     }
     _base.insert(insertBeforeIndex, _base.removeAt(takeFromIndex));
     _changed = true;
-    _events.add(new ListEvent(
+    _events.add(ListEvent(
       eventType: ListEventType.itemMoved,
       index: insertBeforeIndex,
     ));
@@ -103,7 +103,7 @@ class ObservableList<T> extends ListBase<T> {
     _base.length = index + newValue.length;
     _base.setAll(index, newValue);
     _changed = true;
-    _events.add(new ListEvent(
+    _events.add(ListEvent(
       eventType: ListEventType.set,
       index: index,
     ));
@@ -111,7 +111,7 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   set length(int newLength) {
-    throw new UnsupportedError('Changing ObservableList length using '
+    throw UnsupportedError('Changing ObservableList length using '
         'conventional methods is not supported. Please use methods instead');
   }
 
@@ -121,7 +121,7 @@ class ObservableList<T> extends ListBase<T> {
     // operator[]=, because in that case we cannot trace item removal.
     // Once we override all move-inducing methods, we can change set() into
     // operator[]=.
-    throw new UnsupportedError('Changing ObservableList elements using '
+    throw UnsupportedError('Changing ObservableList elements using '
         'conventional methods is not supported. Please use methods instead');
   }
 
@@ -132,7 +132,7 @@ class ObservableList<T> extends ListBase<T> {
     T previousValue = _base[index];
     _base[index] = value;
     _changed = true;
-    _events.add(new ListEvent(
+    _events.add(ListEvent(
       eventType: ListEventType.itemChanged,
       index: index,
       previousValue: previousValue,

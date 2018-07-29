@@ -19,52 +19,52 @@ class DeckSharingPage extends StatefulWidget {
   DeckSharingPage(this._deck);
 
   @override
-  State<StatefulWidget> createState() => new _DeckSharingState();
+  State<StatefulWidget> createState() => _DeckSharingState();
 }
 
 class _DeckSharingState extends State<DeckSharingPage> {
-  final TextEditingController _textController = new TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   AccessType _accessValue = AccessType.write;
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text(widget._deck.name),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget._deck.name),
           actions: <Widget>[
-            new IconButton(
-                icon: new Icon(Icons.send),
+            IconButton(
+                icon: Icon(Icons.send),
                 onPressed:
                     _isEmailCorrect() ? () => _shareDeck(_accessValue) : null)
           ],
         ),
-        body: new Column(
+        body: Column(
           children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-              child: new Row(
+            Padding(
+              padding: EdgeInsets.only(left: 8.0, top: 8.0),
+              child: Row(
                 children: <Widget>[
-                  new Text(AppLocalizations.of(context).peopleLabel),
+                  Text(AppLocalizations.of(context).peopleLabel),
                 ],
               ),
             ),
             _sharingEmail(),
-            new Expanded(child: new DeckUsersWidget(widget._deck)),
+            Expanded(child: DeckUsersWidget(widget._deck)),
           ],
         ),
       );
 
   Widget _sharingEmail() {
-    return new ListTile(
-      title: new TextField(
+    return ListTile(
+      title: TextField(
         controller: _textController,
         onChanged: (String text) {
           setState(() {});
         },
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
           hintText: AppLocalizations.of(context).emailAddressHint,
         ),
       ),
-      trailing: new DeckAccessDropdown(
+      trailing: DeckAccessDropdown(
         value: _accessValue,
         filter: (AccessType access) =>
             (access != AccessType.owner && access != null),
@@ -132,7 +132,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
 
   @override
   void initState() {
-    _deckAccessesViewModel = new DeckAccessesViewModel(widget._deck);
+    _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
       if (a.deckAccess.access == b.deckAccess.access) {
         return (a.user?.name ?? '').compareTo(b.user?.name ?? '');
@@ -169,21 +169,20 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       _deckAccessesViewModel.activate();
       _active = true;
     }
-    return new Column(
+    return Column(
       children: <Widget>[
-        new Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-          child: new Row(
+        Padding(
+          padding: EdgeInsets.only(left: 8.0, top: 8.0),
+          child: Row(
             children: <Widget>[
-              new Text(AppLocalizations.of(context).whoHasAccessLabel),
+              Text(AppLocalizations.of(context).whoHasAccessLabel),
             ],
           ),
         ),
-        new Expanded(
-          child: new ObservingAnimatedList(
+        Expanded(
+          child: ObservingAnimatedList(
               list: _deckAccessesViewModel.deckAccesses,
-              itemBuilder: (context, item, animation, index) =>
-                  new SizeTransition(
+              itemBuilder: (context, item, animation, index) => SizeTransition(
                     child: _buildUserAccessInfo(item),
                     sizeFactor: animation,
                   )),
@@ -200,19 +199,19 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       filter = (AccessType access) => access != AccessType.owner;
     }
 
-    return new ListTile(
+    return ListTile(
       leading: (accessViewModel.user == null)
           ? null
-          : new CircleAvatar(
-              backgroundImage: new NetworkImage(accessViewModel.user.photoUrl),
+          : CircleAvatar(
+              backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
             ),
       title: (accessViewModel.user == null)
-          ? new Center(
+          ? Center(
               // TODO(ksheremet): use the shared ProgressIndicator
-              child: new CircularProgressIndicator(),
+              child: CircularProgressIndicator(),
             )
-          : new Text(accessViewModel.user.name),
-      trailing: new DeckAccessDropdown(
+          : Text(accessViewModel.user.name),
+      trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
         filter: filter,
         valueChanged: (AccessType access) => setState(() {

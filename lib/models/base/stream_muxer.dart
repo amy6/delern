@@ -28,7 +28,7 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
   Map<T, StreamSubscription> _subscriptions;
 
   StreamMuxer(this.streams) {
-    _controller = new StreamController<StreamMuxerEvent<T>>(
+    _controller = StreamController<StreamMuxerEvent<T>>(
       onCancel: _onCancel,
       onListen: _onListen,
       onPause: () => _subscriptions.values.forEach((s) => s.pause()),
@@ -47,14 +47,13 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
   }
 
   void _onListen() {
-    _subscriptions = streams.map((key, stream) => new MapEntry(
+    _subscriptions = streams.map((key, stream) => MapEntry(
         key,
         stream.listen(
-          (evt) => _controller.add(new StreamMuxerEvent<T>(key, evt)),
+          (evt) => _controller.add(StreamMuxerEvent<T>(key, evt)),
           // TODO(dotdoom): should we cancel only when all of them are done?
           onDone: _onCancel,
-          onError: (err) =>
-              _controller.addError(new StreamMuxerEvent<T>(key, err)),
+          onError: (err) => _controller.addError(StreamMuxerEvent<T>(key, err)),
         )));
   }
 

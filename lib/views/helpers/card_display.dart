@@ -9,11 +9,11 @@ class CardDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Card(
+    return Card(
       color: Colors.greenAccent,
-      margin: const EdgeInsets.all(8.0),
-      child: new ListView(
-        padding: const EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(8.0),
+      child: ListView(
+        padding: EdgeInsets.all(20.0),
         children: _buildCardBody(),
       ),
     );
@@ -25,8 +25,8 @@ class CardDisplay extends StatelessWidget {
     ];
 
     if (_showBack) {
-      widgetList.add(new Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
+      widgetList.add(Padding(
+        padding: EdgeInsets.symmetric(vertical: 15.0),
         child: Divider(
           height: 1.0,
         ),
@@ -38,10 +38,10 @@ class CardDisplay extends StatelessWidget {
   }
 
   Widget _sideText(String text) {
-    return new Text(
+    return Text(
       text,
       textAlign: TextAlign.center,
-      style: new TextStyle(
+      style: TextStyle(
         fontSize: 18.0,
       ),
     );

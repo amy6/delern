@@ -59,31 +59,31 @@ class _SignInWidgetState extends State<SignInWidget> {
           ],
         ),
         Container(
-          padding: const EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
-          child: new Row(
+          padding: EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
+          child: Row(
             children: <Widget>[
-              new Expanded(
-                child: new Align(
+              Expanded(
+                child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: new RaisedButton(
+                    child: RaisedButton(
                         color: Colors.white,
                         onPressed: signInGoogleUser,
-                        child: new Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            new Container(
-                              padding: const EdgeInsets.all(10.0),
-                              child: new Image.asset(
+                            Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Image.asset(
                                 'images/google_sign_in.png',
                                 height: 35.0,
                                 width: 35.0,
                               ),
                             ),
-                            new Container(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: new Text(
+                            Container(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Text(
                                   AppLocalizations.of(context).signInWithGoogle,
-                                  style: new TextStyle(
+                                  style: TextStyle(
                                     fontSize: 18.0,
                                   ),
                                 )),

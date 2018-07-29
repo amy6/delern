@@ -20,7 +20,7 @@ class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class SearchBarWidgetState extends State<SearchBarWidget> {
-  TextEditingController _searchController = new TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   bool _isSearchMode = false;
 
   _searchTextChanged() {

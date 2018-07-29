@@ -32,7 +32,7 @@ class Card implements KeyedListItem, Model {
     back = snapshotValue['back'];
     createdAt = snapshotValue['createdAt'] == null
         ? null
-        : new DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
+        : DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
   static Future<Card> fetch(Deck deck, String cardId) async {
@@ -42,7 +42,7 @@ class Card implements KeyedListItem, Model {
   }
 
   static Stream<KeyedListEvent<Card>> getCards(Deck deck) async* {
-    yield new KeyedListEvent(
+    yield KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
                         .reference()
@@ -55,7 +55,7 @@ class Card implements KeyedListItem, Model {
                     .value as Map ??
                 {})
             .entries
-            .map((item) => new Card.fromSnapshot(item.key, item.value, deck)));
+            .map((item) => Card.fromSnapshot(item.key, item.value, deck)));
 
     yield* childEventsStream(
         FirebaseDatabase.instance
@@ -63,12 +63,11 @@ class Card implements KeyedListItem, Model {
             .child('cards')
             .child(deck.key)
             .orderByKey(),
-        (snapshot) =>
-            new Card.fromSnapshot(snapshot.key, snapshot.value, deck));
+        (snapshot) => Card.fromSnapshot(snapshot.key, snapshot.value, deck));
   }
 
   Map<String, dynamic> toMap(bool isNew) {
-    var map = new Map<String, dynamic>()
+    var map = Map<String, dynamic>()
       ..['cards/${deck.key}/$key/front'] = front
       ..['cards/${deck.key}/$key/back'] = back;
     if (isNew) {

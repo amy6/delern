@@ -5,9 +5,9 @@ import '../lib/view_models/base/view_models_list.dart';
 
 StreamMatcher eventMatcher(ListEventType eventType, int index,
     [previousValue]) {
-  var expected = new ListEvent(
+  var expected = ListEvent(
       eventType: eventType, index: index, previousValue: previousValue);
-  return new StreamMatcher((q) async {
+  return StreamMatcher((q) async {
     if (!await q.hasNext) return '';
 
     ListEvent actual = await q.next;
