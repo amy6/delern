@@ -22,7 +22,7 @@ class _DeckTypeDropdownState extends State<DeckTypeDropdown> {
         // Provide default value.
         value: widget.value,
         items: (DeckType.values).map((DeckType value) {
-          return new DropdownMenuItem<DeckType>(
+          return DropdownMenuItem<DeckType>(
             child: _buildDropdownItem(value),
             value: value,
           );

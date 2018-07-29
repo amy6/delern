@@ -5,7 +5,7 @@ import 'helpers.dart';
 
 void main() {
   test('events', () {
-    var list = new ObservableList<int>();
+    var list = ObservableList<int>();
 
     expect(
         list.events,
@@ -55,19 +55,18 @@ void main() {
   });
 
   test('disallowed methods', () {
-    var list = new ObservableList<int>();
+    var list = ObservableList<int>();
     list.setAll(0, [1, -1, 0]);
 
-    expect(() => list.length += 1,
-        throwsA(const isInstanceOf<UnsupportedError>()));
-    expect(list.sort, throwsA(const isInstanceOf<UnsupportedError>()));
+    expect(() => list.length += 1, throwsA(isInstanceOf<UnsupportedError>()));
+    expect(list.sort, throwsA(isInstanceOf<UnsupportedError>()));
 
     list.dispose();
-    expect(() => list.add(0), throwsA(const isInstanceOf<StateError>()));
+    expect(() => list.add(0), throwsA(isInstanceOf<StateError>()));
   });
 
   test('empty changes', () {
-    var list = new ObservableList();
+    var list = ObservableList();
 
     list.move(0, 0);
     expect(list.changed, false);

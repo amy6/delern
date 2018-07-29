@@ -9,7 +9,7 @@ import '../helpers/sign_in.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override
-  _NavigationDrawerState createState() => new _NavigationDrawerState();
+  _NavigationDrawerState createState() => _NavigationDrawerState();
 }
 
 class _NavigationDrawerState extends State<NavigationDrawer> {
@@ -26,66 +26,65 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   @override
   Widget build(BuildContext context) {
     var user = CurrentUserWidget.of(context).user;
-    return new Drawer(
-        child: new Column(
+    return Drawer(
+        child: Column(
       children: <Widget>[
-        new UserAccountsDrawerHeader(
-          accountName: new Text(user.displayName),
-          accountEmail: new Text(user.email),
-          currentAccountPicture: new CircleAvatar(
-            backgroundImage: new NetworkImage(user.photoUrl),
+        UserAccountsDrawerHeader(
+          accountName: Text(user.displayName),
+          accountEmail: Text(user.email),
+          currentAccountPicture: CircleAvatar(
+            backgroundImage: NetworkImage(user.photoUrl),
           ),
         ),
-        new ListTile(
-          leading: new Icon(Icons.perm_identity),
-          title: new Text(AppLocalizations.of(context).navigationDrawerSignOut),
+        ListTile(
+          leading: Icon(Icons.perm_identity),
+          title: Text(AppLocalizations.of(context).navigationDrawerSignOut),
           onTap: () {
             signOut();
             Navigator.pop(context);
           },
         ),
-        new Divider(height: 1.0),
-        new ListTile(
-          title: new Text(
+        Divider(height: 1.0),
+        ListTile(
+          title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: new TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               color: Colors.grey[600],
             ),
           ),
         ),
-        new ListTile(
-          leading: new Icon(Icons.contact_mail),
-          title: new Text(
-              AppLocalizations.of(context).navigationDrawerInviteFriends),
+        ListTile(
+          leading: Icon(Icons.contact_mail),
+          title:
+              Text(AppLocalizations.of(context).navigationDrawerInviteFriends),
           onTap: () {
             sendInvite(context);
             Navigator.pop(context);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.live_help),
-          title:
-              new Text(AppLocalizations.of(context).navigationDrawerContactUs),
+        ListTile(
+          leading: Icon(Icons.live_help),
+          title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () {
             Navigator.pop(context);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.attach_money),
-          title: new Text(
+        ListTile(
+          leading: Icon(Icons.attach_money),
+          title: Text(
               AppLocalizations.of(context).navigationDrawerSupportDevelopment),
           onTap: () {
             Navigator.pop(context);
           },
         ),
-        new Divider(
+        Divider(
           height: 1.0,
         ),
-        new AboutListTile(
-          icon: new Icon(Icons.perm_device_information),
-          child: new Text(AppLocalizations.of(context).navigationDrawerAbout),
-          applicationIcon: new Image.asset('images/ic_launcher.png'),
+        AboutListTile(
+          icon: Icon(Icons.perm_device_information),
+          child: Text(AppLocalizations.of(context).navigationDrawerAbout),
+          applicationIcon: Image.asset('images/ic_launcher.png'),
           applicationVersion: versionCode,
           applicationLegalese: 'GNU General Public License v3.0',
         ),

@@ -31,7 +31,7 @@ class Deck implements KeyedListItem, Model {
     this.lastSyncAt,
     this.category,
   }) : assert(uid != null) {
-    lastSyncAt ??= new DateTime.fromMillisecondsSinceEpoch(0);
+    lastSyncAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   Deck.fromSnapshot(this.key, snapshotValue, this.uid) {
@@ -50,12 +50,12 @@ class Deck implements KeyedListItem, Model {
         snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
     accepted = snapshotValue['accepted'] ?? false;
     lastSyncAt =
-        new DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt']);
+        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt']);
     category = snapshotValue['category'];
   }
 
   static Stream<KeyedListEvent<Deck>> getDecks(String uid) async* {
-    yield new KeyedListEvent(
+    yield KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
                         .reference()
@@ -68,14 +68,14 @@ class Deck implements KeyedListItem, Model {
                     .value as Map ??
                 {})
             .entries
-            .map((item) => new Deck.fromSnapshot(item.key, item.value, uid)));
+            .map((item) => Deck.fromSnapshot(item.key, item.value, uid)));
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()
             .child('decks')
             .child(uid)
             .orderByKey(),
-        (snapshot) => new Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
+        (snapshot) => Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
   }
 
   Stream<void> get updates => FirebaseDatabase.instance
@@ -93,7 +93,7 @@ class Deck implements KeyedListItem, Model {
           .child(uid)
           .child(key)
           .orderByChild('repeatAt')
-          .endAt(new DateTime.now().toUtc().millisecondsSinceEpoch)
+          .endAt(DateTime.now().toUtc().millisecondsSinceEpoch)
           .limitToFirst(limit)
           .onValue
           .map((evt) => (evt.snapshot.value as Map)?.length ?? 0);

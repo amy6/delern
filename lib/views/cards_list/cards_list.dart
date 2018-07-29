@@ -17,7 +17,7 @@ class CardsListPage extends StatefulWidget {
   CardsListPage(this._deck);
 
   @override
-  _CardsListState createState() => new _CardsListState();
+  _CardsListState createState() => _CardsListState();
 }
 
 class _CardsListState extends State<CardsListPage> {
@@ -69,22 +69,22 @@ class _CardsListState extends State<CardsListPage> {
       _updates = _viewModel.updates.listen((_) => setState(() {}));
     }
 
-    return new Scaffold(
+    return Scaffold(
       appBar: SearchBarWidget(
           title: _viewModel.deck.name, search: _searchTextChanged),
-      body: new ObservingGrid(
+      body: ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: _viewModel.cards,
-        itemBuilder: (item) => new CardGridItem(item, _viewModel.deck),
+        itemBuilder: (item) => CardGridItem(item, _viewModel.deck),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
             context,
-            new MaterialPageRoute(
-                builder: (context) => new CreateUpdateCard(
-                    cardModel.Card(deck: _viewModel.deck)))),
-        child: new Icon(Icons.add),
+            MaterialPageRoute(
+                builder: (context) =>
+                    CreateUpdateCard(cardModel.Card(deck: _viewModel.deck)))),
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -98,38 +98,38 @@ class CardGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Card(
+    return Card(
       color: Colors.transparent,
-      child: new Material(
+      child: Material(
         color: Colors.greenAccent,
-        child: new InkWell(
+        child: InkWell(
           splashColor: Theme.of(context).splashColor,
           onTap: () => Navigator.push(
               context,
-              new MaterialPageRoute(
-                  builder: (context) => new CardPreview(viewModel.card))),
-          child: new Container(
-            padding: const EdgeInsets.all(5.0),
-            child: new Column(
+              MaterialPageRoute(
+                  builder: (context) => CardPreview(viewModel.card))),
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text(
+                Text(
                   viewModel.card.front,
                   maxLines: 3,
                   softWrap: true,
                   textAlign: TextAlign.center,
-                  style: new TextStyle(
+                  style: TextStyle(
                     fontSize: 18.0,
                   ),
                 ),
-                new Container(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: new Text(
+                Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Text(
                     viewModel.card.back ?? '',
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
-                    style: new TextStyle(
+                    style: TextStyle(
                       fontSize: 14.0,
                     ),
                   ),

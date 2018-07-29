@@ -6,15 +6,15 @@ import '../lib/models/base/stream_muxer.dart';
 
 void main() {
   test('empty stream', () async {
-    var muxer = new StreamMuxer({
-      'test': new Stream.empty(),
+    var muxer = StreamMuxer({
+      'test': Stream.empty(),
     });
 
     expect(await muxer.isEmpty, true);
   });
 
   test('error stack trace forwarding', () {
-    var muxer = new StreamMuxer({
+    var muxer = StreamMuxer({
       'test': () async* {
         throw Error();
       }(),
@@ -24,7 +24,7 @@ void main() {
   });
 
   test('error stack trace null when not error', () {
-    var muxer = new StreamMuxer({
+    var muxer = StreamMuxer({
       'test': () async* {
         throw 'nothing';
       }(),

@@ -17,7 +17,7 @@ class KeyedListEvent<T extends KeyedListItem> {
   final String previousSiblingKey;
   final Iterable<T> fullListValueForSet;
 
-  const KeyedListEvent({
+  KeyedListEvent({
     @required this.eventType,
     this.previousSiblingKey,
     this.value,
@@ -25,7 +25,7 @@ class KeyedListEvent<T extends KeyedListItem> {
   });
 
   KeyedListEvent<T2> map<T2 extends KeyedListItem>(T2 mapper(T value)) =>
-      new KeyedListEvent<T2>(
+      KeyedListEvent<T2>(
         eventType: eventType,
         previousSiblingKey: previousSiblingKey,
         value: value == null ? null : mapper(value),
@@ -43,14 +43,14 @@ abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
 
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
     Query query, T snapshotParser(DataSnapshot s)) {
-  return new StreamMuxer<ListEventType>({
+  return StreamMuxer<ListEventType>({
     ListEventType.itemAdded: query.onChildAdded,
     ListEventType.itemRemoved: query.onChildRemoved,
     ListEventType.itemMoved: query.onChildMoved,
     ListEventType.itemChanged: query.onChildChanged,
   }).map((muxerEvent) {
     Event dbEvent = muxerEvent.value;
-    return new KeyedListEvent(
+    return KeyedListEvent(
       eventType: muxerEvent.stream,
       value: snapshotParser(dbEvent.snapshot),
       previousSiblingKey: dbEvent.previousSiblingKey,

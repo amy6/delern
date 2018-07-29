@@ -26,7 +26,7 @@ class ObservingGrid<T> extends StatefulWidget {
   final String numberOfCardsLabel;
 
   @override
-  ObservingGridState<T> createState() => new ObservingGridState<T>();
+  ObservingGridState<T> createState() => ObservingGridState<T>();
 }
 
 class ObservingGridState<T> extends State<ObservingGrid<T>> {
@@ -61,21 +61,20 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
 
     // TODO(ksheremet): for an empty list, return 'Add your items'
 
-    return new Column(
+    return Column(
       children: <Widget>[
-        new Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            new Text(
+            Text(
               '${widget.numberOfCardsLabel} ${widget.items.length}',
             ),
           ],
         ),
-        new Expanded(
-          child: new GridView.extent(
+        Expanded(
+          child: GridView.extent(
             maxCrossAxisExtent: widget.maxCrossAxisExtent,
-            children:
-                new List.of(widget.items.map((entry) => _buildItem(entry))),
+            children: List.of(widget.items.map((entry) => _buildItem(entry))),
           ),
         ),
       ],

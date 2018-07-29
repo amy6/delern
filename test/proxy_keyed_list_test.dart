@@ -8,8 +8,8 @@ import 'helpers.dart';
 
 void main() {
   test('filters & sorts', () async {
-    var baseList = new ObservableList<TestFixture>();
-    var list = new ProxyKeyedList<TestFixture>(baseList);
+    var baseList = ObservableList<TestFixture>();
+    var list = ProxyKeyedList<TestFixture>(baseList);
 
     expect(
         list.events,
@@ -17,22 +17,22 @@ void main() {
           // Initial set.
           eventMatcher(ListEventType.set, 0),
           // Filter applied.
-          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('B')),
-          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('C')),
-          eventMatcher(ListEventType.itemRemoved, 1, new TestFixture('E')),
+          eventMatcher(ListEventType.itemRemoved, 1, TestFixture('B')),
+          eventMatcher(ListEventType.itemRemoved, 1, TestFixture('C')),
+          eventMatcher(ListEventType.itemRemoved, 1, TestFixture('E')),
           // Sort applied.
           eventMatcher(ListEventType.set, 0),
           // Item that passes the filter is added.
           eventMatcher(ListEventType.itemAdded, 1),
           // Item that passed the filter is removed.
-          eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('A')),
+          eventMatcher(ListEventType.itemRemoved, 2, TestFixture('A')),
           // Filter updated to allow a few more items, and disallow one.
           eventMatcher(ListEventType.itemAdded, 2),
           eventMatcher(ListEventType.itemAdded, 2),
           eventMatcher(ListEventType.itemAdded, 1),
-          eventMatcher(ListEventType.itemRemoved, 2, new TestFixture('D')),
+          eventMatcher(ListEventType.itemRemoved, 2, TestFixture('D')),
           // Item changed.
-          eventMatcher(ListEventType.itemChanged, 3, new TestFixture('B')),
+          eventMatcher(ListEventType.itemChanged, 3, TestFixture('B')),
           // Sort removed.
           eventMatcher(ListEventType.set, 0),
           // Item moved again.
@@ -43,23 +43,23 @@ void main() {
         ]));
 
     // Wait for all microtasks (listen()) to complete.
-    await new Future(() {});
+    await Future(() {});
 
     baseList.setAll(0, [
-      new TestFixture('A'),
-      new TestFixture('B'),
-      new TestFixture('C'),
-      new TestFixture('E'),
-      new TestFixture('F'),
+      TestFixture('A'),
+      TestFixture('B'),
+      TestFixture('C'),
+      TestFixture('E'),
+      TestFixture('F'),
     ]);
     expect(
         list,
         equals([
-          new TestFixture('A'),
-          new TestFixture('B'),
-          new TestFixture('C'),
-          new TestFixture('E'),
-          new TestFixture('F'),
+          TestFixture('A'),
+          TestFixture('B'),
+          TestFixture('C'),
+          TestFixture('E'),
+          TestFixture('F'),
         ]));
     expect(list, baseList);
 
@@ -67,85 +67,85 @@ void main() {
     expect(
         list,
         equals([
-          new TestFixture('A'),
-          new TestFixture('F'),
+          TestFixture('A'),
+          TestFixture('F'),
         ]));
 
     list.comparator = (a, b) => b.key.compareTo(a.key);
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('A'),
+          TestFixture('F'),
+          TestFixture('A'),
         ]));
 
-    baseList.add(new TestFixture('D'));
+    baseList.add(TestFixture('D'));
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('D'),
-          new TestFixture('A'),
+          TestFixture('F'),
+          TestFixture('D'),
+          TestFixture('A'),
         ]));
 
     baseList.removeAt(0);
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('D'),
+          TestFixture('F'),
+          TestFixture('D'),
         ]));
 
     list.filter = (f) => f.key != 'D';
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('E'),
-          new TestFixture('C'),
-          new TestFixture('B'),
+          TestFixture('F'),
+          TestFixture('E'),
+          TestFixture('C'),
+          TestFixture('B'),
         ]));
 
-    baseList.setAt(0, new TestFixture('B', data: 'updated'));
+    baseList.setAt(0, TestFixture('B', data: 'updated'));
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('E'),
-          new TestFixture('C'),
+          TestFixture('F'),
+          TestFixture('E'),
+          TestFixture('C'),
           // Doesn't go through updateWith, because underlying list is not a
           // ViewModelsList. Therefore, updateCount is not increased.
-          new TestFixture('B', data: 'updated'),
+          TestFixture('B', data: 'updated'),
         ]));
 
     baseList.move(2, 4);
     expect(
         list,
         equals([
-          new TestFixture('F'),
-          new TestFixture('E'),
-          new TestFixture('C'),
-          new TestFixture('B', data: 'updated'),
+          TestFixture('F'),
+          TestFixture('E'),
+          TestFixture('C'),
+          TestFixture('B', data: 'updated'),
         ]));
 
     list.comparator = null;
     expect(
         list,
         equals([
-          new TestFixture('B', data: 'updated'),
-          new TestFixture('C'),
-          new TestFixture('F'),
-          new TestFixture('E'),
+          TestFixture('B', data: 'updated'),
+          TestFixture('C'),
+          TestFixture('F'),
+          TestFixture('E'),
         ]));
 
     baseList.move(3, 2);
     expect(
         list,
         equals([
-          new TestFixture('B', data: 'updated'),
-          new TestFixture('C'),
-          new TestFixture('E'),
-          new TestFixture('F'),
+          TestFixture('B', data: 'updated'),
+          TestFixture('C'),
+          TestFixture('E'),
+          TestFixture('F'),
         ]));
 
     list.filter = null;
@@ -156,35 +156,31 @@ void main() {
   });
 
   test('setAt with data, move', () async {
-    var baseList = new ObservableList<TestFixture>();
+    var baseList = ObservableList<TestFixture>();
     baseList.setAll(0, [
-      new TestFixture('A', data: 0),
-      new TestFixture('B', data: 1),
-      new TestFixture('C', data: 2),
-      new TestFixture('D', data: 3),
-      new TestFixture('E', data: 4),
+      TestFixture('A', data: 0),
+      TestFixture('B', data: 1),
+      TestFixture('C', data: 2),
+      TestFixture('D', data: 3),
+      TestFixture('E', data: 4),
     ]);
-    var list = new ProxyKeyedList<TestFixture>(baseList);
+    var list = ProxyKeyedList<TestFixture>(baseList);
 
     expect(
         list.events,
         emitsInOrder([
           // Filter removes 1 item.
-          eventMatcher(
-              ListEventType.itemRemoved, 0, new TestFixture('A', data: 0)),
+          eventMatcher(ListEventType.itemRemoved, 0, TestFixture('A', data: 0)),
           // Sort is applied.
           eventMatcher(ListEventType.set, 0),
           // Item that passes the filter is added.
           eventMatcher(ListEventType.itemAdded, 0),
           // Item is changed and this change moves it per the order defined.
-          eventMatcher(
-              ListEventType.itemChanged, 3, new TestFixture('C', data: 2)),
+          eventMatcher(ListEventType.itemChanged, 3, TestFixture('C', data: 2)),
           eventMatcher(ListEventType.itemMoved, 0),
           // Item is changed and no longer passes the filter.
-          eventMatcher(
-              ListEventType.itemChanged, 1, new TestFixture('F', data: 5)),
-          eventMatcher(
-              ListEventType.itemRemoved, 1, new TestFixture('F', data: 0)),
+          eventMatcher(ListEventType.itemChanged, 1, TestFixture('F', data: 5)),
+          eventMatcher(ListEventType.itemRemoved, 1, TestFixture('F', data: 0)),
           // Item is changed and starts passing the filter.
           eventMatcher(ListEventType.itemAdded, 1),
           // Sorting is removed.
@@ -200,7 +196,7 @@ void main() {
         ]));
 
     // Wait for all microtasks (listen()) to complete.
-    await new Future(() {});
+    await Future(() {});
 
     expect(list, baseList);
 
@@ -208,107 +204,107 @@ void main() {
     expect(
         list,
         equals([
-          new TestFixture('B', data: 1),
-          new TestFixture('C', data: 2),
-          new TestFixture('D', data: 3),
-          new TestFixture('E', data: 4),
+          TestFixture('B', data: 1),
+          TestFixture('C', data: 2),
+          TestFixture('D', data: 3),
+          TestFixture('E', data: 4),
         ]));
 
     list.comparator = (a, b) => b.data.compareTo(a.data);
     expect(
         list,
         equals([
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('C', data: 2),
-          new TestFixture('B', data: 1),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('C', data: 2),
+          TestFixture('B', data: 1),
         ]));
 
-    baseList.add(new TestFixture('F', data: 5));
+    baseList.add(TestFixture('F', data: 5));
     expect(
         list,
         equals([
-          new TestFixture('F', data: 5),
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('C', data: 2),
-          new TestFixture('B', data: 1),
+          TestFixture('F', data: 5),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('C', data: 2),
+          TestFixture('B', data: 1),
         ]));
 
-    baseList.setAt(2, new TestFixture('C', data: 7));
+    baseList.setAt(2, TestFixture('C', data: 7));
     expect(
         list,
         equals([
-          new TestFixture('C', data: 7),
-          new TestFixture('F', data: 5),
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('F', data: 5),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('B', data: 1),
         ]));
 
-    baseList.setAt(5, new TestFixture('F', data: 0));
+    baseList.setAt(5, TestFixture('F', data: 0));
     expect(
         list,
         equals([
-          new TestFixture('C', data: 7),
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('B', data: 1),
         ]));
 
-    baseList.setAt(0, new TestFixture('A', data: 6));
+    baseList.setAt(0, TestFixture('A', data: 6));
     expect(
         list,
         equals([
-          new TestFixture('C', data: 7),
-          new TestFixture('A', data: 6),
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('A', data: 6),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('B', data: 1),
         ]));
 
     list.comparator = null;
     expect(
         list,
         equals([
-          new TestFixture('A', data: 6),
-          new TestFixture('B', data: 1),
-          new TestFixture('C', data: 7),
-          new TestFixture('D', data: 3),
-          new TestFixture('E', data: 4),
+          TestFixture('A', data: 6),
+          TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('D', data: 3),
+          TestFixture('E', data: 4),
         ]));
 
     baseList.move(0, 6);
     expect(
         list,
         equals([
-          new TestFixture('B', data: 1),
-          new TestFixture('C', data: 7),
-          new TestFixture('D', data: 3),
-          new TestFixture('E', data: 4),
-          new TestFixture('A', data: 6),
+          TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('D', data: 3),
+          TestFixture('E', data: 4),
+          TestFixture('A', data: 6),
         ]));
 
     baseList.move(4, 0);
     expect(
         list,
         equals([
-          new TestFixture('B', data: 1),
-          new TestFixture('C', data: 7),
-          new TestFixture('D', data: 3),
-          new TestFixture('E', data: 4),
-          new TestFixture('A', data: 6),
+          TestFixture('B', data: 1),
+          TestFixture('C', data: 7),
+          TestFixture('D', data: 3),
+          TestFixture('E', data: 4),
+          TestFixture('A', data: 6),
         ]));
 
     baseList.move(1, 3);
     expect(
         list,
         equals([
-          new TestFixture('C', data: 7),
-          new TestFixture('B', data: 1),
-          new TestFixture('D', data: 3),
-          new TestFixture('E', data: 4),
-          new TestFixture('A', data: 6),
+          TestFixture('C', data: 7),
+          TestFixture('B', data: 1),
+          TestFixture('D', data: 3),
+          TestFixture('E', data: 4),
+          TestFixture('A', data: 6),
         ]));
 
     list.filter = null;
@@ -319,8 +315,8 @@ void main() {
   });
 
   test('initial setAll with filter and comparator', () async {
-    var baseList = new ObservableList<TestFixture>();
-    var list = new ProxyKeyedList<TestFixture>(baseList);
+    var baseList = ObservableList<TestFixture>();
+    var list = ProxyKeyedList<TestFixture>(baseList);
 
     expect(
         list.events,
@@ -335,7 +331,7 @@ void main() {
         ]));
 
     // Wait for all microtasks (listen()) to complete.
-    await new Future(() {});
+    await Future(() {});
 
     expect(list, baseList);
 
@@ -344,19 +340,19 @@ void main() {
 
     expect(list, baseList);
     baseList.setAll(0, [
-      new TestFixture('A', data: 0),
-      new TestFixture('B', data: 1),
-      new TestFixture('C', data: 2),
-      new TestFixture('D', data: 3),
-      new TestFixture('E', data: 4),
+      TestFixture('A', data: 0),
+      TestFixture('B', data: 1),
+      TestFixture('C', data: 2),
+      TestFixture('D', data: 3),
+      TestFixture('E', data: 4),
     ]);
     expect(
         list,
         equals([
-          new TestFixture('E', data: 4),
-          new TestFixture('D', data: 3),
-          new TestFixture('C', data: 2),
-          new TestFixture('B', data: 1),
+          TestFixture('E', data: 4),
+          TestFixture('D', data: 3),
+          TestFixture('C', data: 2),
+          TestFixture('B', data: 1),
         ]));
 
     list.filter = null;

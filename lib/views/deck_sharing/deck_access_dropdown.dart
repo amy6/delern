@@ -26,13 +26,13 @@ class DeckAccessDropdown extends StatefulWidget {
 class _DropdownState extends State<DeckAccessDropdown> {
   @override
   Widget build(BuildContext context) {
-    return new DropdownButton<AccessType>(
+    return DropdownButton<AccessType>(
       // Provide default value.
       value: widget.value,
       items: (AccessType.values + [null])
           .where(widget.filter)
           .map((AccessType value) {
-        return new DropdownMenuItem<AccessType>(
+        return DropdownMenuItem<AccessType>(
           child: buildDropdownItem(value),
           value: value,
         );
@@ -50,27 +50,27 @@ class _DropdownState extends State<DeckAccessDropdown> {
     Icon icon;
     if (access == null) {
       text = AppLocalizations.of(context).noAccess;
-      icon = new Icon(Icons.clear);
+      icon = Icon(Icons.clear);
     } else {
       switch (access) {
         case AccessType.write:
           text = AppLocalizations.of(context).canEdit;
-          icon = new Icon(Icons.edit);
+          icon = Icon(Icons.edit);
           break;
         case AccessType.read:
           text = AppLocalizations.of(context).canView;
-          icon = new Icon(Icons.remove_red_eye);
+          icon = Icon(Icons.remove_red_eye);
           break;
         case AccessType.owner:
           text = AppLocalizations.of(context).owner;
-          icon = new Icon(Icons.person);
+          icon = Icon(Icons.person);
           break;
       }
     }
-    return new Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        new Text(text),
+        Text(text),
         icon,
       ],
     );

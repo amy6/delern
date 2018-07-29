@@ -40,7 +40,7 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
   }
 
   void childUpdated(T child) {
-    _processListEvent(new KeyedListEvent(
+    _processListEvent(KeyedListEvent(
       eventType: ListEventType.itemChanged,
       value: child,
     ));
