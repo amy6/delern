@@ -49,9 +49,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
     setState(() {});
   }
 
-  Widget _buildItem(T item) {
-    return widget.itemBuilder(item);
-  }
+  Widget _buildItem(T item) => widget.itemBuilder(item);
 
   @override
   Widget build(BuildContext context) {

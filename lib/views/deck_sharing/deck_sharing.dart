@@ -53,31 +53,27 @@ class _DeckSharingState extends State<DeckSharingPage> {
         ),
       );
 
-  Widget _sharingEmail() {
-    return ListTile(
-      title: TextField(
-        controller: _textController,
-        onChanged: (String text) {
-          setState(() {});
-        },
-        decoration: InputDecoration(
-          hintText: AppLocalizations.of(context).emailAddressHint,
+  Widget _sharingEmail() => ListTile(
+        title: TextField(
+          controller: _textController,
+          onChanged: (String text) {
+            setState(() {});
+          },
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context).emailAddressHint,
+          ),
         ),
-      ),
-      trailing: DeckAccessDropdown(
-        value: _accessValue,
-        filter: (AccessType access) =>
-            (access != AccessType.owner && access != null),
-        valueChanged: (AccessType access) => setState(() {
-              _accessValue = access;
-            }),
-      ),
-    );
-  }
+        trailing: DeckAccessDropdown(
+          value: _accessValue,
+          filter: (AccessType access) =>
+              (access != AccessType.owner && access != null),
+          valueChanged: (AccessType access) => setState(() {
+                _accessValue = access;
+              }),
+        ),
+      );
 
-  bool _isEmailCorrect() {
-    return _textController.text.contains('@');
-  }
+  bool _isEmailCorrect() => _textController.text.contains('@');
 
   // TODO(ksheremet): Disable sharing button
   Future<void> _shareDeck(AccessType deckAccess) async {

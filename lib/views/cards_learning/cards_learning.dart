@@ -81,23 +81,19 @@ class CardsLearningState extends State<CardsLearning> {
     );
   }
 
-  Widget _buildPopupMenu() {
-    return Builder(
-      builder: (context) => PopupMenuButton<_CardMenuItemType>(
-            onSelected: (itemType) =>
-                _onCardMenuItemSelected(context, itemType),
-            itemBuilder: (BuildContext context) {
-              return _buildMenu(context)
+  Widget _buildPopupMenu() => Builder(
+        builder: (context) => PopupMenuButton<_CardMenuItemType>(
+              onSelected: (itemType) =>
+                  _onCardMenuItemSelected(context, itemType),
+              itemBuilder: (BuildContext context) => _buildMenu(context)
                   .entries
                   .map((entry) => PopupMenuItem<_CardMenuItemType>(
                         value: entry.key,
                         child: Text(entry.value),
                       ))
-                  .toList();
-            },
-          ),
-    );
-  }
+                  .toList(),
+            ),
+      );
 
   //heroTag - https://stackoverflow.com/questions/46509553/
   List<Widget> _buildButtons(BuildContext context) {

@@ -8,16 +8,14 @@ class CardDisplay extends StatelessWidget {
   CardDisplay(this._front, this._back, this._showBack);
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.greenAccent,
-      margin: EdgeInsets.all(8.0),
-      child: ListView(
-        padding: EdgeInsets.all(20.0),
-        children: _buildCardBody(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Card(
+        color: Colors.greenAccent,
+        margin: EdgeInsets.all(8.0),
+        child: ListView(
+          padding: EdgeInsets.all(20.0),
+          children: _buildCardBody(),
+        ),
+      );
 
   List<Widget> _buildCardBody() {
     List<Widget> widgetList = [
@@ -37,13 +35,11 @@ class CardDisplay extends StatelessWidget {
     return widgetList;
   }
 
-  Widget _sideText(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 18.0,
-      ),
-    );
-  }
+  Widget _sideText(String text) => Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 18.0,
+        ),
+      );
 }

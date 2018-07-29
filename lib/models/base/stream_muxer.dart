@@ -7,18 +7,11 @@ class StreamMuxerEvent<T> implements Error {
   StreamMuxerEvent(this.stream, this.value);
 
   @override
-  String toString() {
-    return '[muxed stream "$stream"]: $value';
-  }
+  String toString() => '[muxed stream "$stream"]: $value';
 
   // Forward to 'value' to provide stack trace to error reporting facilities.
   @override
-  StackTrace get stackTrace {
-    if (value is Error) {
-      return value.stackTrace;
-    }
-    return null;
-  }
+  StackTrace get stackTrace => value is Error ? value.stackTrace : null;
 }
 
 class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
@@ -38,13 +31,12 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
 
   @override
   StreamSubscription<StreamMuxerEvent<T>> listen(
-      void Function(StreamMuxerEvent<T> event) onData,
-      {Function onError,
-      void Function() onDone,
-      bool cancelOnError}) {
-    return _controller.stream.listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
-  }
+          void Function(StreamMuxerEvent<T> event) onData,
+          {Function onError,
+          void Function() onDone,
+          bool cancelOnError}) =>
+      _controller.stream.listen(onData,
+          onError: onError, onDone: onDone, cancelOnError: cancelOnError);
 
   void _onListen() {
     _subscriptions = streams.map((key, stream) => MapEntry(

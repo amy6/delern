@@ -89,80 +89,71 @@ class DeckListItem extends StatelessWidget {
   DeckListItem(this.viewModel);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: _buildDeckName(context),
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          Container(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: _buildDeckName(context),
+                ),
+                _buildNumberOfCards(),
+                _buildDeckMenu(context),
+              ],
+            ),
+          ),
+          Divider(height: 1.0),
+        ],
+      );
+
+  Widget _buildDeckName(BuildContext context) => Material(
+        child: InkWell(
+          splashColor: Theme.of(context).splashColor,
+          onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CardsLearning(viewModel.deck)),
               ),
-              _buildNumberOfCards(),
-              _buildDeckMenu(context),
-            ],
+          child: Container(
+            padding:
+                EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+            child: Text(
+              viewModel.deck.name,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
         ),
-        Divider(height: 1.0),
-      ],
-    );
-  }
+      );
 
-  Widget _buildDeckName(BuildContext context) {
-    return Material(
-      child: InkWell(
-        splashColor: Theme.of(context).splashColor,
-        onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CardsLearning(viewModel.deck)),
-            ),
-        child: Container(
-          padding:
-              EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
-          child: Text(
-            viewModel.deck.name,
+  Widget _buildNumberOfCards() => Container(
+        child: Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
             style: TextStyle(
               fontSize: 18.0,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+            )),
+      );
 
-  Widget _buildNumberOfCards() {
-    return Container(
-      child: Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
-          style: TextStyle(
-            fontSize: 18.0,
-          )),
-    );
-  }
-
-  Widget _buildDeckMenu(BuildContext context) {
-    return Material(
-      child: InkResponse(
-        splashColor: Theme.of(context).splashColor,
-        radius: 15.0,
-        onTap: () {},
-        child: PopupMenuButton<_DeckMenuItemType>(
-          onSelected: (itemType) => _onDeckMenuItemSelected(context, itemType),
-          itemBuilder: (BuildContext context) {
-            return _buildMenu(context)
+  Widget _buildDeckMenu(BuildContext context) => Material(
+        child: InkResponse(
+          splashColor: Theme.of(context).splashColor,
+          radius: 15.0,
+          onTap: () {},
+          child: PopupMenuButton<_DeckMenuItemType>(
+            onSelected: (itemType) =>
+                _onDeckMenuItemSelected(context, itemType),
+            itemBuilder: (BuildContext context) => _buildMenu(context)
                 .entries
                 .map((entry) => PopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,
                       child: Text(entry.value),
                     ))
-                .toList();
-          },
+                .toList(),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
     switch (item) {

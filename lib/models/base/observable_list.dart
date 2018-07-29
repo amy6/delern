@@ -22,9 +22,7 @@ class ListEvent<T> {
     this.previousValue,
   });
 
-  String toString() {
-    return '$eventType #$index ($previousValue)';
-  }
+  String toString() => '$eventType #$index ($previousValue)';
 }
 
 class ObservableList<T> extends ListBase<T> {
@@ -39,9 +37,7 @@ class ObservableList<T> extends ListBase<T> {
       StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;
 
-  T operator [](int index) {
-    return _base[index];
-  }
+  T operator [](int index) => _base[index];
 
   @override
   void add(T value) {

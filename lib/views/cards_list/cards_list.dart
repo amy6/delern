@@ -97,48 +97,46 @@ class CardGridItem extends StatelessWidget {
   CardGridItem(this.viewModel, this.deck);
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.transparent,
-      child: Material(
-        color: Colors.greenAccent,
-        child: InkWell(
-          splashColor: Theme.of(context).splashColor,
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CardPreview(viewModel.card))),
-          child: Container(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  viewModel.card.front,
-                  maxLines: 3,
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    viewModel.card.back ?? '',
+  Widget build(BuildContext context) => Card(
+        color: Colors.transparent,
+        child: Material(
+          color: Colors.greenAccent,
+          child: InkWell(
+            splashColor: Theme.of(context).splashColor,
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CardPreview(viewModel.card))),
+            child: Container(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    viewModel.card.front,
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 18.0,
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      viewModel.card.back ?? '',
+                      maxLines: 3,
+                      softWrap: true,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

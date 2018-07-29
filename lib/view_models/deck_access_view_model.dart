@@ -62,9 +62,7 @@ class DeckAccessViewModel implements ListItemViewModel {
   }
 
   @override
-  String toString() {
-    return '#$key ${_deckAccess.access} $_user';
-  }
+  String toString() => '#$key ${_deckAccess.access} $_user';
 }
 
 class DeckAccessesViewModel implements Activatable {
