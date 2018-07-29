@@ -25,25 +25,22 @@ class DeckAccessDropdown extends StatefulWidget {
 
 class _DropdownState extends State<DeckAccessDropdown> {
   @override
-  Widget build(BuildContext context) {
-    return DropdownButton<AccessType>(
-      // Provide default value.
-      value: widget.value,
-      items: (AccessType.values + [null])
-          .where(widget.filter)
-          .map((AccessType value) {
-        return DropdownMenuItem<AccessType>(
-          child: buildDropdownItem(value),
-          value: value,
-        );
-      }).toList(),
-      onChanged: (AccessType newValue) {
-        setState(() {
-          widget.valueChanged(newValue);
-        });
-      },
-    );
-  }
+  Widget build(BuildContext context) => DropdownButton<AccessType>(
+        // Provide default value.
+        value: widget.value,
+        items: (AccessType.values + [null])
+            .where(widget.filter)
+            .map((AccessType value) => DropdownMenuItem<AccessType>(
+                  child: buildDropdownItem(value),
+                  value: value,
+                ))
+            .toList(),
+        onChanged: (AccessType newValue) {
+          setState(() {
+            widget.valueChanged(newValue);
+          });
+        },
+      );
 
   Widget buildDropdownItem(AccessType access) {
     String text;

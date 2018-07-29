@@ -54,11 +54,11 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
         _animatedListKey.currentState.insertItem(event.index);
         break;
       case ListEventType.itemRemoved:
-        _animatedListKey.currentState.removeItem(event.index,
-            (BuildContext context, Animation<double> animation) {
-          return widget.itemBuilder(
-              context, event.previousValue, animation, event.index);
-        });
+        _animatedListKey.currentState.removeItem(
+            event.index,
+            (BuildContext context, Animation<double> animation) =>
+                widget.itemBuilder(
+                    context, event.previousValue, animation, event.index));
         break;
       case ListEventType.set:
       // Note: number of items must not change here (unless it's the first
@@ -71,9 +71,8 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   }
 
   Widget _buildItem(
-      BuildContext context, int index, Animation<double> animation) {
-    return widget.itemBuilder(context, widget.list[index], animation, index);
-  }
+          BuildContext context, int index, Animation<double> animation) =>
+      widget.itemBuilder(context, widget.list[index], animation, index);
 
   @override
   Widget build(BuildContext context) {

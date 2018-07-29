@@ -10,32 +10,30 @@ import '../helpers/sign_in.dart';
 
 class CreateDeck extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(Icons.add),
-      onPressed: () async {
-        Deck newDeck = await showDialog<Deck>(
-          context: context,
-          // User must tap a button to dismiss dialog
-          barrierDismissible: false,
-          builder: (_) => _CreateDeckDialog(),
-        );
-        if (newDeck != null) {
-          try {
-            await DeckListViewModel.createDeck(newDeck);
-          } catch (e, stackTrace) {
-            UserMessages.showError(Scaffold.of(context), e, stackTrace);
-            return;
+  Widget build(BuildContext context) => FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          Deck newDeck = await showDialog<Deck>(
+            context: context,
+            // User must tap a button to dismiss dialog
+            barrierDismissible: false,
+            builder: (_) => _CreateDeckDialog(),
+          );
+          if (newDeck != null) {
+            try {
+              await DeckListViewModel.createDeck(newDeck);
+            } catch (e, stackTrace) {
+              UserMessages.showError(Scaffold.of(context), e, stackTrace);
+              return;
+            }
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CreateUpdateCard(cardModel.Card(deck: newDeck))));
           }
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      CreateUpdateCard(cardModel.Card(deck: newDeck))));
-        }
-      },
-    );
-  }
+        },
+      );
 }
 
 class _CreateDeckDialog extends StatefulWidget {
@@ -47,37 +45,35 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   final TextEditingController _textController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        AppLocalizations.of(context).deck,
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
-      content: SingleChildScrollView(
-        child: TextField(
-          autofocus: true,
-          controller: _textController,
-          onChanged: (String text) {
-            setState(() {});
-          },
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text(
+          AppLocalizations.of(context).deck,
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop(null);
+        content: SingleChildScrollView(
+          child: TextField(
+            autofocus: true,
+            controller: _textController,
+            onChanged: (String text) {
+              setState(() {});
             },
-            child: Text(AppLocalizations.of(context).cancel.toUpperCase())),
-        FlatButton(
-            child: Text(AppLocalizations.of(context).add.toUpperCase()),
-            onPressed: _textController.text.isEmpty
-                ? null
-                : () {
-                    Navigator.of(context).pop(Deck(
-                        uid: CurrentUserWidget.of(context).user.uid,
-                        name: _textController.text));
-                  }),
-      ],
-    );
-  }
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop(null);
+              },
+              child: Text(AppLocalizations.of(context).cancel.toUpperCase())),
+          FlatButton(
+              child: Text(AppLocalizations.of(context).add.toUpperCase()),
+              onPressed: _textController.text.isEmpty
+                  ? null
+                  : () {
+                      Navigator.of(context).pop(Deck(
+                          uid: CurrentUserWidget.of(context).user.uid,
+                          name: _textController.text));
+                    }),
+        ],
+      );
 }

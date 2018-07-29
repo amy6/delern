@@ -70,9 +70,7 @@ class DeckListItemViewModel implements ListItemViewModel {
   }
 
   @override
-  String toString() {
-    return '#$key ${deck?.name} [$access $cardsToLearn]';
-  }
+  String toString() => '#$key ${deck?.name} [$access $cardsToLearn]';
 }
 
 class DeckListViewModel implements Activatable {

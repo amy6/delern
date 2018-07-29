@@ -36,84 +36,81 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isChanged) {
-          var locale = AppLocalizations.of(context);
-          var saveChangesDialog = await showSaveUpdatesDialog(
-              context: context,
-              changesQuestion: locale.saveChangesQuestion,
-              yesAnswer: locale.save,
-              noAnswer: locale.cancel);
-          if (saveChangesDialog) {
-            try {
-              await _saveCard();
-              return true;
-            } catch (e, stackTrace) {
-              UserMessages.showError(_scaffoldKey.currentState, e, stackTrace);
-              return false;
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if (_isChanged) {
+            var locale = AppLocalizations.of(context);
+            var saveChangesDialog = await showSaveUpdatesDialog(
+                context: context,
+                changesQuestion: locale.saveChangesQuestion,
+                yesAnswer: locale.save,
+                noAnswer: locale.cancel);
+            if (saveChangesDialog) {
+              try {
+                await _saveCard();
+                return true;
+              } catch (e, stackTrace) {
+                UserMessages.showError(
+                    _scaffoldKey.currentState, e, stackTrace);
+                return false;
+              }
             }
           }
-        }
-        return true;
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: _buildAppBar(),
-        body: _buildBody(),
-      ),
-    );
-  }
+          return true;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ),
+      );
 
-  Widget _buildAppBar() {
-    return AppBar(
-      title: Text(_viewModel.card.deck.name),
-      actions: <Widget>[
-        _viewModel.card.key == null
-            ? IconButton(
-                icon: Icon(Icons.check),
-                onPressed: (_frontTextController.text.isEmpty ||
-                        _backTextController.text.isEmpty)
-                    ? null
-                    : () async {
-                        // TODO(ksheremer): disable button when writing to db
-                        try {
-                          await _saveCard();
-                          UserMessages.showMessage(
-                              _scaffoldKey.currentState,
-                              AppLocalizations
-                                  .of(context)
-                                  .cardAddedUserMessage);
-                          setState(() {
-                            _isChanged = false;
-                            _clearFields();
-                          });
-                        } catch (e, stackTrace) {
-                          UserMessages.showError(
-                              _scaffoldKey.currentState, e, stackTrace);
+  Widget _buildAppBar() => AppBar(
+        title: Text(_viewModel.card.deck.name),
+        actions: <Widget>[
+          _viewModel.card.key == null
+              ? IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: (_frontTextController.text.isEmpty ||
+                          _backTextController.text.isEmpty)
+                      ? null
+                      : () async {
+                          // TODO(ksheremer): disable button when writing to db
+                          try {
+                            await _saveCard();
+                            UserMessages.showMessage(
+                                _scaffoldKey.currentState,
+                                AppLocalizations
+                                    .of(context)
+                                    .cardAddedUserMessage);
+                            setState(() {
+                              _isChanged = false;
+                              _clearFields();
+                            });
+                          } catch (e, stackTrace) {
+                            UserMessages.showError(
+                                _scaffoldKey.currentState, e, stackTrace);
+                          }
+                        })
+              : FlatButton(
+                  child: Text(
+                    AppLocalizations.of(context).save.toUpperCase(),
+                    style: _isChanged ? TextStyle(color: Colors.white) : null,
+                  ),
+                  onPressed: _isChanged
+                      ? () async {
+                          try {
+                            await _saveCard();
+                          } catch (e, stackTrace) {
+                            UserMessages.showError(
+                                _scaffoldKey.currentState, e, stackTrace);
+                            return;
+                          }
+                          Navigator.of(context).pop();
                         }
-                      })
-            : FlatButton(
-                child: Text(
-                  AppLocalizations.of(context).save.toUpperCase(),
-                  style: _isChanged ? TextStyle(color: Colors.white) : null,
-                ),
-                onPressed: _isChanged
-                    ? () async {
-                        try {
-                          await _saveCard();
-                        } catch (e, stackTrace) {
-                          UserMessages.showError(
-                              _scaffoldKey.currentState, e, stackTrace);
-                          return;
-                        }
-                        Navigator.of(context).pop();
-                      }
-                    : null)
-      ],
-    );
-  }
+                      : null)
+        ],
+      );
 
   Future<void> _saveCard() async {
     // TODO(ksheremet): Consider to check that front or back are empty.

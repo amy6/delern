@@ -32,9 +32,7 @@ class KeyedListEvent<T extends KeyedListItem> {
         fullListValueForSet: fullListValueForSet?.map(mapper),
       );
 
-  String toString() {
-    return '$eventType #$previousSiblingKey ($value)';
-  }
+  String toString() => '$eventType #$previousSiblingKey ($value)';
 }
 
 abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
@@ -42,18 +40,17 @@ abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
 }
 
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
-    Query query, T snapshotParser(DataSnapshot s)) {
-  return StreamMuxer<ListEventType>({
-    ListEventType.itemAdded: query.onChildAdded,
-    ListEventType.itemRemoved: query.onChildRemoved,
-    ListEventType.itemMoved: query.onChildMoved,
-    ListEventType.itemChanged: query.onChildChanged,
-  }).map((muxerEvent) {
-    Event dbEvent = muxerEvent.value;
-    return KeyedListEvent(
-      eventType: muxerEvent.stream,
-      value: snapshotParser(dbEvent.snapshot),
-      previousSiblingKey: dbEvent.previousSiblingKey,
-    );
-  });
-}
+        Query query, T snapshotParser(DataSnapshot s)) =>
+    StreamMuxer<ListEventType>({
+      ListEventType.itemAdded: query.onChildAdded,
+      ListEventType.itemRemoved: query.onChildRemoved,
+      ListEventType.itemMoved: query.onChildMoved,
+      ListEventType.itemChanged: query.onChildChanged,
+    }).map((muxerEvent) {
+      Event dbEvent = muxerEvent.value;
+      return KeyedListEvent(
+        eventType: muxerEvent.stream,
+        value: snapshotParser(dbEvent.snapshot),
+        previousSiblingKey: dbEvent.previousSiblingKey,
+      );
+    });
