@@ -7,7 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
 import 'remote/error_reporting.dart';
-import 'views/home/home.dart';
+import 'views/decks_list/decks_list.dart';
+import 'views/helpers/sign_in.dart';
 
 class App extends StatelessWidget {
   @override
@@ -28,7 +29,8 @@ class App extends StatelessWidget {
       title: title,
       theme: new ThemeData(
           primarySwatch: Colors.green, accentColor: Colors.redAccent),
-      home: new HomePage(title),
+      // TODO(dotdoom): put SignInWidget above Navigator.
+      home: SignInWidget(child: DecksListPage(title: title)),
     );
   }
 }
