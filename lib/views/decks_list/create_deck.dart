@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
@@ -7,12 +6,9 @@ import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../card_create_update/card_create_update.dart';
+import '../helpers/sign_in.dart';
 
 class CreateDeck extends StatelessWidget {
-  final FirebaseUser _user;
-
-  CreateDeck(this._user);
-
   @override
   Widget build(BuildContext context) {
     return new FloatingActionButton(
@@ -22,7 +18,7 @@ class CreateDeck extends StatelessWidget {
           context: context,
           // User must tap a button to dismiss dialog
           barrierDismissible: false,
-          builder: (_) => new _CreateDeckDialog(_user),
+          builder: (_) => new _CreateDeckDialog(),
         );
         if (newDeck != null) {
           try {
@@ -43,10 +39,6 @@ class CreateDeck extends StatelessWidget {
 }
 
 class _CreateDeckDialog extends StatefulWidget {
-  final FirebaseUser _user;
-
-  _CreateDeckDialog(this._user);
-
   @override
   _CreateDeckDialogState createState() => new _CreateDeckDialogState();
 }
@@ -82,7 +74,8 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
                 ? null
                 : () {
                     Navigator.of(context).pop(new Deck(
-                        uid: widget._user.uid, name: _textController.text));
+                        uid: CurrentUserWidget.of(context).user.uid,
+                        name: _textController.text));
                   }),
       ],
     );

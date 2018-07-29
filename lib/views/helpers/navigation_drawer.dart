@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
@@ -6,16 +5,14 @@ import 'package:package_info/package_info.dart';
 import '../../flutter/localization.dart';
 import '../../remote/sign_in.dart';
 import '../helpers/send_invite.dart';
+import '../helpers/sign_in.dart';
 
 class NavigationDrawer extends StatefulWidget {
-  final FirebaseUser user;
-  NavigationDrawer(this.user);
-
   @override
-  _NavDrawerState createState() => new _NavDrawerState();
+  _NavigationDrawerState createState() => new _NavigationDrawerState();
 }
 
-class _NavDrawerState extends State<NavigationDrawer> {
+class _NavigationDrawerState extends State<NavigationDrawer> {
   String versionCode;
 
   @override
@@ -28,14 +25,15 @@ class _NavDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    var user = CurrentUserWidget.of(context).user;
     return new Drawer(
         child: new Column(
       children: <Widget>[
         new UserAccountsDrawerHeader(
-          accountName: new Text(widget.user.displayName),
-          accountEmail: new Text(widget.user.email),
+          accountName: new Text(user.displayName),
+          accountEmail: new Text(user.email),
           currentAccountPicture: new CircleAvatar(
-            backgroundImage: new NetworkImage(widget.user.photoUrl),
+            backgroundImage: new NetworkImage(user.photoUrl),
           ),
         ),
         new ListTile(
