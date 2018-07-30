@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
@@ -17,6 +18,11 @@ class User implements KeyedListItem, Model {
   User.fromSnapshot(this.key, dynamic snapshotValue) {
     _parseSnapshot(snapshotValue);
   }
+
+  User.fromFirebase(FirebaseUser user)
+      : key = user.uid,
+        name = user.displayName,
+        photoUrl = user.photoUrl;
 
   void _parseSnapshot(dynamic snapshotValue) {
     if (snapshotValue == null) {
