@@ -27,10 +27,11 @@ class App extends StatelessWidget {
         Locale('ru', 'RU'),
       ],
       title: title,
+      // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
+      builder: (context, child) => SignInWidget(child: child),
       theme:
           ThemeData(primarySwatch: Colors.green, accentColor: Colors.redAccent),
-      // TODO(dotdoom): put SignInWidget above Navigator.
-      home: SignInWidget(child: DecksListPage(title: title)),
+      home: DecksListPage(title: title),
     );
   }
 }
