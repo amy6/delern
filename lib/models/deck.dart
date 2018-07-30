@@ -55,6 +55,11 @@ class Deck implements KeyedListItem, Model {
   }
 
   static Stream<KeyedListEvent<Deck>> getDecks(String uid) async* {
+    FirebaseDatabase.instance
+        .reference()
+        .child('decks')
+        .child(uid)
+        .keepSynced(true);
     yield KeyedListEvent(
         eventType: ListEventType.set,
         fullListValueForSet: ((await FirebaseDatabase.instance
@@ -68,14 +73,37 @@ class Deck implements KeyedListItem, Model {
                     .value as Map ??
                 {})
             .entries
-            .map((item) => Deck.fromSnapshot(item.key, item.value, uid)));
+            .map((item) {
+          _keepDeckSynced(uid, item.key);
+          return Deck.fromSnapshot(item.key, item.value, uid);
+        }));
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()
             .child('decks')
             .child(uid)
-            .orderByKey(),
-        (snapshot) => Deck.fromSnapshot(snapshot.key, snapshot.value, uid));
+            .orderByKey(), (snapshot) {
+      _keepDeckSynced(uid, snapshot.key);
+      return Deck.fromSnapshot(snapshot.key, snapshot.value, uid);
+    });
+  }
+
+  static void _keepDeckSynced(String uid, String deckId) {
+    // Install a background listener on ScheduledCard and Card. The listener
+    // is cancelled automatically when the deck is deleted or un-shared because
+    // of the security rules.
+
+    FirebaseDatabase.instance
+        .reference()
+        .child('learning')
+        .child(uid)
+        .child(deckId)
+        .keepSynced(true);
+    FirebaseDatabase.instance
+        .reference()
+        .child('cards')
+        .child(deckId)
+        .keepSynced(true);
   }
 
   Stream<void> get updates => FirebaseDatabase.instance
