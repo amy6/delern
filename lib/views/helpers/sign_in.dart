@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../flutter/device_info.dart';
 import '../../flutter/localization.dart';
+import '../../models/base/transaction.dart';
+import '../../models/fcm.dart';
+import '../../models/user.dart';
 import '../../remote/sign_in.dart';
 import 'progress_indicator.dart' as progressIndicator;
 
@@ -27,6 +31,20 @@ class _SignInWidgetState extends State<SignInWidget> {
         _user = firebaseUser;
         _isAuthStateKnown = true;
       });
+
+      if (_user != null) {
+        var fcm = FCM(
+            uid: firebaseUser.uid,
+            language: Localizations.localeOf(context).toString(),
+            name: await DeviceInfo.getDeviceManufactureName())
+          // TODO(ksheremet): await _firebaseMessaging.getToken()
+          ..key = 'fake';
+
+        // TODO(dotdoom): move into models?
+        print('Registering for FCM as ${fcm.name} in ${fcm.language}');
+        (Transaction()..save(User.fromFirebase(firebaseUser))..save(fcm))
+            .commit();
+      }
     });
 
     signInSilently();
