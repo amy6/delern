@@ -21,7 +21,15 @@ class ErrorReporting {
 
   static Future<Null> report(
       String src, dynamic error, dynamic stackTrace) async {
-    debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $error');
+    var message = error.toString();
+    try {
+      // For DatabaseError, toString() returns "Instance of 'DatabaseError'".
+      message += ': ${error.message}';
+    } catch (e) {
+      // We tried.
+    }
+
+    debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $message');
 
     if (stackTrace == null && error is Error) {
       stackTrace = error.stackTrace;
@@ -58,7 +66,7 @@ class ErrorReporting {
     print('Reporting to Sentry.io...');
     final SentryResponse response = await _sentry.capture(
         event: Event(
-      exception: error,
+      message: message,
       stackTrace: stackTrace,
       loggerName: src,
     ));
