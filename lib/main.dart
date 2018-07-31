@@ -38,10 +38,11 @@ class App extends StatelessWidget {
 
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) async {
-    await reportError('FlutterError', details.exception, details.stack);
+    await ErrorReporting.report(
+        'FlutterError', details.exception, details.stack);
   };
   Isolate.current.addErrorListener(RawReceivePort((dynamic pair) async {
-    await reportError(
+    await ErrorReporting.report(
       'Isolate ErrorListener',
       (pair as List<String>).first,
       (pair as List<String>).last,
@@ -51,6 +52,6 @@ void main() {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
     runApp(App());
   }, onError: (error, stackTrace) async {
-    await reportError('Zone', error, stackTrace);
+    await ErrorReporting.report('Zone', error, stackTrace);
   });
 }

@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 
-import '../remote/error_reporting.dart';
-
 class DeviceInfo {
   static Future<String> getDeviceManufactureName() async {
     try {
@@ -17,7 +15,10 @@ class DeviceInfo {
         return info.model.toString();
       }
     } catch (e, stackTrace) {
-      reportError('DeviceInfo', e, stackTrace);
+      // Can't use reportError from here because Error Reporting uses this.
+      // TODO(dotdoom): find a way to overcome this.
+      print(e);
+      print(stackTrace);
     }
     return 'Unknown';
   }

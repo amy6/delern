@@ -6,6 +6,7 @@ import '../../flutter/localization.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
 import '../../models/user.dart';
+import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
 import 'progress_indicator.dart' as progressIndicator;
 
@@ -33,6 +34,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       });
 
       if (_user != null) {
+        ErrorReporting.uid = _user.uid;
         var fcm = FCM(
             uid: firebaseUser.uid,
             language: Localizations.localeOf(context).toString(),
