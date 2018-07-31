@@ -49,7 +49,7 @@ class ScheduledCard implements KeyedListItem, Model {
     try {
       level = int.parse(snapshotValue['level'].toString().substring(1));
     } on FormatException catch (e, stackTrace) {
-      reportError('ScheduledCard', e, stackTrace);
+      ErrorReporting.report('ScheduledCard', e, stackTrace);
       level = 0;
     }
     repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);

@@ -10,7 +10,7 @@ class UserMessages {
   // TODO(dotdoom): if Scaffold.of() fails, the error is not reported!
   static Future<Null> showError(
       ScaffoldState scaffoldState, dynamic e, StackTrace stackTrace) {
-    var errorFuture = reportError('showError', e, stackTrace);
+    var errorFuture = ErrorReporting.report('showError', e, stackTrace);
 
     String message =
         AppLocalizations.of(scaffoldState.context).errorUserMessage +
