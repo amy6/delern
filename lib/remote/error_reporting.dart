@@ -10,14 +10,7 @@ import '../flutter/device_info.dart';
 
 class ErrorReporting {
   static SentryClient _sentry;
-  static String _uid;
-
-  static set uid(String newValue) {
-    _uid = newValue;
-    if (_sentry != null) {
-      _sentry.environmentAttributes.extra['uid'] = _uid;
-    }
-  }
+  static String uid;
 
   static Future<Null> report(
       String src, dynamic error, dynamic stackTrace) async {
@@ -49,7 +42,6 @@ class ErrorReporting {
         environment: environment,
         extra: {
           'model': await DeviceInfo.getDeviceManufactureName(),
-          'uid': _uid,
         },
       );
       _sentry = SentryClient(
@@ -69,6 +61,7 @@ class ErrorReporting {
       message: message,
       stackTrace: stackTrace,
       loggerName: src,
+      userContext: User(id: uid),
     ));
     if (response.isSuccessful) {
       print('Success! Event ID: ${response.eventId}');
