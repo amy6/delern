@@ -38,7 +38,7 @@ class _SignInWidgetState extends State<SignInWidget> {
         var fcm = FCM(
             uid: firebaseUser.uid,
             language: Localizations.localeOf(context).toString(),
-            name: await DeviceInfo.getDeviceManufactureName())
+            name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
           // TODO(ksheremet): await _firebaseMessaging.getToken()
           ..key = 'fake';
 
