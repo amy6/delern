@@ -37,11 +37,13 @@ class ErrorReporting {
           null);
 
       var packageInfo = await PackageInfo.fromPlatform();
+      var deviceInfo = await DeviceInfo.getDeviceInfo();
       var environmentAttributes = Event(
         release: '${packageInfo.version} (${packageInfo.buildNumber})',
         environment: environment,
         extra: {
-          'model': await DeviceInfo.getDeviceManufactureName(),
+          'model': deviceInfo.userFriendlyName,
+          'sdk': deviceInfo.sdk,
         },
       );
       _sentry = SentryClient(
