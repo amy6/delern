@@ -23,7 +23,7 @@ class CreateDeck extends StatelessWidget {
             try {
               await DeckListViewModel.createDeck(newDeck);
             } catch (e, stackTrace) {
-              UserMessages.showError(Scaffold.of(context), e, stackTrace);
+              UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
               return;
             }
             Navigator.push(

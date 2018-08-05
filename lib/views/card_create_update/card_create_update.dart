@@ -58,7 +58,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                 return true;
               } catch (e, stackTrace) {
                 UserMessages.showError(
-                    _scaffoldKey.currentState, e, stackTrace);
+                    () => _scaffoldKey.currentState, e, stackTrace);
                 return false;
               }
             }
@@ -96,7 +96,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                             });
                           } catch (e, stackTrace) {
                             UserMessages.showError(
-                                _scaffoldKey.currentState, e, stackTrace);
+                                () => _scaffoldKey.currentState, e, stackTrace);
                           }
                         })
               : FlatButton(
@@ -110,7 +110,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                             await _saveCard();
                           } catch (e, stackTrace) {
                             UserMessages.showError(
-                                _scaffoldKey.currentState, e, stackTrace);
+                                () => _scaffoldKey.currentState, e, stackTrace);
                             return;
                           }
                           Navigator.of(context).pop();

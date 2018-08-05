@@ -137,7 +137,7 @@ class CardsLearningState extends State<CardsLearning> {
       _isBackShown = false;
       _watchedCount++;
     } catch (e, stacktrace) {
-      UserMessages.showError(Scaffold.of(context), e, stacktrace);
+      UserMessages.showError(() => Scaffold.of(context), e, stacktrace);
     }
   }
 
@@ -168,7 +168,7 @@ class CardsLearningState extends State<CardsLearning> {
         UserMessages.showMessage(Scaffold.of(context),
             AppLocalizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
-        UserMessages.showError(Scaffold.of(context), e, stackTrace);
+        UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
       }
     }
   }
