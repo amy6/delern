@@ -21,13 +21,13 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "/lib/l10n/intl_messages.arb",
+  "source" : "/flutter/lib/l10n/intl_messages.arb",
 
   #
   # where translations live
   # e.g. "/resources/%two_letters_code%/%original_file_name%"
   #
-  "translation" : "/lib/l10n/intl_%two_letters_code%.arb",
+  "translation" : "/flutter/lib/l10n/intl_%two_letters_code%.arb",
 
   #
   # files or directories for ignore
