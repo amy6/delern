@@ -24,6 +24,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   TextEditingController _backTextController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   CardViewModel _viewModel;
+  final FocusNode _frontSideFocus = FocusNode();
 
   @override
   void initState() {
@@ -33,6 +34,12 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       _frontTextController.text = _viewModel.card.front;
       _backTextController.text = _viewModel.card.back;
     }
+  }
+
+  @override
+  void dispose() {
+    _frontSideFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -123,6 +130,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       TextField(
+        autofocus: true,
+        focusNode: _frontSideFocus,
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _frontTextController,
@@ -177,5 +186,6 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     _backTextController.clear();
     // Unset Card key so that we create a one.
     _viewModel.card.key = null;
+    FocusScope.of(context).requestFocus(_frontSideFocus);
   }
 }

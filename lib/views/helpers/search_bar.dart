@@ -52,6 +52,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
     if (_isSearchMode) {
       actionIcon = Icon(Icons.close);
       appBarTitle = TextField(
+        autofocus: true,
         controller: _searchController,
         // TODO(ksheremet): fix fontSize everywhere
         style: TextStyle(color: Colors.white, fontSize: 19.0),
@@ -78,10 +79,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
                 _isSearchMode = false;
               } else {
                 _isSearchMode = true;
-                // TODO(ksheremet): Show keyboard when user press on search
               }
-              // TODO(dotdoom): find out if this is necessary
-              _searchTextChanged();
             });
           },
         )
