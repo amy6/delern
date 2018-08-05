@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
+import 'models/base/transaction.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
 import 'views/helpers/sign_in.dart';
@@ -50,6 +51,7 @@ void main() {
   }).sendPort);
   runZoned<Future>(() async {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
+    Transaction.subscribeToOnlineStatus();
     runApp(App());
   }, onError: (error, stackTrace) async {
     await ErrorReporting.report('Zone', error, stackTrace);

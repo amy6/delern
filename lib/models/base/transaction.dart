@@ -8,6 +8,18 @@ class Transaction {
   final List<Model> _toSave = List<Model>();
   final List<Model> _toDelete = List<Model>();
 
+  static bool _isOnline = false;
+
+  static void subscribeToOnlineStatus() {
+    FirebaseDatabase.instance
+        .reference()
+        .child('.info/connected')
+        .onValue
+        .listen((event) {
+      _isOnline = event.snapshot.value;
+    });
+  }
+
   void save(Model m) => _toSave.add(m);
 
   void delete(Model m) {
@@ -38,6 +50,9 @@ class Transaction {
         updates['${m.rootPath}/${m.key}'] = null;
       }
     });
-    return root.update(updates);
+    // TODO(dotdoom): log updates on failure.
+    var updateFuture = root.update(updates);
+    // Firebase update() does not return until it gets response from the server.
+    return _isOnline ? updateFuture : Future.value();
   }
 }
