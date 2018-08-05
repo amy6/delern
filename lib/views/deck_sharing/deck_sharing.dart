@@ -94,7 +94,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
       }
     } catch (e, stackTrace) {
       // TODO(ksheremet): Scaffold.of is unavailable here
-      UserMessages.showError(Scaffold.of(context), e, stackTrace);
+      UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
     }
   }
 

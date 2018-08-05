@@ -60,7 +60,7 @@ class _CardPreviewState extends State<CardPreview> {
                       await _viewModel.deleteCard();
                     } catch (e, stackTrace) {
                       UserMessages.showError(
-                          Scaffold.of(context), e, stackTrace);
+                          () => Scaffold.of(context), e, stackTrace);
                       return;
                     }
                     Navigator.of(context).pop();
