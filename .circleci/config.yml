@@ -92,11 +92,11 @@ jobs:
           if [ "$CIRCLE_BRANCH" = "master" ]; then
             # We use this account to access both Google Play account and GCS.
             # The former requires it to be in "app" subdirectory.
-            echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > android/app/play-store-service-account.json
-            gcloud auth activate-service-account --key-file android/app/play-store-service-account.json
+            echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > flutter/android/app/play-store-service-account.json
+            gcloud auth activate-service-account --key-file flutter/android/app/play-store-service-account.json
             mkdir -p ~/.android
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-            gsutil cp gs://dasfoo-keystore/delern.jks android/app/
+            gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
             ( cd firebase && PROJECT=delern-debug npm run deploy )
             ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
             ( cd flutter && bundle exec fastlane android publish )
