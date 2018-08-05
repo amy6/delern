@@ -38,8 +38,8 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
               'Item change modifies item key.');
           _baseItemChanged(event.index);
           break;
-        case ListEventType.set:
-          _baseSet();
+        case ListEventType.setAll:
+          _baseSetAll();
           break;
       }
     });
@@ -146,7 +146,7 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     }
   }
 
-  void _baseSet() {
+  void _baseSetAll() {
     // We rely heavily on ViewModelsList being a _base. It has to control its
     // children carefully to activate / deactivate them timely. Therefore, it
     // does not call setAll.

@@ -43,7 +43,7 @@ class Card implements KeyedListItem, Model {
 
   static Stream<KeyedListEvent<Card>> getCards(Deck deck) async* {
     yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: ((await FirebaseDatabase.instance
                         .reference()
                         .child('cards')

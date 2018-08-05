@@ -61,7 +61,7 @@ class Deck implements KeyedListItem, Model {
         .child(uid)
         .keepSynced(true);
     yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: ((await FirebaseDatabase.instance
                         .reference()
                         .child('decks')

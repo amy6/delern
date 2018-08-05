@@ -19,10 +19,10 @@ void main() {
     expect(intEvent.fullListValueForSet, null);
 
     var listEvent = KeyedListEvent(
-      eventType: ListEventType.set,
+      eventType: ListEventType.setAll,
       fullListValueForSet: [TestFixture('1', data: '1')],
     ).map((f) => TestFixture(f.key, data: int.parse(f.data) + 1));
-    expect(listEvent.eventType, ListEventType.set);
+    expect(listEvent.eventType, ListEventType.setAll);
     expect(listEvent.value, null);
     expect(listEvent.fullListValueForSet, [TestFixture('1', data: 2)]);
   });

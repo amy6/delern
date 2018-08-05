@@ -60,7 +60,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
                 widget.itemBuilder(
                     context, event.previousValue, animation, event.index));
         break;
-      case ListEventType.set:
+      case ListEventType.setAll:
       // Note: number of items must not change here (unless it's the first
       // update; we validate this in proxy_keyed_list.dart).
       case ListEventType.itemChanged:

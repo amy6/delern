@@ -15,13 +15,13 @@ void main() {
         list.events,
         emitsInOrder([
           // Initial set.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Filter applied.
           eventMatcher(ListEventType.itemRemoved, 1, TestFixture('B')),
           eventMatcher(ListEventType.itemRemoved, 1, TestFixture('C')),
           eventMatcher(ListEventType.itemRemoved, 1, TestFixture('E')),
           // Sort applied.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Item that passes the filter is added.
           eventMatcher(ListEventType.itemAdded, 1),
           // Item that passed the filter is removed.
@@ -34,7 +34,7 @@ void main() {
           // Item changed.
           eventMatcher(ListEventType.itemChanged, 3, TestFixture('B')),
           // Sort removed.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Item moved again.
           eventMatcher(ListEventType.itemMoved, 2),
           // Filter removed.
@@ -172,7 +172,7 @@ void main() {
           // Filter removes 1 item.
           eventMatcher(ListEventType.itemRemoved, 0, TestFixture('A', data: 0)),
           // Sort is applied.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Item that passes the filter is added.
           eventMatcher(ListEventType.itemAdded, 0),
           // Item is changed and this change moves it per the order defined.
@@ -184,7 +184,7 @@ void main() {
           // Item is changed and starts passing the filter.
           eventMatcher(ListEventType.itemAdded, 1),
           // Sorting is removed.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Item is moved.
           eventMatcher(ListEventType.itemMoved, 4),
           // Item is moved but it doesn't affect the list because it's filtered.
@@ -322,11 +322,11 @@ void main() {
         list.events,
         emitsInOrder([
           // Initial set.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           // Filter removed.
           eventMatcher(ListEventType.itemAdded, 4),
           // Sort removed.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           emitsDone,
         ]));
 
