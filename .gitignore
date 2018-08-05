@@ -22,7 +22,7 @@ vendor
 /firebase/database.rules.json
 
 # Google Play (and other usage) deploy key
-/android/app/play-store-service-account.json
+/flutter/android/app/play-store-service-account.json
 
 # Intellij
 *.iml
@@ -39,13 +39,13 @@ firebase-debug.log
 
 # https://docs.fastlane.tools/best-practices/source-control/
 # fastlane specific
-/fastlane/report.xml
+/flutter/fastlane/report.xml
 # deliver temporary files
-/fastlane/Preview.html
+/flutter/fastlane/Preview.html
 # snapshot generated screenshots
-/fastlane/screenshots
+/flutter/fastlane/screenshots
 # scan temporary files
-/fastlane/test_output
+/flutter/fastlane/test_output
 # keystore deployed by CI
-/android/app/delern.jks
+/flutter/android/app/delern.jks
 # TODO(dotdoom): move all .gitignores here

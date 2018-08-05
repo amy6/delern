@@ -25,9 +25,9 @@ jobs:
 
     - restore_cache:
         keys:
-        - v14-{{ arch }}-{{ .Branch }}-{{ checksum "pubspec.yaml" }}
-        - v14-{{ arch }}-{{ .Branch }}-
-        - v14-{{ arch }}-master-
+        - v15-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
+        - v15-{{ arch }}-{{ .Branch }}-
+        - v15-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
@@ -36,7 +36,8 @@ jobs:
           ( cd firebase/functions && npm install --no-save )
           ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
 
-          bundle install
+          # TODO(dotdoom): move fastlane to root directory
+          ( cd flutter && bundle install )
 
           mkdir -p "${ANDROID_HOME?}/licenses"
           # This is just a hash sum of the license agreements accepted.
@@ -44,13 +45,13 @@ jobs:
           echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >>"${ANDROID_HOME?}/licenses/android-sdk-license"
           echo d56f5187479451eabf01fb78af6dfcb131a6481e >>"${ANDROID_HOME?}/licenses/android-sdk-license"
           flutter upgrade
-          flutter packages get
-          echo flutter.sdk=/opt/flutter > android/local.properties
-          ( cd android && ./gradlew resolveDependencies )
+          ( cd flutter && flutter packages get )
+          echo flutter.sdk=/opt/flutter > flutter/android/local.properties
+          ( cd flutter/android && ./gradlew resolveDependencies )
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v14-{{ arch }}-{{ .Branch }}-{{ checksum "pubspec.yaml" }}
+        key: v15-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
         paths:
         - ~/android-sdk
         - ~/.gradle
@@ -59,18 +60,18 @@ jobs:
         - ~/project/firebase/node_modules
         - ~/project/firebase/functions/node_modules
         - ~/project/firebase/www/bower_components
-        - ~/project/vendor/bundle
+        - ~/project/flutter/vendor/bundle
 
     - run:
         name: "Lint, assemble and run unit tests"
         no_output_timeout: "35m"
         command: |
-          ( cd android && ci-lint )
+          ( cd flutter/android && ci-lint )
           ( cd firebase && ci-lint )
 
-          bundle exec fastlane update_plugins
-          bundle exec fastlane build
-          bundle exec fastlane android build
+          ( cd flutter && bundle exec fastlane update_plugins )
+          ( cd flutter && bundle exec fastlane build )
+          ( cd flutter && bundle exec fastlane android build )
 
           if [ -n "$(git status --porcelain)" ]; then
                 echo 'Working directory not clean after reformat / update:' >&2
@@ -79,7 +80,7 @@ jobs:
                 exit 1
           fi
 
-          flutter test --coverage
+          ( cd flutter && flutter test --coverage )
           bash <(curl -s https://codecov.io/bash)
 
           ( cd firebase && npm run build )
@@ -98,7 +99,7 @@ jobs:
             gsutil cp gs://dasfoo-keystore/delern.jks android/app/
             ( cd firebase && PROJECT=delern-debug npm run deploy )
             ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
-            bundle exec fastlane android publish
+            ( cd flutter && bundle exec fastlane android publish )
           fi
 
     - store_test_results:
