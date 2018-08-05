@@ -8,7 +8,7 @@ enum ListEventType {
   itemRemoved,
   itemMoved,
   itemChanged,
-  set,
+  setAll,
 }
 
 class ListEvent<T> {
@@ -100,7 +100,7 @@ class ObservableList<T> extends ListBase<T> {
     _base.setAll(index, newValue);
     _changed = true;
     _events.add(ListEvent(
-      eventType: ListEventType.set,
+      eventType: ListEventType.setAll,
       index: index,
     ));
   }

@@ -76,7 +76,7 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
         move(indexOfKey(event.value.key),
             indexOfKey(event.previousSiblingKey) + 1);
         break;
-      case ListEventType.set:
+      case ListEventType.setAll:
         _setAll(event.fullListValueForSet);
         break;
     }

@@ -12,13 +12,15 @@ void main() {
   test('setAll', () async {
     ProxyKeyedList<TestFixture> list;
     list = ProxyKeyedList<TestFixture>(ViewModelsList<TestFixture>(() async* {
-      yield KeyedListEvent(eventType: ListEventType.set, fullListValueForSet: [
-        TestFixture('A', data: 0),
-        TestFixture('B', data: 1),
-        TestFixture('C', data: 2),
-        TestFixture('D', data: 3),
-        TestFixture('E', data: 4),
-      ]);
+      yield KeyedListEvent(
+          eventType: ListEventType.setAll,
+          fullListValueForSet: [
+            TestFixture('A', data: 0),
+            TestFixture('B', data: 1),
+            TestFixture('C', data: 2),
+            TestFixture('D', data: 3),
+            TestFixture('E', data: 4),
+          ]);
       expect(
           list,
           equals([
@@ -49,14 +51,16 @@ void main() {
             TestFixture('B', data: 1),
           ]));
 
-      yield KeyedListEvent(eventType: ListEventType.set, fullListValueForSet: [
-        TestFixture('A', data: 5),
-        TestFixture('B', data: 4),
-        TestFixture('C', data: 3),
-        TestFixture('D', data: 2),
-        TestFixture('E', data: 1),
-        TestFixture('F', data: 0),
-      ]);
+      yield KeyedListEvent(
+          eventType: ListEventType.setAll,
+          fullListValueForSet: [
+            TestFixture('A', data: 5),
+            TestFixture('B', data: 4),
+            TestFixture('C', data: 3),
+            TestFixture('D', data: 2),
+            TestFixture('E', data: 1),
+            TestFixture('F', data: 0),
+          ]);
       expect(
           list,
           equals([
@@ -67,12 +71,14 @@ void main() {
             TestFixture('E', data: 1, updateCount: 1),
           ]));
 
-      yield KeyedListEvent(eventType: ListEventType.set, fullListValueForSet: [
-        TestFixture('F', data: 0),
-        TestFixture('E', data: 1),
-        TestFixture('A', data: 5),
-        TestFixture('C', data: 3),
-      ]);
+      yield KeyedListEvent(
+          eventType: ListEventType.setAll,
+          fullListValueForSet: [
+            TestFixture('F', data: 0),
+            TestFixture('E', data: 1),
+            TestFixture('A', data: 5),
+            TestFixture('C', data: 3),
+          ]);
       expect(
           list,
           equals([

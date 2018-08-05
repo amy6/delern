@@ -13,7 +13,7 @@ void main() {
     list = ViewModelsList<TestFixture>(() async* {
       // Initial set.
       yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: [TestFixture('1')],
       );
       expect(list, equals([TestFixture('1')]));
@@ -90,7 +90,7 @@ void main() {
     ViewModelsList<TestFixture> list;
     list = ViewModelsList<TestFixture>(() async* {
       yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'to be updated'),
           TestFixture('2', data: 'to be removed'),
@@ -104,7 +104,7 @@ void main() {
           ]));
 
       yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'still to be updated'),
           TestFixture('3', data: 'also to be removed'),
@@ -118,7 +118,7 @@ void main() {
           ]));
 
       yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'no more changes'),
           TestFixture('3'),
@@ -133,7 +133,7 @@ void main() {
         emitsInOrder([
           // Apparently events are matched only at the end. Since ViewModelsList
           // reuses the objects, by the time of verification the data is final.
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           eventMatcher(ListEventType.itemRemoved, 1,
               TestFixture('2', data: 'to be removed')),
           eventMatcher(ListEventType.itemChanged, 0,
@@ -170,7 +170,7 @@ void main() {
     ViewModelsList<TestFixture> list;
     list = ViewModelsList<TestFixture>(() async* {
       yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: testFixtures,
       );
       expect(

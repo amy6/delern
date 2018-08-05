@@ -10,7 +10,7 @@ void main() {
     expect(
         list.events,
         emitsInOrder([
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           eventMatcher(ListEventType.itemAdded, 0),
           eventMatcher(ListEventType.itemAdded, 0),
           eventMatcher(ListEventType.itemAdded, 2),
@@ -21,7 +21,7 @@ void main() {
           eventMatcher(ListEventType.itemMoved, 0),
           eventMatcher(ListEventType.itemMoved, 4),
           eventMatcher(ListEventType.itemChanged, 2, 2),
-          eventMatcher(ListEventType.set, 0),
+          eventMatcher(ListEventType.setAll, 0),
           emitsDone,
         ]));
 

@@ -43,7 +43,7 @@ class DeckAccess implements KeyedListItem, Model {
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
     yield KeyedListEvent(
-        eventType: ListEventType.set,
+        eventType: ListEventType.setAll,
         fullListValueForSet: ((await FirebaseDatabase.instance
                     .reference()
                     .child('deck_access')
