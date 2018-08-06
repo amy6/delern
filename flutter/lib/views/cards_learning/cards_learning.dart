@@ -52,7 +52,7 @@ class CardsLearningState extends State<CardsLearning> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.deck.name),
-        actions: <Widget>[_buildPopupMenu()],
+        actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
           ? progressBar.ProgressIndicator()
