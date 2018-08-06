@@ -82,22 +82,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                           _backTextController.text.isEmpty)
                       ? null
                       : () async {
-                          // TODO(ksheremer): disable button when writing to db
-                          try {
-                            await _saveCard();
-                            UserMessages.showMessage(
-                                _scaffoldKey.currentState,
-                                AppLocalizations
-                                    .of(context)
-                                    .cardAddedUserMessage);
-                            setState(() {
-                              _isChanged = false;
-                              _clearFields();
-                            });
-                          } catch (e, stackTrace) {
-                            UserMessages.showError(
-                                () => _scaffoldKey.currentState, e, stackTrace);
-                          }
+                          await _addCard();
                         })
               : FlatButton(
                   child: Text(
@@ -118,6 +103,21 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                       : null)
         ],
       );
+
+  Future<void> _addCard() async {
+    // TODO(ksheremet): disable button when writing to db
+    try {
+      await _saveCard();
+      UserMessages.showMessage(_scaffoldKey.currentState,
+          AppLocalizations.of(context).cardAddedUserMessage);
+      setState(() {
+        _isChanged = false;
+        _clearFields();
+      });
+    } catch (e, stackTrace) {
+      UserMessages.showError(() => _scaffoldKey.currentState, e, stackTrace);
+    }
+  }
 
   Future<void> _saveCard() async {
     // TODO(ksheremet): Consider to check that front or back are empty.
