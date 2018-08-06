@@ -301,5 +301,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyList": "Add your items",
+  "@emptyList": {
+    "description": "Add your items",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

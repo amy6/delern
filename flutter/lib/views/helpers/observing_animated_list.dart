@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import '../../flutter/localization.dart';
 import '../../models/base/observable_list.dart';
 import 'progress_indicator.dart' as progressBar;
 
@@ -80,7 +81,11 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
       return progressBar.ProgressIndicator();
     }
 
-    // TODO(ksheremet): for an empty list, return 'Add your items'
+    if (widget.list.isEmpty) {
+      return new Center(
+          child: new Text(AppLocalizations.of(context).emptyList));
+    }
+
     return AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-07-19T11:42:41.446423",
+  "@@last_modified": "2018-08-06T11:13:12.134861",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -255,6 +255,12 @@
   "searchHint": "Search...",
   "@searchHint": {
     "description": "Search...",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyList": "Add your items",
+  "@emptyList": {
+    "description": "Add your items",
     "type": "text",
     "placeholders": {}
   }

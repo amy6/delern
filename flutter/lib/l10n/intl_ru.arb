@@ -300,5 +300,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyList": "Добавьте списки",
+  "@emptyList": {
+    "description": "Add your items",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

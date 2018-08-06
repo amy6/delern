@@ -377,6 +377,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Search...',
     );
   }
+
+  String get emptyList {
+    return Intl.message(
+      'Add your items',
+      name: 'emptyList',
+      desc: 'Add your items',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
