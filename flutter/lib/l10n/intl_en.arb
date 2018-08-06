@@ -301,5 +301,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyUserSharingList": "Share your deck",
+  "@emptyUserSharingList": {
+    "description": "Share your deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emptyDecksList": "Add your decks",
+  "@emptyDecksList": {
+    "description": "Add your decks",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

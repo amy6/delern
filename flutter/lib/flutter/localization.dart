@@ -377,6 +377,22 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Search...',
     );
   }
+
+  String get emptyUserSharingList {
+    return Intl.message(
+      'Share your deck',
+      name: 'emptyUserSharingList',
+      desc: 'Share your deck',
+    );
+  }
+
+  String get emptyDecksList {
+    return Intl.message(
+      'Add your decks',
+      name: 'emptyDecksList',
+      desc: 'Add your decks',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

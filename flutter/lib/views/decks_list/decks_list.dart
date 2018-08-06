@@ -71,6 +71,7 @@ class DecksListPageState extends State<DecksListPage> {
               child: DeckListItem(item),
               sizeFactor: animation,
             ),
+        emptyListUserMessage: AppLocalizations.of(context).emptyDecksList,
       ),
       floatingActionButton: CreateDeck(),
     );

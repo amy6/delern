@@ -18,11 +18,13 @@ class ObservingAnimatedList<T> extends StatefulWidget {
     Key key,
     @required this.list,
     @required this.itemBuilder,
+    @required this.emptyListUserMessage,
   })  : assert(itemBuilder != null),
         super(key: key);
 
   final ObservableList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
+  final String emptyListUserMessage;
 
   @override
   ObservingAnimatedListState<T> createState() =>
@@ -80,7 +82,10 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
       return progressBar.ProgressIndicator();
     }
 
-    // TODO(ksheremet): for an empty list, return 'Add your items'
+    if (widget.list.isEmpty) {
+      return Center(child: Text(widget.emptyListUserMessage));
+    }
+
     return AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,

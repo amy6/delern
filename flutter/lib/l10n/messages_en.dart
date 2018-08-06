@@ -42,6 +42,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
             MessageLookupByLibrary.simpleMessage("Email address"),
+        "emptyDecksList":
+            MessageLookupByLibrary.simpleMessage("Add your decks"),
+        "emptyUserSharingList":
+            MessageLookupByLibrary.simpleMessage("Share your deck"),
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Error occurred: "),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
