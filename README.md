@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/dasfoo/delern.svg?style=shield)](https://circleci.com/gh/dasfoo/delern)
 [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern)
 
-## <img src="images/ic_launcher.png" height="64px" /> Delern
+## <img src="flutter/images/ic_launcher.png" height="64px" /> Delern
 
 Spaced repetition learning system
 
