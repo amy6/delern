@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../view_models/learning_view_model.dart';
@@ -60,8 +61,12 @@ class CardsLearningState extends State<CardsLearning> {
               builder: (context) => Column(
                     children: <Widget>[
                       Expanded(
-                          child: CardDisplay(_viewModel.card.front,
-                              _viewModel.card.back ?? '', _isBackShown)),
+                          child: CardDisplay(
+                        front: _viewModel.card.front,
+                        back: _viewModel.card.back ?? '',
+                        showBack: _isBackShown,
+                        backgroundColor: defaultCardColor(),
+                      )),
                       Padding(
                         padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
                         child: Row(

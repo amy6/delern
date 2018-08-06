@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CardDisplay extends StatelessWidget {
-  final String _front;
-  final String _back;
-  final bool _showBack;
+  final String front;
+  final String back;
+  final bool showBack;
+  final MaterialAccentColor backgroundColor;
 
-  CardDisplay(this._front, this._back, this._showBack);
+  CardDisplay({this.front, this.back, this.showBack, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) => Card(
-        color: Colors.greenAccent,
+        color: backgroundColor,
         margin: EdgeInsets.all(8.0),
         child: ListView(
           padding: EdgeInsets.all(20.0),
@@ -19,17 +20,17 @@ class CardDisplay extends StatelessWidget {
 
   List<Widget> _buildCardBody() {
     List<Widget> widgetList = [
-      _sideText(_front),
+      _sideText(front),
     ];
 
-    if (_showBack) {
+    if (showBack) {
       widgetList.add(Padding(
         padding: EdgeInsets.symmetric(vertical: 15.0),
         child: Divider(
           height: 1.0,
         ),
       ));
-      widgetList.add(_sideText(_back));
+      widgetList.add(_sideText(back));
     }
 
     return widgetList;
