@@ -79,11 +79,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           _viewModel.card.key == null
               ? IconButton(
                   icon: Icon(Icons.check),
-                  onPressed: _isCardValid()
-                      ? () async {
-                          await _addCard();
-                        }
-                      : null)
+                  onPressed: _isCardValid() ? _addCard : null)
               : FlatButton(
                   child: Text(
                     AppLocalizations.of(context).save.toUpperCase(),
@@ -93,6 +89,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                   ),
                   onPressed: _isChanged && _isCardValid()
                       ? () async {
+                          // TODO(ksheremet): disable button when writing to db
                           try {
                             await _saveCard();
                           } catch (e, stackTrace) {
@@ -128,9 +125,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Future<void> _saveCard() async {
-    // TODO(ksheremet): Consider to check that front or back are empty.
-    _viewModel.card.front = _frontTextController.text;
-    _viewModel.card.back = _backTextController.text;
+    _viewModel.card.front = _frontTextController.text.trim();
+    _viewModel.card.back = _backTextController.text.trim();
     await _viewModel.saveCard(_addReversedCard);
   }
 
