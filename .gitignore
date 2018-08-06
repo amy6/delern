@@ -9,6 +9,7 @@ packages
 pubspec.lock
 .flutter-plugins
 /coverage
+flutter/.dart_tool/
 
 # Dependencies
 bower_components
