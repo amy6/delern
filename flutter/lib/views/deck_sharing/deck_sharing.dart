@@ -9,6 +9,7 @@ import '../../models/deck_access.dart';
 import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
 import '../helpers/observing_animated_list.dart';
+import '../helpers/progress_indicator.dart' as progressBar;
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
 import 'deck_access_dropdown.dart';
@@ -202,10 +203,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
             ),
       title: (accessViewModel.user == null)
-          ? Center(
-              // TODO(ksheremet): use the shared ProgressIndicator
-              child: CircularProgressIndicator(),
-            )
+          ? progressBar.ProgressIndicator()
           : Text(accessViewModel.user.name),
       trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
