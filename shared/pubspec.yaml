@@ -1,0 +1,5 @@
+name: delern_shared
+description: Spaced repetition learning system (shared files)
+
+dev_dependencies:
+  mockito: ^2.2.3
