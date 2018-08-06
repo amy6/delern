@@ -4,7 +4,7 @@ class CardDisplay extends StatelessWidget {
   final String front;
   final String back;
   final bool showBack;
-  final MaterialAccentColor backgroundColor;
+  final Color backgroundColor;
 
   CardDisplay({this.front, this.back, this.showBack, this.backgroundColor});
 
