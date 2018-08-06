@@ -87,9 +87,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
               : FlatButton(
                   child: Text(
                     AppLocalizations.of(context).save.toUpperCase(),
-                    style: _isChanged ? TextStyle(color: Colors.white) : null,
+                    style: _isChanged && _isCardValid()
+                        ? TextStyle(color: Colors.white)
+                        : null,
                   ),
-                  onPressed: _isChanged
+                  onPressed: _isChanged && _isCardValid()
                       ? () async {
                           try {
                             await _saveCard();
