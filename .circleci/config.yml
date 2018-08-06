@@ -25,9 +25,9 @@ jobs:
 
     - restore_cache:
         keys:
-        - v15-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
-        - v15-{{ arch }}-{{ .Branch }}-
-        - v15-{{ arch }}-master-
+        - v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
+        - v16-{{ arch }}-{{ .Branch }}-
+        - v16-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
@@ -36,8 +36,7 @@ jobs:
           ( cd firebase/functions && npm install --no-save )
           ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
 
-          # TODO(dotdoom): move fastlane to root directory
-          ( cd flutter && bundle install )
+          bundle install
 
           mkdir -p "${ANDROID_HOME?}/licenses"
           # This is just a hash sum of the license agreements accepted.
@@ -51,7 +50,7 @@ jobs:
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v15-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
+        key: v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
         paths:
         - ~/android-sdk
         - ~/.gradle
@@ -60,7 +59,7 @@ jobs:
         - ~/project/firebase/node_modules
         - ~/project/firebase/functions/node_modules
         - ~/project/firebase/www/bower_components
-        - ~/project/flutter/vendor/bundle
+        - ~/project/vendor/bundle
 
     - run:
         name: "Lint, assemble and run unit tests"
@@ -69,7 +68,7 @@ jobs:
           ( cd flutter/android && ci-lint )
           ( cd firebase && ci-lint )
 
-          ( cd flutter && bundle exec fastlane update_plugins )
+          bundle exec fastlane update_plugins
           ( cd flutter && bundle exec fastlane build )
           ( cd flutter && bundle exec fastlane android build )
 
