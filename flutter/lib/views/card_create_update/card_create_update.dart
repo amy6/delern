@@ -45,7 +45,8 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
-          if (_isChanged) {
+          //TODO(ksheremet): Decide whether to show invalid fields
+          if (_isChanged && _isCardValid()) {
             var locale = AppLocalizations.of(context);
             var saveChangesDialog = await showSaveUpdatesDialog(
                 context: context,
@@ -78,12 +79,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           _viewModel.card.key == null
               ? IconButton(
                   icon: Icon(Icons.check),
-                  onPressed: (_frontTextController.text.isEmpty ||
-                          _backTextController.text.isEmpty)
-                      ? null
-                      : () async {
+                  onPressed: _isCardValid()
+                      ? () async {
                           await _addCard();
-                        })
+                        }
+                      : null)
               : FlatButton(
                   child: Text(
                     AppLocalizations.of(context).save.toUpperCase(),
@@ -104,8 +104,14 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         ],
       );
 
+  bool _isCardValid() {
+    return _addReversedCard
+        ? _frontTextController.text.trim().isNotEmpty &&
+            _backTextController.text.trim().isNotEmpty
+        : _frontTextController.text.trim().isNotEmpty;
+  }
+
   Future<void> _addCard() async {
-    // TODO(ksheremet): disable button when writing to db
     try {
       await _saveCard();
       UserMessages.showMessage(_scaffoldKey.currentState,
