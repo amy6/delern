@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-08-06T11:13:12.134861",
+  "@@last_modified": "2018-08-06T13:21:00.272057",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -258,9 +258,15 @@
     "type": "text",
     "placeholders": {}
   },
-  "emptyList": "Add your items",
-  "@emptyList": {
-    "description": "Add your items",
+  "emptyUserSharingList": "Share your deck",
+  "@emptyUserSharingList": {
+    "description": "Share your deck",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyDecksList": "Add your decks",
+  "@emptyDecksList": {
+    "description": "Add your decks",
     "type": "text",
     "placeholders": {}
   }

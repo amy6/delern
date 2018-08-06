@@ -378,11 +378,19 @@ Twitter: https://twitter.com/dasdelern''',
     );
   }
 
-  String get emptyList {
+  String get emptyUserSharingList {
     return Intl.message(
-      'Add your items',
-      name: 'emptyList',
-      desc: 'Add your items',
+      'Share your deck',
+      name: 'emptyUserSharingList',
+      desc: 'Share your deck',
+    );
+  }
+
+  String get emptyDecksList {
+    return Intl.message(
+      'Add your decks',
+      name: 'emptyDecksList',
+      desc: 'Add your decks',
     );
   }
 }

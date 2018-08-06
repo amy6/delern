@@ -302,9 +302,16 @@
     "placeholders": {
     }
   },
-  "emptyList": "Add your items",
-  "@emptyList": {
-    "description": "Add your items",
+  "emptyUserSharingList": "Share your deck",
+  "@emptyUserSharingList": {
+    "description": "Share your deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emptyDecksList": "Add your decks",
+  "@emptyDecksList": {
+    "description": "Add your decks",
     "type": "text",
     "placeholders": {
     }

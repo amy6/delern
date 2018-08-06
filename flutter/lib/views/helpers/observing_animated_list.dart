@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../../flutter/localization.dart';
 import '../../models/base/observable_list.dart';
 import 'progress_indicator.dart' as progressBar;
 
@@ -19,11 +18,13 @@ class ObservingAnimatedList<T> extends StatefulWidget {
     Key key,
     @required this.list,
     @required this.itemBuilder,
+    @required this.emptyListUserMessage,
   })  : assert(itemBuilder != null),
         super(key: key);
 
   final ObservableList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
+  final String emptyListUserMessage;
 
   @override
   ObservingAnimatedListState<T> createState() =>
@@ -82,8 +83,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
     }
 
     if (widget.list.isEmpty) {
-      return new Center(
-          child: new Text(AppLocalizations.of(context).emptyList));
+      return Center(child: Text(widget.emptyListUserMessage));
     }
 
     return AnimatedList(

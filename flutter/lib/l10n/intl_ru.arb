@@ -301,9 +301,16 @@
     "placeholders": {
     }
   },
-  "emptyList": "Добавьте списки",
-  "@emptyList": {
-    "description": "Add your items",
+  "emptyUserSharingList": "Поделитесь списком",
+  "@emptyUserSharingList": {
+    "description": "Share your deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emptyDecksList": "Добавьте списки",
+  "@emptyDecksList": {
+    "description": "Add your decks",
     "type": "text",
     "placeholders": {
     }

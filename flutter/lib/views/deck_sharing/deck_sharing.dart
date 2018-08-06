@@ -178,11 +178,14 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         ),
         Expanded(
           child: ObservingAnimatedList(
-              list: _deckAccessesViewModel.deckAccesses,
-              itemBuilder: (context, item, animation, index) => SizeTransition(
-                    child: _buildUserAccessInfo(item),
-                    sizeFactor: animation,
-                  )),
+            list: _deckAccessesViewModel.deckAccesses,
+            itemBuilder: (context, item, animation, index) => SizeTransition(
+                  child: _buildUserAccessInfo(item),
+                  sizeFactor: animation,
+                ),
+            emptyListUserMessage:
+                AppLocalizations.of(context).emptyUserSharingList,
+          ),
         ),
       ],
     );
