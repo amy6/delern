@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
+import '../../views/helpers/empty_list_message.dart';
 import '../helpers/progress_indicator.dart' as progressBar;
 
 typedef Widget ObservingGridItemBuilder<T>(
@@ -60,7 +61,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
     }
 
     if (widget.items.isEmpty) {
-      return Center(child: Text(widget.emptyGridUserMessage));
+      return EmptyListMessage(widget.emptyGridUserMessage);
     }
 
     return Column(
