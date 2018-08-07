@@ -6,6 +6,7 @@ import '../../flutter/localization.dart';
 import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
 import '../../view_models/card_list_view_model.dart';
+import '../../views/helpers/card_background.dart';
 import '../card_create_update/card_create_update.dart';
 import '../card_preview/card_preview.dart';
 import '../helpers/search_bar.dart';
@@ -100,7 +101,7 @@ class CardGridItem extends StatelessWidget {
   Widget build(BuildContext context) => Card(
         color: Colors.transparent,
         child: Material(
-          color: Colors.greenAccent,
+          color: specifyCardBackground(deck.type, viewModel.card.back),
           child: InkWell(
             splashColor: Theme.of(context).splashColor,
             onTap: () => Navigator.push(

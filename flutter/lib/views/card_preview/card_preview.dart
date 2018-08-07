@@ -6,6 +6,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../view_models/card_view_model.dart';
+import '../../views/helpers/card_background.dart';
 import '../card_create_update/card_create_update.dart';
 import '../helpers/card_display.dart';
 import '../helpers/save_updates_dialog.dart';
@@ -73,9 +74,12 @@ class _CardPreviewState extends State<CardPreview> {
         children: <Widget>[
           Expanded(
               child: CardDisplay(
-                  _viewModel.card.front,
-                  _viewModel.card.back,
-                  /*show back*/ true)),
+            front: _viewModel.card.front,
+            back: _viewModel.card.back,
+            showBack: true,
+            backgroundColor: specifyCardBackground(
+                _viewModel.card.deck.type, _viewModel.card.back),
+          )),
           Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
