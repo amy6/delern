@@ -32,10 +32,13 @@ class _DeckSharingState extends State<DeckSharingPage> {
         appBar: AppBar(
           title: Text(widget._deck.name),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.send),
-                onPressed:
-                    _isEmailCorrect() ? () => _shareDeck(_accessValue) : null)
+            Builder(
+              builder: (context) => IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _isEmailCorrect()
+                      ? () => _shareDeck(_accessValue, context)
+                      : null),
+            )
           ],
         ),
         body: Column(
@@ -77,7 +80,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   bool _isEmailCorrect() => _textController.text.contains('@');
 
   // TODO(ksheremet): Disable sharing button
-  Future<void> _shareDeck(AccessType deckAccess) async {
+  Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
       String uid = await userLookup(_textController.text.toString());
@@ -94,7 +97,6 @@ class _DeckSharingState extends State<DeckSharingPage> {
             DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
       }
     } catch (e, stackTrace) {
-      // TODO(ksheremet): Scaffold.of is unavailable here
       UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
     }
   }
