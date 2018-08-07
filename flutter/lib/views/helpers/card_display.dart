@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../flutter/styles.dart';
+
 class CardDisplay extends StatelessWidget {
   final String front;
   final String back;
@@ -39,8 +41,6 @@ class CardDisplay extends StatelessWidget {
   Widget _sideText(String text) => Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 18.0,
-        ),
+        style: AppStyles.primaryText,
       );
 }

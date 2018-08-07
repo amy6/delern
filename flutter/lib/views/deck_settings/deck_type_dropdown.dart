@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../models/deck.dart';
 
 typedef void DeckTypeCallback(DeckType t);
@@ -50,6 +51,9 @@ class _DeckTypeDropdownState extends State<DeckTypeDropdown> {
         break;
     }
     // TODO(ksheremet): Expand to fill parent
-    return Text(text);
+    return Text(
+      text,
+      style: AppStyles.primaryText,
+    );
   }
 }

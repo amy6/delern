@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import '../../flutter/styles.dart';
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
 import '../helpers/progress_indicator.dart' as progressBar;
@@ -71,6 +72,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
           children: <Widget>[
             Text(
               '${widget.numberOfCardsLabel} ${widget.items.length}',
+              style: AppStyles.secondaryText,
             ),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../models/deck_access.dart';
 
 typedef bool AccessTypeFilter(AccessType t);
@@ -67,7 +68,10 @@ class _DropdownState extends State<DeckAccessDropdown> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(text),
+        Text(
+          text,
+          style: AppStyles.secondaryText,
+        ),
         icon,
       ],
     );

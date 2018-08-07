@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck_access.dart';
 import '../../view_models/deck_list_view_model.dart';
@@ -131,10 +132,7 @@ class DeckListItem extends StatelessWidget {
                 EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
               viewModel.deck.name,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400,
-              ),
+              style: AppStyles.primaryText,
             ),
           ),
         ),
@@ -142,9 +140,7 @@ class DeckListItem extends StatelessWidget {
 
   Widget _buildNumberOfCards() => Container(
         child: Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
-            style: TextStyle(
-              fontSize: 18.0,
-            )),
+            style: AppStyles.primaryText),
       );
 
   Widget _buildDeckMenu(BuildContext context) => Material(
@@ -159,7 +155,10 @@ class DeckListItem extends StatelessWidget {
                 .entries
                 .map((entry) => PopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,
-                      child: Text(entry.value),
+                      child: Text(
+                        entry.value,
+                        style: AppStyles.secondaryText,
+                      ),
                     ))
                 .toList(),
           ),

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../models/deck_access.dart';
@@ -95,6 +96,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               maxLines: null,
               keyboardType: TextInputType.multiline,
               controller: _deckNameController,
+              style: AppStyles.primaryText,
               onChanged: (String text) {
                 setState(() {
                   _isDeckChanged = true;
@@ -107,7 +109,10 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(top: 24.0),
-                  child: Text(AppLocalizations.of(context).deckType),
+                  child: Text(
+                    AppLocalizations.of(context).deckType,
+                    style: AppStyles.secondaryText,
+                  ),
                 ),
               ],
             ),
@@ -126,7 +131,10 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(AppLocalizations.of(context).markdown),
+                Text(
+                  AppLocalizations.of(context).markdown,
+                  style: AppStyles.secondaryText,
+                ),
                 Switch(
                   value: _viewModel.deck.markdown,
                   onChanged: (newValue) {

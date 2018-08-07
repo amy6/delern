@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../flutter/device_info.dart';
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
 import '../../models/user.dart';
@@ -103,9 +104,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                                 padding: EdgeInsets.only(left: 10.0),
                                 child: Text(
                                   AppLocalizations.of(context).signInWithGoogle,
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                  ),
+                                  style: AppStyles.primaryText,
                                 )),
                           ],
                         ))),
