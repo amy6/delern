@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
+import '../../views/helpers/empty_list_message.dart';
 import 'progress_indicator.dart' as progressBar;
 
 typedef Widget ObservingAnimatedListItemBuilder<T>(
@@ -83,7 +84,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
     }
 
     if (widget.list.isEmpty) {
-      return Center(child: Text(widget.emptyListUserMessage));
+      EmptyListMessage(widget.emptyListUserMessage);
     }
 
     return AnimatedList(

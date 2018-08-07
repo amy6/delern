@@ -314,5 +314,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyCardsList": "Добавьте карточки",
+  "@emptyCardsList": {
+    "description": "Add your cards",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

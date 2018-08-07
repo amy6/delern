@@ -315,5 +315,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyCardsList": "Add your cards",
+  "@emptyCardsList": {
+    "description": "Add your cards",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

@@ -78,6 +78,7 @@ class _CardsListState extends State<CardsListPage> {
         items: _viewModel.cards,
         itemBuilder: (item) => CardGridItem(item, _viewModel.deck),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
+        emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
