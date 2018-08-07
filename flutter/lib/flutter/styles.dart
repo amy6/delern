@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-Color defaultCardColor() => Colors.greenAccent[100];
+import '../views/helpers/card_background.dart';
 
-Color masculineCardColor() => Colors.lightBlue[200];
-
-Color feminineCardColor() => Colors.pink[300];
-
-Color neuterCardColor() => Colors.amberAccent[100];
+class AppStyles {
+  static Map<Gender, Color> cardBackgroundColors = {
+    Gender.no_gender: Colors.greenAccent[100],
+    Gender.masculine: Colors.lightBlue[200],
+    Gender.feminine: Colors.pink[300],
+    Gender.neuter: Colors.amberAccent[100],
+  };
+}

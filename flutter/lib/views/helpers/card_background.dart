@@ -4,22 +4,15 @@ import '../../flutter/styles.dart';
 import '../../models/deck.dart';
 
 enum Gender {
-  /// Masculine gender of content.
   masculine,
-
-  /// Feminine gender of content.
   feminine,
-
-  /// Neuter gender of content.
   neuter,
-
-  /// No gender specified.
   no_gender,
 }
 
 Color specifyCardBackground(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
-    return defaultCardColor();
+    return AppStyles.cardBackgroundColors[Gender.no_gender];
   }
   Gender textGender = Gender.no_gender;
   text = text.toLowerCase();
@@ -28,19 +21,7 @@ Color specifyCardBackground(DeckType deckType, String text) {
   } else {
     textGender = _germanCardGender(text);
   }
-
-  switch (textGender) {
-    case Gender.feminine:
-      return feminineCardColor();
-    case Gender.masculine:
-      return masculineCardColor();
-    case Gender.neuter:
-      return neuterCardColor();
-    case Gender.no_gender:
-      return defaultCardColor();
-  }
-  // In case gender wasn't specified use default
-  return defaultCardColor();
+  return AppStyles.cardBackgroundColors[textGender];
 }
 
 Gender _swissCardGender(String text) {
