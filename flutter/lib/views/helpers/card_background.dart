@@ -7,14 +7,14 @@ enum Gender {
   masculine,
   feminine,
   neuter,
-  no_gender,
+  noGender,
 }
 
 Color specifyCardBackground(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
-    return AppStyles.cardBackgroundColors[Gender.no_gender];
+    return AppStyles.cardBackgroundColors[Gender.noGender];
   }
-  Gender textGender = Gender.no_gender;
+  Gender textGender = Gender.noGender;
   text = text.toLowerCase();
   if (deckType == DeckType.swiss) {
     textGender = _swissCardGender(text);
@@ -34,7 +34,7 @@ Gender _swissCardGender(String text) {
   if (text.startsWith("s ") || text.startsWith("es ")) {
     return Gender.neuter;
   }
-  return Gender.no_gender;
+  return Gender.noGender;
 }
 
 Gender _germanCardGender(String text) {
@@ -47,5 +47,5 @@ Gender _germanCardGender(String text) {
   if (text.startsWith("das ")) {
     return Gender.neuter;
   }
-  return Gender.no_gender;
+  return Gender.noGender;
 }
