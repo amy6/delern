@@ -17,6 +17,7 @@ class ObservingGrid<T> extends StatefulWidget {
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
     @required this.numberOfCardsLabel,
+    @required this.emptyGridUserMessage,
   }) : super(key: key);
 
   final ObservableList<T> items;
@@ -24,6 +25,7 @@ class ObservingGrid<T> extends StatefulWidget {
   final double maxCrossAxisExtent;
   // TODO(dotdoom): make this more abstract or rename to 'ObservingCardsGridView'
   final String numberOfCardsLabel;
+  final String emptyGridUserMessage;
 
   @override
   ObservingGridState<T> createState() => ObservingGridState<T>();
@@ -57,7 +59,9 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
       return progressBar.ProgressIndicator();
     }
 
-    // TODO(ksheremet): for an empty list, return 'Add your items'
+    if (widget.items.isEmpty) {
+      return Center(child: Text(widget.emptyGridUserMessage));
+    }
 
     return Column(
       children: <Widget>[

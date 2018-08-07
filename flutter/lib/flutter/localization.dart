@@ -393,6 +393,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Add your decks',
     );
   }
+
+  String get emptyCardsList {
+    return Intl.message(
+      'Add your cards',
+      name: 'emptyCardsList',
+      desc: 'Add your cards',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

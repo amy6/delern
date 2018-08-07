@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-08-06T13:21:00.272057",
+  "@@last_modified": "2018-08-07T09:12:00.225746",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -267,6 +267,12 @@
   "emptyDecksList": "Add your decks",
   "@emptyDecksList": {
     "description": "Add your decks",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyCardsList": "Add your cards",
+  "@emptyCardsList": {
+    "description": "Add your cards",
     "type": "text",
     "placeholders": {}
   }
