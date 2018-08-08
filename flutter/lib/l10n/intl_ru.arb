@@ -321,5 +321,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noSharingAccessUserMessage": "Только владелец может поделиться списком.",
+  "@noSharingAccessUserMessage": {
+    "description": "Only owner of deck can share it.",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

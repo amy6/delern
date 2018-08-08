@@ -401,6 +401,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Add your cards',
     );
   }
+
+  String get noSharingAccessUserMessage {
+    return Intl.message(
+      'Only owner of deck can share it.',
+      name: 'noSharingAccessUserMessage',
+      desc: 'Only owner of deck can share it.',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

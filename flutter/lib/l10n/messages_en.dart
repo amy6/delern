@@ -67,6 +67,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
         "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
+        "noSharingAccessUserMessage": MessageLookupByLibrary
+            .simpleMessage("Only owner of deck can share it."),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Number of cards:"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),

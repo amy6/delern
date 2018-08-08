@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
         "noAccess": MessageLookupByLibrary.simpleMessage("Нет доступа"),
+        "noSharingAccessUserMessage": MessageLookupByLibrary
+            .simpleMessage("Только владелец может поделиться списком."),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Количество карточек:"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),

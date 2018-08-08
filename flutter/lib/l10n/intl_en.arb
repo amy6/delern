@@ -322,5 +322,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noSharingAccessUserMessage": "Only owner of deck can share it.",
+  "@noSharingAccessUserMessage": {
+    "description": "Only owner of deck can share it.",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
