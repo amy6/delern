@@ -3,6 +3,8 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
+import '../../models/deck_access.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../cards_learning/cards_learning.dart';
 import '../cards_list/cards_list.dart';
@@ -174,11 +176,16 @@ class DeckListItem extends StatelessWidget {
         );
         break;
       case _DeckMenuItemType.share:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DeckSharingPage(viewModel.deck)),
-        );
+        if (viewModel.access.access == AccessType.owner) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DeckSharingPage(viewModel.deck)),
+          );
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noSharingAccessUserMessage);
+        }
         break;
     }
   }
