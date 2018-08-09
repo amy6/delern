@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
 import '../../view_models/card_list_view_model.dart';
@@ -13,9 +14,12 @@ import '../helpers/search_bar.dart';
 import 'observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
-  final Deck _deck;
+  final Deck deck;
+  final bool allowEdit;
 
-  CardsListPage(this._deck);
+  CardsListPage({@required this.deck, @required this.allowEdit})
+      : assert(deck != null),
+        assert(allowEdit != null);
 
   @override
   _CardsListState createState() => _CardsListState();
@@ -39,7 +43,7 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   void initState() {
-    _viewModel = CardListViewModel(widget._deck);
+    _viewModel = CardListViewModel(widget.deck);
     super.initState();
   }
 
@@ -80,13 +84,25 @@ class _CardsListState extends State<CardsListPage> {
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
         emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CreateUpdateCard(cardModel.Card(deck: _viewModel.deck)))),
-        child: Icon(Icons.add),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+              onPressed: () {
+                if (widget.allowEdit) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateUpdateCard(
+                              cardModel.Card(deck: _viewModel.deck))));
+                } else {
+                  UserMessages.showMessage(
+                      Scaffold.of(context),
+                      AppLocalizations
+                          .of(context)
+                          .noAddingWithReadAccessUserMessage);
+                }
+              },
+              child: Icon(Icons.add),
+            ),
       ),
     );
   }

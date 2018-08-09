@@ -67,6 +67,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
         "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
+        "noAddingWithReadAccessUserMessage": MessageLookupByLibrary
+            .simpleMessage("You cannot add cards with a read access."),
         "noDeletingWithReadAccessUserMessage": MessageLookupByLibrary
             .simpleMessage("You cannot delete card with a read access."),
         "noEditingWithReadAccessUserMessage": MessageLookupByLibrary

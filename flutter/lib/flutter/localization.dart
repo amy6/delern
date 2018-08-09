@@ -425,6 +425,14 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'You cannot delete card with a read access.',
     );
   }
+
+  String get noAddingWithReadAccessUserMessage {
+    return Intl.message(
+      'You cannot add cards with a read access.',
+      name: 'noAddingWithReadAccessUserMessage',
+      desc: 'You cannot add cards with a read access..',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

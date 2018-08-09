@@ -71,6 +71,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
         "noAccess": MessageLookupByLibrary.simpleMessage("Нет доступа"),
+        "noAddingWithReadAccessUserMessage":
+            MessageLookupByLibrary.simpleMessage(
+                "Вы не можете добавлять карточки с доступом на чтение."),
         "noDeletingWithReadAccessUserMessage":
             MessageLookupByLibrary.simpleMessage(
                 "Вы не можете удалить карточки с доступом на чтение."),

@@ -343,5 +343,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noAddingWithReadAccessUserMessage": "You cannot add cards with a read access.",
+  "@noAddingWithReadAccessUserMessage": {
+    "description": "You cannot add cards with a read access..",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

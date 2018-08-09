@@ -169,7 +169,12 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CardsListPage(viewModel.deck)),
+              builder: (context) => CardsListPage(
+                    deck: viewModel.deck,
+                    allowEdit:
+                        // Not allow to edit or delete cards with read access
+                        viewModel.access?.access != AccessType.read,
+                  )),
         );
         break;
       case _DeckMenuItemType.setting:

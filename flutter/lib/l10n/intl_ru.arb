@@ -342,5 +342,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noAddingWithReadAccessUserMessage": "Вы не можете добавлять карточки с доступом на чтение.",
+  "@noAddingWithReadAccessUserMessage": {
+    "description": "You cannot add cards with a read access..",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
