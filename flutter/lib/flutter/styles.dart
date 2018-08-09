@@ -22,7 +22,7 @@ class AppStyles {
     color: Colors.black87,
   );
 
-  static final TextStyle navigationDrawerGroup = TextStyle(
+  static final TextStyle navigationDrawerGroupText = TextStyle(
     fontWeight: FontWeight.w600,
     color: Colors.grey[600],
   );

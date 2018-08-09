@@ -49,7 +49,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: AppStyles.navigationDrawerGroup,
+            style: AppStyles.navigationDrawerGroupText,
           ),
         ),
         ListTile(
