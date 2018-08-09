@@ -31,6 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
+        "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
+            "You have unsaved changes. Would you like to continue editing?"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
@@ -38,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Do you want to delete card?"),
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete deck?"),
+        "discard": MessageLookupByLibrary.simpleMessage("Discard"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
@@ -93,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Watched: "),
         "whoHasAccessLabel":
-            MessageLookupByLibrary.simpleMessage("Who has access")
+            MessageLookupByLibrary.simpleMessage("Who has access"),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
 }

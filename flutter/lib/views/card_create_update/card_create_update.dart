@@ -46,21 +46,31 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
-          //TODO(ksheremet): Decide whether to show invalid fields
-          if (_isChanged && _isCardValid()) {
+          if (_isChanged) {
             var locale = AppLocalizations.of(context);
-            var saveChangesDialog = await showSaveUpdatesDialog(
-                context: context,
-                changesQuestion: locale.saveChangesQuestion,
-                yesAnswer: locale.save,
-                noAnswer: locale.cancel);
-            if (saveChangesDialog) {
-              try {
-                await _saveCard();
-                return true;
-              } catch (e, stackTrace) {
-                UserMessages.showError(
-                    () => _scaffoldKey.currentState, e, stackTrace);
+            if (_isCardValid()) {
+              var saveChangesDialog = await showSaveUpdatesDialog(
+                  context: context,
+                  changesQuestion: locale.saveChangesQuestion,
+                  yesAnswer: locale.save,
+                  noAnswer: locale.discard);
+              if (saveChangesDialog) {
+                try {
+                  await _saveCard();
+                  return true;
+                } catch (e, stackTrace) {
+                  UserMessages.showError(
+                      () => _scaffoldKey.currentState, e, stackTrace);
+                  return false;
+                }
+              }
+            } else {
+              var continueEditingDialog = await showSaveUpdatesDialog(
+                  context: context,
+                  changesQuestion: locale.continueEditingQuestion,
+                  yesAnswer: locale.yes,
+                  noAnswer: locale.discard);
+              if (continueEditingDialog) {
                 return false;
               }
             }
