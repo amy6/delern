@@ -80,7 +80,11 @@ class _CardsListState extends State<CardsListPage> {
       body: ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: _viewModel.cards,
-        itemBuilder: (item) => CardGridItem(item, _viewModel.deck),
+        itemBuilder: (item) => CardGridItem(
+              viewModel: item,
+              deck: _viewModel.deck,
+              allowEdit: widget.allowEdit,
+            ),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
         emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
       ),
@@ -111,8 +115,13 @@ class _CardsListState extends State<CardsListPage> {
 class CardGridItem extends StatelessWidget {
   final CardListItemViewModel viewModel;
   final Deck deck;
+  final bool allowEdit;
 
-  CardGridItem(this.viewModel, this.deck);
+  CardGridItem(
+      {@required this.viewModel, @required this.deck, @required this.allowEdit})
+      : assert(viewModel != null),
+        assert(deck != null),
+        assert(allowEdit != null);
 
   @override
   Widget build(BuildContext context) => Card(
@@ -124,7 +133,10 @@ class CardGridItem extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CardPreview(viewModel.card))),
+                    builder: (context) => CardPreview(
+                          card: viewModel.card,
+                          allowEdit: allowEdit,
+                        ))),
             child: Container(
               padding: EdgeInsets.all(5.0),
               child: Column(

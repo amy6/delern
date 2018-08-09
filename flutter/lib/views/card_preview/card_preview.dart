@@ -12,9 +12,12 @@ import '../helpers/card_display.dart';
 import '../helpers/save_updates_dialog.dart';
 
 class CardPreview extends StatefulWidget {
-  final cardModel.Card _card;
+  final cardModel.Card card;
+  final bool allowEdit;
 
-  CardPreview(this._card);
+  CardPreview({@required this.card, @required this.allowEdit})
+      : assert(card != null),
+        assert(allowEdit != null);
 
   @override
   State<StatefulWidget> createState() => _CardPreviewState();
@@ -26,7 +29,7 @@ class _CardPreviewState extends State<CardPreview> {
 
   @override
   void initState() {
-    _viewModel = CardViewModel(widget._card);
+    _viewModel = CardViewModel(widget.card);
     super.initState();
   }
 
@@ -50,21 +53,29 @@ class _CardPreviewState extends State<CardPreview> {
             builder: (context) => IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () async {
-                  var locale = AppLocalizations.of(context);
-                  bool saveChanges = await showSaveUpdatesDialog(
-                      context: context,
-                      changesQuestion: locale.deleteCardQuestion,
-                      yesAnswer: locale.delete,
-                      noAnswer: locale.cancel);
-                  if (saveChanges) {
-                    try {
-                      await _viewModel.deleteCard();
-                    } catch (e, stackTrace) {
-                      UserMessages.showError(
-                          () => Scaffold.of(context), e, stackTrace);
-                      return;
+                  if (widget.allowEdit) {
+                    var locale = AppLocalizations.of(context);
+                    bool saveChanges = await showSaveUpdatesDialog(
+                        context: context,
+                        changesQuestion: locale.deleteCardQuestion,
+                        yesAnswer: locale.delete,
+                        noAnswer: locale.cancel);
+                    if (saveChanges) {
+                      try {
+                        await _viewModel.deleteCard();
+                      } catch (e, stackTrace) {
+                        UserMessages.showError(
+                            () => Scaffold.of(context), e, stackTrace);
+                        return;
+                      }
+                      Navigator.of(context).pop();
                     }
-                    Navigator.of(context).pop();
+                  } else {
+                    UserMessages.showMessage(
+                        Scaffold.of(context),
+                        AppLocalizations
+                            .of(context)
+                            .noDeletingWithReadAccessUserMessage);
                   }
                 }),
           )
@@ -83,12 +94,24 @@ class _CardPreviewState extends State<CardPreview> {
           Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.edit),
-        onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateUpdateCard(_viewModel.card))),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+            child: Icon(Icons.edit),
+            onPressed: () {
+              if (widget.allowEdit) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CreateUpdateCard(_viewModel.card)));
+              } else {
+                UserMessages.showMessage(
+                    Scaffold.of(context),
+                    AppLocalizations
+                        .of(context)
+                        .noEditingWithReadAccessUserMessage);
+              }
+            }),
       ),
     );
   }
