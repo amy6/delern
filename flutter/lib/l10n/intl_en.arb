@@ -350,5 +350,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "continueEditingQuestion": "You have unsaved changes. Would you like to continue editing?",
+  "@continueEditingQuestion": {
+    "description": "You have unsaved changes. Would you like to continue editing?",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "discard": "Discard",
+  "@discard": {
+    "description": "Discard",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

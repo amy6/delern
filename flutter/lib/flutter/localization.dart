@@ -433,6 +433,30 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'You cannot add cards with a read access..',
     );
   }
+
+  String get continueEditingQuestion {
+    return Intl.message(
+      'You have unsaved changes. Would you like to continue editing?',
+      name: 'continueEditingQuestion',
+      desc: 'You have unsaved changes. Would you like to continue editing?',
+    );
+  }
+
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: 'Yes',
+    );
+  }
+
+  String get discard {
+    return Intl.message(
+      'Discard',
+      name: 'discard',
+      desc: 'Discard',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

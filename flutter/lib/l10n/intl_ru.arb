@@ -349,5 +349,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "continueEditingQuestion": "У Вас есть несохраненные изменения. Хотите продолжить редактирование?",
+  "@continueEditingQuestion": {
+    "description": "You have unsaved changes. Would you like to continue editing?",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "yes": "Да",
+  "@yes": {
+    "description": "Yes",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "discard": "Отменить изменения",
+  "@discard": {
+    "description": "Discard",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

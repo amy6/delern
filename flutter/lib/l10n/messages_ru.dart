@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
+        "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
+            "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
@@ -39,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить карточку?"),
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить список?"),
+        "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
@@ -100,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Просмотрено: "),
         "whoHasAccessLabel":
-            MessageLookupByLibrary.simpleMessage("У кого есть доступ")
+            MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
+        "yes": MessageLookupByLibrary.simpleMessage("Да")
       };
 }
