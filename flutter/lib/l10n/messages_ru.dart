@@ -41,7 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить карточку?"),
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить список?"),
-        "discard": MessageLookupByLibrary.simpleMessage("Отменить"),
+        "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),

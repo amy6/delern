@@ -364,7 +364,7 @@
     "placeholders": {
     }
   },
-  "discard": "Отменить",
+  "discard": "Отменить изменения",
   "@discard": {
     "description": "Discard",
     "type": "text",
