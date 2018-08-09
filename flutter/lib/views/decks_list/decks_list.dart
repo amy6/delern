@@ -116,7 +116,15 @@ class DeckListItem extends StatelessWidget {
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CardsLearning(viewModel.deck)),
+                    builder: (context) => CardsLearning(
+                          deck: viewModel.deck,
+                          allowEdit:
+                              // Not allow to edit or delete cards with read access
+                              // If some error occurred when retrieving DeckAccess and it is null access
+                              // we still give a try to edit for a user. If user doesn't
+                              // have permissions they will see "Permission denied"
+                              viewModel.access?.access != AccessType.read,
+                        )),
               ),
           child: Container(
             padding:
@@ -164,7 +172,15 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CardsListPage(viewModel.deck)),
+              builder: (context) => CardsListPage(
+                    deck: viewModel.deck,
+                    allowEdit:
+                        // Not allow to edit or delete cards with read access
+                        // If some error occurred and it is null access
+                        // we still give a try to edit for a user. If user doesn't
+                        // have permissions they will see "Permission denied"
+                        viewModel.access?.access != AccessType.read,
+                  )),
         );
         break;
       case _DeckMenuItemType.setting:

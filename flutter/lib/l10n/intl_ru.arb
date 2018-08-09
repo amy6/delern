@@ -328,5 +328,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noEditingWithReadAccessUserMessage": "Вы не можете редактировать карточки с доступом на чтение.",
+  "@noEditingWithReadAccessUserMessage": {
+    "description": "You cannot edit card with a read access.",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noDeletingWithReadAccessUserMessage": "Вы не можете удалить карточки с доступом на чтение.",
+  "@noDeletingWithReadAccessUserMessage": {
+    "description": "You cannot delete card with a read access.",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noAddingWithReadAccessUserMessage": "Вы не можете добавлять карточки с доступом на чтение.",
+  "@noAddingWithReadAccessUserMessage": {
+    "description": "You cannot add cards with a read access..",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

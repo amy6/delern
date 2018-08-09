@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-08-08T12:03:02.152772",
+  "@@last_modified": "2018-08-09T07:34:45.793042",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -279,6 +279,24 @@
   "noSharingAccessUserMessage": "Only owner of deck can share it.",
   "@noSharingAccessUserMessage": {
     "description": "Only owner of deck can share it.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noEditingWithReadAccessUserMessage": "You cannot edit card with a read access.",
+  "@noEditingWithReadAccessUserMessage": {
+    "description": "You cannot edit card with a read access.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noDeletingWithReadAccessUserMessage": "You cannot delete card with a read access.",
+  "@noDeletingWithReadAccessUserMessage": {
+    "description": "You cannot delete card with a read access.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noAddingWithReadAccessUserMessage": "You cannot add cards with a read access.",
+  "@noAddingWithReadAccessUserMessage": {
+    "description": "You cannot add cards with a read access..",
     "type": "text",
     "placeholders": {}
   }

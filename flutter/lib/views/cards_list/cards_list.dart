@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
 import '../../view_models/card_list_view_model.dart';
@@ -13,9 +14,12 @@ import '../helpers/search_bar.dart';
 import 'observing_grid_view.dart';
 
 class CardsListPage extends StatefulWidget {
-  final Deck _deck;
+  final Deck deck;
+  final bool allowEdit;
 
-  CardsListPage(this._deck);
+  CardsListPage({@required this.deck, @required this.allowEdit})
+      : assert(deck != null),
+        assert(allowEdit != null);
 
   @override
   _CardsListState createState() => _CardsListState();
@@ -39,7 +43,7 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   void initState() {
-    _viewModel = CardListViewModel(widget._deck);
+    _viewModel = CardListViewModel(widget.deck);
     super.initState();
   }
 
@@ -76,17 +80,33 @@ class _CardsListState extends State<CardsListPage> {
       body: ObservingGrid(
         maxCrossAxisExtent: 240.0,
         items: _viewModel.cards,
-        itemBuilder: (item) => CardGridItem(item, _viewModel.deck),
+        itemBuilder: (item) => CardGridItem(
+              viewModel: item,
+              deck: _viewModel.deck,
+              allowEdit: widget.allowEdit,
+            ),
         numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
         emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CreateUpdateCard(cardModel.Card(deck: _viewModel.deck)))),
-        child: Icon(Icons.add),
+      floatingActionButton: Builder(
+        builder: (context) => FloatingActionButton(
+              onPressed: () {
+                if (widget.allowEdit) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateUpdateCard(
+                              cardModel.Card(deck: _viewModel.deck))));
+                } else {
+                  UserMessages.showMessage(
+                      Scaffold.of(context),
+                      AppLocalizations
+                          .of(context)
+                          .noAddingWithReadAccessUserMessage);
+                }
+              },
+              child: Icon(Icons.add),
+            ),
       ),
     );
   }
@@ -95,8 +115,13 @@ class _CardsListState extends State<CardsListPage> {
 class CardGridItem extends StatelessWidget {
   final CardListItemViewModel viewModel;
   final Deck deck;
+  final bool allowEdit;
 
-  CardGridItem(this.viewModel, this.deck);
+  CardGridItem(
+      {@required this.viewModel, @required this.deck, @required this.allowEdit})
+      : assert(viewModel != null),
+        assert(deck != null),
+        assert(allowEdit != null);
 
   @override
   Widget build(BuildContext context) => Card(
@@ -108,7 +133,10 @@ class CardGridItem extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CardPreview(viewModel.card))),
+                    builder: (context) => CardPreview(
+                          card: viewModel.card,
+                          allowEdit: allowEdit,
+                        ))),
             child: Container(
               padding: EdgeInsets.all(5.0),
               child: Column(

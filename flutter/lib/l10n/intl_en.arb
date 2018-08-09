@@ -329,5 +329,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "noEditingWithReadAccessUserMessage": "You cannot edit card with a read access.",
+  "@noEditingWithReadAccessUserMessage": {
+    "description": "You cannot edit card with a read access.",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noDeletingWithReadAccessUserMessage": "You cannot delete card with a read access.",
+  "@noDeletingWithReadAccessUserMessage": {
+    "description": "You cannot delete card with a read access.",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "noAddingWithReadAccessUserMessage": "You cannot add cards with a read access.",
+  "@noAddingWithReadAccessUserMessage": {
+    "description": "You cannot add cards with a read access..",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

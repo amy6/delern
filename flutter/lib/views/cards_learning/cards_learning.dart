@@ -7,16 +7,19 @@ import '../../flutter/localization.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../view_models/learning_view_model.dart';
-import '../card_create_update/card_create_update.dart';
+import '../../views/card_create_update/card_create_update.dart';
 import '../helpers/card_background.dart';
 import '../helpers/card_display.dart';
 import '../helpers/progress_indicator.dart' as progressBar;
 import '../helpers/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
-  final Deck _deck;
+  final Deck deck;
+  final bool allowEdit;
 
-  CardsLearning(this._deck);
+  CardsLearning({@required this.deck, @required this.allowEdit})
+      : assert(deck != null),
+        assert(allowEdit != null);
 
   @override
   State<StatefulWidget> createState() => CardsLearningState();
@@ -30,7 +33,8 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   void initState() {
-    _viewModel = LearningViewModel(widget._deck);
+    _viewModel =
+        LearningViewModel(deck: widget.deck, allowEdit: widget.allowEdit);
     super.initState();
   }
 
@@ -150,13 +154,23 @@ class CardsLearningState extends State<CardsLearning> {
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
     switch (item) {
       case _CardMenuItemType.edit:
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateUpdateCard(_viewModel.card)));
+        if (widget.allowEdit) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateUpdateCard(_viewModel.card)));
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noEditingWithReadAccessUserMessage);
+        }
         break;
       case _CardMenuItemType.delete:
-        _deleteCard(context);
+        if (widget.allowEdit) {
+          _deleteCard(context);
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noDeletingWithReadAccessUserMessage);
+        }
         break;
     }
   }
