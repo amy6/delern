@@ -116,7 +116,12 @@ class DeckListItem extends StatelessWidget {
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => CardsLearning(viewModel.deck)),
+                    builder: (context) => CardsLearning(
+                          deck: viewModel.deck,
+                          allowEdit:
+                              // Not allow to edit or delete cards with read access
+                              viewModel.access?.access != AccessType.read,
+                        )),
               ),
           child: Container(
             padding:

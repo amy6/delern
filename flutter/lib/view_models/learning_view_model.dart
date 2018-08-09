@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
+
 import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
@@ -11,8 +13,9 @@ class LearningViewModel {
   Card get card => _scheduledCard?.card;
 
   final Deck deck;
+  final bool allowEdit;
 
-  LearningViewModel(this.deck);
+  LearningViewModel({@required this.deck, @required this.allowEdit});
 
   Stream<void> get updates => StreamMuxer({
         0: deck.updates,

@@ -409,6 +409,22 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Only owner of deck can share it.',
     );
   }
+
+  String get noEditingWithReadAccessUserMessage {
+    return Intl.message(
+      'You cannot edit card with a read access.',
+      name: 'noEditingWithReadAccessUserMessage',
+      desc: 'You cannot edit card with a read access.',
+    );
+  }
+
+  String get noDeletingWithReadAccessUserMessage {
+    return Intl.message(
+      'You cannot delete card with a read access.',
+      name: 'noDeletingWithReadAccessUserMessage',
+      desc: 'You cannot delete card with a read access.',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
