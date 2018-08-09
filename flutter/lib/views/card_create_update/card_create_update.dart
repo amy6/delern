@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../view_models/card_view_model.dart';
@@ -144,6 +145,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             _isChanged = true;
           });
         },
+        style: AppStyles.primaryText,
         decoration: InputDecoration(
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
@@ -156,6 +158,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             _isChanged = true;
           });
         },
+        style: AppStyles.primaryText,
         decoration: InputDecoration(
           hintText: AppLocalizations.of(context).backSideHint,
         ),
@@ -167,7 +170,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
-        title: Text(AppLocalizations.of(context).reversedCardLabel),
+        title: Text(
+          AppLocalizations.of(context).reversedCardLabel,
+          style: AppStyles.secondaryText,
+        ),
         value: _addReversedCard,
         onChanged: (bool newValue) {
           setState(() {

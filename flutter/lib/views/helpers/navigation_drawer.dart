@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../remote/sign_in.dart';
 import '../helpers/send_invite.dart';
 import '../helpers/sign_in.dart';
@@ -48,10 +49,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-            ),
+            style: AppStyles.navigationDrawerGroup,
           ),
         ),
         ListTile(

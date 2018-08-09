@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../view_models/learning_view_model.dart';
@@ -81,8 +82,11 @@ class CardsLearningState extends State<CardsLearning> {
                       ),
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).watchedCards +
-                              '$_watchedCount'),
+                          Text(
+                            AppLocalizations.of(context).watchedCards +
+                                '$_watchedCount',
+                            style: AppStyles.secondaryText,
+                          ),
                         ],
                       )
                     ],

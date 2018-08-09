@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../models/deck_access.dart';
@@ -47,7 +48,10 @@ class _DeckSharingState extends State<DeckSharingPage> {
               padding: EdgeInsets.only(left: 8.0, top: 8.0),
               child: Row(
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).peopleLabel),
+                  Text(
+                    AppLocalizations.of(context).peopleLabel,
+                    style: AppStyles.secondaryText,
+                  ),
                 ],
               ),
             ),
@@ -63,6 +67,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
           onChanged: (String text) {
             setState(() {});
           },
+          style: AppStyles.primaryText,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context).emailAddressHint,
           ),
@@ -174,7 +179,10 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           padding: EdgeInsets.only(left: 8.0, top: 8.0),
           child: Row(
             children: <Widget>[
-              Text(AppLocalizations.of(context).whoHasAccessLabel),
+              Text(
+                AppLocalizations.of(context).whoHasAccessLabel,
+                style: AppStyles.secondaryText,
+              ),
             ],
           ),
         ),
@@ -209,7 +217,10 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
       title: (accessViewModel.user == null)
           ? progressBar.ProgressIndicator()
-          : Text(accessViewModel.user.name),
+          : Text(
+              accessViewModel.user.name,
+              style: AppStyles.primaryText,
+            ),
       trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
         filter: filter,

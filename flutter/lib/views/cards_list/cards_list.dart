@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
@@ -147,9 +148,7 @@ class CardGridItem extends StatelessWidget {
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
+                    style: AppStyles.primaryText,
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 10.0),
@@ -158,9 +157,7 @@ class CardGridItem extends StatelessWidget {
                       maxLines: 3,
                       softWrap: true,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                      ),
+                      style: AppStyles.secondaryText,
                     ),
                   ),
                 ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 
 typedef void SearchCallback(String input);
 
@@ -54,12 +55,11 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       appBarTitle = TextField(
         autofocus: true,
         controller: _searchController,
-        // TODO(ksheremet): fix fontSize everywhere
-        style: TextStyle(color: Colors.white, fontSize: 19.0),
+        style: AppStyles.searchBarText,
         decoration: InputDecoration(
             border: InputBorder.none,
             hintText: AppLocalizations.of(context).searchHint,
-            hintStyle: TextStyle(color: Colors.white)),
+            hintStyle: AppStyles.searchBarText),
       );
     } else {
       appBarTitle = Text(widget.title);

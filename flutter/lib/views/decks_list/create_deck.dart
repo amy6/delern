@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
+import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../models/deck.dart';
@@ -57,6 +58,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
             onChanged: (String text) {
               setState(() {});
             },
+            style: AppStyles.primaryText,
           ),
         ),
         actions: <Widget>[
