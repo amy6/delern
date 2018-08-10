@@ -138,10 +138,19 @@ class DeckListItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildNumberOfCards() => Container(
-        child: Text(viewModel.cardsToLearn?.toString() ?? 'N/A',
-            style: AppStyles.primaryText),
-      );
+  Widget _buildNumberOfCards() {
+    int maxNumberOfCards = 200;
+    String numberOfCards;
+    if (viewModel.cardsToLearn != null &&
+        viewModel.cardsToLearn > maxNumberOfCards) {
+      numberOfCards = '$maxNumberOfCards+';
+    } else {
+      numberOfCards = viewModel.cardsToLearn?.toString() ?? 'N/A';
+    }
+    return Container(
+      child: Text(numberOfCards, style: AppStyles.primaryText),
+    );
+  }
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
