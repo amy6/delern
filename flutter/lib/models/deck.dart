@@ -114,17 +114,16 @@ class Deck implements KeyedListItem, Model {
       .onValue
       .map((event) => _parseSnapshot(event.snapshot.value));
 
-  Stream<int> getNumberOfCardsToLearn([int limit = 201]) =>
-      FirebaseDatabase.instance
-          .reference()
-          .child('learning')
-          .child(uid)
-          .child(key)
-          .orderByChild('repeatAt')
-          .endAt(DateTime.now().toUtc().millisecondsSinceEpoch)
-          .limitToFirst(limit)
-          .onValue
-          .map((evt) => (evt.snapshot.value as Map)?.length ?? 0);
+  Stream<int> getNumberOfCardsToLearn(int limit) => FirebaseDatabase.instance
+      .reference()
+      .child('learning')
+      .child(uid)
+      .child(key)
+      .orderByChild('repeatAt')
+      .endAt(DateTime.now().toUtc().millisecondsSinceEpoch)
+      .limitToFirst(limit)
+      .onValue
+      .map((evt) => (evt.snapshot.value as Map)?.length ?? 0);
 
   Map<String, dynamic> toMap(bool isNew) => {
         'decks/$uid/$key': {

@@ -139,11 +139,10 @@ class DeckListItem extends StatelessWidget {
       );
 
   Widget _buildNumberOfCards() {
-    int maxNumberOfCards = 200;
     String numberOfCards;
     if (viewModel.cardsToLearn != null &&
-        viewModel.cardsToLearn > maxNumberOfCards) {
-      numberOfCards = '$maxNumberOfCards+';
+        viewModel.cardsToLearn > viewModel.maxNumberOfCards) {
+      numberOfCards = '${viewModel.maxNumberOfCards}+';
     } else {
       numberOfCards = viewModel.cardsToLearn?.toString() ?? 'N/A';
     }

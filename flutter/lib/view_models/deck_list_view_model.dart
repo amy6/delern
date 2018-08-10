@@ -20,11 +20,15 @@ class DeckListItemViewModel implements ListItemViewModel {
   DeckAccess _access;
   int _cardsToLearn;
 
+  final int maxNumberOfCards;
+
   final ViewModelsList<DeckListItemViewModel> _owner;
   StreamSubscription<StreamMuxerEvent<bool>> _internalUpdates;
 
-  DeckListItemViewModel(this._owner, this._deck)
-      : _access = DeckAccess(deck: _deck);
+  DeckListItemViewModel(this._owner, this._deck,
+      {@required this.maxNumberOfCards})
+      : assert(maxNumberOfCards != null),
+        _access = DeckAccess(deck: _deck);
 
   @override
   DeckListItemViewModel updateWith(DeckListItemViewModel value) {
@@ -51,7 +55,7 @@ class DeckListItemViewModel implements ListItemViewModel {
     _internalUpdates = StreamMuxer({
       // TODO(dotdoom): investigate _access.key == null
       false: _access.updates,
-      true: _deck.getNumberOfCardsToLearn(),
+      true: _deck.getNumberOfCardsToLearn(maxNumberOfCards + 1),
     }).listen((event) {
       if (event.stream) {
         this._cardsToLearn = event.value;
@@ -75,6 +79,7 @@ class DeckListItemViewModel implements ListItemViewModel {
 
 class DeckListViewModel implements Activatable {
   final String uid;
+  final int _maxNumberOfCards = 200;
 
   ViewModelsList<DeckListItemViewModel> _deckViewModels;
   ProxyKeyedList<DeckListItemViewModel> _decksProxy;
@@ -85,8 +90,9 @@ class DeckListViewModel implements Activatable {
   DeckListViewModel(this.uid) {
     _deckViewModels = ViewModelsList<DeckListItemViewModel>(() => Deck
         .getDecks(uid)
-        .map((deckEvent) => deckEvent
-            .map((deck) => DeckListItemViewModel(_deckViewModels, deck))));
+        .map((deckEvent) => deckEvent.map((deck) => DeckListItemViewModel(
+            _deckViewModels, deck,
+            maxNumberOfCards: _maxNumberOfCards))));
   }
 
   @override
