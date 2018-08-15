@@ -33,4 +33,10 @@ class AppStyles {
     color: Colors.white,
     fontSize: 19.0,
   );
+
+  static final TextStyle linkText = TextStyle(
+    fontSize: 19.0,
+    color: Colors.blueAccent,
+    fontWeight: FontWeight.w400,
+  );
 }

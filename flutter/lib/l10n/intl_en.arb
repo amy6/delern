@@ -371,5 +371,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "supportDev": "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n",
+  "@supportDev": {
+    "description": "Support development",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "followSocialMediaLabel": "Follow latest news on:",
+  "@followSocialMediaLabel": {
+    "description": "Follow Social Media",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "sourceCodeLabel": "To see the source code for this app, please visit the",
+  "@sourceCodeLabel": {
+    "description": "Source Code",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

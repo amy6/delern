@@ -55,6 +55,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поделитесь списком"),
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Произошла ошибка: "),
+        "followSocialMediaLabel": MessageLookupByLibrary
+            .simpleMessage("Cледите за последними новостями Delern:"),
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
@@ -100,6 +102,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "sourceCodeLabel": MessageLookupByLibrary.simpleMessage(
+            "Чтобы увидеть исходный код этого приложения, посетите"),
+        "supportDev": MessageLookupByLibrary.simpleMessage(
+            "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n\nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n"),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Просмотрено: "),
         "whoHasAccessLabel":

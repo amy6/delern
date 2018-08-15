@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-08-09T13:38:45.851456",
+  "@@last_modified": "2018-08-15T14:47:18.358149",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -315,6 +315,24 @@
   "discard": "Discard",
   "@discard": {
     "description": "Discard",
+    "type": "text",
+    "placeholders": {}
+  },
+  "supportDev": "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n",
+  "@supportDev": {
+    "description": "Support development",
+    "type": "text",
+    "placeholders": {}
+  },
+  "followSocialMediaLabel": "Follow latest news on:",
+  "@followSocialMediaLabel": {
+    "description": "Follow Social Media",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sourceCodeLabel": "To see the source code for this app, please visit the",
+  "@sourceCodeLabel": {
+    "description": "Source Code",
     "type": "text",
     "placeholders": {}
   }

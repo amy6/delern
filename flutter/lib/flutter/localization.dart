@@ -457,6 +457,30 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Discard',
     );
   }
+
+  String get supportDev {
+    return Intl.message(
+      'Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n',
+      name: 'supportDev',
+      desc: 'Support development',
+    );
+  }
+
+  String get followSocialMediaLabel {
+    return Intl.message(
+      'Follow latest news on:',
+      name: 'followSocialMediaLabel',
+      desc: 'Follow Social Media',
+    );
+  }
+
+  String get sourceCodeLabel {
+    return Intl.message(
+      'To see the source code for this app, please visit the',
+      name: 'sourceCodeLabel',
+      desc: 'Source Code',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

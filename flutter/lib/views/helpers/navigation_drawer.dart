@@ -5,6 +5,7 @@ import 'package:package_info/package_info.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../remote/sign_in.dart';
+import '../../views/support_dev/support_development.dart';
 import '../helpers/send_invite.dart';
 import '../helpers/sign_in.dart';
 
@@ -65,15 +66,18 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           leading: Icon(Icons.live_help),
           title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () {
+            // TODO(ksheremet): Open email app
             Navigator.pop(context);
           },
         ),
         ListTile(
-          leading: Icon(Icons.attach_money),
+          leading: Icon(Icons.developer_board),
           title: Text(
               AppLocalizations.of(context).navigationDrawerSupportDevelopment),
           onTap: () {
             Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SupportDevelopment()));
           },
         ),
         Divider(

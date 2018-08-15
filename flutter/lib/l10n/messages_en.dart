@@ -53,6 +53,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Share your deck"),
         "errorUserMessage":
             MessageLookupByLibrary.simpleMessage("Error occurred: "),
+        "followSocialMediaLabel":
+            MessageLookupByLibrary.simpleMessage("Follow latest news on:"),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
@@ -96,6 +98,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+        "sourceCodeLabel": MessageLookupByLibrary.simpleMessage(
+            "To see the source code for this app, please visit the"),
+        "supportDev": MessageLookupByLibrary.simpleMessage(
+            "Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n"),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Watched: "),
         "whoHasAccessLabel":
