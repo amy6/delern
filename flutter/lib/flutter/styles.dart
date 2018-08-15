@@ -10,6 +10,8 @@ class AppStyles {
     Gender.neuter: Colors.amberAccent[100],
   };
 
+  static final Color signInBackgroundColor = Colors.greenAccent[100]
+
   static final TextStyle primaryText = TextStyle(
     fontSize: 19.0,
     fontWeight: FontWeight.w400,
