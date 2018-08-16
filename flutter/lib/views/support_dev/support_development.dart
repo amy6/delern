@@ -1,39 +1,27 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-
-class _LinkTextSpan extends TextSpan {
-  _LinkTextSpan(
-      {TextStyle style,
-      String url,
-      String text,
-      @required BuildContext context})
-      : super(
-            style: style,
-            text: text ?? url,
-            recognizer: new TapGestureRecognizer()
-              ..onTap = () async {
-                if (await canLaunch(url)) {
-                  await launch(url, forceSafariVC: false);
-                } else {
-                  UserMessages.showError(
-                      () => Scaffold.of(context),
-                      'Could not launch url',
-                      throw 'Could not launch url: $url');
-                }
-              });
-}
-
-class _NewLineTextSpan extends TextSpan {
-  _NewLineTextSpan() : super(text: '\n');
-}
 
 class SupportDevelopment extends StatelessWidget {
   final TextStyle linkStyle = AppStyles.linkText;
+
+  static const String _markdownData = """
+### Please tell us what we can do to make your experience with Delern better!
+
+### If you have any questions or suggestions please contact us:
+### [delern@dasfoo.org](mailto:delern@dasfoo.org) 
+
+### Follow latest news on:
+
+- ### [Facebook](https://fb.me/das.delern) 
+- ### [Twitter](https://twitter.com/dasdelern)
+- ### [Google+](https://plus.google.com/communities/104603840044649051798)
+- ### [VK](https://vk.com/delern)
+
+### To see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).
+""";
 
   @override
   Widget build(BuildContext context) {
@@ -43,70 +31,7 @@ class SupportDevelopment extends StatelessWidget {
                 .of(context)
                 .navigationDrawerSupportDevelopment)),
         body: Builder(
-          builder: (context) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: new RichText(
-                    softWrap: true,
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: AppLocalizations.of(context).supportDev,
-                            style: AppStyles.primaryText),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url: 'mailto:delern@dasfoo.org',
-                            text: 'delern@dasfoo.org',
-                            context: context),
-                        _NewLineTextSpan(),
-                        _NewLineTextSpan(),
-                        TextSpan(
-                          text: AppLocalizations
-                              .of(context)
-                              .followSocialMediaLabel,
-                          style: AppStyles.primaryText,
-                        ),
-                        _NewLineTextSpan(),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url: 'https://fb.me/das.delern',
-                            text: 'Facebook',
-                            context: context),
-                        _NewLineTextSpan(),
-                        _NewLineTextSpan(),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url: 'https://twitter.com/dasdelern',
-                            text: 'Twitter',
-                            context: context),
-                        _NewLineTextSpan(),
-                        _NewLineTextSpan(),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url:
-                                'https://plus.google.com/communities/104603840044649051798',
-                            text: 'Google+',
-                            context: context),
-                        _NewLineTextSpan(),
-                        _NewLineTextSpan(),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url: 'https://vk.com/delern',
-                            text: 'VK',
-                            context: context),
-                        _NewLineTextSpan(),
-                        _NewLineTextSpan(),
-                        TextSpan(
-                            style: AppStyles.primaryText,
-                            text: AppLocalizations.of(context).sourceCodeLabel +
-                                ' '),
-                        _LinkTextSpan(
-                            style: linkStyle,
-                            url: 'https://github.com/dasfoo/delern',
-                            text: 'Delern guthub repo.',
-                            context: context)
-                      ],
-                    )),
-              ),
+          builder: (context) => Markdown(data: _markdownData),
         ));
   }
 }

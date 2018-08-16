@@ -481,6 +481,28 @@ Twitter: https://twitter.com/dasdelern''',
       desc: 'Source Code',
     );
   }
+
+  String get supportDevelopment {
+    return Intl.message(
+      '''
+       ### Please tell us what we can do to make your experience with Delern better!
+       
+       ### If you have any questions or suggestions please contact us:
+       ### [delern@dasfoo.org](mailto:delern@dasfoo.org) 
+       
+       ### Follow latest news on:
+       
+       - ### [Facebook](https://fb.me/das.delern) 
+       - ### [Twitter](https://twitter.com/dasdelern)
+       - ### [Google+](https://plus.google.com/communities/104603840044649051798)
+       - ### [VK](https://vk.com/delern)
+       
+       ### To see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).
+      ''',
+      name: 'supportDevelopment',
+      desc: 'Support Development',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
