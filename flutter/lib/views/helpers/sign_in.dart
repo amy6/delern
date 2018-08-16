@@ -61,58 +61,63 @@ class _SignInWidgetState extends State<SignInWidget> {
     if (_isAuthStateKnown == false) {
       return progressIndicator.ProgressIndicator();
     }
-    return Stack(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(50.0),
-                    child: Image.asset(
-                      'images/delern.png',
+    return Scaffold(
+      backgroundColor: AppStyles.signInBackgroundColor,
+      body: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(50.0),
+                      child: Image.asset(
+                        'images/delern.png',
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        Container(
-          padding: EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: RaisedButton(
-                        color: Colors.white,
-                        onPressed: signInGoogleUser,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: Image.asset(
-                                'images/google_sign_in.png',
-                                height: 35.0,
-                                width: 35.0,
-                              ),
-                            ),
-                            Container(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  AppLocalizations.of(context).signInWithGoogle,
-                                  style: AppStyles.primaryText,
-                                )),
-                          ],
-                        ))),
-              ),
             ],
           ),
-        )
-      ],
+          Container(
+            padding: EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: RaisedButton(
+                          color: Colors.white,
+                          onPressed: signInGoogleUser,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(10.0),
+                                child: Image.asset(
+                                  'images/google_sign_in.png',
+                                  height: 35.0,
+                                  width: 35.0,
+                                ),
+                              ),
+                              Container(
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  child: Text(
+                                    AppLocalizations
+                                        .of(context)
+                                        .signInWithGoogle,
+                                    style: AppStyles.primaryText,
+                                  )),
+                            ],
+                          ))),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
