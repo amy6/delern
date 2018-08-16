@@ -28,6 +28,10 @@ class _LinkTextSpan extends TextSpan {
               });
 }
 
+class _NewLineTextSpan extends TextSpan {
+  _NewLineTextSpan() : super(text: '\n');
+}
+
 class SupportDevelopment extends StatelessWidget {
   final TextStyle linkStyle = AppStyles.linkText;
 
@@ -53,38 +57,47 @@ class SupportDevelopment extends StatelessWidget {
                             url: 'mailto:delern@dasfoo.org',
                             text: 'delern@dasfoo.org',
                             context: context),
+                        _NewLineTextSpan(),
+                        _NewLineTextSpan(),
                         TextSpan(
-                          text: '\n\n' +
-                              AppLocalizations
-                                  .of(context)
-                                  .followSocialMediaLabel,
+                          text: AppLocalizations
+                              .of(context)
+                              .followSocialMediaLabel,
                           style: AppStyles.primaryText,
                         ),
+                        _NewLineTextSpan(),
                         _LinkTextSpan(
                             style: linkStyle,
                             url: 'https://fb.me/das.delern',
-                            text: '\nFacebook',
+                            text: 'Facebook',
                             context: context),
+                        _NewLineTextSpan(),
+                        _NewLineTextSpan(),
                         _LinkTextSpan(
                             style: linkStyle,
                             url: 'https://twitter.com/dasdelern',
-                            text: '\n\nTwitter',
+                            text: 'Twitter',
                             context: context),
+                        _NewLineTextSpan(),
+                        _NewLineTextSpan(),
                         _LinkTextSpan(
                             style: linkStyle,
                             url:
                                 'https://plus.google.com/communities/104603840044649051798',
-                            text: '\n\nGoogle+',
+                            text: 'Google+',
                             context: context),
+                        _NewLineTextSpan(),
+                        _NewLineTextSpan(),
                         _LinkTextSpan(
                             style: linkStyle,
                             url: 'https://vk.com/delern',
-                            text: '\n\nVK',
+                            text: 'VK',
                             context: context),
+                        _NewLineTextSpan(),
+                        _NewLineTextSpan(),
                         TextSpan(
                             style: AppStyles.primaryText,
-                            text: '\n\n' +
-                                AppLocalizations.of(context).sourceCodeLabel +
+                            text: AppLocalizations.of(context).sourceCodeLabel +
                                 ' '),
                         _LinkTextSpan(
                             style: linkStyle,
