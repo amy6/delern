@@ -83,8 +83,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noEditingWithReadAccessUserMessage":
             MessageLookupByLibrary.simpleMessage(
                 "Вы не можете редактировать карточки с доступом на чтение."),
-        "noSharingAccessUserMessage": MessageLookupByLibrary
-            .simpleMessage("Только владелец может поделиться списком."),
+        "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Только владелец может поделиться списком."),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Количество карточек:"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
@@ -92,8 +92,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Добавить обратную карточку"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
-        "saveChangesQuestion": MessageLookupByLibrary
-            .simpleMessage("Вы хотите сохранить изменения?"),
+        "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
+            "Вы хотите сохранить изменения?"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Поиск..."),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),

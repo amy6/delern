@@ -105,8 +105,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               Container(
                                   padding: EdgeInsets.only(left: 10.0),
                                   child: Text(
-                                    AppLocalizations
-                                        .of(context)
+                                    AppLocalizations.of(context)
                                         .signInWithGoogle,
                                     style: AppStyles.primaryText,
                                   )),

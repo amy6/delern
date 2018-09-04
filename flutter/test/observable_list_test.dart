@@ -58,11 +58,12 @@ void main() {
     var list = ObservableList<int>();
     list.setAll(0, [1, -1, 0]);
 
-    expect(() => list.length += 1, throwsA(isInstanceOf<UnsupportedError>()));
-    expect(list.sort, throwsA(isInstanceOf<UnsupportedError>()));
+    expect(
+        () => list.length += 1, throwsA(const TypeMatcher<UnsupportedError>()));
+    expect(list.sort, throwsA(const TypeMatcher<UnsupportedError>()));
 
     list.dispose();
-    expect(() => list.add(0), throwsA(isInstanceOf<StateError>()));
+    expect(() => list.add(0), throwsA(const TypeMatcher<StateError>()));
   });
 
   test('empty changes', () {

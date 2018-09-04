@@ -14,10 +14,11 @@
     <firebase-query path="/decks/[[uid]]" data="{{decks}}"></firebase-query>
 
     <paper-dropdown-menu label="[[localize('choose_deck_text')]]">
-      <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{selectedDeckKey}}">
+      <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value"
+        selected="{{selectedDeckKey}}">
         <paper-item class="fake-paper-item">
-          FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden fake item whose only purpose
-          is to load styles properly.
+          FIXME(https://stackoverflow.com/questions/47228224/): remove this hidden fake item whose
+          only purpose is to load styles properly.
         </paper-item>
         <template is="dom-repeat" items="[[decks]]">
           <paper-item value$="[[item.$key]]">[[item.name]]</paper-item>

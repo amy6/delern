@@ -70,14 +70,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
         "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
-        "noAddingWithReadAccessUserMessage": MessageLookupByLibrary
-            .simpleMessage("You cannot add cards with a read access."),
-        "noDeletingWithReadAccessUserMessage": MessageLookupByLibrary
-            .simpleMessage("You cannot delete card with a read access."),
-        "noEditingWithReadAccessUserMessage": MessageLookupByLibrary
-            .simpleMessage("You cannot edit card with a read access."),
-        "noSharingAccessUserMessage": MessageLookupByLibrary
-            .simpleMessage("Only owner of deck can share it."),
+        "noAddingWithReadAccessUserMessage":
+            MessageLookupByLibrary.simpleMessage(
+                "You cannot add cards with a read access."),
+        "noDeletingWithReadAccessUserMessage":
+            MessageLookupByLibrary.simpleMessage(
+                "You cannot delete card with a read access."),
+        "noEditingWithReadAccessUserMessage":
+            MessageLookupByLibrary.simpleMessage(
+                "You cannot edit card with a read access."),
+        "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Only owner of deck can share it."),
         "numberOfCards":
             MessageLookupByLibrary.simpleMessage("Number of cards:"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
@@ -85,8 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "reversedCardLabel":
             MessageLookupByLibrary.simpleMessage("Add reversed card"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
-        "saveChangesQuestion": MessageLookupByLibrary
-            .simpleMessage("Do you want to save changes?"),
+        "saveChangesQuestion": MessageLookupByLibrary.simpleMessage(
+            "Do you want to save changes?"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Search..."),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),

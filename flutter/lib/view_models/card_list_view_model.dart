@@ -40,9 +40,8 @@ class CardListViewModel implements Activatable {
       _cardsProxy ??= ProxyKeyedList(_cardViewModels);
 
   CardListViewModel(this.deck) {
-    _cardViewModels = ViewModelsList<CardListItemViewModel>(() => Card
-        .getCards(deck)
-        .map((cardEvent) =>
+    _cardViewModels = ViewModelsList<CardListItemViewModel>(() =>
+        Card.getCards(deck).map((cardEvent) =>
             cardEvent.map((card) => CardListItemViewModel(card))));
   }
 
