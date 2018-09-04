@@ -100,6 +100,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "supportDevelopment": MessageLookupByLibrary.simpleMessage(
+            "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n       \nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nCледите за последними новостями Delern:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nЧтобы увидеть исходный код этого приложения, посетите [Delern guthub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
         "watchedCards": MessageLookupByLibrary.simpleMessage("Просмотрено: "),
         "whoHasAccessLabel":
