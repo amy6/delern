@@ -7,9 +7,10 @@ import '../flutter/localization.dart';
 import '../remote/error_reporting.dart';
 
 class UserMessages {
-  static Future<Null> showError(
-      ScaffoldState scaffoldFinder(), dynamic e, StackTrace stackTrace) {
-    var errorFuture = ErrorReporting.report('showError', e, stackTrace);
+  static Future<Null> showError(ScaffoldState scaffoldFinder(), dynamic e,
+      [StackTrace stackTrace]) {
+    var errorFuture =
+        ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);
 
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffol ancestor widget).

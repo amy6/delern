@@ -11,23 +11,19 @@ class SupportDevelopment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text(AppLocalizations
-                .of(context)
+            title: Text(AppLocalizations.of(context)
                 .navigationDrawerSupportDevelopment)),
         body: Builder(
           builder: (context) => Markdown(
               data: AppLocalizations.of(context).supportDevelopment,
-              styleSheet: MarkdownStyleSheet
-                  .fromTheme(Theme.of(context))
+              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                   .copyWith(p: AppStyles.primaryText),
               onTapLink: (href) async {
                 if (await canLaunch(href)) {
                   await launch(href, forceSafariVC: false);
                 } else {
                   UserMessages.showError(
-                      () => Scaffold.of(context),
-                      'Could not launch url',
-                      throw 'Could not launch url: $href');
+                      () => Scaffold.of(context), 'Could not launch url $href');
                 }
               }),
         ));
