@@ -73,8 +73,7 @@ class _CardPreviewState extends State<CardPreview> {
                   } else {
                     UserMessages.showMessage(
                         Scaffold.of(context),
-                        AppLocalizations
-                            .of(context)
+                        AppLocalizations.of(context)
                             .noDeletingWithReadAccessUserMessage);
                   }
                 }),
@@ -107,8 +106,7 @@ class _CardPreviewState extends State<CardPreview> {
               } else {
                 UserMessages.showMessage(
                     Scaffold.of(context),
-                    AppLocalizations
-                        .of(context)
+                    AppLocalizations.of(context)
                         .noEditingWithReadAccessUserMessage);
               }
             }),

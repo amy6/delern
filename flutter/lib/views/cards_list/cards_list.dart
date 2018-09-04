@@ -101,8 +101,7 @@ class _CardsListState extends State<CardsListPage> {
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),
-                      AppLocalizations
-                          .of(context)
+                      AppLocalizations.of(context)
                           .noAddingWithReadAccessUserMessage);
                 }
               },

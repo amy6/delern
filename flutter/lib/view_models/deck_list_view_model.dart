@@ -88,11 +88,10 @@ class DeckListViewModel implements Activatable {
       _decksProxy ??= ProxyKeyedList(_deckViewModels);
 
   DeckListViewModel(this.uid) {
-    _deckViewModels = ViewModelsList<DeckListItemViewModel>(() => Deck
-        .getDecks(uid)
-        .map((deckEvent) => deckEvent.map((deck) => DeckListItemViewModel(
-            _deckViewModels, deck,
-            maxNumberOfCards: _maxNumberOfCards))));
+    _deckViewModels = ViewModelsList<DeckListItemViewModel>(() =>
+        Deck.getDecks(uid).map((deckEvent) => deckEvent.map((deck) =>
+            DeckListItemViewModel(_deckViewModels, deck,
+                maxNumberOfCards: _maxNumberOfCards))));
   }
 
   @override

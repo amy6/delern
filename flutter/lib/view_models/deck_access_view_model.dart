@@ -75,10 +75,10 @@ class DeckAccessesViewModel implements Activatable {
       _deckAccessesProxy ??= ProxyKeyedList(_deckAccessViewModels);
 
   DeckAccessesViewModel(this.deck) {
-    _deckAccessViewModels = ViewModelsList<DeckAccessViewModel>(() => DeckAccess
-        .getDeckAccesses(deck)
-        .map((deckAccessEvent) => deckAccessEvent.map((deckAccess) =>
-            DeckAccessViewModel(_deckAccessViewModels, deckAccess))));
+    _deckAccessViewModels = ViewModelsList<DeckAccessViewModel>(() =>
+        DeckAccess.getDeckAccesses(deck).map((deckAccessEvent) =>
+            deckAccessEvent.map((deckAccess) =>
+                DeckAccessViewModel(_deckAccessViewModels, deckAccess))));
   }
 
   @override
