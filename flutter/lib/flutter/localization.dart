@@ -458,46 +458,22 @@ Twitter: https://twitter.com/dasdelern''',
     );
   }
 
-  String get supportDev {
-    return Intl.message(
-      'Please tell us what we can do to make your experience with Delern better!\n\nIf you have any questions or suggestions please contact us:\n',
-      name: 'supportDev',
-      desc: 'Support development',
-    );
-  }
-
-  String get followSocialMediaLabel {
-    return Intl.message(
-      'Follow latest news on:',
-      name: 'followSocialMediaLabel',
-      desc: 'Follow Social Media',
-    );
-  }
-
-  String get sourceCodeLabel {
-    return Intl.message(
-      'To see the source code for this app, please visit the',
-      name: 'sourceCodeLabel',
-      desc: 'Source Code',
-    );
-  }
-
   String get supportDevelopment {
     return Intl.message(
       '''
-       ### Please tell us what we can do to make your experience with Delern better!
+Please tell us what we can do to make your experience with Delern better!
        
-       ### If you have any questions or suggestions please contact us:
-       ### [delern@dasfoo.org](mailto:delern@dasfoo.org) 
+If you have any questions or suggestions please contact us:
+[delern@dasfoo.org](mailto:delern@dasfoo.org) 
        
-       ### Follow latest news on:
+Follow latest news on:
        
-       - ### [Facebook](https://fb.me/das.delern) 
-       - ### [Twitter](https://twitter.com/dasdelern)
-       - ### [Google+](https://plus.google.com/communities/104603840044649051798)
-       - ### [VK](https://vk.com/delern)
+- [Facebook](https://fb.me/das.delern) 
+- [Twitter](https://twitter.com/dasdelern)
+- [Google+](https://plus.google.com/communities/104603840044649051798)
+- [VK](https://vk.com/delern)
        
-       ### To see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).
+To see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).
       ''',
       name: 'supportDevelopment',
       desc: 'Support Development',
