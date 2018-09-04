@@ -14,8 +14,8 @@
 <dom-module id="share-deck">
   <template>
 
-    <iron-ajax id="user-lookup" url="//us-central1-[[firebaseProjectId]].cloudfunctions.net/userLookup" handle-as="text"
-      reject-with-request></iron-ajax>
+    <iron-ajax id="user-lookup" url="//us-central1-[[firebaseProjectId]].cloudfunctions.net/userLookup"
+      handle-as="text" reject-with-request></iron-ajax>
 
     <style include="shared-styles">
       :host {
@@ -44,7 +44,8 @@
     <div class="row">
       <div class="col-6 intends">
         <paper-dropdown-menu label="[[localize('access_label')]]">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value" selected="{{access}}">
+          <paper-listbox slot="dropdown-content" class="dropdown-content" attr-for-selected="value"
+            selected="{{access}}">
             <paper-item value="write">[[localize('can_edit_access')]]</paper-item>
             <paper-item value="read">[[localize('can_view_access')]]</paper-item>
           </paper-listbox>
