@@ -378,5 +378,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "installEmailApp": "Please install Email App",
+  "@installEmailApp": {
+    "description": "Please install Email App",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

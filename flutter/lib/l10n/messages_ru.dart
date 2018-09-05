@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "frontSideHint":
             MessageLookupByLibrary.simpleMessage("Передняя сторона"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("Немецкий"),
+        "installEmailApp": MessageLookupByLibrary.simpleMessage(
+            "Пожалуйста установите приложение Электронной Почты"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
