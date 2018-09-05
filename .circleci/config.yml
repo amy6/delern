@@ -68,7 +68,6 @@ jobs:
           ( cd flutter/android && ci-lint )
           ( cd firebase && ci-lint )
 
-          bundle exec fastlane update_plugins
           ( cd flutter && bundle exec fastlane build )
           ( cd flutter && bundle exec fastlane android build )
 
