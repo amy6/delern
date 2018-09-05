@@ -479,6 +479,14 @@ To see the source code for this app, please visit the [Delern guthub repo](https
       desc: 'Support Development',
     );
   }
+
+  String get installEmailApp {
+    return Intl.message(
+      'Please install Email App',
+      name: 'installEmailApp',
+      desc: 'Please install Email App',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -377,5 +377,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "installEmailApp": "Пожалуйста установите приложение Электронной Почты",
+  "@installEmailApp": {
+    "description": "Please install Email App",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
