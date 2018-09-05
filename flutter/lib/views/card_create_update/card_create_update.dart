@@ -8,6 +8,7 @@ import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as cardModel;
 import '../../view_models/card_view_model.dart';
 import '../helpers/save_updates_dialog.dart';
+import '../helpers/slow_operation_widget.dart';
 
 class CreateUpdateCard extends StatefulWidget {
   final cardModel.Card _card;
@@ -70,29 +71,25 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         title: Text(_viewModel.card.deck.name),
         actions: <Widget>[
           _viewModel.card.key == null
-              ? IconButton(
-                  icon: Icon(Icons.check),
-                  onPressed: _isCardValid() ? _addCard : null)
-              : FlatButton(
-                  child: Text(
-                    AppLocalizations.of(context).save.toUpperCase(),
-                    style: _isChanged && _isCardValid()
-                        ? TextStyle(color: Colors.white)
-                        : null,
-                  ),
-                  onPressed: _isChanged && _isCardValid()
-                      ? () async {
-                          // TODO(ksheremet): disable button when writing to db
-                          try {
-                            await _saveCard();
-                          } catch (e, stackTrace) {
-                            UserMessages.showError(
-                                () => _scaffoldKey.currentState, e, stackTrace);
-                            return;
-                          }
-                          Navigator.of(context).pop();
-                        }
-                      : null)
+              ? SlowOperationWidget(
+                  (cb) => IconButton(
+                      icon: Icon(Icons.check),
+                      onPressed: _isCardValid() ? cb : null),
+                  _addCard)
+              : SlowOperationWidget(
+                  (cb) => FlatButton(
+                      child: Text(
+                        AppLocalizations.of(context).save.toUpperCase(),
+                        style: _isChanged && _isCardValid()
+                            ? TextStyle(color: Colors.white)
+                            : null,
+                      ),
+                      onPressed: _isChanged && _isCardValid() ? cb : null),
+                  () async {
+                  if (await _saveCard()) {
+                    Navigator.of(context).pop();
+                  }
+                }),
         ],
       );
 
@@ -117,10 +114,16 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     }
   }
 
-  Future<void> _saveCard() async {
+  Future<bool> _saveCard() async {
     _viewModel.card.front = _frontTextController.text.trim();
     _viewModel.card.back = _backTextController.text.trim();
-    await _viewModel.saveCard(_addReversedCard);
+    try {
+      await _viewModel.saveCard(_addReversedCard);
+    } catch (e, stackTrace) {
+      UserMessages.showError(() => _scaffoldKey.currentState, e, stackTrace);
+      return false;
+    }
+    return true;
   }
 
   Widget _buildBody() {
