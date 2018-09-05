@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
 import '../../flutter/styles.dart';
+import '../../views/helpers/non_scrolling_markdown.dart';
 
 class CardDisplay extends StatelessWidget {
   final String front;
   final String back;
   final bool showBack;
   final Color backgroundColor;
+  final bool isMarkdown;
 
-  CardDisplay({this.front, this.back, this.showBack, this.backgroundColor});
+  CardDisplay(
+      {@required this.front,
+      @required this.back,
+      @required this.showBack,
+      @required this.backgroundColor,
+      @required this.isMarkdown});
 
   @override
   Widget build(BuildContext context) => Card(
@@ -16,13 +23,13 @@ class CardDisplay extends StatelessWidget {
         margin: EdgeInsets.all(8.0),
         child: ListView(
           padding: EdgeInsets.all(20.0),
-          children: _buildCardBody(),
+          children: _buildCardBody(context),
         ),
       );
 
-  List<Widget> _buildCardBody() {
+  List<Widget> _buildCardBody(BuildContext context) {
     List<Widget> widgetList = [
-      _sideText(front),
+      _sideText(front, context),
     ];
 
     if (showBack) {
@@ -32,15 +39,20 @@ class CardDisplay extends StatelessWidget {
           height: 1.0,
         ),
       ));
-      widgetList.add(_sideText(back));
+      widgetList.add(_sideText(back, context));
     }
 
     return widgetList;
   }
 
-  Widget _sideText(String text) => Text(
-        text,
-        textAlign: TextAlign.center,
-        style: AppStyles.primaryText,
-      );
+  Widget _sideText(String text, BuildContext context) {
+    if (isMarkdown) {
+      return buildNonScrollingMarkdown(text, context);
+    }
+    return Text(
+      text,
+      textAlign: TextAlign.center,
+      style: AppStyles.primaryText,
+    );
+  }
 }

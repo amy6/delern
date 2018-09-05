@@ -72,6 +72,7 @@ class CardsLearningState extends State<CardsLearning> {
                         showBack: _isBackShown,
                         backgroundColor: specifyCardBackground(
                             _viewModel.deck.type, _viewModel.card.back),
+                        isMarkdown: _viewModel.deck.markdown,
                       )),
                       Padding(
                         padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
