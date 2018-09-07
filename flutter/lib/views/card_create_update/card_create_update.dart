@@ -101,16 +101,13 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Future<void> _addCard() async {
-    try {
-      await _saveCard();
+    if (await _saveCard()) {
       UserMessages.showMessage(_scaffoldKey.currentState,
           AppLocalizations.of(context).cardAddedUserMessage);
       setState(() {
         _isChanged = false;
         _clearFields();
       });
-    } catch (e, stackTrace) {
-      UserMessages.showError(() => _scaffoldKey.currentState, e, stackTrace);
     }
   }
 

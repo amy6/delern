@@ -9,6 +9,7 @@ import '../../models/deck.dart';
 import '../../models/deck_access.dart';
 import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
+import '../../views/helpers/slow_operation_widget.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/progress_indicator.dart' as progressBar;
 import '../helpers/save_updates_dialog.dart';
@@ -34,11 +35,11 @@ class _DeckSharingState extends State<DeckSharingPage> {
           title: Text(widget._deck.name),
           actions: <Widget>[
             Builder(
-              builder: (context) => IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _isEmailCorrect()
-                      ? () => _shareDeck(_accessValue, context)
-                      : null),
+              builder: (context) => SlowOperationWidget(
+                  (cb) => IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: _isEmailCorrect() ? cb : null),
+                  () => _shareDeck(_accessValue, context)),
             )
           ],
         ),
@@ -84,7 +85,6 @@ class _DeckSharingState extends State<DeckSharingPage> {
 
   bool _isEmailCorrect() => _textController.text.contains('@');
 
-  // TODO(ksheremet): Disable sharing button
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
