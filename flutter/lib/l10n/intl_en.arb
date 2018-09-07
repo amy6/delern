@@ -385,5 +385,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "couldNotLaunchUrl": "Could not launch url",
+  "@couldNotLaunchUrl": {
+    "description": "Could not launch url ",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

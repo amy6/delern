@@ -33,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
+        "couldNotLaunchUrl":
+            MessageLookupByLibrary.simpleMessage("Could not launch url"),
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),

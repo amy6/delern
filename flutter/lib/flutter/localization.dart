@@ -487,6 +487,14 @@ To see the source code for this app, please visit the [Delern guthub repo](https
       desc: 'Please install Email App',
     );
   }
+
+  String get couldNotLaunchUrl {
+    return Intl.message(
+      'Could not launch url',
+      name: 'couldNotLaunchUrl',
+      desc: 'Could not launch url ',
+    );
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
