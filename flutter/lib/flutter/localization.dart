@@ -490,9 +490,10 @@ To see the source code for this app, please visit the [Delern guthub repo](https
     );
   }
 
-  String get couldNotLaunchUrl {
+  String couldNotLaunchUrl(String url) {
     return Intl.message(
-      'Could not launch url',
+      "Could not launch url $url",
+      args: [url],
       name: 'couldNotLaunchUrl',
       desc: 'Could not launch url ',
     );

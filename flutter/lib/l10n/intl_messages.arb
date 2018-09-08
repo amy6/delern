@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T15:22:13.682919",
+  "@@last_modified": "2018-09-08T15:28:22.617196",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -334,10 +334,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "couldNotLaunchUrl": "Could not launch url",
+  "couldNotLaunchUrl": "Could not launch url {url}",
   "@couldNotLaunchUrl": {
     "description": "Could not launch url ",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "url": {}
+    }
   }
 }

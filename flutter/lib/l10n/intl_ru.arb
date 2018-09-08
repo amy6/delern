@@ -389,11 +389,12 @@
     "placeholders": {
     }
   },
-  "couldNotLaunchUrl": "Не удалось запустить ссылку ",
-  "@couldNotLaunchUrl": {
-    "description": "Could not launch url ",
-    "type": "text",
-    "placeholders": {
+  "couldNotLaunchUrl": "Не удалось запустить ссылку {url}",
+    "@couldNotLaunchUrl": {
+      "description": "Could not launch url ",
+      "type": "text",
+      "placeholders": {
+        "url": {}
+      }
     }
   }
-}

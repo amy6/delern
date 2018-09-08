@@ -17,9 +17,11 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'en';
 
-  static m0(number) => "Number of cards: ${number}";
+  static m0(url) => "Could not launch url";
 
-  static m1(number) => "Watched: ${number}";
+  static m1(number) => "Number of cards: ${number}";
+
+  static m2(number) => "Watched: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -37,8 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
-        "couldNotLaunchUrl":
-            MessageLookupByLibrary.simpleMessage("Could not launch url"),
+        "couldNotLaunchUrl": m0,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
@@ -89,7 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
-        "numberOfCards": m0,
+        "numberOfCards": m1,
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":
@@ -106,7 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n       \nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nFollow latest news on:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nTo see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
-        "watchedCards": m1,
+        "watchedCards": m2,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")
