@@ -72,10 +72,10 @@ jobs:
           ( cd flutter && bundle exec fastlane android build )
 
           if [ -n "$(git status --porcelain)" ]; then
-                echo 'Working directory not clean after reformat / update:' >&2
-                git status >&2
-                git diff >&2
-                exit 1
+            echo 'Working directory not clean after reformat / update:' >&2
+            git status >&2
+            git diff >&2
+            exit 1
           fi
 
           ( cd flutter && flutter test --coverage )
@@ -95,6 +95,15 @@ jobs:
             mkdir -p ~/.android
             gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
             gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
+
+            # TODO(dotdoom): dedup against git status check after reformat.
+            if [ -n "$(git status --porcelain)" ]; then
+              echo 'Working directory not clean before production build:' >&2
+              git status >&2
+              git diff >&2
+              exit 1
+            fi
+
             ( cd firebase && PROJECT=delern-debug npm run deploy )
             ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
             ( cd flutter && bundle exec fastlane android publish )
