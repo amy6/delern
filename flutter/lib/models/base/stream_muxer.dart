@@ -1,5 +1,6 @@
 import 'dart:async';
 
+// TODO(dotdoom): should be Exception.
 class StreamMuxerEvent<T> implements Error {
   final T stream;
   final dynamic value;

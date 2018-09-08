@@ -25,7 +25,8 @@ void main() {
   test('error stack trace null when not error', () {
     var muxer = StreamMuxer({
       'test': () async* {
-        throw 'nothing';
+        // ignore: only_throw_errors
+        throw 'a String';
       }(),
     });
 
@@ -33,6 +34,6 @@ void main() {
         muxer.first,
         throwsA((e) =>
             e.stackTrace == null &&
-            e.toString() == '[muxed stream "test"]: nothing'));
+            e.toString() == '[muxed stream "test"]: a String'));
   });
 }
