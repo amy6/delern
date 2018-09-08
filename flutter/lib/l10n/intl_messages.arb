@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-07T16:54:02.175711",
+  "@@last_modified": "2018-09-08T16:32:52.670097",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -60,11 +60,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "numberOfCards": "Number of cards:",
+  "numberOfCards": "Number of cards: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "number": {}
+    }
   },
   "canEdit": "Can Edit",
   "@canEdit": {
@@ -108,13 +110,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "frontSideHint": "front side",
+  "frontSideHint": "Front side",
   "@frontSideHint": {
     "description": "front side",
     "type": "text",
     "placeholders": {}
   },
-  "backSideHint": "back side",
+  "backSideHint": "Back side",
   "@backSideHint": {
     "description": "back side",
     "type": "text",
@@ -135,12 +137,6 @@
   "add": "Add",
   "@add": {
     "description": "Add",
-    "type": "text",
-    "placeholders": {}
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel",
     "type": "text",
     "placeholders": {}
   },
@@ -198,11 +194,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "watchedCards": "Watched: ",
+  "watchedCards": "Watched: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "number": {}
+    }
   },
   "deleteDeckQuestion": "Do you want to delete deck?",
   "@deleteDeckQuestion": {
@@ -330,10 +328,12 @@
     "type": "text",
     "placeholders": {}
   },
-  "couldNotLaunchUrl": "Could not launch url",
+  "couldNotLaunchUrl": "Could not launch url {url}",
   "@couldNotLaunchUrl": {
-    "description": "Could not launch url ",
+    "description": "Could not launch url",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "url": {}
+    }
   }
 }

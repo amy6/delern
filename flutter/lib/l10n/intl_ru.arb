@@ -70,11 +70,13 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Количество карточек:",
+  "numberOfCards": "Количество карточек: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "canEdit": "Может редактировать",
@@ -231,11 +233,13 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Просмотрено: ",
+  "watchedCards": "Просмотрено: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "deleteDeckQuestion": "Вы хотите удалить список?",
@@ -385,11 +389,13 @@
     "placeholders": {
     }
   },
-  "couldNotLaunchUrl": "Не удалось запустить ссылку ",
+  "couldNotLaunchUrl": "Не удалось запустить ссылку {url}",
   "@couldNotLaunchUrl": {
-    "description": "Could not launch url ",
+    "description": "Could not launch url",
     "type": "text",
     "placeholders": {
+      "url": {
+      }
     }
   }
 }

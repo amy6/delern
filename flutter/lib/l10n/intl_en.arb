@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-04-13T13:09:02.169445",
+  "@@last_modified": "2018-09-08T16:12:06.012208",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -71,11 +71,13 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Number of cards:",
+  "numberOfCards": "Number of cards: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "canEdit": "Can Edit",
@@ -162,13 +164,6 @@
     "placeholders": {
     }
   },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "save": "Save",
   "@save": {
     "description": "Save",
@@ -232,11 +227,13 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Watched: ",
+  "watchedCards": "Watched: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "deleteDeckQuestion": "Do you want to delete deck?",
@@ -386,11 +383,13 @@
     "placeholders": {
     }
   },
-  "couldNotLaunchUrl": "Could not launch url",
+  "couldNotLaunchUrl": "Could not launch url {url}",
   "@couldNotLaunchUrl": {
-    "description": "Could not launch url ",
+    "description": "Could not launch url",
     "type": "text",
     "placeholders": {
+      "url": {
+      }
     }
   }
 }

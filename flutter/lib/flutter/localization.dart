@@ -106,10 +106,11 @@ class AppLocalizations {
     );
   }
 
-  String get numberOfCards {
+  String numberOfCards(int number) {
     return Intl.message(
-      'Number of cards:',
+      'Number of cards: $number',
       name: 'numberOfCards',
+      args: [number],
       desc: 'Number of cards',
     );
   }
@@ -172,7 +173,7 @@ class AppLocalizations {
 
   String get frontSideHint {
     return Intl.message(
-      'front side',
+      'Front side',
       name: 'frontSideHint',
       desc: 'front side',
     );
@@ -180,7 +181,7 @@ class AppLocalizations {
 
   String get backSideHint {
     return Intl.message(
-      'back side',
+      'Back side',
       name: 'backSideHint',
       desc: 'back side',
     );
@@ -207,14 +208,6 @@ class AppLocalizations {
       'Add',
       name: 'add',
       desc: 'Add',
-    );
-  }
-
-  String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: 'Cancel',
     );
   }
 
@@ -298,9 +291,10 @@ Twitter: https://twitter.com/dasdelern''',
     );
   }
 
-  String get watchedCards {
+  String watchedCards(int number) {
     return Intl.message(
-      'Watched: ',
+      "Watched: $number",
+      args: [number],
       name: 'watchedCards',
       desc: 'watchedCards',
     );
@@ -488,11 +482,12 @@ To see the source code for this app, please visit the [Delern guthub repo](https
     );
   }
 
-  String get couldNotLaunchUrl {
+  String couldNotLaunchUrl(String url) {
     return Intl.message(
-      'Could not launch url',
+      "Could not launch url $url",
+      args: [url],
       name: 'couldNotLaunchUrl',
-      desc: 'Could not launch url ',
+      desc: 'Could not launch url',
     );
   }
 }

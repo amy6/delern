@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
@@ -18,7 +19,6 @@ class ObservingGrid<T> extends StatefulWidget {
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
-    @required this.numberOfCardsLabel,
     @required this.emptyGridUserMessage,
   }) : super(key: key);
 
@@ -26,7 +26,6 @@ class ObservingGrid<T> extends StatefulWidget {
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
   // TODO(dotdoom): make this more abstract or rename to 'ObservingCardsGridView'
-  final String numberOfCardsLabel;
   final String emptyGridUserMessage;
 
   @override
@@ -71,7 +70,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(
-              '${widget.numberOfCardsLabel} ${widget.items.length}',
+              AppLocalizations.of(context).numberOfCards(widget.items.length),
               style: AppStyles.secondaryText,
             ),
           ],

@@ -71,7 +71,8 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                       context: context,
                       changesQuestion: locale.deleteDeckQuestion,
                       yesAnswer: locale.delete,
-                      noAnswer: locale.cancel);
+                      noAnswer:
+                          MaterialLocalizations.of(context).cancelButtonLabel);
                   if (deleteDeckDialog) {
                     try {
                       await _viewModel.delete();

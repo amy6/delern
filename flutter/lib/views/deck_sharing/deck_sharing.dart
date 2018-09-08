@@ -112,7 +112,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         context: context,
         changesQuestion: locale.appNotInstalledSharingDeck,
         yesAnswer: locale.send,
-        noAnswer: locale.cancel);
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (inviteUser) {
       await sendInvite(context);
       return true;

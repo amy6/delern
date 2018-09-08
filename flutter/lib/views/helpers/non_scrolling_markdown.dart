@@ -16,7 +16,7 @@ Widget buildNonScrollingMarkdown(String text, BuildContext context) {
           await launch(href, forceSafariVC: false);
         } else {
           UserMessages.showError(() => Scaffold.of(context),
-              AppLocalizations.of(context).couldNotLaunchUrl + href);
+              AppLocalizations.of(context).couldNotLaunchUrl(href));
         }
       });
 }

@@ -86,7 +86,7 @@ class _CardsListState extends State<CardsListPage> {
               deck: _viewModel.deck,
               allowEdit: widget.allowEdit,
             ),
-        numberOfCardsLabel: AppLocalizations.of(context).numberOfCards,
+        // TODO(ksheremet): Consider to remove this field
         emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
       ),
       floatingActionButton: Builder(
