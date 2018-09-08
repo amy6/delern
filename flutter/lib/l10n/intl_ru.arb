@@ -70,11 +70,13 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Количество карточек:",
+  "numberOfCards": "Количество карточек: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "canEdit": "Может редактировать",

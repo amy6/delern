@@ -71,11 +71,13 @@
     "placeholders": {
     }
   },
-  "numberOfCards": "Number of cards:",
+  "numberOfCards": "Number of cards: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "canEdit": "Can Edit",

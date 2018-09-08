@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T14:59:40.019005",
+  "@@last_modified": "2018-09-08T15:22:13.682919",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -60,11 +60,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "numberOfCards": "Number of cards:",
+  "numberOfCards": "Number of cards: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "number": {}
+    }
   },
   "canEdit": "Can Edit",
   "@canEdit": {

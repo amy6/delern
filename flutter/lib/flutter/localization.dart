@@ -106,10 +106,11 @@ class AppLocalizations {
     );
   }
 
-  String get numberOfCards {
+  String numberOfCards(int number) {
     return Intl.message(
-      'Number of cards:',
+      'Number of cards: $number',
       name: 'numberOfCards',
+      args: [number],
       desc: 'Number of cards',
     );
   }
