@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T15:28:22.617196",
+  "@@last_modified": "2018-09-08T16:12:06.012208",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -137,12 +137,6 @@
   "add": "Add",
   "@add": {
     "description": "Add",
-    "type": "text",
-    "placeholders": {}
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel",
     "type": "text",
     "placeholders": {}
   },
@@ -336,7 +330,7 @@
   },
   "couldNotLaunchUrl": "Could not launch url {url}",
   "@couldNotLaunchUrl": {
-    "description": "Could not launch url ",
+    "description": "Could not launch url",
     "type": "text",
     "placeholders": {
       "url": {}

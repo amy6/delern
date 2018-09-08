@@ -66,7 +66,9 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
               onPressed: () {
                 Navigator.of(context).pop(null);
               },
-              child: Text(AppLocalizations.of(context).cancel.toUpperCase())),
+              child: Text(MaterialLocalizations.of(context)
+                  .cancelButtonLabel
+                  .toUpperCase())),
           FlatButton(
               child: Text(AppLocalizations.of(context).add.toUpperCase()),
               onPressed: _textController.text.isEmpty

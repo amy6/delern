@@ -186,7 +186,7 @@ class CardsLearningState extends State<CardsLearning> {
         context: context,
         changesQuestion: locale.deleteCardQuestion,
         yesAnswer: locale.delete,
-        noAnswer: locale.cancel);
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (saveChanges) {
       try {
         await _viewModel.deleteCard();

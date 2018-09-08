@@ -391,7 +391,7 @@
   },
   "couldNotLaunchUrl": "Не удалось запустить ссылку {url}",
     "@couldNotLaunchUrl": {
-      "description": "Could not launch url ",
+      "description": "Could not launch url",
       "type": "text",
       "placeholders": {
         "url": {}

@@ -59,7 +59,8 @@ class _CardPreviewState extends State<CardPreview> {
                         context: context,
                         changesQuestion: locale.deleteCardQuestion,
                         yesAnswer: locale.delete,
-                        noAnswer: locale.cancel);
+                        noAnswer: MaterialLocalizations.of(context)
+                            .cancelButtonLabel);
                     if (saveChanges) {
                       try {
                         await _viewModel.deleteCard();

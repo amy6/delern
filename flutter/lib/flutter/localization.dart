@@ -211,14 +211,6 @@ class AppLocalizations {
     );
   }
 
-  String get cancel {
-    return Intl.message(
-      'Cancel',
-      name: 'cancel',
-      desc: 'Cancel',
-    );
-  }
-
   String get save {
     return Intl.message(
       'Save',
@@ -495,7 +487,7 @@ To see the source code for this app, please visit the [Delern guthub repo](https
       "Could not launch url $url",
       args: [url],
       name: 'couldNotLaunchUrl',
-      desc: 'Could not launch url ',
+      desc: 'Could not launch url',
     );
   }
 }
