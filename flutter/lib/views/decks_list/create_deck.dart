@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../card_create_update/card_create_update.dart';
@@ -31,7 +31,7 @@ class CreateDeck extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CreateUpdateCard(cardModel.Card(deck: newDeck))));
+                        CreateUpdateCard(card_model.Card(deck: newDeck))));
           }
         },
       );

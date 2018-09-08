@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/card_list_view_model.dart';
 import '../../views/helpers/card_background.dart';
@@ -97,7 +97,7 @@ class _CardsListState extends State<CardsListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CreateUpdateCard(
-                              cardModel.Card(deck: _viewModel.deck))));
+                              card_model.Card(deck: _viewModel.deck))));
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),

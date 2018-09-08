@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import 'progress_indicator.dart' as progressBar;
+import 'progress_indicator.dart';
 
 typedef Widget ObservingAnimatedListItemBuilder<T>(
   BuildContext context,
@@ -80,7 +80,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.list.changed) {
-      return progressBar.ProgressIndicator();
+      return HelperProgressIndicator();
     }
 
     if (widget.list.isEmpty) {

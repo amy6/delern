@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../view_models/card_view_model.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/slow_operation_widget.dart';
 
 class CreateUpdateCard extends StatefulWidget {
-  final cardModel.Card _card;
+  final card_model.Card _card;
 
   CreateUpdateCard(this._card);
 

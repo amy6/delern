@@ -7,7 +7,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/progress_indicator.dart';
 
 typedef Widget ObservingGridItemBuilder<T>(
   T item,
@@ -57,7 +57,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.items.changed) {
-      return progressBar.ProgressIndicator();
+      return HelperProgressIndicator();
     }
 
     if (widget.items.isEmpty) {

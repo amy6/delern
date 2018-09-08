@@ -11,7 +11,7 @@ import '../../view_models/learning_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
 import '../helpers/card_background.dart';
 import '../helpers/card_display.dart';
-import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/progress_indicator.dart';
 import '../helpers/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
@@ -61,7 +61,7 @@ class CardsLearningState extends State<CardsLearning> {
         actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
-          ? progressBar.ProgressIndicator()
+          ? HelperProgressIndicator()
           : Builder(
               builder: (context) => Column(
                     children: <Widget>[
