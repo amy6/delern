@@ -1,9 +1,9 @@
+import 'package:delern_flutter/models/base/keyed_list.dart';
+import 'package:delern_flutter/models/base/observable_list.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import '../lib/models/base/keyed_list.dart';
-import '../lib/models/base/observable_list.dart';
 import 'helpers.dart';
 
 class MockQuery extends Mock implements Query {}

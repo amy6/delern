@@ -1,6 +1,6 @@
+import 'package:delern_flutter/models/base/observable_list.dart';
 import 'package:test/test.dart';
 
-import '../lib/models/base/observable_list.dart';
 import 'helpers.dart';
 
 void main() {

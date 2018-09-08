@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/keyed_list.dart';
+import 'package:delern_flutter/models/base/observable_list.dart';
+import 'package:delern_flutter/view_models/base/view_models_list.dart';
 import 'package:test/test.dart';
 
-import '../lib/models/base/keyed_list.dart';
-import '../lib/models/base/observable_list.dart';
-import '../lib/view_models/base/view_models_list.dart';
 import 'helpers.dart';
 
 void main() {

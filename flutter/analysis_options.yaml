@@ -28,7 +28,6 @@ linter:
     #- annotate_overrides
     #- avoid_annotating_with_dynamic
     #- avoid_as
-    #- avoid_relative_lib_imports
     #- avoid_catches_without_on_clauses
     #- avoid_classes_with_only_static_members
     #- avoid_function_literals_in_foreach_calls
@@ -74,6 +73,7 @@ linter:
     - avoid_js_rounded_ints
     - avoid_null_checks_in_equality_operators
     - avoid_private_typedef_functions
+    - avoid_relative_lib_imports
     - avoid_return_types_on_setters
     - avoid_returning_null
     - avoid_returning_this

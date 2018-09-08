@@ -1,7 +1,6 @@
+import 'package:delern_flutter/models/base/observable_list.dart';
+import 'package:delern_flutter/view_models/base/view_models_list.dart';
 import 'package:test/test.dart';
-
-import '../lib/models/base/observable_list.dart';
-import '../lib/view_models/base/view_models_list.dart';
 
 StreamMatcher eventMatcher(ListEventType eventType, int index,
     [previousValue]) {

@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:test/test.dart';
-
-import '../lib/models/base/stream_muxer.dart';
 
 void main() {
   test('empty stream', () async {

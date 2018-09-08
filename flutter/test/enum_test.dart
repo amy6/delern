@@ -1,6 +1,5 @@
+import 'package:delern_flutter/models/base/enum.dart';
 import 'package:test/test.dart';
-
-import '../lib/models/base/enum.dart';
 
 enum _Test {
   first,
