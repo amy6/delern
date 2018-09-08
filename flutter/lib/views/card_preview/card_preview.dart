@@ -55,7 +55,7 @@ class _CardPreviewState extends State<CardPreview> {
                 onPressed: () async {
                   if (widget.allowEdit) {
                     var locale = AppLocalizations.of(context);
-                    bool saveChanges = await showSaveUpdatesDialog(
+                    var saveChanges = await showSaveUpdatesDialog(
                         context: context,
                         changesQuestion: locale.deleteCardQuestion,
                         yesAnswer: locale.delete,

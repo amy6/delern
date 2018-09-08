@@ -38,7 +38,6 @@ linter:
     #- curly_braces_in_flow_control_structures
     #- library_prefixes
     #- lines_longer_than_80_chars
-    #- omit_local_variable_types
     #- parameter_assignments
     #- prefer_adjacent_string_concatenation
     #- prefer_collection_literals
@@ -103,6 +102,7 @@ linter:
     - no_duplicate_case_values
     - non_constant_identifier_names
     - null_closures
+    - omit_local_variable_types
     - one_member_abstracts
     - only_throw_errors
     - overridden_fields

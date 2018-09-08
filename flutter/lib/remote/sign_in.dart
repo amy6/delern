@@ -6,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 Future<FirebaseUser> _signInToFirebaseWithGoogle(GoogleSignInAccount a) async {
-  final GoogleSignInAuthentication googleAuth = await a.authentication;
+  final googleAuth = await a.authentication;
   return await FirebaseAuth.instance.signInWithGoogle(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,

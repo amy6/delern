@@ -14,7 +14,7 @@ class CreateDeck extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
-          Deck newDeck = await showDialog<Deck>(
+          var newDeck = await showDialog<Deck>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,

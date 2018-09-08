@@ -14,7 +14,7 @@ Color specifyCardBackground(DeckType deckType, String text) {
   if (deckType == DeckType.basic) {
     return AppStyles.cardBackgroundColors[Gender.noGender];
   }
-  Gender textGender = Gender.noGender;
+  var textGender = Gender.noGender;
   text = text.toLowerCase();
   if (deckType == DeckType.swiss) {
     textGender = _swissCardGender(text);

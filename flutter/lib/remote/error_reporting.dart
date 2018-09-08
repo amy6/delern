@@ -29,7 +29,7 @@ class ErrorReporting {
     }
 
     if (_sentry == null) {
-      String environment = 'production';
+      var environment = 'production';
       assert(() {
             environment = 'dev';
             return true;
@@ -58,7 +58,7 @@ class ErrorReporting {
     }
 
     print('Reporting to Sentry.io...');
-    final SentryResponse response = await _sentry.capture(
+    final response = await _sentry.capture(
         event: Event(
       message: message,
       stackTrace: stackTrace,

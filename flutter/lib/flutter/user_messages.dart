@@ -15,9 +15,8 @@ class UserMessages {
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffol ancestor widget).
     var scaffoldState = scaffoldFinder();
-    String message =
-        AppLocalizations.of(scaffoldState.context).errorUserMessage +
-            e.toString().substring(0, min(e.toString().length, 50));
+    var message = AppLocalizations.of(scaffoldState.context).errorUserMessage +
+        e.toString().substring(0, min(e.toString().length, 50));
     showMessage(scaffoldState, message);
 
     return errorFuture;

@@ -51,7 +51,7 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   T removeAt(int index) {
-    T value = _base.removeAt(index);
+    var value = _base.removeAt(index);
     _changed = true;
     _events.add(ListEvent(
       eventType: ListEventType.itemRemoved,
@@ -125,7 +125,7 @@ class ObservableList<T> extends ListBase<T> {
   // methods (e.g. sort()) without immediately noticing the side effects, such
   // as itemAdded / itemRemoved / itemChanged event churn.
   void setAt(int index, T value) {
-    T previousValue = _base[index];
+    var previousValue = _base[index];
     _base[index] = value;
     _changed = true;
     _events.add(ListEvent(

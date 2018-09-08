@@ -28,7 +28,7 @@ class CardDisplay extends StatelessWidget {
       );
 
   List<Widget> _buildCardBody(BuildContext context) {
-    List<Widget> widgetList = [
+    var widgetList = [
       _sideText(front, context),
     ];
 

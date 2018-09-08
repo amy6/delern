@@ -88,7 +88,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
     print("Share deck: " + deckAccess.toString() + _textController.text);
     try {
-      String uid = await userLookup(_textController.text.toString());
+      var uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
           setState(() {

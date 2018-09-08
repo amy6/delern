@@ -124,6 +124,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Widget _buildBody() {
+    // ignore: omit_local_variable_types
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       TextField(
