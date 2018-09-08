@@ -78,7 +78,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
         Expanded(
           child: GridView.extent(
             maxCrossAxisExtent: widget.maxCrossAxisExtent,
-            children: List.of(widget.items.map((entry) => _buildItem(entry))),
+            children: List.of(widget.items.map(_buildItem)),
           ),
         ),
       ],

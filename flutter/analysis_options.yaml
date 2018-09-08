@@ -54,9 +54,6 @@ linter:
     #- sort_constructors_first
     #- sort_unnamed_constructors_first
     #- unawaited_futures
-    #- unnecessary_lambdas
-    #- unnecessary_parenthesis
-    #- unnecessary_this
 
     - always_require_non_null_named_parameters
     - avoid_as
@@ -131,7 +128,9 @@ linter:
     - unnecessary_brace_in_string_interps
     - unnecessary_const
     - unnecessary_getters_setters
+    - unnecessary_lambdas
     - unnecessary_new
+    - unnecessary_parenthesis
     - unnecessary_null_aware_assignments
     - unnecessary_null_in_if_null_operators
     - unnecessary_overrides

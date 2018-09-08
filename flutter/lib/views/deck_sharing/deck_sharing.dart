@@ -76,7 +76,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         trailing: DeckAccessDropdown(
           value: _accessValue,
           filter: (AccessType access) =>
-              (access != AccessType.owner && access != null),
+              access != AccessType.owner && access != null,
           valueChanged: (AccessType access) => setState(() {
                 _accessValue = access;
               }),
@@ -91,9 +91,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
       var uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
-          setState(() {
-            _textController.clear();
-          });
+          setState(_textController.clear);
         }
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
