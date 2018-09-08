@@ -231,11 +231,13 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Просмотрено: ",
+  "watchedCards": "Просмотрено: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "deleteDeckQuestion": "Вы хотите удалить список?",

@@ -232,11 +232,13 @@
     "placeholders": {
     }
   },
-  "watchedCards": "Watched: ",
+  "watchedCards": "Watched: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
     "placeholders": {
+      "number": {
+      }
     }
   },
   "deleteDeckQuestion": "Do you want to delete deck?",

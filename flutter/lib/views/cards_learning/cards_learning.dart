@@ -84,8 +84,8 @@ class CardsLearningState extends State<CardsLearning> {
                       Row(
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context).watchedCards +
-                                '$_watchedCount',
+                            AppLocalizations.of(context)
+                                .watchedCards(_watchedCount),
                             style: AppStyles.secondaryText,
                           ),
                         ],

@@ -298,9 +298,10 @@ Twitter: https://twitter.com/dasdelern''',
     );
   }
 
-  String get watchedCards {
+  String watchedCards(int number) {
     return Intl.message(
-      'Watched: ',
+      "Watched: $number",
+      args: [number],
       name: 'watchedCards',
       desc: 'watchedCards',
     );
