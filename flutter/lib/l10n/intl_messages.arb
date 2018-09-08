@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-05T10:57:42.366324",
+  "@@last_modified": "2018-09-07T16:54:02.175711",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -327,6 +327,12 @@
   "installEmailApp": "Please install Email App",
   "@installEmailApp": {
     "description": "Please install Email App",
+    "type": "text",
+    "placeholders": {}
+  },
+  "couldNotLaunchUrl": "Could not launch url",
+  "@couldNotLaunchUrl": {
+    "description": "Could not launch url ",
     "type": "text",
     "placeholders": {}
   }

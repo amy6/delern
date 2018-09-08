@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
+        "couldNotLaunchUrl": MessageLookupByLibrary.simpleMessage(
+            "Не удалось запустить ссылку "),
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),

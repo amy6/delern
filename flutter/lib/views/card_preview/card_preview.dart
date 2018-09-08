@@ -84,12 +84,12 @@ class _CardPreviewState extends State<CardPreview> {
         children: <Widget>[
           Expanded(
               child: CardDisplay(
-            front: _viewModel.card.front,
-            back: _viewModel.card.back,
-            showBack: true,
-            backgroundColor: specifyCardBackground(
-                _viewModel.card.deck.type, _viewModel.card.back),
-          )),
+                  front: _viewModel.card.front,
+                  back: _viewModel.card.back,
+                  showBack: true,
+                  backgroundColor: specifyCardBackground(
+                      _viewModel.card.deck.type, _viewModel.card.back),
+                  isMarkdown: _viewModel.card.deck.markdown)),
           Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
