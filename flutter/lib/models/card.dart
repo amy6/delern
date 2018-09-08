@@ -42,19 +42,19 @@ class Card implements KeyedListItem, Model {
   }
 
   static Stream<KeyedListEvent<Card>> getCards(Deck deck) async* {
+    Map initialValue = (await FirebaseDatabase.instance
+                .reference()
+                .child('cards')
+                .child(deck.key)
+                .orderByKey()
+                .onValue
+                .first)
+            .snapshot
+            .value ??
+        {};
     yield KeyedListEvent(
         eventType: ListEventType.setAll,
-        fullListValueForSet: ((await FirebaseDatabase.instance
-                        .reference()
-                        .child('cards')
-                        .child(deck.key)
-                        .orderByKey()
-                        .onValue
-                        .first)
-                    .snapshot
-                    .value as Map ??
-                {})
-            .entries
+        fullListValueForSet: initialValue.entries
             .map((item) => Card.fromSnapshot(item.key, item.value, deck)));
 
     yield* childEventsStream(

@@ -43,10 +43,11 @@ void main() {
         'FlutterError', details.exception, details.stack);
   };
   Isolate.current.addErrorListener(RawReceivePort((dynamic pair) async {
+    List<String> errorAndStacktrace = pair;
     await ErrorReporting.report(
       'Isolate ErrorListener',
-      (pair as List<String>).first,
-      (pair as List<String>).last,
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
     );
   }).sendPort);
   runZoned<Future>(() async {

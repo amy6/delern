@@ -42,20 +42,20 @@ class DeckAccess implements KeyedListItem, Model {
   }
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
+    Map initialValue = (await FirebaseDatabase.instance
+                .reference()
+                .child('deck_access')
+                .child(deck.key)
+                .orderByKey()
+                .onValue
+                .first)
+            .snapshot
+            .value ??
+        {};
     yield KeyedListEvent(
         eventType: ListEventType.setAll,
-        fullListValueForSet: ((await FirebaseDatabase.instance
-                    .reference()
-                    .child('deck_access')
-                    .child(deck.key)
-                    .orderByKey()
-                    .onValue
-                    .first)
-                .snapshot
-                .value as Map)
-            .entries
-            .map(
-                (item) => DeckAccess.fromSnapshot(item.key, item.value, deck)));
+        fullListValueForSet: initialValue.entries.map(
+            (item) => DeckAccess.fromSnapshot(item.key, item.value, deck)));
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()

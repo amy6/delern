@@ -60,20 +60,19 @@ class Deck implements KeyedListItem, Model {
         .child('decks')
         .child(uid)
         .keepSynced(true);
+    Map initialValue = (await FirebaseDatabase.instance
+                .reference()
+                .child('decks')
+                .child(uid)
+                .orderByKey()
+                .onValue
+                .first)
+            .snapshot
+            .value ??
+        {};
     yield KeyedListEvent(
         eventType: ListEventType.setAll,
-        fullListValueForSet: ((await FirebaseDatabase.instance
-                        .reference()
-                        .child('decks')
-                        .child(uid)
-                        .orderByKey()
-                        .onValue
-                        .first)
-                    .snapshot
-                    .value as Map ??
-                {})
-            .entries
-            .map((item) {
+        fullListValueForSet: initialValue.entries.map((item) {
           _keepDeckSynced(uid, item.key);
           return Deck.fromSnapshot(item.key, item.value, uid);
         }));
@@ -115,15 +114,18 @@ class Deck implements KeyedListItem, Model {
       .map((event) => _parseSnapshot(event.snapshot.value));
 
   Stream<int> getNumberOfCardsToLearn(int limit) => FirebaseDatabase.instance
-      .reference()
-      .child('learning')
-      .child(uid)
-      .child(key)
-      .orderByChild('repeatAt')
-      .endAt(DateTime.now().toUtc().millisecondsSinceEpoch)
-      .limitToFirst(limit)
-      .onValue
-      .map((evt) => (evt.snapshot.value as Map)?.length ?? 0);
+          .reference()
+          .child('learning')
+          .child(uid)
+          .child(key)
+          .orderByChild('repeatAt')
+          .endAt(DateTime.now().toUtc().millisecondsSinceEpoch)
+          .limitToFirst(limit)
+          .onValue
+          .map((evt) {
+        Map allValues = evt.snapshot.value;
+        return allValues?.length ?? 0;
+      });
 
   Map<String, dynamic> toMap(bool isNew) => {
         'decks/$uid/$key': {

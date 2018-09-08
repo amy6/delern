@@ -132,6 +132,6 @@ class CurrentUserWidget extends InheritedWidget {
         super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) =>
-      user != (oldWidget as CurrentUserWidget).user;
+  bool updateShouldNotify(CurrentUserWidget oldWidget) =>
+      user != oldWidget.user;
 }
