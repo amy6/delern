@@ -173,7 +173,7 @@ class AppLocalizations {
 
   String get frontSideHint {
     return Intl.message(
-      'front side',
+      'Front side',
       name: 'frontSideHint',
       desc: 'front side',
     );
@@ -181,7 +181,7 @@ class AppLocalizations {
 
   String get backSideHint {
     return Intl.message(
-      'back side',
+      'Back side',
       name: 'backSideHint',
       desc: 'back side',
     );

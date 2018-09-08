@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T16:12:06.012208",
+  "@@last_modified": "2018-09-08T16:32:52.670097",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -110,13 +110,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "frontSideHint": "front side",
+  "frontSideHint": "Front side",
   "@frontSideHint": {
     "description": "front side",
     "type": "text",
     "placeholders": {}
   },
-  "backSideHint": "back side",
+  "backSideHint": "Back side",
   "@backSideHint": {
     "description": "back side",
     "type": "text",

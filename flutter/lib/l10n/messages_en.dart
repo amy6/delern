@@ -17,7 +17,7 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'en';
 
-  static m0(url) => "Could not launch url";
+  static m0(url) => "Could not launch url ${url}";
 
   static m1(number) => "Number of cards: ${number}";
 
@@ -32,7 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "basicDeckType": MessageLookupByLibrary.simpleMessage("Basic"),
         "canEdit": MessageLookupByLibrary.simpleMessage("Can Edit"),
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cardAddedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was added"),
         "cardDeletedUserMessage":
