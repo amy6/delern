@@ -219,6 +219,8 @@ class DeckListItem extends StatelessWidget {
 enum _DeckMenuItemType { edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) =>
+    // We want this Map to be ordered.
+    // ignore: prefer_collection_literals
     LinkedHashMap<_DeckMenuItemType, String>()
       ..[_DeckMenuItemType.edit] =
           AppLocalizations.of(context).editCardsDeckMenu

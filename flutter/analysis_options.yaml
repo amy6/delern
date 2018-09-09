@@ -30,7 +30,6 @@ linter:
     #- avoid_classes_with_only_static_members
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
-    #- prefer_collection_literals
     #- prefer_const_constructors
     #- prefer_const_constructors_in_immutables
     #- prefer_expression_function_bodies
@@ -105,6 +104,7 @@ linter:
     - prefer_adjacent_string_concatenation
     - prefer_asserts_in_initializer_lists
     - prefer_bool_in_asserts
+    - prefer_collection_literals
     - prefer_conditional_assignment
     - prefer_const_declarations
     - prefer_const_literals_to_create_immutables

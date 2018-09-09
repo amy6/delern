@@ -32,7 +32,7 @@ class ObservableList<T> extends ListBase<T> {
 
   bool get changed => _changed;
 
-  final List<T> _base = List<T>();
+  final List<T> _base = <T>[];
   final StreamController<ListEvent<T>> _events =
       StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;

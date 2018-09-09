@@ -67,9 +67,10 @@ class Card implements KeyedListItem, Model {
   }
 
   Map<String, dynamic> toMap(bool isNew) {
-    var map = Map<String, dynamic>()
-      ..['cards/${deck.key}/$key/front'] = front
-      ..['cards/${deck.key}/$key/back'] = back;
+    var map = <String, dynamic>{
+      'cards/${deck.key}/$key/front': front,
+      'cards/${deck.key}/$key/back': back
+    };
     if (isNew) {
       // Important note: we ask server to fill in the timestamp, but we do not
       // update it in our object immediately. Something trivial like
