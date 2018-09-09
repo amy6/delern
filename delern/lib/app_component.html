@@ -1,0 +1,44 @@
+<header class="material-header">
+  <div class="material-header-row">
+    <material-button icon class="material-drawer-button" (trigger)="drawer.toggle()">
+      <material-icon icon="menu"></material-icon>
+    </material-button>
+    <span class="material-header-title">{{title}}</span>
+
+    <div class="material-spacer"></div>
+
+    <material-button>en</material-button>
+    <material-button>ru</material-button>
+    <!-- TODO(dotdoom): add account picture and popup -->
+  </div>
+</header>
+
+<material-drawer temporary #drawer>
+  <material-list>
+    <div group class="mat-drawer-spacer">
+      <!-- TODO(dotdoom): add application icon and title -->
+    </div>
+    <div group>
+      <material-list-item>
+        <material-icon icon="add"></material-icon>Add card
+      </material-list-item>
+      <material-list-item>
+        <material-icon icon="share"></material-icon>Share decks
+      </material-list-item>
+      <material-list-item (click)="signOut()">
+        <material-icon icon="power_settings_new"></material-icon>Sign out
+      </material-list-item>
+    </div>
+    <div group>
+      <div label>Support</div>
+      <material-list-item>
+        <material-icon icon="send"></material-icon>Feedback
+      </material-list-item>
+    </div>
+  </material-list>
+</material-drawer>
+
+<div class="material-content">
+  HELLO WORLD
+  <add-card></add-card>
+</div>
