@@ -28,13 +28,13 @@ linter:
     #- unawaited_futures
 
     # Questionable effort-to-gain ratio.
-    #- sort_constructors_first
     #- avoid_catches_without_on_clauses
+    #- avoid_function_literals_in_foreach_calls
+    #- sort_constructors_first
 
     # Disabled pre-existing findings.
     # TODO(dotdoom): make this list empty.
     #- avoid_classes_with_only_static_members
-    #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- prefer_final_locals
 
