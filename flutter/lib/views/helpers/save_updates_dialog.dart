@@ -11,7 +11,7 @@ Future<bool> showSaveUpdatesDialog(
       context: context,
       // user must tap button!
       barrierDismissible: false,
-      builder: (BuildContext context) => AlertDialog(
+      builder: (context) => AlertDialog(
             title: Text(changesQuestion),
             actions: <Widget>[
               FlatButton(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../view_models/card_view_model.dart';
 import '../../views/helpers/card_background.dart';
 import '../card_create_update/card_create_update.dart';
@@ -12,10 +12,10 @@ import '../helpers/card_display.dart';
 import '../helpers/save_updates_dialog.dart';
 
 class CardPreview extends StatefulWidget {
-  final cardModel.Card card;
+  final card_model.Card card;
   final bool allowEdit;
 
-  CardPreview({@required this.card, @required this.allowEdit})
+  const CardPreview({@required this.card, @required this.allowEdit})
       : assert(card != null),
         assert(allowEdit != null);
 
@@ -42,20 +42,18 @@ class _CardPreviewState extends State<CardPreview> {
 
   @override
   Widget build(BuildContext context) {
-    if (_viewModelUpdates == null) {
-      _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.card.deck.name),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () async {
                   if (widget.allowEdit) {
                     var locale = AppLocalizations.of(context);
-                    bool saveChanges = await showSaveUpdatesDialog(
+                    var saveChanges = await showSaveUpdatesDialog(
                         context: context,
                         changesQuestion: locale.deleteCardQuestion,
                         yesAnswer: locale.delete,
@@ -91,12 +89,12 @@ class _CardPreviewState extends State<CardPreview> {
                   backgroundColor: specifyCardBackground(
                       _viewModel.card.deck.type, _viewModel.card.back),
                   isMarkdown: _viewModel.card.deck.markdown)),
-          Padding(padding: EdgeInsets.only(bottom: 100.0))
+          const Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
-            child: Icon(Icons.edit),
+            child: const Icon(Icons.edit),
             onPressed: () {
               if (widget.allowEdit) {
                 Navigator.push(

@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'model.dart';
 
 class Transaction {
-  final List<Model> _toSave = List<Model>();
-  final List<Model> _toDelete = List<Model>();
+  final List<Model> _toSave = <Model>[];
+  final List<Model> _toDelete = <Model>[];
 
   static bool _isOnline = false;
 
@@ -34,7 +34,7 @@ class Transaction {
 
   Future<void> commit() {
     var root = FirebaseDatabase.instance.reference();
-    var updates = Map<String, dynamic>();
+    var updates = <String, dynamic>{};
     _toSave.forEach((m) {
       if (m.key == null) {
         m.key = root.child(m.rootPath).push().key;

@@ -20,7 +20,7 @@ import 'create_deck.dart';
 class DecksListPage extends StatefulWidget {
   final String title;
 
-  DecksListPage({@required this.title, Key key})
+  const DecksListPage({@required this.title, Key key})
       : assert(title != null),
         super(key: key);
 
@@ -90,7 +90,7 @@ class DecksListPageState extends State<DecksListPage> {
 class DeckListItem extends StatelessWidget {
   final DeckListItemViewModel viewModel;
 
-  DeckListItem(this.viewModel);
+  const DeckListItem(this.viewModel);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -107,7 +107,7 @@ class DeckListItem extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
         ],
       );
 
@@ -120,16 +120,17 @@ class DeckListItem extends StatelessWidget {
                     builder: (context) => CardsLearning(
                           deck: viewModel.deck,
                           allowEdit:
-                              // Not allow to edit or delete cards with read access
-                              // If some error occurred when retrieving DeckAccess and it is null access
-                              // we still give a try to edit for a user. If user doesn't
-                              // have permissions they will see "Permission denied"
+                              // Not allow to edit or delete cards with read
+                              // access. If some error occurred when retrieving
+                              // DeckAccess and it is null access we still give
+                              // a try to edit for a user. If user doesn't have
+                              // permissions they will see "Permission denied".
                               viewModel.access?.access != AccessType.read,
                         )),
               ),
           child: Container(
-            padding:
-                EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(
+                top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
               viewModel.deck.name,
               style: AppStyles.primaryText,
@@ -159,7 +160,7 @@ class DeckListItem extends StatelessWidget {
           child: PopupMenuButton<_DeckMenuItemType>(
             onSelected: (itemType) =>
                 _onDeckMenuItemSelected(context, itemType),
-            itemBuilder: (BuildContext context) => _buildMenu(context)
+            itemBuilder: (context) => _buildMenu(context)
                 .entries
                 .map((entry) => PopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,
@@ -184,8 +185,9 @@ class DeckListItem extends StatelessWidget {
                     allowEdit:
                         // Not allow to edit or delete cards with read access
                         // If some error occurred and it is null access
-                        // we still give a try to edit for a user. If user doesn't
-                        // have permissions they will see "Permission denied"
+                        // we still give a try to edit for a user. If user
+                        // doesn't have permissions they will see "Permission
+                        // denied".
                         viewModel.access?.access != AccessType.read,
                   )),
         );
@@ -217,6 +219,8 @@ class DeckListItem extends StatelessWidget {
 enum _DeckMenuItemType { edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) =>
+    // We want this Map to be ordered.
+    // ignore: prefer_collection_literals
     LinkedHashMap<_DeckMenuItemType, String>()
       ..[_DeckMenuItemType.edit] =
           AppLocalizations.of(context).editCardsDeckMenu

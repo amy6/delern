@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:test/test.dart';
-
-import '../lib/models/base/stream_muxer.dart';
 
 void main() {
   test('empty stream', () async {
     var muxer = StreamMuxer({
-      'test': Stream.empty(),
+      'test': const Stream.empty(),
     });
 
     expect(await muxer.isEmpty, true);
@@ -26,7 +25,8 @@ void main() {
   test('error stack trace null when not error', () {
     var muxer = StreamMuxer({
       'test': () async* {
-        throw 'nothing';
+        // ignore: only_throw_errors
+        throw 'a String';
       }(),
     });
 
@@ -34,6 +34,6 @@ void main() {
         muxer.first,
         throwsA((e) =>
             e.stackTrace == null &&
-            e.toString() == '[muxed stream "test"]: nothing'));
+            e.toString() == '[muxed stream "test"]: a String'));
   });
 }

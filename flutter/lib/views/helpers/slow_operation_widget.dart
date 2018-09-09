@@ -9,7 +9,7 @@ class SlowOperationWidget extends StatefulWidget {
   final ChildBuilder childBuilder;
   final ChildCallback childCallback;
 
-  SlowOperationWidget(this.childBuilder, this.childCallback);
+  const SlowOperationWidget(this.childBuilder, this.childCallback);
 
   @override
   State<StatefulWidget> createState() => _SlowOperationWidgetState();

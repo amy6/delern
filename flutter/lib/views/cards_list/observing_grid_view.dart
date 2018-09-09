@@ -7,25 +7,25 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/progress_indicator.dart';
 
 typedef Widget ObservingGridItemBuilder<T>(
   T item,
 );
 
 class ObservingGrid<T> extends StatefulWidget {
-  ObservingGrid({
-    Key key,
+  const ObservingGrid({
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
     @required this.emptyGridUserMessage,
+    Key key,
   }) : super(key: key);
 
   final ObservableList<T> items;
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
-  // TODO(dotdoom): make this more abstract or rename to 'ObservingCardsGridView'
+  // TODO(dotdoom): make this more abstract or rename to ObservingCardsGridView
   final String emptyGridUserMessage;
 
   @override
@@ -57,7 +57,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.items.changed) {
-      return progressBar.ProgressIndicator();
+      return HelperProgressIndicator();
     }
 
     if (widget.items.isEmpty) {
@@ -78,7 +78,7 @@ class ObservingGridState<T> extends State<ObservingGrid<T>> {
         Expanded(
           child: GridView.extent(
             maxCrossAxisExtent: widget.maxCrossAxisExtent,
-            children: List.of(widget.items.map((entry) => _buildItem(entry))),
+            children: List.of(widget.items.map(_buildItem)),
           ),
         ),
       ],

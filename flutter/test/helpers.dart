@@ -1,14 +1,15 @@
+import 'package:delern_flutter/models/base/observable_list.dart';
+import 'package:delern_flutter/view_models/base/view_models_list.dart';
 import 'package:test/test.dart';
-
-import '../lib/models/base/observable_list.dart';
-import '../lib/view_models/base/view_models_list.dart';
 
 StreamMatcher eventMatcher(ListEventType eventType, int index,
     [previousValue]) {
   var expected = ListEvent(
       eventType: eventType, index: index, previousValue: previousValue);
   return StreamMatcher((q) async {
-    if (!await q.hasNext) return '';
+    if (!await q.hasNext) {
+      return '';
+    }
 
     ListEvent actual = await q.next;
     if (actual.eventType == expected.eventType &&

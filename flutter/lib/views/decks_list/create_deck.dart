@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../card_create_update/card_create_update.dart';
@@ -12,9 +12,9 @@ import '../helpers/sign_in.dart';
 class CreateDeck extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () async {
-          Deck newDeck = await showDialog<Deck>(
+          var newDeck = await showDialog<Deck>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,
@@ -31,7 +31,7 @@ class CreateDeck extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CreateUpdateCard(cardModel.Card(deck: newDeck))));
+                        CreateUpdateCard(card_model.Card(deck: newDeck))));
           }
         },
       );
@@ -49,13 +49,13 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(
           AppLocalizations.of(context).deck,
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         content: SingleChildScrollView(
           child: TextField(
             autofocus: true,
             controller: _textController,
-            onChanged: (String text) {
+            onChanged: (text) {
               setState(() {});
             },
             style: AppStyles.primaryText,

@@ -32,7 +32,7 @@ class ObservableList<T> extends ListBase<T> {
 
   bool get changed => _changed;
 
-  final List<T> _base = List<T>();
+  final List<T> _base = <T>[];
   final StreamController<ListEvent<T>> _events =
       StreamController<ListEvent<T>>.broadcast(sync: true);
   bool _changed = false;
@@ -40,8 +40,8 @@ class ObservableList<T> extends ListBase<T> {
   T operator [](int index) => _base[index];
 
   @override
-  void add(T value) {
-    insert(_base.length, value);
+  void add(T element) {
+    insert(_base.length, element);
   }
 
   @override
@@ -51,7 +51,7 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   T removeAt(int index) {
-    T value = _base.removeAt(index);
+    var value = _base.removeAt(index);
     _changed = true;
     _events.add(ListEvent(
       eventType: ListEventType.itemRemoved,
@@ -95,9 +95,10 @@ class ObservableList<T> extends ListBase<T> {
   }
 
   @override
-  void setAll(int index, Iterable<T> newValue) {
-    _base.length = index + newValue.length;
-    _base.setAll(index, newValue);
+  void setAll(int index, Iterable<T> iterable) {
+    _base
+      ..length = index + iterable.length
+      ..setAll(index, iterable);
     _changed = true;
     _events.add(ListEvent(
       eventType: ListEventType.setAll,
@@ -125,7 +126,7 @@ class ObservableList<T> extends ListBase<T> {
   // methods (e.g. sort()) without immediately noticing the side effects, such
   // as itemAdded / itemRemoved / itemChanged event churn.
   void setAt(int index, T value) {
-    T previousValue = _base[index];
+    var previousValue = _base[index];
     _base[index] = value;
     _changed = true;
     _events.add(ListEvent(

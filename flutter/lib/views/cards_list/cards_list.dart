@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/card_list_view_model.dart';
 import '../../views/helpers/card_background.dart';
@@ -18,7 +18,7 @@ class CardsListPage extends StatefulWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardsListPage({@required this.deck, @required this.allowEdit})
+  const CardsListPage({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 
@@ -71,9 +71,7 @@ class _CardsListState extends State<CardsListPage> {
       _viewModel.activate();
       _active = true;
     }
-    if (_updates == null) {
-      _updates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _updates ??= _viewModel.updates.listen((_) => setState(() {}));
 
     return Scaffold(
       appBar: SearchBarWidget(
@@ -97,7 +95,7 @@ class _CardsListState extends State<CardsListPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => CreateUpdateCard(
-                              cardModel.Card(deck: _viewModel.deck))));
+                              card_model.Card(deck: _viewModel.deck))));
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),
@@ -105,7 +103,7 @@ class _CardsListState extends State<CardsListPage> {
                           .noAddingWithReadAccessUserMessage);
                 }
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
       ),
     );
@@ -117,7 +115,7 @@ class CardGridItem extends StatelessWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardGridItem(
+  const CardGridItem(
       {@required this.viewModel, @required this.deck, @required this.allowEdit})
       : assert(viewModel != null),
         assert(deck != null),
@@ -138,7 +136,7 @@ class CardGridItem extends StatelessWidget {
                           allowEdit: allowEdit,
                         ))),
             child: Container(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -150,7 +148,7 @@ class CardGridItem extends StatelessWidget {
                     style: AppStyles.primaryText,
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
                       viewModel.card.back ?? '',
                       maxLines: 3,

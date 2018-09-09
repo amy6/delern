@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as cardModel;
+import '../../models/card.dart' as card_model;
 import '../../view_models/card_view_model.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/slow_operation_widget.dart';
 
 class CreateUpdateCard extends StatefulWidget {
-  final cardModel.Card _card;
+  final card_model.Card _card;
 
-  CreateUpdateCard(this._card);
+  const CreateUpdateCard(this._card);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();
@@ -22,8 +22,8 @@ class CreateUpdateCard extends StatefulWidget {
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _addReversedCard = false;
   bool _isChanged = false;
-  TextEditingController _frontTextController = TextEditingController();
-  TextEditingController _backTextController = TextEditingController();
+  final TextEditingController _frontTextController = TextEditingController();
+  final TextEditingController _backTextController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   CardViewModel _viewModel;
   final FocusNode _frontSideFocus = FocusNode();
@@ -73,7 +73,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           _viewModel.card.key == null
               ? SlowOperationWidget(
                   (cb) => IconButton(
-                      icon: Icon(Icons.check),
+                      icon: const Icon(Icons.check),
                       onPressed: _isCardValid() ? cb : null),
                   _addCard)
               : SlowOperationWidget(
@@ -81,7 +81,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                       child: Text(
                         AppLocalizations.of(context).save.toUpperCase(),
                         style: _isChanged && _isCardValid()
-                            ? TextStyle(color: Colors.white)
+                            ? const TextStyle(color: Colors.white)
                             : null,
                       ),
                       onPressed: _isChanged && _isCardValid() ? cb : null),
@@ -93,12 +93,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         ],
       );
 
-  bool _isCardValid() {
-    return _addReversedCard
-        ? _frontTextController.text.trim().isNotEmpty &&
-            _backTextController.text.trim().isNotEmpty
-        : _frontTextController.text.trim().isNotEmpty;
-  }
+  bool _isCardValid() => _addReversedCard
+      ? _frontTextController.text.trim().isNotEmpty &&
+          _backTextController.text.trim().isNotEmpty
+      : _frontTextController.text.trim().isNotEmpty;
 
   Future<void> _addCard() async {
     if (await _saveCard()) {
@@ -112,8 +110,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Future<bool> _saveCard() async {
-    _viewModel.card.front = _frontTextController.text.trim();
-    _viewModel.card.back = _backTextController.text.trim();
+    _viewModel.card
+      ..front = _frontTextController.text.trim()
+      ..back = _backTextController.text.trim();
     try {
       await _viewModel.saveCard(_addReversedCard);
     } catch (e, stackTrace) {
@@ -124,6 +123,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Widget _buildBody() {
+    // ignore: omit_local_variable_types
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       TextField(
@@ -132,7 +132,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _frontTextController,
-        onChanged: (String text) {
+        onChanged: (text) {
           setState(() {
             _isChanged = true;
           });
@@ -145,7 +145,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _backTextController,
-        onChanged: (String text) {
+        onChanged: (text) {
           setState(() {
             _isChanged = true;
           });
@@ -167,7 +167,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           style: AppStyles.secondaryText,
         ),
         value: _addReversedCard,
-        onChanged: (bool newValue) {
+        onChanged: (newValue) {
           setState(() {
             _addReversedCard = newValue;
           });
@@ -178,7 +178,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     }
 
     return ListView(
-      padding: EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       children: widgetsList,
     );
   }

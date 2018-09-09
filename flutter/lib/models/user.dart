@@ -15,7 +15,7 @@ class User implements KeyedListItem, Model {
 
   User({@required this.key, this.name, this.photoUrl}) : assert(key != null);
 
-  User.fromSnapshot(this.key, dynamic snapshotValue) {
+  User.fromSnapshot(this.key, snapshotValue) {
     _parseSnapshot(snapshotValue);
   }
 
@@ -24,7 +24,7 @@ class User implements KeyedListItem, Model {
         name = user.displayName,
         photoUrl = user.photoUrl;
 
-  void _parseSnapshot(dynamic snapshotValue) {
+  void _parseSnapshot(snapshotValue) {
     if (snapshotValue == null) {
       // Assume the user doesn't exist anymore.
       key = null;

@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import 'progress_indicator.dart' as progressBar;
+import 'progress_indicator.dart';
 
 typedef Widget ObservingAnimatedListItemBuilder<T>(
   BuildContext context,
@@ -15,11 +15,11 @@ typedef Widget ObservingAnimatedListItemBuilder<T>(
 );
 
 class ObservingAnimatedList<T> extends StatefulWidget {
-  ObservingAnimatedList({
-    Key key,
+  const ObservingAnimatedList({
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyListUserMessage,
+    Key key,
   })  : assert(itemBuilder != null),
         super(key: key);
 
@@ -59,9 +59,8 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
       case ListEventType.itemRemoved:
         _animatedListKey.currentState.removeItem(
             event.index,
-            (BuildContext context, Animation<double> animation) =>
-                widget.itemBuilder(
-                    context, event.previousValue, animation, event.index));
+            (context, animation) => widget.itemBuilder(
+                context, event.previousValue, animation, event.index));
         break;
       case ListEventType.setAll:
       // Note: number of items must not change here (unless it's the first
@@ -80,7 +79,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   @override
   Widget build(BuildContext context) {
     if (!widget.list.changed) {
-      return progressBar.ProgressIndicator();
+      return HelperProgressIndicator();
     }
 
     if (widget.list.isEmpty) {

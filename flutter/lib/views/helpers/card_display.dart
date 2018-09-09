@@ -10,7 +10,7 @@ class CardDisplay extends StatelessWidget {
   final Color backgroundColor;
   final bool isMarkdown;
 
-  CardDisplay(
+  const CardDisplay(
       {@required this.front,
       @required this.back,
       @required this.showBack,
@@ -20,26 +20,27 @@ class CardDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
         color: backgroundColor,
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         child: ListView(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           children: _buildCardBody(context),
         ),
       );
 
   List<Widget> _buildCardBody(BuildContext context) {
-    List<Widget> widgetList = [
+    var widgetList = [
       _sideText(front, context),
     ];
 
     if (showBack) {
-      widgetList.add(Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
-        child: Divider(
-          height: 1.0,
-        ),
-      ));
-      widgetList.add(_sideText(back, context));
+      widgetList
+        ..add(const Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          child: Divider(
+            height: 1.0,
+          ),
+        ))
+        ..add(_sideText(back, context));
     }
 
     return widgetList;

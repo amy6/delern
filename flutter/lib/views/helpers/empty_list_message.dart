@@ -5,7 +5,7 @@ import '../../flutter/styles.dart';
 class EmptyListMessage extends StatelessWidget {
   final String _displayText;
 
-  EmptyListMessage(this._displayText);
+  const EmptyListMessage(this._displayText);
 
   @override
   Widget build(BuildContext context) => Center(

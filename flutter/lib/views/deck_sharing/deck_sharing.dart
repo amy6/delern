@@ -11,7 +11,7 @@ import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
 import '../../views/helpers/slow_operation_widget.dart';
 import '../helpers/observing_animated_list.dart';
-import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/progress_indicator.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
 import 'deck_access_dropdown.dart';
@@ -19,7 +19,7 @@ import 'deck_access_dropdown.dart';
 class DeckSharingPage extends StatefulWidget {
   final Deck _deck;
 
-  DeckSharingPage(this._deck);
+  const DeckSharingPage(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckSharingState();
@@ -37,7 +37,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
             Builder(
               builder: (context) => SlowOperationWidget(
                   (cb) => IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: _isEmailCorrect() ? cb : null),
                   () => _shareDeck(_accessValue, context)),
             )
@@ -46,7 +46,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         body: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: 8.0, top: 8.0),
+              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
               child: Row(
                 children: <Widget>[
                   Text(
@@ -65,7 +65,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   Widget _sharingEmail() => ListTile(
         title: TextField(
           controller: _textController,
-          onChanged: (String text) {
+          onChanged: (text) {
             setState(() {});
           },
           style: AppStyles.primaryText,
@@ -75,9 +75,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
         ),
         trailing: DeckAccessDropdown(
           value: _accessValue,
-          filter: (AccessType access) =>
-              (access != AccessType.owner && access != null),
-          valueChanged: (AccessType access) => setState(() {
+          filter: (access) => access != AccessType.owner && access != null,
+          valueChanged: (access) => setState(() {
                 _accessValue = access;
               }),
         ),
@@ -86,14 +85,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
   bool _isEmailCorrect() => _textController.text.contains('@');
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
-    print("Share deck: " + deckAccess.toString() + _textController.text);
+    print('Share deck: $deckAccess: ${_textController.text}');
     try {
-      String uid = await userLookup(_textController.text.toString());
+      var uid = await userLookup(_textController.text.toString());
       if (uid == null) {
         if (await _inviteUser()) {
-          setState(() {
-            _textController.clear();
-          });
+          setState(_textController.clear);
         }
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
@@ -124,7 +121,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
 class DeckUsersWidget extends StatefulWidget {
   final Deck _deck;
 
-  DeckUsersWidget(this._deck);
+  const DeckUsersWidget(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckUsersState();
@@ -176,7 +173,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 8.0, top: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
           child: Row(
             children: <Widget>[
               Text(
@@ -204,9 +201,9 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;
     if (accessViewModel.deckAccess.access == AccessType.owner) {
-      filter = (AccessType access) => access == AccessType.owner;
+      filter = (access) => access == AccessType.owner;
     } else {
-      filter = (AccessType access) => access != AccessType.owner;
+      filter = (access) => access != AccessType.owner;
     }
 
     return ListTile(
@@ -216,7 +213,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
             ),
       title: (accessViewModel.user == null)
-          ? progressBar.ProgressIndicator()
+          ? HelperProgressIndicator()
           : Text(
               accessViewModel.user.name,
               style: AppStyles.primaryText,
@@ -224,7 +221,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
         filter: filter,
-        valueChanged: (AccessType access) => setState(() {
+        valueChanged: (access) => setState(() {
               DeckAccessesViewModel.shareDeck(DeckAccess(
                   deck: _deckAccessesViewModel.deck,
                   uid: accessViewModel.deckAccess.uid,

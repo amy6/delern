@@ -30,7 +30,7 @@ class ScheduledCard implements KeyedListItem, Model {
   int level;
   DateTime repeatAt;
 
-  ScheduledCard({@required this.card, this.level: 0, this.repeatAt})
+  ScheduledCard({@required this.card, this.level = 0, this.repeatAt})
       : assert(card != null) {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
@@ -69,8 +69,8 @@ class ScheduledCard implements KeyedListItem, Model {
           // the learning tree fixes this because local cache gets all entries.
           .limitToFirst(2)
           .onValue
-          .transform(StreamTransformer.fromHandlers(
-              handleData: (event, EventSink<ScheduledCard> sink) async {
+          .transform(
+              StreamTransformer.fromHandlers(handleData: (event, sink) async {
         if (event.snapshot.value == null) {
           // The deck is empty. Should we offer the user to re-sync?
           sink.close();
@@ -79,24 +79,24 @@ class ScheduledCard implements KeyedListItem, Model {
 
         // TODO(dotdoom): remove sorting once Flutter Firebase issue is fixed.
         // Workaround for https://github.com/flutter/flutter/issues/19389.
-        var latestScheduledCard =
-            ((event.snapshot.value.entries.toList() as List<MapEntry>)
-                  ..sort((s1, s2) {
-                    var repeatAtComparison =
-                        s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
-                    // Sometimes repeatAt of 2 cards may be the same, which
-                    // will result in unstable order. Most often this is
-                    // happening to the newly added cards, which have
-                    // repeatAt = 0.
-                    // We mimic Firebase behavior here, which falls back to
-                    // sorting lexicographically by key.
-                    // TODO(dotdoom): do not set repeatAt = 0?
-                    if (repeatAtComparison == 0) {
-                      return s1.key.compareTo(s2.key);
-                    }
-                    return repeatAtComparison;
-                  }))
-                .first;
+        List<MapEntry> allEntries = event.snapshot.value.entries.toList();
+        var latestScheduledCard = (allEntries
+              ..sort((s1, s2) {
+                var repeatAtComparison =
+                    s1.value['repeatAt'].compareTo(s2.value['repeatAt']);
+                // Sometimes repeatAt of 2 cards may be the same, which
+                // will result in unstable order. Most often this is
+                // happening to the newly added cards, which have
+                // repeatAt = 0.
+                // We mimic Firebase behavior here, which falls back to
+                // sorting lexicographically by key.
+                // TODO(dotdoom): do not set repeatAt = 0?
+                if (repeatAtComparison == 0) {
+                  return s1.key.compareTo(s2.key);
+                }
+                return repeatAtComparison;
+              }))
+            .first;
 
         var card = await Card.fetch(deck, latestScheduledCard.key);
         var scheduledCard =
@@ -127,9 +127,9 @@ class ScheduledCard implements KeyedListItem, Model {
       };
 
   CardView answer(bool knows) {
-    var cv = CardView(card: card);
-    cv.reply = knows;
-    cv.levelBefore = level;
+    var cv = CardView(card: card)
+      ..reply = knows
+      ..levelBefore = level;
     if (knows) {
       level = min(level + 1, levelDurations.length - 1);
     } else {

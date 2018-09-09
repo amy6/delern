@@ -11,14 +11,14 @@ import '../../view_models/learning_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
 import '../helpers/card_background.dart';
 import '../helpers/card_display.dart';
-import '../helpers/progress_indicator.dart' as progressBar;
+import '../helpers/progress_indicator.dart';
 import '../helpers/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardsLearning({@required this.deck, @required this.allowEdit})
+  const CardsLearning({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 
@@ -48,20 +48,18 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   Widget build(BuildContext context) {
-    if (_updates == null) {
-      _updates = _viewModel.updates.listen(
-          (_) => setState(() {
-                _isBackShown = false;
-              }),
-          onDone: () => Navigator.of(context).pop());
-    }
+    _updates ??= _viewModel.updates.listen(
+        (_) => setState(() {
+              _isBackShown = false;
+            }),
+        onDone: () => Navigator.of(context).pop());
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.deck.name),
         actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
-          ? progressBar.ProgressIndicator()
+          ? HelperProgressIndicator()
           : Builder(
               builder: (context) => Column(
                     children: <Widget>[
@@ -75,7 +73,7 @@ class CardsLearningState extends State<CardsLearning> {
                         isMarkdown: _viewModel.deck.markdown,
                       )),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
+                        padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: _buildButtons(context),
@@ -100,7 +98,7 @@ class CardsLearningState extends State<CardsLearning> {
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
               onSelected: (itemType) =>
                   _onCardMenuItemSelected(context, itemType),
-              itemBuilder: (BuildContext context) => _buildMenu(context)
+              itemBuilder: (context) => _buildMenu(context)
                   .entries
                   .map((entry) => PopupMenuItem<_CardMenuItemType>(
                         value: entry.key,
@@ -114,36 +112,37 @@ class CardsLearningState extends State<CardsLearning> {
   List<Widget> _buildButtons(BuildContext context) {
     if (_isBackShown) {
       return [
-        // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
+        // TODO(ksheremet): Make buttons disabled when card was answered and is
+        // saving to DB.
         FloatingActionButton(
-            heroTag: "dontknow",
+            heroTag: 'dontknow',
             backgroundColor: Colors.red,
-            child: Icon(Icons.clear),
+            child: const Icon(Icons.clear),
             onPressed: () async {
               await _answerCard(false, context);
               setState(() {});
             }),
         FloatingActionButton(
-            heroTag: "know",
+            heroTag: 'know',
             backgroundColor: Colors.green,
-            child: Icon(Icons.check),
+            child: const Icon(Icons.check),
             onPressed: () async {
               await _answerCard(true, context);
               setState(() {});
             })
       ];
-    } else
-      return [
-        FloatingActionButton(
-            backgroundColor: Colors.orange,
-            heroTag: "turn",
-            child: Icon(Icons.cached),
-            onPressed: () {
-              setState(() {
-                _isBackShown = true;
-              });
-            })
-      ];
+    }
+    return [
+      FloatingActionButton(
+          backgroundColor: Colors.orange,
+          heroTag: 'turn',
+          child: const Icon(Icons.cached),
+          onPressed: () {
+            setState(() {
+              _isBackShown = true;
+            });
+          })
+    ];
   }
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
@@ -182,7 +181,7 @@ class CardsLearningState extends State<CardsLearning> {
 
   void _deleteCard(BuildContext context) async {
     var locale = AppLocalizations.of(context);
-    bool saveChanges = await showSaveUpdatesDialog(
+    var saveChanges = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: locale.deleteCardQuestion,
         yesAnswer: locale.delete,
@@ -202,6 +201,8 @@ class CardsLearningState extends State<CardsLearning> {
 enum _CardMenuItemType { edit, delete }
 
 Map<_CardMenuItemType, String> _buildMenu(BuildContext context) =>
+    // We want this Map to be ordered.
+    // ignore: prefer_collection_literals
     LinkedHashMap<_CardMenuItemType, String>()
       ..[_CardMenuItemType.edit] = AppLocalizations.of(context).edit
       ..[_CardMenuItemType.delete] = AppLocalizations.of(context).delete;

@@ -15,7 +15,7 @@ class DeckSettingsPage extends StatefulWidget {
   final Deck _deck;
   final DeckAccess _access;
 
-  DeckSettingsPage(this._deck, this._access);
+  const DeckSettingsPage(this._deck, this._access);
 
   @override
   State<StatefulWidget> createState() => _DeckSettingsPageState();
@@ -23,7 +23,7 @@ class DeckSettingsPage extends StatefulWidget {
 
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  TextEditingController _deckNameController = TextEditingController();
+  final TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
   bool _isDeckChanged = false;
@@ -44,9 +44,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_viewModelUpdates == null) {
-      _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
     return WillPopScope(
       onWillPop: () async {
         if (_isDeckChanged) {
@@ -64,7 +62,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
           key: _scaffoldKey,
           appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () async {
                   var locale = AppLocalizations.of(context);
                   var deleteDeckDialog = await showSaveUpdatesDialog(
@@ -90,7 +88,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   }
 
   Widget _buildBody() => Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             TextField(
@@ -98,7 +96,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               keyboardType: TextInputType.multiline,
               controller: _deckNameController,
               style: AppStyles.primaryText,
-              onChanged: (String text) {
+              onChanged: (text) {
                 setState(() {
                   _isDeckChanged = true;
                   _viewModel.deck.name = text;
@@ -109,7 +107,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 24.0),
+                  padding: const EdgeInsets.only(top: 24.0),
                   child: Text(
                     AppLocalizations.of(context).deckType,
                     style: AppStyles.secondaryText,
@@ -122,7 +120,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               children: <Widget>[
                 DeckTypeDropdown(
                   value: _viewModel.deck.type,
-                  valueChanged: (DeckType newDeckType) => setState(() {
+                  valueChanged: (newDeckType) => setState(() {
                         _isDeckChanged = true;
                         _viewModel.deck.type = newDeckType;
                       }),

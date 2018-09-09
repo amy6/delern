@@ -9,12 +9,12 @@ import '../../models/fcm.dart';
 import '../../models/user.dart';
 import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
-import 'progress_indicator.dart' as progressIndicator;
+import 'progress_indicator.dart';
 
 class SignInWidget extends StatefulWidget {
   final Widget child;
 
-  SignInWidget({this.child});
+  const SignInWidget({this.child});
 
   @override
   State<StatefulWidget> createState() => _SignInWidgetState();
@@ -59,7 +59,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       return CurrentUserWidget(user: _user, child: widget.child);
     }
     if (_isAuthStateKnown == false) {
-      return progressIndicator.ProgressIndicator();
+      return HelperProgressIndicator();
     }
     return Scaffold(
       backgroundColor: AppStyles.signInBackgroundColor,
@@ -71,7 +71,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 child: Container(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(50.0),
+                      padding: const EdgeInsets.all(50.0),
                       child: Image.asset(
                         'images/delern.png',
                       ),
@@ -82,7 +82,8 @@ class _SignInWidgetState extends State<SignInWidget> {
             ],
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
+            padding:
+                const EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -95,7 +96,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: Image.asset(
                                   'images/google_sign_in.png',
                                   height: 35.0,
@@ -103,7 +104,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                                 ),
                               ),
                               Container(
-                                  padding: EdgeInsets.only(left: 10.0),
+                                  padding: const EdgeInsets.only(left: 10.0),
                                   child: Text(
                                     AppLocalizations.of(context)
                                         .signInWithGoogle,
@@ -127,11 +128,11 @@ class CurrentUserWidget extends InheritedWidget {
   static CurrentUserWidget of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(CurrentUserWidget);
 
-  CurrentUserWidget({Key key, Widget child, @required this.user})
+  const CurrentUserWidget({@required this.user, Key key, Widget child})
       : assert(user != null),
         super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) =>
-      user != (oldWidget as CurrentUserWidget).user;
+  bool updateShouldNotify(CurrentUserWidget oldWidget) =>
+      user != oldWidget.user;
 }

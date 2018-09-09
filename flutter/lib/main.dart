@@ -23,7 +23,7 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
@@ -38,15 +38,16 @@ class App extends StatelessWidget {
 }
 
 void main() {
-  FlutterError.onError = (FlutterErrorDetails details) async {
+  FlutterError.onError = (details) async {
     await ErrorReporting.report(
         'FlutterError', details.exception, details.stack);
   };
-  Isolate.current.addErrorListener(RawReceivePort((dynamic pair) async {
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    List<String> errorAndStacktrace = pair;
     await ErrorReporting.report(
       'Isolate ErrorListener',
-      (pair as List<String>).first,
-      (pair as List<String>).last,
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
     );
   }).sendPort);
   runZoned<Future>(() async {

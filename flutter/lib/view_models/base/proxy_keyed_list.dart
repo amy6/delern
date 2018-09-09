@@ -62,6 +62,8 @@ class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
     }
   }
 
+  // Getter is not super useful for this property.
+  // ignore: avoid_setters_without_getters
   set comparator(Comparator<T> value) {
     _comparator = value;
     if (isEmpty) {
