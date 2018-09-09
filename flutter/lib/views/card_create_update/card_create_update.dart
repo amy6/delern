@@ -112,8 +112,9 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   }
 
   Future<bool> _saveCard() async {
-    _viewModel.card.front = _frontTextController.text.trim();
-    _viewModel.card.back = _backTextController.text.trim();
+    _viewModel.card
+      ..front = _frontTextController.text.trim()
+      ..back = _backTextController.text.trim();
     try {
       await _viewModel.saveCard(_addReversedCard);
     } catch (e, stackTrace) {

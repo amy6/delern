@@ -33,13 +33,14 @@ class CardDisplay extends StatelessWidget {
     ];
 
     if (showBack) {
-      widgetList.add(Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.0),
-        child: Divider(
-          height: 1.0,
-        ),
-      ));
-      widgetList.add(_sideText(back, context));
+      widgetList
+        ..add(Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0),
+          child: Divider(
+            height: 1.0,
+          ),
+        ))
+        ..add(_sideText(back, context));
     }
 
     return widgetList;

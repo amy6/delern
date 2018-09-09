@@ -55,8 +55,7 @@ void main() {
   });
 
   test('disallowed methods', () {
-    var list = ObservableList<int>();
-    list.setAll(0, [1, -1, 0]);
+    var list = ObservableList<int>()..setAll(0, [1, -1, 0]);
 
     expect(
         () => list.length += 1, throwsA(const TypeMatcher<UnsupportedError>()));
@@ -67,9 +66,7 @@ void main() {
   });
 
   test('empty changes', () {
-    var list = ObservableList();
-
-    list.move(0, 0);
+    var list = ObservableList()..move(0, 0);
     expect(list.changed, false);
 
     list.move(0, 1);

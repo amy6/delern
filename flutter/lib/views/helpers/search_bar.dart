@@ -40,8 +40,9 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   void dispose() {
-    _searchController.removeListener(_searchTextChanged);
-    _searchController.dispose();
+    _searchController
+      ..removeListener(_searchTextChanged)
+      ..dispose();
     super.dispose();
   }
 

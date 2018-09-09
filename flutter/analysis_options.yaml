@@ -31,7 +31,6 @@ linter:
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- avoid_types_on_closure_parameters
-    #- cascade_invocations
     #- lines_longer_than_80_chars
     #- prefer_collection_literals
     #- prefer_const_constructors
@@ -72,6 +71,7 @@ linter:
     - await_only_futures
     - camel_case_types
     - cancel_subscriptions
+    - cascade_invocations
     - close_sinks
     - comment_references
     - constant_identifier_names

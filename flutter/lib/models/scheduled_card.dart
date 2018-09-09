@@ -127,9 +127,9 @@ class ScheduledCard implements KeyedListItem, Model {
       };
 
   CardView answer(bool knows) {
-    var cv = CardView(card: card);
-    cv.reply = knows;
-    cv.levelBefore = level;
+    var cv = CardView(card: card)
+      ..reply = knows
+      ..levelBefore = level;
     if (knows) {
       level = min(level + 1, levelDurations.length - 1);
     } else {

@@ -22,17 +22,14 @@ class CardViewModel {
   String toString() => (_card.key == null ? _card.deck : _card).toString();
 
   Future<void> saveCard(bool addReverse) {
-    var t = Transaction();
-    t.save(_card);
-    t.save(ScheduledCard(card: _card));
+    var t = Transaction()..save(_card)..save(ScheduledCard(card: _card));
     if (addReverse) {
       var reverse = Card(
         deck: _card.deck,
         front: _card.back,
         back: _card.front,
       );
-      t.save(reverse);
-      t.save(ScheduledCard(card: reverse));
+      t..save(reverse)..save(ScheduledCard(card: reverse));
     }
 
     return t.commit();

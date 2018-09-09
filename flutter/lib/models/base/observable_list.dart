@@ -96,8 +96,9 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   void setAll(int index, Iterable<T> iterable) {
-    _base.length = index + iterable.length;
-    _base.setAll(index, iterable);
+    _base
+      ..length = index + iterable.length
+      ..setAll(index, iterable);
     _changed = true;
     _events.add(ListEvent(
       eventType: ListEventType.setAll,

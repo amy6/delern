@@ -156,14 +156,14 @@ void main() {
   });
 
   test('setAt with data, move', () async {
-    var baseList = ObservableList<TestFixture>();
-    baseList.setAll(0, [
-      TestFixture('A', data: 0),
-      TestFixture('B', data: 1),
-      TestFixture('C', data: 2),
-      TestFixture('D', data: 3),
-      TestFixture('E', data: 4),
-    ]);
+    var baseList = ObservableList<TestFixture>()
+      ..setAll(0, [
+        TestFixture('A', data: 0),
+        TestFixture('B', data: 1),
+        TestFixture('C', data: 2),
+        TestFixture('D', data: 3),
+        TestFixture('E', data: 4),
+      ]);
     var list = ProxyKeyedList<TestFixture>(baseList);
 
     expect(
@@ -336,6 +336,7 @@ void main() {
     expect(list, baseList);
 
     list.filter = (f) => f.data > 0;
+    // ignore: cascade_invocations
     list.comparator = (a, b) => b.data.compareTo(a.data);
 
     expect(list, baseList);
@@ -355,8 +356,9 @@ void main() {
           TestFixture('B', data: 1),
         ]));
 
-    list.filter = null;
-    list.comparator = null;
+    list
+      ..filter = null
+      ..comparator = null;
     expect(list, baseList);
 
     list.dispose();
