@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-typedef Future<void> ChildCallback();
-typedef Widget ChildBuilder(ChildCallback callback);
+typedef ChildCallback = Future<void> Function();
+typedef ChildBuilder = Widget Function(ChildCallback callback);
 
 class SlowOperationWidget extends StatefulWidget {
   final ChildBuilder childBuilder;

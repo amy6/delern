@@ -24,6 +24,9 @@ linter:
     # "Correcting" input parameters is too useful to let go of.
     #- parameter_assignments
 
+    # Too many instances of intentional unawaiting.
+    #- unawaited_futures
+
     # Questionable effort-to-gain ratio.
     #- sort_constructors_first
     #- avoid_catches_without_on_clauses
@@ -34,8 +37,6 @@ linter:
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- prefer_final_locals
-    #- prefer_generic_function_type_aliases
-    #- unawaited_futures
 
     - always_declare_return_types
     - always_put_control_body_on_new_line
@@ -114,6 +115,7 @@ linter:
     - prefer_final_fields
     - prefer_foreach
     - prefer_function_declarations_over_variables
+    - prefer_generic_function_type_aliases
     - prefer_initializing_formals
     - prefer_interpolation_to_compose_strings
     - prefer_is_empty

@@ -11,7 +11,7 @@ abstract class ListItemViewModel implements KeyedListItem, Activatable {
   ListItemViewModel updateWith(covariant ListItemViewModel value);
 }
 
-typedef Stream<T> StreamGetter<T>();
+typedef StreamGetter<T> = Stream<T> Function();
 
 // TODO(dotdoom): make list interface readonly.
 class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>

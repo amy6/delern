@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import '../../models/base/keyed_list.dart';
 import '../../models/base/observable_list.dart';
 
-typedef bool Filter<T>(T item);
+typedef Filter<T> = bool Function(T item);
 
 // TODO(dotdoom): make list interface readonly.
 class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
