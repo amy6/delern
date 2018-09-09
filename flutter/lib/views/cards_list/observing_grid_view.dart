@@ -25,7 +25,7 @@ class ObservingGrid<T> extends StatefulWidget {
   final ObservableList<T> items;
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
-  // TODO(dotdoom): make this more abstract or rename to 'ObservingCardsGridView'
+  // TODO(dotdoom): make this more abstract or rename to ObservingCardsGridView
   final String emptyGridUserMessage;
 
   @override

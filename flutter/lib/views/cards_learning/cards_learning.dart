@@ -112,7 +112,8 @@ class CardsLearningState extends State<CardsLearning> {
   List<Widget> _buildButtons(BuildContext context) {
     if (_isBackShown) {
       return [
-        // TODO(ksheremet): Make buttons disabled when card was answered and is saving to DB
+        // TODO(ksheremet): Make buttons disabled when card was answered and is
+        // saving to DB.
         FloatingActionButton(
             heroTag: "dontknow",
             backgroundColor: Colors.red,

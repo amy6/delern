@@ -6,11 +6,6 @@ import 'package:intl/intl.dart';
 import '../l10n/messages_all.dart';
 
 /// https://flutter.io/tutorials/internationalization/
-/// 1. Generate intl_messages.arb that serves as template for other translations:
-/// flutter pub pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/flutter/localization.dart
-/// 2. Create other translations files naming them intl_*.arb
-/// 3. Generate messages_*.dart files and messages_all.dart:
-/// flutter pub pub run intl_translation:generate_from_arb --output-dir=lib/l10n   --no-use-deferred-loading lib/flutter/localization.dart lib/l10n/intl_*.arb
 class AppLocalizations {
   static Future<AppLocalizations> load(Locale locale) {
     final name =

@@ -31,7 +31,6 @@ linter:
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- avoid_types_on_closure_parameters
-    #- lines_longer_than_80_chars
     #- prefer_collection_literals
     #- prefer_const_constructors
     #- prefer_const_constructors_in_immutables
@@ -89,6 +88,7 @@ linter:
     - join_return_with_assignment
     - library_names
     - library_prefixes
+    - lines_longer_than_80_chars
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
     - no_adjacent_strings_in_list
