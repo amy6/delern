@@ -20,7 +20,7 @@ import 'create_deck.dart';
 class DecksListPage extends StatefulWidget {
   final String title;
 
-  DecksListPage({@required this.title, Key key})
+  const DecksListPage({@required this.title, Key key})
       : assert(title != null),
         super(key: key);
 
@@ -90,7 +90,7 @@ class DecksListPageState extends State<DecksListPage> {
 class DeckListItem extends StatelessWidget {
   final DeckListItemViewModel viewModel;
 
-  DeckListItem(this.viewModel);
+  const DeckListItem(this.viewModel);
 
   @override
   Widget build(BuildContext context) => Column(

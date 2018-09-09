@@ -15,7 +15,7 @@ class CardPreview extends StatefulWidget {
   final card_model.Card card;
   final bool allowEdit;
 
-  CardPreview({@required this.card, @required this.allowEdit})
+  const CardPreview({@required this.card, @required this.allowEdit})
       : assert(card != null),
         assert(allowEdit != null);
 

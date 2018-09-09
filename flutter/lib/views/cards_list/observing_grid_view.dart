@@ -14,7 +14,7 @@ typedef Widget ObservingGridItemBuilder<T>(
 );
 
 class ObservingGrid<T> extends StatefulWidget {
-  ObservingGrid({
+  const ObservingGrid({
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,

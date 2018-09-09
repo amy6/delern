@@ -15,7 +15,7 @@ class DeckSettingsPage extends StatefulWidget {
   final Deck _deck;
   final DeckAccess _access;
 
-  DeckSettingsPage(this._deck, this._access);
+  const DeckSettingsPage(this._deck, this._access);
 
   @override
   State<StatefulWidget> createState() => _DeckSettingsPageState();

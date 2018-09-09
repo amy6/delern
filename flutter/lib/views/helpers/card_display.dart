@@ -10,7 +10,7 @@ class CardDisplay extends StatelessWidget {
   final Color backgroundColor;
   final bool isMarkdown;
 
-  CardDisplay(
+  const CardDisplay(
       {@required this.front,
       @required this.back,
       @required this.showBack,

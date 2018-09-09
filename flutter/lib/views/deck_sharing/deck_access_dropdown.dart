@@ -13,7 +13,7 @@ class DeckAccessDropdown extends StatefulWidget {
   final AccessTypeCallback valueChanged;
   final AccessTypeFilter filter;
 
-  DeckAccessDropdown(
+  const DeckAccessDropdown(
       {@required this.value,
       @required this.valueChanged,
       @required this.filter})

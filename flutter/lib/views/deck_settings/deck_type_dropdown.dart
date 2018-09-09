@@ -10,7 +10,7 @@ class DeckTypeDropdown extends StatefulWidget {
   final DeckType value;
   final DeckTypeCallback valueChanged;
 
-  DeckTypeDropdown({@required this.value, @required this.valueChanged})
+  const DeckTypeDropdown({@required this.value, @required this.valueChanged})
       : assert(valueChanged != null);
 
   @override

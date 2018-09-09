@@ -9,7 +9,7 @@ class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String title;
   final SearchCallback search;
 
-  SearchBarWidget({this.title, this.search});
+  const SearchBarWidget({this.title, this.search});
 
   @override
   State<StatefulWidget> createState() => SearchBarWidgetState();

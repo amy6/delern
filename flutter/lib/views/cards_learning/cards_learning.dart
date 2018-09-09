@@ -18,7 +18,7 @@ class CardsLearning extends StatefulWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardsLearning({@required this.deck, @required this.allowEdit})
+  const CardsLearning({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 

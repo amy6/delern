@@ -13,7 +13,7 @@ import '../helpers/slow_operation_widget.dart';
 class CreateUpdateCard extends StatefulWidget {
   final card_model.Card _card;
 
-  CreateUpdateCard(this._card);
+  const CreateUpdateCard(this._card);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();

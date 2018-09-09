@@ -19,7 +19,7 @@ import 'deck_access_dropdown.dart';
 class DeckSharingPage extends StatefulWidget {
   final Deck _deck;
 
-  DeckSharingPage(this._deck);
+  const DeckSharingPage(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckSharingState();
@@ -121,7 +121,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
 class DeckUsersWidget extends StatefulWidget {
   final Deck _deck;
 
-  DeckUsersWidget(this._deck);
+  const DeckUsersWidget(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckUsersState();

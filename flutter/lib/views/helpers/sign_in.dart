@@ -14,7 +14,7 @@ import 'progress_indicator.dart';
 class SignInWidget extends StatefulWidget {
   final Widget child;
 
-  SignInWidget({this.child});
+  const SignInWidget({this.child});
 
   @override
   State<StatefulWidget> createState() => _SignInWidgetState();
@@ -127,7 +127,7 @@ class CurrentUserWidget extends InheritedWidget {
   static CurrentUserWidget of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(CurrentUserWidget);
 
-  CurrentUserWidget({@required this.user, Key key, Widget child})
+  const CurrentUserWidget({@required this.user, Key key, Widget child})
       : assert(user != null),
         super(key: key, child: child);
 

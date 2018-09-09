@@ -18,7 +18,7 @@ class CardsListPage extends StatefulWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardsListPage({@required this.deck, @required this.allowEdit})
+  const CardsListPage({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 
@@ -115,7 +115,7 @@ class CardGridItem extends StatelessWidget {
   final Deck deck;
   final bool allowEdit;
 
-  CardGridItem(
+  const CardGridItem(
       {@required this.viewModel, @required this.deck, @required this.allowEdit})
       : assert(viewModel != null),
         assert(deck != null),

@@ -31,7 +31,6 @@ linter:
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- prefer_const_constructors
-    #- prefer_const_constructors_in_immutables
     #- prefer_final_locals
     #- prefer_generic_function_type_aliases
     #- sort_constructors_first
@@ -104,6 +103,7 @@ linter:
     - prefer_bool_in_asserts
     - prefer_collection_literals
     - prefer_conditional_assignment
+    - prefer_const_constructors_in_immutables
     - prefer_const_declarations
     - prefer_const_literals_to_create_immutables
     - prefer_constructors_over_static_methods

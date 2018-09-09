@@ -15,7 +15,7 @@ typedef Widget ObservingAnimatedListItemBuilder<T>(
 );
 
 class ObservingAnimatedList<T> extends StatefulWidget {
-  ObservingAnimatedList({
+  const ObservingAnimatedList({
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyListUserMessage,
