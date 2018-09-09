@@ -40,8 +40,8 @@ class ObservableList<T> extends ListBase<T> {
   T operator [](int index) => _base[index];
 
   @override
-  void add(T value) {
-    insert(_base.length, value);
+  void add(T element) {
+    insert(_base.length, element);
   }
 
   @override
@@ -95,9 +95,9 @@ class ObservableList<T> extends ListBase<T> {
   }
 
   @override
-  void setAll(int index, Iterable<T> newValue) {
-    _base.length = index + newValue.length;
-    _base.setAll(index, newValue);
+  void setAll(int index, Iterable<T> iterable) {
+    _base.length = index + iterable.length;
+    _base.setAll(index, iterable);
     _changed = true;
     _events.add(ListEvent(
       eventType: ListEventType.setAll,

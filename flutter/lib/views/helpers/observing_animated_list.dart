@@ -16,10 +16,10 @@ typedef Widget ObservingAnimatedListItemBuilder<T>(
 
 class ObservingAnimatedList<T> extends StatefulWidget {
   ObservingAnimatedList({
-    Key key,
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyListUserMessage,
+    Key key,
   })  : assert(itemBuilder != null),
         super(key: key);
 

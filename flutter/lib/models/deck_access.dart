@@ -32,7 +32,7 @@ class DeckAccess implements KeyedListItem, Model {
     uid = null;
   }
 
-  DeckAccess.fromSnapshot(this.uid, dynamic snapshotValue, this.deck) {
+  DeckAccess.fromSnapshot(this.uid, snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);
   }
 

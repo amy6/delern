@@ -48,13 +48,11 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   Widget build(BuildContext context) {
-    if (_updates == null) {
-      _updates = _viewModel.updates.listen(
-          (_) => setState(() {
-                _isBackShown = false;
-              }),
-          onDone: () => Navigator.of(context).pop());
-    }
+    _updates ??= _viewModel.updates.listen(
+        (_) => setState(() {
+              _isBackShown = false;
+            }),
+        onDone: () => Navigator.of(context).pop());
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.deck.name),
@@ -132,18 +130,18 @@ class CardsLearningState extends State<CardsLearning> {
               setState(() {});
             })
       ];
-    } else
-      return [
-        FloatingActionButton(
-            backgroundColor: Colors.orange,
-            heroTag: "turn",
-            child: Icon(Icons.cached),
-            onPressed: () {
-              setState(() {
-                _isBackShown = true;
-              });
-            })
-      ];
+    }
+    return [
+      FloatingActionButton(
+          backgroundColor: Colors.orange,
+          heroTag: "turn",
+          child: Icon(Icons.cached),
+          onPressed: () {
+            setState(() {
+              _isBackShown = true;
+            });
+          })
+    ];
   }
 
   Future<void> _answerCard(bool answer, BuildContext context) async {

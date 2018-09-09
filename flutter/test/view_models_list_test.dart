@@ -78,7 +78,7 @@ void main() {
     })
       ..activate();
 
-    await Future<Null>(() {});
+    await Future<void>(() {});
     expect(
         list,
         equals(
@@ -147,7 +147,7 @@ void main() {
           emitsDone,
         ]));
 
-    await Future<Null>(() {});
+    await Future<void>(() {});
     expect(
         list,
         equals([
@@ -241,7 +241,7 @@ void main() {
     expect(changedTestFixture.active, false);
     expect(addedTestFixture.active, false);
 
-    await Future<Null>(() {});
+    await Future<void>(() {});
     list.deactivate();
     expect(
         list,

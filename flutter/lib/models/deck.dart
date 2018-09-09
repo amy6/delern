@@ -25,9 +25,9 @@ class Deck implements KeyedListItem, Model {
   Deck({
     @required this.uid,
     this.name,
-    this.markdown: false,
-    this.type: DeckType.basic,
-    this.accepted: true,
+    this.markdown = false,
+    this.type = DeckType.basic,
+    this.accepted = true,
     this.lastSyncAt,
     this.category,
   }) : assert(uid != null) {

@@ -21,10 +21,10 @@ class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class SearchBarWidgetState extends State<SearchBarWidget> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   bool _isSearchMode = false;
 
-  _searchTextChanged() {
+  void _searchTextChanged() {
     if (_isSearchMode) {
       widget.search(_searchController.text);
     } else {

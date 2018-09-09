@@ -23,7 +23,7 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
@@ -42,7 +42,7 @@ void main() {
     await ErrorReporting.report(
         'FlutterError', details.exception, details.stack);
   };
-  Isolate.current.addErrorListener(RawReceivePort((dynamic pair) async {
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
     List<String> errorAndStacktrace = pair;
     await ErrorReporting.report(
       'Isolate ErrorListener',

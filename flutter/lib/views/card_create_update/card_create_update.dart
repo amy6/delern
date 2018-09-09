@@ -22,8 +22,8 @@ class CreateUpdateCard extends StatefulWidget {
 class _CreateUpdateCardState extends State<CreateUpdateCard> {
   bool _addReversedCard = false;
   bool _isChanged = false;
-  TextEditingController _frontTextController = TextEditingController();
-  TextEditingController _backTextController = TextEditingController();
+  final TextEditingController _frontTextController = TextEditingController();
+  final TextEditingController _backTextController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   CardViewModel _viewModel;
   final FocusNode _frontSideFocus = FocusNode();

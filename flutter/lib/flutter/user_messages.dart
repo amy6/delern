@@ -7,7 +7,7 @@ import '../flutter/localization.dart';
 import '../remote/error_reporting.dart';
 
 class UserMessages {
-  static Future<Null> showError(ScaffoldState scaffoldFinder(), dynamic e,
+  static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
     var errorFuture =
         ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);

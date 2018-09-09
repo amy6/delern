@@ -42,9 +42,7 @@ class _CardPreviewState extends State<CardPreview> {
 
   @override
   Widget build(BuildContext context) {
-    if (_viewModelUpdates == null) {
-      _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.card.deck.name),

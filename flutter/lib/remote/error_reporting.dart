@@ -12,8 +12,7 @@ class ErrorReporting {
   static SentryClient _sentry;
   static String uid;
 
-  static Future<Null> report(
-      String src, dynamic error, dynamic stackTrace) async {
+  static Future<void> report(String src, error, stackTrace) async {
     var message = error.toString();
     try {
       // For DatabaseError, toString() returns "Instance of 'DatabaseError'".
@@ -47,7 +46,7 @@ class ErrorReporting {
         },
       );
       _sentry = SentryClient(
-          dsn: "https://36d72a65344d439d86ee65d623d050ce:" +
+          dsn: "https://36d72a65344d439d86ee65d623d050ce:"
               "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345",
           environmentAttributes: environmentAttributes);
     }

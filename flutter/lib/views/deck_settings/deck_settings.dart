@@ -23,7 +23,7 @@ class DeckSettingsPage extends StatefulWidget {
 
 class _DeckSettingsPageState extends State<DeckSettingsPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  TextEditingController _deckNameController = TextEditingController();
+  final TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
   StreamSubscription<void> _viewModelUpdates;
   bool _isDeckChanged = false;
@@ -44,9 +44,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_viewModelUpdates == null) {
-      _viewModelUpdates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
     return WillPopScope(
       onWillPop: () async {
         if (_isDeckChanged) {

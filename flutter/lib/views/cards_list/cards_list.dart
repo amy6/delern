@@ -71,9 +71,7 @@ class _CardsListState extends State<CardsListPage> {
       _viewModel.activate();
       _active = true;
     }
-    if (_updates == null) {
-      _updates = _viewModel.updates.listen((_) => setState(() {}));
-    }
+    _updates ??= _viewModel.updates.listen((_) => setState(() {}));
 
     return Scaffold(
       appBar: SearchBarWidget(

@@ -7,7 +7,9 @@ StreamMatcher eventMatcher(ListEventType eventType, int index,
   var expected = ListEvent(
       eventType: eventType, index: index, previousValue: previousValue);
   return StreamMatcher((q) async {
-    if (!await q.hasNext) return '';
+    if (!await q.hasNext) {
+      return '';
+    }
 
     ListEvent actual = await q.next;
     if (actual.eventType == expected.eventType &&

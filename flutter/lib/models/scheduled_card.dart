@@ -30,7 +30,7 @@ class ScheduledCard implements KeyedListItem, Model {
   int level;
   DateTime repeatAt;
 
-  ScheduledCard({@required this.card, this.level: 0, this.repeatAt})
+  ScheduledCard({@required this.card, this.level = 0, this.repeatAt})
       : assert(card != null) {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }

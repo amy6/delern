@@ -15,11 +15,11 @@ typedef Widget ObservingGridItemBuilder<T>(
 
 class ObservingGrid<T> extends StatefulWidget {
   ObservingGrid({
-    Key key,
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
     @required this.emptyGridUserMessage,
+    Key key,
   }) : super(key: key);
 
   final ObservableList<T> items;
