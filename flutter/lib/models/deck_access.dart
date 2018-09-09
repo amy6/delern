@@ -32,13 +32,13 @@ class DeckAccess implements KeyedListItem, Model {
     uid = null;
   }
 
-  DeckAccess.fromSnapshot(this.uid, snapshotValue, this.deck) {
-    _parseSnapshot(snapshotValue);
-  }
-
   DeckAccess({@required this.deck, this.uid, this.access})
       : assert(deck != null) {
     uid ??= deck.uid;
+  }
+
+  DeckAccess.fromSnapshot(this.uid, snapshotValue, this.deck) {
+    _parseSnapshot(snapshotValue);
   }
 
   static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {

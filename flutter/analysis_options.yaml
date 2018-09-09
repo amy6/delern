@@ -33,7 +33,6 @@ linter:
     #- prefer_final_locals
     #- prefer_generic_function_type_aliases
     #- sort_constructors_first
-    #- sort_unnamed_constructors_first
     #- unawaited_futures
 
     - always_declare_return_types
@@ -123,6 +122,7 @@ linter:
     - prefer_void_to_null
     - recursive_getters
     - slash_for_doc_comments
+    - sort_unnamed_constructors_first
     - super_goes_last
     - test_types_in_equals
     - throw_in_finally
