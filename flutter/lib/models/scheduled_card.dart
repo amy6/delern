@@ -69,8 +69,8 @@ class ScheduledCard implements KeyedListItem, Model {
           // the learning tree fixes this because local cache gets all entries.
           .limitToFirst(2)
           .onValue
-          .transform(StreamTransformer.fromHandlers(
-              handleData: (event, EventSink<ScheduledCard> sink) async {
+          .transform(
+              StreamTransformer.fromHandlers(handleData: (event, sink) async {
         if (event.snapshot.value == null) {
           // The deck is empty. Should we offer the user to re-sync?
           sink.close();

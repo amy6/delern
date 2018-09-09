@@ -98,7 +98,7 @@ class CardsLearningState extends State<CardsLearning> {
         builder: (context) => PopupMenuButton<_CardMenuItemType>(
               onSelected: (itemType) =>
                   _onCardMenuItemSelected(context, itemType),
-              itemBuilder: (BuildContext context) => _buildMenu(context)
+              itemBuilder: (context) => _buildMenu(context)
                   .entries
                   .map((entry) => PopupMenuItem<_CardMenuItemType>(
                         value: entry.key,

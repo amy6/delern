@@ -59,9 +59,8 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
       case ListEventType.itemRemoved:
         _animatedListKey.currentState.removeItem(
             event.index,
-            (BuildContext context, Animation<double> animation) =>
-                widget.itemBuilder(
-                    context, event.previousValue, animation, event.index));
+            (context, animation) => widget.itemBuilder(
+                context, event.previousValue, animation, event.index));
         break;
       case ListEventType.setAll:
       // Note: number of items must not change here (unless it's the first

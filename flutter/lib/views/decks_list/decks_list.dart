@@ -160,7 +160,7 @@ class DeckListItem extends StatelessWidget {
           child: PopupMenuButton<_DeckMenuItemType>(
             onSelected: (itemType) =>
                 _onDeckMenuItemSelected(context, itemType),
-            itemBuilder: (BuildContext context) => _buildMenu(context)
+            itemBuilder: (context) => _buildMenu(context)
                 .entries
                 .map((entry) => PopupMenuItem<_DeckMenuItemType>(
                       value: entry.key,

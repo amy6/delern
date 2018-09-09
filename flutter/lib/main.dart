@@ -38,7 +38,7 @@ class App extends StatelessWidget {
 }
 
 void main() {
-  FlutterError.onError = (FlutterErrorDetails details) async {
+  FlutterError.onError = (details) async {
     await ErrorReporting.report(
         'FlutterError', details.exception, details.stack);
   };

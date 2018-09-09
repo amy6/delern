@@ -134,7 +134,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _frontTextController,
-        onChanged: (String text) {
+        onChanged: (text) {
           setState(() {
             _isChanged = true;
           });
@@ -147,7 +147,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _backTextController,
-        onChanged: (String text) {
+        onChanged: (text) {
           setState(() {
             _isChanged = true;
           });
@@ -169,7 +169,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           style: AppStyles.secondaryText,
         ),
         value: _addReversedCard,
-        onChanged: (bool newValue) {
+        onChanged: (newValue) {
           setState(() {
             _addReversedCard = newValue;
           });

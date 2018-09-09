@@ -65,7 +65,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   Widget _sharingEmail() => ListTile(
         title: TextField(
           controller: _textController,
-          onChanged: (String text) {
+          onChanged: (text) {
             setState(() {});
           },
           style: AppStyles.primaryText,
@@ -75,9 +75,8 @@ class _DeckSharingState extends State<DeckSharingPage> {
         ),
         trailing: DeckAccessDropdown(
           value: _accessValue,
-          filter: (AccessType access) =>
-              access != AccessType.owner && access != null,
-          valueChanged: (AccessType access) => setState(() {
+          filter: (access) => access != AccessType.owner && access != null,
+          valueChanged: (access) => setState(() {
                 _accessValue = access;
               }),
         ),
@@ -202,9 +201,9 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;
     if (accessViewModel.deckAccess.access == AccessType.owner) {
-      filter = (AccessType access) => access == AccessType.owner;
+      filter = (access) => access == AccessType.owner;
     } else {
-      filter = (AccessType access) => access != AccessType.owner;
+      filter = (access) => access != AccessType.owner;
     }
 
     return ListTile(
@@ -222,7 +221,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
         filter: filter,
-        valueChanged: (AccessType access) => setState(() {
+        valueChanged: (access) => setState(() {
               DeckAccessesViewModel.shareDeck(DeckAccess(
                   deck: _deckAccessesViewModel.deck,
                   uid: accessViewModel.deckAccess.uid,

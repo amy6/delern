@@ -96,7 +96,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               keyboardType: TextInputType.multiline,
               controller: _deckNameController,
               style: AppStyles.primaryText,
-              onChanged: (String text) {
+              onChanged: (text) {
                 setState(() {
                   _isDeckChanged = true;
                   _viewModel.deck.name = text;
@@ -120,7 +120,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               children: <Widget>[
                 DeckTypeDropdown(
                   value: _viewModel.deck.type,
-                  valueChanged: (DeckType newDeckType) => setState(() {
+                  valueChanged: (newDeckType) => setState(() {
                         _isDeckChanged = true;
                         _viewModel.deck.type = newDeckType;
                       }),

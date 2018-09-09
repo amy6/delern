@@ -12,7 +12,7 @@ class AppLocalizations {
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
 
-    return initializeMessages(localeName).then((bool _) {
+    return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
       return AppLocalizations();
     });

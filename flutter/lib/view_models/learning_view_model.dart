@@ -19,8 +19,8 @@ class LearningViewModel {
 
   Stream<void> get updates => StreamMuxer({
         0: deck.updates,
-        1: ScheduledCard.next(deck).transform(StreamTransformer.fromHandlers(
-            handleData: (sc, EventSink<void> sink) {
+        1: ScheduledCard.next(deck)
+            .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
           // TODO(ksheremet): allow users to learn beyond the time horizon.
           if (sc.repeatAt.isAfter(DateTime.now().toUtc())) {
             sink.close();

@@ -55,7 +55,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
           child: TextField(
             autofocus: true,
             controller: _textController,
-            onChanged: (String text) {
+            onChanged: (text) {
               setState(() {});
             },
             style: AppStyles.primaryText,
