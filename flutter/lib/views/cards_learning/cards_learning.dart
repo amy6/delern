@@ -115,7 +115,7 @@ class CardsLearningState extends State<CardsLearning> {
         // TODO(ksheremet): Make buttons disabled when card was answered and is
         // saving to DB.
         FloatingActionButton(
-            heroTag: "dontknow",
+            heroTag: 'dontknow',
             backgroundColor: Colors.red,
             child: Icon(Icons.clear),
             onPressed: () async {
@@ -123,7 +123,7 @@ class CardsLearningState extends State<CardsLearning> {
               setState(() {});
             }),
         FloatingActionButton(
-            heroTag: "know",
+            heroTag: 'know',
             backgroundColor: Colors.green,
             child: Icon(Icons.check),
             onPressed: () async {
@@ -135,7 +135,7 @@ class CardsLearningState extends State<CardsLearning> {
     return [
       FloatingActionButton(
           backgroundColor: Colors.orange,
-          heroTag: "turn",
+          heroTag: 'turn',
           child: Icon(Icons.cached),
           onPressed: () {
             setState(() {

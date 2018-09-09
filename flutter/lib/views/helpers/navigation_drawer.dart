@@ -70,7 +70,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           onTap: () async {
             Navigator.pop(context);
             try {
-              await launch("mailto:delern@dasfoo.org?subject=Delern%20Support",
+              await launch('mailto:delern@dasfoo.org?subject=Delern%20Support',
                   forceSafariVC: false);
             } catch (e, stackTrace) {
               UserMessages.showError(() => Scaffold.of(context),

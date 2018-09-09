@@ -85,7 +85,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
   bool _isEmailCorrect() => _textController.text.contains('@');
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
-    print("Share deck: $deckAccess: ${_textController.text}");
+    print('Share deck: $deckAccess: ${_textController.text}');
     try {
       var uid = await userLookup(_textController.text.toString());
       if (uid == null) {

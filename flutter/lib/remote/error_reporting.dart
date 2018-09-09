@@ -46,8 +46,8 @@ class ErrorReporting {
         },
       );
       _sentry = SentryClient(
-          dsn: "https://36d72a65344d439d86ee65d623d050ce:"
-              "038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345",
+          dsn: 'https://36d72a65344d439d86ee65d623d050ce:'
+              '038b2b2aa94f474db45ce1c4676b845e@sentry.io/305345',
           environmentAttributes: environmentAttributes);
     }
 

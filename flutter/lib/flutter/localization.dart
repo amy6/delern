@@ -288,7 +288,7 @@ Twitter: https://twitter.com/dasdelern''',
 
   String watchedCards(int number) {
     return Intl.message(
-      "Watched: $number",
+      'Watched: $number',
       args: [number],
       name: 'watchedCards',
       desc: 'watchedCards',
@@ -479,7 +479,7 @@ To see the source code for this app, please visit the [Delern guthub repo](https
 
   String couldNotLaunchUrl(String url) {
     return Intl.message(
-      "Could not launch url $url",
+      'Could not launch url $url',
       args: [url],
       name: 'couldNotLaunchUrl',
       desc: 'Could not launch url',
