@@ -12,7 +12,7 @@ import '../helpers/sign_in.dart';
 class CreateDeck extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () async {
           var newDeck = await showDialog<Deck>(
             context: context,
@@ -49,7 +49,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   Widget build(BuildContext context) => AlertDialog(
         title: Text(
           AppLocalizations.of(context).deck,
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         content: SingleChildScrollView(
           child: TextField(

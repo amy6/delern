@@ -37,7 +37,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
             Builder(
               builder: (context) => SlowOperationWidget(
                   (cb) => IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: _isEmailCorrect() ? cb : null),
                   () => _shareDeck(_accessValue, context)),
             )
@@ -46,7 +46,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         body: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: 8.0, top: 8.0),
+              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
               child: Row(
                 children: <Widget>[
                   Text(
@@ -173,7 +173,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 8.0, top: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
           child: Row(
             children: <Widget>[
               Text(

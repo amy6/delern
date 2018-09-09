@@ -48,20 +48,20 @@ class _DropdownState extends State<DeckAccessDropdown> {
     Icon icon;
     if (access == null) {
       text = AppLocalizations.of(context).noAccess;
-      icon = Icon(Icons.clear);
+      icon = const Icon(Icons.clear);
     } else {
       switch (access) {
         case AccessType.write:
           text = AppLocalizations.of(context).canEdit;
-          icon = Icon(Icons.edit);
+          icon = const Icon(Icons.edit);
           break;
         case AccessType.read:
           text = AppLocalizations.of(context).canView;
-          icon = Icon(Icons.remove_red_eye);
+          icon = const Icon(Icons.remove_red_eye);
           break;
         case AccessType.owner:
           text = AppLocalizations.of(context).owner;
-          icon = Icon(Icons.person);
+          icon = const Icon(Icons.person);
           break;
       }
     }

@@ -49,7 +49,7 @@ class _CardPreviewState extends State<CardPreview> {
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () async {
                   if (widget.allowEdit) {
                     var locale = AppLocalizations.of(context);
@@ -89,12 +89,12 @@ class _CardPreviewState extends State<CardPreview> {
                   backgroundColor: specifyCardBackground(
                       _viewModel.card.deck.type, _viewModel.card.back),
                   isMarkdown: _viewModel.card.deck.markdown)),
-          Padding(padding: EdgeInsets.only(bottom: 100.0))
+          const Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
       floatingActionButton: Builder(
         builder: (context) => FloatingActionButton(
-            child: Icon(Icons.edit),
+            child: const Icon(Icons.edit),
             onPressed: () {
               if (widget.allowEdit) {
                 Navigator.push(

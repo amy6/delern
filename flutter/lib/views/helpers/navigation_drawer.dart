@@ -41,14 +41,14 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ),
         ),
         ListTile(
-          leading: Icon(Icons.perm_identity),
+          leading: const Icon(Icons.perm_identity),
           title: Text(AppLocalizations.of(context).navigationDrawerSignOut),
           onTap: () {
             signOut();
             Navigator.pop(context);
           },
         ),
-        Divider(height: 1.0),
+        const Divider(height: 1.0),
         ListTile(
           title: Text(
             AppLocalizations.of(context).navigationDrawerCommunicateGroup,
@@ -56,7 +56,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           ),
         ),
         ListTile(
-          leading: Icon(Icons.contact_mail),
+          leading: const Icon(Icons.contact_mail),
           title:
               Text(AppLocalizations.of(context).navigationDrawerInviteFriends),
           onTap: () {
@@ -65,7 +65,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.live_help),
+          leading: const Icon(Icons.live_help),
           title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () async {
             Navigator.pop(context);
@@ -79,7 +79,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.developer_board),
+          leading: const Icon(Icons.developer_board),
           title: Text(
               AppLocalizations.of(context).navigationDrawerSupportDevelopment),
           onTap: () {
@@ -88,11 +88,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 MaterialPageRoute(builder: (context) => SupportDevelopment()));
           },
         ),
-        Divider(
+        const Divider(
           height: 1.0,
         ),
         AboutListTile(
-          icon: Icon(Icons.perm_device_information),
+          icon: const Icon(Icons.perm_device_information),
           child: Text(AppLocalizations.of(context).navigationDrawerAbout),
           applicationIcon: Image.asset('images/ic_launcher.png'),
           applicationVersion: versionCode,

@@ -107,7 +107,7 @@ class DeckListItem extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
         ],
       );
 
@@ -129,8 +129,8 @@ class DeckListItem extends StatelessWidget {
                         )),
               ),
           child: Container(
-            padding:
-                EdgeInsets.only(top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(
+                top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
               viewModel.deck.name,
               style: AppStyles.primaryText,

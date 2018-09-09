@@ -73,7 +73,7 @@ class CardsLearningState extends State<CardsLearning> {
                         isMarkdown: _viewModel.deck.markdown,
                       )),
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0, bottom: 20.0),
+                        padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: _buildButtons(context),
@@ -117,7 +117,7 @@ class CardsLearningState extends State<CardsLearning> {
         FloatingActionButton(
             heroTag: 'dontknow',
             backgroundColor: Colors.red,
-            child: Icon(Icons.clear),
+            child: const Icon(Icons.clear),
             onPressed: () async {
               await _answerCard(false, context);
               setState(() {});
@@ -125,7 +125,7 @@ class CardsLearningState extends State<CardsLearning> {
         FloatingActionButton(
             heroTag: 'know',
             backgroundColor: Colors.green,
-            child: Icon(Icons.check),
+            child: const Icon(Icons.check),
             onPressed: () async {
               await _answerCard(true, context);
               setState(() {});
@@ -136,7 +136,7 @@ class CardsLearningState extends State<CardsLearning> {
       FloatingActionButton(
           backgroundColor: Colors.orange,
           heroTag: 'turn',
-          child: Icon(Icons.cached),
+          child: const Icon(Icons.cached),
           onPressed: () {
             setState(() {
               _isBackShown = true;

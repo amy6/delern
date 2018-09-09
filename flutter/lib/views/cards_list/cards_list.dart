@@ -103,7 +103,7 @@ class _CardsListState extends State<CardsListPage> {
                           .noAddingWithReadAccessUserMessage);
                 }
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
       ),
     );
@@ -136,7 +136,7 @@ class CardGridItem extends StatelessWidget {
                           allowEdit: allowEdit,
                         ))),
             child: Container(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -148,7 +148,7 @@ class CardGridItem extends StatelessWidget {
                     style: AppStyles.primaryText,
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
                       viewModel.card.back ?? '',
                       maxLines: 3,

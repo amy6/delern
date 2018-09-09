@@ -20,9 +20,9 @@ class CardDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
         color: backgroundColor,
-        margin: EdgeInsets.all(8.0),
+        margin: const EdgeInsets.all(8.0),
         child: ListView(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           children: _buildCardBody(context),
         ),
       );
@@ -34,7 +34,7 @@ class CardDisplay extends StatelessWidget {
 
     if (showBack) {
       widgetList
-        ..add(Padding(
+        ..add(const Padding(
           padding: EdgeInsets.symmetric(vertical: 15.0),
           child: Divider(
             height: 1.0,

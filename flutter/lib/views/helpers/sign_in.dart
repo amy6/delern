@@ -71,7 +71,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                 child: Container(
                   child: Center(
                     child: Padding(
-                      padding: EdgeInsets.all(50.0),
+                      padding: const EdgeInsets.all(50.0),
                       child: Image.asset(
                         'images/delern.png',
                       ),
@@ -82,7 +82,8 @@ class _SignInWidgetState extends State<SignInWidget> {
             ],
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
+            padding:
+                const EdgeInsets.only(bottom: 50.0, left: 15.0, right: 15.0),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -95,7 +96,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: Image.asset(
                                   'images/google_sign_in.png',
                                   height: 35.0,
@@ -103,7 +104,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                                 ),
                               ),
                               Container(
-                                  padding: EdgeInsets.only(left: 10.0),
+                                  padding: const EdgeInsets.only(left: 10.0),
                                   child: Text(
                                     AppLocalizations.of(context)
                                         .signInWithGoogle,

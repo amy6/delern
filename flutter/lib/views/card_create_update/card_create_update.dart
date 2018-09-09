@@ -73,7 +73,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
           _viewModel.card.key == null
               ? SlowOperationWidget(
                   (cb) => IconButton(
-                      icon: Icon(Icons.check),
+                      icon: const Icon(Icons.check),
                       onPressed: _isCardValid() ? cb : null),
                   _addCard)
               : SlowOperationWidget(
@@ -81,7 +81,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
                       child: Text(
                         AppLocalizations.of(context).save.toUpperCase(),
                         style: _isChanged && _isCardValid()
-                            ? TextStyle(color: Colors.white)
+                            ? const TextStyle(color: Colors.white)
                             : null,
                       ),
                       onPressed: _isChanged && _isCardValid() ? cb : null),
@@ -178,7 +178,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     }
 
     return ListView(
-      padding: EdgeInsets.only(left: 8.0, right: 8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       children: widgetsList,
     );
   }

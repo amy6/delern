@@ -17,7 +17,7 @@ class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
   // Flutter documentation for AppBar.preferredSize says:
   // "the sum of kToolbarHeight and the bottom widget's preferred height".
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class SearchBarWidgetState extends State<SearchBarWidget> {
@@ -52,7 +52,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
     Icon actionIcon;
 
     if (_isSearchMode) {
-      actionIcon = Icon(Icons.close);
+      actionIcon = const Icon(Icons.close);
       appBarTitle = TextField(
         autofocus: true,
         controller: _searchController,
@@ -64,7 +64,7 @@ class SearchBarWidgetState extends State<SearchBarWidget> {
       );
     } else {
       appBarTitle = Text(widget.title);
-      actionIcon = Icon(Icons.search);
+      actionIcon = const Icon(Icons.search);
     }
 
     return AppBar(

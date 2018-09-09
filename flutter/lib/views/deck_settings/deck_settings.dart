@@ -62,7 +62,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
           key: _scaffoldKey,
           appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () async {
                   var locale = AppLocalizations.of(context);
                   var deleteDeckDialog = await showSaveUpdatesDialog(
@@ -88,7 +88,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   }
 
   Widget _buildBody() => Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             TextField(
@@ -107,7 +107,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 24.0),
+                  padding: const EdgeInsets.only(top: 24.0),
                   child: Text(
                     AppLocalizations.of(context).deckType,
                     style: AppStyles.secondaryText,

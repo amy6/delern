@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   test('empty stream', () async {
     var muxer = StreamMuxer({
-      'test': Stream.empty(),
+      'test': const Stream.empty(),
     });
 
     expect(await muxer.isEmpty, true);
