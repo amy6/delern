@@ -9,9 +9,7 @@ import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
 import '../helpers/progress_indicator.dart';
 
-typedef Widget ObservingGridItemBuilder<T>(
-  T item,
-);
+typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 
 class ObservingGrid<T> extends StatefulWidget {
   const ObservingGrid({

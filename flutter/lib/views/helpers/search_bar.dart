@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 
-typedef void SearchCallback(String input);
+typedef SearchCallback = void Function(String input);
 
 class SearchBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String title;

@@ -5,8 +5,8 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/deck_access.dart';
 
-typedef bool AccessTypeFilter(AccessType t);
-typedef void AccessTypeCallback(AccessType t);
+typedef AccessTypeFilter = bool Function(AccessType t);
+typedef AccessTypeCallback = void Function(AccessType t);
 
 class DeckAccessDropdown extends StatefulWidget {
   final AccessType value;

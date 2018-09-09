@@ -4,7 +4,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/deck.dart';
 
-typedef void DeckTypeCallback(DeckType t);
+typedef DeckTypeCallback = void Function(DeckType t);
 
 class DeckTypeDropdown extends StatefulWidget {
   final DeckType value;
