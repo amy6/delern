@@ -24,15 +24,17 @@ linter:
     # "Correcting" input parameters is too useful to let go of.
     #- parameter_assignments
 
+    # Questionable effort-to-gain ratio.
+    #- sort_constructors_first
+    #- avoid_catches_without_on_clauses
+
     # Disabled pre-existing findings.
     # TODO(dotdoom): make this list empty.
-    #- avoid_catches_without_on_clauses
     #- avoid_classes_with_only_static_members
     #- avoid_function_literals_in_foreach_calls
     #- avoid_positional_boolean_parameters
     #- prefer_final_locals
     #- prefer_generic_function_type_aliases
-    #- sort_constructors_first
     #- unawaited_futures
 
     - always_declare_return_types
