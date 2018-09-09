@@ -93,12 +93,10 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         ],
       );
 
-  bool _isCardValid() {
-    return _addReversedCard
-        ? _frontTextController.text.trim().isNotEmpty &&
-            _backTextController.text.trim().isNotEmpty
-        : _frontTextController.text.trim().isNotEmpty;
-  }
+  bool _isCardValid() => _addReversedCard
+      ? _frontTextController.text.trim().isNotEmpty &&
+          _backTextController.text.trim().isNotEmpty
+      : _frontTextController.text.trim().isNotEmpty;
 
   Future<void> _addCard() async {
     if (await _saveCard()) {
