@@ -74,10 +74,7 @@ class CardsLearningState extends State<CardsLearning> {
                       )),
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: _buildButtons(context),
-                        ),
+                        child: _buildButtons(context),
                       ),
                       Row(
                         children: <Widget>[
@@ -109,9 +106,10 @@ class CardsLearningState extends State<CardsLearning> {
       );
 
   //heroTag - https://stackoverflow.com/questions/46509553/
-  List<Widget> _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context) {
+    List<FloatingActionButton> buttons;
     if (_isBackShown) {
-      return [
+      buttons = [
         // TODO(ksheremet): Make buttons disabled when card was answered and is
         // saving to DB.
         FloatingActionButton(
@@ -131,18 +129,23 @@ class CardsLearningState extends State<CardsLearning> {
               setState(() {});
             })
       ];
+    } else {
+      buttons = [
+        FloatingActionButton(
+            backgroundColor: Colors.orange,
+            heroTag: 'turn',
+            child: const Icon(Icons.cached),
+            onPressed: () {
+              setState(() {
+                _isBackShown = true;
+              });
+            })
+      ];
     }
-    return [
-      FloatingActionButton(
-          backgroundColor: Colors.orange,
-          heroTag: 'turn',
-          child: const Icon(Icons.cached),
-          onPressed: () {
-            setState(() {
-              _isBackShown = true;
-            });
-          })
-    ];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: buttons,
+    );
   }
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
