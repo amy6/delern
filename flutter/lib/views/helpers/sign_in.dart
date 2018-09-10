@@ -9,7 +9,7 @@ import '../../models/fcm.dart';
 import '../../models/user.dart';
 import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
-import 'progress_indicator.dart';
+import 'helper_progress_indicator.dart';
 
 class SignInWidget extends StatefulWidget {
   final Widget child;

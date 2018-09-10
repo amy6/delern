@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import 'progress_indicator.dart';
+import 'helper_progress_indicator.dart';
 
 typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
   BuildContext context,
