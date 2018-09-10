@@ -7,7 +7,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/observable_list.dart';
 import '../../views/helpers/empty_list_message.dart';
-import '../helpers/progress_indicator.dart';
+import '../helpers/helper_progress_indicator.dart';
 
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 

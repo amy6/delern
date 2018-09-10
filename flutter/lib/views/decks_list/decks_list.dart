@@ -11,11 +11,11 @@ import '../cards_learning/cards_learning.dart';
 import '../cards_list/cards_list.dart';
 import '../deck_settings/deck_settings.dart';
 import '../deck_sharing/deck_sharing.dart';
-import '../helpers/navigation_drawer.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/search_bar.dart';
 import '../helpers/sign_in.dart';
 import 'create_deck.dart';
+import 'navigation_drawer.dart';
 
 class DecksListPage extends StatefulWidget {
   final String title;

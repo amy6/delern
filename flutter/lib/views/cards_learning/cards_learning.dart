@@ -11,7 +11,7 @@ import '../../view_models/learning_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
 import '../helpers/card_background.dart';
 import '../helpers/card_display.dart';
-import '../helpers/progress_indicator.dart';
+import '../helpers/helper_progress_indicator.dart';
 import '../helpers/save_updates_dialog.dart';
 
 class CardsLearning extends StatefulWidget {
