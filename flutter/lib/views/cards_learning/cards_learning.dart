@@ -13,6 +13,7 @@ import '../helpers/card_background.dart';
 import '../helpers/card_display.dart';
 import '../helpers/helper_progress_indicator.dart';
 import '../helpers/save_updates_dialog.dart';
+import '../helpers/slow_operation_widget.dart';
 
 class CardsLearning extends StatefulWidget {
   final Deck deck;
@@ -74,10 +75,7 @@ class CardsLearningState extends State<CardsLearning> {
                       )),
                       Padding(
                         padding: const EdgeInsets.only(top: 25.0, bottom: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: _buildButtons(context),
-                        ),
+                        child: _buildButtons(context),
                       ),
                       Row(
                         children: <Widget>[
@@ -108,31 +106,35 @@ class CardsLearningState extends State<CardsLearning> {
             ),
       );
 
-  //heroTag - https://stackoverflow.com/questions/46509553/
-  List<Widget> _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context) {
     if (_isBackShown) {
-      return [
-        // TODO(ksheremet): Make buttons disabled when card was answered and is
-        // saving to DB.
-        FloatingActionButton(
-            heroTag: 'dontknow',
-            backgroundColor: Colors.red,
-            child: const Icon(Icons.clear),
-            onPressed: () async {
-              await _answerCard(false, context);
-              setState(() {});
-            }),
-        FloatingActionButton(
-            heroTag: 'know',
-            backgroundColor: Colors.green,
-            child: const Icon(Icons.check),
-            onPressed: () async {
-              await _answerCard(true, context);
-              setState(() {});
-            })
-      ];
+      return SlowOperationWidget((cb) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FloatingActionButton(
+                  // heroTag - https://stackoverflow.com/questions/46509553/
+                  heroTag: 'dontknow',
+                  backgroundColor: Colors.red,
+                  child: const Icon(Icons.clear),
+                  onPressed: cb(() async {
+                    await _answerCard(false, context);
+                    // TODO(ksheremet): check 'mounted', widget may be gone.
+                    setState(() {});
+                  })),
+              FloatingActionButton(
+                  heroTag: 'know',
+                  backgroundColor: Colors.green,
+                  child: const Icon(Icons.check),
+                  onPressed: cb(() async {
+                    await _answerCard(true, context);
+                    // TODO(ksheremet): check 'mounted', widget may be gone.
+                    setState(() {});
+                  })),
+            ],
+          ));
     }
-    return [
+
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       FloatingActionButton(
           backgroundColor: Colors.orange,
           heroTag: 'turn',
@@ -142,7 +144,7 @@ class CardsLearningState extends State<CardsLearning> {
               _isBackShown = true;
             });
           })
-    ];
+    ]);
   }
 
   Future<void> _answerCard(bool answer, BuildContext context) async {
