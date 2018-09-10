@@ -5,7 +5,6 @@ build/
 
 /flutter/.packages
 /flutter/.pub/
-/flutter/ios/.generated/
 /flutter/packages
 /flutter/pubspec.lock
 /flutter/.flutter-plugins

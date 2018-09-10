@@ -12,6 +12,8 @@ build/
 GeneratedPluginRegistrant.h
 GeneratedPluginRegistrant.m
 
+.generated/
+
 *.pbxuser
 *.mode1v3
 *.mode2v3
@@ -40,8 +42,4 @@ Icon?
 /ServiceDefinitions.json
 
 Pods/
-/Runner.xcworkspace/xcshareddata
-/Runner.xcodeproj
-/.symlinks
-/Podfile.lock
-# TODO(dotdoom): figure out which files can be ignored here
+.symlinks/
