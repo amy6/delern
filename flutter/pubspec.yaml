@@ -1,5 +1,6 @@
 name: delern_flutter
 description: Spaced repetition learning system (Flutter version)
+version: 1.0.0+1
 
 dependencies:
   sentry:
