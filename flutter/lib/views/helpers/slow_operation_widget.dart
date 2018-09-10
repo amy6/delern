@@ -3,13 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 typedef ChildCallback = Future<void> Function();
-typedef ChildBuilder = Widget Function(ChildCallback callback);
+typedef ChildCallbackBuilder = ChildCallback Function(
+    ChildCallback originalFunction);
+typedef ChildBuilder = Widget Function(
+    ChildCallbackBuilder childCallbackBuilder);
 
-class SlowOperationWidget extends StatefulWidget {
+class SlowOperationWidget<T extends Function> extends StatefulWidget {
   final ChildBuilder childBuilder;
-  final ChildCallback childCallback;
 
-  const SlowOperationWidget(this.childBuilder, this.childCallback);
+  const SlowOperationWidget(this.childBuilder);
 
   @override
   State<StatefulWidget> createState() => _SlowOperationWidgetState();
@@ -18,18 +20,23 @@ class SlowOperationWidget extends StatefulWidget {
 class _SlowOperationWidgetState extends State<SlowOperationWidget> {
   bool _inProgress = false;
 
-  @override
-  Widget build(BuildContext context) {
+  ChildCallback _childCallbackBuilder(ChildCallback originalFunction) {
     if (_inProgress) {
-      return widget.childBuilder(null);
+      return null;
     }
-    return widget.childBuilder(() async {
+    return () async {
       setState(() => _inProgress = true);
       try {
-        return await widget.childCallback();
+        return await originalFunction();
       } finally {
-        setState(() => _inProgress = false);
+        if (mounted) {
+          setState(() => _inProgress = false);
+        }
       }
-    });
+    };
   }
+
+  @override
+  Widget build(BuildContext context) =>
+      widget.childBuilder(_childCallbackBuilder);
 }

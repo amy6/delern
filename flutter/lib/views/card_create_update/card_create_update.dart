@@ -71,25 +71,23 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         title: Text(_viewModel.card.deck.name),
         actions: <Widget>[
           _viewModel.card.key == null
-              ? SlowOperationWidget(
-                  (cb) => IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: _isCardValid() ? cb : null),
-                  _addCard)
-              : SlowOperationWidget(
-                  (cb) => FlatButton(
-                      child: Text(
-                        AppLocalizations.of(context).save.toUpperCase(),
-                        style: _isChanged && _isCardValid()
-                            ? const TextStyle(color: Colors.white)
-                            : null,
-                      ),
-                      onPressed: _isChanged && _isCardValid() ? cb : null),
-                  () async {
-                  if (await _saveCard()) {
-                    Navigator.of(context).pop();
-                  }
-                }),
+              ? SlowOperationWidget((cb) => IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: _isCardValid() ? cb(_addCard) : null))
+              : SlowOperationWidget((cb) => FlatButton(
+                  child: Text(
+                    AppLocalizations.of(context).save.toUpperCase(),
+                    style: _isChanged && _isCardValid()
+                        ? const TextStyle(color: Colors.white)
+                        : null,
+                  ),
+                  onPressed: _isChanged && _isCardValid()
+                      ? cb(() async {
+                          if (await _saveCard()) {
+                            Navigator.of(context).pop();
+                          }
+                        })
+                      : null)),
         ],
       );
 

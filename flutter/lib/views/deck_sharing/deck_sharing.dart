@@ -36,10 +36,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
           actions: <Widget>[
             Builder(
               builder: (context) => SlowOperationWidget(
-                  (cb) => IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: _isEmailCorrect() ? cb : null),
-                  () => _shareDeck(_accessValue, context)),
+                    (cb) => IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: _isEmailCorrect()
+                            ? cb(() => _shareDeck(_accessValue, context))
+                            : null),
+                  ),
             )
           ],
         ),
