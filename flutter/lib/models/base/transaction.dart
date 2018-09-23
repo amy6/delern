@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 
+import '../../remote/error_reporting.dart';
 import 'model.dart';
 
 class Transaction {
@@ -32,7 +33,7 @@ class Transaction {
     _toDelete.add(m);
   }
 
-  Future<void> commit() {
+  Future<void> commit() async {
     var root = FirebaseDatabase.instance.reference();
     var updates = <String, dynamic>{};
     _toSave.forEach((m) {
@@ -50,9 +51,21 @@ class Transaction {
         updates['${m.rootPath}/${m.key}'] = null;
       }
     });
-    // TODO(dotdoom): log updates on failure.
-    var updateFuture = root.update(updates);
+
     // Firebase update() does not return until it gets response from the server.
-    return _isOnline ? updateFuture : Future.value();
+    var updateFuture = root.update(updates);
+
+    if (!_isOnline) {
+      updateFuture.catchError((error, stackTrace) => ErrorReporting.report(
+          'Applying $updates in background', error, stackTrace));
+      return;
+    }
+
+    try {
+      await updateFuture;
+    } catch (error, stackTrace) {
+      ErrorReporting.report('Applying $updates', error, stackTrace);
+      rethrow;
+    }
   }
 }

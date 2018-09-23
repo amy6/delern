@@ -1,11 +1,18 @@
 name: delern_flutter
 description: Spaced repetition learning system (Flutter version)
-version: 1.0.0+1
+version: 1.0.2+1
 
 dependencies:
   sentry:
     # actively worked on, but rarely released.
     git: git://github.com/flutter/sentry.git
+
+  device_info: ^0.2.1
+  package_info: ^0.3.0
+  url_launcher: ^3.0.3
+  flutter_markdown: ^0.2.0
+  http: ^0.11.3
+  share: ^0.5.2
 
   # Do not upgrade these packages unless you need it.
   # Bumping these versions may bump minimum Play Services version required to
@@ -13,31 +20,19 @@ dependencies:
   firebase_auth: 0.5.11
   firebase_database: 1.0.1
   google_sign_in: 3.0.4
-  device_info: ^0.2.1
-  package_info: ^0.3.0
-  url_launcher: 3.0.3
-  flutter_markdown: 0.2.0
 
   flutter:
     sdk: flutter
 
   flutter_localizations:
-      sdk: flutter
-  intl_translation: 0.17.0
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.0
-
-  http: ^0.11.3+16
-
-  share: ^0.5.2
+    sdk: flutter
+  intl_translation: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  mockito: 3.0.0
+  mockito: ^3.0.0
 
 
 # For information on the generic Dart part of this file, see the
