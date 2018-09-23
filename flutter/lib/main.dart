@@ -43,7 +43,7 @@ void main() {
         'FlutterError', details.exception, details.stack);
   };
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    List<String> errorAndStacktrace = pair;
+    List<dynamic> errorAndStacktrace = pair;
     await ErrorReporting.report(
       'Isolate ErrorListener',
       errorAndStacktrace.first,

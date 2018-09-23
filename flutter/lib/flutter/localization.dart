@@ -358,7 +358,7 @@ Follow latest news on:
 - [Google+](https://plus.google.com/communities/104603840044649051798)
 - [VK](https://vk.com/delern)
        
-To see the source code for this app, please visit the [Delern guthub repo](https://github.com/dasfoo/delern).
+To see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).
       ''',
         name: 'supportDevelopment',
         desc: 'Support Development',

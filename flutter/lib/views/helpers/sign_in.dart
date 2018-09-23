@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../flutter/device_info.dart';
@@ -10,6 +11,8 @@ import '../../models/user.dart';
 import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
 import 'helper_progress_indicator.dart';
+
+final _firebaseMessaging = FirebaseMessaging();
 
 class SignInWidget extends StatefulWidget {
   final Widget child;
@@ -36,17 +39,24 @@ class _SignInWidgetState extends State<SignInWidget> {
 
       if (_user != null) {
         ErrorReporting.uid = _user.uid;
-        var fcm = FCM(
-            uid: firebaseUser.uid,
-            language: Localizations.localeOf(context).toString(),
-            name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
-          // TODO(ksheremet): await _firebaseMessaging.getToken()
-          ..key = 'fake';
 
-        // TODO(dotdoom): move into models?
-        print('Registering for FCM as ${fcm.name} in ${fcm.language}');
-        (Transaction()..save(User.fromFirebase(firebaseUser))..save(fcm))
-            .commit();
+        _firebaseMessaging.onTokenRefresh.listen((token) async {
+          var fcm = FCM(
+              uid: firebaseUser.uid,
+              language: Localizations.localeOf(context).toString(),
+              name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
+            ..key = token;
+
+          print('Registering for FCM as ${fcm.name} in ${fcm.language}');
+          (Transaction()..save(User.fromFirebase(firebaseUser))..save(fcm))
+              .commit();
+        });
+
+        _firebaseMessaging
+          ..requestNotificationPermissions()
+          // TODO(dotdoom): register onMessage to show a snack bar with
+          //                notification when the app is in foreground.
+          ..configure();
       }
     });
 
