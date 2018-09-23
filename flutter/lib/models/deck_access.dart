@@ -92,12 +92,19 @@ class DeckAccess implements KeyedListItem, Model {
   }
 
   Stream<void> get updates => FirebaseDatabase.instance
-      .reference()
-      .child('deck_access')
-      .child(deck.key)
-      .child(key)
-      .onValue
-      .map((evt) => _parseSnapshot(evt.snapshot.value));
+          .reference()
+          .child('deck_access')
+          .child(deck.key)
+          .child(key)
+          .onValue
+          .map((evt) {
+        // TODO(dotdoom): either do not set key=null in _parseSnapshot, or do
+        //                this "weird trick" in every model.
+        if (key == null) {
+          this.uid = evt.snapshot.key;
+        }
+        _parseSnapshot(evt.snapshot.value);
+      });
 
   @override
   String get rootPath => 'deck_access/${deck.key}';

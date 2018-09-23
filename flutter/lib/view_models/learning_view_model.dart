@@ -19,6 +19,7 @@ class LearningViewModel {
 
   Stream<void> get updates => StreamMuxer({
         0: deck.updates,
+        // TODO(dotdoom): subscribe to card updates, too!
         1: ScheduledCard.next(deck)
             .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
           // TODO(ksheremet): allow users to learn beyond the time horizon.
