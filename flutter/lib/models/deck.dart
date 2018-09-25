@@ -50,7 +50,7 @@ class Deck implements KeyedListItem, Model {
         snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
     accepted = snapshotValue['accepted'] ?? false;
     lastSyncAt =
-        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt']);
+        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
     category = snapshotValue['category'];
   }
 
