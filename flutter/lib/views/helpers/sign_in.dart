@@ -40,6 +40,11 @@ class _SignInWidgetState extends State<SignInWidget> {
       if (_user != null) {
         ErrorReporting.uid = _user.uid;
 
+        // Don't wait for FCM token to save User.
+        Transaction()
+          ..save(User.fromFirebase(firebaseUser))
+          ..commit();
+
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           var fcm = FCM(
               uid: firebaseUser.uid,
@@ -48,8 +53,7 @@ class _SignInWidgetState extends State<SignInWidget> {
             ..key = token;
 
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
-          (Transaction()..save(User.fromFirebase(firebaseUser))..save(fcm))
-              .commit();
+          (Transaction()..save(fcm)).commit();
         });
 
         _firebaseMessaging

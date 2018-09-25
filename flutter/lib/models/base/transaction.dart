@@ -57,14 +57,16 @@ class Transaction {
 
     if (!_isOnline) {
       updateFuture.catchError((error, stackTrace) => ErrorReporting.report(
-          'Applying $updates in background', error, stackTrace));
+          'Transaction', error, stackTrace,
+          extra: {'updates': updates}));
       return;
     }
 
     try {
       await updateFuture;
     } catch (error, stackTrace) {
-      ErrorReporting.report('Applying $updates', error, stackTrace);
+      ErrorReporting.report('Transaction', error, stackTrace,
+          extra: {'updates': updates});
       rethrow;
     }
   }

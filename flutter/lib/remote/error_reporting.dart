@@ -12,7 +12,8 @@ class ErrorReporting {
   static SentryClient _sentry;
   static String uid;
 
-  static Future<void> report(String src, error, stackTrace) async {
+  static Future<void> report(String src, error, stackTrace,
+      {Map<String, dynamic> extra}) async {
     var message = error.toString();
     try {
       // For DatabaseError, toString() returns "Instance of 'DatabaseError'".
@@ -41,8 +42,8 @@ class ErrorReporting {
         release: '${packageInfo.version} (${packageInfo.buildNumber})',
         environment: environment,
         extra: {
-          'model': deviceInfo.userFriendlyName,
-          'sdk': deviceInfo.sdk,
+          'device.model': deviceInfo.userFriendlyName,
+          'device.sdk': deviceInfo.sdk,
         },
       );
       _sentry = SentryClient(
@@ -63,6 +64,7 @@ class ErrorReporting {
       stackTrace: stackTrace,
       loggerName: src,
       userContext: User(id: uid),
+      extra: extra,
     ));
     if (response.isSuccessful) {
       print('Success! Event ID: ${response.eventId}');
