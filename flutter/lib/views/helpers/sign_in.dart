@@ -8,6 +8,7 @@ import '../../flutter/styles.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
 import '../../models/user.dart';
+import '../../remote/analytics.dart';
 import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
 import 'helper_progress_indicator.dart';
@@ -44,6 +45,10 @@ class _SignInWidgetState extends State<SignInWidget> {
         Transaction()
           ..save(User.fromFirebase(firebaseUser))
           ..commit();
+
+        analytics
+          ..setUserId(_user.uid)
+          ..logLogin();
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           var fcm = FCM(

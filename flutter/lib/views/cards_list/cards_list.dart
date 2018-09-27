@@ -94,6 +94,7 @@ class _CardsListState extends State<CardsListPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
+                          settings: const RouteSettings(name: '/cards/new'),
                           builder: (context) => CreateUpdateCard(
                               card_model.Card(deck: _viewModel.deck))));
                 } else {
@@ -131,6 +132,7 @@ class CardGridItem extends StatelessWidget {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
+                    settings: const RouteSettings(name: '/cards/preview'),
                     builder: (context) => CardPreview(
                           card: viewModel.card,
                           allowEdit: allowEdit,

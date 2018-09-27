@@ -84,8 +84,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
               AppLocalizations.of(context).navigationDrawerSupportDevelopment),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SupportDevelopment()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    settings: const RouteSettings(name: '/support'),
+                    builder: (context) => SupportDevelopment()));
           },
         ),
         const Divider(

@@ -30,6 +30,7 @@ class CreateDeck extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
+                    settings: const RouteSettings(name: '/cards/new'),
                     builder: (context) =>
                         CreateUpdateCard(card_model.Card(deck: newDeck))));
           }

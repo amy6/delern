@@ -164,6 +164,7 @@ class CardsLearningState extends State<CardsLearning> {
           Navigator.push(
               context,
               MaterialPageRoute(
+                  settings: const RouteSettings(name: '/cards/edit'),
                   builder: (context) => CreateUpdateCard(_viewModel.card)));
         } else {
           UserMessages.showMessage(Scaffold.of(context),

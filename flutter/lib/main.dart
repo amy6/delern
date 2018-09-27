@@ -1,17 +1,22 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
 import 'models/base/transaction.dart';
+import 'remote/analytics.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
 import 'views/helpers/sign_in.dart';
 
 class App extends StatelessWidget {
+  static final _analyticsNavigatorObserver =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     var title = 'Delern';
@@ -27,6 +32,7 @@ class App extends StatelessWidget {
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
+      navigatorObservers: [_analyticsNavigatorObserver],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
       builder: (context, child) => SignInWidget(child: child),
@@ -53,6 +59,7 @@ void main() {
   runZoned<Future>(() async {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
     Transaction.subscribeToOnlineStatus();
+    analytics.logAppOpen();
     runApp(App());
   }, onError: (error, stackTrace) async {
     await ErrorReporting.report('Zone', error, stackTrace);
