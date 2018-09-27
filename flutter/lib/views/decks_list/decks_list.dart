@@ -117,6 +117,7 @@ class DeckListItem extends StatelessWidget {
           onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
+                    settings: const RouteSettings(name: '/decks/learn'),
                     builder: (context) => CardsLearning(
                           deck: viewModel.deck,
                           allowEdit:
@@ -180,6 +181,7 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
+              settings: const RouteSettings(name: '/decks/view'),
               builder: (context) => CardsListPage(
                     deck: viewModel.deck,
                     allowEdit:
@@ -196,6 +198,7 @@ class DeckListItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
+              settings: const RouteSettings(name: '/decks/settings'),
               builder: (context) =>
                   DeckSettingsPage(viewModel.deck, viewModel.access)),
         );
@@ -205,6 +208,7 @@ class DeckListItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
+                settings: const RouteSettings(name: '/decks/share'),
                 builder: (context) => DeckSharingPage(viewModel.deck)),
           );
         } else {

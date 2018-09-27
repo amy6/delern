@@ -100,6 +100,9 @@ class _CardPreviewState extends State<CardPreview> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
+                        // 'name' is used by Firebase Analytics to log events.
+                        // TODO(dotdoom): consider better route names.
+                        settings: const RouteSettings(name: '/cards/edit'),
                         builder: (context) =>
                             CreateUpdateCard(_viewModel.card)));
               } else {
