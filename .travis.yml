@@ -13,11 +13,8 @@ branches:
 cache:
   bundler: true
   cocoapods: true
-  directories:
-  - $HOME/.cocoapods
 
 script:
-
 - bundle exec pod setup
 
 - wget
