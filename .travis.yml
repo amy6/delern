@@ -18,9 +18,7 @@ cache:
 
 script:
 
-# TODO(dotdoom): add cocoapods to bundler?
-- gem install cocoapods
-- pod setup
+- bundle exec pod setup
 
 - wget
   'https://storage.googleapis.com/flutter_infra/releases/beta/macos/flutter_macos_v0.8.2-beta.zip'
