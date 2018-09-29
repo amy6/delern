@@ -50,8 +50,11 @@ class CardsLearningState extends State<CardsLearning> {
   @override
   Widget build(BuildContext context) {
     _updates ??= _viewModel.updates.listen(
-        (_) => setState(() {
-              _isBackShown = false;
+        (updateType) => setState(() {
+              if (updateType == LearningUpdateType.scheduledCardUpdate) {
+                // New card has arrived, hide the back side!
+                _isBackShown = false;
+              }
             }),
         onDone: () => Navigator.of(context).pop());
     return Scaffold(
@@ -112,24 +115,18 @@ class CardsLearningState extends State<CardsLearning> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton(
-                  // heroTag - https://stackoverflow.com/questions/46509553/
-                  heroTag: 'dontknow',
-                  backgroundColor: Colors.red,
-                  child: const Icon(Icons.clear),
-                  onPressed: cb(() async {
-                    await _answerCard(false, context);
-                    // TODO(ksheremet): check 'mounted', widget may be gone.
-                    setState(() {});
-                  })),
+                // heroTag - https://stackoverflow.com/questions/46509553/
+                heroTag: 'dontknow',
+                backgroundColor: Colors.red,
+                child: const Icon(Icons.clear),
+                onPressed: cb(() => _answerCard(false, context)),
+              ),
               FloatingActionButton(
-                  heroTag: 'know',
-                  backgroundColor: Colors.green,
-                  child: const Icon(Icons.check),
-                  onPressed: cb(() async {
-                    await _answerCard(true, context);
-                    // TODO(ksheremet): check 'mounted', widget may be gone.
-                    setState(() {});
-                  })),
+                heroTag: 'know',
+                backgroundColor: Colors.green,
+                child: const Icon(Icons.check),
+                onPressed: cb(() => _answerCard(true, context)),
+              ),
             ],
           ));
     }
@@ -150,10 +147,15 @@ class CardsLearningState extends State<CardsLearning> {
   Future<void> _answerCard(bool answer, BuildContext context) async {
     try {
       await _viewModel.answer(answer);
-      _isBackShown = false;
-      _watchedCount++;
     } catch (e, stacktrace) {
       UserMessages.showError(() => Scaffold.of(context), e, stacktrace);
+      return;
+    }
+
+    if (mounted) {
+      setState(() {
+        _watchedCount++;
+      });
     }
   }
 
