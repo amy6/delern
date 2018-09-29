@@ -6,7 +6,6 @@ build/
 /flutter/.packages
 /flutter/.pub/
 /flutter/packages
-/flutter/pubspec.lock
 /flutter/.flutter-plugins
 /flutter/coverage
 /flutter/.dart_tool/

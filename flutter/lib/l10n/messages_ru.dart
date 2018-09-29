@@ -6,6 +6,7 @@
 import 'package:intl/intl.dart';
 import 'package:intl/message_lookup_by_library.dart';
 
+// ignore: unnecessary_new
 final messages = new MessageLookup();
 
 // ignore: unused_element
