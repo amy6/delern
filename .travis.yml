@@ -1,0 +1,30 @@
+os: osx
+podfile: flutter/ios/Podfile
+
+env:
+  global:
+  - SDK_ROOT="$HOME/sdk"
+  - PATH="$PATH:$SDK_ROOT/flutter/bin"
+
+branches:
+  only:
+  - master
+
+cache:
+  bundler: true
+  cocoapods: true
+
+script:
+- bundle exec pod setup
+
+- wget
+  'https://storage.googleapis.com/flutter_infra/releases/beta/macos/flutter_macos_v0.8.2-beta.zip'
+  -O /tmp/flutter.zip
+- unzip -q -d "$SDK_ROOT" /tmp/flutter.zip
+
+# Do not require signing of iOS applications (key is not available on Travis)
+- sed -i
+  -e 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g'
+  flutter/ios/Runner.xcodeproj/project.pbxproj
+
+- cd flutter && flutter build ios --debug
