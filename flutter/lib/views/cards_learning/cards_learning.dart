@@ -50,8 +50,11 @@ class CardsLearningState extends State<CardsLearning> {
   @override
   Widget build(BuildContext context) {
     _updates ??= _viewModel.updates.listen(
-        (_) => setState(() {
-              _isBackShown = false;
+        (updateType) => setState(() {
+              if (updateType.stream == LearningUpdateType.scheduledCardUpdate) {
+                // New card has arrived, hide the back side!
+                _isBackShown = false;
+              }
             }),
         onDone: () => Navigator.of(context).pop());
     return Scaffold(
