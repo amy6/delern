@@ -51,7 +51,7 @@ class CardsLearningState extends State<CardsLearning> {
   Widget build(BuildContext context) {
     _updates ??= _viewModel.updates.listen(
         (updateType) => setState(() {
-              if (updateType.stream == LearningUpdateType.scheduledCardUpdate) {
+              if (updateType == LearningUpdateType.scheduledCardUpdate) {
                 // New card has arrived, hide the back side!
                 _isBackShown = false;
               }

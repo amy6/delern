@@ -22,7 +22,7 @@ class LearningViewModel {
 
   LearningViewModel({@required this.deck, @required this.allowEdit});
 
-  Stream<StreamMuxerEvent<LearningUpdateType>> get updates => StreamMuxer({
+  Stream<LearningUpdateType> get updates => StreamMuxer({
         LearningUpdateType.deckUpdate: deck.updates,
         LearningUpdateType.scheduledCardUpdate: ScheduledCard.next(deck)
             .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
@@ -37,7 +37,7 @@ class LearningViewModel {
         // We deliberately do not subscribe to Card updates (i.e. we only watch
         // ScheduledCard). If the card that the user is looking at right now is
         // updated live, it can result in bad user experience.
-      });
+      }).map((muxerEvent) => muxerEvent.stream);
 
   Future<void> answer(bool knows) {
     var cv = _scheduledCard.answer(knows);
