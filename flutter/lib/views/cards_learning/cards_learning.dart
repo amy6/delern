@@ -29,6 +29,7 @@ class CardsLearning extends StatefulWidget {
 
 class CardsLearningState extends State<CardsLearning> {
   bool _isBackShown = false;
+  bool _learnBeyondHorizon = false;
   int _watchedCount = 0;
   LearningViewModel _viewModel;
   StreamSubscription<void> _updates;
@@ -49,14 +50,20 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   Widget build(BuildContext context) {
-    _updates ??= _viewModel.updates.listen(
-        (updateType) => setState(() {
-              if (updateType == LearningUpdateType.scheduledCardUpdate) {
-                // New card has arrived, hide the back side!
-                _isBackShown = false;
-              }
-            }),
-        onDone: () => Navigator.of(context).pop());
+    _updates ??= _viewModel.updates.listen((updateType) {
+      if (!mounted) {
+        return;
+      }
+      if (updateType == LearningUpdateType.scheduledCardUpdate) {
+        _nextCardArrived();
+      } else {
+        // Usually a deck update.
+        setState(() {});
+      }
+    },
+        // Tell caller that no cards were available,
+        onDone: () => Navigator.of(context).pop(false));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.deck.name),
@@ -198,6 +205,28 @@ class CardsLearningState extends State<CardsLearning> {
             AppLocalizations.of(context).cardDeletedUserMessage);
       } catch (e, stackTrace) {
         UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
+      }
+    }
+  }
+
+  void _nextCardArrived() async {
+    setState(() {
+      // For a new card we show, hide the back side.
+      _isBackShown = false;
+    });
+
+    if (!_learnBeyondHorizon) {
+      if (_viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
+        _learnBeyondHorizon = await showSaveUpdatesDialog(
+                context: context,
+                changesQuestion:
+                    AppLocalizations.of(context).continueLearningQuestion,
+                noAnswer: AppLocalizations.of(context).no,
+                yesAnswer: AppLocalizations.of(context).yes) ==
+            true;
+        if (!_learnBeyondHorizon) {
+          Navigator.of(context).pop();
+        }
       }
     }
   }

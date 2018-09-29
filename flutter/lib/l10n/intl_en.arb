@@ -391,5 +391,28 @@
       "url": {
       }
     }
+  },
+  "continueLearningQuestion": "All cards for this time are learned. Would you like to continue?",
+  "@continueLearningQuestion": {
+    "description": "Question for the user to continue learning",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "no": "no",
+  "@no": {
+    "description": "no",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emptyDeckUserMessage": "This deck is currently empty. Please add cards in {menu} deck menu.",
+  "@emptyDeckUserMessage": {
+    "description": "Empty deck user message",
+    "type": "text",
+    "placeholders": {
+      "menu": {
+      }
+    }
   }
 }

@@ -376,6 +376,25 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'couldNotLaunchUrl',
         desc: 'Could not launch url',
       );
+
+  String get continueLearningQuestion => Intl.message(
+        'All cards for this time are learned. Would you like to continue?',
+        name: 'continueLearningQuestion',
+        desc: 'Question for the user to continue learning',
+      );
+
+  String get no => Intl.message(
+        'no',
+        name: 'no',
+        desc: 'no',
+      );
+
+  String emptyDeckUserMessage(String menu) => Intl.message(
+        'This deck is currently empty. Please add cards in $menu deck menu.',
+        args: [menu],
+        name: 'emptyDeckUserMessage',
+        desc: 'Empty deck user message',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

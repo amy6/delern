@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T16:32:52.670097",
+  "@@last_modified": "2018-09-29T23:18:25.333136",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -334,6 +334,26 @@
     "type": "text",
     "placeholders": {
       "url": {}
+    }
+  },
+  "continueLearningQuestion": "All cards for this time are learned. Would you like to continue?",
+  "@continueLearningQuestion": {
+    "description": "Question for the user to continue learning",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "no",
+  "@no": {
+    "description": "no",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyDeckUserMessage": "This deck is currently empty. Please add cards in {menu} deck menu.",
+  "@emptyDeckUserMessage": {
+    "description": "Empty deck user message",
+    "type": "text",
+    "placeholders": {
+      "menu": {}
     }
   }
 }

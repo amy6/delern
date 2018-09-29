@@ -397,5 +397,28 @@
       "url": {
       }
     }
+  },
+  "continueLearningQuestion": "Все карточки на данный момент выучены. Вы хотите продолжить обучение?",
+  "@continueLearningQuestion": {
+    "description": "Question for the user to continue learning",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "no": "нет",
+  "@no": {
+    "description": "нет",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "emptyDeckUserMessage": "Этот список пуст. Пожалуйста добавьте карточки в {menu} меню списка.",
+  "@emptyDeckUserMessage": {
+    "description": "Empty deck user message",
+    "type": "text",
+    "placeholders": {
+      "menu": {
+      }
+    }
   }
 }

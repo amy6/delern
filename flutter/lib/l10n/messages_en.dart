@@ -20,9 +20,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(url) => "Could not launch url ${url}";
 
-  static m1(number) => "Number of cards: ${number}";
+  static m1(menu) =>
+      "This deck is currently empty. Please add cards in ${menu} deck menu.";
 
-  static m2(number) => "Watched: ${number}";
+  static m2(number) => "Number of cards: ${number}";
+
+  static m3(number) => "Watched: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -39,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
+        "continueLearningQuestion": MessageLookupByLibrary.simpleMessage(
+            "All cards for this time are learned. Would you like to continue?"),
         "couldNotLaunchUrl": m0,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
@@ -54,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Email address"),
         "emptyCardsList":
             MessageLookupByLibrary.simpleMessage("Add your cards"),
+        "emptyDeckUserMessage": m1,
         "emptyDecksList":
             MessageLookupByLibrary.simpleMessage("Add your decks"),
         "emptyUserSharingList":
@@ -78,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sign Out"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
+        "no": MessageLookupByLibrary.simpleMessage("no"),
         "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
         "noAddingWithReadAccessUserMessage":
             MessageLookupByLibrary.simpleMessage(
@@ -90,7 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You cannot edit card with a read access."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
-        "numberOfCards": m1,
+        "numberOfCards": m2,
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":
@@ -107,7 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n       \nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nFollow latest news on:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),
-        "watchedCards": m2,
+        "watchedCards": m3,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("Who has access"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")

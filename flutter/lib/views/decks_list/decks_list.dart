@@ -114,21 +114,29 @@ class DeckListItem extends StatelessWidget {
   Widget _buildDeckName(BuildContext context) => Material(
         child: InkWell(
           splashColor: Theme.of(context).splashColor,
-          onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    settings: const RouteSettings(name: '/decks/learn'),
-                    builder: (context) => CardsLearning(
-                          deck: viewModel.deck,
-                          allowEdit:
-                              // Not allow to edit or delete cards with read
-                              // access. If some error occurred when retrieving
-                              // DeckAccess and it is null access we still give
-                              // a try to edit for a user. If user doesn't have
-                              // permissions they will see "Permission denied".
-                              viewModel.access?.access != AccessType.read,
-                        )),
-              ),
+          onTap: () async {
+            var anyCardsShown = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/decks/learn'),
+                  builder: (context) => CardsLearning(
+                        deck: viewModel.deck,
+                        allowEdit:
+                            // Not allow to edit or delete cards with read
+                            // access. If some error occurred when retrieving
+                            // DeckAccess and it is null access we still give
+                            // a try to edit for a user. If user doesn't have
+                            // permissions they will see "Permission denied".
+                            viewModel.access?.access != AccessType.read,
+                      )),
+            );
+            if (anyCardsShown == false) {
+              UserMessages.showMessage(
+                  Scaffold.of(context),
+                  AppLocalizations.of(context).emptyDeckUserMessage(
+                      AppLocalizations.of(context).editCardsDeckMenu));
+            }
+          },
           child: Container(
             padding: const EdgeInsets.only(
                 top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
