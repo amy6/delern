@@ -40,6 +40,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
+        "continueLearningQuestion": MessageLookupByLibrary.simpleMessage(
+            "Все карточки на данный момент выучены. Вы хотите продолжить обучение?"),
         "couldNotLaunchUrl": m0,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
@@ -82,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Выход"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Поддержать разработку"),
+        "no": MessageLookupByLibrary.simpleMessage("нет"),
         "noAccess": MessageLookupByLibrary.simpleMessage("Нет доступа"),
         "noAddingWithReadAccessUserMessage":
             MessageLookupByLibrary.simpleMessage(

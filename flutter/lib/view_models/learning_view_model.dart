@@ -15,6 +15,8 @@ enum LearningUpdateType {
 
 class LearningViewModel {
   ScheduledCard _scheduledCard;
+
+  ScheduledCard get scheduledCard => _scheduledCard;
   Card get card => _scheduledCard?.card;
 
   final Deck deck;
@@ -26,11 +28,6 @@ class LearningViewModel {
         LearningUpdateType.deckUpdate: deck.updates,
         LearningUpdateType.scheduledCardUpdate: ScheduledCard.next(deck)
             .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
-          // TODO(ksheremet): allow users to learn beyond the time horizon.
-          if (sc.repeatAt.isAfter(DateTime.now().toUtc())) {
-            sink.close();
-            return;
-          }
           _scheduledCard = sc;
           sink.add(null);
         })),

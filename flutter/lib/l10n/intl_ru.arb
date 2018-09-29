@@ -397,5 +397,19 @@
       "url": {
       }
     }
+  },
+  "continueLearningQuestion": "Все карточки на данный момент выучены. Вы хотите продолжить обучение?",
+  "@continueLearningQuestion": {
+    "description": "Question for the user to continue learning",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "no": "нет",
+  "@no": {
+    "description": "нет",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

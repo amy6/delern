@@ -39,6 +39,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
+        "continueLearningQuestion": MessageLookupByLibrary.simpleMessage(
+            "All cards for this time are learned. Would you like to continue?"),
         "couldNotLaunchUrl": m0,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
@@ -78,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Sign Out"),
         "navigationDrawerSupportDevelopment":
             MessageLookupByLibrary.simpleMessage("Support Development"),
+        "no": MessageLookupByLibrary.simpleMessage("no"),
         "noAccess": MessageLookupByLibrary.simpleMessage("No access"),
         "noAddingWithReadAccessUserMessage":
             MessageLookupByLibrary.simpleMessage(

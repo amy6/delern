@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2018-09-08T16:32:52.670097",
+  "@@last_modified": "2018-09-29T22:48:27.635410",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -335,5 +335,17 @@
     "placeholders": {
       "url": {}
     }
+  },
+  "continueLearningQuestion": "All cards for this time are learned. Would you like to continue?",
+  "@continueLearningQuestion": {
+    "description": "Question for the user to continue learning",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "no",
+  "@no": {
+    "description": "no",
+    "type": "text",
+    "placeholders": {}
   }
 }
