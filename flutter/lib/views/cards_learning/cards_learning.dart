@@ -61,8 +61,8 @@ class CardsLearningState extends State<CardsLearning> {
         setState(() {});
       }
     },
-        // TODO(ksheremet): tell user that the deck is empty.
-        onDone: () => Navigator.of(context).pop());
+        // Tell caller that no cards were available,
+        onDone: () => Navigator.of(context).pop(false));
 
     return Scaffold(
       appBar: AppBar(

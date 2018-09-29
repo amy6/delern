@@ -411,5 +411,14 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "emptyDeckUserMessage": "Этот список пуст. Пожалуйста добавьте карточки в {menu} меню списка.",
+  "@emptyDeckUserMessage": {
+    "description": "Empty deck user message",
+    "type": "text",
+    "placeholders": {
+      "menu": {
+      }
+    }
   }
 }
