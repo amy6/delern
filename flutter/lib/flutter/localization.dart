@@ -1,21 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/messages_all.dart';
 
 /// https://flutter.io/tutorials/internationalization/
 class AppLocalizations {
-  static Future<AppLocalizations> load(Locale locale) {
+  static Future<AppLocalizations> load(Locale locale) async {
     final name =
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
 
-    return initializeMessages(localeName).then((_) {
-      Intl.defaultLocale = localeName;
-      return AppLocalizations();
-    });
+    await initializeMessages(localeName);
+    await initializeDateFormatting(localeName);
+    Intl.defaultLocale = localeName;
+
+    return AppLocalizations();
   }
 
   static AppLocalizations of(BuildContext context) =>
@@ -377,12 +379,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Could not launch url',
       );
 
-  String get continueLearningQuestion => Intl.message(
-        'All cards for this time are learned. Would you like to continue?',
-        name: 'continueLearningQuestion',
-        desc: 'Question for the user to continue learning',
-      );
-
   String get no => Intl.message(
         'no',
         name: 'no',
@@ -394,6 +390,14 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         args: [menu],
         name: 'emptyDeckUserMessage',
         desc: 'Empty deck user message',
+      );
+
+  String continueLearningQuestion(String date) => Intl.message(
+        'Next card to learn is suggested at $date. Would you like to continue '
+            'learning anyway?',
+        args: [date],
+        name: 'continueLearningQuestion',
+        desc: 'Question for the user to continue learning',
       );
 }
 

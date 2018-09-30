@@ -392,11 +392,13 @@
       }
     }
   },
-  "continueLearningQuestion": "All cards for this time are learned. Would you like to continue?",
+  "continueLearningQuestion": "Next card to learn is suggested at {date}. Would you like to continue learning anyway?",
   "@continueLearningQuestion": {
     "description": "Question for the user to continue learning",
     "type": "text",
     "placeholders": {
+      "date": {
+      }
     }
   },
   "no": "no",

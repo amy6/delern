@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
@@ -30,6 +31,7 @@ class CardsLearning extends StatefulWidget {
 class CardsLearningState extends State<CardsLearning> {
   bool _isBackShown = false;
   bool _learnBeyondHorizon = false;
+  bool _atLeastOneCardShown = false;
   int _watchedCount = 0;
   LearningViewModel _viewModel;
   StreamSubscription<void> _updates;
@@ -215,20 +217,25 @@ class CardsLearningState extends State<CardsLearning> {
       _isBackShown = false;
     });
 
-    if (!_learnBeyondHorizon) {
-      if (_viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
+    if (!_learnBeyondHorizon &&
+        _viewModel.scheduledCard.repeatAt.isAfter(DateTime.now().toUtc())) {
+      if (!_atLeastOneCardShown) {
         _learnBeyondHorizon = await showSaveUpdatesDialog(
                 context: context,
-                changesQuestion:
-                    AppLocalizations.of(context).continueLearningQuestion,
+                changesQuestion: AppLocalizations.of(context)
+                    .continueLearningQuestion(DateFormat.yMMMd()
+                        .add_jm()
+                        .format(_viewModel.scheduledCard.repeatAt)),
                 noAnswer: AppLocalizations.of(context).no,
                 yesAnswer: AppLocalizations.of(context).yes) ==
             true;
-        if (!_learnBeyondHorizon) {
-          Navigator.of(context).pop();
-        }
+      }
+      if (!_learnBeyondHorizon) {
+        Navigator.of(context).pop();
       }
     }
+
+    _atLeastOneCardShown = true;
   }
 }
 
