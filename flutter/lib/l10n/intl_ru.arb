@@ -398,11 +398,13 @@
       }
     }
   },
-  "continueLearningQuestion": "Все карточки на данный момент выучены. Вы хотите продолжить обучение?",
+  "continueLearningQuestion": "Следующая карточка рекомендуется к повторению {date}. Вы хотите продолжить изучение?",
   "@continueLearningQuestion": {
     "description": "Question for the user to continue learning",
     "type": "text",
     "placeholders": {
+      "date": {
+      }
     }
   },
   "no": "нет",

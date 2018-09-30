@@ -18,14 +18,17 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'ru';
 
-  static m0(url) => "Не удалось запустить ссылку ${url}";
+  static m0(date) =>
+      "Следующая карточка рекомендуется к повторению ${date}. Вы хотите продолжить изучение?";
 
-  static m1(menu) =>
+  static m1(url) => "Не удалось запустить ссылку ${url}";
+
+  static m2(menu) =>
       "Этот список пуст. Пожалуйста добавьте карточки в ${menu} меню списка.";
 
-  static m2(number) => "Количество карточек: ${number}";
+  static m3(number) => "Количество карточек: ${number}";
 
-  static m3(number) => "Просмотрено: ${number}";
+  static m4(number) => "Просмотрено: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -43,9 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
-        "continueLearningQuestion": MessageLookupByLibrary.simpleMessage(
-            "Все карточки на данный момент выучены. Вы хотите продолжить обучение?"),
-        "couldNotLaunchUrl": m0,
+        "continueLearningQuestion": m0,
+        "couldNotLaunchUrl": m1,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
@@ -61,7 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Адрес электронной почты"),
         "emptyCardsList":
             MessageLookupByLibrary.simpleMessage("Добавьте карточки"),
-        "emptyDeckUserMessage": m1,
+        "emptyDeckUserMessage": m2,
         "emptyDecksList":
             MessageLookupByLibrary.simpleMessage("Добавьте списки"),
         "emptyUserSharingList":
@@ -101,7 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
-        "numberOfCards": m2,
+        "numberOfCards": m3,
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "reversedCardLabel":
@@ -118,7 +120,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n       \nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nCледите за последними новостями Delern:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
-        "watchedCards": m3,
+        "watchedCards": m4,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
         "yes": MessageLookupByLibrary.simpleMessage("Да")
