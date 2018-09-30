@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +9,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'flutter/localization.dart';
 import 'models/base/transaction.dart';
-import 'remote/analytics.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
 import 'views/helpers/sign_in.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
-      FirebaseAnalyticsObserver(analytics: analytics);
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics());
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ void main() {
   runZoned<Future>(() async {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
     Transaction.subscribeToOnlineStatus();
-    analytics.logAppOpen();
+    FirebaseAnalytics().logAppOpen();
     runApp(App());
   }, onError: (error, stackTrace) async {
     await ErrorReporting.report('Zone', error, stackTrace);

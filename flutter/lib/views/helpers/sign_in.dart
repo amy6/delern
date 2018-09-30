@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import '../../flutter/styles.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
 import '../../models/user.dart';
-import '../../remote/analytics.dart';
 import '../../remote/error_reporting.dart';
 import '../../remote/sign_in.dart';
 import 'helper_progress_indicator.dart';
@@ -46,7 +46,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           ..save(User.fromFirebase(firebaseUser))
           ..commit();
 
-        analytics
+        FirebaseAnalytics()
           ..setUserId(_user.uid)
           ..logLogin();
 

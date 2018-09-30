@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
@@ -7,7 +8,6 @@ import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../models/deck_access.dart';
-import '../../remote/analytics.dart';
 import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
 import '../../views/helpers/slow_operation_widget.dart';
@@ -100,7 +100,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
       } else {
         await DeckAccessesViewModel.shareDeck(
             DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
-        analytics.logShare(
+        FirebaseAnalytics().logShare(
             contentType: 'application/flashcards-deck',
             itemId: widget._deck.key);
       }
