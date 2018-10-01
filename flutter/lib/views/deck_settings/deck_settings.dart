@@ -63,6 +63,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
           appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.delete),
+                // TODO(ksheremet): Slow operation widget
                 onPressed: () async {
                   var locale = AppLocalizations.of(context);
                   var deleteDeckDialog = await showSaveUpdatesDialog(
@@ -79,7 +80,9 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                           () => _scaffoldKey.currentState, e, stackTrace);
                       return;
                     }
-                    Navigator.of(context).pop();
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
                   }
                 }),
           ]),
