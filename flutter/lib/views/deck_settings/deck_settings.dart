@@ -79,7 +79,9 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                           () => _scaffoldKey.currentState, e, stackTrace);
                       return;
                     }
-                    Navigator.of(context).pop();
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
                   }
                 }),
           ]),
