@@ -126,13 +126,16 @@ class ScheduledCard implements KeyedListItem, Model {
         }
       };
 
-  CardView answer(bool knows) {
+  CardView answer(bool knows, bool learnBeyondHorizon) {
     var cv = CardView(card: card)
       ..reply = knows
       ..levelBefore = level;
-    if (knows) {
+
+    // if know==true and learnBeyondHorizon==true, the level stays the same
+    if (knows && !learnBeyondHorizon) {
       level = min(level + 1, levelDurations.length - 1);
-    } else {
+    }
+    if (!knows) {
       level = 0;
     }
     repeatAt = DateTime.now().toUtc().add(levelDurations[level]);
