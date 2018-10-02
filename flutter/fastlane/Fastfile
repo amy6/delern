@@ -14,6 +14,7 @@ default_platform(:android)
 lane :build do
   flutter(action: 'l10n',
           l10n_strings_file: 'lib/flutter/localization.dart',
+          l10n_strings_locale: 'en',
           l10n_reformat_arb: true)
   flutter(action: 'format')
   flutter(action: 'analyze')

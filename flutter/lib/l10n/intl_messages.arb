@@ -1,353 +1,411 @@
 {
-  "@@last_modified": "2018-09-30T20:54:40.454629",
+  "@@locale": "en",
+  "@@last_modified": "2018-10-02T20:21:12.733114",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "navigationDrawerCommunicateGroup": "Communicate",
   "@navigationDrawerCommunicateGroup": {
     "description": "Communicate Group Name in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "navigationDrawerInviteFriends": "Invite Friends",
   "@navigationDrawerInviteFriends": {
     "description": "Invite Friends in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "navigationDrawerContactUs": "Contact Us",
   "@navigationDrawerContactUs": {
     "description": "Contact Us in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "navigationDrawerSupportDevelopment": "Support Development",
   "@navigationDrawerSupportDevelopment": {
     "description": "Support Development in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "navigationDrawerAbout": "About",
   "@navigationDrawerAbout": {
     "description": "About in Navigation Drawer",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "signInWithGoogle": "Sign In with Google",
   "@signInWithGoogle": {
     "description": "Sign In with Google Button",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "editCardsDeckMenu": "Edit Cards",
   "@editCardsDeckMenu": {
     "description": "Edit Cards in Deck Menu",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "settingsDeckMenu": "Settings",
   "@settingsDeckMenu": {
     "description": "Settings in Deck Menu",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "shareDeckMenu": "Share",
   "@shareDeckMenu": {
     "description": "Share in Deck Menu",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "numberOfCards": "Number of cards: {number}",
   "@numberOfCards": {
     "description": "Number of cards",
     "type": "text",
     "placeholders": {
-      "number": {}
+      "number": {
+      }
     }
   },
   "canEdit": "Can Edit",
   "@canEdit": {
     "description": "User can edit a deck",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "canView": "Can View",
   "@canView": {
     "description": "User can view a deck",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "owner": "Owner",
   "@owner": {
     "description": "User has owner access",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "noAccess": "No access",
   "@noAccess": {
     "description": "User has no access",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "emailAddressHint": "Email address",
   "@emailAddressHint": {
     "description": "Email address hint",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "peopleLabel": "People",
   "@peopleLabel": {
     "description": "People label",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "whoHasAccessLabel": "Who has access",
   "@whoHasAccessLabel": {
     "description": "Who has access label",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "frontSideHint": "Front side",
   "@frontSideHint": {
     "description": "front side",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "backSideHint": "Back side",
   "@backSideHint": {
     "description": "back side",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "reversedCardLabel": "Add reversed card",
   "@reversedCardLabel": {
     "description": "Add reversed card",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "deck": "Deck",
   "@deck": {
     "description": "Deck label",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "add": "Add",
   "@add": {
     "description": "Add",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "save": "Save",
   "@save": {
     "description": "Save",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "delete": "Delete",
   "@delete": {
     "description": "Delete",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "saveChangesQuestion": "Do you want to save changes?",
   "@saveChangesQuestion": {
     "description": "Do you want to save changes?",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "deleteCardQuestion": "Do you want to delete card?",
   "@deleteCardQuestion": {
     "description": "Do you want to delete card?",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "errorUserMessage": "Error occurred: ",
   "@errorUserMessage": {
     "description": "Error occurred.",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "send": "Send",
   "@send": {
     "description": "Send",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "appNotInstalledSharingDeck": "This user hasn't installed Delern yet. Do you want to sent an invite?",
   "@appNotInstalledSharingDeck": {
     "description": "The app hasn't installed by user with who deck was shared",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern",
   "@inviteToAppMessage": {
     "description": "Invite to the App message",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "edit": "Edit",
   "@edit": {
     "description": "Edit",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "watchedCards": "Watched: {number}",
   "@watchedCards": {
     "description": "watchedCards",
     "type": "text",
     "placeholders": {
-      "number": {}
+      "number": {
+      }
     }
   },
   "deleteDeckQuestion": "Do you want to delete deck?",
   "@deleteDeckQuestion": {
     "description": "Do you want to delete deck?",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "basicDeckType": "Basic",
   "@basicDeckType": {
     "description": "basic decktype name",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "germanDeckType": "German",
   "@germanDeckType": {
     "description": "german decktype name",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "swissDeckType": "Swiss",
   "@swissDeckType": {
     "description": "swiss decktype name",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "deckType": "Deck Type",
   "@deckType": {
     "description": "Deck Type",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "markdown": "Markdown",
   "@markdown": {
     "description": "Markdown",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "cardDeletedUserMessage": "Card was deleted",
   "@cardDeletedUserMessage": {
     "description": "Card was deleted",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "cardAddedUserMessage": "Card was added",
   "@cardAddedUserMessage": {
     "description": "Card was added",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "searchHint": "Search...",
   "@searchHint": {
     "description": "Search...",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "emptyUserSharingList": "Share your deck",
   "@emptyUserSharingList": {
     "description": "Share your deck",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "emptyDecksList": "Add your decks",
   "@emptyDecksList": {
     "description": "Add your decks",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "emptyCardsList": "Add your cards",
   "@emptyCardsList": {
     "description": "Add your cards",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "noSharingAccessUserMessage": "Only owner of deck can share it.",
   "@noSharingAccessUserMessage": {
     "description": "Only owner of deck can share it.",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "noEditingWithReadAccessUserMessage": "You cannot edit card with a read access.",
   "@noEditingWithReadAccessUserMessage": {
     "description": "You cannot edit card with a read access.",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "noDeletingWithReadAccessUserMessage": "You cannot delete card with a read access.",
   "@noDeletingWithReadAccessUserMessage": {
     "description": "You cannot delete card with a read access.",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "noAddingWithReadAccessUserMessage": "You cannot add cards with a read access.",
   "@noAddingWithReadAccessUserMessage": {
     "description": "You cannot add cards with a read access..",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "continueEditingQuestion": "You have unsaved changes. Would you like to continue editing?",
   "@continueEditingQuestion": {
     "description": "You have unsaved changes. Would you like to continue editing?",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "yes": "Yes",
   "@yes": {
     "description": "Yes",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "discard": "Discard",
   "@discard": {
     "description": "Discard",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "supportDevelopment": "Please tell us what we can do to make your experience with Delern better!\n       \nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nFollow latest news on:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      ",
   "@supportDevelopment": {
     "description": "Support Development",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "installEmailApp": "Please install Email App",
   "@installEmailApp": {
     "description": "Please install Email App",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "couldNotLaunchUrl": "Could not launch url {url}",
   "@couldNotLaunchUrl": {
     "description": "Could not launch url",
     "type": "text",
     "placeholders": {
-      "url": {}
+      "url": {
+      }
     }
   },
   "no": "no",
   "@no": {
     "description": "no",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+    }
   },
   "emptyDeckUserMessage": "This deck is currently empty. Please add cards in {menu} deck menu.",
   "@emptyDeckUserMessage": {
     "description": "Empty deck user message",
     "type": "text",
     "placeholders": {
-      "menu": {}
+      "menu": {
+      }
     }
   },
   "continueLearningQuestion": "Next card to learn is suggested at {date}. Would you like to continue learning anyway?",
@@ -355,7 +413,8 @@
     "description": "Question for the user to continue learning",
     "type": "text",
     "placeholders": {
-      "date": {}
+      "date": {
+      }
     }
   }
 }

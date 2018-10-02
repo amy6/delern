@@ -29,6 +29,8 @@ class App extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: const [
+        // This list limits what locales Global Localizations delegates above
+        // will support. The first element of this list is a fallback locale.
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
