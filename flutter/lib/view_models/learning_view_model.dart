@@ -36,8 +36,8 @@ class LearningViewModel {
         // updated live, it can result in bad user experience.
       }).map((muxerEvent) => muxerEvent.stream);
 
-  Future<void> answer(bool knows) {
-    var cv = _scheduledCard.answer(knows);
+  Future<void> answer(bool knows, bool learnBeyondHorizon) {
+    var cv = _scheduledCard.answer(knows, learnBeyondHorizon);
     return (Transaction()..save(_scheduledCard)..save(cv)).commit();
   }
 

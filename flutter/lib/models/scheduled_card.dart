@@ -40,6 +40,11 @@ class ScheduledCard implements KeyedListItem, Model {
     _parseSnapshot(snapshotValue);
   }
 
+  /* It is used for cards randomizing appearance.
+   Max jitter is 2h 59 min */
+  Duration _getJitter() =>
+      Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
+
   void _parseSnapshot(snapshotValue) {
     if (snapshotValue == null) {
       // Assume the ScheduledCard doesn't exist anymore.
@@ -126,16 +131,19 @@ class ScheduledCard implements KeyedListItem, Model {
         }
       };
 
-  CardView answer(bool knows) {
+  CardView answer(bool knows, bool learnBeyondHorizon) {
     var cv = CardView(card: card)
       ..reply = knows
       ..levelBefore = level;
-    if (knows) {
+
+    // if know==true and learnBeyondHorizon==true, the level stays the same
+    if (knows && !learnBeyondHorizon) {
       level = min(level + 1, levelDurations.length - 1);
-    } else {
+    }
+    if (!knows) {
       level = 0;
     }
-    repeatAt = DateTime.now().toUtc().add(levelDurations[level]);
+    repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _getJitter());
     return cv;
   }
 }
