@@ -40,6 +40,11 @@ class ScheduledCard implements KeyedListItem, Model {
     _parseSnapshot(snapshotValue);
   }
 
+  /* It is used for cards randomizing appearance.
+   Max jitter is 2h 59 min */
+  Duration _getJitter() =>
+      Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
+
   void _parseSnapshot(snapshotValue) {
     if (snapshotValue == null) {
       // Assume the ScheduledCard doesn't exist anymore.
@@ -138,7 +143,7 @@ class ScheduledCard implements KeyedListItem, Model {
     if (!knows) {
       level = 0;
     }
-    repeatAt = DateTime.now().toUtc().add(levelDurations[level]);
+    repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _getJitter());
     return cv;
   }
 }
