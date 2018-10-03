@@ -104,6 +104,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
         "numberOfCards": m3,
+        "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Нет сети, пожалуйста, попробуйте позже"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "reversedCardLabel":
@@ -113,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Вы хотите сохранить изменения?"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Поиск..."),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
+        "serverUnavailableUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Сервер временно недоступен, пожалуйста, попробуйте позже"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":

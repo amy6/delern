@@ -22,6 +22,12 @@ class UserMessages {
     return errorFuture;
   }
 
+  // TODO(ksheremet): Consider to move to another place.
+  // This method reports and doesn't show any messages to user.
+  static void reportError(e, [StackTrace stackTrace]) {
+    ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);
+  }
+
   // TODO(ksheremet): Add user message for Snackbar and error message for
   // reporting.
   // In navigation drawer 'Contact us' show user message to user and send error

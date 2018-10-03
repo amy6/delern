@@ -187,7 +187,7 @@ class AppLocalizations {
       );
 
   String get errorUserMessage => Intl.message(
-        'Error occurred: ',
+        'Error: ',
         name: 'errorUserMessage',
         desc: 'Error occurred.',
       );
@@ -398,6 +398,18 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         args: [date],
         name: 'continueLearningQuestion',
         desc: 'Question for the user to continue learning',
+      );
+
+  String get offlineUserMessage => Intl.message(
+        'You are offline, please try it later',
+        name: 'offlineUserMessage',
+        desc: 'Offline user message',
+      );
+
+  String get serverUnavailableUserMessage => Intl.message(
+        'Server temporarily unavailable, please try again later',
+        name: 'serverUnavailableUserMessage',
+        desc: 'Server temporarily unavailable',
       );
 }
 

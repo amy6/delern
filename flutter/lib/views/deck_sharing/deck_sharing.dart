@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +105,13 @@ class _DeckSharingState extends State<DeckSharingPage> {
             contentType: 'application/flashcards-deck',
             itemId: widget._deck.key);
       }
+    } on SocketException catch (_) {
+      UserMessages.showMessage(Scaffold.of(context),
+          AppLocalizations.of(context).offlineUserMessage);
+    } on HttpException catch (e, stackTrace) {
+      UserMessages.reportError(e, stackTrace);
+      UserMessages.showMessage(Scaffold.of(context),
+          AppLocalizations.of(context).serverUnavailableUserMessage);
     } catch (e, stackTrace) {
       UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
     }
