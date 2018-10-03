@@ -28,12 +28,12 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-  intl_translation: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  intl_translation: ^0.17.0
   mockito: ^3.0.0
 
 
