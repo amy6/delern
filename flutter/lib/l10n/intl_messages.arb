@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-02T20:21:12.733114",
+  "@@last_modified": "2018-10-03T13:54:54.906107",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -192,7 +192,7 @@
     "placeholders": {
     }
   },
-  "errorUserMessage": "Error occurred: ",
+  "errorUserMessage": "Error: ",
   "@errorUserMessage": {
     "description": "Error occurred.",
     "type": "text",
@@ -415,6 +415,20 @@
     "placeholders": {
       "date": {
       }
+    }
+  },
+  "offlineUserMessage": "You are offline, please try it later",
+  "@offlineUserMessage": {
+    "description": "Offline user message",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "serverUnavailableUserMessage": "Server temporarily unavailable, please try again later",
+  "@serverUnavailableUserMessage": {
+    "description": "Server temporarily unavailable",
+    "type": "text",
+    "placeholders": {
     }
   }
 }

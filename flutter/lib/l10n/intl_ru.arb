@@ -415,5 +415,19 @@
       "menu": {
       }
     }
+  },
+  "offlineUserMessage": "Нет сети, пожалуйста, попробуйте позже",
+  "@offlineUserMessage": {
+    "description": "Offline user message",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "serverUnavailableUserMessage": "Сервер временно недоступен, пожалуйста, попробуйте позже",
+  "@serverUnavailableUserMessage": {
+    "description": "Server temporarily unavailable",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

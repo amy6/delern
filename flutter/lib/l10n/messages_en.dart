@@ -66,8 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add your decks"),
         "emptyUserSharingList":
             MessageLookupByLibrary.simpleMessage("Share your deck"),
-        "errorUserMessage":
-            MessageLookupByLibrary.simpleMessage("Error occurred: "),
+        "errorUserMessage": MessageLookupByLibrary.simpleMessage("Error: "),
         "frontSideHint": MessageLookupByLibrary.simpleMessage("Front side"),
         "germanDeckType": MessageLookupByLibrary.simpleMessage("German"),
         "installEmailApp":
@@ -100,6 +99,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Only owner of deck can share it."),
         "numberOfCards": m3,
+        "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
+            "You are offline, please try it later"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":
@@ -109,6 +110,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Do you want to save changes?"),
         "searchHint": MessageLookupByLibrary.simpleMessage("Search..."),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
+        "serverUnavailableUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Server temporarily unavailable, please try again later"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
