@@ -163,13 +163,6 @@
     "placeholders": {
     }
   },
-  "cancel": "Отмена",
-  "@cancel": {
-    "description": "Cancel",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "save": "Сохранить",
   "@save": {
     "description": "Save",
