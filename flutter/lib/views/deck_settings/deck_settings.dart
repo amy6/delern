@@ -8,6 +8,7 @@ import '../../flutter/user_messages.dart';
 import '../../models/deck.dart';
 import '../../models/deck_access.dart';
 import '../../view_models/deck_view_model.dart';
+import '../../views/helpers/slow_operation_widget.dart';
 import '../helpers/save_updates_dialog.dart';
 import 'deck_type_dropdown.dart';
 
@@ -61,30 +62,32 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
       child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.delete),
-                // TODO(ksheremet): Slow operation widget
-                onPressed: () async {
-                  var locale = AppLocalizations.of(context);
-                  var deleteDeckDialog = await showSaveUpdatesDialog(
-                      context: context,
-                      changesQuestion: locale.deleteDeckQuestion,
-                      yesAnswer: locale.delete,
-                      noAnswer:
-                          MaterialLocalizations.of(context).cancelButtonLabel);
-                  if (deleteDeckDialog) {
-                    try {
-                      await _viewModel.delete();
-                    } catch (e, stackTrace) {
-                      UserMessages.showError(
-                          () => _scaffoldKey.currentState, e, stackTrace);
-                      return;
-                    }
-                    if (mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  }
-                }),
+            SlowOperationWidget(
+              (cb) => IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: cb(() async {
+                      var locale = AppLocalizations.of(context);
+                      var deleteDeckDialog = await showSaveUpdatesDialog(
+                          context: context,
+                          changesQuestion: locale.deleteDeckQuestion,
+                          yesAnswer: locale.delete,
+                          noAnswer: MaterialLocalizations.of(context)
+                              .cancelButtonLabel);
+                      if (deleteDeckDialog) {
+                        try {
+                          await _viewModel.delete();
+                        } catch (e, stackTrace) {
+                          UserMessages.showError(
+                              () => _scaffoldKey.currentState, e, stackTrace);
+                          return;
+                        }
+                        if (mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    }),
+                  ),
+            )
           ]),
           body: _buildBody()),
     );
