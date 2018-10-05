@@ -65,19 +65,18 @@ path /deck_access/{deckId}/{sharedWithUserId} is DeckAccess {
   read() { isCurrentUser(sharedWithUserId) }
 
   create() {
-    userExists(sharedWithUserId) &&
-    (
-      deckExisted(deckId) ? (
-        // Sharing a deck.
-        prior(deckAccess(deckId)) === "owner" &&
-        // Make sure access is not owner (there can be only 1 owner!), the
-        // actual allowed set of values is handled by AccessString validation.
-        deckAccessFor(deckId, sharedWithUserId) !== "owner"
-      ) : (
-        // Creating a new deck.
-        isCurrentUser(sharedWithUserId) &&
-        deckAccess(deckId) === "owner"
-      )
+    deckExisted(deckId) ? (
+      // Sharing a deck.
+      userExists(sharedWithUserId) &&
+      prior(deckAccess(deckId)) === "owner" &&
+      // Make sure access is not owner (there can be only 1 owner!), the
+      // actual allowed set of values is handled by AccessString validation.
+      deckAccessFor(deckId, sharedWithUserId) !== "owner"
+    ) : (
+      // Creating a new deck. Do not check userExists because anonymous
+      // users do not have /users record.
+      isCurrentUser(sharedWithUserId) &&
+      deckAccess(deckId) === "owner"
     )
   }
   update() { prior(deckAccess(deckId)) === "owner" }
@@ -114,7 +113,8 @@ path /decks/{userId} {
 path /decks/{userId}/{deckId} is Deck {
   create() {
     deckAccess(deckId) === "owner" &&
-    userExists(userId) &&
+    // userExists() will return false for anonymous users
+    (isCurrentUser(userId) || userExists(userId)) &&
     (isCurrentUser(userId) === this.accepted)
   }
 
