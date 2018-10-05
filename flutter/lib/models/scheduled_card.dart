@@ -121,7 +121,7 @@ class ScheduledCard implements KeyedListItem, Model {
       }));
 
   @override
-  String get rootPath => 'learning/${card.deck.uid}/${card.deck.uid}';
+  String get rootPath => 'learning/${card.deck.uid}/${card.deck.key}';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
