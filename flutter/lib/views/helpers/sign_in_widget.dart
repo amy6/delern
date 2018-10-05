@@ -41,10 +41,12 @@ class _SignInWidgetState extends State<SignInWidget> {
       if (_user != null) {
         ErrorReporting.uid = _user.uid;
 
-        // Don't wait for FCM token to save User.
-        Transaction()
-          ..save(User.fromFirebase(firebaseUser))
-          ..commit();
+        if (!_user.isAnonymous) {
+          // Don't wait for FCM token to save User.
+          Transaction()
+            ..save(User.fromFirebase(firebaseUser))
+            ..commit();
+        }
 
         FirebaseAnalytics()
           ..setUserId(_user.uid)
