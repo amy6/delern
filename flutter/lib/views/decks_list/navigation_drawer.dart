@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,23 +32,35 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    var user = CurrentUserWidget.of(context).user;
+    final user = CurrentUserWidget.of(context).user;
+    var accountName = user.displayName;
+    if (accountName == null || accountName.isEmpty) {
+      accountName = 'Anonymous'; // TODO(ksheremet): AppLocalizations.of()
+    }
     return Drawer(
         child: Column(
       children: <Widget>[
         UserAccountsDrawerHeader(
-          accountName: Text(user.displayName),
+          accountName: Text(accountName),
           accountEmail: Text(user.email),
-          currentAccountPicture: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
-          ),
+          currentAccountPicture: user.photoUrl == null
+              ? const FittedBox(child: Text('?'))
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoUrl),
+                ),
         ),
         ListTile(
           leading: const Icon(Icons.perm_identity),
-          title: Text(AppLocalizations.of(context).navigationDrawerSignOut),
-          onTap: () {
-            signOut();
-            Navigator.pop(context);
+          title: Text(user.isAnonymous
+              ? 'Sign In'
+              : AppLocalizations.of(context).navigationDrawerSignOut),
+          onTap: () async {
+            if (user.isAnonymous) {
+              _promoteAnonymous();
+            } else {
+              signOut();
+              Navigator.pop(context);
+            }
           },
         ),
         const Divider(height: 1.0),
@@ -103,5 +118,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ),
       ],
     ));
+  }
+
+  Future<void> _promoteAnonymous() async {
+    try {
+      await signIn(SignInProvider.google);
+    } on PlatformException catch (e) {
+      // Show a dialog. This is sad, but what can you do?
+    }
   }
 }

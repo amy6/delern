@@ -44,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
+        "continueAnonymous":
+            MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "continueLearningQuestion": m0,
@@ -106,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
+        "or": MessageLookupByLibrary.simpleMessage("или"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "reversedCardLabel":

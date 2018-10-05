@@ -27,6 +27,8 @@ class SignInWidget extends StatefulWidget {
 class _SignInWidgetState extends State<SignInWidget> {
   FirebaseUser _user;
   bool _isAuthStateKnown = false;
+  final _itemPadding = const Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0));
 
   @override
   void initState() {
@@ -108,9 +110,10 @@ class _SignInWidgetState extends State<SignInWidget> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: RaisedButton(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      RaisedButton(
                           color: Colors.white,
                           onPressed: () => signIn(SignInProvider.google),
                           child: Row(
@@ -132,7 +135,33 @@ class _SignInWidgetState extends State<SignInWidget> {
                                     style: AppStyles.primaryText,
                                   )),
                             ],
-                          ))),
+                          )),
+                      _itemPadding,
+                      Text(
+                        AppLocalizations.of(context).or,
+                        style: AppStyles.primaryText,
+                      ),
+                      _itemPadding,
+                      RaisedButton(
+                          color: Colors.white,
+                          onPressed: () => signIn(SignInProvider.anonymous),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15.0),
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .continueAnonymous,
+                                  style: AppStyles.primaryText,
+                                ),
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
                 ),
               ],
             ),

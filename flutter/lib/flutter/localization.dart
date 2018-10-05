@@ -411,6 +411,18 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'serverUnavailableUserMessage',
         desc: 'Server temporarily unavailable',
       );
+
+  String get or => Intl.message(
+        'or',
+        name: 'or',
+        desc: 'or',
+      );
+
+  String get continueAnonymous => Intl.message(
+        'Continue Anonymous',
+        name: 'continueAnonymous',
+        desc: 'Continue Anonymous',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

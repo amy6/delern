@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
+        "continueAnonymous":
+            MessageLookupByLibrary.simpleMessage("Continue Anonymous"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m0,
@@ -101,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
+        "or": MessageLookupByLibrary.simpleMessage("or"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":

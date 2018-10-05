@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-03T13:54:54.906107",
+  "@@last_modified": "2018-10-07T13:20:24.446806",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -427,6 +427,20 @@
   "serverUnavailableUserMessage": "Server temporarily unavailable, please try again later",
   "@serverUnavailableUserMessage": {
     "description": "Server temporarily unavailable",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "or": "or",
+  "@or": {
+    "description": "or",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "continueAnonymous": "Continue Anonymous",
+  "@continueAnonymous": {
+    "description": "Continue Anonymous",
     "type": "text",
     "placeholders": {
     }

@@ -429,5 +429,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "or": "или",
+  "@or": {
+    "description": "or",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "continueAnonymous": "Продолжить Анонимно",
+  "@continueAnonymous": {
+    "description": "Continue Anonymous",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
