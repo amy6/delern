@@ -110,7 +110,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       alignment: Alignment.bottomCenter,
                       child: RaisedButton(
                           color: Colors.white,
-                          onPressed: signInGoogleUser,
+                          onPressed: () => signIn(SignInProvider.google),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
