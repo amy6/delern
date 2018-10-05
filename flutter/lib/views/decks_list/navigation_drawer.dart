@@ -9,7 +9,7 @@ import '../../flutter/user_messages.dart';
 import '../../remote/sign_in.dart';
 import '../../views/support_dev/support_development.dart';
 import '../helpers/send_invite.dart';
-import '../helpers/sign_in.dart';
+import '../helpers/sign_in_widget.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override

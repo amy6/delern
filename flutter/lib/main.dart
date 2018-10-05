@@ -11,7 +11,7 @@ import 'flutter/localization.dart';
 import 'models/base/transaction.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
-import 'views/helpers/sign_in.dart';
+import 'views/helpers/sign_in_widget.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
