@@ -13,7 +13,7 @@ import '../deck_settings/deck_settings.dart';
 import '../deck_sharing/deck_sharing.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/search_bar.dart';
-import '../helpers/sign_in.dart';
+import '../helpers/sign_in_widget.dart';
 import 'create_deck.dart';
 import 'navigation_drawer.dart';
 

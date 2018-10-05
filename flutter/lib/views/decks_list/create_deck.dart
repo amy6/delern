@@ -7,7 +7,7 @@ import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../card_create_update/card_create_update.dart';
-import '../helpers/sign_in.dart';
+import '../helpers/sign_in_widget.dart';
 
 class CreateDeck extends StatelessWidget {
   @override
