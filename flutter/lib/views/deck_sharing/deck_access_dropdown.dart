@@ -45,6 +45,14 @@ class _DropdownState extends State<DeckAccessDropdown> {
       ));
 
   Widget buildDropdownItem(AccessType access) {
+    // TODO(dotdoom): split this into a separate widget. Framework will then
+    //                call build() separately for positioning the item in the
+    //                value field and drop-down menu. We can detect our position
+    //                by scanning the widget tree. In the value field, we will
+    //                build as icon only.
+    //                Unsolved problem is positioning the drop down menu to
+    //                avoid overflow.
+
     String text;
     Icon icon;
     if (access == null) {
