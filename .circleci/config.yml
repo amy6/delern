@@ -25,7 +25,7 @@ jobs:
 
     - restore_cache:
         keys:
-        - v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
+        - v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
         - v16-{{ arch }}-{{ .Branch }}-
         - v16-{{ arch }}-master-
 
@@ -50,7 +50,7 @@ jobs:
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.yaml" }}
+        key: v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
         paths:
         - ~/android-sdk
         - ~/.gradle
