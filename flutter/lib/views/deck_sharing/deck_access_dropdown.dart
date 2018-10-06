@@ -26,7 +26,8 @@ class DeckAccessDropdown extends StatefulWidget {
 
 class _DropdownState extends State<DeckAccessDropdown> {
   @override
-  Widget build(BuildContext context) => DropdownButton<AccessType>(
+  Widget build(BuildContext context) => DropdownButtonHideUnderline(
+          child: DropdownButton<AccessType>(
         // Provide default value.
         value: widget.value,
         items: (AccessType.values + [null])
@@ -41,9 +42,17 @@ class _DropdownState extends State<DeckAccessDropdown> {
             widget.valueChanged(newValue);
           });
         },
-      );
+      ));
 
   Widget buildDropdownItem(AccessType access) {
+    // TODO(dotdoom): split this into a separate widget. Framework will then
+    //                call build() separately for positioning the item in the
+    //                value field and drop-down menu. We can detect our position
+    //                by scanning the widget tree. In the value field, we will
+    //                build as icon only.
+    //                Unsolved problem is positioning the drop down menu to
+    //                avoid overflow.
+
     String text;
     Icon icon;
     if (access == null) {

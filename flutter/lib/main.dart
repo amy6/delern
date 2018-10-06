@@ -48,7 +48,7 @@ class App extends StatelessWidget {
 void main() {
   FlutterError.onError = (details) async {
     await ErrorReporting.report(
-        'FlutterError', details.exception, details.stack);
+        'FlutterError', details.exception, details.stack ?? details.context);
   };
   Isolate.current.addErrorListener(RawReceivePort((pair) async {
     List<dynamic> errorAndStacktrace = pair;
