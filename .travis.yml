@@ -17,14 +17,25 @@ cache:
 script:
 - bundle exec pod setup
 
+# Get latest link at https://flutter.io/setup-macos/
 - wget
   'https://storage.googleapis.com/flutter_infra/releases/beta/macos/flutter_macos_v0.8.2-beta.zip'
   -O /tmp/flutter.zip
 - unzip -q -d "$SDK_ROOT" /tmp/flutter.zip
 
+- flutter upgrade
+
 # Do not require signing of iOS applications (key is not available on Travis)
-- sed -i
+- sed -i ''
   -e 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g'
   flutter/ios/Runner.xcodeproj/project.pbxproj
 
-- cd flutter && flutter build ios --debug
+- ( cd flutter && flutter build ios --debug )
+
+# Check that there are no modifications (except the ones we did)
+- git checkout
+  flutter/ios/Runner.xcodeproj/project.pbxproj
+  .bundle/config
+- git status
+- git diff
+- test -z "$(git status --porcelain)"
