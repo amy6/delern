@@ -16,10 +16,17 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="${appName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Disable Advertising ID collection
-        https://firebase.google.com/support/guides/disable-analytics
-        -->
+
+        <!-- Disabling some features of Firebase Analytics:
+             https://firebase.google.com/support/guides/disable-analytics -->
+        <!-- Disable Advertising ID collection -->
         <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+        <!-- We do not want to report Analytics from Firebase Test Lab. The code in Application
+             checks that and re-enables reporting when no Firebase Test Lab is detected. If we
+             leave this ON by default, Analytics code inside the app will start sending events
+             before any code in Application can stop it -->
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification" />

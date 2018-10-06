@@ -14,11 +14,10 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
 
     String testLabSetting = Settings.System.getString(getContentResolver(), "firebase.test.lab");
-    if ("true".equals(testLabSetting)) {
-      // Do not enable Firebase Analytics in Firebase Test Lab (e.g. pre-launch report).
-      // Documentation on detecting Firebase Test Lab: https://goo.gl/JeHQuW.
-      // Documentation on Analytics: https://firebase.google.com/support/guides/disable-analytics.
-      FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
+    if (!"true".equals(testLabSetting)) {
+      // Re-enable Analytics when not in Firebase Test Lab. See AndroidManifest.xml for details.
+      // Documentation on detecting Firebase Test Lab: https://goo.gl/JeHQuW
+      FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true);
     }
 
     GeneratedPluginRegistrant.registerWith(this);
