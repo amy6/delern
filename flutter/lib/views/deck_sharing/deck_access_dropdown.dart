@@ -26,7 +26,8 @@ class DeckAccessDropdown extends StatefulWidget {
 
 class _DropdownState extends State<DeckAccessDropdown> {
   @override
-  Widget build(BuildContext context) => DropdownButton<AccessType>(
+  Widget build(BuildContext context) => DropdownButtonHideUnderline(
+          child: DropdownButton<AccessType>(
         // Provide default value.
         value: widget.value,
         items: (AccessType.values + [null])
@@ -41,7 +42,7 @@ class _DropdownState extends State<DeckAccessDropdown> {
             widget.valueChanged(newValue);
           });
         },
-      );
+      ));
 
   Widget buildDropdownItem(AccessType access) {
     String text;
