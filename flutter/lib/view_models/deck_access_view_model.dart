@@ -6,6 +6,7 @@ import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/user.dart';
+import '../remote/analytics.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -99,6 +100,7 @@ class DeckAccessesViewModel implements Activatable {
   }
 
   static Future<void> shareDeck(DeckAccess access) async {
+    logShare(access.deck.key);
     var tr = Transaction();
 
     if (access.access == null) {

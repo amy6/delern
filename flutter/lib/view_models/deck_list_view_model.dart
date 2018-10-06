@@ -6,6 +6,7 @@ import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
+import '../remote/analytics.dart';
 import 'base/activatable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
@@ -110,8 +111,11 @@ class DeckListViewModel implements Activatable {
     _decksProxy?.dispose();
   }
 
-  static Future<void> createDeck(Deck deck) => (Transaction()
-        ..save(deck)
-        ..save(DeckAccess(deck: deck, access: AccessType.owner)))
-      .commit();
+  static Future<void> createDeck(Deck deck) {
+    logDeckCreate();
+    return (Transaction()
+          ..save(deck)
+          ..save(DeckAccess(deck: deck, access: AccessType.owner)))
+        .commit();
+  }
 }

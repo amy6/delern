@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
@@ -101,9 +100,6 @@ class _DeckSharingState extends State<DeckSharingPage> {
       } else {
         await DeckAccessesViewModel.shareDeck(
             DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
-        FirebaseAnalytics().logShare(
-            contentType: 'application/flashcards-deck',
-            itemId: widget._deck.key);
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(Scaffold.of(context),

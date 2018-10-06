@@ -7,6 +7,7 @@ import '../models/card_view.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/scheduled_card.dart';
+import '../remote/analytics.dart';
 
 class DeckViewModel {
   final Deck deck;
@@ -22,6 +23,7 @@ class DeckViewModel {
       });
 
   Future<void> delete() async {
+    logDeckDelete(deck.key);
     var t = Transaction()..delete(deck);
     var card = Card(deck: deck);
     if (access.access == AccessType.owner) {
