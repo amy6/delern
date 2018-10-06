@@ -4,6 +4,7 @@ import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
 import '../models/scheduled_card.dart';
+import '../remote/analytics.dart';
 
 class CardViewModel {
   Card get card => _card;
@@ -22,6 +23,7 @@ class CardViewModel {
   String toString() => (_card.key == null ? _card.deck : _card).toString();
 
   Future<void> saveCard(bool addReverse) {
+    logCardCreate(_card.deck.key);
     var t = Transaction()..save(_card)..save(ScheduledCard(card: _card));
     if (addReverse) {
       var reverse = Card(
