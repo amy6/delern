@@ -11,6 +11,7 @@ import '../../models/deck_access.dart';
 import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
 import '../../views/helpers/slow_operation_widget.dart';
+import '../helpers/empty_list_message.dart';
 import '../helpers/helper_progress_indicator.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/save_updates_dialog.dart';
@@ -200,8 +201,8 @@ class _DeckUsersState extends State<DeckUsersWidget> {
                   child: _buildUserAccessInfo(item),
                   sizeFactor: animation,
                 ),
-            emptyListUserMessage:
-                AppLocalizations.of(context).emptyUserSharingList,
+            emptyMessageBuilder: () => EmptyListMessage(
+                AppLocalizations.of(context).emptyUserSharingList),
           ),
         ),
       ],
