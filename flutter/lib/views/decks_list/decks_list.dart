@@ -11,6 +11,7 @@ import '../cards_learning/cards_learning.dart';
 import '../cards_list/cards_list.dart';
 import '../deck_settings/deck_settings.dart';
 import '../deck_sharing/deck_sharing.dart';
+import '../helpers/empty_list_message.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/search_bar.dart';
 import '../helpers/sign_in_widget.dart';
@@ -26,6 +27,66 @@ class DecksListPage extends StatefulWidget {
 
   @override
   DecksListPageState createState() => DecksListPageState();
+}
+
+class _ArrowToFloatingActionButton extends CustomPainter {
+  final BuildContext scaffoldContext;
+  final GlobalKey fabKey;
+
+  _ArrowToFloatingActionButton(this.scaffoldContext, this.fabKey);
+
+  static const _margin = 20.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final RenderBox scaffoldBox = scaffoldContext.findRenderObject();
+    final RenderBox fabBox = fabKey.currentContext.findRenderObject();
+    final fabRect =
+        scaffoldBox.globalToLocal(fabBox.localToGlobal(Offset.zero)) &
+            fabBox.size;
+    final center = size.center(Offset.zero);
+
+    final curve = Path()
+      ..moveTo(center.dx, center.dy + _margin)
+      ..cubicTo(
+          center.dx - _margin,
+          center.dy + _margin * 2,
+          _margin - center.dx,
+          (fabRect.center.dy - center.dy) * 2 / 3 + center.dy,
+          fabRect.centerLeft.dx - _margin,
+          fabRect.center.dy)
+      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
+      ..lineTo(
+          fabRect.centerLeft.dx - _margin * 2.5, fabRect.center.dy - _margin)
+      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
+      ..lineTo(fabRect.centerLeft.dx - _margin * 2.5,
+          fabRect.center.dy + _margin / 2);
+
+    canvas.drawPath(
+        curve,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3.0
+          ..strokeCap = StrokeCap.round);
+  }
+
+  @override
+  bool shouldRepaint(_ArrowToFloatingActionButton oldDelegate) =>
+      scaffoldContext != oldDelegate.scaffoldContext ||
+      fabKey != oldDelegate.fabKey;
+}
+
+class ArrowToFloatingActionButtonWidget extends StatelessWidget {
+  final Widget child;
+  final GlobalKey fabKey;
+
+  const ArrowToFloatingActionButtonWidget({@required this.fabKey, this.child});
+
+  @override
+  Widget build(BuildContext context) => Container(
+      child: CustomPaint(
+          painter: _ArrowToFloatingActionButton(context, fabKey),
+          child: child));
 }
 
 class DecksListPageState extends State<DecksListPage> {
@@ -58,6 +119,8 @@ class DecksListPageState extends State<DecksListPage> {
         d.deck.name.toLowerCase().contains(input);
   }
 
+  GlobalKey fabKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     if (!_active) {
@@ -74,9 +137,12 @@ class DecksListPageState extends State<DecksListPage> {
               child: DeckListItem(item),
               sizeFactor: animation,
             ),
-        emptyListUserMessage: AppLocalizations.of(context).emptyDecksList,
+        emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+            fabKey: fabKey,
+            child:
+                EmptyListMessage(AppLocalizations.of(context).emptyDecksList)),
       ),
-      floatingActionButton: CreateDeck(),
+      floatingActionButton: CreateDeck(key: fabKey),
     );
   }
 

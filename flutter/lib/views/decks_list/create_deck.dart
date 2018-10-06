@@ -10,6 +10,8 @@ import '../card_create_update/card_create_update.dart';
 import '../helpers/sign_in_widget.dart';
 
 class CreateDeck extends StatelessWidget {
+  const CreateDeck({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => FloatingActionButton(
         child: const Icon(Icons.add),

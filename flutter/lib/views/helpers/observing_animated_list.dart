@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../../models/base/observable_list.dart';
-import '../../views/helpers/empty_list_message.dart';
 import 'helper_progress_indicator.dart';
 
 typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
@@ -14,18 +13,20 @@ typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
   int index,
 );
 
+typedef WidgetBuilder = Widget Function();
+
 class ObservingAnimatedList<T> extends StatefulWidget {
   const ObservingAnimatedList({
     @required this.list,
     @required this.itemBuilder,
-    @required this.emptyListUserMessage,
+    @required this.emptyMessageBuilder,
     Key key,
   })  : assert(itemBuilder != null),
         super(key: key);
 
   final ObservableList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
-  final String emptyListUserMessage;
+  final WidgetBuilder emptyMessageBuilder;
 
   @override
   ObservingAnimatedListState<T> createState() =>
@@ -83,7 +84,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
     }
 
     if (widget.list.isEmpty) {
-      EmptyListMessage(widget.emptyListUserMessage);
+      return widget.emptyMessageBuilder();
     }
 
     return AnimatedList(
