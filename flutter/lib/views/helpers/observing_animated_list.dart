@@ -53,6 +53,14 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
   }
 
   void _processListEvent(ListEvent<T> event) {
+    if (_animatedListKey.currentState == null) {
+      // The list state is not available because the widget has not been created
+      // yet. This may happen when the data is empty and we show an 'empty list'
+      // message instead of the list widget.
+      setState(() {});
+      return;
+    }
+
     switch (event.eventType) {
       case ListEventType.itemAdded:
         _animatedListKey.currentState.insertItem(event.index);
