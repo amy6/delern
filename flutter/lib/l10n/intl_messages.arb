@@ -466,7 +466,7 @@
     "placeholders": {
     }
   },
-  "accountExistUserWarning": "You have already an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
+  "accountExistUserWarning": "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
   "@accountExistUserWarning": {
     "description": "User warning, account already exists",
     "type": "text",

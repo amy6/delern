@@ -445,7 +445,7 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get accountExistUserWarning => Intl.message(
-        'You have already an account, please sign in with your credentials. '
+        'You already have an account, please sign in with your credentials. '
             'All your data, that was created anonymously, will be lost. '
             'Would you like to continue?',
         name: 'accountExistUserWarning',
