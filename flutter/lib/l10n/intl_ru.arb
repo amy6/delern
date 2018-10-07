@@ -450,5 +450,26 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "anonymous": "Анонимный пользователь",
+  "@anonymous": {
+    "description": "Anonymous",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerSignIn": "Войти",
+  "@navigationDrawerSignIn": {
+    "description": "Sign In",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "accountExistUserWarning": "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?",
+  "@accountExistUserWarning": {
+    "description": "User warning, account already exists",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

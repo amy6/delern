@@ -32,7 +32,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
+            "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?"),
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
+        "anonymous":
+            MessageLookupByLibrary.simpleMessage("Анонимный пользователь"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":
@@ -90,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Связаться с нами"),
         "navigationDrawerInviteFriends":
             MessageLookupByLibrary.simpleMessage("Пригласить друзей"),
+        "navigationDrawerSignIn": MessageLookupByLibrary.simpleMessage("Войти"),
         "navigationDrawerSignOut":
             MessageLookupByLibrary.simpleMessage("Выход"),
         "navigationDrawerSupportDevelopment":

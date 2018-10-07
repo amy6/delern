@@ -431,6 +431,26 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'splashScreenFeatures',
         desc: 'Data and progress are saved',
       );
+
+  String get anonymous => Intl.message(
+        'Anonymous',
+        name: 'anonymous',
+        desc: 'Anonymous',
+      );
+
+  String get navigationDrawerSignIn => Intl.message(
+        'Sign In',
+        name: 'navigationDrawerSignIn',
+        desc: 'Sign In',
+      );
+
+  String get accountExistUserWarning => Intl.message(
+        'You have already an account, please sign in with your credentials. '
+            'All your data, that was created anonymously, will be lost. '
+            'Would you like to continue?',
+        name: 'accountExistUserWarning',
+        desc: 'User warning, account already exists',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

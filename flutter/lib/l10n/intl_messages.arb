@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-07T16:53:36.119629",
+  "@@last_modified": "2018-10-07T18:09:50.070817",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -448,6 +448,27 @@
   "splashScreenFeatures": "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues",
   "@splashScreenFeatures": {
     "description": "Data and progress are saved",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "anonymous": "Anonymous",
+  "@anonymous": {
+    "description": "Anonymous",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerSignIn": "Sign In",
+  "@navigationDrawerSignIn": {
+    "description": "Sign In",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "accountExistUserWarning": "You have already an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
+  "@accountExistUserWarning": {
+    "description": "User warning, account already exists",
     "type": "text",
     "placeholders": {
     }

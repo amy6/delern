@@ -9,8 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
+import '../../remote/analytics.dart';
 import '../../remote/sign_in.dart';
 import '../../views/support_dev/support_development.dart';
+import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
 import '../helpers/sign_in_widget.dart';
 
@@ -35,16 +37,18 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     final user = CurrentUserWidget.of(context).user;
     var accountName = user.displayName;
     if (accountName == null || accountName.isEmpty) {
-      accountName = 'Anonymous'; // TODO(ksheremet): AppLocalizations.of()
+      accountName = AppLocalizations.of(context).anonymous;
     }
     return Drawer(
         child: Column(
       children: <Widget>[
         UserAccountsDrawerHeader(
           accountName: Text(accountName),
-          accountEmail: Text(user.email),
+          accountEmail: Text(user.email ?? ''),
           currentAccountPicture: user.photoUrl == null
-              ? const FittedBox(child: Text('?'))
+              ? const CircleAvatar(
+                  backgroundImage: AssetImage('images/anonymous.jpg'),
+                )
               : CircleAvatar(
                   backgroundImage: NetworkImage(user.photoUrl),
                 ),
@@ -52,11 +56,11 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ListTile(
           leading: const Icon(Icons.perm_identity),
           title: Text(user.isAnonymous
-              ? 'Sign In'
+              ? AppLocalizations.of(context).navigationDrawerSignIn
               : AppLocalizations.of(context).navigationDrawerSignOut),
           onTap: () async {
             if (user.isAnonymous) {
-              _promoteAnonymous();
+              _promoteAnonymous(context);
             } else {
               signOut();
               Navigator.pop(context);
@@ -120,11 +124,23 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
     ));
   }
 
-  Future<void> _promoteAnonymous() async {
+  Future<void> _promoteAnonymous(BuildContext context) async {
+    logPromoteAnonymous();
     try {
       await signIn(SignInProvider.google);
-    } on PlatformException catch (e) {
-      // Show a dialog. This is sad, but what can you do?
+    } on PlatformException catch (_) {
+      // TODO(ksheremet): Merge data
+      logPromoteAnonymousFail();
+      var signIn = await showSaveUpdatesDialog(
+          context: context,
+          changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
+          yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,
+          noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+      if (signIn) {
+        signOut();
+      } else {
+        Navigator.of(context).pop();
+      }
     }
   }
 }

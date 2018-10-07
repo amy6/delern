@@ -22,3 +22,9 @@ Future<void> logCardCreate(String deckId) =>
     FirebaseAnalytics().logEvent(name: 'card_create', parameters: {
       'item_id': deckId,
     });
+
+Future<void> logPromoteAnonymous() =>
+    FirebaseAnalytics().logEvent(name: 'promote_anonymous');
+
+Future<void> logPromoteAnonymousFail() =>
+    FirebaseAnalytics().logEvent(name: 'promote_anonymous_fail');
