@@ -43,8 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Card was added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
-        "continueAnonymous":
-            MessageLookupByLibrary.simpleMessage("Continue Anonymous"),
+        "continueAnonymously":
+            MessageLookupByLibrary.simpleMessage("Continue Anonymously"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "You have unsaved changes. Would you like to continue editing?"),
         "continueLearningQuestion": m0,
@@ -57,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete deck?"),
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
+        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
+            "I do not want any of these features"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
@@ -103,7 +105,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "You are offline, please try it later"),
-        "or": MessageLookupByLibrary.simpleMessage("or"),
         "owner": MessageLookupByLibrary.simpleMessage("Owner"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("People"),
         "reversedCardLabel":
@@ -119,6 +120,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+        "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
+            "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Please tell us what we can do to make your experience with Delern better!\n       \nIf you have any questions or suggestions please contact us:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nFollow latest news on:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nTo see the source code for this app, please visit the [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Swiss"),

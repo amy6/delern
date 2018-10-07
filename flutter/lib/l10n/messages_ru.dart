@@ -44,7 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
-        "continueAnonymous":
+        "continueAnonymously":
             MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
@@ -58,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить список?"),
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
+        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
+            "Мне не нужны все эти функции "),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
@@ -108,7 +110,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "numberOfCards": m3,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
-        "or": MessageLookupByLibrary.simpleMessage("или"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
         "peopleLabel": MessageLookupByLibrary.simpleMessage("Люди"),
         "reversedCardLabel":
@@ -124,6 +125,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
+            "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n       \nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nCледите за последними новостями Delern:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),

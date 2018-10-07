@@ -412,16 +412,24 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'Server temporarily unavailable',
       );
 
-  String get or => Intl.message(
-        'or',
-        name: 'or',
-        desc: 'or',
+  String get doNotNeedFeaturesText => Intl.message(
+        'I do not want any of these features',
+        name: 'doNotNeedFeaturesText',
+        desc: 'Do not need features text',
       );
 
-  String get continueAnonymous => Intl.message(
-        'Continue Anonymous',
-        name: 'continueAnonymous',
-        desc: 'Continue Anonymous',
+  String get continueAnonymously => Intl.message(
+        'Continue Anonymously',
+        name: 'continueAnonymously',
+        desc: 'Continue Anonymously',
+      );
+
+  String get splashScreenFeatures => Intl.message(
+        'Data and progress are saved in the Cloud\n'
+            'Data and progress are synchronized across all your devices\n'
+            'Share cards with your friends and colleagues',
+        name: 'splashScreenFeatures',
+        desc: 'Data and progress are saved',
       );
 }
 

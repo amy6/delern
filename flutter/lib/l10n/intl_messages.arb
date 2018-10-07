@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-07T13:20:24.446806",
+  "@@last_modified": "2018-10-07T16:53:36.119629",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -431,16 +431,23 @@
     "placeholders": {
     }
   },
-  "or": "or",
-  "@or": {
-    "description": "or",
+  "doNotNeedFeaturesText": "I do not want any of these features",
+  "@doNotNeedFeaturesText": {
+    "description": "Do not need features text",
     "type": "text",
     "placeholders": {
     }
   },
-  "continueAnonymous": "Continue Anonymous",
-  "@continueAnonymous": {
-    "description": "Continue Anonymous",
+  "continueAnonymously": "Continue Anonymously",
+  "@continueAnonymously": {
+    "description": "Continue Anonymously",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "splashScreenFeatures": "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues",
+  "@splashScreenFeatures": {
+    "description": "Data and progress are saved",
     "type": "text",
     "placeholders": {
     }
