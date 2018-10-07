@@ -44,7 +44,7 @@
   },
   "signInWithGoogle": "Войти с помощью Google",
   "@signInWithGoogle": {
-    "description": "Sign In with Google Button",
+    "description": "Sign in with Google Button",
     "type": "text",
     "placeholders": {
     }

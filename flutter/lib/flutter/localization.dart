@@ -60,9 +60,9 @@ class AppLocalizations {
       );
 
   String get signInWithGoogle => Intl.message(
-        'Sign In with Google',
+        'Sign in with Google',
         name: 'signInWithGoogle',
-        desc: 'Sign In with Google Button',
+        desc: 'Sign in with Google Button',
       );
 
   String get editCardsDeckMenu => Intl.message(
