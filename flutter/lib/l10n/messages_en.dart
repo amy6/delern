@@ -124,7 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
         "signInWithGoogle":
-            MessageLookupByLibrary.simpleMessage("Sign In with Google"),
+            MessageLookupByLibrary.simpleMessage("Sign in with Google"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
