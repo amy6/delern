@@ -1,6 +1,12 @@
 name: delern_flutter
 description: Spaced repetition learning system (Flutter version)
 
+# Version information is set by Fastlane when building:
+# $ flutter build --build-name=... --build-number=...
+# We set a default here for debugging purposes because debug binary is not
+# usually built via Fastlane.
+version: 1.0.0+1
+
 dependencies:
   sentry:
     # actively worked on, but rarely released.
