@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
@@ -31,64 +32,148 @@ class DecksList extends StatefulWidget {
   DecksListState createState() => DecksListState();
 }
 
+enum ArrowAttachPosition {
+  right,
+  left,
+  bottom,
+  top,
+}
+
+typedef BoundariesGetter = Rect Function();
+
 class _ArrowToFloatingActionButton extends CustomPainter {
-  final BuildContext scaffoldContext;
-  final GlobalKey fabKey;
+  static const _marginFraction = 0.1;
 
-  _ArrowToFloatingActionButton(this.scaffoldContext, this.fabKey);
+  final BoundariesGetter sourceRect;
+  final BoundariesGetter destinationRect;
+  final ArrowAttachPosition sourceAttach;
+  final ArrowAttachPosition destinationAttach;
 
-  static const _margin = 20.0;
+  _ArrowToFloatingActionButton({
+    @required this.destinationRect,
+    @required this.destinationAttach,
+    this.sourceRect,
+    this.sourceAttach,
+  })  : assert(destinationRect != null),
+        assert(destinationAttach != null),
+        assert((sourceRect == null) == (sourceAttach == null));
+
+  static Offset _rectAttachPoint(
+      Rect rect, ArrowAttachPosition attach, Size bounds) {
+    final marginX =
+        min(rect.width * _marginFraction, bounds.width / 2 * _marginFraction);
+    final marginY =
+        min(rect.height * _marginFraction, bounds.height / 2 * _marginFraction);
+    switch (attach) {
+      case ArrowAttachPosition.right:
+        return rect.centerRight.translate(marginX, 0.0);
+      case ArrowAttachPosition.left:
+        return rect.centerLeft.translate(-marginX, 0.0);
+      case ArrowAttachPosition.bottom:
+        return rect.bottomCenter.translate(0.0, marginY);
+      case ArrowAttachPosition.top:
+        return rect.topCenter.translate(0.0, -marginY);
+    }
+    return null;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox scaffoldBox = scaffoldContext.findRenderObject();
-    final RenderBox fabBox = fabKey.currentContext.findRenderObject();
-    final fabRect =
-        scaffoldBox.globalToLocal(fabBox.localToGlobal(Offset.zero)) &
-            fabBox.size;
-    final center = size.center(Offset.zero);
+    var startPoint = size.center(Offset.zero);
+    if (sourceRect != null) {
+      startPoint = _rectAttachPoint(sourceRect(), sourceAttach, size);
+    }
 
-    final curve = Path()
-      ..moveTo(center.dx, center.dy + _margin)
-      ..cubicTo(
-          center.dx - _margin,
-          center.dy + _margin * 2,
-          _margin - center.dx,
-          (fabRect.center.dy - center.dy) * 2 / 3 + center.dy,
-          fabRect.centerLeft.dx - _margin,
-          fabRect.center.dy)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(
-          fabRect.centerLeft.dx - _margin * 2.5, fabRect.center.dy - _margin)
-      ..moveTo(fabRect.centerLeft.dx - _margin, fabRect.center.dy)
-      ..lineTo(fabRect.centerLeft.dx - _margin * 2.5,
-          fabRect.center.dy + _margin / 2);
+    final endPoint =
+        _rectAttachPoint(destinationRect(), destinationAttach, size);
+
+    final y1 = (startPoint.dy * 3 + endPoint.dy * 2) / 5;
+    final y2 = (startPoint.dy * 2 + endPoint.dy * 3) / 5;
+
+    var actualSourceAttach = sourceAttach;
+    if (actualSourceAttach == null) {
+      if (destinationAttach == ArrowAttachPosition.right) {
+        actualSourceAttach = ArrowAttachPosition.left;
+      } else {
+        actualSourceAttach = ArrowAttachPosition.right;
+      }
+    }
+
+    final x1 =
+        actualSourceAttach == ArrowAttachPosition.left ? 0.0 : size.width;
+    final x2 = size.width - x1;
+
+    final curve = Path()..moveTo(startPoint.dx, startPoint.dy);
+    if (sourceAttach == destinationAttach) {
+      curve.quadraticBezierTo(x1, y1, endPoint.dx, endPoint.dy);
+    } else {
+      curve.cubicTo(x1, y1, x2, y2, endPoint.dx, endPoint.dy);
+    }
 
     canvas.drawPath(
         curve,
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0
+          ..strokeWidth = 2.0
           ..strokeCap = StrokeCap.round);
   }
 
   @override
   bool shouldRepaint(_ArrowToFloatingActionButton oldDelegate) =>
-      scaffoldContext != oldDelegate.scaffoldContext ||
-      fabKey != oldDelegate.fabKey;
+      destinationAttach != oldDelegate.destinationAttach ||
+      destinationRect() != oldDelegate.destinationRect() ||
+      sourceAttach != oldDelegate.sourceAttach ||
+      ((sourceRect == null) != (oldDelegate.sourceRect == null)) ||
+      (sourceRect != null && sourceRect() != oldDelegate.sourceRect());
 }
 
 class ArrowToFloatingActionButtonWidget extends StatelessWidget {
   final Widget child;
+  final ArrowAttachPosition childAttach;
+  final GlobalKey childKey;
+
+  final ArrowAttachPosition fabAttach;
   final GlobalKey fabKey;
 
-  const ArrowToFloatingActionButtonWidget({@required this.fabKey, this.child});
+  const ArrowToFloatingActionButtonWidget(
+      {@required this.fabKey,
+      this.fabAttach = ArrowAttachPosition.left,
+      this.child,
+      this.childKey,
+      this.childAttach});
+
+  Rect _getBoundsInContext(
+      {@required BuildContext boundsOf, @required BuildContext localContext}) {
+    RenderBox target = boundsOf.findRenderObject();
+    RenderBox local = localContext.findRenderObject();
+    return local.globalToLocal(target.localToGlobal(Offset.zero)) & target.size;
+  }
 
   @override
-  Widget build(BuildContext context) => Container(
-      child: CustomPaint(
-          painter: _ArrowToFloatingActionButton(context, fabKey),
-          child: child));
+  Widget build(BuildContext context) {
+    BoundariesGetter sourceRect;
+    var sourceAttach = childAttach;
+    if (childKey != null) {
+      sourceRect = () => _getBoundsInContext(
+          boundsOf: childKey.currentContext, localContext: context);
+      if (childAttach == null) {
+        sourceAttach = Directionality.of(context) == TextDirection.ltr
+            ? ArrowAttachPosition.right
+            : ArrowAttachPosition.left;
+      }
+    }
+
+    return Container(
+        child: CustomPaint(
+            painter: _ArrowToFloatingActionButton(
+              destinationAttach: fabAttach,
+              destinationRect: () => _getBoundsInContext(
+                  boundsOf: fabKey.currentContext, localContext: context),
+              sourceAttach: sourceAttach,
+              sourceRect: sourceRect,
+            ),
+            child: child));
+  }
 }
 
 class DecksListState extends State<DecksList> {
@@ -121,7 +206,8 @@ class DecksListState extends State<DecksList> {
         d.name.toLowerCase().contains(input);
   }
 
-  GlobalKey fabKey = GlobalKey();
+  final GlobalKey _fabKey = GlobalKey();
+  final GlobalKey _addDecksKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -130,28 +216,28 @@ class DecksListState extends State<DecksList> {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: ObservingAnimatedListWidget(
-                list: _bloc.decksList,
-                itemBuilder: (context, item, animation, index) =>
-                    SizeTransition(
-                      child: DeckListItemWidget(item, _bloc),
-                      sizeFactor: animation,
-                    ),
-                emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-                    fabKey: fabKey,
-                    child: EmptyListMessageWidget(
-                        AppLocalizations.of(context).emptyDecksList)),
-              ),
-            ),
-            // The size of FAB = 56 logical pixels from Material Design.
-            // To make settings available that are behind Fab, padding=60 was
-            // added.
+                child: ObservingAnimatedListWidget(
+                    list: _bloc.decksList,
+                    itemBuilder: (context, item, animation, index) =>
+                        SizeTransition(
+                          child: DeckListItemWidget(item, _bloc),
+                          sizeFactor: animation,
+                        ),
+                    emptyMessageBuilder: () =>
+                        ArrowToFloatingActionButtonWidget(
+                            fabKey: _fabKey,
+                            // fabAttach: ArrowAttachPosition.left,
+                            childKey: _addDecksKey,
+                            // childAttach: ArrowAttachPosition.right,
+                            child: EmptyListMessageWidget(
+                                AppLocalizations.of(context).emptyDecksList,
+                                textKey: _addDecksKey)))),
             const Padding(
               padding: EdgeInsets.only(bottom: 60),
-            )
+            ),
           ],
         ),
-        floatingActionButton: CreateDeckWidget(key: fabKey),
+        floatingActionButton: CreateDeckWidget(key: _fabKey),
       );
 }
 
