@@ -44,14 +44,12 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       children: <Widget>[
         UserAccountsDrawerHeader(
           accountName: Text(accountName),
-          accountEmail: Text(user.email ?? ''),
-          currentAccountPicture: user.photoUrl == null
-              ? const CircleAvatar(
-                  backgroundImage: AssetImage('images/anonymous.jpg'),
-                )
-              : CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoUrl),
-                ),
+          accountEmail: user.email == null ? null : Text(user.email),
+          currentAccountPicture: CircleAvatar(
+            backgroundImage: user.photoUrl == null
+                ? const AssetImage('images/anonymous.jpg')
+                : NetworkImage(user.photoUrl),
+          ),
         ),
         ListTile(
           leading: const Icon(Icons.perm_identity),
