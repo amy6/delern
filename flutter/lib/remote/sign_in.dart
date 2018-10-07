@@ -59,7 +59,7 @@ Future<void> signOut() async {
         break;
     }
   }
-
+  _currentProvider = null;
   await FirebaseAuth.instance.signOut();
 }
 

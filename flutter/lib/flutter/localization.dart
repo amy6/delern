@@ -411,6 +411,46 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'serverUnavailableUserMessage',
         desc: 'Server temporarily unavailable',
       );
+
+  String get doNotNeedFeaturesText => Intl.message(
+        'I do not want any of these features',
+        name: 'doNotNeedFeaturesText',
+        desc: 'Do not need features text',
+      );
+
+  String get continueAnonymously => Intl.message(
+        'Continue Anonymously',
+        name: 'continueAnonymously',
+        desc: 'Continue Anonymously',
+      );
+
+  String get splashScreenFeatures => Intl.message(
+        'Data and progress are saved in the Cloud\n'
+            'Data and progress are synchronized across all your devices\n'
+            'Share cards with your friends and colleagues',
+        name: 'splashScreenFeatures',
+        desc: 'Data and progress are saved',
+      );
+
+  String get anonymous => Intl.message(
+        'Anonymous',
+        name: 'anonymous',
+        desc: 'Anonymous',
+      );
+
+  String get navigationDrawerSignIn => Intl.message(
+        'Sign In',
+        name: 'navigationDrawerSignIn',
+        desc: 'Sign In',
+      );
+
+  String get accountExistUserWarning => Intl.message(
+        'You already have an account, please sign in with your credentials. '
+            'All your data, that was created anonymously, will be lost. '
+            'Would you like to continue?',
+        name: 'accountExistUserWarning',
+        desc: 'User warning, account already exists',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-03T13:54:54.906107",
+  "@@last_modified": "2018-10-07T18:09:50.070817",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -427,6 +427,48 @@
   "serverUnavailableUserMessage": "Server temporarily unavailable, please try again later",
   "@serverUnavailableUserMessage": {
     "description": "Server temporarily unavailable",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "doNotNeedFeaturesText": "I do not want any of these features",
+  "@doNotNeedFeaturesText": {
+    "description": "Do not need features text",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "continueAnonymously": "Continue Anonymously",
+  "@continueAnonymously": {
+    "description": "Continue Anonymously",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "splashScreenFeatures": "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues",
+  "@splashScreenFeatures": {
+    "description": "Data and progress are saved",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "anonymous": "Anonymous",
+  "@anonymous": {
+    "description": "Anonymous",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerSignIn": "Sign In",
+  "@navigationDrawerSignIn": {
+    "description": "Sign In",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "accountExistUserWarning": "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
+  "@accountExistUserWarning": {
+    "description": "User warning, account already exists",
     "type": "text",
     "placeholders": {
     }

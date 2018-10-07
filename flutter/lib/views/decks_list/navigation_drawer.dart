@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,8 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
+import '../../remote/analytics.dart';
 import '../../remote/sign_in.dart';
 import '../../views/support_dev/support_development.dart';
+import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
 import '../helpers/sign_in_widget.dart';
 
@@ -29,23 +34,35 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    var user = CurrentUserWidget.of(context).user;
+    final user = CurrentUserWidget.of(context).user;
+    var accountName = user.displayName;
+    if (accountName == null || accountName.isEmpty) {
+      accountName = AppLocalizations.of(context).anonymous;
+    }
     return Drawer(
         child: Column(
       children: <Widget>[
         UserAccountsDrawerHeader(
-          accountName: Text(user.displayName),
-          accountEmail: Text(user.email),
+          accountName: Text(accountName),
+          accountEmail: user.email == null ? null : Text(user.email),
           currentAccountPicture: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoUrl),
+            backgroundImage: user.photoUrl == null
+                ? const AssetImage('images/anonymous.jpg')
+                : NetworkImage(user.photoUrl),
           ),
         ),
         ListTile(
           leading: const Icon(Icons.perm_identity),
-          title: Text(AppLocalizations.of(context).navigationDrawerSignOut),
-          onTap: () {
-            signOut();
-            Navigator.pop(context);
+          title: Text(user.isAnonymous
+              ? AppLocalizations.of(context).navigationDrawerSignIn
+              : AppLocalizations.of(context).navigationDrawerSignOut),
+          onTap: () async {
+            if (user.isAnonymous) {
+              _promoteAnonymous(context);
+            } else {
+              signOut();
+              Navigator.pop(context);
+            }
           },
         ),
         const Divider(height: 1.0),
@@ -103,5 +120,25 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
         ),
       ],
     ));
+  }
+
+  Future<void> _promoteAnonymous(BuildContext context) async {
+    logPromoteAnonymous();
+    try {
+      await signIn(SignInProvider.google);
+    } on PlatformException catch (_) {
+      // TODO(ksheremet): Merge data
+      logPromoteAnonymousFail();
+      var signIn = await showSaveUpdatesDialog(
+          context: context,
+          changesQuestion: AppLocalizations.of(context).accountExistUserWarning,
+          yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,
+          noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+      if (signIn) {
+        signOut();
+      } else {
+        Navigator.of(context).pop();
+      }
+    }
   }
 }

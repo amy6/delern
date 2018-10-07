@@ -429,5 +429,47 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "doNotNeedFeaturesText": "Мне не нужны все эти функции ",
+  "@doNotNeedFeaturesText": {
+    "description": "Do not need features text",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "continueAnonymously": "Продолжить Анонимно",
+  "@continueAnonymously": {
+    "description": "Continue Anonymously",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "splashScreenFeatures": "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами",
+  "@splashScreenFeatures": {
+    "description": "Share cards with your friends and colleagues",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "anonymous": "Анонимный пользователь",
+  "@anonymous": {
+    "description": "Anonymous",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "navigationDrawerSignIn": "Войти",
+  "@navigationDrawerSignIn": {
+    "description": "Sign In",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "accountExistUserWarning": "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?",
+  "@accountExistUserWarning": {
+    "description": "User warning, account already exists",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

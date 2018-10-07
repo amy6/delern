@@ -32,7 +32,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
+            "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?"),
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
+        "anonymous":
+            MessageLookupByLibrary.simpleMessage("Анонимный пользователь"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":
@@ -44,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
+        "continueAnonymously":
+            MessageLookupByLibrary.simpleMessage("Продолжить Анонимно"),
         "continueEditingQuestion": MessageLookupByLibrary.simpleMessage(
             "У Вас есть несохраненные изменения. Хотите продолжить редактирование?"),
         "continueLearningQuestion": m0,
@@ -56,6 +62,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteDeckQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить список?"),
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
+        "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
+            "Мне не нужны все эти функции "),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
@@ -86,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Связаться с нами"),
         "navigationDrawerInviteFriends":
             MessageLookupByLibrary.simpleMessage("Пригласить друзей"),
+        "navigationDrawerSignIn": MessageLookupByLibrary.simpleMessage("Войти"),
         "navigationDrawerSignOut":
             MessageLookupByLibrary.simpleMessage("Выход"),
         "navigationDrawerSupportDevelopment":
@@ -121,6 +130,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
+            "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n       \nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nCледите за последними новостями Delern:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
