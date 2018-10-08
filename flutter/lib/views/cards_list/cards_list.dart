@@ -44,7 +44,8 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   void initState() {
-    _viewModel = CardListViewModel(widget.deck);
+    _viewModel = CardListViewModel(widget.deck)
+      ..cards.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.initState();
   }
 
