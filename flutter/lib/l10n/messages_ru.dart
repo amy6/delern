@@ -84,7 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "installEmailApp": MessageLookupByLibrary.simpleMessage(
             "Пожалуйста установите приложение Электронной Почты"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
-            "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке https://play.google.com/store/apps/details?id=org.dasfoo.delern чтобы установить из Google Play!\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
+            "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке чтобы установить из\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
