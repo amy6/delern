@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-07T20:44:34.216225",
+  "@@last_modified": "2018-10-09T13:50:03.440573",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -213,7 +213,7 @@
     "placeholders": {
     }
   },
-  "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to https://play.google.com/store/apps/details?id=org.dasfoo.delern to install it from Google Play!\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern",
+  "inviteToAppMessage": "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern",
   "@inviteToAppMessage": {
     "description": "Invite to the App message",
     "type": "text",
