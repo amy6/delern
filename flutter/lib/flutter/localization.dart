@@ -234,12 +234,6 @@ Twitter: https://twitter.com/dasdelern''',
         desc: 'watchedCards',
       );
 
-  String get deleteDeckQuestion => Intl.message(
-        'Do you want to delete deck?',
-        name: 'deleteDeckQuestion',
-        desc: 'Do you want to delete deck?',
-      );
-
   String get basicDeckType => Intl.message(
         'Basic',
         name: 'basicDeckType',
@@ -452,6 +446,21 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
             'Would you like to continue?',
         name: 'accountExistUserWarning',
         desc: 'User warning, account already exists',
+      );
+
+  String get deleteDeckOwnerAccessQuestion => Intl.message(
+        'The deck, all cards and learning history will be removed from all '
+            'users it is shared with. Do you want to delete deck?',
+        name: 'deleteDeckOwnerAccessQuestion',
+        desc: 'Delete deck question to owner of deck',
+      );
+
+  String get deleteDeckWriteReadAccessQuestion => Intl.message(
+        'The deck will be removed from your account only, all cards and '
+            'learning history will remain with the owner and other users. '
+            'Do you want to delete deck?',
+        name: 'deleteDeckWriteReadAccessQuestion',
+        desc: 'Delete deck question to user with write access',
       );
 }
 
