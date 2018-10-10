@@ -449,8 +449,10 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
       );
 
   String get deleteDeckOwnerAccessQuestion => Intl.message(
-        'The deck, all cards and learning history will be removed from all '
-            'users it is shared with. Do you want to delete deck?',
+        'The deck, all cards and learning history will be removed.\n\n'
+            'If you have shared this deck with other users, it will also be '
+            'removed from all users it is shared with. Do you want to delete '
+            'deck?',
         name: 'deleteDeckOwnerAccessQuestion',
         desc: 'Delete deck question to owner of deck',
       );

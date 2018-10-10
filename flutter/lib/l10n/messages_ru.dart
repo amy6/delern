@@ -60,7 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Вы хотите удалить карточку?"),
         "deleteDeckOwnerAccessQuestion": MessageLookupByLibrary.simpleMessage(
-            "Список, все карточки и история изучения будут удалены у всех пользователей списка. Вы хотите удалить список?"),
+            "Список, все карточки и история изучения будут удалены.\n\nЕсли вы поделились списком с другими пользователями, он также будет удален у них. Вы хотите удалить список?"),
         "deleteDeckWriteReadAccessQuestion": MessageLookupByLibrary.simpleMessage(
             "Список будет удален с Вашего аккаунта, все карточки и история изучения останутся у владельца списка и остальных пользователей. Вы хотите удалить список?"),
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
