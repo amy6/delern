@@ -9,16 +9,13 @@ description: Spaced repetition learning system (Flutter version)
 #version: 1.0.0+1
 
 dependencies:
-  sentry:
-    # actively worked on, but rarely released.
-    git: git://github.com/flutter/sentry.git
-
   device_info: ^0.2.1
   package_info: ^0.3.0
   url_launcher: ^3.0.3
   flutter_markdown: ^0.2.0
   http: ^0.11.3
   share: ^0.5.2
+  sentry: ^2.1.1
 
   # Do not upgrade these packages unless you need it.
   # Bumping these versions may bump minimum Play Services version required to
