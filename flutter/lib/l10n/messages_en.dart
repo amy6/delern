@@ -57,8 +57,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion":
             MessageLookupByLibrary.simpleMessage("Do you want to delete card?"),
-        "deleteDeckQuestion":
-            MessageLookupByLibrary.simpleMessage("Do you want to delete deck?"),
+        "deleteDeckOwnerAccessQuestion": MessageLookupByLibrary.simpleMessage(
+            "The deck, all cards and learning history will be removed.\n\nIf you have shared this deck with other users, it will also be removed from all users it is shared with. Do you want to delete deck?"),
+        "deleteDeckWriteReadAccessQuestion": MessageLookupByLibrary.simpleMessage(
+            "The deck will be removed from your account only, all cards and learning history will remain with the owner and other users. Do you want to delete deck?"),
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "I do not want any of these features"),

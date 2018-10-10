@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-09T13:50:03.440573",
+  "@@last_modified": "2018-10-10T19:33:58.885797",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -236,13 +236,6 @@
       }
     }
   },
-  "deleteDeckQuestion": "Do you want to delete deck?",
-  "@deleteDeckQuestion": {
-    "description": "Do you want to delete deck?",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "basicDeckType": "Basic",
   "@basicDeckType": {
     "description": "basic decktype name",
@@ -469,6 +462,20 @@
   "accountExistUserWarning": "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?",
   "@accountExistUserWarning": {
     "description": "User warning, account already exists",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckOwnerAccessQuestion": "The deck, all cards and learning history will be removed.\n\nIf you have shared this deck with other users, it will also be removed from all users it is shared with. Do you want to delete deck?",
+  "@deleteDeckOwnerAccessQuestion": {
+    "description": "Delete deck question to owner of deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckWriteReadAccessQuestion": "The deck will be removed from your account only, all cards and learning history will remain with the owner and other users. Do you want to delete deck?",
+  "@deleteDeckWriteReadAccessQuestion": {
+    "description": "Delete deck question to user with write access",
     "type": "text",
     "placeholders": {
     }

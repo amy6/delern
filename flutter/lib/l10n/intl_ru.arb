@@ -235,13 +235,6 @@
       }
     }
   },
-  "deleteDeckQuestion": "Вы хотите удалить список?",
-  "@deleteDeckQuestion": {
-    "description": "Do you want to delete deck?",
-    "type": "text",
-    "placeholders": {
-    }
-  },
   "basicDeckType": "Базовый",
   "@basicDeckType": {
     "description": "basic decktype name",
@@ -468,6 +461,20 @@
   "accountExistUserWarning": "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?",
   "@accountExistUserWarning": {
     "description": "User warning, account already exists",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckOwnerAccessQuestion": "Список, все карточки и история изучения будут удалены.\n\nЕсли вы поделились списком с другими пользователями, он также будет удален у них. Вы хотите удалить список?",
+  "@deleteDeckOwnerAccessQuestion": {
+    "description": "Delete deck question to owner of deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "deleteDeckWriteReadAccessQuestion": "Список будет удален с Вашего аккаунта, все карточки и история изучения останутся у владельца списка и остальных пользователей. Вы хотите удалить список?",
+  "@deleteDeckWriteReadAccessQuestion": {
+    "description": "Delete deck question to user with write access",
     "type": "text",
     "placeholders": {
     }

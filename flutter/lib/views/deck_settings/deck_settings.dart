@@ -67,9 +67,21 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                     icon: const Icon(Icons.delete),
                     onPressed: cb(() async {
                       var locale = AppLocalizations.of(context);
+                      String deleteDeckQuestion;
+                      switch (_viewModel.access.access) {
+                        case AccessType.owner:
+                          deleteDeckQuestion =
+                              locale.deleteDeckOwnerAccessQuestion;
+                          break;
+                        case AccessType.write:
+                        case AccessType.read:
+                          deleteDeckQuestion =
+                              locale.deleteDeckWriteReadAccessQuestion;
+                          break;
+                      }
                       var deleteDeckDialog = await showSaveUpdatesDialog(
                           context: context,
-                          changesQuestion: locale.deleteDeckQuestion,
+                          changesQuestion: deleteDeckQuestion,
                           yesAnswer: locale.delete,
                           noAnswer: MaterialLocalizations.of(context)
                               .cancelButtonLabel);
