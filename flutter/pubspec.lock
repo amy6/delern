@@ -355,12 +355,10 @@ packages:
   sentry:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "5167a5c1fe65ecbfebd1b6e7cbc8122b8645ff40"
-      url: "git://github.com/flutter/sentry.git"
-    source: git
-    version: "2.1.0"
+      name: sentry
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   share:
     dependency: "direct main"
     description:
