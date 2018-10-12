@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-10T19:33:58.885797",
+  "@@last_modified": "2018-10-12T13:27:33.508159",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -390,15 +390,6 @@
     "description": "no",
     "type": "text",
     "placeholders": {
-    }
-  },
-  "emptyDeckUserMessage": "This deck is currently empty. Please add cards in {menu} deck menu.",
-  "@emptyDeckUserMessage": {
-    "description": "Empty deck user message",
-    "type": "text",
-    "placeholders": {
-      "menu": {
-      }
     }
   },
   "continueLearningQuestion": "Next card to learn is suggested at {date}. Would you like to continue learning anyway?",

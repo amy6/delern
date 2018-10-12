@@ -23,12 +23,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m1(url) => "Не удалось запустить ссылку ${url}";
 
-  static m2(menu) =>
-      "Этот список пуст. Пожалуйста добавьте карточки в ${menu} меню списка.";
+  static m2(number) => "Количество карточек: ${number}";
 
-  static m3(number) => "Количество карточек: ${number}";
-
-  static m4(number) => "Просмотрено: ${number}";
+  static m3(number) => "Просмотрено: ${number}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
@@ -73,7 +70,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Адрес электронной почты"),
         "emptyCardsList":
             MessageLookupByLibrary.simpleMessage("Добавьте карточки"),
-        "emptyDeckUserMessage": m2,
         "emptyDecksList":
             MessageLookupByLibrary.simpleMessage("Добавьте списки"),
         "emptyUserSharingList":
@@ -114,7 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Вы не можете редактировать карточки с доступом на чтение."),
         "noSharingAccessUserMessage": MessageLookupByLibrary.simpleMessage(
             "Только владелец может поделиться списком."),
-        "numberOfCards": m3,
+        "numberOfCards": m2,
         "offlineUserMessage": MessageLookupByLibrary.simpleMessage(
             "Нет сети, пожалуйста, попробуйте позже"),
         "owner": MessageLookupByLibrary.simpleMessage("Владелец"),
@@ -137,7 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
             "Расскажите, пожалуйста, что мы можем сделать, чтобы улучшить Ваш опыт с Delern!\n       \nЕсли у вас есть какие-либо вопросы или предложения, свяжитесь с нами:\n[delern@dasfoo.org](mailto:delern@dasfoo.org) \n       \nCледите за последними новостями Delern:\n       \n- [Facebook](https://fb.me/das.delern) \n- [Twitter](https://twitter.com/dasdelern)\n- [Google+](https://plus.google.com/communities/104603840044649051798)\n- [VK](https://vk.com/delern)\n       \nЧтобы увидеть исходный код этого приложения, посетите [Delern GitHub repo](https://github.com/dasfoo/delern).\n      "),
         "swissDeckType": MessageLookupByLibrary.simpleMessage("Швейцарский"),
-        "watchedCards": m4,
+        "watchedCards": m3,
         "whoHasAccessLabel":
             MessageLookupByLibrary.simpleMessage("У кого есть доступ"),
         "yes": MessageLookupByLibrary.simpleMessage("Да")

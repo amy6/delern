@@ -381,13 +381,6 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         desc: 'no',
       );
 
-  String emptyDeckUserMessage(String menu) => Intl.message(
-        'This deck is currently empty. Please add cards in $menu deck menu.',
-        args: [menu],
-        name: 'emptyDeckUserMessage',
-        desc: 'Empty deck user message',
-      );
-
   String continueLearningQuestion(String date) => Intl.message(
         'Next card to learn is suggested at $date. Would you like to continue '
             'learning anyway?',

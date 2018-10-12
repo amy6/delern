@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
+import '../../models/card.dart' as card_model;
 import '../../models/deck_access.dart';
 import '../../view_models/deck_list_view_model.dart';
+import '../../views/card_create_update/card_create_update.dart';
 import '../cards_learning/cards_learning.dart';
 import '../cards_list/cards_list.dart';
 import '../deck_settings/deck_settings.dart';
@@ -197,10 +199,13 @@ class DeckListItem extends StatelessWidget {
                       )),
             );
             if (anyCardsShown == false) {
-              UserMessages.showMessage(
-                  Scaffold.of(context),
-                  AppLocalizations.of(context).emptyDeckUserMessage(
-                      AppLocalizations.of(context).editCardsDeckMenu));
+              // If deck is empty, open a screen with adding cards
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      settings: const RouteSettings(name: '/cards/new'),
+                      builder: (context) => CreateUpdateCard(
+                          card_model.Card(deck: viewModel.deck))));
             }
           },
           child: Container(
