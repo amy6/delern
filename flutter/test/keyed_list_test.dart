@@ -6,7 +6,32 @@ import 'package:test/test.dart';
 
 import 'helpers.dart';
 
-class MockQuery extends Mock implements Query {}
+class MockDataSnapshot extends Mock implements DataSnapshot {
+  String get key => 'testKey';
+}
+
+class MockEvent extends Mock implements Event {
+  @override
+  DataSnapshot get snapshot => MockDataSnapshot();
+}
+
+Stream<Event> _singleEvent() async* {
+  yield MockEvent();
+}
+
+class MockQuery extends Mock implements Query {
+  @override
+  Stream<Event> get onChildAdded => _singleEvent();
+
+  @override
+  Stream<Event> get onChildRemoved => _singleEvent();
+
+  @override
+  Stream<Event> get onChildMoved => _singleEvent();
+
+  @override
+  Stream<Event> get onChildChanged => _singleEvent();
+}
 
 void main() {
   test('map', () {
@@ -27,14 +52,27 @@ void main() {
     expect(listEvent.fullListValueForSet, [TestFixture('1', data: 2)]);
   });
 
-  test('event subscriptions', () {
+  test('event subscriptions', () async {
     var query = MockQuery();
-    childEventsStream(query, (s) => TestFixture(s.key, data: s.value));
 
-    verify(query.onChildAdded).called(1);
-    verify(query.onChildRemoved).called(1);
-    verify(query.onChildMoved).called(1);
-    verify(query.onChildChanged).called(1);
+    final events =
+        await childEventsStream(query, (snapshot) => TestFixture(snapshot.key))
+            .toList();
+
+    final eventTypesLeft = ListEventType.values.toList()
+      ..remove(ListEventType.setAll);
+
+    for (final event in events) {
+      expect(event.value.key, 'testKey');
+      expect(event.fullListValueForSet, null);
+      expect(event.previousSiblingKey, null);
+      expect(eventTypesLeft, contains(event.eventType));
+      expect(event.toString(), contains('#testKey'));
+      eventTypesLeft.remove(event.eventType);
+    }
+
+    // Verify that all events have triggered.
+    expect(eventTypesLeft, isEmpty);
     verifyNever(query.onValue);
   });
 }
