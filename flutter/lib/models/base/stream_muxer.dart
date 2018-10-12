@@ -1,7 +1,6 @@
 import 'dart:async';
 
-// TODO(dotdoom): should be Exception.
-class StreamMuxerEvent<T> implements Error {
+class StreamMuxerEvent<T> {
   final T stream;
   final dynamic value;
 
@@ -9,10 +8,6 @@ class StreamMuxerEvent<T> implements Error {
 
   @override
   String toString() => '[muxed stream "$stream"]: $value';
-
-  // Forward to 'value' to provide stack trace to error reporting facilities.
-  @override
-  StackTrace get stackTrace => value is Error ? value.stackTrace : null;
 }
 
 class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
@@ -46,7 +41,8 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
           (evt) => _controller.add(StreamMuxerEvent<T>(key, evt)),
           // TODO(dotdoom): should we cancel only when all of them are done?
           onDone: _onCancel,
-          onError: (err) => _controller.addError(StreamMuxerEvent<T>(key, err)),
+          onError: (err, stackTrace) =>
+              _controller.addError(StreamMuxerEvent<T>(key, err), stackTrace),
         )));
   }
 

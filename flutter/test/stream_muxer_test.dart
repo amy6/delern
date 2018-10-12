@@ -12,28 +12,34 @@ void main() {
     expect(await muxer.isEmpty, true);
   });
 
-  test('error stack trace forwarding', () {
-    var muxer = StreamMuxer({
+  test('works with a single stream', () async {
+    final muxer = StreamMuxer({
       'test': () async* {
-        throw Error();
+        yield 'passed';
       }(),
     });
 
-    expect(muxer.first, throwsA((e) => e.stackTrace != null));
+    final first = await muxer.first;
+    expect(first.stream, 'test');
+    expect(first.value, 'passed');
   });
 
-  test('error stack trace null when not error', () {
-    var muxer = StreamMuxer({
+  test('processes errors', () async {
+    final muxer = StreamMuxer({
       'test': () async* {
-        // ignore: only_throw_errors
-        throw 'a String';
+        throw Exception('nope!');
       }(),
     });
 
-    expect(
-        muxer.first,
-        throwsA((e) =>
-            e.stackTrace == null &&
-            e.toString() == '[muxed stream "test"]: a String'));
+    var caught = false;
+    try {
+      await muxer.first;
+    } on StreamMuxerEvent catch (e, stackTrace) {
+      expect(stackTrace, isNotNull);
+      expect(e.stream, 'test');
+      expect(e.value.toString(), 'Exception: nope!');
+      caught = true;
+    }
+    expect(caught, true, reason: 'Expected exception not raised');
   });
 }
