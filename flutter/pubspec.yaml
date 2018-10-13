@@ -20,11 +20,11 @@ dependencies:
   # Do not upgrade these packages unless you need it.
   # Bumping these versions may bump minimum Play Services version required to
   # run the app, resulting in older phones being unsupported.
-  firebase_auth: 0.5.11
-  firebase_analytics: 1.0.3
-  firebase_database: 1.0.1
-  firebase_messaging: 2.0.0
-  google_sign_in: 3.0.4
+  firebase_auth: 0.6.2+1
+  firebase_analytics: 1.0.4
+  firebase_database: 1.0.5
+  firebase_messaging: 2.0.1
+  google_sign_in: 3.2.1
 
   flutter:
     sdk: flutter
