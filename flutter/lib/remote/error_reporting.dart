@@ -13,7 +13,7 @@ class ErrorReporting {
   static String uid;
 
   static Future<void> report(String src, error, stackTrace,
-      {Map<String, dynamic> extra}) async {
+      {Map<String, dynamic> extra, bool printErrorInfo = true}) async {
     var message = error.toString();
     try {
       // For DatabaseError, toString() returns "Instance of 'DatabaseError'".
@@ -22,7 +22,9 @@ class ErrorReporting {
       // We tried.
     }
 
-    debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $message');
+    if (printErrorInfo) {
+      debugPrint('/!\\ /!\\ /!\\ Caught error in $src: $message');
+    }
 
     if (stackTrace == null && error is Error) {
       stackTrace = error.stackTrace;
@@ -52,7 +54,7 @@ class ErrorReporting {
           environmentAttributes: environmentAttributes);
     }
 
-    if (_sentry.environmentAttributes.environment == 'dev') {
+    if (printErrorInfo && _sentry.environmentAttributes.environment == 'dev') {
       debugPrint(
           'Stack trace follows on the next line:\n$stackTrace\n${'-' * 80}');
     }
