@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:intro_views_flutter/intro_views_flutter.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,6 +13,7 @@ import 'models/base/transaction.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
 import 'views/helpers/sign_in_widget.dart';
+import 'views/onboarding/intro_view.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
@@ -40,7 +42,24 @@ class App extends StatelessWidget {
       builder: (context, child) => SignInWidget(child: child),
       theme:
           ThemeData(primarySwatch: Colors.green, accentColor: Colors.redAccent),
-      home: DecksListPage(title: title),
+      home: Builder(
+        builder: (context) => IntroViewsFlutter(
+              IntroViewBuilder().introPages(context),
+              onTapDoneButton: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DecksListPage(title: title),
+                  ),
+                );
+              },
+              showSkipButton: true,
+              pageButtonTextStyles: const TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+              ),
+            ),
+      ),
     );
   }
 }

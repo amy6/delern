@@ -26,6 +26,9 @@ dependencies:
   firebase_messaging: 2.0.1
   google_sign_in: 3.2.1
 
+  # Onboarding
+  intro_views_flutter: "^2.2.4"
+
   flutter:
     sdk: flutter
 
@@ -56,6 +59,9 @@ flutter:
   - images/delern.png
   - images/google_sign_in.png
   - images/anonymous.jpg
+  - images/card_sharing.png
+  - images/child_learning.png
+  - images/deck_creation.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

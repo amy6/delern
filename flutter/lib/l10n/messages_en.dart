@@ -51,6 +51,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "couldNotLaunchUrl": m1,
         "deck": MessageLookupByLibrary.simpleMessage("Deck"),
         "deckType": MessageLookupByLibrary.simpleMessage("Deck Type"),
+        "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Create decks with flashcards"),
+        "decksIntroTitle": MessageLookupByLibrary.simpleMessage("Create Decks"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Do you want to delete this card?"),
@@ -78,6 +81,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please install Email App"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "I invite you to install Delern, a spaced repetition learning app, which will allow you to learn quickly and easily!\n     \nProceed to install it from:\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n  \nAfter install, follow Delern latest news on:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
+        "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Learn in any place and offline as well"),
+        "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Learn"),
         "markdown": MessageLookupByLibrary.simpleMessage("Markdown"),
         "navigationDrawerAbout": MessageLookupByLibrary.simpleMessage("About"),
         "navigationDrawerCommunicateGroup":
@@ -121,6 +127,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Server temporarily unavailable, please try again later"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Share"),
+        "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Share decks with friends and colleagues to learn together"),
+        "shareIntroTitle": MessageLookupByLibrary.simpleMessage("Share decks"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign in with Google"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(

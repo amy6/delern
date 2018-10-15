@@ -457,6 +457,42 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'deleteDeckWriteReadAccessQuestion',
         desc: 'Delete deck question to user with write access',
       );
+
+  String get decksIntroTitle => Intl.message(
+        'Create Decks',
+        name: 'decksIntroTitle',
+        desc: 'Create decks intro title',
+      );
+
+  String get decksIntroDescription => Intl.message(
+        'Create decks with flashcards',
+        name: 'decksIntroDescription',
+        desc: 'Create decks with flashcards',
+      );
+
+  String get learnIntroTitle => Intl.message(
+        'Learn',
+        name: 'learnIntroTitle',
+        desc: 'Learn intro title',
+      );
+
+  String get learnIntroDescription => Intl.message(
+        'Learn in any place and offline as well',
+        name: 'learnIntroDescription',
+        desc: 'Learn intro description',
+      );
+
+  String get shareIntroTitle => Intl.message(
+        'Share decks',
+        name: 'shareIntroTitle',
+        desc: 'Share intro title',
+      );
+
+  String get shareIntroDescription => Intl.message(
+        'Share decks with friends and colleagues to learn together',
+        name: 'shareIntroDescription',
+        desc: 'Share intro description',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
