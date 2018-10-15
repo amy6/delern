@@ -117,6 +117,8 @@ PODS:
   - Protobuf (3.6.1)
   - share (0.5.2):
     - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
   - url_launcher (0.0.1):
     - Flutter
 
@@ -131,6 +133,7 @@ DEPENDENCIES:
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - share (from `.symlinks/plugins/share/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 SPEC REPOS:
@@ -174,6 +177,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
 
@@ -205,6 +210,7 @@ SPEC CHECKSUMS:
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   share: 222b5dcc8031238af9d7de91149df65bad1aef75
+  shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   url_launcher: 92b89c1029a0373879933c21642958c874539095
 
 PODFILE CHECKSUM: 1e5af4103afd21ca5ead147d7b81d06f494f51a2
