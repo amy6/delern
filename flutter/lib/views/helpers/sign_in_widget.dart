@@ -89,82 +89,138 @@ class _SignInWidgetState extends State<SignInWidget> {
     if (_isAuthStateKnown == false) {
       return HelperProgressIndicator();
     }
-    final features = AppLocalizations.of(context)
-        .splashScreenFeatures
-        .split('\n')
-        .map(_buildFeatureText)
-        .toList();
+
     return Scaffold(
       backgroundColor: AppStyles.signInBackgroundColor,
-      body: Column(
+      body: OrientationBuilder(
+          builder: (context, orientation) =>
+              (orientation == Orientation.portrait)
+                  ? _buildPortraitSignInScreen(context)
+                  : _buildLandscapeSignInScreen(context)),
+    );
+  }
+
+  List<Widget> _getFeatures(BuildContext context) =>
+      AppLocalizations.of(context)
+          .splashScreenFeatures
+          .split('\n')
+          .map(_buildFeatureText)
+          .toList();
+
+  Widget _buildGoogleSignInButton(Orientation orientation) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: RaisedButton(
+            color: Colors.white,
+            onPressed: () => signIn(SignInProvider.google),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(
+                      Orientation.portrait == orientation ? 10.0 : 5.0),
+                  child: Image.asset(
+                    'images/google_sign_in.png',
+                    height: 35.0,
+                    width: 35.0,
+                  ),
+                ),
+                Container(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      AppLocalizations.of(context).signInWithGoogle,
+                      style: AppStyles.primaryText,
+                    )),
+              ],
+            )),
+      );
+
+  Widget _buildLogoPicture() => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: Image.asset(
+          'images/delern.png',
+        ),
+      );
+
+  Widget _buildAnonymousSignInButton(Orientation orientation) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: RaisedButton(
+            color: Colors.white,
+            onPressed: () => signIn(SignInProvider.anonymous),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical:
+                          Orientation.portrait == orientation ? 15.0 : 10.0),
+                  child: Text(
+                    AppLocalizations.of(context).continueAnonymously,
+                    style: AppStyles.primaryText,
+                  ),
+                ),
+              ],
+            )),
+      );
+
+  Widget _buildLandscapeSignInScreen(BuildContext context) => Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _buildLogoPicture(),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                      _itemPadding,
+                    ] +
+                    _getFeatures(context) +
+                    [
+                      _buildGoogleSignInButton(Orientation.landscape),
+                      _itemPadding,
+                      Text(
+                        AppLocalizations.of(context).doNotNeedFeaturesText,
+                        style: AppStyles.primaryText,
+                      ),
+                      _itemPadding,
+                      _buildAnonymousSignInButton(Orientation.landscape),
+                      _itemPadding,
+                    ],
+              ),
+            ),
+          )
+        ],
+      );
+
+  // TODO(ksheremet): Make widget Scrollable with more sign in options
+  Widget _buildPortraitSignInScreen(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-              Expanded(
-                  child: Center(
-                child: Image.asset(
-                  'images/delern.png',
-                ),
-              )),
+              Expanded(child: Center(child: _buildLogoPicture())),
             ] +
-            features +
+            _getFeatures(context) +
             [
               _itemPadding,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: RaisedButton(
-                    color: Colors.white,
-                    onPressed: () => signIn(SignInProvider.google),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Image.asset(
-                            'images/google_sign_in.png',
-                            height: 35.0,
-                            width: 35.0,
-                          ),
-                        ),
-                        Container(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: Text(
-                              AppLocalizations.of(context).signInWithGoogle,
-                              style: AppStyles.primaryText,
-                            )),
-                      ],
-                    )),
-              ),
+              _buildGoogleSignInButton(Orientation.portrait),
               _itemPadding,
               Text(
                 AppLocalizations.of(context).doNotNeedFeaturesText,
                 style: AppStyles.primaryText,
               ),
               _itemPadding,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: RaisedButton(
-                    color: Colors.white,
-                    onPressed: () => signIn(SignInProvider.anonymous),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text(
-                            AppLocalizations.of(context).continueAnonymously,
-                            style: AppStyles.primaryText,
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
+              _buildAnonymousSignInButton(Orientation.portrait),
               _itemPadding
             ],
-      ),
-    );
-  }
+      );
 }
 
 class CurrentUserWidget extends InheritedWidget {
