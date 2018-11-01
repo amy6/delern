@@ -91,10 +91,12 @@ class CardsLearningState extends State<CardsLearning> {
                       ),
                       Row(
                         children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context)
-                                .watchedCards(_watchedCount),
-                            style: AppStyles.secondaryText,
+                          SafeArea(
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .watchedCards(_watchedCount),
+                              style: AppStyles.secondaryText,
+                            ),
                           ),
                         ],
                       )
