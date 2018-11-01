@@ -181,7 +181,7 @@ class AppLocalizations {
       );
 
   String get deleteCardQuestion => Intl.message(
-        'Do you want to delete card?',
+        'Do you want to delete this card?',
         name: 'deleteCardQuestion',
         desc: 'Do you want to delete card?',
       );
