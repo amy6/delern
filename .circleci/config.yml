@@ -3,14 +3,10 @@ version: 2
 jobs:
   build:
     docker:
-    - image: dasfoo/firebase:latest
+    - image: dasfoo/dev:latest
     environment:
-    - ANDROID_HOME: /root/android-sdk
     - TERM: dumb
     - PAGER: cat
-    # https://docs.gradle.org/current/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon
-    # "It is recommend to disable the Daemon for Continuous Integration and build server environments."
-    - GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
     - checkout
     - run:
@@ -38,24 +34,17 @@ jobs:
 
           bundle install
 
-          mkdir -p "${ANDROID_HOME?}/licenses"
-          # This is just a hash sum of the license agreements accepted.
-          # Take this text from the Android SDK directory on your machine.
-          echo 8933bad161af4178b1185d1a37fbf41ea5269c55 >>"${ANDROID_HOME?}/licenses/android-sdk-license"
-          echo d56f5187479451eabf01fb78af6dfcb131a6481e >>"${ANDROID_HOME?}/licenses/android-sdk-license"
-          flutter upgrade
           ( cd flutter && flutter packages get )
-          echo flutter.sdk=/opt/flutter > flutter/android/local.properties
+          echo "flutter.sdk=$FLUTTER_HOME" > flutter/android/local.properties
           ( cd flutter/android && ./gradlew resolveDependencies )
 
     - save_cache:
         # Use different keys because caches are immutable.
         key: v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
         paths:
-        - ~/android-sdk
-        - ~/.gradle
         - ~/.npm
-        - ~/.pub-cache
+        - ~/project/.gradle
+        - ~/project/.pub-cache
         - ~/project/firebase/node_modules
         - ~/project/firebase/functions/node_modules
         - ~/project/firebase/www/bower_components
@@ -65,9 +54,6 @@ jobs:
         name: "Lint, assemble and run unit tests"
         no_output_timeout: "35m"
         command: |
-          ( cd flutter/android && ci-lint )
-          ( cd firebase && ci-lint )
-
           ( cd flutter && bundle exec fastlane build )
           ( cd flutter && bundle exec fastlane android build )
 

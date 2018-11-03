@@ -17,13 +17,8 @@ cache:
 script:
 - bundle exec pod setup
 
-# Get latest link at https://flutter.io/setup-macos/
-- wget
-  'https://storage.googleapis.com/flutter_infra/releases/beta/macos/flutter_macos_v0.8.2-beta.zip'
-  -O /tmp/flutter.zip
-- unzip -q -d "$SDK_ROOT" /tmp/flutter.zip
-
-- flutter upgrade
+- git clone --depth=1 --branch=beta https://github.com/flutter/flutter.git "${SDK_ROOT?}/flutter"
+- flutter doctor
 
 # Do not require signing of iOS applications (key is not available on Travis)
 - sed -i ''
