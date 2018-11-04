@@ -21,9 +21,9 @@ jobs:
 
     - restore_cache:
         keys:
-        - v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
-        - v16-{{ arch }}-{{ .Branch }}-
-        - v16-{{ arch }}-master-
+        - v17-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
+        - v17-{{ arch }}-{{ .Branch }}-
+        - v17-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
@@ -36,19 +36,6 @@ jobs:
 
           ( cd flutter && flutter packages get )
           echo "flutter.sdk=$FLUTTER_HOME" > flutter/android/local.properties
-          ( cd flutter/android && ./gradlew resolveDependencies )
-
-    - save_cache:
-        # Use different keys because caches are immutable.
-        key: v16-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
-        paths:
-        - ~/.npm
-        - ~/project/.gradle
-        - ~/project/.pub-cache
-        - ~/project/firebase/node_modules
-        - ~/project/firebase/functions/node_modules
-        - ~/project/firebase/www/bower_components
-        - ~/project/vendor/bundle
 
     - run:
         name: "Lint, assemble and run unit tests"
@@ -69,6 +56,18 @@ jobs:
 
           ( cd firebase && npm run build )
           ( cd firebase/www && ../node_modules/.bin/polymer lint )
+
+    - save_cache:
+        # Use different keys because caches are immutable.
+        key: v17-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
+        paths:
+        - .npm
+        - .gradle
+        - .pub-cache
+        - firebase/node_modules
+        - firebase/functions/node_modules
+        - firebase/www/bower_components
+        - vendor/bundle
 
     - run:
         name: "[if branch=master] Deploy Firebase and build Release APK"
