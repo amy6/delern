@@ -91,6 +91,10 @@ class CardsLearningState extends State<CardsLearning> {
                       ),
                       Row(
                         children: <Widget>[
+                          // Use SafeArea to indent the child by the amount
+                          // necessary to avoid The Notch on the iPhone X,
+                          // or other similar creative physical features of
+                          // the display.
                           SafeArea(
                             child: Text(
                               AppLocalizations.of(context)
