@@ -2,9 +2,6 @@
 .atom/
 .vscode/
 build/
-.pub-cache
-.gradle
-.npm
 
 /flutter/.packages
 /flutter/.pub/
