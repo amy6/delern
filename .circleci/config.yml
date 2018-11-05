@@ -21,9 +21,9 @@ jobs:
 
     - restore_cache:
         keys:
-        - v17-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
-        - v17-{{ arch }}-{{ .Branch }}-
-        - v17-{{ arch }}-master-
+        - v20-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
+        - v20-{{ arch }}-{{ .Branch }}-
+        - v20-{{ arch }}-master-
 
     - run:
         name: "Install dependencies"
@@ -59,11 +59,14 @@ jobs:
 
     - save_cache:
         # Use different keys because caches are immutable.
-        key: v17-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
+        key: v20-{{ arch }}-{{ .Branch }}-{{ checksum "flutter/pubspec.lock" }}
         paths:
-        - .npm
-        - .gradle
-        - .pub-cache
+        - ~/.npm
+        - ~/.gradle
+        # Do not backup ~/.pub-cache. In addition to project dependencies it
+        # also contains pre-installed Flutter dependencies, which are owned by
+        # 'root' and fail chmod when restoring cache by CircleCI. Besides, pub
+        # cache is fast to download.
         - firebase/node_modules
         - firebase/functions/node_modules
         - firebase/www/bower_components
