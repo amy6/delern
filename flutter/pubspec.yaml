@@ -28,7 +28,7 @@ dependencies:
   google_sign_in: 3.2.1
 
   # Onboarding
-  intro_views_flutter: "^2.2.4"
+  intro_views_flutter: ^2.2.4
 
   flutter:
     sdk: flutter

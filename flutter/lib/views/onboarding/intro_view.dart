@@ -1,9 +1,49 @@
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
-
-import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../flutter/localization.dart';
+
+class OnboardingViewWidget extends StatefulWidget {
+  final Widget child;
+
+  const OnboardingViewWidget({@required this.child}) : assert(child != null);
+
+  @override
+  State<StatefulWidget> createState() => _OnboardingViewWidgetState();
+}
+
+class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
+  static const String _introPrefKey = 'is-intro-shown';
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  bool _isIntroShown;
+
+  @override
+  void initState() {
+    super.initState();
+    _prefs.then((pref) {
+      _isIntroShown = pref.getBool(_introPrefKey);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isIntroShown != null && _isIntroShown != false) {
+      return SignInWidget(child: widget.child);
+    } else {
+      return IntroViewWidget(callback: () {
+        setState(() {
+          _prefs.then((pref) {
+            pref.setBool(_introPrefKey, true);
+            _isIntroShown = true;
+          });
+        });
+      });
+    }
+  }
+}
 
 class IntroViewWidget extends StatelessWidget {
   static const double _imageHeight = 285.0;
