@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         Locale('en', 'US'),
         Locale('ru', 'RU'),
       ],
-      navigatorObservers: [App._analyticsNavigatorObserver],
+      navigatorObservers: [_analyticsNavigatorObserver],
       title: title,
       // OnboardingViewWidget must be above Navigator
       // to provide CurrentUserWidget.of().

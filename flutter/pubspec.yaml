@@ -17,6 +17,7 @@ dependencies:
   share: ^0.5.2
   sentry: ^2.1.1
   shared_preferences: ^0.4.3
+  intro_views_flutter: ^2.2.4
 
   # Do not upgrade these packages unless you need it.
   # Bumping these versions may bump minimum Play Services version required to
@@ -26,9 +27,6 @@ dependencies:
   firebase_database: 1.0.5
   firebase_messaging: 2.0.1
   google_sign_in: 3.2.1
-
-  # Onboarding
-  intro_views_flutter: ^2.2.4
 
   flutter:
     sdk: flutter

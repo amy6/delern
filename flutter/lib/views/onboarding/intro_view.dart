@@ -1,10 +1,11 @@
-import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../flutter/localization.dart';
+import '../../views/helpers/helper_progress_indicator.dart';
+import '../../views/helpers/sign_in_widget.dart';
 
 class OnboardingViewWidget extends StatefulWidget {
   final Widget child;
@@ -21,39 +22,40 @@ class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
   bool _isIntroShown;
 
   @override
-  void initState() {
-    super.initState();
-    _prefs.then((pref) {
-      _isIntroShown = pref.getBool(_introPrefKey);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isIntroShown != null && _isIntroShown != false) {
-      return SignInWidget(child: widget.child);
-    } else {
-      return IntroViewWidget(callback: () {
-        setState(() {
-          _prefs.then((pref) {
-            pref.setBool(_introPrefKey, true);
-            _isIntroShown = true;
-          });
-        });
+  Widget build(BuildContext context) => FutureBuilder(
+      future: _prefs,
+      builder: (context, pref) {
+        if (pref.connectionState == ConnectionState.done) {
+          _isIntroShown = pref.data.getBool(_introPrefKey);
+          if (_isIntroShown == true) {
+            return SignInWidget(child: widget.child);
+          } else {
+            return _IntroViewWidget(callback: () async {
+              (await _prefs).setBool(_introPrefKey, true);
+              setState(() {
+                _isIntroShown = true;
+              });
+            });
+          }
+        }
+        return HelperProgressIndicator();
       });
-    }
-  }
 }
 
-class IntroViewWidget extends StatelessWidget {
-  static const double _imageHeight = 285.0;
-  static const double _imageWidth = 285.0;
+class _IntroViewWidget extends StatelessWidget {
   static const _textStyle = TextStyle(color: Colors.white);
   final Function callback;
 
-  const IntroViewWidget({@required this.callback}) : assert(callback != null);
+  const _IntroViewWidget({@required this.callback}) : assert(callback != null);
 
   List<PageViewModel> _introPages(BuildContext context) {
+    final imageWidth = MediaQuery.of(context).size.width * 0.85;
+    // If device is small, set smaller size of text to prevent overlapping
+    // TODO(ksheremet): In landscape mode on small device font size isn't set up
+    // Check intro_views_flutter package to fix it
+    final textStyle = (imageWidth > 280)
+        ? _textStyle
+        : _textStyle.merge(const TextStyle(fontSize: 25));
     var pages = [
       PageViewModel(
           pageColor: const Color(0xFF3F51A5),
@@ -63,11 +65,10 @@ class IntroViewWidget extends StatelessWidget {
           title: Text(
             AppLocalizations.of(context).decksIntroTitle,
           ),
-          textStyle: _textStyle,
+          textStyle: textStyle,
           mainImage: Image.asset(
             'images/deck_creation.png',
-            height: _imageHeight,
-            width: _imageWidth,
+            width: imageWidth,
             alignment: Alignment.center,
           )),
       PageViewModel(
@@ -78,11 +79,10 @@ class IntroViewWidget extends StatelessWidget {
         title: Text(AppLocalizations.of(context).learnIntroTitle),
         mainImage: Image.asset(
           'images/child_learning.png',
-          height: _imageHeight,
-          width: _imageWidth,
+          width: imageWidth,
           alignment: Alignment.center,
         ),
-        textStyle: _textStyle,
+        textStyle: textStyle,
       ),
       PageViewModel(
         pageColor: const Color(0xFF607D8B),
@@ -92,11 +92,10 @@ class IntroViewWidget extends StatelessWidget {
         title: Text(AppLocalizations.of(context).shareIntroTitle),
         mainImage: Image.asset(
           'images/card_sharing.png',
-          height: _imageHeight,
-          width: _imageWidth,
+          width: imageWidth,
           alignment: Alignment.center,
         ),
-        textStyle: _textStyle,
+        textStyle: textStyle,
       ),
     ];
     return pages;
