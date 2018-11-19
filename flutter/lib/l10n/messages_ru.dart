@@ -53,6 +53,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "couldNotLaunchUrl": m1,
         "deck": MessageLookupByLibrary.simpleMessage("Список"),
         "deckType": MessageLookupByLibrary.simpleMessage("Тип списка"),
+        "decksIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Создавайте списки с карточками"),
+        "decksIntroTitle":
+            MessageLookupByLibrary.simpleMessage("Создавайте списки"),
         "delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "deleteCardQuestion": MessageLookupByLibrary.simpleMessage(
             "Вы хотите удалить эту карточку?"),
@@ -63,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "Мне не нужны все эти функции "),
+        "done": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
@@ -83,6 +88,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Пожалуйста установите приложение Электронной Почты"),
         "inviteToAppMessage": MessageLookupByLibrary.simpleMessage(
             "Я приглашаю Вас установить Delern, систему интервального изучения, которая позволяет изучать быстро и легко!\n  \nПройдите по ссылке чтобы установить из\nGoogle Play: https://play.google.com/store/apps/details?id=org.dasfoo.delern\nApp Store: https://itunes.apple.com/us/app/delern/id1435734822?ls=1&mt=8\n  \nПосле установки, следите за последними новостями Delern:\nFacebook: https://fb.me/das.delern\nVK: https://vk.com/delern\nGoogle+: https://plus.google.com/communities/104603840044649051798\nTwitter: https://twitter.com/dasdelern"),
+        "learnIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Изучайте в любом месте, а также без сети"),
+        "learnIntroTitle": MessageLookupByLibrary.simpleMessage("Изучайте"),
         "markdown": MessageLookupByLibrary.simpleMessage("Маркдаун"),
         "navigationDrawerAbout":
             MessageLookupByLibrary.simpleMessage("О приложении"),
@@ -126,8 +134,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Сервер временно недоступен, пожалуйста, попробуйте позже"),
         "settingsDeckMenu": MessageLookupByLibrary.simpleMessage("Настройки"),
         "shareDeckMenu": MessageLookupByLibrary.simpleMessage("Поделиться"),
+        "shareIntroDescription": MessageLookupByLibrary.simpleMessage(
+            "Делитесь списками с друзьями и коллегами, чтобы изучать вместе"),
+        "shareIntroTitle":
+            MessageLookupByLibrary.simpleMessage("Делитесь списками"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(

@@ -16,6 +16,8 @@ dependencies:
   http: '>=0.11.3'
   share: ^0.5.2
   sentry: ^2.1.1
+  shared_preferences: ^0.4.3
+  intro_views_flutter: ^2.2.4
 
   # Do not upgrade these packages unless you need it.
   # Bumping these versions may bump minimum Play Services version required to
@@ -56,6 +58,9 @@ flutter:
   - images/delern.png
   - images/google_sign_in.png
   - images/anonymous.jpg
+  - images/card_sharing.png
+  - images/child_learning.png
+  - images/deck_creation.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

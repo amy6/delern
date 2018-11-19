@@ -11,7 +11,7 @@ import 'flutter/localization.dart';
 import 'models/base/transaction.dart';
 import 'remote/error_reporting.dart';
 import 'views/decks_list/decks_list.dart';
-import 'views/helpers/sign_in_widget.dart';
+import 'views/onboarding/intro_view.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =
@@ -36,8 +36,9 @@ class App extends StatelessWidget {
       ],
       navigatorObservers: [_analyticsNavigatorObserver],
       title: title,
-      // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
-      builder: (context, child) => SignInWidget(child: child),
+      // OnboardingViewWidget must be above Navigator
+      // to provide CurrentUserWidget.of().
+      builder: (context, child) => OnboardingViewWidget(child: child),
       theme:
           ThemeData(primarySwatch: Colors.green, accentColor: Colors.redAccent),
       home: DecksListPage(title: title),

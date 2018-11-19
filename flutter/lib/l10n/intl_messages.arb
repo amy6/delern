@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-12T13:27:33.508159",
+  "@@last_modified": "2018-11-19T18:23:11.232158",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -467,6 +467,62 @@
   "deleteDeckWriteReadAccessQuestion": "The deck will be removed from your account only, all cards and learning history will remain with the owner and other users. Do you want to delete deck?",
   "@deleteDeckWriteReadAccessQuestion": {
     "description": "Delete deck question to user with write access",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "decksIntroTitle": "Create Decks",
+  "@decksIntroTitle": {
+    "description": "Create decks intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "decksIntroDescription": "Create decks with flashcards",
+  "@decksIntroDescription": {
+    "description": "Create decks with flashcards",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "learnIntroTitle": "Learn",
+  "@learnIntroTitle": {
+    "description": "Learn intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "learnIntroDescription": "Learn in any place and offline as well",
+  "@learnIntroDescription": {
+    "description": "Learn intro description",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareIntroTitle": "Share decks",
+  "@shareIntroTitle": {
+    "description": "Share intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareIntroDescription": "Share decks with friends and colleagues to learn together",
+  "@shareIntroDescription": {
+    "description": "Share intro description",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip",
     "type": "text",
     "placeholders": {
     }

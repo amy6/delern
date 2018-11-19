@@ -469,5 +469,61 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "decksIntroTitle": "Создавайте списки",
+  "@decksIntroTitle": {
+    "description": "Create decks intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "decksIntroDescription": "Создавайте списки с карточками",
+  "@decksIntroDescription": {
+    "description": "Create decks with flashcards",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "learnIntroTitle": "Изучайте",
+  "@learnIntroTitle": {
+    "description": "Learn intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "learnIntroDescription": "Изучайте в любом месте, а также без сети",
+  "@learnIntroDescription": {
+    "description": "Learn intro description",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareIntroTitle": "Делитесь списками",
+  "@shareIntroTitle": {
+    "description": "Share intro title",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "shareIntroDescription": "Делитесь списками с друзьями и коллегами, чтобы изучать вместе",
+  "@shareIntroDescription": {
+    "description": "Share intro description",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "done": "Закрыть",
+  "@done": {
+    "description": "Done",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "skip": "Пропустить",
+  "@skip": {
+    "description": "Skip",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
