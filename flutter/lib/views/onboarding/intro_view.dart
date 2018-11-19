@@ -104,6 +104,8 @@ class _IntroViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IntroViewsFlutter(
         _introPages(context),
+        doneText: Text(AppLocalizations.of(context).done.toUpperCase()),
+        skipText: Text(AppLocalizations.of(context).skip.toUpperCase()),
         onTapDoneButton: callback,
         showSkipButton: true,
         pageButtonTextStyles: const TextStyle(

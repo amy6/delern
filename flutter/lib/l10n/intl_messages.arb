@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-10-15T12:02:59.945615",
+  "@@last_modified": "2018-11-19T18:23:11.232158",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -509,6 +509,20 @@
   "shareIntroDescription": "Share decks with friends and colleagues to learn together",
   "@shareIntroDescription": {
     "description": "Share intro description",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "done": "Done",
+  "@done": {
+    "description": "Done",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip",
     "type": "text",
     "placeholders": {
     }

@@ -511,5 +511,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "done": "Закрыть",
+  "@done": {
+    "description": "Done",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "skip": "Пропустить",
+  "@skip": {
+    "description": "Skip",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

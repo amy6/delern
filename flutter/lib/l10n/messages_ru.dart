@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Отменить изменения"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "Мне не нужны все эти функции "),
+        "done": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "edit": MessageLookupByLibrary.simpleMessage("Редактировать"),
         "editCardsDeckMenu":
             MessageLookupByLibrary.simpleMessage("Редактировать карточки"),
@@ -139,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Делитесь списками"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Войти с помощью Google"),
+        "skip": MessageLookupByLibrary.simpleMessage("Пропустить"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Данные и прогресс сохранены в Облаке\nДанные и прогресс синхронизированы на всех Ваших устройствах\nДелитесь карточками со своими друзьями и коллегами"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(

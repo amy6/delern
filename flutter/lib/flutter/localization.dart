@@ -493,6 +493,18 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'shareIntroDescription',
         desc: 'Share intro description',
       );
+
+  String get done => Intl.message(
+        'Done',
+        name: 'done',
+        desc: 'Done',
+      );
+
+  String get skip => Intl.message(
+        'Skip',
+        name: 'skip',
+        desc: 'Skip',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

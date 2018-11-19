@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "discard": MessageLookupByLibrary.simpleMessage("Discard"),
         "doNotNeedFeaturesText": MessageLookupByLibrary.simpleMessage(
             "I do not want any of these features"),
+        "done": MessageLookupByLibrary.simpleMessage("Done"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Edit Cards"),
         "emailAddressHint":
@@ -132,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareIntroTitle": MessageLookupByLibrary.simpleMessage("Share decks"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Sign in with Google"),
+        "skip": MessageLookupByLibrary.simpleMessage("Skip"),
         "splashScreenFeatures": MessageLookupByLibrary.simpleMessage(
             "Data and progress are saved in the Cloud\nData and progress are synchronized across all your devices\nShare cards with your friends and colleagues"),
         "supportDevelopment": MessageLookupByLibrary.simpleMessage(
