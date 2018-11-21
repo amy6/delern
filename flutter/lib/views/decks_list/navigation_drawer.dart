@@ -40,7 +40,10 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       accountName = AppLocalizations.of(context).anonymous;
     }
     return Drawer(
-        child: Column(
+        child: ListView(
+      // Remove any padding from the ListView.
+      // https://flutter.io/docs/cookbook/design/drawer
+      padding: EdgeInsets.zero,
       children: <Widget>[
         UserAccountsDrawerHeader(
           accountName: Text(accountName),
