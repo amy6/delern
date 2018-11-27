@@ -6,6 +6,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/delern"/>
+            android:src="@drawable/delern"/>
     </item>
 </layer-list>
