@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
         "anonymous":
             MessageLookupByLibrary.simpleMessage("Анонимный пользователь"),
+        "appLogoName":
+            MessageLookupByLibrary.simpleMessage("Delern Флэшкарточки"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "Данный пользователь еще не установил Delern. Отправить приглашение?"),
         "backSideHint":

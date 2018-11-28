@@ -136,8 +136,20 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   Widget _buildLogoPicture() => Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: Image.asset(
-          'images/delern.png',
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(
+              'images/ic_launcher.png',
+            ),
+            Text(
+              AppLocalizations.of(context).appLogoName,
+              style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.green,
+                  fontWeight: FontWeight.w700),
+            ),
+          ],
         ),
       );
 

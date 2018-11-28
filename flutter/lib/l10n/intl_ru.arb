@@ -525,5 +525,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "appLogoName": "Delern Флэшкарточки",
+  "@appLogoName": {
+    "description": "Delern Flashcards",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

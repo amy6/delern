@@ -55,7 +55,6 @@ flutter:
 
   assets:
   - images/ic_launcher.png
-  - images/delern.png
   - images/google_sign_in.png
   - images/anonymous.jpg
   - images/card_sharing.png
