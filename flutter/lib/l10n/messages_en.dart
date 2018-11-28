@@ -33,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?"),
         "add": MessageLookupByLibrary.simpleMessage("Add"),
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
+        "appLogoName":
+            MessageLookupByLibrary.simpleMessage("Delern Flashcards"),
         "appNotInstalledSharingDeck": MessageLookupByLibrary.simpleMessage(
             "This user hasn\'t installed Delern yet. Do you want to sent an invite?"),
         "backSideHint": MessageLookupByLibrary.simpleMessage("Back side"),

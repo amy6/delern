@@ -505,6 +505,12 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'skip',
         desc: 'Skip',
       );
+
+  String get appLogoName => Intl.message(
+        'Delern Flashcards',
+        name: 'appLogoName',
+        desc: 'Delern Flashcards',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
