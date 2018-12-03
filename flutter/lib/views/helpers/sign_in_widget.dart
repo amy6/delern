@@ -65,6 +65,9 @@ class _SignInWidgetState extends State<SignInWidget> {
           (Transaction()..save(fcm)).commit();
         });
 
+        // Update profile data with the latest information from providers.
+        updateProfileFromProvider(_user);
+
         _firebaseMessaging
           ..requestNotificationPermissions()
           // TODO(dotdoom): register onMessage to show a snack bar with

@@ -49,6 +49,19 @@ Future<FirebaseUser> signIn(SignInProvider provider) async {
   return null;
 }
 
+Future<void> updateProfileFromProvider(FirebaseUser user) {
+  var update = UserUpdateInfo();
+  for (final providerData in user.providerData) {
+    if (providerData.displayName != user.displayName) {
+      update.displayName = providerData.displayName;
+    }
+    if (providerData.photoUrl != user.photoUrl) {
+      update.photoUrl = providerData.photoUrl;
+    }
+  }
+  return user.updateProfile(update);
+}
+
 Future<void> signOut() async {
   if (_currentProvider != null) {
     switch (_currentProvider) {
@@ -75,6 +88,11 @@ Future<FirebaseUser> _withGoogle(GoogleSignInAccount a) async {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    if (user != null) {
+      // TODO(dotdoom): this doesn't trigger authStateChanged event, which
+      // means Navigation Drawer will not be updated until app restart.
+      await updateProfileFromProvider(user);
+    }
   } else {
     user = await FirebaseAuth.instance.signInWithGoogle(
       accessToken: googleAuth.accessToken,
