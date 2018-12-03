@@ -5,13 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
 import '../../remote/analytics.dart';
 import '../../remote/sign_in.dart';
+import '../../views/helpers/send_email.dart';
 import '../../views/support_dev/support_development.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
@@ -102,13 +101,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () async {
             Navigator.pop(context);
-            try {
-              await launch('mailto:delern@dasfoo.org?subject=Delern%20Support',
-                  forceSafariVC: false);
-            } catch (e, stackTrace) {
-              UserMessages.showError(() => Scaffold.of(context),
-                  AppLocalizations.of(context).installEmailApp, stackTrace);
-            }
+            await sendEmail(context);
           },
         ),
         ListTile(
