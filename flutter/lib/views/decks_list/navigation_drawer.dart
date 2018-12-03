@@ -10,7 +10,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../remote/analytics.dart';
 import '../../remote/sign_in.dart';
-import '../../views/helpers/send_email.dart';
+import '../../views/helpers/launch_email.dart';
 import '../../views/support_dev/support_development.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
@@ -101,7 +101,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           title: Text(AppLocalizations.of(context).navigationDrawerContactUs),
           onTap: () async {
             Navigator.pop(context);
-            await sendEmail(context);
+            await launchEmail(context);
           },
         ),
         ListTile(

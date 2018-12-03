@@ -8,7 +8,7 @@ const String _googleGmaillUrl =
     'googlegmail:///co?to=delern@dasfoo.org&subject=Delern%20Support';
 const String _mailUrl = 'mailto:delern@dasfoo.org?subject=Delern%20Support';
 
-Future<void> sendEmail(BuildContext context) async {
+Future<void> launchEmail(BuildContext context) async {
   try {
     if (Theme.of(context).platform == TargetPlatform.iOS &&
         await canLaunch(_googleGmaillUrl)) {
