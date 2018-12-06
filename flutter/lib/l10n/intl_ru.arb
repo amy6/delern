@@ -532,5 +532,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "addCardsDeckMenu": "Добавить карточки",
+  "@addCardsDeckMenu": {
+    "description": "Add Cards in Deck Menu",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

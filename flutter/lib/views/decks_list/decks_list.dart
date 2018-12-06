@@ -255,7 +255,26 @@ class DeckListItem extends StatelessWidget {
       );
 
   void _onDeckMenuItemSelected(BuildContext context, _DeckMenuItemType item) {
+    // Not allow to add/edit or delete cards with read access
+    // If some error occurred and it is null access
+    // we still give a try to edit for a user. If user
+    // doesn't have permissions they will see "Permission
+    // denied".
+    var allowEdit = viewModel.access?.access != AccessType.read;
     switch (item) {
+      case _DeckMenuItemType.add:
+        if (allowEdit) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  settings: const RouteSettings(name: '/cards/new'),
+                  builder: (context) =>
+                      CreateUpdateCard(card_model.Card(deck: viewModel.deck))));
+        } else {
+          UserMessages.showMessage(Scaffold.of(context),
+              AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
+        }
+        break;
       case _DeckMenuItemType.edit:
         Navigator.push(
           context,
@@ -263,13 +282,7 @@ class DeckListItem extends StatelessWidget {
               settings: const RouteSettings(name: '/decks/view'),
               builder: (context) => CardsListPage(
                     deck: viewModel.deck,
-                    allowEdit:
-                        // Not allow to edit or delete cards with read access
-                        // If some error occurred and it is null access
-                        // we still give a try to edit for a user. If user
-                        // doesn't have permissions they will see "Permission
-                        // denied".
-                        viewModel.access?.access != AccessType.read,
+                    allowEdit: allowEdit,
                   )),
         );
         break;
@@ -299,12 +312,13 @@ class DeckListItem extends StatelessWidget {
   }
 }
 
-enum _DeckMenuItemType { edit, setting, share }
+enum _DeckMenuItemType { add, edit, setting, share }
 
 Map<_DeckMenuItemType, String> _buildMenu(BuildContext context) {
   // We want this Map to be ordered.
   // ignore: prefer_collection_literals
   var deckMenu = LinkedHashMap<_DeckMenuItemType, String>()
+    ..[_DeckMenuItemType.add] = AppLocalizations.of(context).addCardsDeckMenu
     ..[_DeckMenuItemType.edit] = AppLocalizations.of(context).editCardsDeckMenu
     ..[_DeckMenuItemType.setting] =
         AppLocalizations.of(context).settingsDeckMenu;

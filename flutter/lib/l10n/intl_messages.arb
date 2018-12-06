@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-11-28T15:27:18.624469",
+  "@@last_modified": "2018-12-06T14:39:29.958874",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -530,6 +530,13 @@
   "appLogoName": "Delern Flashcards",
   "@appLogoName": {
     "description": "Delern Flashcards",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "addCardsDeckMenu": "Add Cards",
+  "@addCardsDeckMenu": {
+    "description": "Add Cards in Deck Menu",
     "type": "text",
     "placeholders": {
     }

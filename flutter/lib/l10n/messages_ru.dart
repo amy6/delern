@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
             "У Вас уже есть учетная запись, пожалуйста, войдите в свой аккаунт. Все ваши данные, созданные анонимно, будут потеряны. Желаете ли Вы продолжить?"),
         "add": MessageLookupByLibrary.simpleMessage("Добавить"),
+        "addCardsDeckMenu":
+            MessageLookupByLibrary.simpleMessage("Добавить карточки"),
         "anonymous":
             MessageLookupByLibrary.simpleMessage("Анонимный пользователь"),
         "appLogoName":
