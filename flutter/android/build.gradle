@@ -28,3 +28,18 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+task resolveDependencies {
+    doLast {
+        project.configurations.each { configuration ->
+            if (configuration.isCanBeResolved()) {
+                configuration.resolve()
+            }
+        }
+        project.buildscript.configurations.each { configuration ->
+            if (configuration.isCanBeResolved()) {
+                configuration.resolve()
+            }
+        }
+    }
+}

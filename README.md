@@ -1,6 +1,5 @@
-[![CircleCI](https://circleci.com/gh/dasfoo/delern.svg?style=shield)](https://circleci.com/gh/dasfoo/delern)
+[![Travis CI](https://travis-ci.org/dasfoo/delern.svg?branch=master)](https://travis-ci.org/dasfoo/delern)
 [![codecov](https://codecov.io/gh/dasfoo/delern/branch/master/graph/badge.svg)](https://codecov.io/gh/dasfoo/delern)
-iOS: [![Travis CI](https://travis-ci.org/dasfoo/delern.svg?branch=master)](https://travis-ci.org/dasfoo/delern)
 
 ## <img src="flutter/images/ic_launcher.png" height="64px" /> Delern
 

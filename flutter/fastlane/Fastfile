@@ -35,7 +35,7 @@ platform :android do
     flutter(
       action: 'build',
       git_version: true,
-    ).values.first
+    )
     supply(
       track: 'internal',
       apk: lane_context[SharedValues::FLUTTER_OUTPUT_APK],
@@ -48,10 +48,42 @@ end
 
 platform :ios do
   lane :build do
+    # Set up OS X keychain and switch match to readonly model. This command has
+    # no effect outside CI.
+    setup_travis
+
+    match(
+      type: 'development',
+      app_identifier: 'org.dasfoo.delern.debug',
+    )
     flutter(
       action: 'build',
       git_version: true,
       debug: true,
+    )
+  end
+
+  lane :publish do
+    setup_travis
+    match(
+      type: 'appstore',
+      app_identifier: 'org.dasfoo.delern',
+    )
+    # Build the app to:
+    # - add version
+    # - switch to release mode
+    flutter(
+      action: 'build',
+      git_version: true,
+      # TODO(dotdoom): since this changes Podfile.lock and other files to
+      #                symlink the release version of packages, we have to clear
+      #                dirty mark.
+      git_version_dirty_mark: '',
+    )
+    gym(silent: true)
+    pilot(
+      ipa: 'build/Runner.ipa',
+      skip_submission: true,
     )
   end
 end
