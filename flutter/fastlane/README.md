@@ -43,6 +43,11 @@ fastlane android publish
 fastlane ios build
 ```
 
+### ios publish
+```
+fastlane ios publish
+```
+
 
 ----
 

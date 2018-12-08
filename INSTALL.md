@@ -112,7 +112,7 @@ Put `fabric.properties` with Fabric API key configured into `app` subdirectory.
 You can get the API key (not secret key, which isn't used) on the Fabric
 [organization page](https://www.fabric.io/settings/organizations).
 
-## CircleCI environment
+## CI environment
 
 * `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEYSTORE_KEY_PASSWORD`
 

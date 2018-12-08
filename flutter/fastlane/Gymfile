@@ -1,0 +1,2 @@
+workspace('ios/Runner.xcworkspace')
+output_directory('./build')
