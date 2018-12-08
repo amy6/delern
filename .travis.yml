@@ -130,22 +130,16 @@ script:
     fi
 
   - |
-    if [ -n "$TRAVIS_PULL_REQUEST" ]; then
-      # Building a PR. No access to keys. Build debug version w/o signing.
-      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        sed -i '' 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g' \
-            flutter/ios/Runner.xcodeproj/project.pbxproj
-        ( cd flutter && flutter build ios --debug )
-      fi
-    else
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
       # We use this account to access both Google Play account and GCS.
       # The former requires it to be in "app" subdirectory.
       echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > flutter/android/app/play-store-service-account.json
       gcloud auth activate-service-account --key-file flutter/android/app/play-store-service-account.json
 
-      # Building a tag or "master" branch. Deploy Firebase to debug, publish to
-      # Play Store (internal track).
       if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        echo 'Building a tag or "master" branch. Deploy Firebase to debug,'
+        echo 'publish to Play Store (internal track).'
+
         mkdir -p ~/.android
         gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
         gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
@@ -154,18 +148,27 @@ script:
         ( cd flutter && bundle exec fastlane android publish )
       else
         if [ -n "$TRAVIS_TAG" ]; then
-          # Building a tag. Upload to TestFlight.
+          echo 'Building a tag. Upload to TestFlight.'
           ( cd flutter && bundle exec fastlane ios publish )
         elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
-          # Building "master" branch. Build debug version, sign. Do not upload to
-          # TestFlight (review process is too slow, besides, version number format
-          # will look like a.b.c-N-gCOMMIT, which is not accepted by Apple
-          # Store).
+          echo 'Building "master" branch. Build debug version, sign. Do not'
+          echo 'upload to TestFlight (review process is too slow, besides,'
+          echo 'version number format will look like a.b.c-N-gCOMMIT, which is'
+          echo 'not accepted by Apple Store).'
+
           ( cd flutter && bundle exec fastlane ios build )
         else
-          echo 'Unexpected condition for triggering the build!'
+          echo 'Unexpected condition for triggering the build!' >&2
           exit 1
         fi
+       fi
+    else
+      echo 'Building a PR. No access to keys. Build debug version w/o signing.'
+
+      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        sed -i '' 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g' \
+            flutter/ios/Runner.xcodeproj/project.pbxproj
+        ( cd flutter && flutter build ios --debug )
       fi
     fi
 
