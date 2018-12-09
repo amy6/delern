@@ -1,3 +1,5 @@
+# Validate with: ruby -ryaml -e 'YAML.load_file ".travis.yml"'
+
 # Generic option gives us Git, Ruby, NodeJS, JVM, i.e. everything we need.
 # https://docs.travis-ci.com/user/languages/minimal-and-generic/#generic
 language: generic
@@ -8,13 +10,6 @@ language: generic
 # TODO(dotdoom): use CI build number instead of commit count.
 git:
   depth: false
-
-addons:
-  apt:
-    packages:
-      # https://flutter.io/docs/get-started/install/linux.
-      - lib32stdc++6
-      - libglu1-mesa
 
 env:
   global:
@@ -29,46 +24,46 @@ env:
     # https://github.com/flutter/flutter/pull/4989.
     - BOT=false
 
-matrix:
-  include:
-    # Build Android / deploy to Play Store, deploy Firebase.
-    - os: linux
-      # URL from https://cloud.google.com/sdk/docs/downloads-versioned-archives.
-      env: GCLOUD_URL='https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-227.0.0-linux-x86_64.tar.gz'
-    # Build iOS / deploy to App Store.
-    - os: osx
-      env: GCLOUD_URL='https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-227.0.0-darwin-x86_64.tar.gz'
+os: osx
 
 branches:
   only:
     - master
     - /^[0-9]+[.][0-9]+[.][0-9]+$/
 
-cache:
-  directories:
-    # pod setup (clones repository): 104s
-    - $HOME/.cocoapods
-    # flutter doctor (builds flutter tool): 124s
-    - $SDK_ROOT/flutter
-    - $ANDROID_HOME
-    - $HOME/.pub-cache
-    - $HOME/.gradle
-    - $HOME/.npm
-    - $TRAVIS_BUILD_DIR/vendor/bundle
-    - $TRAVIS_BUILD_DIR/firebase/node_modules
-    - $TRAVIS_BUILD_DIR/firebase/functions/node_modules
-    - $TRAVIS_BUILD_DIR/firebase/www/bower_components
+# For some reason, cache is SO slow on OSX, it's better to disable.
+#cache:
+#  timeout: 480
+#  directories:
+#    # pod setup (clones repository): 104s, pod install: 40s
+#    - $HOME/.cocoapods
+#    # flutter precache: 110s
+#    - $SDK_ROOT/flutter
+#    # npm install in firebase/: 165s
+#    - $TRAVIS_BUILD_DIR/firebase/node_modules
+#    # npm install in firebase/functions/: 36s
+#    - $TRAVIS_BUILD_DIR/firebase/functions/node_modules
+#    - $TRAVIS_BUILD_DIR/vendor/bundle (25s)
+#    - $TRAVIS_BUILD_DIR/firebase/www/bower_components (16s)
+#    # difficult to measure (scattered)
+#    - $HOME/.gradle
+#    - $ANDROID_HOME
+#    # very fast, probably not worth caching
+#    - $HOME/.pub-cache
 
 before_script:
   - mkdir -p "${SDK_ROOT?}"
 
   # Install and configure gcloud.
-  - curl -sSL "${GCLOUD_URL?}" | tar -C "${SDK_ROOT?}" -xz
-  # This is needed only on OSX to fetch match keys repository.
+  - |
+    curl -sSL \
+    'https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-227.0.0-darwin-x86_64.tar.gz' | \
+    tar -C "${SDK_ROOT?}" -xz
+  - gcloud version
+  # This is needed only for iOS to fetch match keys repository.
   - |
     git config --global credential.https://source.developers.google.com.helper \
         gcloud.sh
-  - gcloud version
 
   # Install and build flutter (may be cached).
   - |
@@ -82,99 +77,83 @@ before_script:
   - flutter --version
 
   # Install Android SDK.
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      mkdir -p "${ANDROID_HOME?}/licenses"
-      # This is a hash of accepted licenses, which can be copied verbatim from
-      # developer's workstation.
-      echo d56f5187479451eabf01fb78af6dfcb131a6481e \
-        > "${ANDROID_HOME?}/licenses/android-sdk-license"
-
-      # Bootstrap step necessary to run Gradle, which installs Android SDK.
-      echo "flutter.sdk=$SDK_ROOT/flutter" > flutter/android/local.properties
-      ( cd flutter/android && ./gradlew resolveDependencies )
-    fi
+  - mkdir -p "${ANDROID_HOME?}/licenses"
+  # This is a hash of accepted licenses, which can be copied verbatim from a
+  # developer's workstation.
+  - >
+    echo d56f5187479451eabf01fb78af6dfcb131a6481e >
+    "${ANDROID_HOME?}/licenses/android-sdk-license"
+  # Bootstrap step necessary to run Gradle, which installs Android SDK.
+  - echo "flutter.sdk=$SDK_ROOT/flutter" > flutter/android/local.properties
+  - ( cd flutter/android && ./gradlew resolveDependencies )
 
   - bundle --version
   - bundle install
 
   - ( cd flutter && flutter packages get )
 
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      pod --version
-      bundle exec pod setup &&
-        ( cd flutter/ios && bundle exec pod install )
-    else
-      npm --version
-      ( cd firebase && npm install --no-save ) &&
-        ( cd firebase/functions && npm install --no-save ) &&
-        ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
-    fi
+  - pod --version
+  - bundle exec pod setup
+
+  # TODO(dotdoom): file bug: Travis ignores node_js and .nvmrc for generic lang.
+  # Firebase requires Node version > 8.
+  - nvm install 8
+  - nvm alias default 8
+
+  - node --version
+  - npm --version
+  - ( cd firebase && npm install --no-save )
+  - ( cd firebase/functions && npm install --no-save )
+  - ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
 
 script:
   - ( cd flutter && bundle exec fastlane build )
 
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      ( cd flutter && bundle exec fastlane android build )
+  - ( cd flutter && flutter test --coverage )
+  - bash <(curl -s https://codecov.io/bash)
 
-      if [ -n "$(git status --porcelain)" ]; then
-        echo 'Working directory not clean after reformat / update:' >&2
-        git status >&2
-        git diff >&2
-        exit 1
-      fi
+  - ( cd firebase && npm run build )
+  - ( cd firebase/www && ../node_modules/.bin/polymer lint )
 
-      ( cd flutter && flutter test --coverage )
-      bash <(curl -s https://codecov.io/bash)
-
-      ( cd firebase && npm run build )
-      ( cd firebase/www && ../node_modules/.bin/polymer lint )
-    fi
+  - bundle exec fastlane ensure_clean_git
 
   - |
     if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+      echo 'Building a tag or a branch. Deploy Firebase to debug,'
+      echo 'publish to Play Store (internal track).'
+
       # We use this account to access both Google Play account and GCS.
-      # The former requires it to be in "app" subdirectory.
+      # The former requires it to be in the location configured in Appfile.
       echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > flutter/android/app/play-store-service-account.json
       gcloud auth activate-service-account --key-file flutter/android/app/play-store-service-account.json
 
-      if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        echo 'Building a tag or "master" branch. Deploy Firebase to debug,'
-        echo 'publish to Play Store (internal track).'
+      mkdir -p ~/.android
+      gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
+      gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
 
-        mkdir -p ~/.android
-        gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-        gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
-        ( cd firebase && PROJECT=delern-debug npm run deploy )
-        ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
-        ( cd flutter && bundle exec fastlane android publish )
+      bundle exec fastlane ensure_clean_git
+      ( cd firebase && PROJECT=delern-debug npm run deploy )
+      ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
+      ( cd flutter && bundle exec fastlane android publish )
+
+      if [ -n "$TRAVIS_TAG" ]; then
+        echo 'Building a tag. Upload to TestFlight.'
+        ( cd flutter && bundle exec fastlane ios publish )
+      elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
+        echo 'Building "master" branch. Build debug version, sign. Do not'
+        echo 'upload to TestFlight (review process is too slow, besides,'
+        echo 'version number format will look like a.b.c-N-gCOMMIT, which is'
+        echo 'not accepted by Apple Store).'
+
+        ( cd flutter && bundle exec fastlane ios build )
       else
-        if [ -n "$TRAVIS_TAG" ]; then
-          echo 'Building a tag. Upload to TestFlight.'
-          ( cd flutter && bundle exec fastlane ios publish )
-        elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
-          echo 'Building "master" branch. Build debug version, sign. Do not'
-          echo 'upload to TestFlight (review process is too slow, besides,'
-          echo 'version number format will look like a.b.c-N-gCOMMIT, which is'
-          echo 'not accepted by Apple Store).'
-
-          ( cd flutter && bundle exec fastlane ios build )
-        else
-          echo 'Unexpected condition for triggering the build!' >&2
-          exit 1
-        fi
-       fi
+        echo 'Unexpected condition for triggering the build!' >&2
+        exit 1
+      fi
     else
       echo 'Building a PR. No access to keys. Build debug version w/o signing.'
-
-      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        sed -i '' 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g' \
-            flutter/ios/Runner.xcodeproj/project.pbxproj
-        ( cd flutter && flutter build ios --debug )
-      fi
+      ( cd flutter && bundle exec fastlane android build )
+      sed -i '' 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g' \
+          flutter/ios/Runner.xcodeproj/project.pbxproj
+      ( cd flutter && flutter build ios --debug )
     fi
-
-before_cache:
-  - rm -f .npm/anonymous-cli-metrics.json
