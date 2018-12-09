@@ -11,6 +11,10 @@
 
 default_platform(:android)
 
+# A fixed integer to add to CI build number to calculate an application build
+# number.
+CI_BUILD_NUMBER_BASE = 4000
+
 lane :build do
   flutter(
     action: 'l10n',
@@ -26,7 +30,8 @@ platform :android do
   lane :build do
     flutter(
       action: 'build',
-      git_version: true,
+      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
+      build_name_override: 'vcs*',
       debug: true,
     )
   end
@@ -34,7 +39,8 @@ platform :android do
   lane :publish do
     flutter(
       action: 'build',
-      git_version: true,
+      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
+      build_name_override: 'vcs*',
     )
     supply(
       track: 'internal',
@@ -58,7 +64,8 @@ platform :ios do
     )
     flutter(
       action: 'build',
-      git_version: true,
+      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
+      build_name_override: 'vcs*',
       debug: true,
     )
   end
@@ -74,11 +81,11 @@ platform :ios do
     # - switch to release mode
     flutter(
       action: 'build',
-      git_version: true,
+      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
       # TODO(dotdoom): since this changes Podfile.lock and other files to
       #                symlink the release version of packages, we have to clear
       #                dirty mark.
-      git_version_dirty_mark: '',
+      build_name_override: 'vcs',
     )
     gym(silent: true)
     pilot(
