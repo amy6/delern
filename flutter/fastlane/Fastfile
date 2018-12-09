@@ -88,9 +88,9 @@ platform :ios do
       build_name_override: 'vcs',
     )
     gym(silent: true)
+    # TODO(dotdoom): set also "changelog"
     pilot(
       ipa: 'build/Runner.ipa',
-      skip_submission: true,
     )
   end
 end
