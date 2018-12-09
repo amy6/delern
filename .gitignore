@@ -39,7 +39,7 @@ firebase-debug.log
 
 # https://docs.fastlane.tools/best-practices/source-control/
 # fastlane specific
-/flutter/fastlane/report.xml
+report.xml
 # deliver temporary files
 /flutter/fastlane/Preview.html
 # snapshot generated screenshots

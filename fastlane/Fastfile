@@ -1,0 +1,17 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+lane :ensure_clean_git do
+  unless sh(*%w(git status --porcelain), log: false).strip.empty?
+    status = sh(*%w(git status), log: false)
+    diff = sh(*%w(git diff), log: false)
+    UI.build_failure!("Working directory not clean!\n#{status}\n#{diff}")
+  end
+end
+
+# vim: ft=ruby
