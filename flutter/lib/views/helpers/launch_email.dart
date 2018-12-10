@@ -1,3 +1,4 @@
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,23 +12,45 @@ const String _supportEmail = 'delern@dasfoo.org';
 String _queryEncodingToPercent(String text) => text.replaceAll('+', '%20');
 
 Future<void> launchEmail(BuildContext context) async {
-  final platform = Theme.of(context).platform;
   final appInfo = await PackageInfo.fromPlatform();
   final appVersion = appInfo.version;
   final buildNumber = appInfo.buildNumber;
   final appName = appInfo.appName;
   final orientation = MediaQuery.of(context).orientation.toString();
-  final screenSize = MediaQuery.of(context).size;
+  //Count physical pixels of device
+  final screenSize =
+      MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
+
+  // Get info about the device
+  final deviceInfo = DeviceInfoPlugin();
+  var phoneModel = '';
+  var operatingSystem = '';
+  if (Theme.of(context).platform == TargetPlatform.android) {
+    final androidInfo = await deviceInfo.androidInfo;
+    phoneModel = androidInfo.model;
+    // https://developer.android.com/reference/android/os/Build.VERSION
+    operatingSystem = 'Android version: ${androidInfo.version.release};\n'
+        'Android Security Patch level: ${androidInfo.version.securityPatch};\n'
+        'SDK: ${androidInfo.version.sdkInt};';
+  } else {
+    final iosInfo = await deviceInfo.iosInfo;
+    phoneModel = iosInfo.model;
+    // http://pubs.opengroup.org/onlinepubs/7908799/xsh/sysutsname.h.html
+    operatingSystem =
+        'iOS version: ${iosInfo.systemName} ${iosInfo.systemVersion}; \n'
+        'Version level of the release: ${iosInfo.utsname.version}\n'
+        'Hardware Type: ${iosInfo.utsname.machine};';
+  }
 
   // On iPhone Gmail app \n does not work.
   final appInfoOptions = {
-    'subject': 'Delern Support',
-    'body': '\n\n\nApp Name: $appName; \n'
-        'App Version: $appVersion; \n'
+    'subject': '$appName Feedback',
+    'body': '\n\n\nApp Version: $appVersion; \n'
         'Build Number: $buildNumber; \n'
-        'Plaform: $platform; \n'
         'App Orientation: $orientation; \n'
         'Screensize: $screenSize; \n'
+        'Device: $phoneModel; \n'
+        '$operatingSystem \n'
   };
 
   final mailUrl = _queryEncodingToPercent(Uri(
