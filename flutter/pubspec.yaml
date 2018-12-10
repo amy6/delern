@@ -9,8 +9,8 @@ description: Spaced repetition learning system (Flutter version)
 #version: 1.0.0+1
 
 dependencies:
-  device_info: ^0.2.1
-  package_info: ^0.3.0
+  device_info: ^0.3.0
+  package_info: ^0.3.2
   url_launcher: ^3.0.3
   flutter_markdown: ^0.2.0
   http: '>=0.11.3'
