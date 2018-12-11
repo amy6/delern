@@ -13,20 +13,17 @@ dependencies:
   package_info: ^0.3.2
   url_launcher: ^3.0.3
   flutter_markdown: ^0.2.0
-  http: '>=0.11.3'
+  http: ^0.11.3
   share: ^0.5.2
   sentry: ^2.1.1
   shared_preferences: ^0.4.3
   intro_views_flutter: ^2.2.4
 
-  # Do not upgrade these packages unless you need it.
-  # Bumping these versions may bump minimum Play Services version required to
-  # run the app, resulting in older phones being unsupported.
-  firebase_auth: 0.6.2+1
-  firebase_analytics: 1.0.4
-  firebase_database: 1.0.5
-  firebase_messaging: 2.0.1
-  google_sign_in: 3.2.1
+  firebase_auth: ^0.6.6
+  firebase_analytics: ^1.0.6
+  firebase_database: ^1.0.5
+  firebase_messaging: ^2.1.0
+  google_sign_in: ^3.2.4
 
   flutter:
     sdk: flutter
