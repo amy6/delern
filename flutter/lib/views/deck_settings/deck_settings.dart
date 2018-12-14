@@ -107,63 +107,65 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
 
   Widget _buildBody() => Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              controller: _deckNameController,
-              style: AppStyles.primaryText,
-              onChanged: (text) {
-                setState(() {
-                  _isDeckChanged = true;
-                  _viewModel.deck.name = text;
-                });
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child: Text(
-                    AppLocalizations.of(context).deckType,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              TextField(
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                controller: _deckNameController,
+                style: AppStyles.primaryText,
+                onChanged: (text) {
+                  setState(() {
+                    _isDeckChanged = true;
+                    _viewModel.deck.name = text;
+                  });
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child: Text(
+                      AppLocalizations.of(context).deckType,
+                      style: AppStyles.secondaryText,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  DeckTypeDropdown(
+                    value: _viewModel.deck.type,
+                    valueChanged: (newDeckType) => setState(() {
+                          _isDeckChanged = true;
+                          _viewModel.deck.type = newDeckType;
+                        }),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    AppLocalizations.of(context).markdown,
                     style: AppStyles.secondaryText,
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                DeckTypeDropdown(
-                  value: _viewModel.deck.type,
-                  valueChanged: (newDeckType) => setState(() {
+                  Switch(
+                    value: _viewModel.deck.markdown,
+                    onChanged: (newValue) {
+                      setState(() {
                         _isDeckChanged = true;
-                        _viewModel.deck.type = newDeckType;
-                      }),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  AppLocalizations.of(context).markdown,
-                  style: AppStyles.secondaryText,
-                ),
-                Switch(
-                  value: _viewModel.deck.markdown,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _isDeckChanged = true;
-                      _viewModel.deck.markdown = newValue;
-                    });
-                  },
-                )
-              ],
-            ),
-          ],
+                        _viewModel.deck.markdown = newValue;
+                      });
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       );
 }
