@@ -99,7 +99,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         ],
       );
     } else {
-      return HorizontalDialog(
+      return _HorizontalDialog(
         child: SingleChildScrollView(
           child: Container(
               width: MediaQuery.of(context).size.width,
@@ -124,48 +124,28 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   }
 }
 
-class HorizontalDialog extends StatelessWidget {
-  const HorizontalDialog({
+class _HorizontalDialog extends StatelessWidget {
+  const _HorizontalDialog({
     Key key,
     this.child,
-    this.insetAnimationDuration = const Duration(milliseconds: 100),
-    this.insetAnimationCurve = Curves.decelerate,
-    this.shape,
   }) : super(key: key);
 
   final Widget child;
 
-  /// The duration of the animation to show when the system keyboard intrudes
-  /// into the space that the dialog is placed in.
-  ///
-  /// Defaults to 100 milliseconds.
-  final Duration insetAnimationDuration;
-
-  /// The curve to use for the animation shown when the system keyboard intrudes
-  /// into the space that the dialog is placed in.
-  ///
-  /// Defaults to [Curves.fastOutSlowIn].
-  final Curve insetAnimationCurve;
-
-  /// {@template flutter.material.dialog.shape}
-  /// The shape of this dialog's border.
-  ///
-  /// Defines the dialog's [Material.shape].
-  ///
-  /// The default shape is a [RoundedRectangleBorder] with a radius of 2.0.
-  /// {@endtemplate}
-  final ShapeBorder shape;
-
-  Color _getColor(BuildContext context) =>
-      Theme.of(context).dialogBackgroundColor;
-
-  static const RoundedRectangleBorder _defaultDialogShape =
-      RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(2.0)));
-
   @override
   Widget build(BuildContext context) {
-    final dialogTheme = DialogTheme.of(context);
+    // The duration of the animation to show when the system keyboard intrudes
+    // into the space that the dialog is placed in.
+    const insetAnimationDuration = Duration(milliseconds: 100);
+
+    // The curve to use for the animation shown when the system
+    // keyboard intrudes
+    // into the space that the dialog is placed in.
+    const insetAnimationCurve = Curves.decelerate;
+
+    const dialogShape = RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)));
+
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets,
       duration: insetAnimationDuration,
@@ -173,10 +153,10 @@ class HorizontalDialog extends StatelessWidget {
       child: Center(
         child: Material(
           elevation: 24.0,
-          color: _getColor(context),
+          color: Theme.of(context).dialogBackgroundColor,
           type: MaterialType.card,
           child: child,
-          shape: shape ?? dialogTheme.shape ?? _defaultDialogShape,
+          shape: dialogShape,
         ),
       ),
     );
