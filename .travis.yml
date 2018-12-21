@@ -97,7 +97,7 @@ before_script:
   - ( cd firebase/www && ../node_modules/.bin/bower --allow-root install )
 
   # TODO(dotdoom): this step is very slow and should not even be necessary.
-  - pod setup
+  #- pod setup
 
 script:
   - ( cd flutter && bundle exec fastlane build )
