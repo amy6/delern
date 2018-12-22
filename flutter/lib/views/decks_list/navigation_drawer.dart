@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +8,7 @@ import 'package:package_info/package_info.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../remote/analytics.dart';
-import '../../remote/sign_in.dart';
+import '../../remote/auth.dart';
 import '../../views/helpers/launch_email.dart';
 import '../../views/support_dev/support_development.dart';
 import '../helpers/save_updates_dialog.dart';
@@ -24,9 +23,6 @@ class NavigationDrawer extends StatefulWidget {
 class _NavigationDrawerState extends State<NavigationDrawer> {
   String versionCode;
 
-  // TODO(dotdoom): remove when CurrentUserWidget supplies realtime data.
-  FirebaseUser _overrideUserForProfile;
-
   @override
   void initState() {
     super.initState();
@@ -38,18 +34,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   @override
   Widget build(BuildContext context) {
     var user = CurrentUserWidget.of(context).user;
-    if (_overrideUserForProfile != null &&
-        user != null &&
-        _overrideUserForProfile.uid == user.uid) {
-      // Take override only if it's exactly matching the current user, otherwise
-      // switching user / signing out will make UI stale!
-      user = _overrideUserForProfile;
-    }
 
-    var accountName = user.displayName;
-    if (accountName == null || accountName.isEmpty) {
-      accountName = AppLocalizations.of(context).anonymous;
-    }
+    var accountName =
+        user.displayName ?? AppLocalizations.of(context).anonymous;
 
     return Drawer(
         child: ListView(
@@ -59,7 +46,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
       children: <Widget>[
         UserAccountsDrawerHeader(
           accountName: Text(accountName),
-          accountEmail: user.email == null ? null : Text(user.email),
+          accountEmail: Text(user.humanFriendlyIdentifier),
           currentAccountPicture: CircleAvatar(
             backgroundImage: user.photoUrl == null
                 ? const AssetImage('images/anonymous.jpg')
@@ -75,7 +62,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
             if (user.isAnonymous) {
               _promoteAnonymous(context);
             } else {
-              signOut();
+              Auth.instance.signOut();
               Navigator.pop(context);
             }
           },
@@ -134,7 +121,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
   Future<void> _promoteAnonymous(BuildContext context) async {
     logPromoteAnonymous();
     try {
-      await signIn(SignInProvider.google);
+      await Auth.instance.signIn(SignInProvider.google);
     } on PlatformException catch (_) {
       // TODO(ksheremet): Merge data
       logPromoteAnonymousFail();
@@ -144,18 +131,13 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
           yesAnswer: AppLocalizations.of(context).navigationDrawerSignIn,
           noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
       if (signIn) {
-        signOut();
+        // Sign out of Firebase but retain the account that has been picked by
+        // user.
+        await Auth.instance.signOut();
+        Auth.instance.signIn(SignInProvider.google, forceAccountPicker: false);
       } else {
         Navigator.of(context).pop();
       }
-      return;
     }
-
-    // TODO(dotdoom): remove once we automatically call AuthStateChanged.
-    await CurrentUserWidget.of(context).user.reload();
-    // reload() does not change existing instance. We have to get new user again
-    // https://github.com/flutter/plugins/pull/533
-    _overrideUserForProfile = await FirebaseAuth.instance.currentUser();
-    setState(() {});
   }
 }
