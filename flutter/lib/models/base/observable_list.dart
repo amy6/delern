@@ -108,21 +108,21 @@ class ObservableList<T> extends ListBase<T> {
 
   @override
   set length(int newLength) {
-    throw UnsupportedError('Changing ObservableList length using '
-        'conventional methods is not supported. Please use methods instead');
+    throw UnsupportedError('Changing ObservableList length using this method '
+        'is not supported. Please use one of the other methods provided.');
   }
 
   @override
   void operator []=(int index, T value) {
     // We don't want default List<T> implementation to move items around using
     // operator[]=, because in that case we cannot trace item removal.
-    // Once we override all move-inducing methods, we can change set() into
+    // Once we override all move-inducing methods, we can change setAt() into
     // operator[]=.
-    throw UnsupportedError('Changing ObservableList elements using '
-        'conventional methods is not supported. Please use methods instead');
+    throw UnsupportedError('Changing ObservableList elements using this method '
+        'is not supported. Please use one of the other methods provided.');
   }
 
-  // We don't override []= because that would allow us to subtly use modifying
+  // We don't implement []= because that would allow us to subtly use modifying
   // methods (e.g. sort()) without immediately noticing the side effects, such
   // as itemAdded / itemRemoved / itemChanged event churn.
   void setAt(int index, T value) {

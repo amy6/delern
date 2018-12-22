@@ -29,10 +29,23 @@ class CardsLearning extends StatefulWidget {
 }
 
 class CardsLearningState extends State<CardsLearning> {
+  /// Whether or not back side of the card is visible.
   bool _isBackShown = false;
+
+  /// Whether the card on the display is scheduled for the time in future.
+  /// Implies that the user has been asked to learn cards beyond current date,
+  /// and replied positively.
   bool _learnBeyondHorizon = false;
+
+  /// Whether we have shown at least one side of one card to the user (does not
+  /// necessarily mean that they anwered it).
   bool _atLeastOneCardShown = false;
+
+  /// Number of cards the user has answered (either positively or negatively) to
+  /// in this session.
+  // TODO(ksheremet): rename to "Answers", also in the UI.
   int _watchedCount = 0;
+
   LearningViewModel _viewModel;
   StreamSubscription<void> _updates;
 

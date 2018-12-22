@@ -24,6 +24,9 @@ class KeyedListEvent<T extends KeyedListItem> {
     this.fullListValueForSet,
   });
 
+  /// Map [value] or [fullListValueForSet] (whichever is applicable) of this
+  /// event using [mapper], then pack them back into a new [KeyedListEvent] with
+  /// the same parameters.
   KeyedListEvent<T2> map<T2 extends KeyedListItem>(T2 mapper(T value)) =>
       KeyedListEvent<T2>(
         eventType: eventType,
@@ -39,6 +42,9 @@ abstract class KeyedListMixin<T extends KeyedListItem> implements List<T> {
   int indexOfKey(String key) => indexWhere((item) => item.key == key);
 }
 
+/// Subscribe to onChildAdded/Removed/Moved/Changed events (but not the onValue
+/// event) of [query] and mux them into appropriate [KeyedListEvent], parsing
+/// values with [snapshotParser].
 Stream<KeyedListEvent<T>> childEventsStream<T extends KeyedListItem>(
         Query query, T snapshotParser(DataSnapshot s)) =>
     StreamMuxer<ListEventType>({
