@@ -64,6 +64,7 @@ void main() {
     expect(list, baseList);
 
     list.filter = (f) => f.key != 'B' && f.key != 'C' && f.key != 'E';
+    expect(list.filter, isNotNull);
     expect(
         list,
         equals([
