@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import '../remote/auth.dart' as auth;
 import 'base/keyed_list.dart';
 import 'base/model.dart';
 
@@ -19,7 +19,7 @@ class User implements KeyedListItem, Model {
     _parseSnapshot(snapshotValue);
   }
 
-  User.fromFirebase(FirebaseUser user)
+  User.fromAuth(auth.User user)
       : key = user.uid,
         name = user.displayName,
         photoUrl = user.photoUrl;

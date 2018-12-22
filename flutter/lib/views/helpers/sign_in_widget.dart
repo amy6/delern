@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +7,9 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
-import '../../models/user.dart';
+import '../../models/user.dart' as user_model;
+import '../../remote/auth.dart';
 import '../../remote/error_reporting.dart';
-import '../../remote/sign_in.dart';
 import 'helper_progress_indicator.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
@@ -25,8 +24,6 @@ class SignInWidget extends StatefulWidget {
 }
 
 class _SignInWidgetState extends State<SignInWidget> {
-  FirebaseUser _user;
-  bool _isAuthStateKnown = false;
   final _itemPadding =
       const Padding(padding: EdgeInsets.symmetric(vertical: 10.0));
 
@@ -34,29 +31,26 @@ class _SignInWidgetState extends State<SignInWidget> {
   void initState() {
     super.initState();
 
-    FirebaseAuth.instance.onAuthStateChanged.listen((firebaseUser) async {
-      setState(() {
-        _user = firebaseUser;
-        _isAuthStateKnown = true;
-      });
+    Auth.instance.onUserChanged.listen((_) async {
+      setState(() {});
 
-      if (_user != null) {
-        ErrorReporting.uid = _user.uid;
+      if (Auth.instance.currentUser != null) {
+        ErrorReporting.uid = Auth.instance.currentUser.uid;
 
-        if (!_user.isAnonymous) {
+        if (!Auth.instance.currentUser.isAnonymous) {
           // Don't wait for FCM token to save User.
           Transaction()
-            ..save(User.fromFirebase(firebaseUser))
+            ..save(user_model.User.fromAuth(Auth.instance.currentUser))
             ..commit();
         }
 
         FirebaseAnalytics()
-          ..setUserId(_user.uid)
+          ..setUserId(Auth.instance.currentUser.uid)
           ..logLogin();
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
           var fcm = FCM(
-              uid: firebaseUser.uid,
+              uid: Auth.instance.currentUser.uid,
               language: Localizations.localeOf(context).toString(),
               name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
             ..key = token;
@@ -64,9 +58,6 @@ class _SignInWidgetState extends State<SignInWidget> {
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
           (Transaction()..save(fcm)).commit();
         });
-
-        // Update profile data with the latest information from providers.
-        updateProfileFromProvider(_user);
 
         _firebaseMessaging
           ..requestNotificationPermissions()
@@ -76,7 +67,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       }
     });
 
-    signInSilently();
+    Auth.instance.signInSilently();
   }
 
   Widget _buildFeatureText(String text) => ListTile(
@@ -86,10 +77,11 @@ class _SignInWidgetState extends State<SignInWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_user != null) {
-      return CurrentUserWidget(user: _user, child: widget.child);
+    if (Auth.instance.currentUser != null) {
+      return CurrentUserWidget(
+          user: Auth.instance.currentUser, child: widget.child);
     }
-    if (_isAuthStateKnown == false) {
+    if (!Auth.instance.authStateKnown) {
       return HelperProgressIndicator();
     }
 
@@ -114,7 +106,7 @@ class _SignInWidgetState extends State<SignInWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: RaisedButton(
             color: Colors.white,
-            onPressed: () => signIn(SignInProvider.google),
+            onPressed: () => Auth.instance.signIn(SignInProvider.google),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -160,7 +152,7 @@ class _SignInWidgetState extends State<SignInWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: RaisedButton(
             color: Colors.white,
-            onPressed: () => signIn(SignInProvider.anonymous),
+            onPressed: () => Auth.instance.signIn(null),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +231,7 @@ class _SignInWidgetState extends State<SignInWidget> {
 }
 
 class CurrentUserWidget extends InheritedWidget {
-  final FirebaseUser user;
+  final User user;
 
   static CurrentUserWidget of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(CurrentUserWidget);

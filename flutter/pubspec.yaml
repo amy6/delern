@@ -18,6 +18,7 @@ dependencies:
   sentry: ^2.1.1
   shared_preferences: ^0.4.3
   intro_views_flutter: ^2.2.4
+  quiver: '>=2.0.0 <3.0.0'
 
   firebase_auth: ^0.6.6
   firebase_analytics: ^1.0.6
@@ -81,5 +82,5 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies, 
+  # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
