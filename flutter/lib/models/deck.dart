@@ -146,3 +146,76 @@ class Deck implements KeyedListItem, Model {
   @override
   String get rootPath => 'decks/$uid';
 }
+
+class DeckModel implements Model {
+  String uid;
+  String key;
+  String name;
+  bool markdown;
+  DeckType type;
+  bool accepted;
+  DateTime lastSyncAt;
+  String category;
+
+  DeckModel();
+
+  // We expect this to be called often and optimize for performance.
+  DeckModel.copyFrom(DeckModel other)
+      : uid = other.uid,
+        key = other.key,
+        name = other.name,
+        markdown = other.markdown,
+        type = other.type,
+        accepted = other.accepted,
+        lastSyncAt = other.lastSyncAt,
+        category = other.category;
+
+  DeckModel.copyFromLegacy(Deck legacy)
+      : uid = legacy.uid,
+        key = legacy.key,
+        name = legacy.name,
+        markdown = legacy.markdown,
+        type = legacy.type,
+        accepted = legacy.accepted,
+        lastSyncAt = legacy.lastSyncAt,
+        category = legacy.category;
+
+  DeckModel._fromSnapshot(this.uid, this.key, snapshotValue) {
+    if (snapshotValue == null) {
+      // Assume the deck doesn't exist anymore.
+      key = null;
+      return;
+    }
+    name = snapshotValue['name'];
+    markdown = snapshotValue['markdown'] ?? false;
+    type = Enum.fromString(
+        snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
+    accepted = snapshotValue['accepted'] ?? false;
+    lastSyncAt =
+        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
+    category = snapshotValue['category'];
+  }
+
+  @override
+  String get rootPath => 'decks/$uid';
+
+  Map<String, dynamic> toMap(bool isNew) => {
+        'decks/$uid/$key': {
+          'name': name,
+          'markdown': markdown,
+          'deckType': Enum.asString(type)?.toUpperCase(),
+          'accepted': accepted,
+          'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
+          'category': category,
+        }
+      };
+
+  static Stream<DeckModel> get({@required String uid, @required String key}) =>
+      FirebaseDatabase.instance
+          .reference()
+          .child('decks')
+          .child(uid)
+          .child(key)
+          .onValue
+          .map((evt) => DeckModel._fromSnapshot(uid, key, evt.snapshot));
+}

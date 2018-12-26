@@ -25,7 +25,7 @@ public class MainActivity extends FlutterActivity {
 
     if (BuildConfig.DEBUG) {
       // TODO(dotdoom): this should be placed in main.dart once it's available in Flutter.
-      FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG);
+      //FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG);
     }
 
     GeneratedPluginRegistrant.registerWith(this);

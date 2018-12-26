@@ -1,15 +1,30 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
 import '../../flutter/user_messages.dart';
+import '../../models/card.dart';
 import '../../models/card.dart' as card_model;
-import '../../view_models/card_view_model.dart';
+import '../../models/deck.dart';
+import '../../view_models/card_preview_bloc.dart';
 import '../../views/helpers/card_background.dart';
 import '../card_create_update/card_create_update.dart';
 import '../helpers/card_display.dart';
 import '../helpers/save_updates_dialog.dart';
+
+/*class _CardPreviewProvider extends InheritedWidget {
+  final CardPreviewBloc bloc;
+
+  static _CardPreviewProvider of(BuildContext context) =>
+      context.inheritFromWidgetOfExactType(_CardPreviewProvider);
+
+  const _CardPreviewProvider({@required this.bloc, Key key, Widget child})
+      : assert(bloc != null),
+        super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(_CardPreviewProvider oldWidget) =>
+      bloc != oldWidget.bloc;
+}*/
 
 class CardPreview extends StatefulWidget {
   final card_model.Card card;
@@ -24,28 +39,22 @@ class CardPreview extends StatefulWidget {
 }
 
 class _CardPreviewState extends State<CardPreview> {
-  CardViewModel _viewModel;
-  StreamSubscription<void> _viewModelUpdates;
+  CardPreviewBloc _cardPreviewBloc;
 
   @override
   void initState() {
-    _viewModel = CardViewModel(widget.card);
     super.initState();
-  }
-
-  @override
-  void deactivate() {
-    _viewModelUpdates?.cancel();
-    _viewModelUpdates = null;
-    super.deactivate();
+    // TODO(dotdoom): replace with a simple assignment.
+    _cardPreviewBloc = CardPreviewBloc(
+        card: CardModel.copyFromLegacy(widget.card),
+        deck: DeckModel.copyFromLegacy(widget.card.deck));
   }
 
   @override
   Widget build(BuildContext context) {
-    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
     return Scaffold(
       appBar: AppBar(
-        title: Text(_viewModel.card.deck.name),
+        title: Text(_cardPreviewBloc.deckNameValue),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
@@ -60,13 +69,8 @@ class _CardPreviewState extends State<CardPreview> {
                         noAnswer: MaterialLocalizations.of(context)
                             .cancelButtonLabel);
                     if (saveChanges) {
-                      try {
-                        await _viewModel.deleteCard();
-                      } catch (e, stackTrace) {
-                        UserMessages.showError(
-                            () => Scaffold.of(context), e, stackTrace);
-                        return;
-                      }
+                      _cardPreviewBloc.deleteCard.add(null);
+                      // TODO(dotdoom): error reporting?
                       Navigator.of(context).pop();
                     }
                   } else {
@@ -82,13 +86,17 @@ class _CardPreviewState extends State<CardPreview> {
       body: Column(
         children: <Widget>[
           Expanded(
-              child: CardDisplay(
-                  front: _viewModel.card.front,
-                  back: _viewModel.card.back,
-                  showBack: true,
-                  backgroundColor: specifyCardBackground(
-                      _viewModel.card.deck.type, _viewModel.card.back),
-                  isMarkdown: _viewModel.card.deck.markdown)),
+              child: StreamBuilder<CardViewModel>(
+                  stream: _cardPreviewBloc.cardStream,
+                  initialData: _cardPreviewBloc.cardValue,
+                  builder: (context, snapshot) => CardDisplay(
+                      front: snapshot.requireData.card.front,
+                      back: snapshot.requireData.card.back,
+                      showBack: true,
+                      backgroundColor: specifyCardBackground(
+                          snapshot.requireData.deck.type,
+                          snapshot.requireData.card.back),
+                      isMarkdown: snapshot.requireData.deck.markdown))),
           const Padding(padding: EdgeInsets.only(bottom: 100.0))
         ],
       ),
@@ -103,8 +111,7 @@ class _CardPreviewState extends State<CardPreview> {
                         // 'name' is used by Firebase Analytics to log events.
                         // TODO(dotdoom): consider better route names.
                         settings: const RouteSettings(name: '/cards/edit'),
-                        builder: (context) =>
-                            CreateUpdateCard(_viewModel.card)));
+                        builder: (context) => CreateUpdateCard(widget.card)));
               } else {
                 UserMessages.showMessage(
                     Scaffold.of(context),
