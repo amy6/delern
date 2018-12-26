@@ -46,6 +46,10 @@ type AccessString extends String {
 
 type DeckAccess {
   access: AccessString,
+  // TODO(dotdoom): consider removing these because they are populated by
+  //                the database maintenance script with admin privileges.
+  displayName: String | Null,
+  photoUrl: String | Null,
 }
 
 deckAccessFor(deckId, userId) {
@@ -55,7 +59,6 @@ deckAccess(deckId) {
   deckAccessFor(deckId, auth.uid)
 }
 deckExisted(deckId) { prior(root.deck_access[deckId]) !== null }
-userExists(userId) { root.users[userId] !== null }
 
 path /deck_access/{deckId} {
   read() { prior(deckAccess(deckId)) === "owner" }
@@ -67,14 +70,12 @@ path /deck_access/{deckId}/{sharedWithUserId} is DeckAccess {
   create() {
     deckExisted(deckId) ? (
       // Sharing a deck.
-      userExists(sharedWithUserId) &&
       prior(deckAccess(deckId)) === "owner" &&
       // Make sure access is not owner (there can be only 1 owner!), the
       // actual allowed set of values is handled by AccessString validation.
       deckAccessFor(deckId, sharedWithUserId) !== "owner"
     ) : (
-      // Creating a new deck. Do not check userExists because anonymous
-      // users do not have /users record.
+      // Creating a new deck.
       isCurrentUser(sharedWithUserId) &&
       deckAccess(deckId) === "owner"
     )
@@ -113,8 +114,6 @@ path /decks/{userId} {
 path /decks/{userId}/{deckId} is Deck {
   create() {
     deckAccess(deckId) === "owner" &&
-    // userExists() will return false for anonymous users
-    (isCurrentUser(userId) || userExists(userId)) &&
     (isCurrentUser(userId) === this.accepted)
   }
 
