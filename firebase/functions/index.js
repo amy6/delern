@@ -305,7 +305,7 @@ delern.forEachUser = (batchSize, callback, nextPageToken) => {
 };
 
 exports.databaseMaintenance = functions.https.onRequest((req, res) => {
-  let now = new Date().getTime();
+  /*let now = new Date().getTime();
   delern.forEachUser(1000, (user) => {
     // Properties at https://firebase.google.com/docs/auth/admin/manage-users
     if ((!user.email && !user.phoneNumber) ||
@@ -321,7 +321,7 @@ exports.databaseMaintenance = functions.https.onRequest((req, res) => {
           admin.auth().deleteUser(user.uid));
       }
     }
-  }).then(() => {
+  })*/ Promise.resolve().then(() => {
     return admin.database().ref('deck_access').once('value')
       .then((deckAccessSnapshot) => {
         let deckAccesses = deckAccessSnapshot.val();
