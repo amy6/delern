@@ -198,6 +198,7 @@
 
         let deckAccess = {
           access: this.access,
+          email: email,
         };
 
         let sharedDeck = {
@@ -206,6 +207,7 @@
           markdown: deck.markdown,
           lastSyncAt: 0,
           accepted: false,
+          access: deckAccess.access,
         };
 
         let self = this;
@@ -220,12 +222,13 @@
               updates['/decks/' + uid + '/' + deck.$key] = sharedDeck;
               return firebase.database().ref().update(updates).then(
                 self.doWait());
-            } else if (snap.val().access !== deckAccess) {
-              return firebase.database().ref()
-                .child('deck_access')
-                .child(deck.$key)
-                .child(uid)
-                .set(deckAccess);
+            } else if (snap.val().access !== deckAccess.access) {
+              let updates = {};
+              updates['/deck_access/' + deck.$key + '/' + uid + '/access'] =
+                deckAccess.access;
+              updates['/decks/' + uid + '/' + deck.$key + '/access'] =
+                deckAccess.access;
+              return firebase.database().ref().update(updates);
             }
           }).catch((e) => {
             e.email = email;
