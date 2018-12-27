@@ -116,7 +116,8 @@ class DeckAccessesViewModel implements Activatable {
           accepted: false,
           markdown: access.deck.markdown,
           type: access.deck.type,
-          category: access.deck.category)
+          category: access.deck.category,
+          access: access.access)
         ..key = access.deck.key);
     }
 
