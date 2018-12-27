@@ -45,7 +45,7 @@ class DeckAccess implements KeyedListItem, Model {
     uid = null;
   }
 
-  String get displayName => _displayName ?? email;
+  String get displayName => _displayName;
   String get photoUrl => _photoUrl;
 
   DeckAccess({@required this.deck, this.uid, this.access, this.email})

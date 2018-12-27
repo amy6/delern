@@ -114,7 +114,7 @@ class DeckListViewModel implements Activatable {
   static Future<void> createDeck(Deck deck, String email) {
     logDeckCreate();
     return (Transaction()
-          ..save(deck)
+          ..save(deck..access = AccessType.owner)
           ..save(
               DeckAccess(deck: deck, access: AccessType.owner, email: email)))
         .commit();

@@ -12,6 +12,7 @@ import '../../remote/user_lookup.dart';
 import '../../view_models/deck_access_view_model.dart';
 import '../../views/helpers/slow_operation_widget.dart';
 import '../helpers/empty_list_message.dart';
+import '../helpers/helper_progress_indicator.dart';
 import '../helpers/observing_animated_list.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/send_invite.dart';
@@ -220,6 +221,10 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       filter = (access) => access != AccessType.owner;
     }
 
+    final displayName = accessViewModel.deckAccess.displayName ??
+        accessViewModel.deckAccess.email ??
+        accessViewModel.user?.name;
+
     return ListTile(
       leading: (accessViewModel.deckAccess.photoUrl == null)
           ? (accessViewModel.user == null)
@@ -231,13 +236,12 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               backgroundImage:
                   NetworkImage(accessViewModel.deckAccess.photoUrl),
             ),
-      title: Text(
-        accessViewModel.deckAccess.displayName ??
-            accessViewModel.deckAccess.email ??
-            accessViewModel.user?.name ??
-            'Loading...',
-        style: AppStyles.primaryText,
-      ),
+      title: displayName == null
+          ? HelperProgressIndicator()
+          : Text(
+              displayName,
+              style: AppStyles.primaryText,
+            ),
       trailing: DeckAccessDropdown(
         value: accessViewModel.deckAccess.access,
         filter: filter,
