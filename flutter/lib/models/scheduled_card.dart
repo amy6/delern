@@ -147,3 +147,70 @@ class ScheduledCard implements KeyedListItem, Model {
     return cv;
   }
 }
+
+class ScheduledCardModel implements Model {
+  static const levelDurations = [
+    Duration(hours: 4),
+    Duration(days: 1),
+    Duration(days: 2),
+    Duration(days: 5),
+    Duration(days: 14),
+    Duration(days: 30),
+    Duration(days: 60),
+  ];
+
+  String get key => card.key;
+  set key(_) => throw Exception('ScheduledCard key is always set via "card"');
+  CardModel card;
+  // TODO(ksheremet): Find better place for storing uid
+  String _uid;
+  int level;
+  DateTime repeatAt;
+
+  ScheduledCardModel(
+      {@required this.card,
+      @required String uid,
+      this.level = 0,
+      this.repeatAt})
+      : assert(card != null),
+        assert(uid != null) {
+    _uid = uid;
+    repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
+  ScheduledCardModel.fromSnapshot(snapshotValue, {@required this.card})
+      : assert(card != null) {
+    _parseSnapshot(snapshotValue);
+  }
+
+  /* It is used for cards randomizing appearance.
+   Max jitter is 2h 59 min */
+  Duration _getJitter() =>
+      Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
+
+  void _parseSnapshot(snapshotValue) {
+    if (snapshotValue == null) {
+      // Assume the ScheduledCard doesn't exist anymore.
+      key = null;
+      return;
+    }
+    try {
+      level = int.parse(snapshotValue['level'].toString().substring(1));
+    } on FormatException catch (e, stackTrace) {
+      ErrorReporting.report('ScheduledCard', e, stackTrace);
+      level = 0;
+    }
+    repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
+  }
+
+  @override
+  String get rootPath => 'learning/$_uid/${card.deckKey}';
+
+  @override
+  Map<String, dynamic> toMap(bool isNew) => {
+        'learning/$_uid/${card.deckKey}/$key': {
+          'level': 'L$level',
+          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
+        }
+      };
+}
