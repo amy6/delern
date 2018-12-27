@@ -8,6 +8,7 @@ import 'base/enum.dart';
 import 'base/keyed_list.dart';
 import 'base/model.dart';
 import 'base/observable_list.dart';
+import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
 
@@ -21,6 +22,7 @@ class Deck implements KeyedListItem, Model {
   bool accepted;
   DateTime lastSyncAt;
   String category;
+  AccessType access;
 
   Deck({
     @required this.uid,
@@ -30,6 +32,7 @@ class Deck implements KeyedListItem, Model {
     this.accepted = true,
     this.lastSyncAt,
     this.category,
+    this.access,
   }) : assert(uid != null) {
     lastSyncAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
@@ -52,6 +55,7 @@ class Deck implements KeyedListItem, Model {
     lastSyncAt =
         DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
     category = snapshotValue['category'];
+    access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
   static Stream<KeyedListEvent<Deck>> getDecks(String uid) async* {
@@ -135,6 +139,7 @@ class Deck implements KeyedListItem, Model {
           'accepted': accepted,
           'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
           'category': category,
+          'access': Enum.asString(access),
         }
       };
 

@@ -234,6 +234,8 @@ export const databaseMaintenance = functions.https
             .ref('deck_access').once('value')).val();
         const uidCache = {};
         const userInformationUpdates = {};
+        // TODO(dotdoom): this should be done by app.
+        const deckAccessInsideDeckUpdates = {};
         const missingCardsOperations = [];
         for (const deckKey in deckAccesses) {
             const deckAccess = deckAccesses[deckKey];
@@ -249,6 +251,9 @@ export const databaseMaintenance = functions.https
                 userInformationUpdates[
                     [deckKey, uid, 'photoUrl'].join('/')] =
                     user.photoUrl || null;
+                deckAccessInsideDeckUpdates[
+                    [uid, deckKey, 'access'].join('/')] =
+                    deckAccess[uid].access;
 
                 missingCardsOperations.push(
                     delern.createMissingScheduledCards(uid, deckKey));
@@ -257,6 +262,8 @@ export const databaseMaintenance = functions.https
         await Promise.all(missingCardsOperations);
         await admin.database().ref('deck_access')
             .update(userInformationUpdates);
+        await admin.database().ref('decks')
+            .update(deckAccessInsideDeckUpdates);
 
         res.end();
     });

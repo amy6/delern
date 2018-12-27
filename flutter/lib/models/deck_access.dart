@@ -112,5 +112,7 @@ class DeckAccess implements KeyedListItem, Model {
   @override
   Map<String, dynamic> toMap(bool isNew) => {
         'deck_access/${deck.key}/$key/access': Enum.asString(access),
+        // Update "access" field of the Deck, too.
+        'decks/$key/${deck.key}/access': Enum.asString(access),
       };
 }
