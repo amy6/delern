@@ -232,7 +232,7 @@ export const databaseMaintenance = functions.https
     .onRequest(async (req, res) => {
         const deckAccesses = (await admin.database()
             .ref('deck_access').once('value')).val();
-        const uidCache = {};
+        const uidCache: { [uid: string]: admin.auth.UserRecord } = {};
         const userInformationUpdates = {};
         // TODO(dotdoom): this should be done by app.
         const deckAccessInsideDeckUpdates = {};
@@ -250,7 +250,10 @@ export const databaseMaintenance = functions.https
                     user.displayName || null;
                 userInformationUpdates[
                     [deckKey, uid, 'photoUrl'].join('/')] =
-                    user.photoUrl || null;
+                    user.photoURL || null;
+                userInformationUpdates[
+                    [deckKey, uid, 'email'].join('/')] =
+                    user.email || null;
                 deckAccessInsideDeckUpdates[
                     [uid, deckKey, 'access'].join('/')] =
                     deckAccess[uid].access;

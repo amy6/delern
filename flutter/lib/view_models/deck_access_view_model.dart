@@ -119,6 +119,8 @@ class DeckAccessesViewModel implements Activatable {
           category: access.deck.category,
           access: access.access)
         ..key = access.deck.key);
+    } else {
+      access.updateAccessFieldInDeck = true;
     }
 
     return tr.commit();

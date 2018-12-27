@@ -22,6 +22,19 @@ class DeckAccess implements KeyedListItem, Model {
   String uid;
   Deck deck;
   AccessType access;
+  String email;
+
+  String _displayName;
+  String _photoUrl;
+
+  /// Set to "true" to update redundant "access" field in /decks.
+  // This is ugly and does not belong to model at all, but Firebase Database
+  // client implementation verifies that paths do not intersect within a single
+  // update. I.e.: when we save both Deck and DeckAccess, DeckAccess still tries
+  // to update redundant "access" field inside Deck, and this is not allowed,
+  // even when the value is the same.
+  // TODO(dotdoom): think of a workaround.
+  bool updateAccessFieldInDeck = false;
 
   String get key => uid;
   set key(String newValue) {
@@ -32,7 +45,10 @@ class DeckAccess implements KeyedListItem, Model {
     uid = null;
   }
 
-  DeckAccess({@required this.deck, this.uid, this.access})
+  String get displayName => _displayName;
+  String get photoUrl => _photoUrl;
+
+  DeckAccess({@required this.deck, this.uid, this.access, this.email})
       : assert(deck != null) {
     uid ??= deck.uid;
   }
@@ -88,6 +104,9 @@ class DeckAccess implements KeyedListItem, Model {
       key = null;
       return;
     }
+    _displayName = snapshotValue['displayName'];
+    _photoUrl = snapshotValue['photoUrl'];
+    email = snapshotValue['email'];
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
@@ -110,9 +129,17 @@ class DeckAccess implements KeyedListItem, Model {
   String get rootPath => 'deck_access/${deck.key}';
 
   @override
-  Map<String, dynamic> toMap(bool isNew) => {
-        'deck_access/${deck.key}/$key/access': Enum.asString(access),
-        // Update "access" field of the Deck, too.
-        'decks/$key/${deck.key}/access': Enum.asString(access),
-      };
+  Map<String, dynamic> toMap(bool isNew) {
+    final updates = {
+      // Do not save displayName and photoUrl because these are populated by
+      // Cloud functions.
+      'deck_access/${deck.key}/$key/access': Enum.asString(access),
+      'deck_access/${deck.key}/$key/email': email,
+    };
+    if (updateAccessFieldInDeck) {
+      // Update "access" field of the Deck, too.
+      updates['decks/$key/${deck.key}/access'] = Enum.asString(access);
+    }
+    return updates;
+  }
 }

@@ -156,6 +156,7 @@ class DeckModel implements Model {
   bool accepted;
   DateTime lastSyncAt;
   String category;
+  AccessType access;
 
   DeckModel();
 
@@ -168,7 +169,8 @@ class DeckModel implements Model {
         type = other.type,
         accepted = other.accepted,
         lastSyncAt = other.lastSyncAt,
-        category = other.category;
+        category = other.category,
+        access = other.access;
 
   DeckModel.copyFromLegacy(Deck legacy)
       : uid = legacy.uid,
@@ -178,7 +180,8 @@ class DeckModel implements Model {
         type = legacy.type,
         accepted = legacy.accepted,
         lastSyncAt = legacy.lastSyncAt,
-        category = legacy.category;
+        category = legacy.category,
+        access = legacy.access;
 
   DeckModel._fromSnapshot(this.uid, this.key, snapshotValue) {
     if (snapshotValue == null) {
@@ -194,6 +197,7 @@ class DeckModel implements Model {
     lastSyncAt =
         DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
     category = snapshotValue['category'];
+    access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
   @override
@@ -207,6 +211,7 @@ class DeckModel implements Model {
           'accepted': accepted,
           'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
           'category': category,
+          'access': Enum.asString(access),
         }
       };
 

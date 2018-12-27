@@ -46,8 +46,10 @@ type AccessString extends String {
 
 type DeckAccess {
   access: AccessString,
-  // TODO(dotdoom): consider removing these because they are populated by
-  //                the database maintenance script with admin privileges.
+  // This field will be set initially by the app when a Deck is shared.
+  email: String | Null,
+  // These fields are set either by the app when a Deck is created, or filled in
+  // by Cloud function when a Deck is shared.
   displayName: String | Null,
   photoUrl: String | Null,
 }

@@ -99,8 +99,11 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        await DeckAccessesViewModel.shareDeck(
-            DeckAccess(deck: widget._deck, uid: uid, access: deckAccess));
+        await DeckAccessesViewModel.shareDeck(DeckAccess(
+            deck: widget._deck,
+            uid: uid,
+            access: deckAccess,
+            email: _textController.text.toString()));
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(Scaffold.of(context),
@@ -147,7 +150,8 @@ class _DeckUsersState extends State<DeckUsersWidget> {
     _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
       if (a.deckAccess.access == b.deckAccess.access) {
-        return (a.user?.name ?? '').compareTo(b.user?.name ?? '');
+        // TODO(dotdoom): sort by display name once available.
+        return 0;
       }
 
       switch (a.deckAccess.access) {
@@ -217,16 +221,25 @@ class _DeckUsersState extends State<DeckUsersWidget> {
       filter = (access) => access != AccessType.owner;
     }
 
+    final displayName = accessViewModel.deckAccess.displayName ??
+        accessViewModel.deckAccess.email ??
+        accessViewModel.user?.name;
+
     return ListTile(
-      leading: (accessViewModel.user == null)
-          ? null
+      leading: (accessViewModel.deckAccess.photoUrl == null)
+          ? (accessViewModel.user == null)
+              ? null
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
+                )
           : CircleAvatar(
-              backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
+              backgroundImage:
+                  NetworkImage(accessViewModel.deckAccess.photoUrl),
             ),
-      title: (accessViewModel.user == null)
+      title: displayName == null
           ? HelperProgressIndicator()
           : Text(
-              accessViewModel.user.name,
+              displayName,
               style: AppStyles.primaryText,
             ),
       trailing: DeckAccessDropdown(
@@ -236,6 +249,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               DeckAccessesViewModel.shareDeck(DeckAccess(
                   deck: _deckAccessesViewModel.deck,
                   uid: accessViewModel.deckAccess.uid,
+                  email: accessViewModel.deckAccess.email,
                   access: access));
             }),
       ),

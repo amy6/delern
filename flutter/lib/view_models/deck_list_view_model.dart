@@ -111,11 +111,12 @@ class DeckListViewModel implements Activatable {
     _decksProxy?.dispose();
   }
 
-  static Future<void> createDeck(Deck deck) {
+  static Future<void> createDeck(Deck deck, String email) {
     logDeckCreate();
     return (Transaction()
-          ..save(deck)
-          ..save(DeckAccess(deck: deck, access: AccessType.owner)))
+          ..save(deck..access = AccessType.owner)
+          ..save(
+              DeckAccess(deck: deck, access: AccessType.owner, email: email)))
         .commit();
   }
 }

@@ -23,8 +23,12 @@ class CreateDeck extends StatelessWidget {
             builder: (_) => _CreateDeckDialog(),
           );
           if (newDeck != null) {
+            final currentUser = CurrentUserWidget.of(context).user;
             try {
-              await DeckListViewModel.createDeck(newDeck);
+              // TODO(dotdoom): pass DeckAccess as a second parameter, with
+              // email, displayName and photoUrl filled in.
+              await DeckListViewModel.createDeck(
+                  newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
               UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
               return;
