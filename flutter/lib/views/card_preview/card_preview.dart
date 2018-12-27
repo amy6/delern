@@ -7,24 +7,10 @@ import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
 import '../../view_models/card_preview_bloc.dart';
 import '../../views/helpers/card_background.dart';
+import '../../views/helpers/sign_in_widget.dart';
 import '../card_create_update/card_create_update.dart';
 import '../helpers/card_display.dart';
 import '../helpers/save_updates_dialog.dart';
-
-/*class _CardPreviewProvider extends InheritedWidget {
-  final CardPreviewBloc bloc;
-
-  static _CardPreviewProvider of(BuildContext context) =>
-      context.inheritFromWidgetOfExactType(_CardPreviewProvider);
-
-  const _CardPreviewProvider({@required this.bloc, Key key, Widget child})
-      : assert(bloc != null),
-        super(key: key, child: child);
-
-  @override
-  bool updateShouldNotify(_CardPreviewProvider oldWidget) =>
-      bloc != oldWidget.bloc;
-}*/
 
 class CardPreview extends StatefulWidget {
   final card_model.Card card;
@@ -51,75 +37,77 @@ class _CardPreviewState extends State<CardPreview> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_cardPreviewBloc.deckNameValue),
-        actions: <Widget>[
-          Builder(
-            builder: (context) => IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () async {
-                  if (widget.allowEdit) {
-                    var locale = AppLocalizations.of(context);
-                    var saveChanges = await showSaveUpdatesDialog(
-                        context: context,
-                        changesQuestion: locale.deleteCardQuestion,
-                        yesAnswer: locale.delete,
-                        noAnswer: MaterialLocalizations.of(context)
-                            .cancelButtonLabel);
-                    if (saveChanges) {
-                      _cardPreviewBloc.deleteCard.add(null);
-                      // TODO(dotdoom): error reporting?
-                      Navigator.of(context).pop();
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(_cardPreviewBloc.deckNameValue),
+          actions: <Widget>[
+            Builder(
+              builder: (context) => IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () async {
+                    if (widget.allowEdit) {
+                      var locale = AppLocalizations.of(context);
+                      var saveChanges = await showSaveUpdatesDialog(
+                          context: context,
+                          changesQuestion: locale.deleteCardQuestion,
+                          yesAnswer: locale.delete,
+                          noAnswer: MaterialLocalizations.of(context)
+                              .cancelButtonLabel);
+                      if (saveChanges) {
+                        _cardPreviewBloc.deleteCard
+                            .add(CurrentUserWidget.of(context).user.uid);
+                        // TODO(ksheremet): It would be better to close
+                        //  screen in StreamBuilder when
+                        //  snapshot.connectionState == Done, but StreamBuilder
+                        //   requires a Widget in return statement.
+                        Navigator.of(context).pop();
+                      }
+                    } else {
+                      UserMessages.showMessage(
+                          Scaffold.of(context),
+                          AppLocalizations.of(context)
+                              .noDeletingWithReadAccessUserMessage);
                     }
-                  } else {
-                    UserMessages.showMessage(
-                        Scaffold.of(context),
-                        AppLocalizations.of(context)
-                            .noDeletingWithReadAccessUserMessage);
-                  }
-                }),
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: StreamBuilder<CardViewModel>(
-                  stream: _cardPreviewBloc.cardStream,
-                  initialData: _cardPreviewBloc.cardValue,
-                  builder: (context, snapshot) => CardDisplay(
-                      front: snapshot.requireData.card.front,
-                      back: snapshot.requireData.card.back,
-                      showBack: true,
-                      backgroundColor: specifyCardBackground(
-                          snapshot.requireData.deck.type,
-                          snapshot.requireData.card.back),
-                      isMarkdown: snapshot.requireData.deck.markdown))),
-          const Padding(padding: EdgeInsets.only(bottom: 100.0))
-        ],
-      ),
-      floatingActionButton: Builder(
-        builder: (context) => FloatingActionButton(
-            child: const Icon(Icons.edit),
-            onPressed: () {
-              if (widget.allowEdit) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        // 'name' is used by Firebase Analytics to log events.
-                        // TODO(dotdoom): consider better route names.
-                        settings: const RouteSettings(name: '/cards/edit'),
-                        builder: (context) => CreateUpdateCard(widget.card)));
-              } else {
-                UserMessages.showMessage(
-                    Scaffold.of(context),
-                    AppLocalizations.of(context)
-                        .noEditingWithReadAccessUserMessage);
-              }
-            }),
-      ),
-    );
-  }
+                  }),
+            )
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+                child: StreamBuilder<CardViewModel>(
+                    stream: _cardPreviewBloc.cardStream,
+                    initialData: _cardPreviewBloc.cardValue,
+                    builder: (context, snapshot) => CardDisplay(
+                        front: snapshot.requireData.card.front,
+                        back: snapshot.requireData.card.back,
+                        showBack: true,
+                        backgroundColor: specifyCardBackground(
+                            snapshot.requireData.deck.type,
+                            snapshot.requireData.card.back),
+                        isMarkdown: snapshot.requireData.deck.markdown))),
+            const Padding(padding: EdgeInsets.only(bottom: 100.0))
+          ],
+        ),
+        floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton(
+              child: const Icon(Icons.edit),
+              onPressed: () {
+                if (widget.allowEdit) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          // 'name' is used by Firebase Analytics to log events.
+                          // TODO(dotdoom): consider better route names.
+                          settings: const RouteSettings(name: '/cards/edit'),
+                          builder: (context) => CreateUpdateCard(widget.card)));
+                } else {
+                  UserMessages.showMessage(
+                      Scaffold.of(context),
+                      AppLocalizations.of(context)
+                          .noEditingWithReadAccessUserMessage);
+                }
+              }),
+        ),
+      );
 }

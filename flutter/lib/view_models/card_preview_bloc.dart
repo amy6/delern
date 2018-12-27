@@ -11,7 +11,7 @@ class CardViewModel {
   CardModel card;
   DeckModel deck;
 
-  CardViewModel({this.card, @required this.deck}) : assert(deck != null) {
+  CardViewModel({@required this.deck, this.card}) : assert(deck != null) {
     card ??= CardModel();
   }
 
@@ -34,20 +34,30 @@ class CardPreviewBloc {
 
   CardViewModel _cardValue;
   CardViewModel get cardValue => CardViewModel._copyFrom(_cardValue);
+
   Stream<CardViewModel> get cardStream =>
       // TODO(dotdoom): mux in DeckModel updates stream, too.
       CardModel.get(deckKey: _cardValue.card.deckKey, key: _cardValue.card.key)
-          .map((cardModel) => CardViewModel._copyFrom(_cardValue =
-              CardViewModel(card: cardModel, deck: _cardValue.deck)));
+          .transform(StreamTransformer.fromHandlers(
+              handleData: (cardModel, sink) async {
+        if (cardModel.key == null) {
+          // Card doesn't exist anymore. Do not send any events
+          sink.close();
+        } else {
+          sink.add(cardValue);
+        }
+      }));
 
-  final StreamController<void> _deleteCardController = StreamController<void>();
-  Sink<void> get deleteCard => _deleteCardController.sink;
+  // TODO(ksheremet): Figure out whether to call close() on dispose
+  // ignore: close_sinks
+  final _deleteCardController = StreamController<String>();
+  Sink<String> get deleteCard => _deleteCardController.sink;
 
-  void _deleteCard(void _) {
+  void _deleteCard(String uid) {
     // TODO(dotdoom): move to models?
-    final card =
-        Card(deck: Deck(uid: _cardValue.deck.uid)..key = _cardValue.deck.key);
-    (Transaction()..delete(_cardValue.card)..delete(ScheduledCard(card: card)))
+    (Transaction()
+          ..delete(_cardValue.card)
+          ..delete(ScheduledCardModel(card: _cardValue.card, uid: uid)))
         .commit();
   }
 }
