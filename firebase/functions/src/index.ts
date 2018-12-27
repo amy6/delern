@@ -155,37 +155,30 @@ export const deckShared = functions.database
                 title: actorUser.displayName + ' shared a deck with you',
                 body: actorUser.displayName + ' shared their deck "' +
                     deckName + '" (' + numberOfCards + ' cards) with you',
-                icon: actorUser.photoURL || '',
             },
+            token: null,
         };
 
+        const tokenUpdates = {};
         for (const fcmId in fcmEntries) {
             console.log('Notifying user ' + sharedWithUser.uid + ' on ' +
                 fcmEntries[fcmId].name + ' about user ' + actorUser.uid +
                 ' sharing a deck ' + deckName + ' (' + numberOfCards +
                 ' cards)');
-        }
-
-        const tokensToRemoveOperations = [];
-        for (const result of (await admin.messaging().sendToDevice(
-            Object.keys(fcmEntries), payload)).results) {
-            const error = result.error;
-            if (error) {
-                // Cleanup the tokens which are not registered anymore.
-                if (error.code === 'messaging/invalid-registration-token' ||
-                    error.code ===
-                    'messaging/registration-token-not-registered') {
-                    console.warn('Removing a token because of', error.code);
-                    tokensToRemoveOperations.push(
-                        fcmSnapshot.ref.child(result.canonicalRegistrationToken)
-                            .remove());
+            payload.token = fcmId;
+            try {
+                console.log('Notified:', await admin.messaging().send(payload));
+            } catch (e) {
+                if (e.code === 'messaging/invalid-registration-token' ||
+                    e.code === 'messaging/registration-token-not-registered') {
+                    console.warn('Removing a token because of', e.code);
+                    tokenUpdates[sharedWithUser.uid + '/' + fcmId] = null;
                 } else {
-                    console.error('Failed to send a notification to',
-                        sharedWithUser.uid, ':', error.code);
+                    console.error('Failed:', e);
                 }
             }
         }
-        await Promise.all(tokensToRemoveOperations);
+        await admin.database().ref('fcm').update(tokenUpdates);
     });
 
 export const deckUnShared = functions.database
