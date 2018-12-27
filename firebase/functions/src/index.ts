@@ -251,6 +251,9 @@ export const databaseMaintenance = functions.https
                 userInformationUpdates[
                     [deckKey, uid, 'photoUrl'].join('/')] =
                     user.photoUrl || null;
+                userInformationUpdates[
+                    [deckKey, uid, 'email'].join('/')] =
+                    user.email || null;
                 deckAccessInsideDeckUpdates[
                     [uid, deckKey, 'access'].join('/')] =
                     deckAccess[uid].access;

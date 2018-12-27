@@ -39,7 +39,7 @@ class DeckAccess implements KeyedListItem, Model {
   String get displayName => _displayName ?? email;
   String get photoUrl => _photoUrl;
 
-  DeckAccess({@required this.deck, this.uid, this.access})
+  DeckAccess({@required this.deck, this.uid, this.access, this.email})
       : assert(deck != null) {
     uid ??= deck.uid;
   }
@@ -97,6 +97,7 @@ class DeckAccess implements KeyedListItem, Model {
     }
     _displayName = snapshotValue['displayName'];
     _photoUrl = snapshotValue['photoUrl'];
+    email = snapshotValue['email'];
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
@@ -120,6 +121,8 @@ class DeckAccess implements KeyedListItem, Model {
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
+        // Do not save displayName and photoUrl because these are populated by
+        // Cloud functions.
         'deck_access/${deck.key}/$key/access': Enum.asString(access),
         'deck_access/${deck.key}/$key/email': email,
         // Update "access" field of the Deck, too.
