@@ -105,7 +105,9 @@ script:
   - ( cd flutter && flutter test --coverage )
   - bash <(curl -s https://codecov.io/bash)
 
-  - ( cd firebase && npm run build )
+  - npm --prefix firebase run build
+  - npm --prefix firebase/functions run lint
+  - npm --prefix firebase/functions run build
   - ( cd firebase/www && ../node_modules/.bin/polymer lint )
 
   - bundle exec fastlane ensure_clean_git
@@ -125,8 +127,8 @@ script:
       gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
 
       bundle exec fastlane ensure_clean_git
-      ( cd firebase && PROJECT=delern-debug npm run deploy )
-      ( cd firebase && PROJECT=delern-e1b33 npm run deploy )
+      PROJECT=delern-debug npm --prefix firebase run deploy
+      PROJECT=delern-e1b33 npm --prefix firebase run deploy
       ( cd flutter && bundle exec fastlane android publish )
 
       if [ -n "$TRAVIS_TAG" ]; then
