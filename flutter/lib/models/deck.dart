@@ -139,7 +139,7 @@ class Deck implements KeyedListItem, Model {
           'accepted': accepted,
           'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
           'category': category,
-          'access': Enum.asString(access),
+          'access': Enum.asString(access ?? AccessType.owner),
         }
       };
 
