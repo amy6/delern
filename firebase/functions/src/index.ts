@@ -241,8 +241,17 @@ export const databaseMaintenance = functions.https
             const deckAccess = deckAccesses[deckKey];
 
             for (const uid in deckAccess) {
+                missingCardsOperations.push(
+                    delern.createMissingScheduledCards(uid, deckKey));
+
                 if (!(uid in uidCache)) {
-                    uidCache[uid] = await admin.auth().getUser(uid);
+                    try {
+                        uidCache[uid] = await admin.auth().getUser(uid);
+                    } catch (e) {
+                        console.error('Cannot find user ' + uid +
+                            ' for deck ' + deckKey, e);
+                        continue;
+                    }
                 }
                 const user = uidCache[uid];
                 userInformationUpdates[
@@ -257,9 +266,6 @@ export const databaseMaintenance = functions.https
                 deckAccessInsideDeckUpdates[
                     [uid, deckKey, 'access'].join('/')] =
                     deckAccess[uid].access;
-
-                missingCardsOperations.push(
-                    delern.createMissingScheduledCards(uid, deckKey));
             }
         }
         await Promise.all(missingCardsOperations);
