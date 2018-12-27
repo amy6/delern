@@ -46,6 +46,7 @@ type AccessString extends String {
 
 type DeckAccess {
   access: AccessString,
+  email: String | Null,
   // TODO(dotdoom): consider removing these because they are populated by
   //                the database maintenance script with admin privileges.
   displayName: String | Null,

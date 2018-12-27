@@ -22,6 +22,10 @@ class DeckAccess implements KeyedListItem, Model {
   String uid;
   Deck deck;
   AccessType access;
+  String email;
+
+  String _displayName;
+  String _photoUrl;
 
   String get key => uid;
   set key(String newValue) {
@@ -31,6 +35,9 @@ class DeckAccess implements KeyedListItem, Model {
     }
     uid = null;
   }
+
+  String get displayName => _displayName ?? email;
+  String get photoUrl => _photoUrl;
 
   DeckAccess({@required this.deck, this.uid, this.access})
       : assert(deck != null) {
@@ -88,6 +95,8 @@ class DeckAccess implements KeyedListItem, Model {
       key = null;
       return;
     }
+    _displayName = snapshotValue['displayName'];
+    _photoUrl = snapshotValue['photoUrl'];
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
@@ -112,6 +121,7 @@ class DeckAccess implements KeyedListItem, Model {
   @override
   Map<String, dynamic> toMap(bool isNew) => {
         'deck_access/${deck.key}/$key/access': Enum.asString(access),
+        'deck_access/${deck.key}/$key/email': email,
         // Update "access" field of the Deck, too.
         'decks/$key/${deck.key}/access': Enum.asString(access),
       };
