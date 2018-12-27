@@ -71,7 +71,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       );
 
   Widget _buildAppBar() => AppBar(
-        //TODO(ksheremet): Consider to add name of deck in CardModel
+        // TODO(ksheremet): Consider to add name of deck in CardModel
         title: Text(widget._card.deck.name),
         actions: <Widget>[
           _cardModel.key == null

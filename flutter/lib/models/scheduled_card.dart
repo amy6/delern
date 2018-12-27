@@ -167,40 +167,12 @@ class ScheduledCardModel implements Model {
   int level;
   DateTime repeatAt;
 
-  ScheduledCardModel(
-      {@required this.card,
-      @required String uid,
-      this.level = 0,
-      this.repeatAt})
+  ScheduledCardModel({@required this.card, @required String uid})
       : assert(card != null),
         assert(uid != null) {
     _uid = uid;
+    level ??= 0;
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
-  }
-
-  ScheduledCardModel.fromSnapshot(snapshotValue, {@required this.card})
-      : assert(card != null) {
-    _parseSnapshot(snapshotValue);
-  }
-
-  /* It is used for cards randomizing appearance.
-   Max jitter is 2h 59 min */
-  Duration _getJitter() =>
-      Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
-
-  void _parseSnapshot(snapshotValue) {
-    if (snapshotValue == null) {
-      // Assume the ScheduledCard doesn't exist anymore.
-      key = null;
-      return;
-    }
-    try {
-      level = int.parse(snapshotValue['level'].toString().substring(1));
-    } on FormatException catch (e, stackTrace) {
-      ErrorReporting.report('ScheduledCard', e, stackTrace);
-      level = 0;
-    }
-    repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
 
   @override
