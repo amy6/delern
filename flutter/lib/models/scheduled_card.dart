@@ -147,3 +147,42 @@ class ScheduledCard implements KeyedListItem, Model {
     return cv;
   }
 }
+
+class ScheduledCardModel implements Model {
+  static const levelDurations = [
+    Duration(hours: 4),
+    Duration(days: 1),
+    Duration(days: 2),
+    Duration(days: 5),
+    Duration(days: 14),
+    Duration(days: 30),
+    Duration(days: 60),
+  ];
+
+  String get key => card.key;
+  set key(_) => throw Exception('ScheduledCard key is always set via "card"');
+  CardModel card;
+  // TODO(ksheremet): Find better place for storing uid
+  String _uid;
+  int level;
+  DateTime repeatAt;
+
+  ScheduledCardModel({@required this.card, @required String uid})
+      : assert(card != null),
+        assert(uid != null) {
+    _uid = uid;
+    level ??= 0;
+    repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
+  @override
+  String get rootPath => 'learning/$_uid/${card.deckKey}';
+
+  @override
+  Map<String, dynamic> toMap(bool isNew) => {
+        'learning/$_uid/${card.deckKey}/$key': {
+          'level': 'L$level',
+          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
+        }
+      };
+}
