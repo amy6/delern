@@ -3,6 +3,7 @@ import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../flutter/device_info.dart';
 import '../../flutter/localization.dart';
 import '../../views/helpers/helper_progress_indicator.dart';
 import '../../views/helpers/sign_in_widget.dart';
@@ -51,11 +52,9 @@ class _IntroViewWidget extends StatelessWidget {
   List<PageViewModel> _introPages(BuildContext context) {
     final imageWidth = MediaQuery.of(context).size.width * 0.85;
     // If device is small, set smaller size of text to prevent overlapping
-    // TODO(ksheremet): In landscape mode on small device font size isn't set up
-    // Check intro_views_flutter package to fix it
-    final textStyle = (imageWidth > 280)
-        ? _textStyle
-        : _textStyle.merge(const TextStyle(fontSize: 25));
+    final textStyle = DeviceInfo.isDeviceSmall(context)
+        ? _textStyle.merge(const TextStyle(fontSize: 25))
+        : _textStyle;
     var pages = [
       PageViewModel(
           pageColor: const Color(0xFF3F51A5),

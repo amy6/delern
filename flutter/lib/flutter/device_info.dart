@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 import '../remote/error_reporting.dart';
@@ -40,5 +41,15 @@ class DeviceInfo {
       }
     }
     return _instance;
+  }
+
+  /// Method check whether device is small. Found by trial and error
+  static bool isDeviceSmall(BuildContext context) {
+    final mediaData = MediaQuery.of(context);
+    if (mediaData.orientation == Orientation.portrait) {
+      return mediaData.size.height < 620;
+    }
+    // In landscape device is small to prevent overlapping
+    return true;
   }
 }
