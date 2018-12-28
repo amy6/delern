@@ -44,7 +44,8 @@ class CardPreviewBloc {
           // Card doesn't exist anymore. Do not send any events
           sink.close();
         } else {
-          sink.add(cardValue);
+          sink.add(CardViewModel._copyFrom(_cardValue =
+              CardViewModel(card: cardModel, deck: _cardValue.deck)));
         }
       }));
 
