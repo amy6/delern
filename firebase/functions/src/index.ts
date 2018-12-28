@@ -71,6 +71,19 @@ const delern = {
         await admin.database().ref('learning').update(learningUpdate);
     },
     forEachUser: null,
+
+    /// Delete user data, but leave traces (like entries in deck_access and
+    /// cards for the decks they had, in case they are shared). deck_access
+    /// entry of this user will be deleted for deckKey. If the user was an owner
+    /// of this deck, it is left ownerless. If the deck was not shared, the
+    /// cards are left orphaned and must be cleaned up later.
+    deleteUserLeavingTraces: (uid: string, deckKey: string) =>
+        admin.database().ref().update({
+            [`learning/${uid}`]: null,
+            [`decks/${uid}`]: null,
+            [`views/${uid}`]: null,
+            [`deck_access/${deckKey}/${uid}`]: null,
+        }),
 };
 
 export const userLookup = functions.https.onRequest((req, res) =>
@@ -240,7 +253,12 @@ export const databaseMaintenance = functions.https
                         uidCache[uid] = await admin.auth().getUser(uid);
                     } catch (e) {
                         console.error(`Cannot find user ${uid} for deck ` +
-                            deckKey, e);
+                            `${deckKey}`, e);
+                        if (e.code === 'auth/user-not-found') {
+                            console.log('User does not exist in ' +
+                                'Authentication database, deleting their data');
+                            await delern.deleteUserLeavingTraces(uid, deckKey);
+                        }
                         continue;
                     }
                 }
