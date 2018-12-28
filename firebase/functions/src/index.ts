@@ -49,8 +49,8 @@ const delern = {
         }
 
         if (Object.keys(scheduledCardsUpdates).length !== 0) {
-            console.error(Error('Database denormalized in deck ' + deckKey +
-                ' for user ' + uid + ', fixing (see below for details)'));
+            console.error(Error(`Database denormalized in deck ${deckKey} ` +
+                `for user ${uid}, fixing (see below for details)`));
             console.log(scheduledCardsUpdates);
         }
 
@@ -136,9 +136,9 @@ export const deckShared = functions.database
             replyTo: actorUser.email,
             to: sharedWithUser.email,
             subject: actorUser.displayName + ' shared a Delern deck with you',
-            text: 'Hello! ' + actorUser.displayName + ' has shared a Delern ' +
-                'deck "' + deckName + '" (' + numberOfCards + ' cards) ' +
-                'with you! Go to the Delern app on your device to check it out',
+            text: `Hello! ${actorUser.displayName} has shared a Delern deck ` +
+                `"${deckName}" (${numberOfCards} cards) with you! Go to the ` +
+                'Delern app on your device to check it out',
         };
         console.log('Sending notification email', mailOptions);
         try {
@@ -153,18 +153,17 @@ export const deckShared = functions.database
         const payload = {
             notification: {
                 title: actorUser.displayName + ' shared a deck with you',
-                body: actorUser.displayName + ' shared their deck "' +
-                    deckName + '" (' + numberOfCards + ' cards) with you',
+                body: `${actorUser.displayName} shared their deck ` +
+                    `"${deckName}" (${numberOfCards} cards) with you`,
             },
             token: null,
         };
 
         const tokenUpdates = {};
         for (const fcmId in fcmEntries) {
-            console.log('Notifying user ' + sharedWithUser.uid + ' on ' +
-                fcmEntries[fcmId].name + ' about user ' + actorUser.uid +
-                ' sharing a deck ' + deckName + ' (' + numberOfCards +
-                ' cards)');
+            console.log(`Notifying user ${sharedWithUser.uid} on ` +
+                `${fcmEntries[fcmId].name} about user ${actorUser.uid} ` +
+                `sharing a deck "${deckName}" (${numberOfCards} cards)`);
             payload.token = fcmId;
             try {
                 console.log('Notified:', await admin.messaging().send(payload));
@@ -246,8 +245,8 @@ export const databaseMaintenance = functions.https
                     try {
                         uidCache[uid] = await admin.auth().getUser(uid);
                     } catch (e) {
-                        console.error('Cannot find user ' + uid +
-                            ' for deck ' + deckKey, e);
+                        console.error(`Cannot find user ${uid} for deck ` +
+                            deckKey, e);
                         continue;
                     }
                 }
