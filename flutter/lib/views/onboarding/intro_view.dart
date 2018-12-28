@@ -6,12 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../flutter/device_info.dart';
 import '../../flutter/localization.dart';
 import '../../views/helpers/helper_progress_indicator.dart';
-import '../../views/helpers/sign_in_widget.dart';
 
 class OnboardingViewWidget extends StatefulWidget {
-  final Widget child;
+  final Widget Function() afterOnboardingBuilder;
 
-  const OnboardingViewWidget({@required this.child}) : assert(child != null);
+  const OnboardingViewWidget({@required this.afterOnboardingBuilder})
+      : assert(afterOnboardingBuilder != null);
 
   @override
   State<StatefulWidget> createState() => _OnboardingViewWidgetState();
@@ -29,7 +29,7 @@ class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
         if (pref.connectionState == ConnectionState.done) {
           _isIntroShown = pref.data.getBool(_introPrefKey);
           if (_isIntroShown == true) {
-            return SignInWidget(child: widget.child);
+            return widget.afterOnboardingBuilder();
           } else {
             return _IntroViewWidget(callback: () async {
               (await _prefs).setBool(_introPrefKey, true);
