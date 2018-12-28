@@ -26,6 +26,10 @@ env:
 
 os: osx
 
+# Starting March 2019, all iOS apps submitted to the App Store must be built
+# with the iOS 12.1 SDK or later, included in Xcode 10.1 or later.
+osx_image: xcode10.1
+
 branches:
   only:
     - master
