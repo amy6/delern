@@ -225,11 +225,16 @@ export const databaseMaintenance = functions.https
     .onRequest(async (req, res) => {
         const deckAccesses = (await admin.database()
             .ref('deck_access').once('value')).val();
+        const decks = (await admin.database().ref('decks').once('value')).val();
+
         const uidCache: { [uid: string]: admin.auth.UserRecord } = {};
         const userInformationUpdates = {};
         // TODO(dotdoom): this should be done by app.
         const deckAccessInsideDeckUpdates = {};
         const missingCardsOperations = [];
+
+        let deletedSharedDecks = 0;
+
         for (const deckKey in deckAccesses) {
             const deckAccess = deckAccesses[deckKey];
 
@@ -253,10 +258,19 @@ export const databaseMaintenance = functions.https
                     user.photoURL || null;
                 userInformationUpdates[`${deckKey}/${uid}/email`] =
                     user.email || null;
-                deckAccessInsideDeckUpdates[`${uid}/${deckKey}/access`] =
-                    deckAccess[uid].access;
+
+                if (uid in decks && deckKey in decks[uid]) {
+                    deckAccessInsideDeckUpdates[`${uid}/${deckKey}/access`] =
+                        deckAccess[uid].access;
+                } else {
+                    deletedSharedDecks++;
+                }
             }
         }
+
+        console.log(`Found ${deletedSharedDecks} decks that were shared, but ` +
+            'then deleted by the recipient from their list');
+
         await Promise.all(missingCardsOperations);
         await admin.database().ref('deck_access')
             .update(userInformationUpdates);
