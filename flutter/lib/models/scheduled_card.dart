@@ -8,6 +8,8 @@ import 'package:meta/meta.dart';
 import '../remote/error_reporting.dart';
 import 'base/keyed_list.dart';
 import 'base/model.dart';
+import 'base/observable_list.dart';
+import 'base/stream_muxer.dart';
 import 'base/transaction.dart';
 import 'card.dart';
 import 'card_view.dart';
@@ -148,6 +150,33 @@ class ScheduledCard implements KeyedListItem, Model {
   }
 }
 
+class UnorderedListEvent<T> {
+  final ListEventType eventType;
+  final T value;
+  final String key;
+
+  UnorderedListEvent({
+    @required this.key,
+    @required this.eventType,
+    @required this.value,
+  });
+}
+
+Stream<UnorderedListEvent<T>> _unorderedChildEventsStream<T>(
+        Query query, T snapshotParser(DataSnapshot s)) =>
+    StreamMuxer<ListEventType>({
+      ListEventType.itemAdded: query.onChildAdded,
+      ListEventType.itemRemoved: query.onChildRemoved,
+      ListEventType.itemChanged: query.onChildChanged,
+    }).map((muxerEvent) {
+      Event dbEvent = muxerEvent.value;
+      return UnorderedListEvent(
+        key: dbEvent.snapshot.key,
+        eventType: muxerEvent.stream,
+        value: snapshotParser(dbEvent.snapshot),
+      );
+    });
+
 class ScheduledCardModel implements Model {
   static const levelDurations = [
     Duration(hours: 4),
@@ -175,6 +204,28 @@ class ScheduledCardModel implements Model {
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
+  ScheduledCardModel.fromSnapshot(String uid, String key, snapshotValue)
+      : assert(uid != null),
+        assert(key != null) {
+    _uid = uid;
+
+    if (snapshotValue == null) {
+      // Assume the scheduled card doesn't exist anymore.
+      return;
+    }
+
+    // TODO(dotdoom): stop creating fake CardModel here.
+    card = CardModel()..key = key;
+
+    try {
+      level = int.parse(snapshotValue['level'].toString().substring(1));
+    } on FormatException catch (e, stackTrace) {
+      ErrorReporting.report('ScheduledCard', e, stackTrace);
+      level = 0;
+    }
+    repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
+  }
+
   @override
   String get rootPath => 'learning/$_uid/${card.deckKey}';
 
@@ -185,4 +236,14 @@ class ScheduledCardModel implements Model {
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
+
+  static Stream<UnorderedListEvent<Iterable<ScheduledCardModel>>> listsForUser(
+          String uid) =>
+      _unorderedChildEventsStream(
+          FirebaseDatabase.instance.reference().child('learning').child(uid),
+          (scheduledCardsOfDeck) {
+        final Map value = scheduledCardsOfDeck.value;
+        return value.entries.map((entry) =>
+            ScheduledCardModel.fromSnapshot(uid, entry.key, entry.value));
+      });
 }

@@ -15,6 +15,7 @@ import '../deck_settings/deck_settings.dart';
 import '../deck_sharing/deck_sharing.dart';
 import '../helpers/empty_list_message.dart';
 import '../helpers/observing_animated_list.dart';
+import '../helpers/scheduled_cards_bloc_widget.dart';
 import '../helpers/search_bar.dart';
 import '../helpers/sign_in_widget.dart';
 import 'create_deck.dart';
@@ -170,7 +171,7 @@ class DeckListItem extends StatelessWidget {
                 Expanded(
                   child: _buildDeckName(context),
                 ),
-                _buildNumberOfCards(),
+                _buildNumberOfCards(context),
                 _buildDeckMenu(context),
               ],
             ),
@@ -219,16 +220,15 @@ class DeckListItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildNumberOfCards() {
-    String numberOfCards;
-    if (viewModel.cardsToLearn != null &&
-        viewModel.cardsToLearn > viewModel.maxNumberOfCards) {
-      numberOfCards = '${viewModel.maxNumberOfCards}+';
-    } else {
-      numberOfCards = viewModel.cardsToLearn?.toString() ?? 'N/A';
-    }
-    return Container(
-      child: Text(numberOfCards, style: AppStyles.primaryText),
+  Widget _buildNumberOfCards(BuildContext context) {
+    final bloc = ScheduledCardsBlocWidget.of(context).bloc;
+    return StreamBuilder<int>(
+      initialData: bloc.numberOfCardsValue(viewModel.deck.key),
+      stream: bloc.numberOfCardsStream(viewModel.deck.key),
+      builder: (context, snapshot) => Container(
+            child: Text((snapshot.data ?? 0).toString(),
+                style: AppStyles.primaryText),
+          ),
     );
   }
 

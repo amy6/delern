@@ -15,9 +15,10 @@ import 'helper_progress_indicator.dart';
 final _firebaseMessaging = FirebaseMessaging();
 
 class SignInWidget extends StatefulWidget {
-  final Widget child;
+  final Widget Function() afterSignInBuilder;
 
-  const SignInWidget({this.child});
+  const SignInWidget({@required this.afterSignInBuilder})
+      : assert(afterSignInBuilder != null);
 
   @override
   State<StatefulWidget> createState() => _SignInWidgetState();
@@ -79,7 +80,7 @@ class _SignInWidgetState extends State<SignInWidget> {
   Widget build(BuildContext context) {
     if (Auth.instance.currentUser != null) {
       return CurrentUserWidget(
-          user: Auth.instance.currentUser, child: widget.child);
+          user: Auth.instance.currentUser, child: widget.afterSignInBuilder());
     }
     if (!Auth.instance.authStateKnown) {
       return HelperProgressIndicator();
