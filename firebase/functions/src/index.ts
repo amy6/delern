@@ -33,7 +33,7 @@ const delern = {
         const cards = (await admin.database().ref('cards').child(deckKey)
             .once('value')).val() || {};
 
-        const scheduledCardsUpdates = {};
+        const scheduledCardsUpdates: { [path: string]: any } = {};
         for (const cardKey in cards) {
             if (!(cardKey in scheduledCards)) {
                 scheduledCardsUpdates[cardKey] =
@@ -52,10 +52,9 @@ const delern = {
             console.error(Error(`Database denormalized in deck ${deckKey} ` +
                 `for user ${uid}, fixing (see below for details)`));
             console.log(scheduledCardsUpdates);
+            await admin.database().ref('learning').child(uid).child(deckKey)
+                .update(scheduledCards);
         }
-
-        await admin.database().ref('learning').child(uid).child(deckKey)
-            .update(scheduledCards);
     },
     setScheduledCardForAllUsers: async (deckKey: string, cardKey: string,
         skipUid: string, scheduledCard: any) => {
@@ -227,10 +226,8 @@ export const databaseMaintenance = functions.https
         const decks = (await admin.database().ref('decks').once('value')).val();
 
         const uidCache: { [uid: string]: admin.auth.UserRecord } = {};
-        const userInformationUpdates = {};
-        // TODO(dotdoom): this should be done by app.
-        const deckAccessInsideDeckUpdates = {};
-        const missingCardsOperations = [];
+        const updates: { [path: string]: any } = {};
+        const missingCardsOperations: Promise<void>[] = [];
 
         let deletedSharedDecks = 0;
 
@@ -238,9 +235,6 @@ export const databaseMaintenance = functions.https
             const deckAccess = deckAccesses[deckKey];
 
             for (const uid in deckAccess) {
-                missingCardsOperations.push(
-                    delern.createMissingScheduledCards(uid, deckKey));
-
                 if (!(uid in uidCache)) {
                     try {
                         uidCache[uid] = await admin.auth().getUser(uid);
@@ -251,15 +245,21 @@ export const databaseMaintenance = functions.https
                     }
                 }
                 const user = uidCache[uid];
-                userInformationUpdates[`${deckKey}/${uid}/displayName`] =
+                updates[`deck_access/${deckKey}/${uid}/displayName`] =
                     user.displayName || null;
-                userInformationUpdates[`${deckKey}/${uid}/photoUrl`] =
+                updates[`deck_access/${deckKey}/${uid}/photoUrl`] =
                     user.photoURL || null;
-                userInformationUpdates[`${deckKey}/${uid}/email`] =
+
+                // TODO(dotdoom): this should be done by app.
+                updates[`deck_access/${deckKey}/${uid}/email`] =
                     user.email || null;
 
                 if (uid in decks && deckKey in decks[uid]) {
-                    deckAccessInsideDeckUpdates[`${uid}/${deckKey}/access`] =
+                    missingCardsOperations.push(
+                        delern.createMissingScheduledCards(uid, deckKey));
+
+                    // TODO(dotdoom): this should be done by app.
+                    updates[`decks/${uid}/${deckKey}/access`] =
                         deckAccess[uid].access;
                 } else {
                     deletedSharedDecks++;
@@ -271,10 +271,7 @@ export const databaseMaintenance = functions.https
             'then deleted by the recipient from their list');
 
         await Promise.all(missingCardsOperations);
-        await admin.database().ref('deck_access')
-            .update(userInformationUpdates);
-        await admin.database().ref('decks')
-            .update(deckAccessInsideDeckUpdates);
+        await admin.database().ref().update(updates);
 
         res.end();
     });
