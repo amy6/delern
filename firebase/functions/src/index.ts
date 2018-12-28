@@ -65,7 +65,7 @@ const delern = {
         const learningUpdate = {};
         for (const sharedWithUid in deckAccesses) {
             if (sharedWithUid !== skipUid) {
-                learningUpdate[[sharedWithUid, deckKey, cardKey].join('/')] =
+                learningUpdate[`${sharedWithUid}/${deckKey}/${cardKey}`] =
                     scheduledCard;
             }
         }
@@ -188,9 +188,9 @@ export const deckUnShared = functions.database
         const uid = context.params.uid;
 
         return admin.database().ref('/').update({
-            [['learning', uid, deckKey].join('/')]: null,
-            [['views', uid, deckKey].join('/')]: null,
-            [['decks', uid, deckKey].join('/')]: null,
+            [`learning/${uid}/${deckKey}`]: null,
+            [`views/${uid}/${deckKey}`]: null,
+            [`decks/${uid}/${deckKey}`]: null,
         });
     });
 
@@ -247,17 +247,13 @@ export const databaseMaintenance = functions.https
                     }
                 }
                 const user = uidCache[uid];
-                userInformationUpdates[
-                    [deckKey, uid, 'displayName'].join('/')] =
+                userInformationUpdates[`${deckKey}/${uid}/displayName`] =
                     user.displayName || null;
-                userInformationUpdates[
-                    [deckKey, uid, 'photoUrl'].join('/')] =
+                userInformationUpdates[`${deckKey}/${uid}/photoUrl`] =
                     user.photoURL || null;
-                userInformationUpdates[
-                    [deckKey, uid, 'email'].join('/')] =
+                userInformationUpdates[`${deckKey}/${uid}/email`] =
                     user.email || null;
-                deckAccessInsideDeckUpdates[
-                    [uid, deckKey, 'access'].join('/')] =
+                deckAccessInsideDeckUpdates[`${uid}/${deckKey}/access`] =
                     deckAccess[uid].access;
             }
         }
