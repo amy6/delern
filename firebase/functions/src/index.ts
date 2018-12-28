@@ -33,7 +33,7 @@ const delern = {
         const cards = (await admin.database().ref('cards').child(deckKey)
             .once('value')).val() || {};
 
-        const scheduledCardsUpdates = {};
+        const scheduledCardsUpdates: { [path: string]: any } = {};
         for (const cardKey in cards) {
             if (!(cardKey in scheduledCards)) {
                 scheduledCardsUpdates[cardKey] =
@@ -49,13 +49,12 @@ const delern = {
         }
 
         if (Object.keys(scheduledCardsUpdates).length !== 0) {
-            console.error(Error('Database denormalized in deck ' + deckKey +
-                ' for user ' + uid + ', fixing (see below for details)'));
+            console.error(Error(`Database denormalized in deck ${deckKey} ` +
+                `for user ${uid}, fixing (see below for details)`));
             console.log(scheduledCardsUpdates);
+            await admin.database().ref('learning').child(uid).child(deckKey)
+                .update(scheduledCards);
         }
-
-        await admin.database().ref('learning').child(uid).child(deckKey)
-            .update(scheduledCards);
     },
     setScheduledCardForAllUsers: async (deckKey: string, cardKey: string,
         skipUid: string, scheduledCard: any) => {
@@ -65,13 +64,26 @@ const delern = {
         const learningUpdate = {};
         for (const sharedWithUid in deckAccesses) {
             if (sharedWithUid !== skipUid) {
-                learningUpdate[[sharedWithUid, deckKey, cardKey].join('/')] =
+                learningUpdate[`${sharedWithUid}/${deckKey}/${cardKey}`] =
                     scheduledCard;
             }
         }
         await admin.database().ref('learning').update(learningUpdate);
     },
     forEachUser: null,
+
+    /// Delete user data, but leave traces (like entries in deck_access and
+    /// cards for the decks they had, in case they are shared). deck_access
+    /// entry of this user will be deleted for deckKey. If the user was an owner
+    /// of this deck, it is left ownerless. If the deck was not shared, the
+    /// cards are left orphaned and must be cleaned up later.
+    deleteUserLeavingTraces: (uid: string, deckKey: string) =>
+        admin.database().ref().update({
+            [`learning/${uid}`]: null,
+            [`decks/${uid}`]: null,
+            [`views/${uid}`]: null,
+            [`deck_access/${deckKey}/${uid}`]: null,
+        }),
 };
 
 export const userLookup = functions.https.onRequest((req, res) =>
@@ -136,9 +148,9 @@ export const deckShared = functions.database
             replyTo: actorUser.email,
             to: sharedWithUser.email,
             subject: actorUser.displayName + ' shared a Delern deck with you',
-            text: 'Hello! ' + actorUser.displayName + ' has shared a Delern ' +
-                'deck "' + deckName + '" (' + numberOfCards + ' cards) ' +
-                'with you! Go to the Delern app on your device to check it out',
+            text: `Hello! ${actorUser.displayName} has shared a Delern deck ` +
+                `"${deckName}" (${numberOfCards} cards) with you! Go to the ` +
+                'Delern app on your device to check it out',
         };
         console.log('Sending notification email', mailOptions);
         try {
@@ -153,18 +165,17 @@ export const deckShared = functions.database
         const payload = {
             notification: {
                 title: actorUser.displayName + ' shared a deck with you',
-                body: actorUser.displayName + ' shared their deck "' +
-                    deckName + '" (' + numberOfCards + ' cards) with you',
+                body: `${actorUser.displayName} shared their deck ` +
+                    `"${deckName}" (${numberOfCards} cards) with you`,
             },
             token: null,
         };
 
         const tokenUpdates = {};
         for (const fcmId in fcmEntries) {
-            console.log('Notifying user ' + sharedWithUser.uid + ' on ' +
-                fcmEntries[fcmId].name + ' about user ' + actorUser.uid +
-                ' sharing a deck ' + deckName + ' (' + numberOfCards +
-                ' cards)');
+            console.log(`Notifying user ${sharedWithUser.uid} on ` +
+                `${fcmEntries[fcmId].name} about user ${actorUser.uid} ` +
+                `sharing a deck "${deckName}" (${numberOfCards} cards)`);
             payload.token = fcmId;
             try {
                 console.log('Notified:', await admin.messaging().send(payload));
@@ -188,9 +199,9 @@ export const deckUnShared = functions.database
         const uid = context.params.uid;
 
         return admin.database().ref('/').update({
-            [['learning', uid, deckKey].join('/')]: null,
-            [['views', uid, deckKey].join('/')]: null,
-            [['decks', uid, deckKey].join('/')]: null,
+            [`learning/${uid}/${deckKey}`]: null,
+            [`views/${uid}/${deckKey}`]: null,
+            [`decks/${uid}/${deckKey}`]: null,
         });
     });
 
@@ -225,47 +236,60 @@ export const databaseMaintenance = functions.https
     .onRequest(async (req, res) => {
         const deckAccesses = (await admin.database()
             .ref('deck_access').once('value')).val();
+        const decks = (await admin.database().ref('decks').once('value')).val();
+
         const uidCache: { [uid: string]: admin.auth.UserRecord } = {};
-        const userInformationUpdates = {};
-        // TODO(dotdoom): this should be done by app.
-        const deckAccessInsideDeckUpdates = {};
-        const missingCardsOperations = [];
+        const updates: { [path: string]: any } = {};
+        const missingCardsOperations: Promise<void>[] = [];
+
+        let deletedSharedDecks = 0;
+
         for (const deckKey in deckAccesses) {
             const deckAccess = deckAccesses[deckKey];
 
             for (const uid in deckAccess) {
-                missingCardsOperations.push(
-                    delern.createMissingScheduledCards(uid, deckKey));
-
                 if (!(uid in uidCache)) {
                     try {
                         uidCache[uid] = await admin.auth().getUser(uid);
                     } catch (e) {
-                        console.error('Cannot find user ' + uid +
-                            ' for deck ' + deckKey, e);
+                        console.error(`Cannot find user ${uid} for deck ` +
+                            `${deckKey}`, e);
+                        if (e.code === 'auth/user-not-found') {
+                            console.log('User does not exist in ' +
+                                'Authentication database, deleting their data');
+                            await delern.deleteUserLeavingTraces(uid, deckKey);
+                        }
                         continue;
                     }
                 }
                 const user = uidCache[uid];
-                userInformationUpdates[
-                    [deckKey, uid, 'displayName'].join('/')] =
+                updates[`deck_access/${deckKey}/${uid}/displayName`] =
                     user.displayName || null;
-                userInformationUpdates[
-                    [deckKey, uid, 'photoUrl'].join('/')] =
+                updates[`deck_access/${deckKey}/${uid}/photoUrl`] =
                     user.photoURL || null;
-                userInformationUpdates[
-                    [deckKey, uid, 'email'].join('/')] =
+
+                // TODO(dotdoom): this should be done by app.
+                updates[`deck_access/${deckKey}/${uid}/email`] =
                     user.email || null;
-                deckAccessInsideDeckUpdates[
-                    [uid, deckKey, 'access'].join('/')] =
-                    deckAccess[uid].access;
+
+                if (uid in decks && deckKey in decks[uid]) {
+                    missingCardsOperations.push(
+                        delern.createMissingScheduledCards(uid, deckKey));
+
+                    // TODO(dotdoom): this should be done by app.
+                    updates[`decks/${uid}/${deckKey}/access`] =
+                        deckAccess[uid].access;
+                } else {
+                    deletedSharedDecks++;
+                }
             }
         }
+
+        console.log(`Found ${deletedSharedDecks} decks that were shared, but ` +
+            'then deleted by the recipient from their list');
+
         await Promise.all(missingCardsOperations);
-        await admin.database().ref('deck_access')
-            .update(userInformationUpdates);
-        await admin.database().ref('decks')
-            .update(deckAccessInsideDeckUpdates);
+        await admin.database().ref().update(updates);
 
         res.end();
     });

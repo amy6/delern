@@ -21,6 +21,9 @@ vendor
 # firebase-bolt conversion tool output.
 /firebase/database.rules.json
 
+# Directory with firebase tool cache.
+/firebase/.firebase
+
 # Google Play (and other usage) deploy key
 /flutter/android/app/play-store-service-account.json
 
