@@ -5,10 +5,10 @@ import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as card_model;
 import '../../models/deck.dart';
-import '../../view_models/card_list_block.dart';
+import '../../view_models/card_list_view_model.dart';
+import '../../views/cards_list/observing_grid_view.dart';
 import '../../views/helpers/card_background.dart';
-import '../../views/helpers/empty_list_message.dart';
-import '../../views/helpers/helper_progress_indicator.dart';
+import '../../views/helpers/search_bar.dart';
 import '../card_create_update/card_create_update.dart';
 import '../card_preview/card_preview.dart';
 
@@ -25,10 +25,10 @@ class CardsListPage extends StatefulWidget {
 }
 
 class _CardsListState extends State<CardsListPage> {
-  CardListViewModel _viewModel;
-  StreamSubscription<void> _updates;
+  CardListViewModel _cardListViewModel;
 
-  void _searchTextChanged(String input) {
+  // TODO(ksheremet): Implement card search
+  /*void _searchTextChanged(String input) {
     if (input == null) {
       _viewModel.cards.filter = null;
       return;
@@ -37,56 +37,28 @@ class _CardsListState extends State<CardsListPage> {
     _viewModel.cards.filter = (c) =>
         c.front.toLowerCase().contains(input) ||
         c.back.toLowerCase().contains(input);
-  }
+  }*/
 
   @override
   void initState() {
-    _cardListBlock = CardListBlock(deckKey: widget.deck.key);
+    _cardListViewModel = CardListViewModel(deckKey: widget.deck.key);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.deck.name),
+        appBar: SearchBarWidget(title: widget.deck.name, search: null),
+        body: ObservingGrid(
+          maxCrossAxisExtent: 240.0,
+          items: _cardListViewModel.cardProcessor,
+          itemBuilder: (item) => CardGridItem(
+                card: item,
+                deck: DeckModel.copyFromLegacy(widget.deck),
+                allowEdit: widget.allowEdit,
+              ),
+          // TODO(ksheremet): Consider to remove this field
+          emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
         ),
-        body: StreamBuilder<List<card_model.CardModel>>(
-            initialData: _cardListBlock.cardValue,
-            stream: _cardListBlock.cardStream,
-            builder: (buildContext, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return HelperProgressIndicator();
-              }
-              if (snapshot.requireData.isEmpty) {
-                return EmptyListMessage(
-                    AppLocalizations.of(context).emptyCardsList);
-              }
-              return Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        AppLocalizations.of(context)
-                            .numberOfCards(_cardListBlock.cardValue.length),
-                        style: AppStyles.secondaryText,
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: GridView.extent(
-                      maxCrossAxisExtent: 240,
-                      children: List.of(
-                          _cardListBlock.cardValue.map((item) => CardGridItem(
-                                card: item,
-                                deck: DeckModel.copyFromLegacy(widget.deck),
-                                allowEdit: widget.allowEdit,
-                              ))),
-                    ),
-                  ),
-                ],
-              );
-            }),
         floatingActionButton: buildAddCard(),
       );
 

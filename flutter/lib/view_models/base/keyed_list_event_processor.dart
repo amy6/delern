@@ -36,7 +36,7 @@ abstract class KeyedListEventProcessor<TElement extends KeyedListItem,
   StreamSubscription<TInputEvent> _inputEventsSubscription;
 
   /// The source of inbound events that this processor handles while there is
-  /// at least one subsctiber active on the [events] stream.
+  /// at least one subscriber active on the [events] stream.
   final StreamGetter<TInputEvent> source;
 
   KeyedListEventProcessor(this.source) {

@@ -169,18 +169,30 @@ class CardModel implements Model {
           .map((evt) =>
               CardModel._fromSnapshot(deckKey, key, evt.snapshot.value));
 
-  static Stream<List<CardModel>> getCards(String deckKey) =>
-      (FirebaseDatabase.instance
-              .reference()
-              .child('cards')
-              .child(deckKey)
-              .orderByKey()
-              .onValue)
-          .map((v) {
-        Map v2 = v.snapshot.value ?? {};
-        return v2.entries
-            .map((item) =>
-                CardModel._fromSnapshot(deckKey, item.key, item.value))
-            .toList();
-      });
+  static Stream<DatabaseListEvent<CardModel>> getCards(String deckKey) async* {
+    Map initialValue = (await FirebaseDatabase.instance
+                .reference()
+                .child('cards')
+                .child(deckKey)
+                .orderByKey()
+                .onValue
+                .first)
+            .snapshot
+            .value ??
+        {};
+
+    yield DatabaseListEvent(
+        eventType: ListEventType.setAll,
+        fullListValueForSet: initialValue.entries.map(
+            (item) => CardModel._fromSnapshot(deckKey, item.key, item.value)));
+
+    yield* childEventsStream(
+        FirebaseDatabase.instance
+            .reference()
+            .child('cards')
+            .child(deckKey)
+            .orderByKey(),
+        (snapshot) =>
+            CardModel._fromSnapshot(deckKey, snapshot.key, snapshot.value));
+  }
 }
