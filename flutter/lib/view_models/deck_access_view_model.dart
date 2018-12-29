@@ -19,19 +19,6 @@ class DeckAccessViewModel implements ListItemViewModel {
   DeckAccessViewModel(this._deckAccess);
 
   @override
-  DeckAccessViewModel updateWith(DeckAccessViewModel value) {
-    if (identical(this, value)) {
-      // This will happen when we sent an internal update event to the owner.
-      return this;
-    }
-
-    assert(_deckAccess.key == value._deckAccess.key,
-        'Attempting to absorb a deck with a different key');
-    _deckAccess = value._deckAccess;
-    return this;
-  }
-
-  @override
   String toString() => '#$key ${_deckAccess.access}';
 }
 

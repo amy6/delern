@@ -8,7 +8,6 @@ import 'disposable.dart';
 
 abstract class ListItemViewModel implements KeyedListItem {
   String get key;
-  ListItemViewModel updateWith(covariant ListItemViewModel value);
 }
 
 typedef StreamGetter<T> = Stream<T> Function();
@@ -81,8 +80,7 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
     removeAt(index);
   }
 
-  void _update(int index, T newValue) =>
-      setAt(index, this[index].updateWith(newValue));
+  void _update(int index, T newValue) => setAt(index, newValue);
 
   void _setAll(Iterable<T> newValue) {
     if (!changed) {
