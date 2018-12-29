@@ -143,7 +143,6 @@ class DeckUsersWidget extends StatefulWidget {
 
 class _DeckUsersState extends State<DeckUsersWidget> {
   DeckAccessesViewModel _deckAccessesViewModel;
-  bool _active = false;
 
   @override
   void initState() {
@@ -167,51 +166,38 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   }
 
   @override
-  void deactivate() {
-    _deckAccessesViewModel.deactivate();
-    _active = false;
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     _deckAccessesViewModel.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (!_active) {
-      _deckAccessesViewModel.activate();
-      _active = true;
-    }
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-          child: Row(
-            children: <Widget>[
-              Text(
-                AppLocalizations.of(context).whoHasAccessLabel,
-                style: AppStyles.secondaryText,
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ObservingAnimatedList(
-            list: _deckAccessesViewModel.deckAccesses,
-            itemBuilder: (context, item, animation, index) => SizeTransition(
-                  child: _buildUserAccessInfo(item),
-                  sizeFactor: animation,
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context).whoHasAccessLabel,
+                  style: AppStyles.secondaryText,
                 ),
-            emptyMessageBuilder: () => EmptyListMessage(
-                AppLocalizations.of(context).emptyUserSharingList),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
+          Expanded(
+            child: ObservingAnimatedList(
+              list: _deckAccessesViewModel.deckAccesses,
+              itemBuilder: (context, item, animation, index) => SizeTransition(
+                    child: _buildUserAccessInfo(item),
+                    sizeFactor: animation,
+                  ),
+              emptyMessageBuilder: () => EmptyListMessage(
+                  AppLocalizations.of(context).emptyUserSharingList),
+            ),
+          ),
+        ],
+      );
 
   Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
     Function filter;

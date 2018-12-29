@@ -94,7 +94,6 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
 
 class DecksListPageState extends State<DecksListPage> {
   DeckListViewModel viewModel;
-  bool _active = false;
 
   @override
   void didChangeDependencies() {
@@ -102,13 +101,6 @@ class DecksListPageState extends State<DecksListPage> {
     viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid)
       ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.didChangeDependencies();
-  }
-
-  @override
-  void deactivate() {
-    viewModel.deactivate();
-    _active = false;
-    super.deactivate();
   }
 
   void setFilter(String input) {
@@ -125,29 +117,22 @@ class DecksListPageState extends State<DecksListPage> {
   GlobalKey fabKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
-    if (!_active) {
-      viewModel.activate();
-      _active = true;
-    }
-
-    return Scaffold(
-      appBar: SearchBarWidget(title: widget.title, search: setFilter),
-      drawer: NavigationDrawer(),
-      body: ObservingAnimatedList(
-        list: viewModel.decks,
-        itemBuilder: (context, item, animation, index) => SizeTransition(
-              child: DeckListItem(item),
-              sizeFactor: animation,
-            ),
-        emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-            fabKey: fabKey,
-            child:
-                EmptyListMessage(AppLocalizations.of(context).emptyDecksList)),
-      ),
-      floatingActionButton: CreateDeck(key: fabKey),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: SearchBarWidget(title: widget.title, search: setFilter),
+        drawer: NavigationDrawer(),
+        body: ObservingAnimatedList(
+          list: viewModel.decks,
+          itemBuilder: (context, item, animation, index) => SizeTransition(
+                child: DeckListItem(item),
+                sizeFactor: animation,
+              ),
+          emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+              fabKey: fabKey,
+              child: EmptyListMessage(
+                  AppLocalizations.of(context).emptyDecksList)),
+        ),
+        floatingActionButton: CreateDeck(key: fabKey),
+      );
 
   @override
   void dispose() {

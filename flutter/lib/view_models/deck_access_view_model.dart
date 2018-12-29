@@ -7,7 +7,7 @@ import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../models/user.dart';
 import '../remote/analytics.dart';
-import 'base/activatable.dart';
+import 'base/disposable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
@@ -22,7 +22,15 @@ class DeckAccessViewModel implements ListItemViewModel {
   final ViewModelsList<DeckAccessViewModel> _owner;
   StreamSubscription<User> _userUpdates;
 
-  DeckAccessViewModel(this._owner, this._deckAccess);
+  DeckAccessViewModel(this._owner, this._deckAccess) {
+    _userUpdates = _deckAccess.getUser().listen((user) {
+      this._user = user;
+
+      // Send event to the owner list so that it can find our index
+      // and notify subscribers.
+      _owner.childUpdated(this);
+    });
+  }
 
   @override
   DeckAccessViewModel updateWith(DeckAccessViewModel value) {
@@ -39,34 +47,15 @@ class DeckAccessViewModel implements ListItemViewModel {
 
   @override
   @mustCallSuper
-  void activate() {
-    if (_userUpdates != null) {
-      // This item is already activated. This must normally be only a side
-      // effect of updateWith -> childUpdated cycle.
-      return;
-    }
-
-    _userUpdates = _deckAccess.getUser().listen((user) {
-      this._user = user;
-
-      // Send event to the owner list so that it can find our index
-      // and notify subscribers.
-      _owner.childUpdated(this);
-    });
-  }
-
-  @override
-  @mustCallSuper
-  void deactivate() {
-    _userUpdates?.cancel();
-    _userUpdates = null;
+  void dispose() {
+    _userUpdates.cancel();
   }
 
   @override
   String toString() => '#$key ${_deckAccess.access} $_user';
 }
 
-class DeckAccessesViewModel implements Activatable {
+class DeckAccessesViewModel implements Disposable {
   final Deck deck;
 
   ViewModelsList<DeckAccessViewModel> _deckAccessViewModels;
@@ -84,18 +73,8 @@ class DeckAccessesViewModel implements Activatable {
 
   @override
   @mustCallSuper
-  void deactivate() => _deckAccessViewModels.deactivate();
-
-  @override
-  @mustCallSuper
-  void activate() {
-    deactivate();
-    _deckAccessViewModels.activate();
-  }
-
-  @mustCallSuper
   void dispose() {
-    deactivate();
+    _deckAccessViewModels.dispose();
     _deckAccessesProxy?.dispose();
   }
 

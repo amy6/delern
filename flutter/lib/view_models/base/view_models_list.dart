@@ -4,9 +4,9 @@ import 'package:meta/meta.dart';
 
 import '../../models/base/keyed_list.dart';
 import '../../models/base/observable_list.dart';
-import 'activatable.dart';
+import 'disposable.dart';
 
-abstract class ListItemViewModel implements KeyedListItem, Activatable {
+abstract class ListItemViewModel implements KeyedListItem, Disposable {
   String get key;
   ListItemViewModel updateWith(covariant ListItemViewModel value);
 }
@@ -16,27 +16,21 @@ typedef StreamGetter<T> = Stream<T> Function();
 // TODO(dotdoom): make list interface readonly.
 class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
     with KeyedListMixin<T>
-    implements Activatable {
+    implements Disposable {
   final StreamGetter<KeyedListEvent<T>> _stream;
   StreamSubscription<KeyedListEvent<T>> _subscription;
 
-  ViewModelsList(this._stream);
-
-  @override
-  @mustCallSuper
-  void activate() {
-    if (_subscription == null) {
-      forEach((item) => item.activate());
-      _subscription = _stream().listen(_processListEvent);
-    }
+  ViewModelsList(this._stream) {
+    _subscription = _stream().listen(_processListEvent);
   }
 
   @override
   @mustCallSuper
-  void deactivate() {
+  void dispose() {
     _subscription?.cancel();
     _subscription = null;
-    forEach((item) => item.deactivate());
+    forEach((item) => item.dispose());
+    super.dispose();
   }
 
   void childUpdated(T child) {
@@ -83,21 +77,20 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
   }
 
   void _add(String previousKey, T value) =>
-      insert(indexOfKey(previousKey) + 1, value..activate());
+      insert(indexOfKey(previousKey) + 1, value);
 
   void _remove(int index) {
-    this[index].deactivate();
+    this[index].dispose();
     removeAt(index);
   }
 
   void _update(int index, T newValue) =>
-      setAt(index, this[index].updateWith(newValue)..activate());
+      setAt(index, this[index].updateWith(newValue));
 
   void _setAll(Iterable<T> newValue) {
     if (!changed) {
       // Shortcut (also beneficial for the UI).
       setAll(0, newValue);
-      forEach((e) => e.activate());
       return;
     }
 
@@ -117,7 +110,7 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
     for (var element in newValue) {
       var existingIndex = indexOfKey(element.key);
       if (existingIndex < 0) {
-        insert(index, element..activate());
+        insert(index, element);
       } else {
         if (existingIndex != index) {
           assert(existingIndex > index,

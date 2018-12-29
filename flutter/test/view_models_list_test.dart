@@ -242,7 +242,7 @@ void main() {
     expect(addedTestFixture.active, false);
 
     await Future<void>(() {});
-    list.deactivate();
+    list.dispose();
     expect(
         list,
         equals([

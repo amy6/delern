@@ -7,7 +7,7 @@ import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../remote/analytics.dart';
-import 'base/activatable.dart';
+import 'base/disposable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
@@ -29,7 +29,19 @@ class DeckListItemViewModel implements ListItemViewModel {
   DeckListItemViewModel(this._owner, this._deck,
       {@required this.maxNumberOfCards})
       : assert(maxNumberOfCards != null),
-        _access = DeckAccess(deck: _deck);
+        _access = DeckAccess(deck: _deck) {
+    _internalUpdates = StreamMuxer({
+      false: _access.updates,
+      true: _deck.getNumberOfCardsToLearn(maxNumberOfCards + 1),
+    }).listen((event) {
+      if (event.stream) {
+        this._cardsToLearn = event.value;
+      }
+      // Send event to the owner list so that it can find our index
+      // and notify subscribers.
+      _owner.childUpdated(this);
+    });
+  }
 
   @override
   DeckListItemViewModel updateWith(DeckListItemViewModel value) {
@@ -46,38 +58,15 @@ class DeckListItemViewModel implements ListItemViewModel {
 
   @override
   @mustCallSuper
-  void activate() {
-    if (_internalUpdates != null) {
-      // This item is already activated. This must normally be only a side
-      // effect of updateWith -> childUpdated cycle.
-      return;
-    }
-
-    _internalUpdates = StreamMuxer({
-      false: _access.updates,
-      true: _deck.getNumberOfCardsToLearn(maxNumberOfCards + 1),
-    }).listen((event) {
-      if (event.stream) {
-        this._cardsToLearn = event.value;
-      }
-      // Send event to the owner list so that it can find our index
-      // and notify subscribers.
-      _owner.childUpdated(this);
-    });
-  }
-
-  @override
-  @mustCallSuper
-  void deactivate() {
-    _internalUpdates?.cancel();
-    _internalUpdates = null;
+  void dispose() {
+    _internalUpdates.cancel();
   }
 
   @override
   String toString() => '#$key ${deck?.name} [$access $cardsToLearn]';
 }
 
-class DeckListViewModel implements Activatable {
+class DeckListViewModel implements Disposable {
   final String uid;
   final int _maxNumberOfCards = 200;
 
@@ -96,18 +85,8 @@ class DeckListViewModel implements Activatable {
 
   @override
   @mustCallSuper
-  void deactivate() => _deckViewModels.deactivate();
-
-  @override
-  @mustCallSuper
-  void activate() {
-    deactivate();
-    _deckViewModels.activate();
-  }
-
-  @mustCallSuper
   void dispose() {
-    deactivate();
+    _deckViewModels.dispose();
     _decksProxy?.dispose();
   }
 

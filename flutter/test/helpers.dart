@@ -36,7 +36,7 @@ class TestFixture extends ListItemViewModel {
   void activate() => _active = true;
 
   @override
-  void deactivate() => _active = false;
+  void dispose() => _active = false;
 
   @override
   ListItemViewModel updateWith(TestFixture value) {

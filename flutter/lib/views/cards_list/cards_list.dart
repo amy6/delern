@@ -25,7 +25,19 @@ class CardsListPage extends StatefulWidget {
 }
 
 class _CardsListState extends State<CardsListPage> {
-  CardListBlock _cardListBlock;
+  CardListViewModel _viewModel;
+  StreamSubscription<void> _updates;
+
+  void _searchTextChanged(String input) {
+    if (input == null) {
+      _viewModel.cards.filter = null;
+      return;
+    }
+    input = input.toLowerCase();
+    _viewModel.cards.filter = (c) =>
+        c.card.front.toLowerCase().contains(input) ||
+        c.card.back.toLowerCase().contains(input);
+  }
 
   @override
   void initState() {
