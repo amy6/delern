@@ -147,21 +147,6 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   @override
   void initState() {
     _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
-    /*_deckAccessesViewModel.deckAccesses.comparator = (a, b) {
-      if (a.access == b.access) {
-        // TODO(dotdoom): sort by display name once available.
-        return 0;
-      }
-
-      switch (a.access) {
-        case AccessType.owner:
-          return -1;
-        case AccessType.write:
-          return b.access == AccessType.owner ? 1 : -1;
-        default:
-          return 1;
-      }
-    };*/
     super.initState();
   }
 
@@ -181,7 +166,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           ),
           Expanded(
             child: ObservingAnimatedList(
-              list: _deckAccessesViewModel.deckAccessProcessor,
+              list: _deckAccessesViewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
                     child: _buildUserAccessInfo(item),
                     sizeFactor: animation,

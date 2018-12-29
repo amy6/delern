@@ -104,25 +104,25 @@ class DecksListPageState extends State<DecksListPage> {
     super.didChangeDependencies();
   }
 
-  /*void setFilter(String input) {
+  void setFilter(String input) {
     if (input == null) {
-      viewModel.decks.filter = null;
+      viewModel.filter = null;
       return;
     }
     input = input.toLowerCase();
-    viewModel.decks.filter = (d) =>
+    viewModel.filter = (d) =>
         // Case insensitive filter
         d.name.toLowerCase().contains(input);
-  }*/
+  }
 
   GlobalKey fabKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: SearchBarWidget(title: widget.title, search: null),
+        appBar: SearchBarWidget(title: widget.title, search: setFilter),
         drawer: NavigationDrawer(),
         body: ObservingAnimatedList(
-          list: viewModel.deckProcessor,
+          list: viewModel.list,
           itemBuilder: (context, item, animation, index) => SizeTransition(
                 child: DeckListItem(item),
                 sizeFactor: animation,

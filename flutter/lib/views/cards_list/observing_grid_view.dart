@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/keyed_list_item.dart';
-import '../../view_models/base/keyed_list_event_processor.dart';
 import '../../view_models/base/observable_keyed_list.dart';
 import '../../views/helpers/empty_list_message.dart';
 import '../helpers/helper_progress_indicator.dart';
@@ -22,7 +21,7 @@ class ObservingGrid<T extends KeyedListItem> extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  final KeyedListEventProcessor<T, dynamic> items;
+  final ObservableKeyedList<T> items;
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
   // TODO(dotdoom): make this more abstract or rename to ObservingCardsGridView

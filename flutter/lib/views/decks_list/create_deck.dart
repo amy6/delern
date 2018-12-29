@@ -66,9 +66,9 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         onPressed: _textController.text.isEmpty
             ? null
             : () {
-                Navigator.of(context).pop(DeckModel()
-                  ..uid = CurrentUserWidget.of(context).user.uid
-                  ..name = _textController.text);
+                Navigator.of(context).pop(
+                    DeckModel(CurrentUserWidget.of(context).user.uid)
+                      ..name = _textController.text);
               });
 
     final cancelButton = FlatButton(

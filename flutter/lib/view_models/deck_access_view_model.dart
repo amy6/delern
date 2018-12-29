@@ -4,21 +4,26 @@ import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../remote/analytics.dart';
-import 'base/database_list_event_processor.dart';
-import 'base/keyed_list_event_processor.dart';
+import '../view_models/base/database_list_event_processor.dart';
+import '../view_models/base/filtered_sorted_keyed_list_processor.dart';
+import '../view_models/base/observable_keyed_list.dart';
 
 class DeckAccessesViewModel {
   final DeckModel deck;
 
-  DeckAccessesViewModel(this.deck) {
-    _deckAccessProcessor =
-        DatabaseListEventProcessor(() => DeckAccessModel.getDeckAccesses(deck));
+  DeckAccessesViewModel(this.deck) : assert(deck != null) {
+    _processor = FilteredSortedKeyedListProcessor(
+        DatabaseListEventProcessor(() => DeckAccessModel.getDeckAccesses(deck))
+            .list)
+      ..comparator = (c1, c2) => c1.access.index.compareTo(c2.access.index);
   }
 
-  KeyedListEventProcessor<DeckAccessModel, dynamic> _deckAccessProcessor;
+  ObservableKeyedList<DeckAccessModel> get list => _processor.list;
 
-  KeyedListEventProcessor<DeckAccessModel, dynamic> get deckAccessProcessor =>
-      _deckAccessProcessor;
+  set filter(Filter<DeckAccessModel> newValue) => _processor.filter = newValue;
+  Filter<DeckAccessModel> get filter => _processor.filter;
+
+  FilteredSortedKeyedListProcessor<DeckAccessModel> _processor;
 
   static Future<void> shareDeck(DeckAccessModel access) async {
     logShare(access.deck.key);

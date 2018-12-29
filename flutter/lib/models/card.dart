@@ -5,7 +5,7 @@ import 'package:delern_flutter/models/deck.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
-import 'base/events.dart';
+import 'base/database_list_event.dart';
 import 'base/model.dart';
 
 class CardModel implements Model {
@@ -73,32 +73,14 @@ class CardModel implements Model {
           .map((evt) =>
               CardModel._fromSnapshot(deckKey, key, evt.snapshot.value));
 
-  static Stream<DatabaseListEvent<CardModel>> getCards(String deckKey) async* {
-    Map initialValue = (await FirebaseDatabase.instance
-                .reference()
-                .child('cards')
-                .child(deckKey)
-                .orderByKey()
-                .onValue
-                .first)
-            .snapshot
-            .value ??
-        {};
-
-    yield DatabaseListEvent(
-        eventType: ListEventType.setAll,
-        fullListValueForSet: initialValue.entries.map(
-            (item) => CardModel._fromSnapshot(deckKey, item.key, item.value)));
-
-    yield* childEventsStream(
-        FirebaseDatabase.instance
-            .reference()
-            .child('cards')
-            .child(deckKey)
-            .orderByKey(),
-        (snapshot) =>
-            CardModel._fromSnapshot(deckKey, snapshot.key, snapshot.value));
-  }
+  static Stream<DatabaseListEvent<CardModel>> getCards(String deckKey) =>
+      fullThenChildEventsStream(
+          FirebaseDatabase.instance
+              .reference()
+              .child('cards')
+              .child(deckKey)
+              .orderByKey(),
+          (key, value) => CardModel._fromSnapshot(deckKey, key, value));
 
   static Future<CardModel> fetch(DeckModel deck, String cardId) async {
     var card = CardModel(deckKey: deck.key)..key = cardId;

@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../../models/base/events.dart';
+import '../../models/base/database_list_event.dart';
 import '../../models/base/keyed_list_item.dart';
-import '../../view_models/base/keyed_list_event_processor.dart';
 import '../../view_models/base/observable_keyed_list.dart';
 import 'helper_progress_indicator.dart';
 
@@ -28,7 +27,7 @@ class ObservingAnimatedList<T extends KeyedListItem> extends StatefulWidget {
   })  : assert(itemBuilder != null),
         super(key: key);
 
-  final KeyedListEventProcessor<T, dynamic> list;
+  final ObservableKeyedList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
 

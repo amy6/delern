@@ -31,11 +31,15 @@ class DatabaseListEvent<T> {
   String toString() => '$eventType #$previousSiblingKey ($value)';
 }
 
+// Linter bug: https://github.com/dart-lang/linter/issues/1162.
+// ignore: avoid_annotating_with_dynamic
+typedef SnapshotParser<T> = T Function(String key, dynamic value);
+
 /// Subscribe to onChildAdded/Removed/Moved/Changed events (but not the onValue
 /// event) of [query] and mux them into appropriate [DatabaseListEvent], parsing
 /// values with [snapshotParser].
 Stream<DatabaseListEvent<T>> childEventsStream<T>(
-        Query query, T snapshotParser(DataSnapshot s)) =>
+        Query query, SnapshotParser snapshotParser) =>
     StreamMuxer<ListEventType>({
       ListEventType.itemAdded: query.onChildAdded,
       ListEventType.itemRemoved: query.onChildRemoved,
@@ -45,7 +49,17 @@ Stream<DatabaseListEvent<T>> childEventsStream<T>(
       Event dbEvent = muxerEvent.value;
       return DatabaseListEvent(
         eventType: muxerEvent.stream,
-        value: snapshotParser(dbEvent.snapshot),
+        value: snapshotParser(dbEvent.snapshot.key, dbEvent.snapshot.value),
         previousSiblingKey: dbEvent.previousSiblingKey,
       );
     });
+
+Stream<DatabaseListEvent<T>> fullThenChildEventsStream<T>(
+    Query query, SnapshotParser snapshotParser) async* {
+  Map initialValue = (await query.onValue.first).snapshot.value ?? {};
+  yield DatabaseListEvent(
+      eventType: ListEventType.setAll,
+      fullListValueForSet: initialValue.entries
+          .map((item) => snapshotParser(item.key, item.value)));
+  yield* childEventsStream(query, snapshotParser);
+}

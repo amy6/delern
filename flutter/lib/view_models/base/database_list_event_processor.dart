@@ -1,15 +1,12 @@
 import 'package:meta/meta.dart';
 
-import '../../models/base/events.dart';
+import '../../models/base/database_list_event.dart';
 import '../../models/base/keyed_list_item.dart';
 import 'keyed_list_event_processor.dart';
-import 'observable_keyed_list.dart';
 
 /// A processor (see [KeyedListEventProcessor]) that handles (Firebase) Database
 /// events for list initial onValue and subsequent onChild* events, and builds
-/// and updates internal [value] representation of how that list looks like.
-/// Like any other [KeyedListEventProcessor], it emits events that change the
-/// list via [events] stream.
+/// and updates internal [list] representation of how that list looks like.
 class DatabaseListEventProcessor<T extends KeyedListItem>
     extends KeyedListEventProcessor<T, DatabaseListEvent<T>> {
   DatabaseListEventProcessor(StreamGetter<DatabaseListEvent<T>> source)
@@ -41,7 +38,7 @@ class DatabaseListEventProcessor<T extends KeyedListItem>
         // the item will no longer exist by the time "change(...)" arrives.
         var index = list.indexOfKey(event.value.key);
         if (index >= 0) {
-          list.update(index, event.value);
+          list.setAt(index, event.value);
         }
         break;
       case ListEventType.itemMoved:

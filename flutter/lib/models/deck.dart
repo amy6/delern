@@ -4,8 +4,8 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import 'base/database_list_event.dart';
 import 'base/enum.dart';
-import 'base/events.dart';
 import 'base/model.dart';
 import 'deck_access.dart';
 
@@ -96,36 +96,20 @@ class DeckModel implements Model {
           .onValue
           .map((evt) => DeckModel._fromSnapshot(uid, key, evt.snapshot));
 
-  static Stream<DatabaseListEvent<DeckModel>> getDecks(String uid) async* {
+  static Stream<DatabaseListEvent<DeckModel>> getDecks(String uid) {
     FirebaseDatabase.instance
         .reference()
         .child('decks')
         .child(uid)
         .keepSynced(true);
-    Map initialValue = (await FirebaseDatabase.instance
-                .reference()
-                .child('decks')
-                .child(uid)
-                .orderByKey()
-                .onValue
-                .first)
-            .snapshot
-            .value ??
-        {};
-    yield DatabaseListEvent(
-        eventType: ListEventType.setAll,
-        fullListValueForSet: initialValue.entries.map((item) {
-          _keepDeckSynced(uid, item.key);
-          return DeckModel._fromSnapshot(uid, item.key, item.value);
-        }));
-    yield* childEventsStream(
+    return fullThenChildEventsStream(
         FirebaseDatabase.instance
             .reference()
             .child('decks')
             .child(uid)
-            .orderByKey(), (snapshot) {
-      _keepDeckSynced(uid, snapshot.key);
-      return DeckModel._fromSnapshot(uid, snapshot.key, snapshot.value);
+            .orderByKey(), (key, value) {
+      _keepDeckSynced(uid, key);
+      return DeckModel._fromSnapshot(uid, key, value);
     });
   }
 
@@ -134,12 +118,6 @@ class DeckModel implements Model {
     // is cancelled automatically when the deck is deleted or un-shared because
     // of the security rules.
 
-    FirebaseDatabase.instance
-        .reference()
-        .child('learning')
-        .child(uid)
-        .child(deckId)
-        .keepSynced(true);
     FirebaseDatabase.instance
         .reference()
         .child('cards')

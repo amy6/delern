@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../../models/base/events.dart';
+import '../../models/base/database_list_event.dart';
 import '../../models/base/keyed_list_item.dart';
 import 'keyed_list_event_processor.dart';
 import 'observable_keyed_list.dart';
@@ -9,7 +9,7 @@ typedef Filter<T> = bool Function(T item);
 
 class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
     extends KeyedListEventProcessor<T, ListEvent<T>> {
-  final KeyedListEventProcessor<T, dynamic> _source;
+  final ObservableKeyedList<T> _source;
 
   FilteredSortedKeyedListProcessor(this._source) : super(() => _source.events) {
     if (_source.value != null) {
@@ -68,8 +68,7 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
   }
 
   Comparator<T> _comparator;
-  // Getter is not super useful for this property.
-  // ignore: avoid_setters_without_getters
+  Comparator<T> get comparator => _comparator;
   set comparator(Comparator<T> value) {
     _comparator = value;
 
@@ -128,7 +127,7 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
 
     // Update the item in case it was modified, and to notify subscribers.
     if (oldIndex >= 0) {
-      list.update(srcIndex, _source.value[srcIndex]);
+      list.setAt(srcIndex, _source.value[srcIndex]);
     }
 
     if (oldIndex != newIndex) {

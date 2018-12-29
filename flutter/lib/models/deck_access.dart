@@ -4,8 +4,8 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
+import 'base/database_list_event.dart';
 import 'base/enum.dart';
-import 'base/events.dart';
 import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 import 'deck.dart';
@@ -18,8 +18,8 @@ enum AccessType {
 }
 
 class DeckAccessModel implements KeyedListItem, Model {
-  // TODO(dotdoom): relay this to User model associated with this object.
   String uid;
+  // TODO(dotdoom): remove DeckModel from here.
   DeckModel deck;
   AccessType access;
   String email;
@@ -58,30 +58,14 @@ class DeckAccessModel implements KeyedListItem, Model {
   }
 
   static Stream<DatabaseListEvent<DeckAccessModel>> getDeckAccesses(
-      DeckModel deck) async* {
-    Map initialValue = (await FirebaseDatabase.instance
-                .reference()
-                .child('deck_access')
-                .child(deck.key)
-                .orderByKey()
-                .onValue
-                .first)
-            .snapshot
-            .value ??
-        {};
-    yield DatabaseListEvent(
-        eventType: ListEventType.setAll,
-        fullListValueForSet: initialValue.entries.map((item) =>
-            DeckAccessModel.fromSnapshot(item.key, item.value, deck)));
-    yield* childEventsStream(
-        FirebaseDatabase.instance
-            .reference()
-            .child('deck_access')
-            .child(deck.key)
-            .orderByKey(),
-        (snapshot) =>
-            DeckAccessModel.fromSnapshot(snapshot.key, snapshot.value, deck));
-  }
+          DeckModel deck) =>
+      fullThenChildEventsStream(
+          FirebaseDatabase.instance
+              .reference()
+              .child('deck_access')
+              .child(deck.key)
+              .orderByKey(),
+          (key, value) => DeckAccessModel.fromSnapshot(key, value, deck));
 
   Stream<UserModel> getUser() => FirebaseDatabase.instance
       .reference()

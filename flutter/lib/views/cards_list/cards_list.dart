@@ -27,17 +27,16 @@ class CardsListPage extends StatefulWidget {
 class _CardsListState extends State<CardsListPage> {
   CardListViewModel _cardListViewModel;
 
-  // TODO(ksheremet): Implement card search
-  /*void _searchTextChanged(String input) {
+  void _searchTextChanged(String input) {
     if (input == null) {
-      _viewModel.cards.filter = null;
+      _cardListViewModel.filter = null;
       return;
     }
     input = input.toLowerCase();
-    _viewModel.cards.filter = (c) =>
+    _cardListViewModel.filter = (c) =>
         c.front.toLowerCase().contains(input) ||
         c.back.toLowerCase().contains(input);
-  }*/
+  }
 
   @override
   void initState() {
@@ -47,10 +46,11 @@ class _CardsListState extends State<CardsListPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: SearchBarWidget(title: widget.deck.name, search: null),
+        appBar: SearchBarWidget(
+            title: widget.deck.name, search: _searchTextChanged),
         body: ObservingGrid(
           maxCrossAxisExtent: 240.0,
-          items: _cardListViewModel.cardProcessor,
+          items: _cardListViewModel.list,
           itemBuilder: (item) => CardGridItem(
                 card: item,
                 deck: widget.deck,
