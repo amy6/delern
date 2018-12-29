@@ -35,8 +35,8 @@ class _CardsListState extends State<CardsListPage> {
     }
     input = input.toLowerCase();
     _viewModel.cards.filter = (c) =>
-        c.card.front.toLowerCase().contains(input) ||
-        c.card.back.toLowerCase().contains(input);
+        c.front.toLowerCase().contains(input) ||
+        c.back.toLowerCase().contains(input);
   }
 
   @override

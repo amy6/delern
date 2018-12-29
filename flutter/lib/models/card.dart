@@ -122,6 +122,9 @@ class CardModel implements Model {
         back = legacy.back,
         createdAt = legacy.createdAt;
 
+  // TODO(dotdoom): BROKEN!
+  Card toLegacy() => Card(deck: null);
+
   CardModel._fromSnapshot(this.deckKey, this.key, snapshotValue) {
     if (snapshotValue == null) {
       // Assume the card doesn't exist anymore.

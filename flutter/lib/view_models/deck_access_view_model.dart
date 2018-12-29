@@ -10,32 +10,18 @@ import 'base/disposable.dart';
 import 'base/proxy_keyed_list.dart';
 import 'base/view_models_list.dart';
 
-class DeckAccessViewModel implements ListItemViewModel {
-  String get key => _deckAccess.key;
-  DeckAccess get deckAccess => _deckAccess;
-
-  DeckAccess _deckAccess;
-
-  DeckAccessViewModel(this._deckAccess);
-
-  @override
-  String toString() => '#$key ${_deckAccess.access}';
-}
-
 class DeckAccessesViewModel implements Disposable {
   final Deck deck;
 
-  ViewModelsList<DeckAccessViewModel> _deckAccessViewModels;
-  ProxyKeyedList<DeckAccessViewModel> _deckAccessesProxy;
+  ViewModelsList<DeckAccess> _deckAccessViewModels;
+  ProxyKeyedList<DeckAccess> _deckAccessesProxy;
 
-  ProxyKeyedList<DeckAccessViewModel> get deckAccesses =>
+  ProxyKeyedList<DeckAccess> get deckAccesses =>
       _deckAccessesProxy ??= ProxyKeyedList(_deckAccessViewModels);
 
   DeckAccessesViewModel(this.deck) {
-    _deckAccessViewModels = ViewModelsList<DeckAccessViewModel>(() =>
-        DeckAccess.getDeckAccesses(deck).map((deckAccessEvent) =>
-            deckAccessEvent
-                .map((deckAccess) => DeckAccessViewModel(deckAccess))));
+    _deckAccessViewModels =
+        ViewModelsList<DeckAccess>(() => DeckAccess.getDeckAccesses(deck));
   }
 
   @override

@@ -7,6 +7,7 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart' as card_model;
+import '../../models/deck.dart';
 import '../../models/deck_access.dart';
 import '../../view_models/deck_list_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
@@ -111,7 +112,7 @@ class DecksListPageState extends State<DecksListPage> {
     input = input.toLowerCase();
     viewModel.decks.filter = (d) =>
         // Case insensitive filter
-        d.deck.name.toLowerCase().contains(input);
+        d.name.toLowerCase().contains(input);
   }
 
   GlobalKey fabKey = GlobalKey();
@@ -142,7 +143,7 @@ class DecksListPageState extends State<DecksListPage> {
 }
 
 class DeckListItem extends StatelessWidget {
-  final DeckListItemViewModel viewModel;
+  final Deck viewModel;
 
   const DeckListItem(this.viewModel);
 
@@ -174,14 +175,14 @@ class DeckListItem extends StatelessWidget {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
                   builder: (context) => CardsLearning(
-                        deck: viewModel.deck,
+                        deck: viewModel,
                         allowEdit:
                             // Not allow to edit or delete cards with read
                             // access. If some error occurred when retrieving
                             // DeckAccess and it is null access we still give
                             // a try to edit for a user. If user doesn't have
                             // permissions they will see "Permission denied".
-                            viewModel.deck.access != AccessType.read,
+                            viewModel.access != AccessType.read,
                       )),
             );
             if (anyCardsShown == false) {
@@ -200,7 +201,7 @@ class DeckListItem extends StatelessWidget {
             padding: const EdgeInsets.only(
                 top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
-              viewModel.deck.name,
+              viewModel.name,
               style: AppStyles.primaryText,
             ),
           ),
@@ -239,7 +240,7 @@ class DeckListItem extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = viewModel.deck.access != AccessType.read;
+    var allowEdit = viewModel.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -262,7 +263,7 @@ class DeckListItem extends StatelessWidget {
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/view'),
               builder: (context) => CardsListPage(
-                    deck: viewModel.deck,
+                    deck: viewModel,
                     allowEdit: allowEdit,
                   )),
         );
@@ -272,16 +273,16 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettingsPage(viewModel.deck)),
+              builder: (context) => DeckSettingsPage(viewModel)),
         );
         break;
       case _DeckMenuItemType.share:
-        if (viewModel.deck.access == AccessType.owner) {
+        if (viewModel.access == AccessType.owner) {
           Navigator.push(
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharingPage(viewModel.deck)),
+                builder: (context) => DeckSharingPage(viewModel)),
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),

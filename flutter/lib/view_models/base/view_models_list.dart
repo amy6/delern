@@ -6,14 +6,10 @@ import '../../models/base/keyed_list.dart';
 import '../../models/base/observable_list.dart';
 import 'disposable.dart';
 
-abstract class ListItemViewModel implements KeyedListItem {
-  String get key;
-}
-
 typedef StreamGetter<T> = Stream<T> Function();
 
 // TODO(dotdoom): make list interface readonly.
-class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
+class ViewModelsList<T extends KeyedListItem> extends ObservableList<T>
     with KeyedListMixin<T>
     implements Disposable {
   final StreamGetter<KeyedListEvent<T>> _stream;

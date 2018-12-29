@@ -148,16 +148,16 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   void initState() {
     _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
     _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
-      if (a.deckAccess.access == b.deckAccess.access) {
+      if (a.access == b.access) {
         // TODO(dotdoom): sort by display name once available.
         return 0;
       }
 
-      switch (a.deckAccess.access) {
+      switch (a.access) {
         case AccessType.owner:
           return -1;
         case AccessType.write:
-          return b.deckAccess.access == AccessType.owner ? 1 : -1;
+          return b.access == AccessType.owner ? 1 : -1;
         default:
           return 1;
       }
@@ -199,23 +199,21 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         ],
       );
 
-  Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
+  Widget _buildUserAccessInfo(DeckAccess accessViewModel) {
     Function filter;
-    if (accessViewModel.deckAccess.access == AccessType.owner) {
+    if (accessViewModel.access == AccessType.owner) {
       filter = (access) => access == AccessType.owner;
     } else {
       filter = (access) => access != AccessType.owner;
     }
 
-    final displayName = accessViewModel.deckAccess.displayName ??
-        accessViewModel.deckAccess.email;
+    final displayName = accessViewModel.displayName ?? accessViewModel.email;
 
     return ListTile(
-      leading: (accessViewModel.deckAccess.photoUrl == null)
+      leading: (accessViewModel.photoUrl == null)
           ? null
           : CircleAvatar(
-              backgroundImage:
-                  NetworkImage(accessViewModel.deckAccess.photoUrl),
+              backgroundImage: NetworkImage(accessViewModel.photoUrl),
             ),
       title: displayName == null
           ? HelperProgressIndicator()
@@ -224,13 +222,13 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               style: AppStyles.primaryText,
             ),
       trailing: DeckAccessDropdown(
-        value: accessViewModel.deckAccess.access,
+        value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
               DeckAccessesViewModel.shareDeck(DeckAccess(
                   deck: _deckAccessesViewModel.deck,
-                  uid: accessViewModel.deckAccess.uid,
-                  email: accessViewModel.deckAccess.email,
+                  uid: accessViewModel.uid,
+                  email: accessViewModel.email,
                   access: access));
             }),
       ),
