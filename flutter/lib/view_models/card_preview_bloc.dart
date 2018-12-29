@@ -12,7 +12,7 @@ class CardViewModel {
   DeckModel deck;
 
   CardViewModel({@required this.deck, this.card}) : assert(deck != null) {
-    card ??= CardModel();
+    card ??= CardModel(deckKey: deck.key);
   }
 
   CardViewModel._copyFrom(CardViewModel other)

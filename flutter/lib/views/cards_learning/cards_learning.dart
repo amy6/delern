@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
+import '../../models/card.dart';
 import '../../models/deck.dart';
 import '../../view_models/learning_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
@@ -195,7 +196,10 @@ class CardsLearningState extends State<CardsLearning> {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/edit'),
-                  builder: (context) => CreateUpdateCard(_viewModel.card)));
+                  builder: (context) => CreateUpdateCard(
+                        card: CardModel.copyFromLegacy(_viewModel.card),
+                        deck: DeckModel.copyFromLegacy(widget.deck),
+                      )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               AppLocalizations.of(context).noEditingWithReadAccessUserMessage);

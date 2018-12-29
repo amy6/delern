@@ -7,15 +7,19 @@ import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
 import '../../models/card.dart';
 import '../../models/card.dart' as card_model;
+import '../../models/deck.dart';
 import '../../view_models/card_create_update_view_model.dart';
 import '../../views/helpers/sign_in_widget.dart';
 import '../helpers/save_updates_dialog.dart';
 import '../helpers/slow_operation_widget.dart';
 
 class CreateUpdateCard extends StatefulWidget {
-  final card_model.Card _card;
+  final card_model.CardModel card;
+  final DeckModel deck;
 
-  const CreateUpdateCard(this._card);
+  const CreateUpdateCard({@required this.card, @required this.deck})
+      : assert(card != null),
+        assert(deck != null);
 
   @override
   State<StatefulWidget> createState() => _CreateUpdateCardState();
@@ -33,7 +37,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   @override
   void initState() {
     super.initState();
-    _cardModel = CardModel.copyFromLegacy(widget._card);
+    _cardModel = widget.card;
 
     if (_cardModel.key != null) {
       _frontTextController.text = _cardModel.front;
@@ -71,8 +75,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       );
 
   Widget _buildAppBar() => AppBar(
-        // TODO(ksheremet): Consider to add name of deck in CardModel
-        title: Text(widget._card.deck.name),
+        title: Text(widget.deck.name),
         actions: <Widget>[
           _cardModel.key == null
               ? SlowOperationWidget((cb) => IconButton(

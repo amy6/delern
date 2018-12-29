@@ -104,7 +104,8 @@ class CardModel implements Model {
   String back;
   DateTime createdAt;
 
-  CardModel();
+  // Card always should belong to a deck. Even if card is empty
+  CardModel({@required this.deckKey}) : assert(deckKey != null);
 
   // We expect this to be called often and optimize for performance.
   CardModel.copyFrom(CardModel other)
@@ -167,4 +168,19 @@ class CardModel implements Model {
           .onValue
           .map((evt) =>
               CardModel._fromSnapshot(deckKey, key, evt.snapshot.value));
+
+  static Stream<List<CardModel>> getCards(String deckKey) =>
+      (FirebaseDatabase.instance
+              .reference()
+              .child('cards')
+              .child(deckKey)
+              .orderByKey()
+              .onValue)
+          .map((v) {
+        Map v2 = v.snapshot.value ?? {};
+        return v2.entries
+            .map((item) =>
+                CardModel._fromSnapshot(deckKey, item.key, item.value))
+            .toList();
+      });
 }

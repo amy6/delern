@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:delern_flutter/models/deck.dart';
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
@@ -205,7 +206,9 @@ class DeckListItem extends StatelessWidget {
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
                       builder: (context) => CreateUpdateCard(
-                          card_model.Card(deck: viewModel.deck))));
+                          card:
+                              card_model.CardModel(deckKey: viewModel.deck.key),
+                          deck: DeckModel.copyFromLegacy(viewModel.deck))));
             }
           },
           child: Container(
@@ -268,8 +271,10 @@ class DeckListItem extends StatelessWidget {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) =>
-                      CreateUpdateCard(card_model.Card(deck: viewModel.deck))));
+                  builder: (context) => CreateUpdateCard(
+                        card: card_model.CardModel(deckKey: viewModel.deck.key),
+                        deck: DeckModel.copyFromLegacy(viewModel.deck),
+                      )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
