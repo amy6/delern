@@ -9,12 +9,12 @@ typedef Filter<T> = bool Function(T item);
 
 class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
     extends KeyedListEventProcessor<T, ListEvent<T>> {
-  final ObservableKeyedList<T> _source;
+  final KeyedListEventProcessor<T, dynamic> _source;
 
   FilteredSortedKeyedListProcessor(this._source) : super(() => _source.events) {
     if (_source.value != null) {
       // If initial value is already available, pick it up.
-      _setAll(_source.value);
+      _setAll();
     }
   }
 
@@ -22,12 +22,12 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
   void processEvent(ListEvent<T> event) {
     switch (event.eventType) {
       case ListEventType.itemAdded:
-        _add(event.index);
+        _insert(event.index);
         break;
       case ListEventType.itemRemoved:
         final index = list.indexOfKey(event.previousValue.key);
         if (index >= 0) {
-          _removeAt(index);
+          list.removeAt(index);
         }
         break;
       case ListEventType.itemMoved:
@@ -60,9 +60,9 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
       var newIndex = _indexForNewItem(srcIndex);
 
       if (currentIndex >= 0 && newIndex < 0) {
-        _removeAt(currentIndex);
+        list.removeAt(currentIndex);
       } else if (currentIndex < 0 && newIndex >= 0) {
-        _insert(_indexForNewItem(srcIndex), item);
+        list.insert(_indexForNewItem(srcIndex), item);
       }
     }
   }
@@ -85,85 +85,79 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
       }
       assert(newValue.length == list.value.length,
           'Sorting must not change the size of the list');
-      _setAll(0, newValue);
+      list.setAll(newValue);
     } else {
-      _setAll(0, List<T>.from(this)..sort(_comparator));
+      list.setAll(List<T>.from(list.value)..sort(_comparator));
     }
   }
 
-  int _indexForNewItem(int baseIndex) {
-    var item = _base[baseIndex];
+  int _indexForNewItem(int srcIndex) {
+    var item = _source.value[srcIndex];
     if (_filter != null && !_filter(item)) {
       return -1;
     }
 
     if (_comparator == null) {
-      for (++baseIndex; baseIndex < _base.length; ++baseIndex) {
-        var index = indexOfKey(_base[baseIndex].key);
+      for (++srcIndex; srcIndex < _source.value.length; ++srcIndex) {
+        var index = list.indexOfKey(_source.value[srcIndex].key);
         if (index >= 0) {
           return index;
         }
       }
     } else {
-      for (var index = 0; index < length; ++index) {
-        if (this[index].key != item.key &&
-            _comparator(this[index], item) >= 0) {
+      for (var index = 0; index < list.value.length; ++index) {
+        if (list.value[index].key != item.key &&
+            _comparator(list.value[index], item) >= 0) {
           return index;
         }
       }
     }
-    return length;
+    return list.value.length;
   }
 
-  void _baseItemAdded(int baseIndex) {
-    var index = _indexForNewItem(baseIndex);
+  void _insert(int srcIndex) {
+    var index = _indexForNewItem(srcIndex);
     if (index >= 0) {
-      insert(index, _base[baseIndex]);
+      list.insert(index, _source.value[srcIndex]);
     }
   }
 
-  void _baseItemChanged(int index) {
-    var oldIndex = indexOfKey(_base[index].key);
-    var newIndex = _indexForNewItem(index);
+  void _update(int srcIndex) {
+    var oldIndex = list.indexOfKey(_source.value[srcIndex].key);
+    var newIndex = _indexForNewItem(srcIndex);
 
     // Update the item in case it was modified, and to notify subscribers.
     if (oldIndex >= 0) {
-      setAt(oldIndex, _base[index]);
+      list.update(srcIndex, _source.value[srcIndex]);
     }
 
     if (oldIndex != newIndex) {
       if (oldIndex >= 0) {
         if (newIndex >= 0) {
-          move(oldIndex, newIndex);
+          list.move(oldIndex, newIndex);
         } else {
-          removeAt(oldIndex);
+          list.removeAt(oldIndex);
         }
       } else if (newIndex >= 0) {
-        insert(newIndex, _base[index]);
+        list.insert(newIndex, _source.value[srcIndex]);
       }
     }
   }
 
-  void _baseItemMoved(int newBaseIndex) {
+  void _move(int newSrcIndex) {
     if (_comparator == null) {
-      var newIndex = _indexForNewItem(newBaseIndex);
+      var newIndex = _indexForNewItem(newSrcIndex);
       // Check that it passes the filter.
       if (newIndex >= 0) {
-        var oldIndex = indexOfKey(_base[newBaseIndex].key);
+        var oldIndex = list.indexOfKey(_source.value[newSrcIndex].key);
         assert(oldIndex >= 0, 'Item move adds it to the list.');
-        move(oldIndex, newIndex);
+        list.move(oldIndex, newIndex);
       }
     }
   }
 
-  void _baseSetAll() {
-    // We rely heavily on ViewModelsList being a _base. It has to control its
-    // children carefully to activate / deactivate them timely. Therefore, it
-    // does not call setAll.
-    // TODO(dotdoom): force _base to be ViewModelsList?
-    assert(!changed, 'ProxyKeyedList supports "set" only for initializing.');
-
-    var items = _base.toList(growable: false);
+  void _setAll() {
+    var items = _source.value.toList(growable: false);
 
     if (_filter != null) {
       items = items.where(_filter).toList(growable: false);
@@ -173,14 +167,6 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
       items.sort(_comparator);
     }
 
-    // Here we can simply use setAll without caring about UI, because UI will
-    // not display the list widget until 'changed' is true.
-    setAll(0, items);
-  }
-
-  @mustCallSuper
-  void dispose() {
-    _baseEventsSubscription.cancel();
-    super.dispose();
+    list.setAll(items);
   }
 }
