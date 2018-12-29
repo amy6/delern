@@ -14,7 +14,7 @@ class Card implements KeyedListItem, Model {
   String front;
   String back;
   DateTime createdAt;
-  final Deck deck;
+  final DeckModel deck;
 
   Card({@required this.deck, this.front, this.back}) : assert(deck != null);
 
@@ -35,13 +35,13 @@ class Card implements KeyedListItem, Model {
         : DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
   }
 
-  static Future<Card> fetch(Deck deck, String cardId) async {
+  static Future<Card> fetch(DeckModel deck, String cardId) async {
     var card = Card(deck: deck)..key = cardId;
     await card.updates.first;
     return card;
   }
 
-  static Stream<DatabaseListEvent<Card>> getCards(Deck deck) async* {
+  static Stream<DatabaseListEvent<Card>> getCards(DeckModel deck) async* {
     Map initialValue = (await FirebaseDatabase.instance
                 .reference()
                 .child('cards')

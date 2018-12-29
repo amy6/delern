@@ -18,7 +18,7 @@ import '../helpers/save_updates_dialog.dart';
 import '../helpers/slow_operation_widget.dart';
 
 class CardsLearning extends StatefulWidget {
-  final Deck deck;
+  final DeckModel deck;
   final bool allowEdit;
 
   const CardsLearning({@required this.deck, @required this.allowEdit})
@@ -198,7 +198,7 @@ class CardsLearningState extends State<CardsLearning> {
                   settings: const RouteSettings(name: '/cards/edit'),
                   builder: (context) => CreateUpdateCard(
                         card: CardModel.copyFromLegacy(_viewModel.card),
-                        deck: DeckModel.copyFromLegacy(widget.deck),
+                        deck: widget.deck,
                       )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),

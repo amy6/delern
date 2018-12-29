@@ -20,7 +20,7 @@ class LearningViewModel {
   ScheduledCard get scheduledCard => _scheduledCard;
   Card get card => _scheduledCard?.card;
 
-  final Deck deck;
+  final DeckModel deck;
   final bool allowEdit;
 
   LearningViewModel({@required this.deck, @required this.allowEdit});

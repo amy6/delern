@@ -17,10 +17,10 @@ enum AccessType {
   owner,
 }
 
-class DeckAccess implements KeyedListItem, Model {
+class DeckAccessModel implements KeyedListItem, Model {
   // TODO(dotdoom): relay this to User model associated with this object.
   String uid;
-  Deck deck;
+  DeckModel deck;
   AccessType access;
   String email;
 
@@ -48,17 +48,17 @@ class DeckAccess implements KeyedListItem, Model {
   String get displayName => _displayName;
   String get photoUrl => _photoUrl;
 
-  DeckAccess({@required this.deck, this.uid, this.access, this.email})
+  DeckAccessModel({@required this.deck, this.uid, this.access, this.email})
       : assert(deck != null) {
     uid ??= deck.uid;
   }
 
-  DeckAccess.fromSnapshot(this.uid, snapshotValue, this.deck) {
+  DeckAccessModel.fromSnapshot(this.uid, snapshotValue, this.deck) {
     _parseSnapshot(snapshotValue);
   }
 
-  static Stream<DatabaseListEvent<DeckAccess>> getDeckAccesses(
-      Deck deck) async* {
+  static Stream<DatabaseListEvent<DeckAccessModel>> getDeckAccesses(
+      DeckModel deck) async* {
     Map initialValue = (await FirebaseDatabase.instance
                 .reference()
                 .child('deck_access')
@@ -71,8 +71,8 @@ class DeckAccess implements KeyedListItem, Model {
         {};
     yield DatabaseListEvent(
         eventType: ListEventType.setAll,
-        fullListValueForSet: initialValue.entries.map(
-            (item) => DeckAccess.fromSnapshot(item.key, item.value, deck)));
+        fullListValueForSet: initialValue.entries.map((item) =>
+            DeckAccessModel.fromSnapshot(item.key, item.value, deck)));
     yield* childEventsStream(
         FirebaseDatabase.instance
             .reference()
@@ -80,7 +80,7 @@ class DeckAccess implements KeyedListItem, Model {
             .child(deck.key)
             .orderByKey(),
         (snapshot) =>
-            DeckAccess.fromSnapshot(snapshot.key, snapshot.value, deck));
+            DeckAccessModel.fromSnapshot(snapshot.key, snapshot.value, deck));
   }
 
   Stream<User> getUser() => FirebaseDatabase.instance
@@ -90,8 +90,8 @@ class DeckAccess implements KeyedListItem, Model {
       .onValue
       .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
 
-  static Future<DeckAccess> fetch(Deck deck, [String uid]) async {
-    var access = DeckAccess(deck: deck);
+  static Future<DeckAccessModel> fetch(DeckModel deck, [String uid]) async {
+    var access = DeckAccessModel(deck: deck);
     if (uid != null) {
       access.uid = uid;
     }

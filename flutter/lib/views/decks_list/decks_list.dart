@@ -137,9 +137,9 @@ class DecksListPageState extends State<DecksListPage> {
 }
 
 class DeckListItem extends StatelessWidget {
-  final Deck viewModel;
+  final DeckModel deck;
 
-  const DeckListItem(this.viewModel);
+  const DeckListItem(this.deck);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -169,14 +169,14 @@ class DeckListItem extends StatelessWidget {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
                   builder: (context) => CardsLearning(
-                        deck: viewModel,
+                        deck: deck,
                         allowEdit:
                             // Not allow to edit or delete cards with read
                             // access. If some error occurred when retrieving
                             // DeckAccess and it is null access we still give
                             // a try to edit for a user. If user doesn't have
                             // permissions they will see "Permission denied".
-                            viewModel.access != AccessType.read,
+                            deck.access != AccessType.read,
                       )),
             );
             if (anyCardsShown == false) {
@@ -186,15 +186,15 @@ class DeckListItem extends StatelessWidget {
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
                       builder: (context) => CreateUpdateCard(
-                          card: card_model.CardModel(deckKey: viewModel.key),
-                          deck: DeckModel.copyFromLegacy(viewModel))));
+                          card: card_model.CardModel(deckKey: deck.key),
+                          deck: deck)));
             }
           },
           child: Container(
             padding: const EdgeInsets.only(
                 top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
-              viewModel.name,
+              deck.name,
               style: AppStyles.primaryText,
             ),
           ),
@@ -233,7 +233,7 @@ class DeckListItem extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = viewModel.access != AccessType.read;
+    var allowEdit = deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -242,8 +242,8 @@ class DeckListItem extends StatelessWidget {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
                   builder: (context) => CreateUpdateCard(
-                        card: card_model.CardModel(deckKey: viewModel.key),
-                        deck: DeckModel.copyFromLegacy(viewModel),
+                        card: card_model.CardModel(deckKey: deck.key),
+                        deck: deck,
                       )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
@@ -256,7 +256,7 @@ class DeckListItem extends StatelessWidget {
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/view'),
               builder: (context) => CardsListPage(
-                    deck: viewModel,
+                    deck: deck,
                     allowEdit: allowEdit,
                   )),
         );
@@ -266,16 +266,16 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettingsPage(viewModel)),
+              builder: (context) => DeckSettingsPage(deck)),
         );
         break;
       case _DeckMenuItemType.share:
-        if (viewModel.access == AccessType.owner) {
+        if (deck.access == AccessType.owner) {
           Navigator.push(
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharingPage(viewModel)),
+                builder: (context) => DeckSharingPage(deck)),
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),

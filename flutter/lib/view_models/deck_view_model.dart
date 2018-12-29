@@ -9,7 +9,7 @@ import '../models/scheduled_card.dart';
 import '../remote/analytics.dart';
 
 class DeckViewModel {
-  final Deck deck;
+  final DeckModel deck;
 
   DeckViewModel(this.deck) : assert(deck != null);
 
@@ -20,10 +20,12 @@ class DeckViewModel {
     var t = Transaction()..delete(deck);
     var card = Card(deck: deck);
     if (deck.access == AccessType.owner) {
-      (await DeckAccess.getDeckAccesses(deck).first)
+      (await DeckAccessModel.getDeckAccesses(deck).first)
           .fullListValueForSet
-          .forEach((a) => t.delete(Deck(uid: a.key)..key = deck.key));
-      t..deleteAll(DeckAccess(deck: deck)..key = null)..deleteAll(card);
+          .forEach((a) => t.delete(DeckModel()
+            ..uid = a.key
+            ..key = deck.key));
+      t..deleteAll(DeckAccessModel(deck: deck)..key = null)..deleteAll(card);
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
     t..deleteAll(ScheduledCard(card: card))..deleteAll(CardView(card: card));

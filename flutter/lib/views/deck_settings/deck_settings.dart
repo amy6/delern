@@ -13,7 +13,7 @@ import '../helpers/save_updates_dialog.dart';
 import 'deck_type_dropdown.dart';
 
 class DeckSettingsPage extends StatefulWidget {
-  final Deck _deck;
+  final DeckModel _deck;
 
   const DeckSettingsPage(this._deck);
 

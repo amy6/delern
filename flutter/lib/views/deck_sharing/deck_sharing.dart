@@ -19,7 +19,7 @@ import '../helpers/send_invite.dart';
 import 'deck_access_dropdown.dart';
 
 class DeckSharingPage extends StatefulWidget {
-  final Deck _deck;
+  final DeckModel _deck;
 
   const DeckSharingPage(this._deck);
 
@@ -99,7 +99,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        await DeckAccessesViewModel.shareDeck(DeckAccess(
+        await DeckAccessesViewModel.shareDeck(DeckAccessModel(
             deck: widget._deck,
             uid: uid,
             access: deckAccess,
@@ -133,7 +133,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
 }
 
 class DeckUsersWidget extends StatefulWidget {
-  final Deck _deck;
+  final DeckModel _deck;
 
   const DeckUsersWidget(this._deck);
 
@@ -147,7 +147,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
   @override
   void initState() {
     _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
-    _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
+    /*_deckAccessesViewModel.deckAccesses.comparator = (a, b) {
       if (a.access == b.access) {
         // TODO(dotdoom): sort by display name once available.
         return 0;
@@ -161,14 +161,8 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         default:
           return 1;
       }
-    };
+    };*/
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _deckAccessesViewModel.dispose();
   }
 
   @override
@@ -187,7 +181,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
           ),
           Expanded(
             child: ObservingAnimatedList(
-              list: _deckAccessesViewModel.deckAccesses,
+              list: _deckAccessesViewModel.deckAccessProcessor,
               itemBuilder: (context, item, animation, index) => SizeTransition(
                     child: _buildUserAccessInfo(item),
                     sizeFactor: animation,
@@ -199,7 +193,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         ],
       );
 
-  Widget _buildUserAccessInfo(DeckAccess accessViewModel) {
+  Widget _buildUserAccessInfo(DeckAccessModel accessViewModel) {
     Function filter;
     if (accessViewModel.access == AccessType.owner) {
       filter = (access) => access == AccessType.owner;
@@ -225,7 +219,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
-              DeckAccessesViewModel.shareDeck(DeckAccess(
+              DeckAccessesViewModel.shareDeck(DeckAccessModel(
                   deck: _deckAccessesViewModel.deck,
                   uid: accessViewModel.uid,
                   email: accessViewModel.email,

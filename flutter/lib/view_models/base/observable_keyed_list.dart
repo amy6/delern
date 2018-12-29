@@ -81,7 +81,7 @@ class ObservableKeyedList<T extends KeyedListItem> {
   void setAll(Iterable<T> newValue, [Type eventSource]) {
     if (_value == null) {
       // Initial data arrival. We were waiting for you!
-      _value = newValue;
+      _value = newValue.toList();
       _notify(
           ListEvent(eventType: ListEventType.setAll, eventSource: eventSource));
       return;

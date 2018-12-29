@@ -60,7 +60,7 @@ class ScheduledCard implements KeyedListItem, Model {
     repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
 
-  static Stream<ScheduledCard> next(Deck deck) => FirebaseDatabase.instance
+  static Stream<ScheduledCard> next(DeckModel deck) => FirebaseDatabase.instance
           .reference()
           .child('learning')
           .child(deck.uid)

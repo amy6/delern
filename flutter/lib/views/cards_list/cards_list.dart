@@ -13,7 +13,7 @@ import '../card_create_update/card_create_update.dart';
 import '../card_preview/card_preview.dart';
 
 class CardsListPage extends StatefulWidget {
-  final Deck deck;
+  final DeckModel deck;
   final bool allowEdit;
 
   const CardsListPage({@required this.deck, @required this.allowEdit})
@@ -53,7 +53,7 @@ class _CardsListState extends State<CardsListPage> {
           items: _cardListViewModel.cardProcessor,
           itemBuilder: (item) => CardGridItem(
                 card: item,
-                deck: DeckModel.copyFromLegacy(widget.deck),
+                deck: widget.deck,
                 allowEdit: widget.allowEdit,
               ),
           // TODO(ksheremet): Consider to remove this field
@@ -73,7 +73,7 @@ class _CardsListState extends State<CardsListPage> {
                           builder: (context) => CreateUpdateCard(
                                 card: card_model.CardModel(
                                     deckKey: widget.deck.key),
-                                deck: DeckModel.copyFromLegacy(widget.deck),
+                                deck: widget.deck,
                               )));
                 } else {
                   UserMessages.showMessage(

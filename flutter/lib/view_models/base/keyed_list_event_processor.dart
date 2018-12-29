@@ -46,7 +46,7 @@ abstract class KeyedListEventProcessor<TElement extends KeyedListItem,
             // the source is renewable (it's a StreamGetter) and may resume when
             // listeners resubscribe to this processor.
             _inputEventsSubscription = source().listen(processEvent),
-        onCancel: _inputEventsSubscription.cancel,
+        onCancel: _inputEventsSubscription?.cancel,
         // Has to be synchronous to wait for all subscribers to process one
         // event before the underlying list changes in response to the next one.
         sync: true);

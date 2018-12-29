@@ -16,7 +16,7 @@ class CreateDeck extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          var newDeck = await showDialog<Deck>(
+          var newDeck = await showDialog<DeckModel>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,
@@ -39,7 +39,7 @@ class CreateDeck extends StatelessWidget {
                     settings: const RouteSettings(name: '/cards/new'),
                     builder: (context) => CreateUpdateCard(
                         card: card_model.CardModel(deckKey: newDeck.key),
-                        deck: DeckModel.copyFromLegacy(newDeck))));
+                        deck: newDeck)));
           }
         },
       );
@@ -66,9 +66,9 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         onPressed: _textController.text.isEmpty
             ? null
             : () {
-                Navigator.of(context).pop(Deck(
-                    uid: CurrentUserWidget.of(context).user.uid,
-                    name: _textController.text));
+                Navigator.of(context).pop(DeckModel()
+                  ..uid = CurrentUserWidget.of(context).user.uid
+                  ..name = _textController.text);
               });
 
     final cancelButton = FlatButton(

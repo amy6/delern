@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
-import 'package:delern_flutter/view_models/base/keyed_list_event_processor.dart';
-
 import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../remote/analytics.dart';
+import 'base/database_list_event_processor.dart';
+import 'base/keyed_list_event_processor.dart';
 
 class DeckListViewModel {
   final String uid;
@@ -21,12 +20,12 @@ class DeckListViewModel {
   KeyedListEventProcessor<DeckModel, dynamic> get deckProcessor =>
       _deckProcessor;
 
-  static Future<void> createDeck(Deck deck, String email) {
+  static Future<void> createDeck(DeckModel deck, String email) {
     logDeckCreate();
     return (Transaction()
           ..save(deck..access = AccessType.owner)
-          ..save(
-              DeckAccess(deck: deck, access: AccessType.owner, email: email)))
+          ..save(DeckAccessModel(
+              deck: deck, access: AccessType.owner, email: email)))
         .commit();
   }
 }

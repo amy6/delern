@@ -92,7 +92,7 @@ class ObservingAnimatedListState<T extends KeyedListItem>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.list == null) {
+    if (widget.list == null || widget.list.value == null) {
       return HelperProgressIndicator();
     }
 
