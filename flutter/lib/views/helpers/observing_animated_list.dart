@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../../models/base/observable_list.dart';
+import '../../models/base/events.dart';
+import '../../models/base/keyed_list_item.dart';
+import '../../view_models/base/keyed_list_event_processor.dart';
+import '../../view_models/base/observable_keyed_list.dart';
 import 'helper_progress_indicator.dart';
 
-typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
+typedef ObservingAnimatedListItemBuilder<T extends KeyedListItem> = Widget
+    Function(
   BuildContext context,
   T item,
   Animation<double> animation,
@@ -15,7 +19,7 @@ typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
 
 typedef WidgetBuilder = Widget Function();
 
-class ObservingAnimatedList<T> extends StatefulWidget {
+class ObservingAnimatedList<T extends KeyedListItem> extends StatefulWidget {
   const ObservingAnimatedList({
     @required this.list,
     @required this.itemBuilder,
@@ -24,7 +28,7 @@ class ObservingAnimatedList<T> extends StatefulWidget {
   })  : assert(itemBuilder != null),
         super(key: key);
 
-  final ObservableList<T> list;
+  final KeyedListEventProcessor<T, ListEvent<T>> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
 
@@ -33,7 +37,8 @@ class ObservingAnimatedList<T> extends StatefulWidget {
       ObservingAnimatedListState<T>();
 }
 
-class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
+class ObservingAnimatedListState<T extends KeyedListItem>
+    extends State<ObservingAnimatedList<T>> {
   final GlobalKey<AnimatedListState> _animatedListKey =
       GlobalKey<AnimatedListState>();
 
@@ -48,7 +53,7 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   @override
   void dispose() {
-    _listSubscription?.cancel();
+    _listSubscription.cancel();
     super.dispose();
   }
 
@@ -83,22 +88,22 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   Widget _buildItem(
           BuildContext context, int index, Animation<double> animation) =>
-      widget.itemBuilder(context, widget.list[index], animation, index);
+      widget.itemBuilder(context, widget.list.value[index], animation, index);
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.list.changed) {
+    if (widget.list == null) {
       return HelperProgressIndicator();
     }
 
-    if (widget.list.isEmpty) {
+    if (widget.list.value.isEmpty) {
       return widget.emptyMessageBuilder();
     }
 
     return AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,
-      initialItemCount: widget.list.length,
+      initialItemCount: widget.list.value.length,
     );
   }
 }
