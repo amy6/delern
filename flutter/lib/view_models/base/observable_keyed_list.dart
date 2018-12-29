@@ -25,21 +25,19 @@ class ListEvent<T> {
 }
 
 class ObservableKeyedList<T extends KeyedListItem> {
-  StreamController<ListEvent<T>> _events;
-  Stream<ListEvent<T>> get events => _events.stream;
-
+  Sink<ListEvent<T>> _eventsSink;
   List<T> _value;
   List<T> _externalValue;
   List<T> get value => _externalValue;
 
-  ObservableKeyedList(this._events);
+  ObservableKeyedList(this._eventsSink);
 
   int indexOfKey(String key) => _value.indexWhere((item) => item.key == key);
 
   void _notify(ListEvent<T> event) {
     _externalValue = List.unmodifiable(_value);
-    // TODO(dotdoom): factor out _events and _notify into a separate class.
-    _events.add(event);
+    // TODO(dotdoom): factor out _eventsSink and _notify into a separate class.
+    _eventsSink.add(event);
   }
 
   void move(int takeFromIndex, int insertBeforeIndex, [Type eventSource]) {
