@@ -1,36 +1,25 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
+import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
+import 'package:delern_flutter/view_models/base/keyed_list_event_processor.dart';
 
 import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
 import '../remote/analytics.dart';
-import 'base/disposable.dart';
-import 'base/proxy_keyed_list.dart';
-import 'base/view_models_list.dart';
 
-class DeckListViewModel implements Disposable {
+class DeckListViewModel {
   final String uid;
 
-  ViewModelsList<DeckModel> _deckViewModels;
-  ProxyKeyedList<DeckModel> _decksProxy;
-
-  ProxyKeyedList<DeckModel> get decks =>
-      _decksProxy ??= ProxyKeyedList(_deckViewModels);
-
   DeckListViewModel(this.uid) {
-    _deckViewModels = ViewModelsList<DeckModel>(() => Deck.getDecks(uid).map(
-        (deckEvent) =>
-            deckEvent.map((deck) => DeckModel.copyFromLegacy(deck))));
+    _deckProcessor =
+        DatabaseListEventProcessor<DeckModel>(() => DeckModel.getDecks(uid));
   }
 
-  @override
-  @mustCallSuper
-  void dispose() {
-    _deckViewModels.dispose();
-    _decksProxy?.dispose();
-  }
+  KeyedListEventProcessor<DeckModel, dynamic> _deckProcessor;
+
+  KeyedListEventProcessor<DeckModel, dynamic> get deckProcessor =>
+      _deckProcessor;
 
   static Future<void> createDeck(Deck deck, String email) {
     logDeckCreate();

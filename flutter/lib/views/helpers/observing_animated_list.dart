@@ -28,7 +28,7 @@ class ObservingAnimatedList<T extends KeyedListItem> extends StatefulWidget {
   })  : assert(itemBuilder != null),
         super(key: key);
 
-  final KeyedListEventProcessor<T, ListEvent<T>> list;
+  final KeyedListEventProcessor<T, dynamic> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
 

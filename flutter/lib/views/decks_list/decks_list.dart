@@ -99,12 +99,12 @@ class DecksListPageState extends State<DecksListPage> {
   @override
   void didChangeDependencies() {
     // TODO(dotdoom): find out deactivate/build/didChangeDependencies flow.
-    viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid)
-      ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
+    viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid);
+    //..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.didChangeDependencies();
   }
 
-  void setFilter(String input) {
+  /*void setFilter(String input) {
     if (input == null) {
       viewModel.decks.filter = null;
       return;
@@ -113,16 +113,16 @@ class DecksListPageState extends State<DecksListPage> {
     viewModel.decks.filter = (d) =>
         // Case insensitive filter
         d.name.toLowerCase().contains(input);
-  }
+  }*/
 
   GlobalKey fabKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: SearchBarWidget(title: widget.title, search: setFilter),
+        appBar: SearchBarWidget(title: widget.title, search: null),
         drawer: NavigationDrawer(),
         body: ObservingAnimatedList(
-          list: viewModel.decks,
+          list: viewModel.deckProcessor,
           itemBuilder: (context, item, animation, index) => SizeTransition(
                 child: DeckListItem(item),
                 sizeFactor: animation,
@@ -134,12 +134,6 @@ class DecksListPageState extends State<DecksListPage> {
         ),
         floatingActionButton: CreateDeck(key: fabKey),
       );
-
-  @override
-  void dispose() {
-    super.dispose();
-    viewModel.dispose();
-  }
 }
 
 class DeckListItem extends StatelessWidget {
@@ -192,9 +186,8 @@ class DeckListItem extends StatelessWidget {
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
                       builder: (context) => CreateUpdateCard(
-                          card:
-                              card_model.CardModel(deckKey: viewModel.deck.key),
-                          deck: DeckModel.copyFromLegacy(viewModel.deck))));
+                          card: card_model.CardModel(deckKey: viewModel.key),
+                          deck: DeckModel.copyFromLegacy(viewModel))));
             }
           },
           child: Container(
@@ -249,8 +242,8 @@ class DeckListItem extends StatelessWidget {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
                   builder: (context) => CreateUpdateCard(
-                        card: card_model.CardModel(deckKey: viewModel.deck.key),
-                        deck: DeckModel.copyFromLegacy(viewModel.deck),
+                        card: card_model.CardModel(deckKey: viewModel.key),
+                        deck: DeckModel.copyFromLegacy(viewModel),
                       )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
