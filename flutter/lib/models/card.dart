@@ -4,9 +4,9 @@ import 'dart:core';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
-import 'base/keyed_list.dart';
+import 'base/events.dart';
+import 'base/keyed_list_item.dart';
 import 'base/model.dart';
-import 'base/observable_list.dart';
 import 'deck.dart';
 
 class Card implements KeyedListItem, Model {
@@ -41,7 +41,7 @@ class Card implements KeyedListItem, Model {
     return card;
   }
 
-  static Stream<KeyedListEvent<Card>> getCards(Deck deck) async* {
+  static Stream<DatabaseListEvent<Card>> getCards(Deck deck) async* {
     Map initialValue = (await FirebaseDatabase.instance
                 .reference()
                 .child('cards')
@@ -52,7 +52,7 @@ class Card implements KeyedListItem, Model {
             .snapshot
             .value ??
         {};
-    yield KeyedListEvent(
+    yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: initialValue.entries
             .map((item) => Card.fromSnapshot(item.key, item.value, deck)));
@@ -121,9 +121,6 @@ class CardModel implements Model {
         front = legacy.front,
         back = legacy.back,
         createdAt = legacy.createdAt;
-
-  // TODO(dotdoom): BROKEN!
-  Card toLegacy() => Card(deck: null);
 
   CardModel._fromSnapshot(this.deckKey, this.key, snapshotValue) {
     if (snapshotValue == null) {

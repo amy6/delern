@@ -12,7 +12,7 @@ void main() {
   test('setAll', () async {
     ProxyKeyedList<TestFixture> list;
     list = ProxyKeyedList<TestFixture>(ViewModelsList<TestFixture>(() async* {
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.setAll,
           fullListValueForSet: [
             TestFixture('A', data: 0),
@@ -51,7 +51,7 @@ void main() {
             TestFixture('B', data: 1),
           ]));
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.setAll,
           fullListValueForSet: [
             TestFixture('A', data: 5),
@@ -71,7 +71,7 @@ void main() {
             TestFixture('E', data: 1, updateCount: 1),
           ]));
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.setAll,
           fullListValueForSet: [
             TestFixture('F', data: 0),

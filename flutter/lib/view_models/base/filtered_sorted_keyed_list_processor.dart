@@ -1,85 +1,93 @@
-import 'dart:async';
-
 import 'package:meta/meta.dart';
 
-import '../../models/base/keyed_list.dart';
-import '../../models/base/observable_list.dart';
+import '../../models/base/events.dart';
+import '../../models/base/keyed_list_item.dart';
+import 'keyed_list_event_processor.dart';
+import 'observable_keyed_list.dart';
 
 typedef Filter<T> = bool Function(T item);
 
-// TODO(dotdoom): make list interface readonly.
-class ProxyKeyedList<T extends KeyedListItem> extends ObservableList<T>
-    with KeyedListMixin<T> {
-  final ObservableList<T> _base;
-  StreamSubscription<ListEvent<T>> _baseEventsSubscription;
-  Filter<T> _filter;
-  Comparator<T> _comparator;
+class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
+    extends KeyedListEventProcessor<T, ListEvent<T>> {
+  final ObservableKeyedList<T> _source;
 
-  ProxyKeyedList(this._base) {
-    if (_base.changed) {
-      setAll(0, _base);
+  FilteredSortedKeyedListProcessor(this._source) : super(() => _source.events) {
+    if (_source.value != null) {
+      // If initial value is already available, pick it up.
+      _setAll(_source.value);
     }
-    _baseEventsSubscription = _base.events.listen((event) {
-      switch (event.eventType) {
-        case ListEventType.itemAdded:
-          _baseItemAdded(event.index);
-          break;
-        case ListEventType.itemRemoved:
-          var index = indexOfKey(event.previousValue.key);
-          if (index >= 0) {
-            removeAt(index);
-          }
-          break;
-        case ListEventType.itemMoved:
-          _baseItemMoved(event.index);
-          break;
-        case ListEventType.itemChanged:
-          assert(event.previousValue.key == _base[event.index].key,
-              'Item change modifies item key.');
-          _baseItemChanged(event.index);
-          break;
-        case ListEventType.setAll:
-          _baseSetAll();
-          break;
-      }
-    });
   }
 
-  Filter<T> get filter => _filter;
+  @protected
+  void processEvent(ListEvent<T> event) {
+    switch (event.eventType) {
+      case ListEventType.itemAdded:
+        _add(event.index);
+        break;
+      case ListEventType.itemRemoved:
+        final index = list.indexOfKey(event.previousValue.key);
+        if (index >= 0) {
+          _removeAt(index);
+        }
+        break;
+      case ListEventType.itemMoved:
+        _move(event.index);
+        break;
+      case ListEventType.itemChanged:
+        assert(event.previousValue.key == list.value[event.index].key,
+            'Item change modifies item key.');
+        _update(event.index);
+        break;
+      case ListEventType.setAll:
+        _setAll();
+        break;
+    }
+  }
 
+  Filter<T> _filter;
+  Filter<T> get filter => _filter;
   set filter(final Filter<T> value) {
     _filter = value;
-    for (var baseIndex = 0; baseIndex < _base.length; ++baseIndex) {
-      var item = _base[baseIndex];
-      var currentIndex = indexOfKey(item.key);
-      var newIndex = _indexForNewItem(baseIndex);
+
+    if (_source.value == null) {
+      // No data available yet.
+      return;
+    }
+
+    for (var srcIndex = 0; srcIndex < _source.value.length; ++srcIndex) {
+      var item = _source.value[srcIndex];
+      var currentIndex = list.indexOfKey(item.key);
+      var newIndex = _indexForNewItem(srcIndex);
 
       if (currentIndex >= 0 && newIndex < 0) {
-        removeAt(currentIndex);
+        _removeAt(currentIndex);
       } else if (currentIndex < 0 && newIndex >= 0) {
-        insert(_indexForNewItem(baseIndex), item);
+        _insert(_indexForNewItem(srcIndex), item);
       }
     }
   }
 
+  Comparator<T> _comparator;
   // Getter is not super useful for this property.
   // ignore: avoid_setters_without_getters
   set comparator(Comparator<T> value) {
     _comparator = value;
-    if (isEmpty) {
-      // Shortcut to avoid flipping 'changed' before any data has arrived.
+
+    if (_source.value == null) {
+      // No data available yet.
       return;
     }
+
     if (_comparator == null) {
-      Iterable<T> newValue = _base;
+      Iterable<T> newValue = _source.value;
       if (_filter != null) {
-        newValue = _base.where(_filter);
+        newValue = newValue.where(_filter);
       }
-      assert(newValue.length == length,
+      assert(newValue.length == list.value.length,
           'Sorting must not change the size of the list');
-      setAll(0, newValue);
+      _setAll(0, newValue);
     } else {
-      setAll(0, List<T>.from(this)..sort(_comparator));
+      _setAll(0, List<T>.from(this)..sort(_comparator));
     }
   }
 

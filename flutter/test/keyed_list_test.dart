@@ -35,7 +35,7 @@ class MockQuery extends Mock implements Query {
 
 void main() {
   test('map', () {
-    var intEvent = KeyedListEvent(
+    var intEvent = DatabaseListEvent(
       eventType: ListEventType.itemAdded,
       value: TestFixture('1', data: '1'),
     ).map((f) => TestFixture(f.key, data: int.parse(f.data) + 1));
@@ -43,7 +43,7 @@ void main() {
     expect(intEvent.value, TestFixture('1', data: 2));
     expect(intEvent.fullListValueForSet, null);
 
-    var listEvent = KeyedListEvent(
+    var listEvent = DatabaseListEvent(
       eventType: ListEventType.setAll,
       fullListValueForSet: [TestFixture('1', data: '1')],
     ).map((f) => TestFixture(f.key, data: int.parse(f.data) + 1));
@@ -60,7 +60,7 @@ void main() {
             .toList();
 
     final eventTypesLeft = ListEventType.values.toList()
-      ..remove(ListEventType.setAll);
+      ..removeAt(ListEventType.setAll);
 
     for (final event in events) {
       expect(event.value.key, 'testKey');
@@ -68,7 +68,7 @@ void main() {
       expect(event.previousSiblingKey, null);
       expect(eventTypesLeft, contains(event.eventType));
       expect(event.toString(), contains('#testKey'));
-      eventTypesLeft.remove(event.eventType);
+      eventTypesLeft.removeAt(event.eventType);
     }
 
     // Verify that all events have triggered.

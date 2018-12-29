@@ -5,9 +5,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
 import 'base/enum.dart';
-import 'base/keyed_list.dart';
+import 'base/events.dart';
+import 'base/keyed_list_item.dart';
 import 'base/model.dart';
-import 'base/observable_list.dart';
 import 'deck.dart';
 import 'user.dart';
 
@@ -57,7 +57,8 @@ class DeckAccess implements KeyedListItem, Model {
     _parseSnapshot(snapshotValue);
   }
 
-  static Stream<KeyedListEvent<DeckAccess>> getDeckAccesses(Deck deck) async* {
+  static Stream<DatabaseListEvent<DeckAccess>> getDeckAccesses(
+      Deck deck) async* {
     Map initialValue = (await FirebaseDatabase.instance
                 .reference()
                 .child('deck_access')
@@ -68,7 +69,7 @@ class DeckAccess implements KeyedListItem, Model {
             .snapshot
             .value ??
         {};
-    yield KeyedListEvent(
+    yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: initialValue.entries.map(
             (item) => DeckAccess.fromSnapshot(item.key, item.value, deck)));

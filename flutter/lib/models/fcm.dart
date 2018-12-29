@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:meta/meta.dart';
 
-import 'base/keyed_list.dart';
+import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 
 class FCM implements KeyedListItem, Model {

@@ -12,35 +12,35 @@ void main() {
     ViewModelsList<TestFixture> list;
     list = ViewModelsList<TestFixture>(() async* {
       // Initial set.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: [TestFixture('1')],
       );
       expect(list, equals([TestFixture('1')]));
 
       // Add '1' again (should be ignored).
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemAdded,
           previousSiblingKey: null,
           value: TestFixture('1')..data = 'test');
       expect(list, equals([TestFixture('1')]));
 
       // Add '3' after '1'.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemAdded,
           previousSiblingKey: '1',
           value: TestFixture('3'));
       expect(list, equals([TestFixture('1'), TestFixture('3')]));
 
       // Add '3' after '1' again (should be ignored).
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemAdded,
           previousSiblingKey: '1',
           value: TestFixture('3'));
       expect(list, equals([TestFixture('1'), TestFixture('3')]));
 
       // Add '2' after '1'.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.itemAdded,
         previousSiblingKey: '1',
         value: TestFixture('2'),
@@ -49,7 +49,7 @@ void main() {
           list, equals([TestFixture('1'), TestFixture('2'), TestFixture('3')]));
 
       // Swap '2' and '3'.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.itemMoved,
         value: TestFixture('2'),
         previousSiblingKey: '3',
@@ -58,7 +58,7 @@ void main() {
           list, equals([TestFixture('1'), TestFixture('3'), TestFixture('2')]));
 
       // Swap '2' and '3' again (backwards).
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.itemMoved,
         value: TestFixture('2'),
         previousSiblingKey: '1',
@@ -67,12 +67,12 @@ void main() {
           list, equals([TestFixture('1'), TestFixture('2'), TestFixture('3')]));
 
       // Remove '2'.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemRemoved, value: TestFixture('2'));
       expect(list, equals([TestFixture('1'), TestFixture('3')]));
 
       // Add data 'foo' to '1'.
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemChanged,
           value: TestFixture('1', data: 'foo'));
     })
@@ -89,7 +89,7 @@ void main() {
   test('setAll', () async {
     ViewModelsList<TestFixture> list;
     list = ViewModelsList<TestFixture>(() async* {
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'to be updated'),
@@ -103,7 +103,7 @@ void main() {
             TestFixture('2', data: 'to be removed'),
           ]));
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'still to be updated'),
@@ -117,7 +117,7 @@ void main() {
             TestFixture('3', data: 'also to be removed'),
           ]));
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: [
           TestFixture('1', data: 'no more changes'),
@@ -169,7 +169,7 @@ void main() {
 
     ViewModelsList<TestFixture> list;
     list = ViewModelsList<TestFixture>(() async* {
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
         eventType: ListEventType.setAll,
         fullListValueForSet: testFixtures,
       );
@@ -184,7 +184,7 @@ void main() {
       expect(changedTestFixture.active, false);
       expect(addedTestFixture.active, false);
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemChanged, value: changedTestFixture);
       expect(
           list,
@@ -199,7 +199,7 @@ void main() {
       expect(changedTestFixture.active, false);
       expect(addedTestFixture.active, false);
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemAdded,
           value: addedTestFixture,
           previousSiblingKey: '2');
@@ -221,7 +221,7 @@ void main() {
       expect(
           addedTestFixture, TestFixture('3', data: 'updated', updateCount: 1));
 
-      yield KeyedListEvent(
+      yield DatabaseListEvent(
           eventType: ListEventType.itemRemoved, value: TestFixture('1'));
       expect(
           list,

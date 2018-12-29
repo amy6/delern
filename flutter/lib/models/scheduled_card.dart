@@ -6,7 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
 import '../remote/error_reporting.dart';
-import 'base/keyed_list.dart';
+import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 import 'base/transaction.dart';
 import 'card.dart';
