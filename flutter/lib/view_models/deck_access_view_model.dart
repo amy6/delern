@@ -5,7 +5,6 @@ import 'package:meta/meta.dart';
 import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
-import '../models/user.dart';
 import '../remote/analytics.dart';
 import 'base/disposable.dart';
 import 'base/proxy_keyed_list.dart';
@@ -14,23 +13,10 @@ import 'base/view_models_list.dart';
 class DeckAccessViewModel implements ListItemViewModel {
   String get key => _deckAccess.key;
   DeckAccess get deckAccess => _deckAccess;
-  User get user => _user;
 
   DeckAccess _deckAccess;
-  User _user;
 
-  final ViewModelsList<DeckAccessViewModel> _owner;
-  StreamSubscription<User> _userUpdates;
-
-  DeckAccessViewModel(this._owner, this._deckAccess) {
-    _userUpdates = _deckAccess.getUser().listen((user) {
-      this._user = user;
-
-      // Send event to the owner list so that it can find our index
-      // and notify subscribers.
-      _owner.childUpdated(this);
-    });
-  }
+  DeckAccessViewModel(this._deckAccess);
 
   @override
   DeckAccessViewModel updateWith(DeckAccessViewModel value) {
@@ -46,13 +32,7 @@ class DeckAccessViewModel implements ListItemViewModel {
   }
 
   @override
-  @mustCallSuper
-  void dispose() {
-    _userUpdates.cancel();
-  }
-
-  @override
-  String toString() => '#$key ${_deckAccess.access} $_user';
+  String toString() => '#$key ${_deckAccess.access}';
 }
 
 class DeckAccessesViewModel implements Disposable {
@@ -67,8 +47,8 @@ class DeckAccessesViewModel implements Disposable {
   DeckAccessesViewModel(this.deck) {
     _deckAccessViewModels = ViewModelsList<DeckAccessViewModel>(() =>
         DeckAccess.getDeckAccesses(deck).map((deckAccessEvent) =>
-            deckAccessEvent.map((deckAccess) =>
-                DeckAccessViewModel(_deckAccessViewModels, deckAccess))));
+            deckAccessEvent
+                .map((deckAccess) => DeckAccessViewModel(deckAccess))));
   }
 
   @override

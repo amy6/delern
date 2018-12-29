@@ -208,16 +208,11 @@ class _DeckUsersState extends State<DeckUsersWidget> {
     }
 
     final displayName = accessViewModel.deckAccess.displayName ??
-        accessViewModel.deckAccess.email ??
-        accessViewModel.user?.name;
+        accessViewModel.deckAccess.email;
 
     return ListTile(
       leading: (accessViewModel.deckAccess.photoUrl == null)
-          ? (accessViewModel.user == null)
-              ? null
-              : CircleAvatar(
-                  backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
-                )
+          ? null
           : CircleAvatar(
               backgroundImage:
                   NetworkImage(accessViewModel.deckAccess.photoUrl),

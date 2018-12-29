@@ -181,7 +181,7 @@ class DeckListItem extends StatelessWidget {
                             // DeckAccess and it is null access we still give
                             // a try to edit for a user. If user doesn't have
                             // permissions they will see "Permission denied".
-                            viewModel.access?.access != AccessType.read,
+                            viewModel.deck.access != AccessType.read,
                       )),
             );
             if (anyCardsShown == false) {
@@ -207,18 +207,9 @@ class DeckListItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildNumberOfCards() {
-    String numberOfCards;
-    if (viewModel.cardsToLearn != null &&
-        viewModel.cardsToLearn > viewModel.maxNumberOfCards) {
-      numberOfCards = '${viewModel.maxNumberOfCards}+';
-    } else {
-      numberOfCards = viewModel.cardsToLearn?.toString() ?? 'N/A';
-    }
-    return Container(
-      child: Text(numberOfCards, style: AppStyles.primaryText),
-    );
-  }
+  Widget _buildNumberOfCards() => Container(
+        child: const Text('N/A'),
+      );
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
@@ -248,7 +239,7 @@ class DeckListItem extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = viewModel.access?.access != AccessType.read;
+    var allowEdit = viewModel.deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -281,12 +272,11 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) =>
-                  DeckSettingsPage(viewModel.deck, viewModel.access)),
+              builder: (context) => DeckSettingsPage(viewModel.deck)),
         );
         break;
       case _DeckMenuItemType.share:
-        if (viewModel.access.access == AccessType.owner) {
+        if (viewModel.deck.access == AccessType.owner) {
           Navigator.push(
             context,
             MaterialPageRoute(

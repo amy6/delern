@@ -6,7 +6,7 @@ import '../../models/base/keyed_list.dart';
 import '../../models/base/observable_list.dart';
 import 'disposable.dart';
 
-abstract class ListItemViewModel implements KeyedListItem, Disposable {
+abstract class ListItemViewModel implements KeyedListItem {
   String get key;
   ListItemViewModel updateWith(covariant ListItemViewModel value);
 }
@@ -27,9 +27,7 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
   @override
   @mustCallSuper
   void dispose() {
-    _subscription?.cancel();
-    _subscription = null;
-    forEach((item) => item.dispose());
+    _subscription.cancel();
     super.dispose();
   }
 
@@ -80,7 +78,6 @@ class ViewModelsList<T extends ListItemViewModel> extends ObservableList<T>
       insert(indexOfKey(previousKey) + 1, value);
 
   void _remove(int index) {
-    this[index].dispose();
     removeAt(index);
   }
 

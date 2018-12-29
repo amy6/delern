@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/card.dart';
 import '../models/card_view.dart';
@@ -11,22 +10,16 @@ import '../remote/analytics.dart';
 
 class DeckViewModel {
   final Deck deck;
-  final DeckAccess access;
 
-  DeckViewModel(this.deck, this.access)
-      : assert(deck != null),
-        assert(access != null);
+  DeckViewModel(this.deck) : assert(deck != null);
 
-  Stream<void> get updates => StreamMuxer({
-        0: deck.updates,
-        1: access.updates,
-      });
+  Stream<void> get updates => deck.updates;
 
   Future<void> delete() async {
     logDeckDelete(deck.key);
     var t = Transaction()..delete(deck);
     var card = Card(deck: deck);
-    if (access.access == AccessType.owner) {
+    if (deck.access == AccessType.owner) {
       (await DeckAccess.getDeckAccesses(deck).first)
           .fullListValueForSet
           .forEach((a) => t.delete(Deck(uid: a.key)..key = deck.key));

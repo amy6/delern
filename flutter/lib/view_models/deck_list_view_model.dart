@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:meta/meta.dart';
 
-import '../models/base/stream_muxer.dart';
 import '../models/base/transaction.dart';
 import '../models/deck.dart';
 import '../models/deck_access.dart';
@@ -14,34 +13,10 @@ import 'base/view_models_list.dart';
 class DeckListItemViewModel implements ListItemViewModel {
   String get key => _deck?.key;
   Deck get deck => _deck;
-  DeckAccess get access => _access;
-  int get cardsToLearn => _cardsToLearn;
 
   Deck _deck;
-  DeckAccess _access;
-  int _cardsToLearn;
 
-  final int maxNumberOfCards;
-
-  final ViewModelsList<DeckListItemViewModel> _owner;
-  StreamSubscription<StreamMuxerEvent<bool>> _internalUpdates;
-
-  DeckListItemViewModel(this._owner, this._deck,
-      {@required this.maxNumberOfCards})
-      : assert(maxNumberOfCards != null),
-        _access = DeckAccess(deck: _deck) {
-    _internalUpdates = StreamMuxer({
-      false: _access.updates,
-      true: _deck.getNumberOfCardsToLearn(maxNumberOfCards + 1),
-    }).listen((event) {
-      if (event.stream) {
-        this._cardsToLearn = event.value;
-      }
-      // Send event to the owner list so that it can find our index
-      // and notify subscribers.
-      _owner.childUpdated(this);
-    });
-  }
+  DeckListItemViewModel(this._deck);
 
   @override
   DeckListItemViewModel updateWith(DeckListItemViewModel value) {
@@ -57,18 +32,11 @@ class DeckListItemViewModel implements ListItemViewModel {
   }
 
   @override
-  @mustCallSuper
-  void dispose() {
-    _internalUpdates.cancel();
-  }
-
-  @override
-  String toString() => '#$key ${deck?.name} [$access $cardsToLearn]';
+  String toString() => '#$key ${deck?.name} [${deck?.access}]';
 }
 
 class DeckListViewModel implements Disposable {
   final String uid;
-  final int _maxNumberOfCards = 200;
 
   ViewModelsList<DeckListItemViewModel> _deckViewModels;
   ProxyKeyedList<DeckListItemViewModel> _decksProxy;
@@ -78,9 +46,8 @@ class DeckListViewModel implements Disposable {
 
   DeckListViewModel(this.uid) {
     _deckViewModels = ViewModelsList<DeckListItemViewModel>(() =>
-        Deck.getDecks(uid).map((deckEvent) => deckEvent.map((deck) =>
-            DeckListItemViewModel(_deckViewModels, deck,
-                maxNumberOfCards: _maxNumberOfCards))));
+        Deck.getDecks(uid).map((deckEvent) =>
+            deckEvent.map((deck) => DeckListItemViewModel(deck))));
   }
 
   @override

@@ -33,12 +33,6 @@ class TestFixture extends ListItemViewModel {
   TestFixture(this.key, {this.data, this.updateCount});
 
   @override
-  void activate() => _active = true;
-
-  @override
-  void dispose() => _active = false;
-
-  @override
   ListItemViewModel updateWith(TestFixture value) {
     expect(value.key, key);
     data = value.data;

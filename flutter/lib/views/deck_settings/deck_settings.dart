@@ -14,9 +14,8 @@ import 'deck_type_dropdown.dart';
 
 class DeckSettingsPage extends StatefulWidget {
   final Deck _deck;
-  final DeckAccess _access;
 
-  const DeckSettingsPage(this._deck, this._access);
+  const DeckSettingsPage(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckSettingsPageState();
@@ -32,7 +31,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
-    _viewModel = DeckViewModel(widget._deck, widget._access);
+    _viewModel = DeckViewModel(widget._deck);
     super.initState();
   }
 
@@ -68,7 +67,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
                     onPressed: cb(() async {
                       var locale = AppLocalizations.of(context);
                       String deleteDeckQuestion;
-                      switch (_viewModel.access.access) {
+                      switch (_viewModel.deck.access) {
                         case AccessType.owner:
                           deleteDeckQuestion =
                               locale.deleteDeckOwnerAccessQuestion;
