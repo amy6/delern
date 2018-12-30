@@ -41,6 +41,13 @@ Stream<UnorderedListEvent<T>> _unorderedChildEventsStream<T>(
       );
     });
 
+@immutable
+class CardAndScheduledCard {
+  final CardModel card;
+  final ScheduledCardModel scheduledCard;
+  const CardAndScheduledCard(this.card, this.scheduledCard);
+}
+
 class ScheduledCardModel implements Model {
   static const levelDurations = [
     Duration(hours: 4),
@@ -52,34 +59,30 @@ class ScheduledCardModel implements Model {
     Duration(days: 60),
   ];
 
-  String get key => card.key;
-  set key(_) => throw Exception('ScheduledCard key is always set via "card"');
-  CardModel card;
-  // TODO(ksheremet): Find better place for storing uid
-  String _uid;
+  String uid;
+  String deckKey;
+  String key;
   int level;
   DateTime repeatAt;
 
-  ScheduledCardModel({@required this.card, @required String uid})
-      : assert(card != null),
+  ScheduledCardModel(
+      {@required this.key, @required this.deckKey, @required this.uid})
+      : assert(deckKey != null),
         assert(uid != null) {
-    _uid = uid;
-    level ??= 0;
-    repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
+    level = 0;
+    repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   ScheduledCardModel.fromSnapshot(snapshotValue,
-      {@required this.card, @required uid})
-      : assert(card != null),
-        assert(uid != null) {
-    _uid = uid;
+      {@required this.key, @required this.deckKey, @required this.uid})
+      : assert(uid != null),
+        assert(deckKey != null) {
     _parseSnapshot(snapshotValue);
   }
 
-/* It is used for cards randomizing appearance.
-   Max jitter is 2h 59 min */
-  Duration _getJitter() =>
-      Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
+  // A jutter used to calculate diverse next scheduled time for a card.
+  static final _jitterRandom = Random();
+  Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
 
   void _parseSnapshot(snapshotValue) {
     if (snapshotValue == null) {
@@ -96,7 +99,7 @@ class ScheduledCardModel implements Model {
     repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
 
-  static Stream<ScheduledCardModel> next(DeckModel deck) =>
+  static Stream<CardAndScheduledCard> next(DeckModel deck) =>
       FirebaseDatabase.instance
           .reference()
           .child('learning')
@@ -143,8 +146,9 @@ class ScheduledCardModel implements Model {
         var card = await CardModel.fetch(deck, latestScheduledCard.key);
         var scheduledCard = ScheduledCardModel.fromSnapshot(
             latestScheduledCard.value,
-            card: card,
-            uid: deck.uid);
+            uid: deck.uid,
+            key: latestScheduledCard.key,
+            deckKey: deck.key);
 
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
@@ -156,11 +160,11 @@ class ScheduledCardModel implements Model {
           return;
         }
 
-        sink.add(scheduledCard);
+        sink.add(CardAndScheduledCard(card, scheduledCard));
       }));
 
   @override
-  String get rootPath => 'learning/$_uid/${card.deckKey}';
+  String get rootPath => 'learning/$uid/$key';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
@@ -171,7 +175,7 @@ class ScheduledCardModel implements Model {
       };
 
   CardViewModel answer(bool knows, bool learnBeyondHorizon) {
-    var cv = CardViewModel(uid: _uid, card: card)
+    var cv = CardViewModel(uid: uid, cardKey: key, deckKey: deckKey)
       ..reply = knows
       ..levelBefore = level;
 
@@ -182,7 +186,7 @@ class ScheduledCardModel implements Model {
     if (!knows) {
       level = 0;
     }
-    repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _getJitter());
+    repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _newJitter());
     return cv;
   }
 
@@ -195,7 +199,8 @@ class ScheduledCardModel implements Model {
         // TODO(dotdoom): remove card.
         return value.entries.map((entry) => ScheduledCardModel.fromSnapshot(
             entry.value,
-            card: CardModel(deckKey: scheduledCardsOfDeck.key)..key = entry.key,
+            key: entry.key,
+            deckKey: scheduledCardsOfDeck.key,
             uid: uid));
       });
 }

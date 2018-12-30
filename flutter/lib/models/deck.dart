@@ -55,23 +55,6 @@ class DeckModel implements Model {
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
-  void _parseSnapshot(snapshotValue) {
-    if (snapshotValue == null) {
-      // Assume the deck doesn't exist anymore.
-      key = null;
-      return;
-    }
-    name = snapshotValue['name'];
-    markdown = snapshotValue['markdown'] ?? false;
-    type = Enum.fromString(
-        snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
-    accepted = snapshotValue['accepted'] ?? false;
-    lastSyncAt =
-        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
-    category = snapshotValue['category'];
-    access = Enum.fromString(snapshotValue['access'], AccessType.values);
-  }
-
   @override
   String get rootPath => 'decks/$uid';
 
@@ -129,12 +112,4 @@ class DeckModel implements Model {
         .child(deckId)
         .keepSynced(true);
   }
-
-  Stream<void> get updates => FirebaseDatabase.instance
-      .reference()
-      .child('decks')
-      .child(uid)
-      .child(key)
-      .onValue
-      .map((event) => _parseSnapshot(event.snapshot.value));
 }

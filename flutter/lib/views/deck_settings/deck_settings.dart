@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../flutter/localization.dart';
@@ -25,7 +23,6 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
-  StreamSubscription<void> _viewModelUpdates;
   bool _isDeckChanged = false;
 
   @override
@@ -36,73 +33,63 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
   }
 
   @override
-  void deactivate() {
-    _viewModelUpdates?.cancel();
-    _viewModelUpdates = null;
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isDeckChanged) {
-          try {
-            await _viewModel.save();
-          } catch (e, stackTrace) {
-            UserMessages.showError(
-                () => _scaffoldKey.currentState, e, stackTrace);
-            return false;
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if (_isDeckChanged) {
+            try {
+              await _viewModel.save();
+            } catch (e, stackTrace) {
+              UserMessages.showError(
+                  () => _scaffoldKey.currentState, e, stackTrace);
+              return false;
+            }
           }
-        }
-        return true;
-      },
-      child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
-            SlowOperationWidget(
-              (cb) => IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: cb(() async {
-                      var locale = AppLocalizations.of(context);
-                      String deleteDeckQuestion;
-                      switch (_viewModel.deck.access) {
-                        case AccessType.owner:
-                          deleteDeckQuestion =
-                              locale.deleteDeckOwnerAccessQuestion;
-                          break;
-                        case AccessType.write:
-                        case AccessType.read:
-                          deleteDeckQuestion =
-                              locale.deleteDeckWriteReadAccessQuestion;
-                          break;
-                      }
-                      var deleteDeckDialog = await showSaveUpdatesDialog(
-                          context: context,
-                          changesQuestion: deleteDeckQuestion,
-                          yesAnswer: locale.delete,
-                          noAnswer: MaterialLocalizations.of(context)
-                              .cancelButtonLabel);
-                      if (deleteDeckDialog) {
-                        try {
-                          await _viewModel.delete();
-                        } catch (e, stackTrace) {
-                          UserMessages.showError(
-                              () => _scaffoldKey.currentState, e, stackTrace);
-                          return;
+          return true;
+        },
+        child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
+              SlowOperationWidget(
+                (cb) => IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: cb(() async {
+                        var locale = AppLocalizations.of(context);
+                        String deleteDeckQuestion;
+                        switch (_viewModel.deck.access) {
+                          case AccessType.owner:
+                            deleteDeckQuestion =
+                                locale.deleteDeckOwnerAccessQuestion;
+                            break;
+                          case AccessType.write:
+                          case AccessType.read:
+                            deleteDeckQuestion =
+                                locale.deleteDeckWriteReadAccessQuestion;
+                            break;
                         }
-                        if (mounted) {
-                          Navigator.of(context).pop();
+                        var deleteDeckDialog = await showSaveUpdatesDialog(
+                            context: context,
+                            changesQuestion: deleteDeckQuestion,
+                            yesAnswer: locale.delete,
+                            noAnswer: MaterialLocalizations.of(context)
+                                .cancelButtonLabel);
+                        if (deleteDeckDialog) {
+                          try {
+                            await _viewModel.delete();
+                          } catch (e, stackTrace) {
+                            UserMessages.showError(
+                                () => _scaffoldKey.currentState, e, stackTrace);
+                            return;
+                          }
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                          }
                         }
-                      }
-                    }),
-                  ),
-            )
-          ]),
-          body: _buildBody()),
-    );
-  }
+                      }),
+                    ),
+              )
+            ]),
+            body: _buildBody()),
+      );
 
   Widget _buildBody() => Padding(
         padding: const EdgeInsets.all(8.0),

@@ -13,8 +13,6 @@ class DeckViewModel {
 
   DeckViewModel(this.deck) : assert(deck != null);
 
-  Stream<void> get updates => deck.updates;
-
   Future<void> delete() async {
     logDeckDelete(deck.key);
     var t = Transaction()..delete(deck);
@@ -27,8 +25,10 @@ class DeckViewModel {
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
     t
-      ..deleteAll(ScheduledCardModel(card: card, uid: deck.uid))
-      ..deleteAll(CardViewModel(uid: deck.uid, card: card));
+      ..deleteAll(
+          ScheduledCardModel(deckKey: deck.key, key: null, uid: deck.uid))
+      ..deleteAll(
+          CardViewModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
     await t.commit();
   }
 

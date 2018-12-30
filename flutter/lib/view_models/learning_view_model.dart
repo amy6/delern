@@ -15,25 +15,30 @@ enum LearningUpdateType {
 }
 
 class LearningViewModel {
+  ScheduledCardModel get scheduledCard => _scheduledCard;
   ScheduledCardModel _scheduledCard;
 
-  ScheduledCardModel get scheduledCard => _scheduledCard;
-  CardModel get card => _scheduledCard?.card;
+  CardModel get card => _card;
+  CardModel _card;
 
-  final DeckModel deck;
+  DeckModel get deck => _deck;
+  DeckModel _deck;
+
   final bool allowEdit;
 
-  LearningViewModel({@required this.deck, @required this.allowEdit});
+  LearningViewModel({@required DeckModel deck, @required this.allowEdit})
+      : _deck = deck;
 
   Stream<LearningUpdateType> get updates {
     logStartLearning(deck.key);
     return StreamMuxer({
-      LearningUpdateType.deckUpdate: deck.updates,
-      LearningUpdateType.scheduledCardUpdate: ScheduledCardModel.next(deck)
-          .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
-        _scheduledCard = sc;
-        sink.add(null);
-      })),
+      LearningUpdateType.deckUpdate:
+          DeckModel.get(key: deck.key, uid: deck.uid).map((d) => _deck = d),
+      LearningUpdateType.scheduledCardUpdate:
+          ScheduledCardModel.next(deck).map((casc) {
+        _card = casc.card;
+        _scheduledCard = casc.scheduledCard;
+      }),
       // We deliberately do not subscribe to Card updates (i.e. we only watch
       // ScheduledCard). If the card that the user is looking at right now is
       // updated live, it can result in bad user experience.

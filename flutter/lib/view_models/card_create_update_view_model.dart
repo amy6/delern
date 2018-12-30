@@ -13,15 +13,21 @@ class CardCreateUpdateViewModel {
       @required String uid,
       bool addReverse = false}) {
     logCardCreate(card.deckKey);
-    final sCard = ScheduledCardModel(card: card, uid: uid);
 
-    var t = Transaction()..save(card)..save(sCard);
+    var t = Transaction()..save(card);
+    final sCard =
+        ScheduledCardModel(key: card.key, deckKey: card.deckKey, uid: uid);
+    t.save(sCard);
+
     if (addReverse) {
       var reverse = CardModel.copyFrom(card)
+        ..key = null
         ..front = card.back
         ..back = card.front;
-      var reverseScCard = ScheduledCardModel(card: reverse, uid: uid);
-      t..save(reverse)..save(reverseScCard);
+      t.save(reverse);
+      var reverseScCard = ScheduledCardModel(
+          key: reverse.key, deckKey: reverse.deckKey, uid: uid);
+      t.save(reverseScCard);
     }
     return t.commit();
   }
