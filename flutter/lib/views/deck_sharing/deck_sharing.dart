@@ -99,11 +99,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        await DeckAccessesViewModel.shareDeck(DeckAccessModel(
-            deck: widget._deck,
-            uid: uid,
-            access: deckAccess,
-            email: _textController.text.toString()));
+        await DeckAccessesViewModel.shareDeck(
+            DeckAccessModel(deckKey: widget._deck.key)
+              ..key = uid
+              ..access = deckAccess
+              ..email = _textController.text.toString(),
+            widget._deck);
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(Scaffold.of(context),
@@ -204,11 +205,12 @@ class _DeckUsersState extends State<DeckUsersWidget> {
         value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
-              DeckAccessesViewModel.shareDeck(DeckAccessModel(
-                  deck: _deckAccessesViewModel.deck,
-                  uid: accessViewModel.uid,
-                  email: accessViewModel.email,
-                  access: access));
+              DeckAccessesViewModel.shareDeck(
+                  DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
+                    ..key = accessViewModel.key
+                    ..email = accessViewModel.email
+                    ..access = access,
+                  _deckAccessesViewModel.deck);
             }),
       ),
     );

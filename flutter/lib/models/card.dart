@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:delern_flutter/models/deck.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
@@ -15,7 +14,6 @@ class CardModel implements Model {
   String back;
   DateTime createdAt;
 
-  // Card always should belong to a deck. Even if card is empty
   CardModel({@required this.deckKey}) : assert(deckKey != null);
 
   // We expect this to be called often and optimize for performance.
@@ -26,9 +24,9 @@ class CardModel implements Model {
         back = other.back,
         createdAt = other.createdAt;
 
-  CardModel._fromSnapshot(this.deckKey, this.key, snapshotValue) {
+  CardModel._fromSnapshot(snapshotValue,
+      {@required this.deckKey, @required this.key}) {
     if (snapshotValue == null) {
-      // Assume the card doesn't exist anymore.
       key = null;
       return;
     }
@@ -68,42 +66,17 @@ class CardModel implements Model {
           .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) =>
-              CardModel._fromSnapshot(deckKey, key, evt.snapshot.value));
+          .map((evt) => CardModel._fromSnapshot(evt.snapshot.value,
+              deckKey: deckKey, key: key));
 
-  static Stream<DatabaseListEvent<CardModel>> getCards(String deckKey) =>
+  static Stream<DatabaseListEvent<CardModel>> getList(
+          {@required String deckKey}) =>
       fullThenChildEventsStream(
           FirebaseDatabase.instance
               .reference()
               .child('cards')
               .child(deckKey)
               .orderByKey(),
-          (key, value) => CardModel._fromSnapshot(deckKey, key, value));
-
-  static Future<CardModel> fetch(DeckModel deck, String cardId) async {
-    var card = CardModel(deckKey: deck.key)..key = cardId;
-    await card.updates.first;
-    return card;
-  }
-
-  Stream<void> get updates => FirebaseDatabase.instance
-      .reference()
-      .child('cards')
-      .child(deckKey)
-      .child(key)
-      .onValue
-      .map((event) => _parseSnapshot(event.snapshot.value));
-
-  void _parseSnapshot(snapshotValue) {
-    if (snapshotValue == null) {
-      // Assume the card doesn't exist anymore.
-      key = null;
-      return;
-    }
-    front = snapshotValue['front'];
-    back = snapshotValue['back'];
-    createdAt = snapshotValue['createdAt'] == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
-  }
+          (key, value) =>
+              CardModel._fromSnapshot(value, deckKey: deckKey, key: key));
 }

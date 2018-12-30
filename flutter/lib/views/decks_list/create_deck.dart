@@ -68,7 +68,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
             ? null
             : () {
                 Navigator.of(context).pop(
-                    DeckModel(CurrentUserWidget.of(context).user.uid)
+                    DeckModel(uid: CurrentUserWidget.of(context).user.uid)
                       ..name = _textController.text);
               });
 

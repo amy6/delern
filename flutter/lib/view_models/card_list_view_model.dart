@@ -17,7 +17,8 @@ class CardListViewModel {
 
   CardListViewModel({@required this.deckKey}) : assert(deckKey != null) {
     _processor = FilteredSortedKeyedListProcessor(
-        DatabaseListEventProcessor(() => CardModel.getCards(deckKey)).list)
+        DatabaseListEventProcessor(() => CardModel.getList(deckKey: deckKey))
+            .list)
       ..comparator =
           (c1, c2) => c1.front.toLowerCase().compareTo(c2.front.toLowerCase());
   }

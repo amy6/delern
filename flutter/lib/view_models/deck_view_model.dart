@@ -18,15 +18,14 @@ class DeckViewModel {
     var t = Transaction()..delete(deck);
     var card = CardModel(deckKey: deck.key);
     if (deck.access == AccessType.owner) {
-      (await DeckAccessModel.getDeckAccesses(deck).first)
+      (await DeckAccessModel.getList(deckKey: deck.key).first)
           .fullListValueForSet
-          .forEach((a) => t.delete(DeckModel(a.key)..key = deck.key));
-      t..deleteAll(DeckAccessModel(deck: deck)..key = null)..deleteAll(card);
+          .forEach((a) => t.delete(DeckModel(uid: a.key)..key = deck.key));
+      t..deleteAll(DeckAccessModel(deckKey: deck.key))..deleteAll(card);
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
     t
-      ..deleteAll(
-          ScheduledCardModel(deckKey: deck.key, key: null, uid: deck.uid))
+      ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
       ..deleteAll(
           CardViewModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
     await t.commit();

@@ -65,28 +65,19 @@ class ScheduledCardModel implements Model {
   int level;
   DateTime repeatAt;
 
-  ScheduledCardModel(
-      {@required this.key, @required this.deckKey, @required this.uid})
+  ScheduledCardModel({@required this.deckKey, @required this.uid})
       : assert(deckKey != null),
         assert(uid != null) {
     level = 0;
     repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  ScheduledCardModel.fromSnapshot(snapshotValue,
+  ScheduledCardModel._fromSnapshot(snapshotValue,
       {@required this.key, @required this.deckKey, @required this.uid})
       : assert(uid != null),
-        assert(deckKey != null) {
-    _parseSnapshot(snapshotValue);
-  }
-
-  // A jutter used to calculate diverse next scheduled time for a card.
-  static final _jitterRandom = Random();
-  Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
-
-  void _parseSnapshot(snapshotValue) {
+        assert(deckKey != null),
+        assert(key != null) {
     if (snapshotValue == null) {
-      // Assume the ScheduledCard doesn't exist anymore.
       key = null;
       return;
     }
@@ -98,6 +89,10 @@ class ScheduledCardModel implements Model {
     }
     repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
+
+  // A jutter used to calculate diverse next scheduled time for a card.
+  static final _jitterRandom = Random();
+  Duration _newJitter() => Duration(minutes: _jitterRandom.nextInt(180));
 
   static Stream<CardAndScheduledCard> next(DeckModel deck) =>
       FirebaseDatabase.instance
@@ -143,8 +138,10 @@ class ScheduledCardModel implements Model {
               }))
             .first;
 
-        var card = await CardModel.fetch(deck, latestScheduledCard.key);
-        var scheduledCard = ScheduledCardModel.fromSnapshot(
+        var card =
+            await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
+                .first;
+        var scheduledCard = ScheduledCardModel._fromSnapshot(
             latestScheduledCard.value,
             uid: deck.uid,
             key: latestScheduledCard.key,
@@ -196,8 +193,7 @@ class ScheduledCardModel implements Model {
           FirebaseDatabase.instance.reference().child('learning').child(uid),
           (scheduledCardsOfDeck) {
         final Map value = scheduledCardsOfDeck.value;
-        // TODO(dotdoom): remove card.
-        return value.entries.map((entry) => ScheduledCardModel.fromSnapshot(
+        return value.entries.map((entry) => ScheduledCardModel._fromSnapshot(
             entry.value,
             key: entry.key,
             deckKey: scheduledCardsOfDeck.key,

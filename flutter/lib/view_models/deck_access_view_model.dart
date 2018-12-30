@@ -12,9 +12,8 @@ class DeckAccessesViewModel {
   final DeckModel deck;
 
   DeckAccessesViewModel(this.deck) : assert(deck != null) {
-    _processor = FilteredSortedKeyedListProcessor(
-        DatabaseListEventProcessor(() => DeckAccessModel.getDeckAccesses(deck))
-            .list)
+    _processor = FilteredSortedKeyedListProcessor(DatabaseListEventProcessor(
+        () => DeckAccessModel.getList(deckKey: deck.key)).list)
       ..comparator = (c1, c2) => c1.access.index.compareTo(c2.access.index);
   }
 
@@ -25,8 +24,10 @@ class DeckAccessesViewModel {
 
   FilteredSortedKeyedListProcessor<DeckAccessModel> _processor;
 
-  static Future<void> shareDeck(DeckAccessModel access) async {
-    logShare(access.deck.key);
+  static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) async {
+    assert(deck.key == access.deckKey);
+
+    logShare(access.deckKey);
     var tr = Transaction();
 
     if (access.access == null) {
@@ -34,16 +35,15 @@ class DeckAccessesViewModel {
     }
 
     tr.save(access);
-    if ((await DeckAccessModel.fetch(access.deck, access.uid)).key == null) {
+    if ((await DeckAccessModel.get(deckKey: access.deckKey, key: access.key)
+                .first)
+            .key ==
+        null) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet.
-      tr.save(DeckModel(access.key)
-        ..name = access.deck.name
+      tr.save(DeckModel.copyFrom(deck)
+        ..uid = access.key
         ..accepted = false
-        ..markdown = access.deck.markdown
-        ..type = access.deck.type
-        ..category = access.deck.category
-        ..access = access.access
-        ..key = access.deck.key);
+        ..access = access.access);
     }
 
     return tr.commit();

@@ -13,7 +13,7 @@ class DeckListViewModel {
 
   DeckListViewModel(this.uid) {
     _processor = FilteredSortedKeyedListProcessor(
-        DatabaseListEventProcessor(() => DeckModel.getDecks(uid)).list)
+        DatabaseListEventProcessor(() => DeckModel.getList(uid: uid)).list)
       ..comparator = (d1, d2) => d1.key.compareTo(d2.key);
   }
 
@@ -28,8 +28,10 @@ class DeckListViewModel {
     logDeckCreate();
     return (Transaction()
           ..save(deck..access = AccessType.owner)
-          ..save(DeckAccessModel(
-              deck: deck, access: AccessType.owner, email: email)))
+          ..save(DeckAccessModel(deckKey: deck.key)
+            ..key = deck.uid
+            ..access = AccessType.owner
+            ..email = email))
         .commit();
   }
 }

@@ -58,10 +58,8 @@ class CardPreviewBloc {
     // TODO(dotdoom): move to models?
     (Transaction()
           ..delete(_cardValue.card)
-          ..delete(ScheduledCardModel(
-              key: _cardValue.card.key,
-              deckKey: _cardValue.deck.key,
-              uid: uid)))
+          ..delete(ScheduledCardModel(deckKey: _cardValue.deck.key, uid: uid)
+            ..key = _cardValue.card.key))
         .commit();
   }
 }

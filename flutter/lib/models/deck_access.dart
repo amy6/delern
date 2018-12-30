@@ -8,67 +8,38 @@ import 'base/database_list_event.dart';
 import 'base/enum.dart';
 import 'base/keyed_list_item.dart';
 import 'base/model.dart';
-import 'deck.dart';
 
 enum AccessType {
   read,
+
+  /// "write" implies "read".
   write,
   owner,
 }
 
 class DeckAccessModel implements KeyedListItem, Model {
-  String uid;
-  // TODO(dotdoom): remove DeckModel from here.
-  DeckModel deck;
+  /// DeckAccessModel key is uid of the user whose access it holds.
+  String key;
+
+  String deckKey;
   AccessType access;
   String email;
 
+  /// Display Name is populated by database, can be null.
+  String get displayName => _displayName;
   String _displayName;
+
+  /// Photo URL is populated by database, can be null.
+  String get photoUrl => _photoUrl;
   String _photoUrl;
 
-  String get key => uid;
-  set key(String newValue) {
-    if (newValue != null) {
-      throw UnsupportedError(
-          'DeckAccess must always be bound to an existing user');
-    }
-    uid = null;
-  }
+  DeckAccessModel({@required this.deckKey}) : assert(deckKey != null);
 
-  String get displayName => _displayName;
-  String get photoUrl => _photoUrl;
-
-  DeckAccessModel({@required this.deck, this.uid, this.access, this.email})
-      : assert(deck != null) {
-    uid ??= deck.uid;
-  }
-
-  DeckAccessModel.fromSnapshot(this.uid, snapshotValue, this.deck) {
-    _parseSnapshot(snapshotValue);
-  }
-
-  static Stream<DatabaseListEvent<DeckAccessModel>> getDeckAccesses(
-          DeckModel deck) =>
-      fullThenChildEventsStream(
-          FirebaseDatabase.instance
-              .reference()
-              .child('deck_access')
-              .child(deck.key)
-              .orderByKey(),
-          (key, value) => DeckAccessModel.fromSnapshot(key, value, deck));
-
-  static Future<DeckAccessModel> fetch(DeckModel deck, [String uid]) async {
-    var access = DeckAccessModel(deck: deck);
-    if (uid != null) {
-      access.uid = uid;
-    }
-    await access.updates.first;
-    return access;
-  }
-
-  void _parseSnapshot(snapshotValue) {
+  DeckAccessModel._fromSnapshot(snapshotValue,
+      {@required this.key, @required this.deckKey})
+      : assert(key != null),
+        assert(deckKey != null) {
     if (snapshotValue == null) {
-      // Assume the DeckAccess doesn't exist anymore.
       key = null;
       return;
     }
@@ -78,31 +49,38 @@ class DeckAccessModel implements KeyedListItem, Model {
     access = Enum.fromString(snapshotValue['access'], AccessType.values);
   }
 
-  Stream<void> get updates => FirebaseDatabase.instance
+  static Stream<DatabaseListEvent<DeckAccessModel>> getList(
+          {@required String deckKey}) =>
+      fullThenChildEventsStream(
+          FirebaseDatabase.instance
+              .reference()
+              .child('deck_access')
+              .child(deckKey)
+              .orderByKey(),
+          (key, value) =>
+              DeckAccessModel._fromSnapshot(value, key: key, deckKey: deckKey));
+
+  static Stream<DeckAccessModel> get(
+          {@required String deckKey, @required String key}) =>
+      FirebaseDatabase.instance
           .reference()
           .child('deck_access')
-          .child(deck.key)
+          .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) {
-        // TODO(dotdoom): either do not set key=null in _parseSnapshot, or do
-        //                this "weird trick" in every model.
-        if (key == null) {
-          this.uid = evt.snapshot.key;
-        }
-        _parseSnapshot(evt.snapshot.value);
-      });
+          .map((evt) => DeckAccessModel._fromSnapshot(evt.snapshot.value,
+              key: key, deckKey: deckKey));
 
   @override
-  String get rootPath => 'deck_access/${deck.key}';
+  String get rootPath => 'deck_access/$deckKey';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
         // Do not save displayName and photoUrl because these are populated by
         // Cloud functions.
-        'deck_access/${deck.key}/$key/access': Enum.asString(access),
-        'deck_access/${deck.key}/$key/email': email,
+        '$rootPath/$key/access': Enum.asString(access),
+        '$rootPath/$key/email': email,
         // Update "access" field of the Deck, too.
-        'decks/$key/${deck.key}/access': Enum.asString(access),
+        'decks/$key/$deckKey/access': Enum.asString(access),
       };
 }

@@ -42,16 +42,19 @@ class _SignInWidgetState extends State<SignInWidget> {
           ..logLogin();
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
-          var fcm = FCM(
-              uid: Auth.instance.currentUser.uid,
-              language: Localizations.localeOf(context).toString(),
-              name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
+          var fcm = FCM(uid: Auth.instance.currentUser.uid)
+            ..language = Localizations.localeOf(context).toString()
+            ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
             ..key = token;
 
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
           (Transaction()..save(fcm)).commit();
         });
 
+        // Notifications permission dialog on iOS is definitive: if the user
+        // declines, there's no way to ask confirmation again.
+        // TODO(dotdoom): avoid asking when the app installs (useless).
+        // TODO(dotdoom): present a custom dialog first, and then iOS.
         _firebaseMessaging
           ..requestNotificationPermissions()
           // TODO(dotdoom): register onMessage to show a snack bar with

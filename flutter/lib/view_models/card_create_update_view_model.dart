@@ -15,8 +15,8 @@ class CardCreateUpdateViewModel {
     logCardCreate(card.deckKey);
 
     var t = Transaction()..save(card);
-    final sCard =
-        ScheduledCardModel(key: card.key, deckKey: card.deckKey, uid: uid);
+    final sCard = ScheduledCardModel(deckKey: card.deckKey, uid: uid)
+      ..key = card.key;
     t.save(sCard);
 
     if (addReverse) {
@@ -25,8 +25,8 @@ class CardCreateUpdateViewModel {
         ..front = card.back
         ..back = card.front;
       t.save(reverse);
-      var reverseScCard = ScheduledCardModel(
-          key: reverse.key, deckKey: reverse.deckKey, uid: uid);
+      var reverseScCard = ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
+        ..key = reverse.key;
       t.save(reverseScCard);
     }
     return t.commit();
