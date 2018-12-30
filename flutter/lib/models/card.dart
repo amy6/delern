@@ -44,10 +44,8 @@ class CardModel implements Model {
 
   @override
   Map<String, dynamic> toMap(bool isNew) {
-    var map = <String, dynamic>{
-      'cards/$deckKey/$key/front': front,
-      'cards/$deckKey/$key/back': back
-    };
+    final path = '$rootPath/$key';
+    final map = <String, dynamic>{'$path/front': front, '$path/back': back};
     if (isNew) {
       // Important note: we ask server to fill in the timestamp, but we do not
       // update it in our object immediately. Something trivial like
@@ -57,7 +55,7 @@ class CardModel implements Model {
       // For this reason, we should never *update* createdAt because we risk
       // changing it (see the note above), in which case Firebase Database will
       // reject the update.
-      map['cards/$deckKey/$key/createdAt'] = ServerValue.timestamp;
+      map['$path/createdAt'] = ServerValue.timestamp;
     }
     return map;
   }

@@ -164,7 +164,7 @@ class ScheduledCardModel implements Model {
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
-        'learning/$_uid/${card.deckKey}/$key': {
+        '$rootPath/$key': {
           'level': 'L$level',
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }

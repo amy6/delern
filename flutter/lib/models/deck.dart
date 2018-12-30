@@ -75,17 +75,22 @@ class DeckModel implements Model {
   @override
   String get rootPath => 'decks/$uid';
 
-  Map<String, dynamic> toMap(bool isNew) => {
-        'decks/$uid/$key': {
-          'name': name,
-          'markdown': markdown,
-          'deckType': Enum.asString(type)?.toUpperCase(),
-          'accepted': accepted,
-          'lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
-          'category': category,
-          'access': Enum.asString(access),
-        }
-      };
+  Map<String, dynamic> toMap(bool isNew) {
+    final path = '$rootPath/$key';
+    // Intentionally flatten the update and exclude "access" field because it is
+    // written by DeckAccessModel. Firebase does not allow overlapping updates
+    // within a single update() call.
+    // Besides, flattening the map allows us to preserve new properties, which
+    // tend to appear quite often in DeckModel.
+    return {
+      '$path/name': name,
+      '$path/markdown': markdown,
+      '$path/deckType': Enum.asString(type)?.toUpperCase(),
+      '$path/accepted': accepted,
+      '$path/lastSyncAt': lastSyncAt.toUtc().millisecondsSinceEpoch,
+      '$path/category': category,
+    };
+  }
 
   static Stream<DeckModel> get({@required String uid, @required String key}) =>
       FirebaseDatabase.instance
