@@ -38,11 +38,8 @@ void main() {
       final add = find.text('ADD');
       await driver.waitFor(add);
       await driver.enterText('My Test Deck');
+      await driver.waitFor(find.text('My Test Deck'));
       await driver.tap(add);
-
-      final deckName = find.text('My Test Deck');
-      await driver.waitFor(deckName);
-      await driver.tap(find.byValueKey('addDeck'));
     });
 
     test('create_card', () async {
