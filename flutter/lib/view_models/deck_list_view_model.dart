@@ -13,7 +13,8 @@ class DeckListViewModel {
 
   DeckListViewModel(this.uid) {
     _processor = FilteredSortedKeyedListProcessor(
-        DatabaseListEventProcessor(() => DeckModel.getDecks(uid)).list);
+        DatabaseListEventProcessor(() => DeckModel.getDecks(uid)).list)
+      ..comparator = (d1, d2) => d1.key.compareTo(d2.key);
   }
 
   ObservableKeyedList<DeckModel> get list => _processor.list;

@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 
 import '../../models/base/database_list_event.dart';
 import '../../models/base/keyed_list_item.dart';
+import '../../view_models/base/filtered_sorted_keyed_list_processor.dart';
 import '../../view_models/base/observable_keyed_list.dart';
 import 'helper_progress_indicator.dart';
 
@@ -56,6 +57,9 @@ class ObservingAnimatedListState<T extends KeyedListItem>
     super.dispose();
   }
 
+  static const _defaultAnimationDuration = Duration(milliseconds: 300);
+  static const _filterAnimationDuration = Duration(milliseconds: 0);
+
   void _processListEvent(ListEvent<T> event) {
     if (_animatedListKey.currentState == null) {
       // The list state is not available because the widget has not been created
@@ -67,13 +71,19 @@ class ObservingAnimatedListState<T extends KeyedListItem>
 
     switch (event.eventType) {
       case ListEventType.itemAdded:
-        _animatedListKey.currentState.insertItem(event.index);
+        _animatedListKey.currentState.insertItem(event.index,
+            duration: event.eventSource == FilteredSortedKeyedListProcessor
+                ? _filterAnimationDuration
+                : _defaultAnimationDuration);
         break;
       case ListEventType.itemRemoved:
         _animatedListKey.currentState.removeItem(
             event.index,
             (context, animation) => widget.itemBuilder(
-                context, event.previousValue, animation, event.index));
+                context, event.previousValue, animation, event.index),
+            duration: event.eventSource == FilteredSortedKeyedListProcessor
+                ? _filterAnimationDuration
+                : _defaultAnimationDuration);
         break;
       case ListEventType.setAll:
       // Note: number of items must not change here (unless it's the first

@@ -60,9 +60,10 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
       var newIndex = _indexForNewItem(srcIndex);
 
       if (currentIndex >= 0 && newIndex < 0) {
-        list.removeAt(currentIndex);
+        list.removeAt(currentIndex, FilteredSortedKeyedListProcessor);
       } else if (currentIndex < 0 && newIndex >= 0) {
-        list.insert(_indexForNewItem(srcIndex), item);
+        list.insert(
+            _indexForNewItem(srcIndex), item, FilteredSortedKeyedListProcessor);
       }
     }
   }

@@ -98,9 +98,7 @@ class DecksListPageState extends State<DecksListPage> {
 
   @override
   void didChangeDependencies() {
-    // TODO(dotdoom): find out deactivate/build/didChangeDependencies flow.
     viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid);
-    //..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
     super.didChangeDependencies();
   }
 
