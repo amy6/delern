@@ -2,15 +2,44 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:delern_flutter/models/card_view.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
 import '../remote/error_reporting.dart';
+import 'base/database_list_event.dart';
 import 'base/model.dart';
+import 'base/stream_muxer.dart';
 import 'base/transaction.dart';
 import 'card.dart';
+import 'card_view.dart';
 import 'deck.dart';
+
+class UnorderedListEvent<T> {
+  final ListEventType eventType;
+  final T value;
+  final String key;
+
+  UnorderedListEvent({
+    @required this.key,
+    @required this.eventType,
+    @required this.value,
+  });
+}
+
+Stream<UnorderedListEvent<T>> _unorderedChildEventsStream<T>(
+        Query query, T snapshotParser(DataSnapshot s)) =>
+    StreamMuxer<ListEventType>({
+      ListEventType.itemAdded: query.onChildAdded,
+      ListEventType.itemRemoved: query.onChildRemoved,
+      ListEventType.itemChanged: query.onChildChanged,
+    }).map((muxerEvent) {
+      Event dbEvent = muxerEvent.value;
+      return UnorderedListEvent(
+        key: dbEvent.snapshot.key,
+        eventType: muxerEvent.stream,
+        value: snapshotParser(dbEvent.snapshot),
+      );
+    });
 
 class ScheduledCardModel implements Model {
   static const levelDurations = [
@@ -156,4 +185,17 @@ class ScheduledCardModel implements Model {
     repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _getJitter());
     return cv;
   }
+
+  static Stream<UnorderedListEvent<Iterable<ScheduledCardModel>>> listsForUser(
+          String uid) =>
+      _unorderedChildEventsStream(
+          FirebaseDatabase.instance.reference().child('learning').child(uid),
+          (scheduledCardsOfDeck) {
+        final Map value = scheduledCardsOfDeck.value;
+        // TODO(dotdoom): remove card.
+        return value.entries.map((entry) => ScheduledCardModel.fromSnapshot(
+            entry.value,
+            card: CardModel(deckKey: scheduledCardsOfDeck.key)..key = entry.key,
+            uid: uid));
+      });
 }

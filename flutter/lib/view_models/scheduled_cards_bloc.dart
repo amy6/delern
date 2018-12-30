@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models/base/observable_list.dart';
+import '../models/base/database_list_event.dart';
 import '../models/scheduled_card.dart';
 
 class ScheduledCardsBloc {
