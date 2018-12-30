@@ -56,6 +56,7 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
   @override
   Widget build(BuildContext context) {
     final addDeckButton = FlatButton(
+        key: const Key('addDeck'),
         child: Text(
           AppLocalizations.of(context).add.toUpperCase(),
           style: TextStyle(

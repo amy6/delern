@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-12-06T14:39:29.958874",
+  "@@last_modified": "2018-12-30T11:34:07.904509",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -537,6 +537,20 @@
   "addCardsDeckMenu": "Add Cards",
   "@addCardsDeckMenu": {
     "description": "Add Cards in Deck Menu",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "addDeckTooltip": "Add Deck",
+  "@addDeckTooltip": {
+    "description": "Add Deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "addCardTooltip": "Add Card",
+  "@addCardTooltip": {
+    "description": "Add Card",
     "type": "text",
     "placeholders": {
     }

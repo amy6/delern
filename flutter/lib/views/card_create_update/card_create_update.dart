@@ -79,6 +79,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
         actions: <Widget>[
           _cardModel.key == null
               ? SlowOperationWidget((cb) => IconButton(
+                  tooltip: AppLocalizations.of(context).addCardTooltip,
                   icon: const Icon(Icons.check),
                   onPressed: _isCardValid() ? cb(_addCard) : null))
               : SlowOperationWidget((cb) => FlatButton(
@@ -137,6 +138,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       TextField(
+        key: const Key('frontCardInput'),
         autofocus: true,
         focusNode: _frontSideFocus,
         maxLines: null,
@@ -152,6 +154,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
       TextField(
+        key: const Key('backCardInput'),
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _backTextController,

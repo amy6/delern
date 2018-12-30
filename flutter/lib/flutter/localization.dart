@@ -517,6 +517,18 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'addCardsDeckMenu',
         desc: 'Add Cards in Deck Menu',
       );
+
+  String get addDeckTooltip => Intl.message(
+        'Add Deck',
+        name: 'addDeckTooltip',
+        desc: 'Add Deck',
+      );
+
+  String get addCardTooltip => Intl.message(
+        'Add Card',
+        name: 'addCardTooltip',
+        desc: 'Add Card',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

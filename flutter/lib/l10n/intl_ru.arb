@@ -539,5 +539,19 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "addDeckTooltip": "Добавить список",
+  "@addDeckTooltip": {
+    "description": "Add Deck",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "addCardTooltip": "Добавить карточку",
+  "@addCardTooltip": {
+    "description": "Add Card",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }
