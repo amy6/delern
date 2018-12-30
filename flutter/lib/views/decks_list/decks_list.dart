@@ -17,6 +17,7 @@ import '../deck_settings/deck_settings.dart';
 import '../deck_sharing/deck_sharing.dart';
 import '../helpers/empty_list_message.dart';
 import '../helpers/observing_animated_list.dart';
+import '../helpers/scheduled_cards_bloc_widget.dart';
 import '../helpers/search_bar.dart';
 import '../helpers/sign_in_widget.dart';
 import 'create_deck.dart';
@@ -149,7 +150,7 @@ class DeckListItem extends StatelessWidget {
                 Expanded(
                   child: _buildDeckName(context),
                 ),
-                _buildNumberOfCards(),
+                _buildNumberOfCards(context),
                 _buildDeckMenu(context),
               ],
             ),
@@ -199,9 +200,17 @@ class DeckListItem extends StatelessWidget {
         ),
       );
 
-  Widget _buildNumberOfCards() => Container(
-        child: const Text('N/A'),
-      );
+  Widget _buildNumberOfCards(BuildContext context) {
+    final bloc = ScheduledCardsBlocWidget.of(context).bloc;
+    return StreamBuilder<int>(
+      initialData: bloc.numberOfCardsValue(deck.key),
+      stream: bloc.numberOfCardsStream(deck.key),
+      builder: (context, snapshot) => Container(
+            child: Text((snapshot.data ?? 0).toString(),
+                style: AppStyles.primaryText),
+          ),
+    );
+  }
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
