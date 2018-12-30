@@ -31,8 +31,7 @@ class DeckAccessesViewModel {
     tr.save(access);
     if ((await DeckAccessModel.fetch(access.deck, access.uid)).key == null) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet.
-      tr.save(DeckModel()
-        ..uid = access.key
+      tr.save(DeckModel(access.key)
         ..name = access.deck.name
         ..accepted = false
         ..markdown = access.deck.markdown

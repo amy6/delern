@@ -15,14 +15,16 @@ class DeckModel implements Model {
   String uid;
   String key;
   String name;
-  bool markdown;
-  DeckType type;
-  bool accepted;
+  var markdown = false;
+  var type = DeckType.basic;
+  var accepted = true;
   DateTime lastSyncAt;
   String category;
   AccessType access;
 
-  DeckModel();
+  DeckModel(this.uid) : assert(uid != null) {
+    lastSyncAt = DateTime.fromMillisecondsSinceEpoch(0);
+  }
 
   // We expect this to be called often and optimize for performance.
   DeckModel.copyFrom(DeckModel other)

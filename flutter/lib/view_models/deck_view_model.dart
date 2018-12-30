@@ -22,9 +22,7 @@ class DeckViewModel {
     if (deck.access == AccessType.owner) {
       (await DeckAccessModel.getDeckAccesses(deck).first)
           .fullListValueForSet
-          .forEach((a) => t.delete(DeckModel()
-            ..uid = a.key
-            ..key = deck.key));
+          .forEach((a) => t.delete(DeckModel(a.key)..key = deck.key));
       t..deleteAll(DeckAccessModel(deck: deck)..key = null)..deleteAll(card);
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
     }
