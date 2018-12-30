@@ -1,19 +1,18 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/views/helpers/launch_email.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/send_invite.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/support_dev/support_development.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../remote/analytics.dart';
-import '../../remote/auth.dart';
-import '../../views/helpers/launch_email.dart';
-import '../../views/support_dev/support_development.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/send_invite.dart';
-import '../helpers/sign_in_widget.dart';
 
 class NavigationDrawer extends StatefulWidget {
   @override

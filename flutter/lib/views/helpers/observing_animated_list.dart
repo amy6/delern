@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/base/database_list_event.dart';
-import '../../models/base/keyed_list_item.dart';
-import '../../view_models/base/filtered_sorted_keyed_list_processor.dart';
-import '../../view_models/base/observable_keyed_list.dart';
-import 'helper_progress_indicator.dart';
 
 typedef ObservingAnimatedListItemBuilder<T extends KeyedListItem> = Widget
     Function(

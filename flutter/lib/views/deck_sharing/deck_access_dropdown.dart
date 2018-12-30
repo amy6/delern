@@ -1,9 +1,8 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/deck_access.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../models/deck_access.dart';
 
 typedef AccessTypeFilter = bool Function(AccessType t);
 typedef AccessTypeCallback = void Function(AccessType t);

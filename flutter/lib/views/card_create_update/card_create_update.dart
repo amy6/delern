@@ -1,20 +1,18 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/view_models/card_create_update_view_model.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/card_create_update_view_model.dart';
-import '../../views/helpers/sign_in_widget.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/slow_operation_widget.dart';
-
 class CreateUpdateCard extends StatefulWidget {
-  final card_model.CardModel card;
+  final CardModel card;
   final DeckModel deck;
 
   const CreateUpdateCard({@required this.card, @required this.deck})

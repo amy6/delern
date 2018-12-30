@@ -1,10 +1,9 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/user_messages.dart';
 
 const String _supportEmail = 'delern@dasfoo.org';
 

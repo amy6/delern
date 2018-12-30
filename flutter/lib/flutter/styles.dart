@@ -1,6 +1,5 @@
+import 'package:delern_flutter/views/helpers/card_background.dart';
 import 'package:flutter/material.dart';
-
-import '../views/helpers/card_background.dart';
 
 class AppStyles {
   static final Map<Gender, Color> cardBackgroundColors = {

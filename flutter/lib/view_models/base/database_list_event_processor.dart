@@ -1,8 +1,7 @@
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/view_models/base/keyed_list_event_processor.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/base/database_list_event.dart';
-import '../../models/base/keyed_list_item.dart';
-import 'keyed_list_event_processor.dart';
 
 /// A processor (see [KeyedListEventProcessor]) that handles (Firebase) Database
 /// events for list initial onValue and subsequent onChild* events, and builds

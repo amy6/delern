@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:delern_flutter/l10n/messages_all.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-
-import '../l10n/messages_all.dart';
 
 /// https://flutter.io/tutorials/internationalization/
 class AppLocalizations {

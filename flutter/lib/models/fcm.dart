@@ -1,9 +1,8 @@
 import 'dart:core';
 
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/model.dart';
 import 'package:meta/meta.dart';
-
-import 'base/keyed_list_item.dart';
-import 'base/model.dart';
 
 class FCM implements KeyedListItem, Model {
   String key;

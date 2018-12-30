@@ -1,11 +1,10 @@
+import 'package:delern_flutter/flutter/device_info.dart';
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../flutter/device_info.dart';
-import '../../flutter/localization.dart';
-import '../../views/helpers/helper_progress_indicator.dart';
 
 class OnboardingViewWidget extends StatefulWidget {
   final Widget Function() afterOnboardingBuilder;

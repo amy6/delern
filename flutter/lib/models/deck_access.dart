@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/enum.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/models/base/model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
-
-import 'base/database_list_event.dart';
-import 'base/enum.dart';
-import 'base/keyed_list_item.dart';
-import 'base/model.dart';
 
 enum AccessType {
   read,

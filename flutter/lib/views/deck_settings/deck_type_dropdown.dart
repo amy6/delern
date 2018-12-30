@@ -1,8 +1,7 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/deck.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../models/deck.dart';
 
 typedef DeckTypeCallback = void Function(DeckType t);
 

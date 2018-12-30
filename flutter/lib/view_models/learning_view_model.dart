@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_muxer.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/scheduled_card.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
-
-import '../models/base/stream_muxer.dart';
-import '../models/base/transaction.dart';
-import '../models/card.dart';
-import '../models/deck.dart';
-import '../models/scheduled_card.dart';
-import '../remote/analytics.dart';
 
 enum LearningUpdateType {
   deckUpdate,

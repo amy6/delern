@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/enum.dart';
+import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/models/deck_access.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
-
-import 'base/database_list_event.dart';
-import 'base/enum.dart';
-import 'base/model.dart';
-import 'deck_access.dart';
 
 enum DeckType { basic, german, swiss }
 

@@ -1,20 +1,19 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/view_models/learning_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/card_background.dart';
+import 'package:delern_flutter/views/helpers/card_display.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../view_models/learning_view_model.dart';
-import '../../views/card_create_update/card_create_update.dart';
-import '../helpers/card_background.dart';
-import '../helpers/card_display.dart';
-import '../helpers/helper_progress_indicator.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/slow_operation_widget.dart';
 
 class CardsLearning extends StatefulWidget {
   final DeckModel deck;

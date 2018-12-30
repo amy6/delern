@@ -1,27 +1,25 @@
 import 'dart:collection';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card.dart';
 import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/view_models/deck_list_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
+import 'package:delern_flutter/views/cards_list/cards_list.dart';
+import 'package:delern_flutter/views/deck_settings/deck_settings.dart';
+import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
+import 'package:delern_flutter/views/decks_list/create_deck.dart';
+import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list.dart';
+import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_widget.dart';
+import 'package:delern_flutter/views/helpers/search_bar.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../models/deck_access.dart';
-import '../../view_models/deck_list_view_model.dart';
-import '../../views/card_create_update/card_create_update.dart';
-import '../cards_learning/cards_learning.dart';
-import '../cards_list/cards_list.dart';
-import '../deck_settings/deck_settings.dart';
-import '../deck_sharing/deck_sharing.dart';
-import '../helpers/empty_list_message.dart';
-import '../helpers/observing_animated_list.dart';
-import '../helpers/scheduled_cards_bloc_widget.dart';
-import '../helpers/search_bar.dart';
-import '../helpers/sign_in_widget.dart';
-import 'create_deck.dart';
-import 'navigation_drawer.dart';
 
 class DecksListPage extends StatefulWidget {
   final String title;
@@ -185,8 +183,7 @@ class DeckListItem extends StatelessWidget {
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
                       builder: (context) => CreateUpdateCard(
-                          card: card_model.CardModel(deckKey: deck.key),
-                          deck: deck)));
+                          card: CardModel(deckKey: deck.key), deck: deck)));
             }
           },
           child: Container(
@@ -249,7 +246,7 @@ class DeckListItem extends StatelessWidget {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
                   builder: (context) => CreateUpdateCard(
-                        card: card_model.CardModel(deckKey: deck.key),
+                        card: CardModel(deckKey: deck.key),
                         deck: deck,
                       )));
         } else {

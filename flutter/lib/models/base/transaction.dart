@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/model.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:firebase_database/firebase_database.dart';
-
-import '../../remote/error_reporting.dart';
-import 'model.dart';
 
 class Transaction {
   final _updates = <String, dynamic>{};

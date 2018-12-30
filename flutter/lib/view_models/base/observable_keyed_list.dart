@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/base/database_list_event.dart';
-import '../../models/base/keyed_list_item.dart';
 
 @immutable
 class ListEvent<T> {

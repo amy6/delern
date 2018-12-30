@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
-
-import 'stream_muxer.dart';
 
 enum ListEventType {
   itemAdded,

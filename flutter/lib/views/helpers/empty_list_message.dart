@@ -1,6 +1,5 @@
+import 'package:delern_flutter/flutter/styles.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/styles.dart';
 
 class EmptyListMessage extends StatelessWidget {
   final String _displayText;

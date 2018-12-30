@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 import 'package:meta/meta.dart';
-
-import '../../models/base/keyed_list_item.dart';
-import 'observable_keyed_list.dart';
 
 typedef StreamGetter<T> = Stream<T> Function();
 

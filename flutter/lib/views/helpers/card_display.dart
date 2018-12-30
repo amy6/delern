@@ -1,7 +1,6 @@
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/views/helpers/non_scrolling_markdown.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/styles.dart';
-import '../../views/helpers/non_scrolling_markdown.dart';
 
 class CardDisplay extends StatelessWidget {
   final String front;

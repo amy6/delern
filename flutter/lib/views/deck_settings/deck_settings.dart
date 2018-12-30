@@ -1,14 +1,13 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/view_models/deck_view_model.dart';
+import 'package:delern_flutter/views/deck_settings/deck_type_dropdown.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../models/deck_access.dart';
-import '../../view_models/deck_view_model.dart';
-import '../../views/helpers/slow_operation_widget.dart';
-import '../helpers/save_updates_dialog.dart';
-import 'deck_type_dropdown.dart';
 
 class DeckSettingsPage extends StatefulWidget {
   final DeckModel _deck;

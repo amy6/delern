@@ -1,18 +1,17 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/view_models/card_preview_bloc.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/card_background.dart';
+import 'package:delern_flutter/views/helpers/card_display.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/card_preview_bloc.dart';
-import '../../views/helpers/card_background.dart';
-import '../../views/helpers/sign_in_widget.dart';
-import '../card_create_update/card_create_update.dart';
-import '../helpers/card_display.dart';
-import '../helpers/save_updates_dialog.dart';
-
 class CardPreview extends StatefulWidget {
-  final card_model.CardModel card;
+  final CardModel card;
   final DeckModel deck;
   final bool allowEdit;
 

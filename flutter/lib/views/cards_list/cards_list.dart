@@ -1,16 +1,15 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/view_models/card_list_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/card_preview/card_preview.dart';
+import 'package:delern_flutter/views/cards_list/observing_grid_view.dart';
+import 'package:delern_flutter/views/helpers/card_background.dart';
+import 'package:delern_flutter/views/helpers/search_bar.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/card_list_view_model.dart';
-import '../../views/cards_list/observing_grid_view.dart';
-import '../../views/helpers/card_background.dart';
-import '../../views/helpers/search_bar.dart';
-import '../card_create_update/card_create_update.dart';
-import '../card_preview/card_preview.dart';
 
 class CardsListPage extends StatefulWidget {
   final DeckModel deck;
@@ -71,8 +70,7 @@ class _CardsListState extends State<CardsListPage> {
                       MaterialPageRoute(
                           settings: const RouteSettings(name: '/cards/new'),
                           builder: (context) => CreateUpdateCard(
-                                card: card_model.CardModel(
-                                    deckKey: widget.deck.key),
+                                card: CardModel(deckKey: widget.deck.key),
                                 deck: widget.deck,
                               )));
                 } else {
@@ -88,7 +86,7 @@ class _CardsListState extends State<CardsListPage> {
 }
 
 class CardGridItem extends StatelessWidget {
-  final card_model.CardModel card;
+  final CardModel card;
   final DeckModel deck;
   final bool allowEdit;
 

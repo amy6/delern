@@ -1,8 +1,7 @@
 import 'dart:core';
 
+import 'package:delern_flutter/models/base/model.dart';
 import 'package:meta/meta.dart';
-
-import 'base/model.dart';
 
 class CardViewModel implements Model {
   String uid;

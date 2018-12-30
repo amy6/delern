@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import '../models/base/transaction.dart';
-import '../models/deck.dart';
-import '../models/deck_access.dart';
-import '../remote/analytics.dart';
-import '../view_models/base/database_list_event_processor.dart';
-import '../view_models/base/filtered_sorted_keyed_list_processor.dart';
-import '../view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 
 class DeckAccessesViewModel {
   final DeckModel deck;

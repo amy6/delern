@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/remote/user_lookup.dart';
+import 'package:delern_flutter/view_models/deck_access_view_model.dart';
+import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/send_invite.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../models/deck_access.dart';
-import '../../remote/user_lookup.dart';
-import '../../view_models/deck_access_view_model.dart';
-import '../../views/helpers/slow_operation_widget.dart';
-import '../helpers/empty_list_message.dart';
-import '../helpers/helper_progress_indicator.dart';
-import '../helpers/observing_animated_list.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/send_invite.dart';
-import 'deck_access_dropdown.dart';
 
 class DeckSharingPage extends StatefulWidget {
   final DeckModel _deck;

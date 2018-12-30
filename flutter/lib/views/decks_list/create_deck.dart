@@ -1,13 +1,12 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card.dart' as card_model;
+import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/view_models/deck_list_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/deck_list_view_model.dart';
-import '../card_create_update/card_create_update.dart';
-import '../helpers/sign_in_widget.dart';
 
 class CreateDeck extends StatelessWidget {
   const CreateDeck({Key key}) : super(key: key);

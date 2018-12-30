@@ -1,19 +1,18 @@
 import 'dart:async';
 import 'dart:isolate';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/views/decks_list/decks_list.dart';
+import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_widget.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/onboarding/intro_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'flutter/localization.dart';
-import 'models/base/transaction.dart';
-import 'remote/error_reporting.dart';
-import 'views/decks_list/decks_list.dart';
-import 'views/helpers/scheduled_cards_bloc_widget.dart';
-import 'views/helpers/sign_in_widget.dart';
-import 'views/onboarding/intro_view.dart';
 
 class App extends StatelessWidget {
   static final _analyticsNavigatorObserver =

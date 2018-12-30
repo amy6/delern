@@ -1,14 +1,13 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../models/base/keyed_list_item.dart';
-import '../../view_models/base/observable_keyed_list.dart';
-import '../../views/helpers/empty_list_message.dart';
-import '../helpers/helper_progress_indicator.dart';
 
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 

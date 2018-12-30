@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/scheduled_card.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
-
-import '../models/base/transaction.dart';
-import '../models/card.dart';
-import '../models/scheduled_card.dart';
-import '../remote/analytics.dart';
 
 class CardCreateUpdateViewModel {
   static Future<void> saveCard(

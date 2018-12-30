@@ -1,15 +1,14 @@
+import 'package:delern_flutter/flutter/device_info.dart';
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/fcm.dart';
+import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/device_info.dart';
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../models/base/transaction.dart';
-import '../../models/fcm.dart';
-import '../../remote/auth.dart';
-import '../../remote/error_reporting.dart';
-import 'helper_progress_indicator.dart';
 
 final _firebaseMessaging = FirebaseMessaging();
 

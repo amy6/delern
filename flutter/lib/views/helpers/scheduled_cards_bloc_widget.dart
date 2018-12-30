@@ -1,7 +1,6 @@
+import 'package:delern_flutter/view_models/scheduled_cards_bloc.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../../view_models/scheduled_cards_bloc.dart';
-import 'sign_in_widget.dart';
 
 class ScheduledCardsBlocHolderWidget extends StatefulWidget {
   final Widget child;
