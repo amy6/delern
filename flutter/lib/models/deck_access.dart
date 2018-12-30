@@ -9,7 +9,6 @@ import 'base/enum.dart';
 import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 import 'deck.dart';
-import 'user.dart';
 
 enum AccessType {
   read,
@@ -66,14 +65,6 @@ class DeckAccessModel implements KeyedListItem, Model {
               .child(deck.key)
               .orderByKey(),
           (key, value) => DeckAccessModel.fromSnapshot(key, value, deck));
-
-  Stream<UserModel> getUser() => FirebaseDatabase.instance
-      .reference()
-      .child('users')
-      .child(key)
-      .onValue
-      .map((evt) =>
-          UserModel.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
 
   static Future<DeckAccessModel> fetch(DeckModel deck, [String uid]) async {
     var access = DeckAccessModel(deck: deck);
