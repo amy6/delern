@@ -161,7 +161,7 @@ class ScheduledCardModel implements Model {
       }));
 
   @override
-  String get rootPath => 'learning/$uid/$key';
+  String get rootPath => 'learning/$uid/$deckKey';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
