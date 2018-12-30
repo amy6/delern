@@ -83,12 +83,13 @@ class DeckAccessModel implements KeyedListItem, Model {
             DeckAccessModel.fromSnapshot(snapshot.key, snapshot.value, deck));
   }
 
-  Stream<User> getUser() => FirebaseDatabase.instance
+  Stream<UserModel> getUser() => FirebaseDatabase.instance
       .reference()
       .child('users')
       .child(key)
       .onValue
-      .map((evt) => User.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
+      .map((evt) =>
+          UserModel.fromSnapshot(evt.snapshot.key, evt.snapshot.value));
 
   static Future<DeckAccessModel> fetch(DeckModel deck, [String uid]) async {
     var access = DeckAccessModel(deck: deck);

@@ -15,10 +15,10 @@ enum LearningUpdateType {
 }
 
 class LearningViewModel {
-  ScheduledCard _scheduledCard;
+  ScheduledCardModel _scheduledCard;
 
-  ScheduledCard get scheduledCard => _scheduledCard;
-  Card get card => _scheduledCard?.card;
+  ScheduledCardModel get scheduledCard => _scheduledCard;
+  CardModel get card => _scheduledCard?.card;
 
   final DeckModel deck;
   final bool allowEdit;
@@ -29,7 +29,7 @@ class LearningViewModel {
     logStartLearning(deck.key);
     return StreamMuxer({
       LearningUpdateType.deckUpdate: deck.updates,
-      LearningUpdateType.scheduledCardUpdate: ScheduledCard.next(deck)
+      LearningUpdateType.scheduledCardUpdate: ScheduledCardModel.next(deck)
           .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
         _scheduledCard = sc;
         sink.add(null);

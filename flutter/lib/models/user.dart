@@ -8,18 +8,19 @@ import '../remote/auth.dart' as auth;
 import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 
-class User implements KeyedListItem, Model {
+class UserModel implements KeyedListItem, Model {
   String key;
   String name;
   String photoUrl;
 
-  User({@required this.key, this.name, this.photoUrl}) : assert(key != null);
+  UserModel({@required this.key, this.name, this.photoUrl})
+      : assert(key != null);
 
-  User.fromSnapshot(this.key, snapshotValue) {
+  UserModel.fromSnapshot(this.key, snapshotValue) {
     _parseSnapshot(snapshotValue);
   }
 
-  User.fromAuth(auth.User user)
+  UserModel.fromAuth(auth.User user)
       : key = user.uid,
         name = user.displayName,
         photoUrl = user.photoUrl;

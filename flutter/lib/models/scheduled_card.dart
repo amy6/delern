@@ -2,18 +2,17 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
+import 'package:delern_flutter/models/card_view.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
 
 import '../remote/error_reporting.dart';
-import 'base/keyed_list_item.dart';
 import 'base/model.dart';
 import 'base/transaction.dart';
 import 'card.dart';
-import 'card_view.dart';
 import 'deck.dart';
 
-class ScheduledCard implements KeyedListItem, Model {
+class ScheduledCardModel implements Model {
   static const levelDurations = [
     Duration(hours: 4),
     Duration(days: 1),
@@ -26,21 +25,29 @@ class ScheduledCard implements KeyedListItem, Model {
 
   String get key => card.key;
   set key(_) => throw Exception('ScheduledCard key is always set via "card"');
-  Card card;
+  CardModel card;
+  // TODO(ksheremet): Find better place for storing uid
+  String _uid;
   int level;
   DateTime repeatAt;
 
-  ScheduledCard({@required this.card, this.level = 0, this.repeatAt})
-      : assert(card != null) {
+  ScheduledCardModel({@required this.card, @required String uid})
+      : assert(card != null),
+        assert(uid != null) {
+    _uid = uid;
+    level ??= 0;
     repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  ScheduledCard.fromSnapshot(snapshotValue, {@required this.card})
-      : assert(card != null) {
+  ScheduledCardModel.fromSnapshot(snapshotValue,
+      {@required this.card, @required uid})
+      : assert(card != null),
+        assert(uid != null) {
+    _uid = uid;
     _parseSnapshot(snapshotValue);
   }
 
-  /* It is used for cards randomizing appearance.
+/* It is used for cards randomizing appearance.
    Max jitter is 2h 59 min */
   Duration _getJitter() =>
       Duration(hours: Random().nextInt(3), minutes: Random().nextInt(60));
@@ -60,7 +67,8 @@ class ScheduledCard implements KeyedListItem, Model {
     repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
   }
 
-  static Stream<ScheduledCard> next(DeckModel deck) => FirebaseDatabase.instance
+  static Stream<ScheduledCardModel> next(DeckModel deck) =>
+      FirebaseDatabase.instance
           .reference()
           .child('learning')
           .child(deck.uid)
@@ -103,9 +111,11 @@ class ScheduledCard implements KeyedListItem, Model {
               }))
             .first;
 
-        var card = await Card.fetch(deck, latestScheduledCard.key);
-        var scheduledCard =
-            ScheduledCard.fromSnapshot(latestScheduledCard.value, card: card);
+        var card = await CardModel.fetch(deck, latestScheduledCard.key);
+        var scheduledCard = ScheduledCardModel.fromSnapshot(
+            latestScheduledCard.value,
+            card: card,
+            uid: deck.uid);
 
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
@@ -121,18 +131,18 @@ class ScheduledCard implements KeyedListItem, Model {
       }));
 
   @override
-  String get rootPath => 'learning/${card.deck.uid}/${card.deck.key}';
+  String get rootPath => 'learning/$_uid/${card.deckKey}';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
-        'learning/${card.deck.uid}/${card.deck.key}/$key': {
+        'learning/$_uid/${card.deckKey}/$key': {
           'level': 'L$level',
           'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
         }
       };
 
-  CardView answer(bool knows, bool learnBeyondHorizon) {
-    var cv = CardView(card: card)
+  CardViewModel answer(bool knows, bool learnBeyondHorizon) {
+    var cv = CardViewModel(uid: _uid, card: card)
       ..reply = knows
       ..levelBefore = level;
 
@@ -146,43 +156,4 @@ class ScheduledCard implements KeyedListItem, Model {
     repeatAt = DateTime.now().toUtc().add(levelDurations[level] + _getJitter());
     return cv;
   }
-}
-
-class ScheduledCardModel implements Model {
-  static const levelDurations = [
-    Duration(hours: 4),
-    Duration(days: 1),
-    Duration(days: 2),
-    Duration(days: 5),
-    Duration(days: 14),
-    Duration(days: 30),
-    Duration(days: 60),
-  ];
-
-  String get key => card.key;
-  set key(_) => throw Exception('ScheduledCard key is always set via "card"');
-  CardModel card;
-  // TODO(ksheremet): Find better place for storing uid
-  String _uid;
-  int level;
-  DateTime repeatAt;
-
-  ScheduledCardModel({@required this.card, @required String uid})
-      : assert(card != null),
-        assert(uid != null) {
-    _uid = uid;
-    level ??= 0;
-    repeatAt ??= DateTime.fromMillisecondsSinceEpoch(0);
-  }
-
-  @override
-  String get rootPath => 'learning/$_uid/${card.deckKey}';
-
-  @override
-  Map<String, dynamic> toMap(bool isNew) => {
-        'learning/$_uid/${card.deckKey}/$key': {
-          'level': 'L$level',
-          'repeatAt': repeatAt.toUtc().millisecondsSinceEpoch,
-        }
-      };
 }

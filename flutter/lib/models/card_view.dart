@@ -5,25 +5,31 @@ import 'package:meta/meta.dart';
 import 'base/model.dart';
 import 'card.dart';
 
-class CardView implements Model {
+class CardViewModel implements Model {
   String key;
+  String uid;
   int levelBefore;
   bool reply;
   DateTime timestamp;
 
-  Card card;
+  CardModel card;
 
-  CardView({@required this.card, this.levelBefore, this.reply, this.timestamp})
+  CardViewModel(
+      {@required this.uid,
+      @required this.card,
+      this.levelBefore,
+      this.reply,
+      this.timestamp})
       : assert(card != null) {
     timestamp ??= DateTime.now();
   }
 
   @override
-  String get rootPath => 'views/${card.deck.uid}/${card.deck.key}/${card.key}';
+  String get rootPath => 'views/$uid/${card.deckKey}/${card.key}';
 
   @override
   Map<String, dynamic> toMap(bool isNew) => {
-        'views/${card.deck.uid}/${card.deck.key}/${card.key}/$key': {
+        'views/$uid/${card.deckKey}/${card.key}/$key': {
           'levelBefore': 'L$levelBefore',
           'reply': reply ? 'Y' : 'N',
           'timestamp': timestamp.toUtc().millisecondsSinceEpoch,

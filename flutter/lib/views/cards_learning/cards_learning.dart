@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../flutter/user_messages.dart';
-import '../../models/card.dart';
 import '../../models/deck.dart';
 import '../../view_models/learning_view_model.dart';
 import '../../views/card_create_update/card_create_update.dart';
@@ -197,7 +196,7 @@ class CardsLearningState extends State<CardsLearning> {
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/edit'),
                   builder: (context) => CreateUpdateCard(
-                        card: CardModel.copyFromLegacy(_viewModel.card),
+                        card: _viewModel.card,
                         deck: widget.deck,
                       )));
         } else {

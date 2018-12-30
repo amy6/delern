@@ -40,7 +40,7 @@ class _SignInWidgetState extends State<SignInWidget> {
         if (!Auth.instance.currentUser.isAnonymous) {
           // Don't wait for FCM token to save User.
           Transaction()
-            ..save(user_model.User.fromAuth(Auth.instance.currentUser))
+            ..save(user_model.UserModel.fromAuth(Auth.instance.currentUser))
             ..commit();
         }
 
