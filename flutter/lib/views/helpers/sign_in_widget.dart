@@ -7,7 +7,6 @@ import '../../flutter/localization.dart';
 import '../../flutter/styles.dart';
 import '../../models/base/transaction.dart';
 import '../../models/fcm.dart';
-import '../../models/user.dart' as user_model;
 import '../../remote/auth.dart';
 import '../../remote/error_reporting.dart';
 import 'helper_progress_indicator.dart';
@@ -37,13 +36,6 @@ class _SignInWidgetState extends State<SignInWidget> {
 
       if (Auth.instance.currentUser != null) {
         ErrorReporting.uid = Auth.instance.currentUser.uid;
-
-        if (!Auth.instance.currentUser.isAnonymous) {
-          // Don't wait for FCM token to save User.
-          Transaction()
-            ..save(user_model.UserModel.fromAuth(Auth.instance.currentUser))
-            ..commit();
-        }
 
         FirebaseAnalytics()
           ..setUserId(Auth.instance.currentUser.uid)
