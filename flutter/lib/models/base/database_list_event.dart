@@ -48,7 +48,7 @@ Stream<DatabaseListEvent<T>> childEventsStream<T>(
     }).map((muxerEvent) {
       Event dbEvent = muxerEvent.value;
       return DatabaseListEvent(
-        eventType: muxerEvent.stream,
+        eventType: muxerEvent.key,
         value: snapshotParser(dbEvent.snapshot.key, dbEvent.snapshot.value),
         previousSiblingKey: dbEvent.previousSiblingKey,
       );

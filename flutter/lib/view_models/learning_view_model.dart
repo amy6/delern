@@ -42,7 +42,7 @@ class LearningViewModel {
       // We deliberately do not subscribe to Card updates (i.e. we only watch
       // ScheduledCard). If the card that the user is looking at right now is
       // updated live, it can result in bad user experience.
-    }).map((muxerEvent) => muxerEvent.stream);
+    }).map((muxerEvent) => muxerEvent.key);
   }
 
   Future<void> answer(bool knows, bool learnBeyondHorizon) {

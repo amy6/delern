@@ -36,7 +36,7 @@ Stream<UnorderedListEvent<T>> _unorderedChildEventsStream<T>(
       Event dbEvent = muxerEvent.value;
       return UnorderedListEvent(
         key: dbEvent.snapshot.key,
-        eventType: muxerEvent.stream,
+        eventType: muxerEvent.key,
         value: snapshotParser(dbEvent.snapshot),
       );
     });
