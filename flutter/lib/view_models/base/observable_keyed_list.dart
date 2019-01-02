@@ -7,11 +7,23 @@ import 'package:meta/meta.dart';
 @immutable
 class ListEvent<T> {
   final ListEventType eventType;
+
+  /// A class that has initiated this event. Can be used to differentiate
+  /// between a realtime database event versus the result of user initiated
+  /// filtering.
   final Type eventSource;
+
+  /// For add and change [eventType], index of the item being operated on. For
+  /// move, the index where the item has been moved. For remove, index where the
+  /// item used to be. The actual value of the item is available in
+  /// [previousValue].
   final int index;
+
+  /// For [ListEventType.itemRemoved], the previous value of the item being
+  /// removed.
   final T previousValue;
 
-  const ListEvent({
+  const ListEvent._({
     @required this.eventType,
     this.index,
     this.eventSource,
@@ -49,14 +61,14 @@ class ObservableKeyedList<T extends KeyedListItem> {
       return;
     }
     _value.insert(insertBeforeIndex, _value.removeAt(takeFromIndex));
-    _notify(ListEvent(
+    _notify(ListEvent._(
       eventType: ListEventType.itemMoved,
       eventSource: eventSource,
       index: insertBeforeIndex,
     ));
   }
 
-  void removeAt(int index, [Type eventSource]) => _notify(ListEvent(
+  void removeAt(int index, [Type eventSource]) => _notify(ListEvent._(
       eventType: ListEventType.itemRemoved,
       eventSource: eventSource,
       index: index,
@@ -64,7 +76,7 @@ class ObservableKeyedList<T extends KeyedListItem> {
 
   void insert(int beforeIndex, T value, [Type eventSource]) {
     _value.insert(beforeIndex, value);
-    _notify(ListEvent(
+    _notify(ListEvent._(
         eventType: ListEventType.itemAdded,
         eventSource: eventSource,
         index: beforeIndex));
@@ -72,7 +84,7 @@ class ObservableKeyedList<T extends KeyedListItem> {
 
   void setAt(int index, T value, [Type eventSource]) {
     _value[index] = value;
-    _notify(ListEvent(
+    _notify(ListEvent._(
         eventType: ListEventType.itemChanged,
         eventSource: eventSource,
         index: index));
@@ -82,8 +94,8 @@ class ObservableKeyedList<T extends KeyedListItem> {
     if (_value == null) {
       // Initial data arrival. We were waiting for you!
       _value = newValue.toList();
-      _notify(
-          ListEvent(eventType: ListEventType.setAll, eventSource: eventSource));
+      _notify(ListEvent._(
+          eventType: ListEventType.setAll, eventSource: eventSource));
       return;
     }
 

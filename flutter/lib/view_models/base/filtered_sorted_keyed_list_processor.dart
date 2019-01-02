@@ -33,8 +33,6 @@ class FilteredSortedKeyedListProcessor<T extends KeyedListItem>
         _move(event.index);
         break;
       case ListEventType.itemChanged:
-        assert(event.previousValue.key == list.value[event.index].key,
-            'Item change modifies item key.');
         _update(event.index);
         break;
       case ListEventType.setAll:

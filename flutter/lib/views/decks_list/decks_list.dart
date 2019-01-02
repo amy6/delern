@@ -175,6 +175,7 @@ class DeckListItemWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
+                  // TODO(dotdoom): pass scheduled cards list to CardsLearning.
                   builder: (context) => CardsLearning(
                         deck: deck,
                         allowEdit:

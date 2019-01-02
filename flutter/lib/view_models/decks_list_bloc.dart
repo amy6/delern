@@ -109,9 +109,11 @@ class DecksListBloc {
       final nextRepeatAt = notYetDue
           .reduce((m1, m2) => m1.repeatAt.isBefore(m2.repeatAt) ? m1 : m2)
           .repeatAt;
+      final refreshTimerInterval = nextRepeatAt.difference(now) + _timerDelay;
+      print('Setting deck $deckKey refresh timer for $refreshTimerInterval');
       // Set timer to re-run this method when next repeatAt is due.
-      cardsDue._refreshTimer = Timer(nextRepeatAt.difference(now) + _timerDelay,
-          () => _scheduledCardsChanged(deckKey, value));
+      cardsDue._refreshTimer = Timer(
+          refreshTimerInterval, () => _scheduledCardsChanged(deckKey, value));
     }
   }
 
@@ -128,6 +130,7 @@ class DecksListBloc {
   final _numberOfCardsDue = <String, NumberOfCardsDue>{};
 
   /// Close all streams and release associated timer resources.
+  // TODO(dotdoom): consider self-disposing map elements for onCancel of stream.
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
   }
