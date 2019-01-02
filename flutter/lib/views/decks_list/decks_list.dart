@@ -200,6 +200,7 @@ class DeckListItem extends StatelessWidget {
   Widget _buildNumberOfCards(BuildContext context) {
     final bloc = ScheduledCardsBlocWidget.of(context).bloc;
     return StreamBuilder<int>(
+      key: Key(deck.key),
       initialData: bloc.numberOfCardsValue(deck.key),
       stream: bloc.numberOfCardsStream(deck.key),
       builder: (context, snapshot) => Container(
