@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/base/database_list_event.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
-import 'package:meta/meta.dart';
 
 class NumberOfCardsDue {
   int get value => _value;
@@ -13,12 +12,13 @@ class NumberOfCardsDue {
 
   Timer _refreshTimer;
 
+  NumberOfCardsDue._();
+
   void _addValue(int newValue) {
     _value = newValue;
     _controller.add(newValue);
   }
 
-  @mustCallSuper
   void _dispose() {
     _controller.close();
     _refreshTimer?.cancel();
@@ -94,7 +94,7 @@ class DecksListBloc {
       // Do not remove this controller from the list in
       // StreamController.onCancel, because there may be more references to it,
       // which can re-subscribe in future.
-      _numberOfCardsDue.putIfAbsent(deckKey, () => NumberOfCardsDue());
+      _numberOfCardsDue.putIfAbsent(deckKey, () => NumberOfCardsDue._());
   final _numberOfCardsDue = <String, NumberOfCardsDue>{};
 
   /// Close all streams and release associated timer resources.
