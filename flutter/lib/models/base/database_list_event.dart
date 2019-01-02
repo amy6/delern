@@ -57,7 +57,7 @@ typedef SnapshotParser<T> = T Function(String key, dynamic value);
 //                reassignment most of the values will be wasted.
 Stream<DatabaseListEvent<T>> childEventsStream<T>(
     Query query, SnapshotParser snapshotParser,
-    [bool ordered = true]) {
+    {bool ordered = true}) {
   final subscriptions = {
     ListEventType.itemAdded: query.onChildAdded,
     ListEventType.itemRemoved: query.onChildRemoved,
@@ -79,11 +79,11 @@ Stream<DatabaseListEvent<T>> childEventsStream<T>(
 
 Stream<DatabaseListEvent<T>> fullThenChildEventsStream<T>(
     Query query, SnapshotParser snapshotParser,
-    [bool ordered = true]) async* {
+    {bool ordered = true}) async* {
   Map initialValue = (await query.onValue.first).snapshot.value ?? {};
   yield DatabaseListEvent._(
       eventType: ListEventType.setAll,
       fullListValueForSet: initialValue.entries
           .map((item) => snapshotParser(item.key, item.value)));
-  yield* childEventsStream(query, snapshotParser, ordered);
+  yield* childEventsStream(query, snapshotParser, ordered: ordered);
 }

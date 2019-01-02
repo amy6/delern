@@ -34,18 +34,20 @@ class DeckAccessModel implements KeyedListItem, Model {
 
   DeckAccessModel({@required this.deckKey}) : assert(deckKey != null);
 
-  DeckAccessModel._fromSnapshot(snapshotValue,
-      {@required this.key, @required this.deckKey})
-      : assert(key != null),
+  DeckAccessModel._fromSnapshot({
+    @required this.key,
+    @required this.deckKey,
+    @required Map<String, dynamic> value,
+  })  : assert(key != null),
         assert(deckKey != null) {
-    if (snapshotValue == null) {
+    if (value == null) {
       key = null;
       return;
     }
-    _displayName = snapshotValue['displayName'];
-    _photoUrl = snapshotValue['photoUrl'];
-    email = snapshotValue['email'];
-    access = Enum.fromString(snapshotValue['access'], AccessType.values);
+    _displayName = value['displayName'];
+    _photoUrl = value['photoUrl'];
+    email = value['email'];
+    access = Enum.fromString(value['access'], AccessType.values);
   }
 
   static Stream<DatabaseListEvent<DeckAccessModel>> getList(
@@ -56,8 +58,8 @@ class DeckAccessModel implements KeyedListItem, Model {
               .child('deck_access')
               .child(deckKey)
               .orderByKey(),
-          (key, value) =>
-              DeckAccessModel._fromSnapshot(value, key: key, deckKey: deckKey));
+          (key, value) => DeckAccessModel._fromSnapshot(
+              key: key, deckKey: deckKey, value: value));
 
   static Stream<DeckAccessModel> get(
           {@required String deckKey, @required String key}) =>
@@ -67,8 +69,8 @@ class DeckAccessModel implements KeyedListItem, Model {
           .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) => DeckAccessModel._fromSnapshot(evt.snapshot.value,
-              key: key, deckKey: deckKey));
+          .map((evt) => DeckAccessModel._fromSnapshot(
+              key: key, deckKey: deckKey, value: evt.snapshot.value));
 
   @override
   String get rootPath => 'deck_access/$deckKey';

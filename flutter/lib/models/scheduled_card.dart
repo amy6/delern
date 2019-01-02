@@ -43,22 +43,25 @@ class ScheduledCardModel implements Model {
     repeatAt = DateTime.fromMillisecondsSinceEpoch(0);
   }
 
-  ScheduledCardModel._fromSnapshot(snapshotValue,
-      {@required this.key, @required this.deckKey, @required this.uid})
-      : assert(uid != null),
+  ScheduledCardModel._fromSnapshot({
+    @required this.key,
+    @required this.deckKey,
+    @required this.uid,
+    @required Map<String, dynamic> value,
+  })  : assert(uid != null),
         assert(deckKey != null),
         assert(key != null) {
-    if (snapshotValue == null) {
+    if (value == null) {
       key = null;
       return;
     }
     try {
-      level = int.parse(snapshotValue['level'].toString().substring(1));
+      level = int.parse(value['level'].toString().substring(1));
     } on FormatException catch (e, stackTrace) {
       ErrorReporting.report('ScheduledCard', e, stackTrace);
       level = 0;
     }
-    repeatAt = DateTime.fromMillisecondsSinceEpoch(snapshotValue['repeatAt']);
+    repeatAt = DateTime.fromMillisecondsSinceEpoch(value['repeatAt']);
   }
 
   // A jutter used to calculate diverse next scheduled time for a card.
@@ -113,10 +116,10 @@ class ScheduledCardModel implements Model {
             await CardModel.get(deckKey: deck.key, key: latestScheduledCard.key)
                 .first;
         var scheduledCard = ScheduledCardModel._fromSnapshot(
-            latestScheduledCard.value,
             uid: deck.uid,
             key: latestScheduledCard.key,
-            deckKey: deck.key);
+            deckKey: deck.key,
+            value: latestScheduledCard.value);
 
         if (card.key == null) {
           // Card has been removed but we still have ScheduledCard for it.
@@ -162,12 +165,12 @@ class ScheduledCardModel implements Model {
           String uid) =>
       childEventsStream(
           FirebaseDatabase.instance.reference().child('learning').child(uid),
-          (deckKey, scheduledCardsOfDeck) {
-        final Map value = scheduledCardsOfDeck.value;
-        return value.entries.map((entry) => ScheduledCardModel._fromSnapshot(
-            entry.value,
-            key: entry.key,
-            deckKey: deckKey,
-            uid: uid));
-      }, false);
+          (deckKey, scheduledCardsOfDeck) => scheduledCardsOfDeck.entries
+              .map((entry) => ScheduledCardModel._fromSnapshot(
+                    key: entry.key,
+                    deckKey: deckKey,
+                    uid: uid,
+                    value: entry.value,
+                  )),
+          ordered: false);
 }

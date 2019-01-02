@@ -40,23 +40,24 @@ class DeckModel implements Model {
         category = other.category,
         access = other.access;
 
-  DeckModel._fromSnapshot(snapshotValue,
-      {@required this.uid, @required this.key})
-      : assert(uid != null),
+  DeckModel._fromSnapshot({
+    @required this.uid,
+    @required this.key,
+    @required Map<String, dynamic> value,
+  })  : assert(uid != null),
         assert(key != null) {
-    if (snapshotValue == null) {
+    if (value == null) {
       key = null;
       return;
     }
-    name = snapshotValue['name'];
-    markdown = snapshotValue['markdown'] ?? false;
+    name = value['name'];
+    markdown = value['markdown'] ?? false;
     type = Enum.fromString(
-        snapshotValue['deckType']?.toString()?.toLowerCase(), DeckType.values);
-    accepted = snapshotValue['accepted'] ?? false;
-    lastSyncAt =
-        DateTime.fromMillisecondsSinceEpoch(snapshotValue['lastSyncAt'] ?? 0);
-    category = snapshotValue['category'];
-    access = Enum.fromString(snapshotValue['access'], AccessType.values);
+        value['deckType']?.toString()?.toLowerCase(), DeckType.values);
+    accepted = value['accepted'] ?? false;
+    lastSyncAt = DateTime.fromMillisecondsSinceEpoch(value['lastSyncAt'] ?? 0);
+    category = value['category'];
+    access = Enum.fromString(value['access'], AccessType.values);
   }
 
   @override
@@ -86,8 +87,11 @@ class DeckModel implements Model {
           .child(uid)
           .child(key)
           .onValue
-          .map((evt) =>
-              DeckModel._fromSnapshot(evt.snapshot.value, uid: uid, key: key));
+          .map((evt) => DeckModel._fromSnapshot(
+                uid: uid,
+                key: key,
+                value: evt.snapshot.value,
+              ));
 
   static Stream<DatabaseListEvent<DeckModel>> getList({@required String uid}) {
     FirebaseDatabase.instance
@@ -103,7 +107,7 @@ class DeckModel implements Model {
             .child(uid)
             .orderByKey(), (key, value) {
       _keepDeckSynced(uid, key);
-      return DeckModel._fromSnapshot(value, uid: uid, key: key);
+      return DeckModel._fromSnapshot(uid: uid, key: key, value: value);
     });
   }
 

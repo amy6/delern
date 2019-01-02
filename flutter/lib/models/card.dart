@@ -23,17 +23,20 @@ class CardModel implements Model {
         back = other.back,
         createdAt = other.createdAt;
 
-  CardModel._fromSnapshot(snapshotValue,
-      {@required this.deckKey, @required this.key}) {
-    if (snapshotValue == null) {
+  CardModel._fromSnapshot({
+    @required this.deckKey,
+    @required this.key,
+    @required Map<String, dynamic> value,
+  }) {
+    if (value == null) {
       key = null;
       return;
     }
-    front = snapshotValue['front'];
-    back = snapshotValue['back'];
-    createdAt = snapshotValue['createdAt'] == null
+    front = value['front'];
+    back = value['back'];
+    createdAt = value['createdAt'] == null
         ? null
-        : DateTime.fromMillisecondsSinceEpoch(snapshotValue['createdAt']);
+        : DateTime.fromMillisecondsSinceEpoch(value['createdAt']);
   }
 
   @override
@@ -65,8 +68,8 @@ class CardModel implements Model {
           .child(deckKey)
           .child(key)
           .onValue
-          .map((evt) => CardModel._fromSnapshot(evt.snapshot.value,
-              deckKey: deckKey, key: key));
+          .map((evt) => CardModel._fromSnapshot(
+              deckKey: deckKey, key: key, value: evt.snapshot.value));
 
   static Stream<DatabaseListEvent<CardModel>> getList(
           {@required String deckKey}) =>
@@ -76,6 +79,9 @@ class CardModel implements Model {
               .child('cards')
               .child(deckKey)
               .orderByKey(),
-          (key, value) =>
-              CardModel._fromSnapshot(value, deckKey: deckKey, key: key));
+          (key, value) => CardModel._fromSnapshot(
+                deckKey: deckKey,
+                key: key,
+                value: value,
+              ));
 }
