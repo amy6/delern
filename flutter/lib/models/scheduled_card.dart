@@ -47,7 +47,7 @@ class ScheduledCardModel implements Model {
     @required this.key,
     @required this.deckKey,
     @required this.uid,
-    @required Map<String, dynamic> value,
+    @required Map value,
   })  : assert(uid != null),
         assert(deckKey != null),
         assert(key != null) {
@@ -165,12 +165,13 @@ class ScheduledCardModel implements Model {
           String uid) =>
       childEventsStream(
           FirebaseDatabase.instance.reference().child('learning').child(uid),
-          (deckKey, scheduledCardsOfDeck) => scheduledCardsOfDeck.entries
-              .map((entry) => ScheduledCardModel._fromSnapshot(
-                    key: entry.key,
-                    deckKey: deckKey,
-                    uid: uid,
-                    value: entry.value,
-                  )),
-          ordered: false);
+          (deckKey, scheduledCardsOfDeck) {
+        Map value = scheduledCardsOfDeck ?? {};
+        return value.entries.map((entry) => ScheduledCardModel._fromSnapshot(
+              key: entry.key,
+              deckKey: deckKey,
+              uid: uid,
+              value: entry.value,
+            ));
+      }, ordered: false);
 }

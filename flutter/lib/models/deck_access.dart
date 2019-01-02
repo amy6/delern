@@ -37,7 +37,7 @@ class DeckAccessModel implements KeyedListItem, Model {
   DeckAccessModel._fromSnapshot({
     @required this.key,
     @required this.deckKey,
-    @required Map<String, dynamic> value,
+    @required Map value,
   })  : assert(key != null),
         assert(deckKey != null) {
     if (value == null) {

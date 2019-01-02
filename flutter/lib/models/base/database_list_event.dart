@@ -18,8 +18,8 @@ class DatabaseListEvent<T> {
   final ListEventType eventType;
 
   /// Parsed value of the snapshot. Can be null, for example in
-  /// [ListEventType.itemRemoved] or [ListEventType.itemChanged] events.
-  /// Mutually exclusive with [fullListValueForSet].
+  /// [ListEventType.itemChanged] events when item is removed. Mutually
+  /// exclusive with [fullListValueForSet].
   final T value;
 
   /// The of the snapshot. Mutually exclusive with [fullListValueForSet].
@@ -48,15 +48,16 @@ class DatabaseListEvent<T> {
 // ignore: avoid_annotating_with_dynamic
 typedef SnapshotParser<T> = T Function(String key, dynamic value);
 
-/// Subscribe to onChildAdded/Removed/Moved/Changed events (but not the onValue
-/// event) of [query] and mux them into appropriate [DatabaseListEvent], parsing
-/// values with [snapshotParser]. When [ordered] is set, it also respects the
-/// order changes, subscribing to [Query.onChildMoved].
+/// Subscribe to onChildAdded/Removed/Changed events (but not the onValue event)
+/// of [query] and mux them into appropriate [DatabaseListEvent], parsing values
+/// (including `null`, for example onChanged when a child is removed) with
+/// [snapshotParser]. When [ordered] is set, it also respects the order changes,
+/// subscribing to [Query.onChildMoved].
 // TODO(dotdoom): do not parse snapshots here, that's too wasteful. Do it later
 //                in the list when we know that we really need objects (i.e. on
 //                reassignment most of the values will be wasted.
 Stream<DatabaseListEvent<T>> childEventsStream<T>(
-    Query query, SnapshotParser snapshotParser,
+    Query query, SnapshotParser<T> snapshotParser,
     {bool ordered = true}) {
   final subscriptions = {
     ListEventType.itemAdded: query.onChildAdded,
@@ -78,7 +79,7 @@ Stream<DatabaseListEvent<T>> childEventsStream<T>(
 }
 
 Stream<DatabaseListEvent<T>> fullThenChildEventsStream<T>(
-    Query query, SnapshotParser snapshotParser,
+    Query query, SnapshotParser<T> snapshotParser,
     {bool ordered = true}) async* {
   Map initialValue = (await query.onValue.first).snapshot.value ?? {};
   yield DatabaseListEvent._(

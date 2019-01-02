@@ -26,7 +26,7 @@ class CardModel implements Model {
   CardModel._fromSnapshot({
     @required this.deckKey,
     @required this.key,
-    @required Map<String, dynamic> value,
+    @required Map value,
   }) {
     if (value == null) {
       key = null;

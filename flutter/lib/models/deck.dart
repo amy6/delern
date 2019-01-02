@@ -43,7 +43,7 @@ class DeckModel implements Model {
   DeckModel._fromSnapshot({
     @required this.uid,
     @required this.key,
-    @required Map<String, dynamic> value,
+    @required Map value,
   })  : assert(uid != null),
         assert(key != null) {
     if (value == null) {
