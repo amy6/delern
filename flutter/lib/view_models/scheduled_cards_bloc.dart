@@ -2,11 +2,40 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/base/database_list_event.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:meta/meta.dart';
+
+class NumberOfCardsDue {
+  int get value => _value;
+  int _value = 0;
+
+  Stream<int> get stream => _controller.stream;
+  final _controller = StreamController<int>.broadcast();
+
+  Timer _refreshTimer;
+
+  void _addValue(int newValue) {
+    _value = newValue;
+    _controller.add(newValue);
+  }
+
+  @mustCallSuper
+  void _dispose() {
+    _controller.close();
+    _refreshTimer?.cancel();
+  }
+}
 
 class ScheduledCardsBloc {
   final String uid;
 
   ScheduledCardsBloc(this.uid) {
+    // Delay initial data load. In case we have a significant amount of
+    // ScheduledCards, loading them slows down decks list, because of the
+    // MethodChannel bottleneck.
+    Future.delayed(const Duration(milliseconds: 200), _initialLoad);
+  }
+
+  void _initialLoad() {
     ScheduledCardModel.listsForUser(uid).listen((event) {
       switch (event.eventType) {
         case ListEventType.itemAdded:
@@ -14,14 +43,17 @@ class ScheduledCardsBloc {
           _scheduledCardsChanged(event.key, event.value);
           break;
         case ListEventType.itemRemoved:
-          _numberOfCardsTimers.remove(event.key)?.cancel();
-          _numberOfCardsValues.remove(event.key);
-          // Do not close the stream. itemRemoved occurs when we do not have any
-          // cards left in a deck; once the user adds another card, we will have
-          // to notify our subscribers, which will be gone if we call close().
-          // TODO(dotdoom): consider listening to /decks/$uid to find out when
-          //                a deck is removed and resources can be released.
-          _numberOfCardsControllers[event.key]?.add(0);
+          if (_numberOfCardsDue.containsKey(event.key)) {
+            // Do not close the stream. itemRemoved occurs when we do not have
+            // any cards left in a deck; once the user adds another card, we
+            // will have to notify our subscribers, which will be gone if we
+            // call close().
+            // TODO(dotdoom): consider listening to /decks/$uid to find out when
+            //                a deck is removed and resources can be released.
+            _numberOfCardsDue[event.key]
+              .._refreshTimer?.cancel()
+              .._addValue(0);
+          }
           break;
         default:
       }
@@ -38,43 +70,42 @@ class ScheduledCardsBloc {
     final now = DateTime.now();
     final notYetDue = value.where((sc) => sc.repeatAt.isAfter(now));
 
-    final numberOfCardsDue =
-        _numberOfCardsValues[deckKey] = value.length - notYetDue.length;
-    _numberOfCardsControllers[deckKey]?.add(numberOfCardsDue);
+    final cardsDue = numberOfCardsDue(deckKey)
+      .._addValue(value.length - notYetDue.length);
 
-    _numberOfCardsTimers.remove(deckKey)?.cancel();
+    cardsDue._refreshTimer?.cancel();
     if (notYetDue.isNotEmpty) {
       // Find the closest (minimum) repeatAt.
       final nextRepeatAt = notYetDue
           .reduce((m1, m2) => m1.repeatAt.isBefore(m2.repeatAt) ? m1 : m2)
           .repeatAt;
       // Set timer to re-run this method when next repeatAt is due.
-      _numberOfCardsTimers[deckKey] = Timer(
-          nextRepeatAt.difference(now) + _timerDelay,
+      cardsDue._refreshTimer = Timer(nextRepeatAt.difference(now) + _timerDelay,
           () => _scheduledCardsChanged(deckKey, value));
     }
   }
 
-  final _numberOfCardsValues = <String, int>{};
-  final _numberOfCardsControllers = <String, StreamController<int>>{};
-  final _numberOfCardsTimers = <String, Timer>{};
+  /// Current value and a stream of values for the number of ScheduledCards due
+  /// for learning. This method never returns null.
+  NumberOfCardsDue numberOfCardsDue(String deckKey) =>
+      // Put StreamController in place even if we don't have data for this deck
+      // yet. Later, when we get information about this deck, we will push new
+      // data directly to a subscriber.
+      // Do not remove this controller from the list in
+      // StreamController.onCancel, because there may be more references to it,
+      // which can re-subscribe in future.
+      _numberOfCardsDue.putIfAbsent(deckKey, () => NumberOfCardsDue());
+  final _numberOfCardsDue = <String, NumberOfCardsDue>{};
 
   /// Current number of cards due for the Deck [deckKey].
-  int numberOfCardsValue(String deckKey) => _numberOfCardsValues[deckKey];
+  int numberOfCardsValue(String deckKey) => numberOfCardsDue(deckKey).value;
 
   /// A stream of cards for the Deck [deckKey].
   Stream<int> numberOfCardsStream(String deckKey) =>
-      // Put StreamController in place even if we don't have data for this deck
-      // yet. Later when we get information about this deck, we will push new
-      // data directly to a subscriber.
-      // Do not remove this controller from the list in onCancel, because there
-      // may be more references to it, which can re-subscribe in future.
-      (_numberOfCardsControllers[deckKey] ??= StreamController<int>.broadcast())
-          .stream;
+      numberOfCardsDue(deckKey).stream;
 
   /// Close all streams and release associated timer resources.
   void dispose() {
-    _numberOfCardsControllers.values.forEach((c) => c.close());
-    _numberOfCardsTimers.values.forEach((t) => t.cancel());
+    _numberOfCardsDue.values.forEach((c) => c._dispose());
   }
 }
