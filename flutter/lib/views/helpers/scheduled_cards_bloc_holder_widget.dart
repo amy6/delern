@@ -1,4 +1,4 @@
-import 'package:delern_flutter/view_models/scheduled_cards_bloc.dart';
+import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +13,14 @@ class ScheduledCardsBlocHolderWidget extends StatefulWidget {
 
 class _ScheduledCardsBlocHolderWidgetState
     extends State<ScheduledCardsBlocHolderWidget> {
-  ScheduledCardsBloc _bloc;
+  DecksListBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
     final uid = CurrentUserWidget.of(context).user.uid;
     if (_bloc == null || _bloc.uid != uid) {
       _bloc?.dispose();
-      _bloc = ScheduledCardsBloc(uid);
+      _bloc = DecksListBloc(uid);
     }
 
     return ScheduledCardsBlocWidget(bloc: _bloc, child: widget.child);
@@ -28,7 +28,7 @@ class _ScheduledCardsBlocHolderWidgetState
 }
 
 class ScheduledCardsBlocWidget extends InheritedWidget {
-  final ScheduledCardsBloc bloc;
+  final DecksListBloc bloc;
 
   static ScheduledCardsBlocWidget of(BuildContext context) =>
       context.inheritFromWidgetOfExactType(ScheduledCardsBlocWidget);

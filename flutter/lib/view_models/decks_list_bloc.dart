@@ -25,10 +25,10 @@ class NumberOfCardsDue {
   }
 }
 
-class ScheduledCardsBloc {
+class DecksListBloc {
   final String uid;
 
-  ScheduledCardsBloc(this.uid) {
+  DecksListBloc(this.uid) {
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.
