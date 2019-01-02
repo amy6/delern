@@ -201,8 +201,8 @@ class DeckListItemWidget extends StatelessWidget {
     final bloc = ScheduledCardsBlocWidget.of(context).bloc;
     return StreamBuilder<int>(
       key: Key(deck.key),
-      initialData: bloc.numberOfCardsValue(deck.key),
-      stream: bloc.numberOfCardsStream(deck.key),
+      initialData: bloc.numberOfCardsDue(deck.key).value,
+      stream: bloc.numberOfCardsDue(deck.key).stream,
       builder: (context, snapshot) => Container(
             child: Text((snapshot.data ?? 0).toString(),
                 style: AppStyles.primaryText),

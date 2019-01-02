@@ -97,13 +97,6 @@ class ScheduledCardsBloc {
       _numberOfCardsDue.putIfAbsent(deckKey, () => NumberOfCardsDue());
   final _numberOfCardsDue = <String, NumberOfCardsDue>{};
 
-  /// Current number of cards due for the Deck [deckKey].
-  int numberOfCardsValue(String deckKey) => numberOfCardsDue(deckKey).value;
-
-  /// A stream of cards for the Deck [deckKey].
-  Stream<int> numberOfCardsStream(String deckKey) =>
-      numberOfCardsDue(deckKey).stream;
-
   /// Close all streams and release associated timer resources.
   void dispose() {
     _numberOfCardsDue.values.forEach((c) => c._dispose());
