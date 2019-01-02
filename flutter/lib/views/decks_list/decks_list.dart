@@ -172,21 +172,12 @@ class DeckListItemWidget extends StatelessWidget {
           splashColor: Theme.of(context).splashColor,
           onTap: () async {
             var anyCardsShown = await Navigator.push(
-              context,
-              MaterialPageRoute(
+                context,
+                MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
                   // TODO(dotdoom): pass scheduled cards list to CardsLearning.
-                  builder: (context) => CardsLearning(
-                        deck: deck,
-                        allowEdit:
-                            // Not allow to edit or delete cards with read
-                            // access. If some error occurred when retrieving
-                            // DeckAccess and it is null access we still give
-                            // a try to edit for a user. If user doesn't have
-                            // permissions they will see "Permission denied".
-                            deck.access != AccessType.read,
-                      )),
-            );
+                  builder: (context) => CardsLearning(deck: deck),
+                ));
             if (anyCardsShown == false) {
               // If deck is empty, open a screen with adding cards
               Navigator.push(

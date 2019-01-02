@@ -23,10 +23,9 @@ class LearningViewModel {
   DeckModel get deck => _deck;
   DeckModel _deck;
 
-  final bool allowEdit;
-
-  LearningViewModel({@required DeckModel deck, @required this.allowEdit})
-      : _deck = deck;
+  LearningViewModel({@required DeckModel deck})
+      : assert(deck != null),
+        _deck = deck;
 
   Stream<LearningUpdateType> get updates {
     logStartLearning(deck.key);

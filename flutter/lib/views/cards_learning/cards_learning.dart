@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/learning_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
@@ -17,11 +18,8 @@ import 'package:intl/intl.dart';
 
 class CardsLearning extends StatefulWidget {
   final DeckModel deck;
-  final bool allowEdit;
 
-  const CardsLearning({@required this.deck, @required this.allowEdit})
-      : assert(deck != null),
-        assert(allowEdit != null);
+  const CardsLearning({@required this.deck}) : assert(deck != null);
 
   @override
   State<StatefulWidget> createState() => CardsLearningState();
@@ -50,8 +48,7 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   void initState() {
-    _viewModel =
-        LearningViewModel(deck: widget.deck, allowEdit: widget.allowEdit);
+    _viewModel = LearningViewModel(deck: widget.deck);
     super.initState();
   }
 
@@ -189,7 +186,7 @@ class CardsLearningState extends State<CardsLearning> {
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
     switch (item) {
       case _CardMenuItemType.edit:
-        if (widget.allowEdit) {
+        if (widget.deck.access != AccessType.read) {
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -204,7 +201,7 @@ class CardsLearningState extends State<CardsLearning> {
         }
         break;
       case _CardMenuItemType.delete:
-        if (widget.allowEdit) {
+        if (widget.deck.access != AccessType.read) {
           _deleteCard(context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),
