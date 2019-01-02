@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:delern_flutter/models/base/database_list_event.dart';
 import 'package:delern_flutter/models/base/model.dart';
-import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card.dart';
 import 'package:delern_flutter/models/card_view.dart';
@@ -12,33 +11,6 @@ import 'package:delern_flutter/models/deck.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
-
-class UnorderedListEvent<T> {
-  final ListEventType eventType;
-  final T value;
-  final String key;
-
-  UnorderedListEvent({
-    @required this.key,
-    @required this.eventType,
-    @required this.value,
-  });
-}
-
-Stream<UnorderedListEvent<T>> _unorderedChildEventsStream<T>(
-        Query query, T snapshotParser(DataSnapshot s)) =>
-    StreamMuxer<ListEventType>({
-      ListEventType.itemAdded: query.onChildAdded,
-      ListEventType.itemRemoved: query.onChildRemoved,
-      ListEventType.itemChanged: query.onChildChanged,
-    }).map((muxerEvent) {
-      Event dbEvent = muxerEvent.value;
-      return UnorderedListEvent(
-        key: dbEvent.snapshot.key,
-        eventType: muxerEvent.key,
-        value: snapshotParser(dbEvent.snapshot),
-      );
-    });
 
 @immutable
 class CardAndScheduledCard {
@@ -186,16 +158,16 @@ class ScheduledCardModel implements Model {
     return cv;
   }
 
-  static Stream<UnorderedListEvent<Iterable<ScheduledCardModel>>> listsForUser(
+  static Stream<DatabaseListEvent<Iterable<ScheduledCardModel>>> listsForUser(
           String uid) =>
-      _unorderedChildEventsStream(
+      childEventsStream(
           FirebaseDatabase.instance.reference().child('learning').child(uid),
-          (scheduledCardsOfDeck) {
+          (deckKey, scheduledCardsOfDeck) {
         final Map value = scheduledCardsOfDeck.value;
         return value.entries.map((entry) => ScheduledCardModel._fromSnapshot(
             entry.value,
             key: entry.key,
-            deckKey: scheduledCardsOfDeck.key,
+            deckKey: deckKey,
             uid: uid));
-      });
+      }, false);
 }
