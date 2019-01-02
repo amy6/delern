@@ -5,7 +5,7 @@ import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/fcm.dart';
 import 'package:delern_flutter/remote/auth.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +77,7 @@ class _SignInWidgetState extends State<SignInWidget> {
           user: Auth.instance.currentUser, child: widget.afterSignInBuilder());
     }
     if (!Auth.instance.authStateKnown) {
-      return HelperProgressIndicator();
+      return ProgressIndicatorWidget();
     }
 
     return Scaffold(

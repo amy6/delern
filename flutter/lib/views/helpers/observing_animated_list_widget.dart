@@ -4,7 +4,7 @@ import 'package:delern_flutter/models/base/database_list_event.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
 import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -18,8 +18,9 @@ typedef ObservingAnimatedListItemBuilder<T extends KeyedListItem> = Widget
 
 typedef WidgetBuilder = Widget Function();
 
-class ObservingAnimatedList<T extends KeyedListItem> extends StatefulWidget {
-  const ObservingAnimatedList({
+class ObservingAnimatedListWidget<T extends KeyedListItem>
+    extends StatefulWidget {
+  const ObservingAnimatedListWidget({
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyMessageBuilder,
@@ -32,12 +33,12 @@ class ObservingAnimatedList<T extends KeyedListItem> extends StatefulWidget {
   final WidgetBuilder emptyMessageBuilder;
 
   @override
-  ObservingAnimatedListState<T> createState() =>
-      ObservingAnimatedListState<T>();
+  ObservingAnimatedListWidgetState<T> createState() =>
+      ObservingAnimatedListWidgetState<T>();
 }
 
-class ObservingAnimatedListState<T extends KeyedListItem>
-    extends State<ObservingAnimatedList<T>> {
+class ObservingAnimatedListWidgetState<T extends KeyedListItem>
+    extends State<ObservingAnimatedListWidget<T>> {
   final GlobalKey<AnimatedListState> _animatedListKey =
       GlobalKey<AnimatedListState>();
 
@@ -101,7 +102,7 @@ class ObservingAnimatedListState<T extends KeyedListItem>
   @override
   Widget build(BuildContext context) {
     if (widget.list == null || widget.list.value == null) {
-      return HelperProgressIndicator();
+      return ProgressIndicatorWidget();
     }
 
     if (widget.list.value.isEmpty) {

@@ -1,10 +1,10 @@
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:flutter/material.dart';
 
-class EmptyListMessage extends StatelessWidget {
+class EmptyListMessageWidget extends StatelessWidget {
   final String _displayText;
 
-  const EmptyListMessage(this._displayText);
+  const EmptyListMessageWidget(this._displayText);
 
   @override
   Widget build(BuildContext context) => Center(

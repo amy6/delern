@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:delern_flutter/models/base/stream_muxer.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/scheduled_card.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
 

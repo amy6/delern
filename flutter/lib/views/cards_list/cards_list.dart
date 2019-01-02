@@ -1,21 +1,21 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_list_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/card_preview/card_preview.dart';
-import 'package:delern_flutter/views/cards_list/observing_grid_view.dart';
-import 'package:delern_flutter/views/helpers/card_background.dart';
-import 'package:delern_flutter/views/helpers/search_bar.dart';
+import 'package:delern_flutter/views/cards_list/observing_grid_widget.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
-class CardsListPage extends StatefulWidget {
+class CardsList extends StatefulWidget {
   final DeckModel deck;
   final bool allowEdit;
 
-  const CardsListPage({@required this.deck, @required this.allowEdit})
+  const CardsList({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 
@@ -23,7 +23,7 @@ class CardsListPage extends StatefulWidget {
   _CardsListState createState() => _CardsListState();
 }
 
-class _CardsListState extends State<CardsListPage> {
+class _CardsListState extends State<CardsList> {
   CardListViewModel _cardListViewModel;
 
   void _searchTextChanged(String input) {
@@ -47,7 +47,7 @@ class _CardsListState extends State<CardsListPage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: SearchBarWidget(
             title: widget.deck.name, search: _searchTextChanged),
-        body: ObservingGrid(
+        body: ObservingGridWidget(
           maxCrossAxisExtent: 240.0,
           items: _cardListViewModel.list,
           itemBuilder: (item) => CardGridItem(
@@ -69,7 +69,7 @@ class _CardsListState extends State<CardsListPage> {
                       context,
                       MaterialPageRoute(
                           settings: const RouteSettings(name: '/cards/new'),
-                          builder: (context) => CreateUpdateCard(
+                          builder: (context) => CardCreateUpdate(
                                 card: CardModel(deckKey: widget.deck.key),
                                 deck: widget.deck,
                               )));

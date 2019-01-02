@@ -1,4 +1,4 @@
-import 'package:delern_flutter/models/card.dart';
+import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
 import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';

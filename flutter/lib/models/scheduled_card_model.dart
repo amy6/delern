@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:delern_flutter/models/base/database_list_event.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/card_view.dart';
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/card_reply_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -145,8 +145,8 @@ class ScheduledCardModel implements Model {
         }
       };
 
-  CardViewModel answer(bool knows, bool learnBeyondHorizon) {
-    var cv = CardViewModel(uid: uid, cardKey: key, deckKey: deckKey)
+  CardReplyModel answer(bool knows, bool learnBeyondHorizon) {
+    var cv = CardReplyModel(uid: uid, cardKey: key, deckKey: deckKey)
       ..reply = knows
       ..levelBefore = level;
 

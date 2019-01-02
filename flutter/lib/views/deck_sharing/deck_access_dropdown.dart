@@ -1,18 +1,18 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
-import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 typedef AccessTypeFilter = bool Function(AccessType t);
 typedef AccessTypeCallback = void Function(AccessType t);
 
-class DeckAccessDropdown extends StatefulWidget {
+class DeckAccessDropdownWidget extends StatefulWidget {
   final AccessType value;
   final AccessTypeCallback valueChanged;
   final AccessTypeFilter filter;
 
-  const DeckAccessDropdown(
+  const DeckAccessDropdownWidget(
       {@required this.value,
       @required this.valueChanged,
       @required this.filter})
@@ -23,7 +23,7 @@ class DeckAccessDropdown extends StatefulWidget {
   State<StatefulWidget> createState() => _DropdownState();
 }
 
-class _DropdownState extends State<DeckAccessDropdown> {
+class _DropdownState extends State<DeckAccessDropdownWidget> {
   @override
   Widget build(BuildContext context) => DropdownButtonHideUnderline(
           child: DropdownButton<AccessType>(

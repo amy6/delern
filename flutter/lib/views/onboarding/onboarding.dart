@@ -1,22 +1,22 @@
 import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
 import 'package:intro_views_flutter/intro_views_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardingViewWidget extends StatefulWidget {
+class Onboarding extends StatefulWidget {
   final Widget Function() afterOnboardingBuilder;
 
-  const OnboardingViewWidget({@required this.afterOnboardingBuilder})
+  const Onboarding({@required this.afterOnboardingBuilder})
       : assert(afterOnboardingBuilder != null);
 
   @override
-  State<StatefulWidget> createState() => _OnboardingViewWidgetState();
+  State<StatefulWidget> createState() => _OnboardingState();
 }
 
-class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
+class _OnboardingState extends State<Onboarding> {
   static const String _introPrefKey = 'is-intro-shown';
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   bool _isIntroShown;
@@ -30,7 +30,7 @@ class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
           if (_isIntroShown == true) {
             return widget.afterOnboardingBuilder();
           } else {
-            return _IntroViewWidget(callback: () async {
+            return _OnboardingWidget(callback: () async {
               (await _prefs).setBool(_introPrefKey, true);
               setState(() {
                 _isIntroShown = true;
@@ -38,15 +38,15 @@ class _OnboardingViewWidgetState extends State<OnboardingViewWidget> {
             });
           }
         }
-        return HelperProgressIndicator();
+        return ProgressIndicatorWidget();
       });
 }
 
-class _IntroViewWidget extends StatelessWidget {
+class _OnboardingWidget extends StatelessWidget {
   static const _textStyle = TextStyle(color: Colors.white);
   final Function callback;
 
-  const _IntroViewWidget({@required this.callback}) : assert(callback != null);
+  const _OnboardingWidget({@required this.callback}) : assert(callback != null);
 
   List<PageViewModel> _introPages(BuildContext context) {
     final imageWidth = MediaQuery.of(context).size.width * 0.85;

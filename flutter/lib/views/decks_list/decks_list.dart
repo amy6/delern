@@ -3,33 +3,33 @@ import 'dart:collection';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_list_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
 import 'package:delern_flutter/views/cards_list/cards_list.dart';
 import 'package:delern_flutter/views/deck_settings/deck_settings.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
-import 'package:delern_flutter/views/decks_list/create_deck.dart';
+import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
-import 'package:delern_flutter/views/helpers/empty_list_message.dart';
-import 'package:delern_flutter/views/helpers/observing_animated_list.dart';
-import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_widget.dart';
-import 'package:delern_flutter/views/helpers/search_bar.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_holder_widget.dart';
+import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-class DecksListPage extends StatefulWidget {
+class DecksList extends StatefulWidget {
   final String title;
 
-  const DecksListPage({@required this.title, Key key})
+  const DecksList({@required this.title, Key key})
       : assert(title != null),
         super(key: key);
 
   @override
-  DecksListPageState createState() => DecksListPageState();
+  DecksListState createState() => DecksListState();
 }
 
 class _ArrowToFloatingActionButton extends CustomPainter {
@@ -92,7 +92,7 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
           child: child));
 }
 
-class DecksListPageState extends State<DecksListPage> {
+class DecksListState extends State<DecksList> {
   DeckListViewModel viewModel;
 
   @override
@@ -118,25 +118,25 @@ class DecksListPageState extends State<DecksListPage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: SearchBarWidget(title: widget.title, search: setFilter),
         drawer: NavigationDrawer(),
-        body: ObservingAnimatedList(
+        body: ObservingAnimatedListWidget(
           list: viewModel.list,
           itemBuilder: (context, item, animation, index) => SizeTransition(
-                child: DeckListItem(item),
+                child: DeckListItemWidget(item),
                 sizeFactor: animation,
               ),
           emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
               fabKey: fabKey,
-              child: EmptyListMessage(
+              child: EmptyListMessageWidget(
                   AppLocalizations.of(context).emptyDecksList)),
         ),
-        floatingActionButton: CreateDeck(key: fabKey),
+        floatingActionButton: CreateDeckWidget(key: fabKey),
       );
 }
 
-class DeckListItem extends StatelessWidget {
+class DeckListItemWidget extends StatelessWidget {
   final DeckModel deck;
 
-  const DeckListItem(this.deck);
+  const DeckListItemWidget(this.deck);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -182,7 +182,7 @@ class DeckListItem extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
-                      builder: (context) => CreateUpdateCard(
+                      builder: (context) => CardCreateUpdate(
                           card: CardModel(deckKey: deck.key), deck: deck)));
             }
           },
@@ -246,7 +246,7 @@ class DeckListItem extends StatelessWidget {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) => CreateUpdateCard(
+                  builder: (context) => CardCreateUpdate(
                         card: CardModel(deckKey: deck.key),
                         deck: deck,
                       )));
@@ -260,7 +260,7 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => CardsListPage(
+              builder: (context) => CardsList(
                     deck: deck,
                     allowEdit: allowEdit,
                   )),
@@ -271,7 +271,7 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) => DeckSettingsPage(deck)),
+              builder: (context) => DeckSettings(deck)),
         );
         break;
       case _DeckMenuItemType.share:
@@ -280,7 +280,7 @@ class DeckListItem extends StatelessWidget {
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharingPage(deck)),
+                builder: (context) => DeckSharing(deck)),
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),

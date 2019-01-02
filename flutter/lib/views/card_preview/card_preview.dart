@@ -1,11 +1,11 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_preview_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/helpers/card_background.dart';
-import 'package:delern_flutter/views/helpers/card_display.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/card_display_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +77,7 @@ class _CardPreviewState extends State<CardPreview> {
                 child: StreamBuilder<CardViewModel>(
                     stream: _cardPreviewBloc.cardStream,
                     initialData: _cardPreviewBloc.cardValue,
-                    builder: (context, snapshot) => CardDisplay(
+                    builder: (context, snapshot) => CardDisplayWidget(
                         front: snapshot.requireData.card.front,
                         back: snapshot.requireData.card.back,
                         showBack: true,
@@ -99,7 +99,7 @@ class _CardPreviewState extends State<CardPreview> {
                           // 'name' is used by Firebase Analytics to log events.
                           // TODO(dotdoom): consider better route names.
                           settings: const RouteSettings(name: '/cards/edit'),
-                          builder: (context) => CreateUpdateCard(
+                          builder: (context) => CardCreateUpdate(
                               card: widget.card, deck: widget.deck)));
                 } else {
                   UserMessages.showMessage(

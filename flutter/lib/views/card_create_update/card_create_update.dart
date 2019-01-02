@@ -3,27 +3,27 @@ import 'dart:async';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/card_create_update_view_model.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-class CreateUpdateCard extends StatefulWidget {
+class CardCreateUpdate extends StatefulWidget {
   final CardModel card;
   final DeckModel deck;
 
-  const CreateUpdateCard({@required this.card, @required this.deck})
+  const CardCreateUpdate({@required this.card, @required this.deck})
       : assert(card != null),
         assert(deck != null);
 
   @override
-  State<StatefulWidget> createState() => _CreateUpdateCardState();
+  State<StatefulWidget> createState() => _CardCreateUpdateState();
 }
 
-class _CreateUpdateCardState extends State<CreateUpdateCard> {
+class _CardCreateUpdateState extends State<CardCreateUpdate> {
   bool _addReversedCard = false;
   bool _isChanged = false;
   CardModel _cardModel;

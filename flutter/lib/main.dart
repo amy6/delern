@@ -5,9 +5,9 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:delern_flutter/views/decks_list/decks_list.dart';
-import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_widget.dart';
+import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_holder_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
-import 'package:delern_flutter/views/onboarding/intro_view.dart';
+import 'package:delern_flutter/views/onboarding/onboarding.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -38,13 +38,13 @@ class App extends StatelessWidget {
       navigatorObservers: [_analyticsNavigatorObserver],
       title: title,
       // SignInWidget must be above Navigator to provide CurrentUserWidget.of().
-      builder: (context, child) => OnboardingViewWidget(
+      builder: (context, child) => Onboarding(
           afterOnboardingBuilder: () => SignInWidget(
               afterSignInBuilder: () =>
                   ScheduledCardsBlocHolderWidget(child: child))),
       theme:
           ThemeData(primarySwatch: Colors.green, accentColor: Colors.redAccent),
-      home: DecksListPage(title: title),
+      home: DecksList(title: title),
     );
   }
 }

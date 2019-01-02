@@ -1,15 +1,15 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/card.dart' as card_model;
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/card_model.dart' as card_model;
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_list_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-class CreateDeck extends StatelessWidget {
-  const CreateDeck({Key key}) : super(key: key);
+class CreateDeckWidget extends StatelessWidget {
+  const CreateDeckWidget({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
@@ -36,7 +36,7 @@ class CreateDeck extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     settings: const RouteSettings(name: '/cards/new'),
-                    builder: (context) => CreateUpdateCard(
+                    builder: (context) => CardCreateUpdate(
                         card: card_model.CardModel(deckKey: newDeck.key),
                         deck: newDeck)));
           }

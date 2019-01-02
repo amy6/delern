@@ -4,12 +4,12 @@ import 'dart:collection';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/deck.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/learning_view_model.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
-import 'package:delern_flutter/views/helpers/card_background.dart';
-import 'package:delern_flutter/views/helpers/card_display.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
@@ -84,12 +84,12 @@ class CardsLearningState extends State<CardsLearning> {
         actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
-          ? HelperProgressIndicator()
+          ? ProgressIndicatorWidget()
           : Builder(
               builder: (context) => Column(
                     children: <Widget>[
                       Expanded(
-                          child: CardDisplay(
+                          child: CardDisplayWidget(
                         front: _viewModel.card.front,
                         back: _viewModel.card.back ?? '',
                         showBack: _isBackShown,
@@ -194,7 +194,7 @@ class CardsLearningState extends State<CardsLearning> {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/edit'),
-                  builder: (context) => CreateUpdateCard(
+                  builder: (context) => CardCreateUpdate(
                         card: _viewModel.card,
                         deck: widget.deck,
                       )));

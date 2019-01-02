@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/models/card.dart';
-import 'package:delern_flutter/models/card_view.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/deck_access.dart';
-import 'package:delern_flutter/models/scheduled_card.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/card_reply_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 
 class DeckViewModel {
@@ -27,7 +27,7 @@ class DeckViewModel {
     t
       ..deleteAll(ScheduledCardModel(deckKey: deck.key, uid: deck.uid))
       ..deleteAll(
-          CardViewModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
+          CardReplyModel(uid: deck.uid, deckKey: deck.key, cardKey: null));
     await t.commit();
   }
 

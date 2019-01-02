@@ -4,15 +4,15 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
-import 'package:delern_flutter/views/helpers/empty_list_message.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 
-class ObservingGrid<T extends KeyedListItem> extends StatefulWidget {
-  const ObservingGrid({
+class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
+  const ObservingGridWidget({
     @required this.items,
     @required this.itemBuilder,
     @required this.maxCrossAxisExtent,
@@ -27,11 +27,11 @@ class ObservingGrid<T extends KeyedListItem> extends StatefulWidget {
   final String emptyGridUserMessage;
 
   @override
-  ObservingGridState<T> createState() => ObservingGridState<T>();
+  ObservingGridWidgetState<T> createState() => ObservingGridWidgetState<T>();
 }
 
-class ObservingGridState<T extends KeyedListItem>
-    extends State<ObservingGrid<T>> {
+class ObservingGridWidgetState<T extends KeyedListItem>
+    extends State<ObservingGridWidget<T>> {
   StreamSubscription<ListEvent<T>> _listSubscription;
 
   @override
@@ -51,11 +51,11 @@ class ObservingGridState<T extends KeyedListItem>
   @override
   Widget build(BuildContext context) {
     if (widget.items.value == null) {
-      return HelperProgressIndicator();
+      return ProgressIndicatorWidget();
     }
 
     if (widget.items.value.isEmpty) {
-      return EmptyListMessage(widget.emptyGridUserMessage);
+      return EmptyListMessageWidget(widget.emptyGridUserMessage);
     }
 
     return Column(

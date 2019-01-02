@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:meta/meta.dart';
 
-class CardViewModel implements Model {
+class CardReplyModel implements Model {
   String uid;
   String deckKey;
   String cardKey;
@@ -12,7 +12,7 @@ class CardViewModel implements Model {
   bool reply;
   DateTime timestamp;
 
-  CardViewModel(
+  CardReplyModel(
       {@required this.uid, @required this.deckKey, @required this.cardKey})
       : assert(uid != null),
         assert(deckKey != null) {

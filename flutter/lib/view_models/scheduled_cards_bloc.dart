@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/database_list_event.dart';
-import 'package:delern_flutter/models/scheduled_card.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 
 class ScheduledCardsBloc {
   final String uid;

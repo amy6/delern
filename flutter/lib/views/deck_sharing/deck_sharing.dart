@@ -4,29 +4,29 @@ import 'dart:io';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
-import 'package:delern_flutter/views/helpers/empty_list_message.dart';
-import 'package:delern_flutter/views/helpers/helper_progress_indicator.dart';
-import 'package:delern_flutter/views/helpers/observing_animated_list.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/send_invite.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-class DeckSharingPage extends StatefulWidget {
+class DeckSharing extends StatefulWidget {
   final DeckModel _deck;
 
-  const DeckSharingPage(this._deck);
+  const DeckSharing(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckSharingState();
 }
 
-class _DeckSharingState extends State<DeckSharingPage> {
+class _DeckSharingState extends State<DeckSharing> {
   final TextEditingController _textController = TextEditingController();
   AccessType _accessValue = AccessType.write;
 
@@ -76,7 +76,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
             hintText: AppLocalizations.of(context).emailAddressHint,
           ),
         ),
-        trailing: DeckAccessDropdown(
+        trailing: DeckAccessDropdownWidget(
           value: _accessValue,
           filter: (access) => access != AccessType.owner && access != null,
           valueChanged: (access) => setState(() {
@@ -165,13 +165,13 @@ class _DeckUsersState extends State<DeckUsersWidget> {
             ),
           ),
           Expanded(
-            child: ObservingAnimatedList(
+            child: ObservingAnimatedListWidget(
               list: _deckAccessesViewModel.list,
               itemBuilder: (context, item, animation, index) => SizeTransition(
                     child: _buildUserAccessInfo(item),
                     sizeFactor: animation,
                   ),
-              emptyMessageBuilder: () => EmptyListMessage(
+              emptyMessageBuilder: () => EmptyListMessageWidget(
                   AppLocalizations.of(context).emptyUserSharingList),
             ),
           ),
@@ -195,12 +195,12 @@ class _DeckUsersState extends State<DeckUsersWidget> {
               backgroundImage: NetworkImage(accessViewModel.photoUrl),
             ),
       title: displayName == null
-          ? HelperProgressIndicator()
+          ? ProgressIndicatorWidget()
           : Text(
               displayName,
               style: AppStyles.primaryText,
             ),
-      trailing: DeckAccessDropdown(
+      trailing: DeckAccessDropdownWidget(
         value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {

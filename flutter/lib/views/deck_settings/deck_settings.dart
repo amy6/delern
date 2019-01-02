@@ -1,24 +1,24 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_view_model.dart';
-import 'package:delern_flutter/views/deck_settings/deck_type_dropdown.dart';
+import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-class DeckSettingsPage extends StatefulWidget {
+class DeckSettings extends StatefulWidget {
   final DeckModel _deck;
 
-  const DeckSettingsPage(this._deck);
+  const DeckSettings(this._deck);
 
   @override
-  State<StatefulWidget> createState() => _DeckSettingsPageState();
+  State<StatefulWidget> createState() => _DeckSettingsState();
 }
 
-class _DeckSettingsPageState extends State<DeckSettingsPage> {
+class _DeckSettingsState extends State<DeckSettings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
@@ -122,7 +122,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  DeckTypeDropdown(
+                  DeckTypeDropdownWidget(
                     value: _viewModel.deck.type,
                     valueChanged: (newDeckType) => setState(() {
                           _isDeckChanged = true;

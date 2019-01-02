@@ -1,4 +1,4 @@
-import 'package:delern_flutter/views/helpers/card_background.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
 import 'package:flutter/material.dart';
 
 class AppStyles {

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/transaction.dart';
-import 'package:delern_flutter/models/deck.dart';
-import 'package:delern_flutter/models/deck_access.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
 import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
