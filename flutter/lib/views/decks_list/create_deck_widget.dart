@@ -3,7 +3,7 @@ import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart' as card_model;
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/deck_list_view_model.dart';
+import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class CreateDeckWidget extends StatelessWidget {
             try {
               // TODO(dotdoom): pass DeckAccess as a second parameter, with
               // email, displayName and photoUrl filled in.
-              await DeckListViewModel.createDeck(
+              await DecksListBloc.createDeck(
                   newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
               UserMessages.showError(() => Scaffold.of(context), e, stackTrace);

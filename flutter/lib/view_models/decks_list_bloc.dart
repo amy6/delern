@@ -1,7 +1,14 @@
 import 'dart:async';
 
 import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 
 class NumberOfCardsDue {
   int get value => _value;
@@ -29,13 +36,36 @@ class DecksListBloc {
   final String uid;
 
   DecksListBloc(this.uid) {
+    _decksProcessor = FilteredSortedKeyedListProcessor(
+        DatabaseListEventProcessor(() => DeckModel.getList(uid: uid)).list)
+      ..comparator = (d1, d2) => d1.key.compareTo(d2.key);
+
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.
-    Future.delayed(const Duration(milliseconds: 200), _initialLoad);
+    Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
 
-  void _initialLoad() {
+  ObservableKeyedList<DeckModel> get decksList => _decksProcessor.list;
+
+  Filter<DeckModel> get decksListFilter => _decksProcessor.filter;
+  set decksListFilter(Filter<DeckModel> newValue) =>
+      _decksProcessor.filter = newValue;
+
+  FilteredSortedKeyedListProcessor<DeckModel> _decksProcessor;
+
+  static Future<void> createDeck(DeckModel deck, String email) {
+    logDeckCreate();
+    return (Transaction()
+          ..save(deck..access = AccessType.owner)
+          ..save(DeckAccessModel(deckKey: deck.key)
+            ..key = deck.uid
+            ..access = AccessType.owner
+            ..email = email))
+        .commit();
+  }
+
+  void _loadScheduledCards() {
     ScheduledCardModel.listsForUser(uid).listen((event) {
       switch (event.eventType) {
         case ListEventType.itemAdded:
@@ -48,8 +78,8 @@ class DecksListBloc {
             // any cards left in a deck; once the user adds another card, we
             // will have to notify our subscribers, which will be gone if we
             // call close().
-            // TODO(dotdoom): consider listening to /decks/$uid to find out when
-            //                a deck is removed and resources can be released.
+            // TODO(dotdoom): consider using _processor to find out when a deck
+            //                is removed and resources can be released.
             _numberOfCardsDue[event.key]
               .._refreshTimer?.cancel()
               .._addValue(0);

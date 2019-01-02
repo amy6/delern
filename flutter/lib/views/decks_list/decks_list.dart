@@ -6,7 +6,7 @@ import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/deck_list_view_model.dart';
+import 'package:delern_flutter/view_models/decks_list_bloc.dart';
 import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
 import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
 import 'package:delern_flutter/views/cards_list/cards_list.dart';
@@ -16,7 +16,6 @@ import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
 import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
-import 'package:delern_flutter/views/helpers/scheduled_cards_bloc_holder_widget.dart';
 import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
@@ -93,21 +92,31 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
 }
 
 class DecksListState extends State<DecksList> {
-  DeckListViewModel viewModel;
+  DecksListBloc _bloc;
 
   @override
   void didChangeDependencies() {
-    viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid);
+    final uid = CurrentUserWidget.of(context).user.uid;
+    if (_bloc?.uid != uid) {
+      _bloc?.dispose();
+      _bloc = DecksListBloc(uid);
+    }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _bloc?.dispose();
+    super.dispose();
   }
 
   void setFilter(String input) {
     if (input == null) {
-      viewModel.filter = null;
+      _bloc.decksListFilter = null;
       return;
     }
     input = input.toLowerCase();
-    viewModel.filter = (d) =>
+    _bloc.decksListFilter = (d) =>
         // Case insensitive filter
         d.name.toLowerCase().contains(input);
   }
@@ -119,9 +128,9 @@ class DecksListState extends State<DecksList> {
         appBar: SearchBarWidget(title: widget.title, search: setFilter),
         drawer: NavigationDrawer(),
         body: ObservingAnimatedListWidget(
-          list: viewModel.list,
+          list: _bloc.decksList,
           itemBuilder: (context, item, animation, index) => SizeTransition(
-                child: DeckListItemWidget(item),
+                child: DeckListItemWidget(item, _bloc),
                 sizeFactor: animation,
               ),
           emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
@@ -135,8 +144,9 @@ class DecksListState extends State<DecksList> {
 
 class DeckListItemWidget extends StatelessWidget {
   final DeckModel deck;
+  final DecksListBloc bloc;
 
-  const DeckListItemWidget(this.deck);
+  const DeckListItemWidget(this.deck, this.bloc);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -197,18 +207,15 @@ class DeckListItemWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildNumberOfCards(BuildContext context) {
-    final bloc = ScheduledCardsBlocWidget.of(context).bloc;
-    return StreamBuilder<int>(
-      key: Key(deck.key),
-      initialData: bloc.numberOfCardsDue(deck.key).value,
-      stream: bloc.numberOfCardsDue(deck.key).stream,
-      builder: (context, snapshot) => Container(
-            child: Text((snapshot.data ?? 0).toString(),
-                style: AppStyles.primaryText),
-          ),
-    );
-  }
+  Widget _buildNumberOfCards(BuildContext context) => StreamBuilder<int>(
+        key: Key(deck.key),
+        initialData: bloc.numberOfCardsDue(deck.key).value,
+        stream: bloc.numberOfCardsDue(deck.key).stream,
+        builder: (context, snapshot) => Container(
+              child: Text(snapshot.data?.toString() ?? 'N/A',
+                  style: AppStyles.primaryText),
+            ),
+      );
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
