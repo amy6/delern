@@ -32,7 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "accountExistUserWarning": MessageLookupByLibrary.simpleMessage(
             "You already have an account, please sign in with your credentials. All your data, that was created anonymously, will be lost. Would you like to continue?"),
         "add": MessageLookupByLibrary.simpleMessage("Add"),
+        "addCardTooltip": MessageLookupByLibrary.simpleMessage("Add Card"),
         "addCardsDeckMenu": MessageLookupByLibrary.simpleMessage("Add Cards"),
+        "addDeckTooltip": MessageLookupByLibrary.simpleMessage("Add Deck"),
         "anonymous": MessageLookupByLibrary.simpleMessage("Anonymous"),
         "appLogoName":
             MessageLookupByLibrary.simpleMessage("Delern Flashcards"),

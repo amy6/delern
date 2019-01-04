@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:flutter/material.dart';
-
-import '../flutter/localization.dart';
-import '../remote/error_reporting.dart';
 
 class UserMessages {
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,

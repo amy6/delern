@@ -1,18 +1,17 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:meta/meta.dart';
-
-import '../models/base/transaction.dart';
-import '../models/card.dart';
-import '../models/deck.dart';
-import '../models/scheduled_card.dart';
 
 class CardViewModel {
   CardModel card;
   DeckModel deck;
 
   CardViewModel({@required this.deck, this.card}) : assert(deck != null) {
-    card ??= CardModel();
+    card ??= CardModel(deckKey: deck.key);
   }
 
   CardViewModel._copyFrom(CardViewModel other)
@@ -58,7 +57,8 @@ class CardPreviewBloc {
     // TODO(dotdoom): move to models?
     (Transaction()
           ..delete(_cardValue.card)
-          ..delete(ScheduledCardModel(card: _cardValue.card, uid: uid)))
+          ..delete(ScheduledCardModel(deckKey: _cardValue.deck.key, uid: uid)
+            ..key = _cardValue.card.key))
         .commit();
   }
 }

@@ -1,23 +1,13 @@
 import 'dart:async';
 
-class StreamMuxerEvent<T> {
-  final T stream;
-  final dynamic value;
-
-  StreamMuxerEvent(this.stream, this.value);
-
-  @override
-  String toString() => '[muxed stream "$stream"]: $value';
-}
-
-class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
+class StreamMuxer<T> extends Stream<MapEntry<T, dynamic>> {
   final Map<T, Stream> streams;
 
-  StreamController<StreamMuxerEvent<T>> _controller;
+  StreamController<MapEntry<T, dynamic>> _controller;
   Map<T, StreamSubscription> _subscriptions;
 
   StreamMuxer(this.streams) {
-    _controller = StreamController<StreamMuxerEvent<T>>(
+    _controller = StreamController<MapEntry<T, dynamic>>(
       onCancel: _onCancel,
       onListen: _onListen,
       onPause: () => _subscriptions.values.forEach((s) => s.pause()),
@@ -26,8 +16,8 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
   }
 
   @override
-  StreamSubscription<StreamMuxerEvent<T>> listen(
-          void Function(StreamMuxerEvent<T> event) onData,
+  StreamSubscription<MapEntry<T, dynamic>> listen(
+          void Function(MapEntry<T, dynamic> event) onData,
           {Function onError,
           void Function() onDone,
           bool cancelOnError}) =>
@@ -38,11 +28,11 @@ class StreamMuxer<T> extends Stream<StreamMuxerEvent<T>> {
     _subscriptions = streams.map((key, stream) => MapEntry(
         key,
         stream.listen(
-          (evt) => _controller.add(StreamMuxerEvent<T>(key, evt)),
+          (evt) => _controller.add(MapEntry(key, evt)),
           // TODO(dotdoom): should we cancel only when all of them are done?
           onDone: _onCancel,
           onError: (err, stackTrace) =>
-              _controller.addError(StreamMuxerEvent<T>(key, err), stackTrace),
+              _controller.addError(MapEntry(key, err), stackTrace),
         )));
   }
 

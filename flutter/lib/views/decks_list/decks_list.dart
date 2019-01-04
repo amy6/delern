@@ -1,34 +1,34 @@
 import 'dart:collection';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/decks_list_bloc.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/cards_learning/cards_learning.dart';
+import 'package:delern_flutter/views/cards_list/cards_list.dart';
+import 'package:delern_flutter/views/deck_settings/deck_settings.dart';
+import 'package:delern_flutter/views/deck_sharing/deck_sharing.dart';
+import 'package:delern_flutter/views/decks_list/create_deck_widget.dart';
+import 'package:delern_flutter/views/decks_list/navigation_drawer.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck_access.dart';
-import '../../view_models/deck_list_view_model.dart';
-import '../../views/card_create_update/card_create_update.dart';
-import '../cards_learning/cards_learning.dart';
-import '../cards_list/cards_list.dart';
-import '../deck_settings/deck_settings.dart';
-import '../deck_sharing/deck_sharing.dart';
-import '../helpers/empty_list_message.dart';
-import '../helpers/observing_animated_list.dart';
-import '../helpers/search_bar.dart';
-import '../helpers/sign_in_widget.dart';
-import 'create_deck.dart';
-import 'navigation_drawer.dart';
-
-class DecksListPage extends StatefulWidget {
+class DecksList extends StatefulWidget {
   final String title;
 
-  const DecksListPage({@required this.title, Key key})
+  const DecksList({@required this.title, Key key})
       : assert(title != null),
         super(key: key);
 
   @override
-  DecksListPageState createState() => DecksListPageState();
+  DecksListState createState() => DecksListState();
 }
 
 class _ArrowToFloatingActionButton extends CustomPainter {
@@ -91,74 +91,62 @@ class ArrowToFloatingActionButtonWidget extends StatelessWidget {
           child: child));
 }
 
-class DecksListPageState extends State<DecksListPage> {
-  DeckListViewModel viewModel;
-  bool _active = false;
+class DecksListState extends State<DecksList> {
+  DecksListBloc _bloc;
 
   @override
   void didChangeDependencies() {
-    // TODO(dotdoom): find out deactivate/build/didChangeDependencies flow.
-    viewModel ??= DeckListViewModel(CurrentUserWidget.of(context).user.uid)
-      ..decks.comparator = (d1, d2) => d1.key.compareTo(d2.key);
+    final uid = CurrentUserWidget.of(context).user.uid;
+    if (_bloc?.uid != uid) {
+      _bloc?.dispose();
+      _bloc = DecksListBloc(uid);
+    }
     super.didChangeDependencies();
   }
 
   @override
-  void deactivate() {
-    viewModel.deactivate();
-    _active = false;
-    super.deactivate();
+  void dispose() {
+    _bloc?.dispose();
+    super.dispose();
   }
 
   void setFilter(String input) {
     if (input == null) {
-      viewModel.decks.filter = null;
+      _bloc.decksListFilter = null;
       return;
     }
     input = input.toLowerCase();
-    viewModel.decks.filter = (d) =>
+    _bloc.decksListFilter = (d) =>
         // Case insensitive filter
-        d.deck.name.toLowerCase().contains(input);
+        d.name.toLowerCase().contains(input);
   }
 
   GlobalKey fabKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
-    if (!_active) {
-      viewModel.activate();
-      _active = true;
-    }
-
-    return Scaffold(
-      appBar: SearchBarWidget(title: widget.title, search: setFilter),
-      drawer: NavigationDrawer(),
-      body: ObservingAnimatedList(
-        list: viewModel.decks,
-        itemBuilder: (context, item, animation, index) => SizeTransition(
-              child: DeckListItem(item),
-              sizeFactor: animation,
-            ),
-        emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-            fabKey: fabKey,
-            child:
-                EmptyListMessage(AppLocalizations.of(context).emptyDecksList)),
-      ),
-      floatingActionButton: CreateDeck(key: fabKey),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    viewModel.dispose();
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: SearchBarWidget(title: widget.title, search: setFilter),
+        drawer: NavigationDrawer(),
+        body: ObservingAnimatedListWidget(
+          list: _bloc.decksList,
+          itemBuilder: (context, item, animation, index) => SizeTransition(
+                child: DeckListItemWidget(item, _bloc),
+                sizeFactor: animation,
+              ),
+          emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+              fabKey: fabKey,
+              child: EmptyListMessageWidget(
+                  AppLocalizations.of(context).emptyDecksList)),
+        ),
+        floatingActionButton: CreateDeckWidget(key: fabKey),
+      );
 }
 
-class DeckListItem extends StatelessWidget {
-  final DeckListItemViewModel viewModel;
+class DeckListItemWidget extends StatelessWidget {
+  final DeckModel deck;
+  final DecksListBloc bloc;
 
-  const DeckListItem(this.viewModel);
+  const DeckListItemWidget(this.deck, this.bloc);
 
   @override
   Widget build(BuildContext context) => Column(
@@ -170,7 +158,7 @@ class DeckListItem extends StatelessWidget {
                 Expanded(
                   child: _buildDeckName(context),
                 ),
-                _buildNumberOfCards(),
+                _buildNumberOfCards(context),
                 _buildDeckMenu(context),
               ],
             ),
@@ -184,53 +172,42 @@ class DeckListItem extends StatelessWidget {
           splashColor: Theme.of(context).splashColor,
           onTap: () async {
             var anyCardsShown = await Navigator.push(
-              context,
-              MaterialPageRoute(
+                context,
+                MaterialPageRoute(
                   settings: const RouteSettings(name: '/decks/learn'),
-                  builder: (context) => CardsLearning(
-                        deck: viewModel.deck,
-                        allowEdit:
-                            // Not allow to edit or delete cards with read
-                            // access. If some error occurred when retrieving
-                            // DeckAccess and it is null access we still give
-                            // a try to edit for a user. If user doesn't have
-                            // permissions they will see "Permission denied".
-                            viewModel.access?.access != AccessType.read,
-                      )),
-            );
+                  // TODO(dotdoom): pass scheduled cards list to CardsLearning.
+                  builder: (context) => CardsLearning(deck: deck),
+                ));
             if (anyCardsShown == false) {
               // If deck is empty, open a screen with adding cards
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       settings: const RouteSettings(name: '/cards/new'),
-                      builder: (context) => CreateUpdateCard(
-                          card_model.Card(deck: viewModel.deck))));
+                      builder: (context) => CardCreateUpdate(
+                          card: CardModel(deckKey: deck.key), deck: deck)));
             }
           },
           child: Container(
             padding: const EdgeInsets.only(
                 top: 14.0, bottom: 14.0, left: 8.0, right: 8.0),
             child: Text(
-              viewModel.deck.name,
+              deck.name,
               style: AppStyles.primaryText,
             ),
           ),
         ),
       );
 
-  Widget _buildNumberOfCards() {
-    String numberOfCards;
-    if (viewModel.cardsToLearn != null &&
-        viewModel.cardsToLearn > viewModel.maxNumberOfCards) {
-      numberOfCards = '${viewModel.maxNumberOfCards}+';
-    } else {
-      numberOfCards = viewModel.cardsToLearn?.toString() ?? 'N/A';
-    }
-    return Container(
-      child: Text(numberOfCards, style: AppStyles.primaryText),
-    );
-  }
+  Widget _buildNumberOfCards(BuildContext context) => StreamBuilder<int>(
+        key: Key(deck.key),
+        initialData: bloc.numberOfCardsDue(deck.key).value,
+        stream: bloc.numberOfCardsDue(deck.key).stream,
+        builder: (context, snapshot) => Container(
+              child: Text(snapshot.data?.toString() ?? 'N/A',
+                  style: AppStyles.primaryText),
+            ),
+      );
 
   Widget _buildDeckMenu(BuildContext context) => Material(
         child: InkResponse(
@@ -260,7 +237,7 @@ class DeckListItem extends StatelessWidget {
     // we still give a try to edit for a user. If user
     // doesn't have permissions they will see "Permission
     // denied".
-    var allowEdit = viewModel.access?.access != AccessType.read;
+    var allowEdit = deck.access != AccessType.read;
     switch (item) {
       case _DeckMenuItemType.add:
         if (allowEdit) {
@@ -268,8 +245,10 @@ class DeckListItem extends StatelessWidget {
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/new'),
-                  builder: (context) =>
-                      CreateUpdateCard(card_model.Card(deck: viewModel.deck))));
+                  builder: (context) => CardCreateUpdate(
+                        card: CardModel(deckKey: deck.key),
+                        deck: deck,
+                      )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               AppLocalizations.of(context).noAddingWithReadAccessUserMessage);
@@ -280,8 +259,8 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/view'),
-              builder: (context) => CardsListPage(
-                    deck: viewModel.deck,
+              builder: (context) => CardsList(
+                    deck: deck,
                     allowEdit: allowEdit,
                   )),
         );
@@ -291,17 +270,16 @@ class DeckListItem extends StatelessWidget {
           context,
           MaterialPageRoute(
               settings: const RouteSettings(name: '/decks/settings'),
-              builder: (context) =>
-                  DeckSettingsPage(viewModel.deck, viewModel.access)),
+              builder: (context) => DeckSettings(deck)),
         );
         break;
       case _DeckMenuItemType.share:
-        if (viewModel.access.access == AccessType.owner) {
+        if (deck.access == AccessType.owner) {
           Navigator.push(
             context,
             MaterialPageRoute(
                 settings: const RouteSettings(name: '/decks/share'),
-                builder: (context) => DeckSharingPage(viewModel.deck)),
+                builder: (context) => DeckSharing(deck)),
           );
         } else {
           UserMessages.showMessage(Scaffold.of(context),

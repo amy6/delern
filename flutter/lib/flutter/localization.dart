@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:delern_flutter/l10n/messages_all.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-
-import '../l10n/messages_all.dart';
 
 /// https://flutter.io/tutorials/internationalization/
 class AppLocalizations {
@@ -516,6 +515,18 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         'Add Cards',
         name: 'addCardsDeckMenu',
         desc: 'Add Cards in Deck Menu',
+      );
+
+  String get addDeckTooltip => Intl.message(
+        'Add Deck',
+        name: 'addDeckTooltip',
+        desc: 'Add Deck',
+      );
+
+  String get addCardTooltip => Intl.message(
+        'Add Card',
+        name: 'addCardTooltip',
+        desc: 'Add Card',
       );
 }
 

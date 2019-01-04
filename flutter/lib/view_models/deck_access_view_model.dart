@@ -1,106 +1,33 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
+import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 
-import '../models/base/transaction.dart';
-import '../models/deck.dart';
-import '../models/deck_access.dart';
-import '../models/user.dart';
-import '../remote/analytics.dart';
-import 'base/activatable.dart';
-import 'base/proxy_keyed_list.dart';
-import 'base/view_models_list.dart';
+class DeckAccessesViewModel {
+  final DeckModel deck;
 
-class DeckAccessViewModel implements ListItemViewModel {
-  String get key => _deckAccess.key;
-  DeckAccess get deckAccess => _deckAccess;
-  User get user => _user;
-
-  DeckAccess _deckAccess;
-  User _user;
-
-  final ViewModelsList<DeckAccessViewModel> _owner;
-  StreamSubscription<User> _userUpdates;
-
-  DeckAccessViewModel(this._owner, this._deckAccess);
-
-  @override
-  DeckAccessViewModel updateWith(DeckAccessViewModel value) {
-    if (identical(this, value)) {
-      // This will happen when we sent an internal update event to the owner.
-      return this;
-    }
-
-    assert(_deckAccess.key == value._deckAccess.key,
-        'Attempting to absorb a deck with a different key');
-    _deckAccess = value._deckAccess;
-    return this;
+  DeckAccessesViewModel(this.deck) : assert(deck != null) {
+    _processor = FilteredSortedKeyedListProcessor(DatabaseListEventProcessor(
+        () => DeckAccessModel.getList(deckKey: deck.key)).list)
+      ..comparator = (c1, c2) => c1.access.index.compareTo(c2.access.index);
   }
 
-  @override
-  @mustCallSuper
-  void activate() {
-    if (_userUpdates != null) {
-      // This item is already activated. This must normally be only a side
-      // effect of updateWith -> childUpdated cycle.
-      return;
-    }
+  ObservableKeyedList<DeckAccessModel> get list => _processor.list;
 
-    _userUpdates = _deckAccess.getUser().listen((user) {
-      this._user = user;
+  set filter(Filter<DeckAccessModel> newValue) => _processor.filter = newValue;
+  Filter<DeckAccessModel> get filter => _processor.filter;
 
-      // Send event to the owner list so that it can find our index
-      // and notify subscribers.
-      _owner.childUpdated(this);
-    });
-  }
+  FilteredSortedKeyedListProcessor<DeckAccessModel> _processor;
 
-  @override
-  @mustCallSuper
-  void deactivate() {
-    _userUpdates?.cancel();
-    _userUpdates = null;
-  }
+  static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) async {
+    assert(deck.key == access.deckKey);
 
-  @override
-  String toString() => '#$key ${_deckAccess.access} $_user';
-}
-
-class DeckAccessesViewModel implements Activatable {
-  final Deck deck;
-
-  ViewModelsList<DeckAccessViewModel> _deckAccessViewModels;
-  ProxyKeyedList<DeckAccessViewModel> _deckAccessesProxy;
-
-  ProxyKeyedList<DeckAccessViewModel> get deckAccesses =>
-      _deckAccessesProxy ??= ProxyKeyedList(_deckAccessViewModels);
-
-  DeckAccessesViewModel(this.deck) {
-    _deckAccessViewModels = ViewModelsList<DeckAccessViewModel>(() =>
-        DeckAccess.getDeckAccesses(deck).map((deckAccessEvent) =>
-            deckAccessEvent.map((deckAccess) =>
-                DeckAccessViewModel(_deckAccessViewModels, deckAccess))));
-  }
-
-  @override
-  @mustCallSuper
-  void deactivate() => _deckAccessViewModels.deactivate();
-
-  @override
-  @mustCallSuper
-  void activate() {
-    deactivate();
-    _deckAccessViewModels.activate();
-  }
-
-  @mustCallSuper
-  void dispose() {
-    deactivate();
-    _deckAccessesProxy?.dispose();
-  }
-
-  static Future<void> shareDeck(DeckAccess access) async {
-    logShare(access.deck.key);
+    logShare(access.deckKey);
     var tr = Transaction();
 
     if (access.access == null) {
@@ -108,19 +35,15 @@ class DeckAccessesViewModel implements Activatable {
     }
 
     tr.save(access);
-    if ((await DeckAccess.fetch(access.deck, access.uid)).key == null) {
+    if ((await DeckAccessModel.get(deckKey: access.deckKey, key: access.key)
+                .first)
+            .key ==
+        null) {
       // If there's no DeckAccess, assume the deck hasn't been shared yet.
-      tr.save(Deck(
-          uid: access.key,
-          name: access.deck.name,
-          accepted: false,
-          markdown: access.deck.markdown,
-          type: access.deck.type,
-          category: access.deck.category,
-          access: access.access)
-        ..key = access.deck.key);
-    } else {
-      access.updateAccessFieldInDeck = true;
+      tr.save(DeckModel.copyFrom(deck)
+        ..uid = access.key
+        ..accepted = false
+        ..access = access.access);
     }
 
     return tr.commit();

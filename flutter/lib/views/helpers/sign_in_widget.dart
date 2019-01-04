@@ -1,23 +1,22 @@
+import 'package:delern_flutter/flutter/device_info.dart';
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/fcm.dart';
+import 'package:delern_flutter/remote/auth.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/device_info.dart';
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../models/base/transaction.dart';
-import '../../models/fcm.dart';
-import '../../models/user.dart' as user_model;
-import '../../remote/auth.dart';
-import '../../remote/error_reporting.dart';
-import 'helper_progress_indicator.dart';
-
 final _firebaseMessaging = FirebaseMessaging();
 
 class SignInWidget extends StatefulWidget {
-  final Widget child;
+  final Widget Function() afterSignInBuilder;
 
-  const SignInWidget({this.child});
+  const SignInWidget({@required this.afterSignInBuilder})
+      : assert(afterSignInBuilder != null);
 
   @override
   State<StatefulWidget> createState() => _SignInWidgetState();
@@ -37,28 +36,24 @@ class _SignInWidgetState extends State<SignInWidget> {
       if (Auth.instance.currentUser != null) {
         ErrorReporting.uid = Auth.instance.currentUser.uid;
 
-        if (!Auth.instance.currentUser.isAnonymous) {
-          // Don't wait for FCM token to save User.
-          Transaction()
-            ..save(user_model.User.fromAuth(Auth.instance.currentUser))
-            ..commit();
-        }
-
         FirebaseAnalytics()
           ..setUserId(Auth.instance.currentUser.uid)
           ..logLogin();
 
         _firebaseMessaging.onTokenRefresh.listen((token) async {
-          var fcm = FCM(
-              uid: Auth.instance.currentUser.uid,
-              language: Localizations.localeOf(context).toString(),
-              name: (await DeviceInfo.getDeviceInfo()).userFriendlyName)
+          var fcm = FCM(uid: Auth.instance.currentUser.uid)
+            ..language = Localizations.localeOf(context).toString()
+            ..name = (await DeviceInfo.getDeviceInfo()).userFriendlyName
             ..key = token;
 
           print('Registering for FCM as ${fcm.name} in ${fcm.language}');
           (Transaction()..save(fcm)).commit();
         });
 
+        // Notifications permission dialog on iOS is definitive: if the user
+        // declines, there's no way to ask confirmation again.
+        // TODO(dotdoom): avoid asking when the app installs (useless).
+        // TODO(dotdoom): present a custom dialog first, and then iOS.
         _firebaseMessaging
           ..requestNotificationPermissions()
           // TODO(dotdoom): register onMessage to show a snack bar with
@@ -79,10 +74,10 @@ class _SignInWidgetState extends State<SignInWidget> {
   Widget build(BuildContext context) {
     if (Auth.instance.currentUser != null) {
       return CurrentUserWidget(
-          user: Auth.instance.currentUser, child: widget.child);
+          user: Auth.instance.currentUser, child: widget.afterSignInBuilder());
     }
     if (!Auth.instance.authStateKnown) {
-      return HelperProgressIndicator();
+      return ProgressIndicatorWidget();
     }
 
     return Scaffold(

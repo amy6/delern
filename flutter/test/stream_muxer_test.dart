@@ -24,11 +24,11 @@ void main() {
     });
 
     final events = await muxer.toList();
-    expect(events[0].stream, 'foo');
+    expect(events[0].key, 'foo');
     expect(events[0].value, 'bar');
-    expect(events[1].stream, 1);
+    expect(events[1].key, 1);
     expect(events[1].value, 42.0);
-    expect(events[2].toString(), '[muxed stream "foo"]: baz');
+    expect(events[2].toString(), 'MapEntry(foo: baz)');
   });
 
   test('processes errors', () async {
@@ -41,9 +41,9 @@ void main() {
     var caught = false;
     try {
       await muxer.first;
-    } on StreamMuxerEvent catch (e, stackTrace) {
+    } on MapEntry catch (e, stackTrace) {
       expect(stackTrace, isNotNull);
-      expect(e.stream, 'test');
+      expect(e.key, 'test');
       expect(e.value.toString(), 'Exception: nope!');
       caught = true;
     }

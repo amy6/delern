@@ -1,27 +1,29 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/card_create_update_view_model.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart';
-import '../../models/card.dart' as card_model;
-import '../../view_models/card_create_update_view_model.dart';
-import '../../views/helpers/sign_in_widget.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/slow_operation_widget.dart';
+class CardCreateUpdate extends StatefulWidget {
+  final CardModel card;
+  final DeckModel deck;
 
-class CreateUpdateCard extends StatefulWidget {
-  final card_model.Card _card;
-
-  const CreateUpdateCard(this._card);
+  const CardCreateUpdate({@required this.card, @required this.deck})
+      : assert(card != null),
+        assert(deck != null);
 
   @override
-  State<StatefulWidget> createState() => _CreateUpdateCardState();
+  State<StatefulWidget> createState() => _CardCreateUpdateState();
 }
 
-class _CreateUpdateCardState extends State<CreateUpdateCard> {
+class _CardCreateUpdateState extends State<CardCreateUpdate> {
   bool _addReversedCard = false;
   bool _isChanged = false;
   CardModel _cardModel;
@@ -33,7 +35,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
   @override
   void initState() {
     super.initState();
-    _cardModel = CardModel.copyFromLegacy(widget._card);
+    _cardModel = widget.card;
 
     if (_cardModel.key != null) {
       _frontTextController.text = _cardModel.front;
@@ -71,11 +73,11 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
       );
 
   Widget _buildAppBar() => AppBar(
-        // TODO(ksheremet): Consider to add name of deck in CardModel
-        title: Text(widget._card.deck.name),
+        title: Text(widget.deck.name),
         actions: <Widget>[
           _cardModel.key == null
               ? SlowOperationWidget((cb) => IconButton(
+                  tooltip: AppLocalizations.of(context).addCardTooltip,
                   icon: const Icon(Icons.check),
                   onPressed: _isCardValid() ? cb(_addCard) : null))
               : SlowOperationWidget((cb) => FlatButton(
@@ -134,6 +136,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
     List<Widget> widgetsList = [
       // TODO(ksheremet): limit lines in TextField
       TextField(
+        key: const Key('frontCardInput'),
         autofocus: true,
         focusNode: _frontSideFocus,
         maxLines: null,
@@ -149,6 +152,7 @@ class _CreateUpdateCardState extends State<CreateUpdateCard> {
             hintText: AppLocalizations.of(context).frontSideHint),
       ),
       TextField(
+        key: const Key('backCardInput'),
         maxLines: null,
         keyboardType: TextInputType.multiline,
         controller: _backTextController,

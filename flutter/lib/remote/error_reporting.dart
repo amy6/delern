@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sentry/sentry.dart';
-
-import '../flutter/device_info.dart';
 
 // Error reporting inspired by https://github.com/yjbanov/crashy/.
 

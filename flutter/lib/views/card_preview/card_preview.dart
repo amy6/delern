@@ -1,23 +1,24 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/card_preview_bloc.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/card_preview_bloc.dart';
-import '../../views/helpers/card_background.dart';
-import '../../views/helpers/sign_in_widget.dart';
-import '../card_create_update/card_create_update.dart';
-import '../helpers/card_display.dart';
-import '../helpers/save_updates_dialog.dart';
-
 class CardPreview extends StatefulWidget {
-  final card_model.Card card;
+  final CardModel card;
+  final DeckModel deck;
   final bool allowEdit;
 
-  const CardPreview({@required this.card, @required this.allowEdit})
+  const CardPreview(
+      {@required this.card, @required this.deck, @required this.allowEdit})
       : assert(card != null),
+        assert(deck != null),
         assert(allowEdit != null);
 
   @override
@@ -31,9 +32,7 @@ class _CardPreviewState extends State<CardPreview> {
   void initState() {
     super.initState();
     // TODO(dotdoom): replace with a simple assignment.
-    _cardPreviewBloc = CardPreviewBloc(
-        card: CardModel.copyFromLegacy(widget.card),
-        deck: DeckModel.copyFromLegacy(widget.card.deck));
+    _cardPreviewBloc = CardPreviewBloc(card: widget.card, deck: widget.deck);
   }
 
   @override
@@ -78,7 +77,7 @@ class _CardPreviewState extends State<CardPreview> {
                 child: StreamBuilder<CardViewModel>(
                     stream: _cardPreviewBloc.cardStream,
                     initialData: _cardPreviewBloc.cardValue,
-                    builder: (context, snapshot) => CardDisplay(
+                    builder: (context, snapshot) => CardDisplayWidget(
                         front: snapshot.requireData.card.front,
                         back: snapshot.requireData.card.back,
                         showBack: true,
@@ -100,7 +99,8 @@ class _CardPreviewState extends State<CardPreview> {
                           // 'name' is used by Firebase Analytics to log events.
                           // TODO(dotdoom): consider better route names.
                           settings: const RouteSettings(name: '/cards/edit'),
-                          builder: (context) => CreateUpdateCard(widget.card)));
+                          builder: (context) => CardCreateUpdate(
+                              card: widget.card, deck: widget.deck)));
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),

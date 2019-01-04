@@ -1,66 +1,24 @@
-import 'dart:async';
-
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 import 'package:meta/meta.dart';
 
-import '../models/card.dart';
-import '../models/deck.dart';
-import 'base/activatable.dart';
-import 'base/proxy_keyed_list.dart';
-import 'base/view_models_list.dart';
+class CardListViewModel {
+  final String deckKey;
 
-class CardListItemViewModel implements ListItemViewModel {
-  String get key => _card?.key;
-  Card get card => _card;
-  Card _card;
+  ObservableKeyedList<CardModel> get list => _processor.list;
 
-  CardListItemViewModel(this._card);
+  set filter(Filter<CardModel> newValue) => _processor.filter = newValue;
+  Filter<CardModel> get filter => _processor.filter;
 
-  @override
-  CardListItemViewModel updateWith(CardListItemViewModel value) => value;
+  FilteredSortedKeyedListProcessor<CardModel> _processor;
 
-  @override
-  @mustCallSuper
-  void activate() {}
-
-  @override
-  @mustCallSuper
-  void deactivate() {}
-
-  @override
-  String toString() => _card?.toString();
-}
-
-class CardListViewModel implements Activatable {
-  final Deck deck;
-
-  ViewModelsList<CardListItemViewModel> _cardViewModels;
-  ProxyKeyedList<CardListItemViewModel> _cardsProxy;
-
-  ProxyKeyedList<CardListItemViewModel> get cards =>
-      _cardsProxy ??= ProxyKeyedList(_cardViewModels);
-
-  CardListViewModel(this.deck) {
-    _cardViewModels = ViewModelsList<CardListItemViewModel>(() =>
-        Card.getCards(deck).map((cardEvent) =>
-            cardEvent.map((card) => CardListItemViewModel(card))));
+  CardListViewModel({@required this.deckKey}) : assert(deckKey != null) {
+    _processor = FilteredSortedKeyedListProcessor(
+        DatabaseListEventProcessor(() => CardModel.getList(deckKey: deckKey))
+            .list)
+      ..comparator =
+          (c1, c2) => c1.front.toLowerCase().compareTo(c2.front.toLowerCase());
   }
-
-  @override
-  @mustCallSuper
-  void deactivate() => _cardViewModels.deactivate();
-
-  @override
-  @mustCallSuper
-  void activate() {
-    deactivate();
-    _cardViewModels.activate();
-  }
-
-  @mustCallSuper
-  void dispose() {
-    deactivate();
-    _cardsProxy?.dispose();
-  }
-
-  Stream<void> get updates => deck.updates;
 }

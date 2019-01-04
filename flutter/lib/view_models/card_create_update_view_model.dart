@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
-
-import '../models/base/transaction.dart';
-import '../models/card.dart';
-import '../models/scheduled_card.dart';
-import '../remote/analytics.dart';
 
 class CardCreateUpdateViewModel {
   static Future<void> saveCard(
@@ -13,15 +12,21 @@ class CardCreateUpdateViewModel {
       @required String uid,
       bool addReverse = false}) {
     logCardCreate(card.deckKey);
-    final sCard = ScheduledCardModel(card: card, uid: uid);
 
-    var t = Transaction()..save(card)..save(sCard);
+    var t = Transaction()..save(card);
+    final sCard = ScheduledCardModel(deckKey: card.deckKey, uid: uid)
+      ..key = card.key;
+    t.save(sCard);
+
     if (addReverse) {
       var reverse = CardModel.copyFrom(card)
+        ..key = null
         ..front = card.back
         ..back = card.front;
-      var reverseScCard = ScheduledCardModel(card: reverse, uid: uid);
-      t..save(reverse)..save(reverseScCard);
+      t.save(reverse);
+      var reverseScCard = ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
+        ..key = reverse.key;
+      t.save(reverseScCard);
     }
     return t.commit();
   }

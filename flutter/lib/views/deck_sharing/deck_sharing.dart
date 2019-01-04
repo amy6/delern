@@ -1,33 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/user_lookup.dart';
+import 'package:delern_flutter/view_models/deck_access_view_model.dart';
+import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
+import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
+import 'package:delern_flutter/views/helpers/observing_animated_list_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/send_invite.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../models/deck_access.dart';
-import '../../remote/user_lookup.dart';
-import '../../view_models/deck_access_view_model.dart';
-import '../../views/helpers/slow_operation_widget.dart';
-import '../helpers/empty_list_message.dart';
-import '../helpers/helper_progress_indicator.dart';
-import '../helpers/observing_animated_list.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/send_invite.dart';
-import 'deck_access_dropdown.dart';
+class DeckSharing extends StatefulWidget {
+  final DeckModel _deck;
 
-class DeckSharingPage extends StatefulWidget {
-  final Deck _deck;
-
-  const DeckSharingPage(this._deck);
+  const DeckSharing(this._deck);
 
   @override
   State<StatefulWidget> createState() => _DeckSharingState();
 }
 
-class _DeckSharingState extends State<DeckSharingPage> {
+class _DeckSharingState extends State<DeckSharing> {
   final TextEditingController _textController = TextEditingController();
   AccessType _accessValue = AccessType.write;
 
@@ -77,7 +76,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
             hintText: AppLocalizations.of(context).emailAddressHint,
           ),
         ),
-        trailing: DeckAccessDropdown(
+        trailing: DeckAccessDropdownWidget(
           value: _accessValue,
           filter: (access) => access != AccessType.owner && access != null,
           valueChanged: (access) => setState(() {
@@ -99,11 +98,12 @@ class _DeckSharingState extends State<DeckSharingPage> {
         // Do not clear the field if user didn't send an invite.
         // Maybe user made a typo in email address and needs to correct it.
       } else {
-        await DeckAccessesViewModel.shareDeck(DeckAccess(
-            deck: widget._deck,
-            uid: uid,
-            access: deckAccess,
-            email: _textController.text.toString()));
+        await DeckAccessesViewModel.shareDeck(
+            DeckAccessModel(deckKey: widget._deck.key)
+              ..key = uid
+              ..access = deckAccess
+              ..email = _textController.text.toString(),
+            widget._deck);
       }
     } on SocketException catch (_) {
       UserMessages.showMessage(Scaffold.of(context),
@@ -133,7 +133,7 @@ class _DeckSharingState extends State<DeckSharingPage> {
 }
 
 class DeckUsersWidget extends StatefulWidget {
-  final Deck _deck;
+  final DeckModel _deck;
 
   const DeckUsersWidget(this._deck);
 
@@ -143,114 +143,73 @@ class DeckUsersWidget extends StatefulWidget {
 
 class _DeckUsersState extends State<DeckUsersWidget> {
   DeckAccessesViewModel _deckAccessesViewModel;
-  bool _active = false;
 
   @override
   void initState() {
     _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
-    _deckAccessesViewModel.deckAccesses.comparator = (a, b) {
-      if (a.deckAccess.access == b.deckAccess.access) {
-        // TODO(dotdoom): sort by display name once available.
-        return 0;
-      }
-
-      switch (a.deckAccess.access) {
-        case AccessType.owner:
-          return -1;
-        case AccessType.write:
-          return b.deckAccess.access == AccessType.owner ? 1 : -1;
-        default:
-          return 1;
-      }
-    };
     super.initState();
   }
 
   @override
-  void deactivate() {
-    _deckAccessesViewModel.deactivate();
-    _active = false;
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _deckAccessesViewModel.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_active) {
-      _deckAccessesViewModel.activate();
-      _active = true;
-    }
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-          child: Row(
-            children: <Widget>[
-              Text(
-                AppLocalizations.of(context).whoHasAccessLabel,
-                style: AppStyles.secondaryText,
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ObservingAnimatedList(
-            list: _deckAccessesViewModel.deckAccesses,
-            itemBuilder: (context, item, animation, index) => SizeTransition(
-                  child: _buildUserAccessInfo(item),
-                  sizeFactor: animation,
+  Widget build(BuildContext context) => Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context).whoHasAccessLabel,
+                  style: AppStyles.secondaryText,
                 ),
-            emptyMessageBuilder: () => EmptyListMessage(
-                AppLocalizations.of(context).emptyUserSharingList),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
+          Expanded(
+            child: ObservingAnimatedListWidget(
+              list: _deckAccessesViewModel.list,
+              itemBuilder: (context, item, animation, index) => SizeTransition(
+                    child: _buildUserAccessInfo(item),
+                    sizeFactor: animation,
+                  ),
+              emptyMessageBuilder: () => EmptyListMessageWidget(
+                  AppLocalizations.of(context).emptyUserSharingList),
+            ),
+          ),
+        ],
+      );
 
-  Widget _buildUserAccessInfo(DeckAccessViewModel accessViewModel) {
+  Widget _buildUserAccessInfo(DeckAccessModel accessViewModel) {
     Function filter;
-    if (accessViewModel.deckAccess.access == AccessType.owner) {
+    if (accessViewModel.access == AccessType.owner) {
       filter = (access) => access == AccessType.owner;
     } else {
       filter = (access) => access != AccessType.owner;
     }
 
-    final displayName = accessViewModel.deckAccess.displayName ??
-        accessViewModel.deckAccess.email ??
-        accessViewModel.user?.name;
+    final displayName = accessViewModel.displayName ?? accessViewModel.email;
 
     return ListTile(
-      leading: (accessViewModel.deckAccess.photoUrl == null)
-          ? (accessViewModel.user == null)
-              ? null
-              : CircleAvatar(
-                  backgroundImage: NetworkImage(accessViewModel.user.photoUrl),
-                )
+      leading: (accessViewModel.photoUrl == null)
+          ? null
           : CircleAvatar(
-              backgroundImage:
-                  NetworkImage(accessViewModel.deckAccess.photoUrl),
+              backgroundImage: NetworkImage(accessViewModel.photoUrl),
             ),
       title: displayName == null
-          ? HelperProgressIndicator()
+          ? ProgressIndicatorWidget()
           : Text(
               displayName,
               style: AppStyles.primaryText,
             ),
-      trailing: DeckAccessDropdown(
-        value: accessViewModel.deckAccess.access,
+      trailing: DeckAccessDropdownWidget(
+        value: accessViewModel.access,
         filter: filter,
         valueChanged: (access) => setState(() {
-              DeckAccessesViewModel.shareDeck(DeckAccess(
-                  deck: _deckAccessesViewModel.deck,
-                  uid: accessViewModel.deckAccess.uid,
-                  email: accessViewModel.deckAccess.email,
-                  access: access));
+              DeckAccessesViewModel.shareDeck(
+                  DeckAccessModel(deckKey: _deckAccessesViewModel.deck.key)
+                    ..key = accessViewModel.key
+                    ..email = accessViewModel.email
+                    ..access = access,
+                  _deckAccessesViewModel.deck);
             }),
       ),
     );

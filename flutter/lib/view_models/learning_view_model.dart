@@ -1,13 +1,12 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/stream_muxer.dart';
+import 'package:delern_flutter/models/base/transaction.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/models/scheduled_card_model.dart';
+import 'package:delern_flutter/remote/analytics.dart';
 import 'package:meta/meta.dart';
-
-import '../models/base/stream_muxer.dart';
-import '../models/base/transaction.dart';
-import '../models/card.dart';
-import '../models/deck.dart';
-import '../models/scheduled_card.dart';
-import '../remote/analytics.dart';
 
 enum LearningUpdateType {
   deckUpdate,
@@ -15,29 +14,33 @@ enum LearningUpdateType {
 }
 
 class LearningViewModel {
-  ScheduledCard _scheduledCard;
+  ScheduledCardModel get scheduledCard => _scheduledCard;
+  ScheduledCardModel _scheduledCard;
 
-  ScheduledCard get scheduledCard => _scheduledCard;
-  Card get card => _scheduledCard?.card;
+  CardModel get card => _card;
+  CardModel _card;
 
-  final Deck deck;
-  final bool allowEdit;
+  DeckModel get deck => _deck;
+  DeckModel _deck;
 
-  LearningViewModel({@required this.deck, @required this.allowEdit});
+  LearningViewModel({@required DeckModel deck})
+      : assert(deck != null),
+        _deck = deck;
 
   Stream<LearningUpdateType> get updates {
     logStartLearning(deck.key);
     return StreamMuxer({
-      LearningUpdateType.deckUpdate: deck.updates,
-      LearningUpdateType.scheduledCardUpdate: ScheduledCard.next(deck)
-          .transform(StreamTransformer.fromHandlers(handleData: (sc, sink) {
-        _scheduledCard = sc;
-        sink.add(null);
-      })),
+      LearningUpdateType.deckUpdate:
+          DeckModel.get(key: deck.key, uid: deck.uid).map((d) => _deck = d),
+      LearningUpdateType.scheduledCardUpdate:
+          ScheduledCardModel.next(deck).map((casc) {
+        _card = casc.card;
+        _scheduledCard = casc.scheduledCard;
+      }),
       // We deliberately do not subscribe to Card updates (i.e. we only watch
       // ScheduledCard). If the card that the user is looking at right now is
       // updated live, it can result in bad user experience.
-    }).map((muxerEvent) => muxerEvent.stream);
+    }).map((muxerEvent) => muxerEvent.key);
   }
 
   Future<void> answer(bool knows, bool learnBeyondHorizon) {

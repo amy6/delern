@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
+import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../../models/base/observable_list.dart';
-import 'helper_progress_indicator.dart';
-
-typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
+typedef ObservingAnimatedListItemBuilder<T extends KeyedListItem> = Widget
+    Function(
   BuildContext context,
   T item,
   Animation<double> animation,
@@ -15,8 +18,9 @@ typedef ObservingAnimatedListItemBuilder<T> = Widget Function(
 
 typedef WidgetBuilder = Widget Function();
 
-class ObservingAnimatedList<T> extends StatefulWidget {
-  const ObservingAnimatedList({
+class ObservingAnimatedListWidget<T extends KeyedListItem>
+    extends StatefulWidget {
+  const ObservingAnimatedListWidget({
     @required this.list,
     @required this.itemBuilder,
     @required this.emptyMessageBuilder,
@@ -24,16 +28,17 @@ class ObservingAnimatedList<T> extends StatefulWidget {
   })  : assert(itemBuilder != null),
         super(key: key);
 
-  final ObservableList<T> list;
+  final ObservableKeyedList<T> list;
   final ObservingAnimatedListItemBuilder<T> itemBuilder;
   final WidgetBuilder emptyMessageBuilder;
 
   @override
-  ObservingAnimatedListState<T> createState() =>
-      ObservingAnimatedListState<T>();
+  ObservingAnimatedListWidgetState<T> createState() =>
+      ObservingAnimatedListWidgetState<T>();
 }
 
-class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
+class ObservingAnimatedListWidgetState<T extends KeyedListItem>
+    extends State<ObservingAnimatedListWidget<T>> {
   final GlobalKey<AnimatedListState> _animatedListKey =
       GlobalKey<AnimatedListState>();
 
@@ -48,9 +53,12 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   @override
   void dispose() {
-    _listSubscription?.cancel();
+    _listSubscription.cancel();
     super.dispose();
   }
+
+  static const _defaultAnimationDuration = Duration(milliseconds: 300);
+  static const _filterAnimationDuration = Duration(milliseconds: 0);
 
   void _processListEvent(ListEvent<T> event) {
     if (_animatedListKey.currentState == null) {
@@ -63,13 +71,19 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
     switch (event.eventType) {
       case ListEventType.itemAdded:
-        _animatedListKey.currentState.insertItem(event.index);
+        _animatedListKey.currentState.insertItem(event.index,
+            duration: event.eventSource == FilteredSortedKeyedListProcessor
+                ? _filterAnimationDuration
+                : _defaultAnimationDuration);
         break;
       case ListEventType.itemRemoved:
         _animatedListKey.currentState.removeItem(
             event.index,
             (context, animation) => widget.itemBuilder(
-                context, event.previousValue, animation, event.index));
+                context, event.previousValue, animation, event.index),
+            duration: event.eventSource == FilteredSortedKeyedListProcessor
+                ? _filterAnimationDuration
+                : _defaultAnimationDuration);
         break;
       case ListEventType.setAll:
       // Note: number of items must not change here (unless it's the first
@@ -83,22 +97,22 @@ class ObservingAnimatedListState<T> extends State<ObservingAnimatedList<T>> {
 
   Widget _buildItem(
           BuildContext context, int index, Animation<double> animation) =>
-      widget.itemBuilder(context, widget.list[index], animation, index);
+      widget.itemBuilder(context, widget.list.value[index], animation, index);
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.list.changed) {
-      return HelperProgressIndicator();
+    if (widget.list == null || widget.list.value == null) {
+      return ProgressIndicatorWidget();
     }
 
-    if (widget.list.isEmpty) {
+    if (widget.list.value.isEmpty) {
       return widget.emptyMessageBuilder();
     }
 
     return AnimatedList(
       key: _animatedListKey,
       itemBuilder: _buildItem,
-      initialItemCount: widget.list.length,
+      initialItemCount: widget.list.value.length,
     );
   }
 }

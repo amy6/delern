@@ -1,109 +1,94 @@
-import 'dart:async';
-
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/deck_view_model.dart';
+import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../models/deck_access.dart';
-import '../../view_models/deck_view_model.dart';
-import '../../views/helpers/slow_operation_widget.dart';
-import '../helpers/save_updates_dialog.dart';
-import 'deck_type_dropdown.dart';
+class DeckSettings extends StatefulWidget {
+  final DeckModel _deck;
 
-class DeckSettingsPage extends StatefulWidget {
-  final Deck _deck;
-  final DeckAccess _access;
-
-  const DeckSettingsPage(this._deck, this._access);
+  const DeckSettings(this._deck);
 
   @override
-  State<StatefulWidget> createState() => _DeckSettingsPageState();
+  State<StatefulWidget> createState() => _DeckSettingsState();
 }
 
-class _DeckSettingsPageState extends State<DeckSettingsPage> {
+class _DeckSettingsState extends State<DeckSettings> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _deckNameController = TextEditingController();
   DeckViewModel _viewModel;
-  StreamSubscription<void> _viewModelUpdates;
   bool _isDeckChanged = false;
 
   @override
   void initState() {
     _deckNameController.text = widget._deck.name;
-    _viewModel = DeckViewModel(widget._deck, widget._access);
+    _viewModel = DeckViewModel(widget._deck);
     super.initState();
   }
 
   @override
-  void deactivate() {
-    _viewModelUpdates?.cancel();
-    _viewModelUpdates = null;
-    super.deactivate();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _viewModelUpdates ??= _viewModel.updates.listen((_) => setState(() {}));
-    return WillPopScope(
-      onWillPop: () async {
-        if (_isDeckChanged) {
-          try {
-            await _viewModel.save();
-          } catch (e, stackTrace) {
-            UserMessages.showError(
-                () => _scaffoldKey.currentState, e, stackTrace);
-            return false;
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if (_isDeckChanged) {
+            try {
+              await _viewModel.save();
+            } catch (e, stackTrace) {
+              UserMessages.showError(
+                  () => _scaffoldKey.currentState, e, stackTrace);
+              return false;
+            }
           }
-        }
-        return true;
-      },
-      child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
-            SlowOperationWidget(
-              (cb) => IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: cb(() async {
-                      var locale = AppLocalizations.of(context);
-                      String deleteDeckQuestion;
-                      switch (_viewModel.access.access) {
-                        case AccessType.owner:
-                          deleteDeckQuestion =
-                              locale.deleteDeckOwnerAccessQuestion;
-                          break;
-                        case AccessType.write:
-                        case AccessType.read:
-                          deleteDeckQuestion =
-                              locale.deleteDeckWriteReadAccessQuestion;
-                          break;
-                      }
-                      var deleteDeckDialog = await showSaveUpdatesDialog(
-                          context: context,
-                          changesQuestion: deleteDeckQuestion,
-                          yesAnswer: locale.delete,
-                          noAnswer: MaterialLocalizations.of(context)
-                              .cancelButtonLabel);
-                      if (deleteDeckDialog) {
-                        try {
-                          await _viewModel.delete();
-                        } catch (e, stackTrace) {
-                          UserMessages.showError(
-                              () => _scaffoldKey.currentState, e, stackTrace);
-                          return;
+          return true;
+        },
+        child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(title: Text(_viewModel.deck.name), actions: <Widget>[
+              SlowOperationWidget(
+                (cb) => IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: cb(() async {
+                        var locale = AppLocalizations.of(context);
+                        String deleteDeckQuestion;
+                        switch (_viewModel.deck.access) {
+                          case AccessType.owner:
+                            deleteDeckQuestion =
+                                locale.deleteDeckOwnerAccessQuestion;
+                            break;
+                          case AccessType.write:
+                          case AccessType.read:
+                            deleteDeckQuestion =
+                                locale.deleteDeckWriteReadAccessQuestion;
+                            break;
                         }
-                        if (mounted) {
-                          Navigator.of(context).pop();
+                        var deleteDeckDialog = await showSaveUpdatesDialog(
+                            context: context,
+                            changesQuestion: deleteDeckQuestion,
+                            yesAnswer: locale.delete,
+                            noAnswer: MaterialLocalizations.of(context)
+                                .cancelButtonLabel);
+                        if (deleteDeckDialog) {
+                          try {
+                            await _viewModel.delete();
+                          } catch (e, stackTrace) {
+                            UserMessages.showError(
+                                () => _scaffoldKey.currentState, e, stackTrace);
+                            return;
+                          }
+                          if (mounted) {
+                            Navigator.of(context).pop();
+                          }
                         }
-                      }
-                    }),
-                  ),
-            )
-          ]),
-          body: _buildBody()),
-    );
-  }
+                      }),
+                    ),
+              )
+            ]),
+            body: _buildBody()),
+      );
 
   Widget _buildBody() => Padding(
         padding: const EdgeInsets.all(8.0),
@@ -137,7 +122,7 @@ class _DeckSettingsPageState extends State<DeckSettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  DeckTypeDropdown(
+                  DeckTypeDropdownWidget(
                     value: _viewModel.deck.type,
                     valueChanged: (newDeckType) => setState(() {
                           _isDeckChanged = true;

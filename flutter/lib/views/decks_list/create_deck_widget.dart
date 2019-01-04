@@ -1,22 +1,21 @@
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart' as card_model;
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/decks_list_bloc.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/deck_list_view_model.dart';
-import '../card_create_update/card_create_update.dart';
-import '../helpers/sign_in_widget.dart';
-
-class CreateDeck extends StatelessWidget {
-  const CreateDeck({Key key}) : super(key: key);
+class CreateDeckWidget extends StatelessWidget {
+  const CreateDeckWidget({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          var newDeck = await showDialog<Deck>(
+          var newDeck = await showDialog<DeckModel>(
             context: context,
             // User must tap a button to dismiss dialog
             barrierDismissible: false,
@@ -27,7 +26,7 @@ class CreateDeck extends StatelessWidget {
             try {
               // TODO(dotdoom): pass DeckAccess as a second parameter, with
               // email, displayName and photoUrl filled in.
-              await DeckListViewModel.createDeck(
+              await DecksListBloc.createDeck(
                   newDeck, currentUser.humanFriendlyIdentifier);
             } catch (e, stackTrace) {
               UserMessages.showError(() => Scaffold.of(context), e, stackTrace);
@@ -37,8 +36,9 @@ class CreateDeck extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     settings: const RouteSettings(name: '/cards/new'),
-                    builder: (context) =>
-                        CreateUpdateCard(card_model.Card(deck: newDeck))));
+                    builder: (context) => CardCreateUpdate(
+                        card: card_model.CardModel(deckKey: newDeck.key),
+                        deck: newDeck)));
           }
         },
       );
@@ -65,9 +65,9 @@ class _CreateDeckDialogState extends State<_CreateDeckDialog> {
         onPressed: _textController.text.isEmpty
             ? null
             : () {
-                Navigator.of(context).pop(Deck(
-                    uid: CurrentUserWidget.of(context).user.uid,
-                    name: _textController.text));
+                Navigator.of(context).pop(
+                    DeckModel(uid: CurrentUserWidget.of(context).user.uid)
+                      ..name = _textController.text);
               });
 
     final cancelButton = FlatButton(

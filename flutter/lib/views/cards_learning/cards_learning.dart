@@ -1,28 +1,25 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/deck_access_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/learning_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/card_display_widget.dart';
+import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
+import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
+import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/deck.dart';
-import '../../view_models/learning_view_model.dart';
-import '../../views/card_create_update/card_create_update.dart';
-import '../helpers/card_background.dart';
-import '../helpers/card_display.dart';
-import '../helpers/helper_progress_indicator.dart';
-import '../helpers/save_updates_dialog.dart';
-import '../helpers/slow_operation_widget.dart';
-
 class CardsLearning extends StatefulWidget {
-  final Deck deck;
-  final bool allowEdit;
+  final DeckModel deck;
 
-  const CardsLearning({@required this.deck, @required this.allowEdit})
-      : assert(deck != null),
-        assert(allowEdit != null);
+  const CardsLearning({@required this.deck}) : assert(deck != null);
 
   @override
   State<StatefulWidget> createState() => CardsLearningState();
@@ -51,8 +48,7 @@ class CardsLearningState extends State<CardsLearning> {
 
   @override
   void initState() {
-    _viewModel =
-        LearningViewModel(deck: widget.deck, allowEdit: widget.allowEdit);
+    _viewModel = LearningViewModel(deck: widget.deck);
     super.initState();
   }
 
@@ -85,12 +81,12 @@ class CardsLearningState extends State<CardsLearning> {
         actions: _viewModel.card == null ? null : <Widget>[_buildPopupMenu()],
       ),
       body: _viewModel.card == null
-          ? HelperProgressIndicator()
+          ? ProgressIndicatorWidget()
           : Builder(
               builder: (context) => Column(
                     children: <Widget>[
                       Expanded(
-                          child: CardDisplay(
+                          child: CardDisplayWidget(
                         front: _viewModel.card.front,
                         back: _viewModel.card.back ?? '',
                         showBack: _isBackShown,
@@ -190,19 +186,22 @@ class CardsLearningState extends State<CardsLearning> {
   void _onCardMenuItemSelected(BuildContext context, _CardMenuItemType item) {
     switch (item) {
       case _CardMenuItemType.edit:
-        if (widget.allowEdit) {
+        if (widget.deck.access != AccessType.read) {
           Navigator.push(
               context,
               MaterialPageRoute(
                   settings: const RouteSettings(name: '/cards/edit'),
-                  builder: (context) => CreateUpdateCard(_viewModel.card)));
+                  builder: (context) => CardCreateUpdate(
+                        card: _viewModel.card,
+                        deck: widget.deck,
+                      )));
         } else {
           UserMessages.showMessage(Scaffold.of(context),
               AppLocalizations.of(context).noEditingWithReadAccessUserMessage);
         }
         break;
       case _CardMenuItemType.delete:
-        if (widget.allowEdit) {
+        if (widget.deck.access != AccessType.read) {
           _deleteCard(context);
         } else {
           UserMessages.showMessage(Scaffold.of(context),

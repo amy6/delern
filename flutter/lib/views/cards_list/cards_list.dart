@@ -1,24 +1,21 @@
-import 'dart:async';
-
+import 'package:delern_flutter/flutter/localization.dart';
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:delern_flutter/models/card_model.dart';
+import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/view_models/card_list_view_model.dart';
+import 'package:delern_flutter/views/card_create_update/card_create_update.dart';
+import 'package:delern_flutter/views/card_preview/card_preview.dart';
+import 'package:delern_flutter/views/cards_list/observing_grid_widget.dart';
+import 'package:delern_flutter/views/helpers/card_background_specifier.dart';
+import 'package:delern_flutter/views/helpers/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../flutter/localization.dart';
-import '../../flutter/styles.dart';
-import '../../flutter/user_messages.dart';
-import '../../models/card.dart' as card_model;
-import '../../models/deck.dart';
-import '../../view_models/card_list_view_model.dart';
-import '../../views/helpers/card_background.dart';
-import '../card_create_update/card_create_update.dart';
-import '../card_preview/card_preview.dart';
-import '../helpers/search_bar.dart';
-import 'observing_grid_view.dart';
-
-class CardsListPage extends StatefulWidget {
-  final Deck deck;
+class CardsList extends StatefulWidget {
+  final DeckModel deck;
   final bool allowEdit;
 
-  const CardsListPage({@required this.deck, @required this.allowEdit})
+  const CardsList({@required this.deck, @required this.allowEdit})
       : assert(deck != null),
         assert(allowEdit != null);
 
@@ -26,69 +23,45 @@ class CardsListPage extends StatefulWidget {
   _CardsListState createState() => _CardsListState();
 }
 
-class _CardsListState extends State<CardsListPage> {
-  bool _active = false;
-  CardListViewModel _viewModel;
-  StreamSubscription<void> _updates;
+class _CardsListState extends State<CardsList> {
+  CardListViewModel _cardListViewModel;
 
   void _searchTextChanged(String input) {
     if (input == null) {
-      _viewModel.cards.filter = null;
+      _cardListViewModel.filter = null;
       return;
     }
     input = input.toLowerCase();
-    _viewModel.cards.filter = (c) =>
-        c.card.front.toLowerCase().contains(input) ||
-        c.card.back.toLowerCase().contains(input);
+    _cardListViewModel.filter = (c) =>
+        c.front.toLowerCase().contains(input) ||
+        c.back.toLowerCase().contains(input);
   }
 
   @override
   void initState() {
-    _viewModel = CardListViewModel(widget.deck)
-      ..cards.comparator = (d1, d2) => d1.key.compareTo(d2.key);
+    _cardListViewModel = CardListViewModel(deckKey: widget.deck.key);
     super.initState();
   }
 
   @override
-  void deactivate() {
-    _viewModel.deactivate();
-    _active = false;
+  Widget build(BuildContext context) => Scaffold(
+        appBar: SearchBarWidget(
+            title: widget.deck.name, search: _searchTextChanged),
+        body: ObservingGridWidget(
+          maxCrossAxisExtent: 240.0,
+          items: _cardListViewModel.list,
+          itemBuilder: (item) => CardGridItem(
+                card: item,
+                deck: widget.deck,
+                allowEdit: widget.allowEdit,
+              ),
+          // TODO(ksheremet): Consider to remove this field
+          emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
+        ),
+        floatingActionButton: buildAddCard(),
+      );
 
-    _updates?.cancel();
-    _updates = null;
-
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _viewModel.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_active) {
-      _viewModel.activate();
-      _active = true;
-    }
-    _updates ??= _viewModel.updates.listen((_) => setState(() {}));
-
-    return Scaffold(
-      appBar: SearchBarWidget(
-          title: _viewModel.deck.name, search: _searchTextChanged),
-      body: ObservingGrid(
-        maxCrossAxisExtent: 240.0,
-        items: _viewModel.cards,
-        itemBuilder: (item) => CardGridItem(
-              viewModel: item,
-              deck: _viewModel.deck,
-              allowEdit: widget.allowEdit,
-            ),
-        // TODO(ksheremet): Consider to remove this field
-        emptyGridUserMessage: AppLocalizations.of(context).emptyCardsList,
-      ),
-      floatingActionButton: Builder(
+  Builder buildAddCard() => Builder(
         builder: (context) => FloatingActionButton(
               onPressed: () {
                 if (widget.allowEdit) {
@@ -96,8 +69,10 @@ class _CardsListState extends State<CardsListPage> {
                       context,
                       MaterialPageRoute(
                           settings: const RouteSettings(name: '/cards/new'),
-                          builder: (context) => CreateUpdateCard(
-                              card_model.Card(deck: _viewModel.deck))));
+                          builder: (context) => CardCreateUpdate(
+                                card: CardModel(deckKey: widget.deck.key),
+                                deck: widget.deck,
+                              )));
                 } else {
                   UserMessages.showMessage(
                       Scaffold.of(context),
@@ -107,19 +82,17 @@ class _CardsListState extends State<CardsListPage> {
               },
               child: const Icon(Icons.add),
             ),
-      ),
-    );
-  }
+      );
 }
 
 class CardGridItem extends StatelessWidget {
-  final CardListItemViewModel viewModel;
-  final Deck deck;
+  final CardModel card;
+  final DeckModel deck;
   final bool allowEdit;
 
   const CardGridItem(
-      {@required this.viewModel, @required this.deck, @required this.allowEdit})
-      : assert(viewModel != null),
+      {@required this.card, @required this.deck, @required this.allowEdit})
+      : assert(card != null),
         assert(deck != null),
         assert(allowEdit != null);
 
@@ -127,7 +100,7 @@ class CardGridItem extends StatelessWidget {
   Widget build(BuildContext context) => Card(
         color: Colors.transparent,
         child: Material(
-          color: specifyCardBackground(deck.type, viewModel.card.back),
+          color: specifyCardBackground(deck.type, card.back),
           child: InkWell(
             splashColor: Theme.of(context).splashColor,
             onTap: () => Navigator.push(
@@ -135,7 +108,8 @@ class CardGridItem extends StatelessWidget {
                 MaterialPageRoute(
                     settings: const RouteSettings(name: '/cards/preview'),
                     builder: (context) => CardPreview(
-                          card: viewModel.card,
+                          card: card,
+                          deck: deck,
                           allowEdit: allowEdit,
                         ))),
             child: Container(
@@ -144,7 +118,7 @@ class CardGridItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    viewModel.card.front,
+                    card.front,
                     maxLines: 3,
                     softWrap: true,
                     textAlign: TextAlign.center,
@@ -153,7 +127,7 @@ class CardGridItem extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      viewModel.card.back ?? '',
+                      card.back ?? '',
                       maxLines: 3,
                       softWrap: true,
                       textAlign: TextAlign.center,

@@ -130,10 +130,10 @@ script:
       gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
       gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
 
-      bundle exec fastlane ensure_clean_git
-      PROJECT=delern-debug npm --prefix firebase run deploy
-      PROJECT=delern-e1b33 npm --prefix firebase run deploy
-      ( cd flutter && bundle exec fastlane android publish )
+      bundle exec fastlane ensure_clean_git &&
+      PROJECT=delern-debug npm --prefix firebase run deploy &&
+      PROJECT=delern-e1b33 npm --prefix firebase run deploy &&
+      ( cd flutter && bundle exec fastlane android publish ) &&
 
       if [ -n "$TRAVIS_TAG" ]; then
         echo 'Building a tag. Upload to TestFlight.'
@@ -147,14 +147,14 @@ script:
         ( cd flutter && bundle exec fastlane ios build )
       else
         echo 'Unexpected condition for triggering the build!' >&2
-        exit 1
+        false
       fi
     else
       echo 'Building a PR. No access to keys. Build debug version w/o signing.'
-      ( cd flutter && bundle exec fastlane android build )
-      sed -i '' 's/"CODE_SIGN_IDENTITY.*/CODE_SIGNING_REQUIRED = NO;/g' \
-          flutter/ios/Runner.xcodeproj/project.pbxproj
-      ( cd flutter && flutter build ios --debug )
+      ( cd flutter && bundle exec fastlane android build ) &&
+      # TODO(dotdoom): write proper lane for fastlane.
+      ( cd flutter && flutter build ios --debug --no-codesign ) &&
+      bundle exec fastlane ensure_clean_git
     fi
 
 before_cache:

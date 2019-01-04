@@ -1,7 +1,6 @@
+import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/deck_model.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter/styles.dart';
-import '../../models/deck.dart';
 
 enum Gender {
   masculine,
