@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
@@ -94,22 +94,23 @@ class DeckModel implements Model {
                 value: evt.snapshot.value,
               ));
 
-  static Stream<DatabaseListEvent<DeckModel>> getList({@required String uid}) {
+  static DatabaseObservableList<DeckModel> getList({@required String uid}) {
     FirebaseDatabase.instance
         .reference()
         .child('decks')
         .child(uid)
         .keepSynced(true);
 
-    return fullThenChildEventsStream(
-        FirebaseDatabase.instance
+    return DatabaseObservableList(
+        query: FirebaseDatabase.instance
             .reference()
             .child('decks')
             .child(uid)
-            .orderByKey(), (key, value) {
-      _keepDeckSynced(uid, key);
-      return DeckModel._fromSnapshot(uid: uid, key: key, value: value);
-    });
+            .orderByKey(),
+        snapshotParser: (key, value) {
+          _keepDeckSynced(uid, key);
+          return DeckModel._fromSnapshot(uid: uid, key: key, value: value);
+        });
   }
 
   static void _keepDeckSynced(String uid, String deckId) {
@@ -117,6 +118,8 @@ class DeckModel implements Model {
     // automatically when the deck is deleted or un-shared, because the security
     // rules will not allow to listen to that node anymore.
     // ScheduledCard is synced within ScheduledCardsBloc.
+    // TODO(dotdoom): these listeners are gone when we delete the last card
+    //                (Firebase says "Permission denied"). What can we do?
     FirebaseDatabase.instance
         .reference()
         .child('cards')

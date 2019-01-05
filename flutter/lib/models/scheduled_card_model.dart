@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/database_observable_list.dart';
+import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
@@ -17,6 +18,18 @@ class CardAndScheduledCard {
   final CardModel card;
   final ScheduledCardModel scheduledCard;
   const CardAndScheduledCard(this.card, this.scheduledCard);
+}
+
+@immutable
+class ScheduledCardsListModel implements KeyedListItem {
+  final String key;
+  final List<ScheduledCardModel> scheduledCards;
+
+  const ScheduledCardsListModel({
+    @required this.key,
+    @required this.scheduledCards,
+  })  : assert(key != null),
+        assert(scheduledCards != null);
 }
 
 class ScheduledCardModel implements Model {
@@ -161,17 +174,25 @@ class ScheduledCardModel implements Model {
     return cv;
   }
 
-  static Stream<DatabaseListEvent<Iterable<ScheduledCardModel>>> listsForUser(
+  static DatabaseObservableList<ScheduledCardsListModel> listsForUser(
           String uid) =>
-      childEventsStream(
-          FirebaseDatabase.instance.reference().child('learning').child(uid),
-          (deckKey, scheduledCardsOfDeck) {
-        Map value = scheduledCardsOfDeck ?? {};
-        return value.entries.map((entry) => ScheduledCardModel._fromSnapshot(
-              key: entry.key,
-              deckKey: deckKey,
-              uid: uid,
-              value: entry.value,
-            ));
-      }, ordered: false);
+      DatabaseObservableList(
+          query: FirebaseDatabase.instance
+              .reference()
+              .child('learning')
+              .child(uid),
+          snapshotParser: (deckKey, scheduledCardsOfDeck) {
+            Map value = scheduledCardsOfDeck ?? {};
+            return ScheduledCardsListModel(
+                key: deckKey,
+                scheduledCards: List.unmodifiable(value.entries
+                    .map((entry) => ScheduledCardModel._fromSnapshot(
+                          key: entry.key,
+                          deckKey: deckKey,
+                          uid: uid,
+                          value: entry.value,
+                        ))));
+          },
+          fetchFullValueFirst: false,
+          ordered: false);
 }

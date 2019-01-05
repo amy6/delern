@@ -99,7 +99,7 @@ class DecksListState extends State<DecksList> {
     final uid = CurrentUserWidget.of(context).user.uid;
     if (_bloc?.uid != uid) {
       _bloc?.dispose();
-      _bloc = DecksListBloc(uid);
+      _bloc = DecksListBloc(uid: uid);
     }
     super.didChangeDependencies();
   }

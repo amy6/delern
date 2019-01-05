@@ -19,6 +19,10 @@ dependencies:
   shared_preferences: ^0.4.3
   intro_views_flutter: ^2.2.4
   quiver: '>=2.0.0 <3.0.0'
+  observable:  #^0.22.1+5
+    git:
+      url: https://github.com/dotdoom/observable.git
+      ref: list-observed-unobserved
 
   firebase_auth: ^0.6.6
   firebase_analytics: ^1.0.6

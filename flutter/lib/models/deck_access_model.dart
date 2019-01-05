@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/enum.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
 import 'package:delern_flutter/models/base/model.dart';
@@ -50,15 +50,15 @@ class DeckAccessModel implements KeyedListItem, Model {
     access = Enum.fromString(value['access'], AccessType.values);
   }
 
-  static Stream<DatabaseListEvent<DeckAccessModel>> getList(
+  static DatabaseObservableList<DeckAccessModel> getList(
           {@required String deckKey}) =>
-      fullThenChildEventsStream(
-          FirebaseDatabase.instance
+      DatabaseObservableList(
+          query: FirebaseDatabase.instance
               .reference()
               .child('deck_access')
               .child(deckKey)
               .orderByKey(),
-          (key, value) => DeckAccessModel._fromSnapshot(
+          snapshotParser: (key, value) => DeckAccessModel._fromSnapshot(
               key: key, deckKey: deckKey, value: value));
 
   static Stream<DeckAccessModel> get(

@@ -18,8 +18,9 @@ class DeckViewModel {
     var t = Transaction()..delete(deck);
     var card = CardModel(deckKey: deck.key);
     if (deck.access == AccessType.owner) {
-      (await DeckAccessModel.getList(deckKey: deck.key).first)
-          .fullListValueForSet
+      final accessList = DeckAccessModel.getList(deckKey: deck.key);
+      await accessList.fetchFullValue();
+      accessList
           .forEach((a) => t.delete(DeckModel(uid: a.key)..key = deck.key));
       t..deleteAll(DeckAccessModel(deckKey: deck.key))..deleteAll(card);
       // TODO(dotdoom): delete other users' ScheduledCard and Views?
