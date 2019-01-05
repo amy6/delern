@@ -6,17 +6,8 @@ import * as nodemailer from 'nodemailer';
 admin.initializeApp();
 
 let mailTransport = null;
-if ('gmail' in functions.config()) {
-    // TODO(dotdoom): change this to something like:
-    //   nodemailer.createTransport(functions.config().email).
-    const gmailConfig = functions.config().gmail;
-    mailTransport = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: gmailConfig.email,
-            pass: gmailConfig.password,
-        },
-    });
+if ('email' in functions.config()) {
+    mailTransport = nodemailer.createTransport(functions.config().email);
 }
 
 const delern = {

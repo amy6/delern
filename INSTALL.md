@@ -94,8 +94,9 @@ via Cloud Functions config (also possible to separate debug and release):
 
 ```shell
 $ firebase -P project-name functions:config:set \
-    'gmail.password=my_secret_password' \
-    'gmail.email=myemail@gmail.com'
+    'email.service=gmail' \
+    'email.auth.pass=my_secret_password' \
+    'email.auth.user=myemail@gmail.com'
 ```
 
 Note that, due to the authentication mechanism used (PLAIN), you will most
