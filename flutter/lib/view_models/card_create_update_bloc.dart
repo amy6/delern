@@ -30,29 +30,7 @@ class CardCreateUpdateBloc {
     if (cardModel.key == null) {
       isAddOperation = true;
     }
-    _saveCardController.stream.listen((cardUIState) async {
-      cardModel
-        ..front = cardUIState.front.trim()
-        ..back = cardUIState.back.trim();
-      try {
-        await _saveCard(cardUIState.addReversed);
-        isOperationEnabled = true;
-        if (!isAddOperation) {
-          _onPopController.add(null);
-          return;
-        }
-        _clearFields();
-        if (cardUIState.addReversed) {
-          _onUserMessageController.add(locale.cardAndReversedAddedUserMessage);
-        } else {
-          _onUserMessageController.add(locale.cardAddedUserMessage);
-        }
-      } catch (e, stackTrace) {
-        ErrorReporting.report('saveCard', e, stackTrace ?? StackTrace.current);
-        _onUserMessageController
-            .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
-      }
-    });
+    _saveCardController.stream.listen(_processCardSaving);
   }
 
   final _saveCardController = StreamController<CreateUpdateUIState>();
@@ -85,9 +63,29 @@ class CardCreateUpdateBloc {
     return t.commit();
   }
 
-  void _clearFields() {
-    // Unset Card key so that we create a new one.
-    _cardModel.key = null;
+  void _processCardSaving(cardUIState) async {
+    _cardModel
+      ..front = cardUIState.front.trim()
+      ..back = cardUIState.back.trim();
+    try {
+      await _saveCard(cardUIState.addReversed);
+      isOperationEnabled = true;
+      if (!isAddOperation) {
+        _onPopController.add(null);
+        return;
+      }
+      // Unset Card key so that we create a new one.
+      _cardModel.key = null;
+      if (cardUIState.addReversed) {
+        _onUserMessageController.add(locale.cardAndReversedAddedUserMessage);
+      } else {
+        _onUserMessageController.add(locale.cardAddedUserMessage);
+      }
+    } catch (e, stackTrace) {
+      ErrorReporting.report('saveCard', e, stackTrace ?? StackTrace.current);
+      _onUserMessageController
+          .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+    }
   }
 
   void dispose() {
