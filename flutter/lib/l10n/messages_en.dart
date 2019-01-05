@@ -46,6 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "canView": MessageLookupByLibrary.simpleMessage("Can View"),
         "cardAddedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was added"),
+        "cardAndReversedAddedUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Card and reversed card were added"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Card was deleted"),
         "continueAnonymously":

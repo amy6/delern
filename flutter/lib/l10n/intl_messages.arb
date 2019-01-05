@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "@@last_modified": "2018-12-30T11:34:07.904509",
+  "@@last_modified": "2019-01-05T17:25:37.219682",
   "navigationDrawerSignOut": "Sign Out",
   "@navigationDrawerSignOut": {
     "description": "Sign Out in Navigation Drawer",
@@ -551,6 +551,13 @@
   "addCardTooltip": "Add Card",
   "@addCardTooltip": {
     "description": "Add Card",
+    "type": "text",
+    "placeholders": {
+    }
+  },
+  "cardAndReversedAddedUserMessage": "Card and reversed card were added",
+  "@cardAndReversedAddedUserMessage": {
+    "description": "Card and reversed card were added",
     "type": "text",
     "placeholders": {
     }

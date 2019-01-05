@@ -6,6 +6,7 @@ import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:flutter/material.dart';
 
 class UserMessages {
+  //TODO(ksheremet): Get rid of it
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
     var errorFuture =
@@ -21,8 +22,7 @@ class UserMessages {
     return errorFuture;
   }
 
-  // TODO(ksheremet): Consider to move to another place.
-  // This method reports and doesn't show any messages to user.
+  // TODO(ksheremet): Get rid of it
   static void reportError(e, [StackTrace stackTrace]) {
     ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);
   }
@@ -36,4 +36,8 @@ class UserMessages {
         content: Text(message),
         duration: Duration(seconds: 3),
       ));
+
+  static String formUserFriendlyErrorMessage(AppLocalizations locale, e) =>
+      locale.errorUserMessage +
+      e.toString().substring(0, min(e.toString().length, 50));
 }

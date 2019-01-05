@@ -51,6 +51,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "canView": MessageLookupByLibrary.simpleMessage("Может просматривать"),
         "cardAddedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка добавлена"),
+        "cardAndReversedAddedUserMessage": MessageLookupByLibrary.simpleMessage(
+            "Карточка и обратная карточка были добавлены"),
         "cardDeletedUserMessage":
             MessageLookupByLibrary.simpleMessage("Карточка удалена"),
         "continueAnonymously":

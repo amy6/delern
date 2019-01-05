@@ -528,6 +528,12 @@ To see the source code for this app, please visit the [Delern GitHub repo](https
         name: 'addCardTooltip',
         desc: 'Add Card',
       );
+
+  String get cardAndReversedAddedUserMessage => Intl.message(
+        'Card and reversed card were added',
+        name: 'cardAndReversedAddedUserMessage',
+        desc: 'Card and reversed card were added',
+      );
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

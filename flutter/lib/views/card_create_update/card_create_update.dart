@@ -1,14 +1,11 @@
-import 'dart:async';
-
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/card_create_update_view_model.dart';
+import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
-import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardCreateUpdate extends StatefulWidget {
@@ -26,21 +23,29 @@ class CardCreateUpdate extends StatefulWidget {
 class _CardCreateUpdateState extends State<CardCreateUpdate> {
   bool _addReversedCard = false;
   bool _isChanged = false;
-  CardModel _cardModel;
   final TextEditingController _frontTextController = TextEditingController();
   final TextEditingController _backTextController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final FocusNode _frontSideFocus = FocusNode();
+  CardCreateUpdateBloc _bloc;
 
   @override
-  void initState() {
-    super.initState();
-    _cardModel = widget.card;
-
-    if (_cardModel.key != null) {
-      _frontTextController.text = _cardModel.front;
-      _backTextController.text = _cardModel.back;
+  void didChangeDependencies() {
+    final uid = CurrentUserWidget.of(context).user.uid;
+    if (_bloc?.uid != uid) {
+      _bloc?.dispose();
+      _bloc = CardCreateUpdateBloc(
+          uid: uid,
+          cardModel: widget.card,
+          locale: AppLocalizations.of(context));
+      _bloc.onUserMessage.listen(_onCardAdded);
+      _bloc.onPop.listen((data) {
+        Navigator.pop(context);
+      });
+      _frontTextController.text = _bloc.uiState.front;
+      _backTextController.text = _bloc.uiState.back;
     }
+    super.didChangeDependencies();
   }
 
   @override
@@ -75,60 +80,45 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget _buildAppBar() => AppBar(
         title: Text(widget.deck.name),
         actions: <Widget>[
-          _cardModel.key == null
-              ? SlowOperationWidget((cb) => IconButton(
+          _bloc.isAddOperation
+              ? IconButton(
                   tooltip: AppLocalizations.of(context).addCardTooltip,
                   icon: const Icon(Icons.check),
-                  onPressed: _isCardValid() ? cb(_addCard) : null))
-              : SlowOperationWidget((cb) => FlatButton(
+                  onPressed: _isCardValid() && _bloc.isOperationEnabled
+                      ? _saveCard
+                      : null)
+              : FlatButton(
                   child: Text(
                     AppLocalizations.of(context).save.toUpperCase(),
                     style: _isChanged && _isCardValid()
                         ? const TextStyle(color: Colors.white)
                         : null,
                   ),
-                  onPressed: _isChanged && _isCardValid()
-                      ? cb(() async {
-                          if (await _saveCard()) {
-                            Navigator.of(context).pop();
-                          }
-                        })
-                      : null)),
+                  onPressed:
+                      _isChanged && _isCardValid() && _bloc.isOperationEnabled
+                          ? _saveCard
+                          : null),
         ],
       );
 
   bool _isCardValid() => _addReversedCard
-      ? _frontTextController.text.trim().isNotEmpty &&
-          _backTextController.text.trim().isNotEmpty
-      : _frontTextController.text.trim().isNotEmpty;
+      ? _bloc.uiState.front.trim().isNotEmpty &&
+          _bloc.uiState.back.trim().isNotEmpty
+      : _bloc.uiState.front.trim().isNotEmpty;
 
-  Future<void> _addCard() async {
-    if (await _saveCard()) {
-      UserMessages.showMessage(_scaffoldKey.currentState,
-          AppLocalizations.of(context).cardAddedUserMessage);
-      // Unset Card key so that we create a one.
-      _cardModel.key = null;
-      setState(() {
-        _isChanged = false;
-        _clearInputFields();
-      });
-    }
+  void _onCardAdded(String userMessage) {
+    UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
+    setState(() {
+      _isChanged = false;
+      _clearInputFields();
+    });
   }
 
-  Future<bool> _saveCard() async {
-    _cardModel
-      ..front = _frontTextController.text.trim()
-      ..back = _backTextController.text.trim();
-    try {
-      await CardCreateUpdateViewModel.saveCard(
-          card: _cardModel,
-          uid: CurrentUserWidget.of(context).user.uid,
-          addReverse: _addReversedCard);
-    } catch (e, stackTrace) {
-      UserMessages.showError(() => _scaffoldKey.currentState, e, stackTrace);
-      return false;
-    }
-    return true;
+  void _saveCard() {
+    setState(() {
+      _bloc.isOperationEnabled = false;
+    });
+    _bloc.saveCardSink.add(_addReversedCard);
   }
 
   Widget _buildUserInput() {
@@ -144,6 +134,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.uiState.front = text;
             _isChanged = true;
           });
         },
@@ -158,6 +149,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.uiState.back = text;
             _isChanged = true;
           });
         },
@@ -169,7 +161,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     ];
 
     // Add reversed card widget it it is adding cards
-    if (_cardModel.key == null) {
+    if (_bloc.isAddOperation) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
