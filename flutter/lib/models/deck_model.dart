@@ -53,7 +53,8 @@ class DeckModel implements Model {
     name = value['name'];
     markdown = value['markdown'] ?? false;
     type = Enum.fromString(
-        value['deckType']?.toString()?.toLowerCase(), DeckType.values);
+            value['deckType']?.toString()?.toLowerCase(), DeckType.values) ??
+        DeckType.basic;
     accepted = value['accepted'] ?? false;
     lastSyncAt = DateTime.fromMillisecondsSinceEpoch(value['lastSyncAt'] ?? 0);
     category = value['category'];
