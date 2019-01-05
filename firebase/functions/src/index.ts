@@ -44,7 +44,7 @@ const delern = {
                 `for user ${uid}, fixing (see below for details)`));
             console.log(scheduledCardsUpdates);
             await admin.database().ref('learning').child(uid).child(deckKey)
-                .update(scheduledCards);
+                .update(scheduledCardsUpdates);
         }
     },
     setScheduledCardForAllUsers: async (deckKey: string, cardKey: string,
