@@ -32,7 +32,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   void didChangeDependencies() {
     final uid = CurrentUserWidget.of(context).user.uid;
-    if (_bloc?.uid != uid) {
+    final locale = AppLocalizations.of(context);
+    if (_bloc?.uid != uid || _bloc?.locale != locale) {
       _bloc?.dispose();
       _bloc = CardCreateUpdateBloc(
           uid: uid,
@@ -42,8 +43,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       _bloc.onPop.listen((data) {
         Navigator.pop(context);
       });
-      _frontTextController.text = _bloc.uiState.front;
-      _backTextController.text = _bloc.uiState.back;
+      _frontTextController.text = widget.card.front;
+      _backTextController.text = widget.card.back;
     }
     super.didChangeDependencies();
   }
@@ -102,9 +103,9 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
       );
 
   bool _isCardValid() => _addReversedCard
-      ? _bloc.uiState.front.trim().isNotEmpty &&
-          _bloc.uiState.back.trim().isNotEmpty
-      : _bloc.uiState.front.trim().isNotEmpty;
+      ? _frontTextController.text.trim().isNotEmpty &&
+          _backTextController.text.trim().isNotEmpty
+      : _frontTextController.text.isNotEmpty;
 
   void _onCardAdded(String userMessage) {
     UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
@@ -118,7 +119,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     setState(() {
       _bloc.isOperationEnabled = false;
     });
-    _bloc.saveCardSink.add(_addReversedCard);
+    _bloc.saveCardSink.add(CreateUpdateUIState()
+      ..front = _frontTextController.text.trim()
+      ..back = _backTextController.text.trim()
+      ..addReversed = _addReversedCard);
   }
 
   Widget _buildUserInput() {
@@ -134,7 +138,6 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.uiState.front = text;
             _isChanged = true;
           });
         },
@@ -149,7 +152,6 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
-            _bloc.uiState.back = text;
             _isChanged = true;
           });
         },

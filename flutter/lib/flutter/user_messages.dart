@@ -6,7 +6,7 @@ import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:flutter/material.dart';
 
 class UserMessages {
-  //TODO(ksheremet): Get rid of it
+  // TODO(ksheremet): Get rid of it
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
     var errorFuture =

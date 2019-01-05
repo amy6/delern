@@ -12,39 +12,37 @@ import 'package:meta/meta.dart';
 class CreateUpdateUIState {
   String front;
   String back;
+  bool addReversed;
 }
 
 class CardCreateUpdateBloc {
   final String uid;
-  final CardModel cardModel;
+  CardModel _cardModel;
   final AppLocalizations locale;
-  CreateUpdateUIState uiState;
   bool isAddOperation = false;
   bool isOperationEnabled = true;
 
   CardCreateUpdateBloc(
-      {@required this.uid, @required this.cardModel, @required this.locale})
+      {@required this.uid, @required cardModel, @required this.locale})
       : assert(uid != null),
         assert(cardModel != null) {
+    this._cardModel = cardModel;
     if (cardModel.key == null) {
       isAddOperation = true;
     }
-    uiState = CreateUpdateUIState()
-      ..front = cardModel.front ?? ''
-      ..back = cardModel.back ?? '';
-    _saveCardController.stream.listen((addReversed) async {
+    _saveCardController.stream.listen((cardUIState) async {
       cardModel
-        ..front = uiState.front.trim()
-        ..back = uiState.back.trim();
+        ..front = cardUIState.front.trim()
+        ..back = cardUIState.back.trim();
       try {
-        await _saveCard(addReversed);
+        await _saveCard(cardUIState.addReversed);
         isOperationEnabled = true;
         if (!isAddOperation) {
           _onPopController.add(null);
           return;
         }
         _clearFields();
-        if (addReversed) {
+        if (cardUIState.addReversed) {
           _onUserMessageController.add(locale.cardAndReversedAddedUserMessage);
         } else {
           _onUserMessageController.add(locale.cardAddedUserMessage);
@@ -57,8 +55,8 @@ class CardCreateUpdateBloc {
     });
   }
 
-  final _saveCardController = StreamController<bool>();
-  Sink<bool> get saveCardSink => _saveCardController.sink;
+  final _saveCardController = StreamController<CreateUpdateUIState>();
+  Sink<CreateUpdateUIState> get saveCardSink => _saveCardController.sink;
 
   final _onUserMessageController = StreamController<String>();
   Stream<String> get onUserMessage => _onUserMessageController.stream;
@@ -67,18 +65,18 @@ class CardCreateUpdateBloc {
   Stream<void> get onPop => _onPopController.stream;
 
   Future<void> _saveCard(bool addReversed) {
-    logCardCreate(cardModel.deckKey);
+    logCardCreate(_cardModel.deckKey);
 
-    var t = Transaction()..save(cardModel);
-    final sCard = ScheduledCardModel(deckKey: cardModel.deckKey, uid: uid)
-      ..key = cardModel.key;
+    var t = Transaction()..save(_cardModel);
+    final sCard = ScheduledCardModel(deckKey: _cardModel.deckKey, uid: uid)
+      ..key = _cardModel.key;
     t.save(sCard);
 
     if (addReversed) {
-      var reverse = CardModel.copyFrom(cardModel)
+      var reverse = CardModel.copyFrom(_cardModel)
         ..key = null
-        ..front = cardModel.back
-        ..back = cardModel.front;
+        ..front = _cardModel.back
+        ..back = _cardModel.front;
       t.save(reverse);
       var reverseScCard = ScheduledCardModel(deckKey: reverse.deckKey, uid: uid)
         ..key = reverse.key;
@@ -89,10 +87,7 @@ class CardCreateUpdateBloc {
 
   void _clearFields() {
     // Unset Card key so that we create a new one.
-    cardModel.key = null;
-    uiState
-      ..front = ''
-      ..back = '';
+    _cardModel.key = null;
   }
 
   void dispose() {
