@@ -553,5 +553,12 @@
     "type": "text",
     "placeholders": {
     }
+  },
+  "cardAndReversedAddedUserMessage": "Карточка и обратная карточка были добавлены",
+  "@cardAndReversedAddedUserMessage": {
+    "description": "Card and reversed card were added",
+    "type": "text",
+    "placeholders": {
+    }
   }
 }

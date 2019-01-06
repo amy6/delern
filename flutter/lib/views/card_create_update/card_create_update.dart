@@ -1,14 +1,11 @@
-import 'dart:async';
-
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
-import 'package:delern_flutter/view_models/card_create_update_view_model.dart';
+import 'package:delern_flutter/view_models/card_create_update_bloc.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:delern_flutter/views/helpers/sign_in_widget.dart';
-import 'package:delern_flutter/views/helpers/slow_operation_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardCreateUpdate extends StatefulWidget {
@@ -26,26 +23,38 @@ class CardCreateUpdate extends StatefulWidget {
 class _CardCreateUpdateState extends State<CardCreateUpdate> {
   bool _addReversedCard = false;
   bool _isChanged = false;
-  CardModel _cardModel;
   final TextEditingController _frontTextController = TextEditingController();
   final TextEditingController _backTextController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final FocusNode _frontSideFocus = FocusNode();
+  CardCreateUpdateBloc _bloc;
 
   @override
-  void initState() {
-    super.initState();
-    _cardModel = widget.card;
-
-    if (_cardModel.key != null) {
-      _frontTextController.text = _cardModel.front;
-      _backTextController.text = _cardModel.back;
+  void didChangeDependencies() {
+    // TODO(ksheremet): Wrap Bloc in Stateful widget and use InheritedWidget
+    // to access it. It will help to avoid "if" statements when
+    // uid or locale changed, therefore helps to prevent bugs
+    final uid = CurrentUserWidget.of(context).user.uid;
+    final locale = AppLocalizations.of(context);
+    if (_bloc?.uid != uid || _bloc?.locale != locale) {
+      _bloc?.dispose();
+      _bloc = CardCreateUpdateBloc(
+          uid: uid,
+          cardModel: widget.card,
+          locale: AppLocalizations.of(context));
+      _bloc.onCardAdded.listen(_onCardAdded);
+      _bloc.onPop.listen((_) => Navigator.pop(context));
+      _bloc.onErrorOccurred.listen(_onErrorOccurred);
+      _frontTextController.text = widget.card.front;
+      _backTextController.text = widget.card.back;
     }
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _frontSideFocus.dispose();
+    _bloc?.dispose();
     super.dispose();
   }
 
@@ -75,65 +84,45 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget _buildAppBar() => AppBar(
         title: Text(widget.deck.name),
         actions: <Widget>[
-          _cardModel.key == null
-              ? SlowOperationWidget((cb) => IconButton(
-                  tooltip: AppLocalizations.of(context).addCardTooltip,
-                  icon: const Icon(Icons.check),
-                  onPressed: _isCardValid() ? cb(_addCard) : null))
-              : SlowOperationWidget((cb) => FlatButton(
-                  child: Text(
-                    AppLocalizations.of(context).save.toUpperCase(),
-                    style: _isChanged && _isCardValid()
-                        ? const TextStyle(color: Colors.white)
-                        : null,
-                  ),
-                  onPressed: _isChanged && _isCardValid()
-                      ? cb(() async {
-                          if (await _saveCard()) {
-                            Navigator.of(context).pop();
-                          }
-                        })
-                      : null)),
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _bloc.isOperationEnabled,
+            builder: (context, snapshot) => _bloc.isAddOperation
+                ? IconButton(
+                    tooltip: AppLocalizations.of(context).addCardTooltip,
+                    icon: const Icon(Icons.check),
+                    onPressed: snapshot.data ? _saveCard : null)
+                : FlatButton(
+                    child: Text(
+                      AppLocalizations.of(context).save.toUpperCase(),
+                      style: _isChanged && snapshot.data
+                          ? const TextStyle(color: Colors.white)
+                          : null,
+                    ),
+                    onPressed: _isChanged && snapshot.data ? _saveCard : null),
+          )
         ],
       );
 
-  bool _isCardValid() => _addReversedCard
-      ? _frontTextController.text.trim().isNotEmpty &&
-          _backTextController.text.trim().isNotEmpty
-      : _frontTextController.text.trim().isNotEmpty;
-
-  Future<void> _addCard() async {
-    if (await _saveCard()) {
-      UserMessages.showMessage(_scaffoldKey.currentState,
-          AppLocalizations.of(context).cardAddedUserMessage);
-      // Unset Card key so that we create a one.
-      _cardModel.key = null;
-      setState(() {
-        _isChanged = false;
-        _clearInputFields();
-      });
-    }
+  void _onCardAdded(String userMessage) {
+    UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
+    setState(() {
+      _isChanged = false;
+      _clearInputFields();
+    });
   }
 
-  Future<bool> _saveCard() async {
-    _cardModel
-      ..front = _frontTextController.text.trim()
-      ..back = _backTextController.text.trim();
-    try {
-      await CardCreateUpdateViewModel.saveCard(
-          card: _cardModel,
-          uid: CurrentUserWidget.of(context).user.uid,
-          addReverse: _addReversedCard);
-    } catch (e, stackTrace) {
-      UserMessages.showError(() => _scaffoldKey.currentState, e, stackTrace);
-      return false;
-    }
-    return true;
+  // Show error message to user. Do not clean fields
+  void _onErrorOccurred(message) {
+    UserMessages.showMessage(_scaffoldKey.currentState, message);
+  }
+
+  void _saveCard() {
+    _bloc.saveCardSink.add(null);
   }
 
   Widget _buildUserInput() {
-    // ignore: omit_local_variable_types
-    List<Widget> widgetsList = [
+    final widgetsList = <Widget>[
       // TODO(ksheremet): limit lines in TextField
       TextField(
         key: const Key('frontCardInput'),
@@ -144,6 +133,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.frontSideTextSink.add(text);
             _isChanged = true;
           });
         },
@@ -158,6 +148,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.backSideTextSink.add(text);
             _isChanged = true;
           });
         },
@@ -169,7 +160,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
     ];
 
     // Add reversed card widget it it is adding cards
-    if (_cardModel.key == null) {
+    if (_bloc.isAddOperation) {
       // https://github.com/flutter/flutter/issues/254 suggests using
       // CheckboxListTile to have a clickable checkbox label.
       widgetsList.add(CheckboxListTile(
@@ -179,6 +170,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ),
         value: _addReversedCard,
         onChanged: (newValue) {
+          _bloc.addReversedCardSink.add(newValue);
           setState(() {
             _addReversedCard = newValue;
           });
@@ -197,6 +189,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   void _clearInputFields() {
     _frontTextController.clear();
     _backTextController.clear();
+    _bloc.frontSideTextSink.add('');
+    _bloc.backSideTextSink.add('');
     FocusScope.of(context).requestFocus(_frontSideFocus);
   }
 }
