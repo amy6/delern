@@ -40,9 +40,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           cardModel: widget.card,
           locale: AppLocalizations.of(context));
       _bloc.onCardAdded.listen(_onCardAdded);
-      _bloc.onPop.listen((data) {
-        Navigator.pop(context);
-      });
+      _bloc.onPop.listen((_) => Navigator.pop(context));
       _bloc.onErrorOccurred.listen(_onErrorOccurred);
       _frontTextController.text = widget.card.front;
       _backTextController.text = widget.card.back;
@@ -53,6 +51,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   @override
   void dispose() {
     _frontSideFocus.dispose();
+    _bloc?.dispose();
     super.dispose();
   }
 
@@ -82,57 +81,43 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   Widget _buildAppBar() => AppBar(
         title: Text(widget.deck.name),
         actions: <Widget>[
-          _bloc.isAddOperation
-              ? IconButton(
-                  tooltip: AppLocalizations.of(context).addCardTooltip,
-                  icon: const Icon(Icons.check),
-                  onPressed: _isCardValid() && _bloc.isOperationEnabled
-                      ? _saveCard
-                      : null)
-              : FlatButton(
-                  child: Text(
-                    AppLocalizations.of(context).save.toUpperCase(),
-                    style: _isChanged && _isCardValid()
-                        ? const TextStyle(color: Colors.white)
-                        : null,
-                  ),
-                  onPressed:
-                      _isChanged && _isCardValid() && _bloc.isOperationEnabled
-                          ? _saveCard
-                          : null),
+          StreamBuilder<bool>(
+            initialData: false,
+            stream: _bloc.isOperationEnabled,
+            builder: (context, snapshot) => _bloc.isAddOperation
+                ? IconButton(
+                    tooltip: AppLocalizations.of(context).addCardTooltip,
+                    icon: const Icon(Icons.check),
+                    onPressed:
+                        snapshot != null && snapshot.data ? _saveCard : null)
+                : FlatButton(
+                    child: Text(
+                      AppLocalizations.of(context).save.toUpperCase(),
+                      style: _isChanged && snapshot.data
+                          ? const TextStyle(color: Colors.white)
+                          : null,
+                    ),
+                    onPressed:
+                        snapshot != null && snapshot.data ? _saveCard : null),
+          )
         ],
       );
-
-  bool _isCardValid() => _addReversedCard
-      ? _frontTextController.text.trim().isNotEmpty &&
-          _backTextController.text.trim().isNotEmpty
-      : _frontTextController.text.isNotEmpty;
 
   void _onCardAdded(String userMessage) {
     UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
     setState(() {
-      _bloc.isOperationEnabled = true;
       _isChanged = false;
       _clearInputFields();
     });
   }
 
-  // Show user message and enable db operations. Do not clean fields
+  // Show error message to user. Do not clean fields
   void _onErrorOccurred(message) {
     UserMessages.showMessage(_scaffoldKey.currentState, message);
-    setState(() {
-      _bloc.isOperationEnabled = true;
-    });
   }
 
   void _saveCard() {
-    setState(() {
-      _bloc.isOperationEnabled = false;
-    });
-    _bloc.saveCardSink.add(CreateUpdateUIState()
-      ..front = _frontTextController.text.trim()
-      ..back = _backTextController.text.trim()
-      ..addReversed = _addReversedCard);
+    _bloc.saveCardSink.add(null);
   }
 
   Widget _buildUserInput() {
@@ -148,6 +133,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _frontTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.frontSideTextSink.add(text);
             _isChanged = true;
           });
         },
@@ -162,6 +148,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         controller: _backTextController,
         onChanged: (text) {
           setState(() {
+            _bloc.backSideTextSink.add(text);
             _isChanged = true;
           });
         },
@@ -183,6 +170,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
         ),
         value: _addReversedCard,
         onChanged: (newValue) {
+          _bloc.addReversedCardSink.add(newValue);
           setState(() {
             _addReversedCard = newValue;
           });

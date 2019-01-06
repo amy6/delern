@@ -9,32 +9,36 @@ import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:meta/meta.dart';
 
-class CreateUpdateUIState {
-  String front;
-  String back;
-  bool addReversed;
-}
-
 class CardCreateUpdateBloc {
+  String _frontText;
+  String _backText;
+  bool _addReversedCard = false;
   final String uid;
   CardModel _cardModel;
   final AppLocalizations locale;
   bool isAddOperation = false;
-  bool isOperationEnabled = true;
+  bool _isOperationEnabled = true;
 
   CardCreateUpdateBloc(
       {@required this.uid, @required cardModel, @required this.locale})
       : assert(uid != null),
         assert(cardModel != null) {
     this._cardModel = cardModel;
-    if (cardModel.key == null) {
-      isAddOperation = true;
-    }
-    _saveCardController.stream.listen(_processCardSaving);
+    _initFields();
+    _initListeners();
   }
 
-  final _saveCardController = StreamController<CreateUpdateUIState>();
-  Sink<CreateUpdateUIState> get saveCardSink => _saveCardController.sink;
+  final _saveCardController = StreamController<void>();
+  Sink<void> get saveCardSink => _saveCardController.sink;
+
+  final _frontSideTextController = StreamController<String>();
+  Sink<String> get frontSideTextSink => _frontSideTextController.sink;
+
+  final _backSideTextController = StreamController<String>();
+  Sink<String> get backSideTextSink => _backSideTextController.sink;
+
+  final _addReversedCardController = StreamController<bool>();
+  Sink<bool> get addReversedCardSink => _addReversedCardController.sink;
 
   final _onCardAddedController = StreamController<String>();
   Stream<String> get onCardAdded => _onCardAddedController.stream;
@@ -45,15 +49,41 @@ class CardCreateUpdateBloc {
   final _onPopController = StreamController<void>();
   Stream<void> get onPop => _onPopController.stream;
 
-  Future<void> _saveCard(bool addReversed) {
-    logCardCreate(_cardModel.deckKey);
+  final _isOperationEnabledController = StreamController<bool>();
+  Stream<bool> get isOperationEnabled => _isOperationEnabledController.stream;
 
+  void _initFields() {
+    if (_cardModel.key == null) {
+      isAddOperation = true;
+    }
+    _frontText = _cardModel.front ?? '';
+    _backText = _cardModel.back ?? '';
+  }
+
+  void _initListeners() {
+    _saveCardController.stream.listen((_) => _processSavingCard());
+    _frontSideTextController.stream.listen((frontText) {
+      _frontText = frontText;
+      _checkOperationAvailability();
+    });
+    _backSideTextController.stream.listen((backText) {
+      _backText = backText;
+      _checkOperationAvailability();
+    });
+    _addReversedCardController.stream.listen((addReversed) {
+      _addReversedCard = addReversed;
+      _checkOperationAvailability();
+    });
+  }
+
+  Future<void> _saveCard() {
+    logCardCreate(_cardModel.deckKey);
     var t = Transaction()..save(_cardModel);
     final sCard = ScheduledCardModel(deckKey: _cardModel.deckKey, uid: uid)
       ..key = _cardModel.key;
     t.save(sCard);
 
-    if (addReversed) {
+    if (_addReversedCard) {
       var reverse = CardModel.copyFrom(_cardModel)
         ..key = null
         ..front = _cardModel.back
@@ -66,19 +96,30 @@ class CardCreateUpdateBloc {
     return t.commit();
   }
 
-  void _processCardSaving(cardUIState) async {
+  void _startSaving() {
+    _isOperationEnabled = false;
+    _checkOperationAvailability();
+  }
+
+  void _endSaving() {
+    _isOperationEnabled = true;
+    _checkOperationAvailability();
+  }
+
+  void _processSavingCard() async {
     _cardModel
-      ..front = cardUIState.front.trim()
-      ..back = cardUIState.back.trim();
+      ..front = _frontText.trim()
+      ..back = _backText.trim();
     try {
-      await _saveCard(cardUIState.addReversed);
+      _startSaving();
+      await _saveCard();
+      _endSaving();
       if (!isAddOperation) {
         _onPopController.add(null);
         return;
       }
-      // Unset Card key so that we create a new one.
-      _cardModel.key = null;
-      if (cardUIState.addReversed) {
+      _clearCard();
+      if (_addReversedCard) {
         _onCardAddedController.add(locale.cardAndReversedAddedUserMessage);
       } else {
         _onCardAddedController.add(locale.cardAddedUserMessage);
@@ -90,10 +131,31 @@ class CardCreateUpdateBloc {
     }
   }
 
+  void _clearCard() {
+    // Unset Card key so that we create a new one.
+    _cardModel.key = null;
+    // Clear front and back for validation
+    _frontText = '';
+    _backText = '';
+    _checkOperationAvailability();
+  }
+
+  bool _isCardValid() => _addReversedCard
+      ? _frontText.trim().isNotEmpty && _backText.trim().isNotEmpty
+      : _frontText.trim().isNotEmpty;
+
+  void _checkOperationAvailability() {
+    _isOperationEnabledController.add(_isOperationEnabled && _isCardValid());
+  }
+
   void dispose() {
     _saveCardController.close();
     _onCardAddedController.close();
     _onPopController.close();
     _onErrorController.close();
+    _frontSideTextController.close();
+    _backSideTextController.close();
+    _isOperationEnabledController.close();
+    _addReversedCardController.close();
   }
 }
