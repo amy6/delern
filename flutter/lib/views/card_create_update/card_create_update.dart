@@ -31,10 +31,9 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
 
   @override
   void didChangeDependencies() {
-    // TODO(ksheremet):
-    // Wrap Bloc in Stateful widget and use InheritedWidget to access it.
-    // It will help to avoid "if" statements when uid or locale changed,
-    // therefore helps to prevent bugs
+    // TODO(ksheremet): Wrap Bloc in Stateful widget and use InheritedWidget
+    // to access it. It will help to avoid "if" statements when
+    // uid or locale changed, therefore helps to prevent bugs
     final uid = CurrentUserWidget.of(context).user.uid;
     final locale = AppLocalizations.of(context);
     if (_bloc?.uid != uid || _bloc?.locale != locale) {
@@ -92,8 +91,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
                 ? IconButton(
                     tooltip: AppLocalizations.of(context).addCardTooltip,
                     icon: const Icon(Icons.check),
-                    onPressed:
-                        snapshot != null && snapshot.data ? _saveCard : null)
+                    onPressed: snapshot.data ? _saveCard : null)
                 : FlatButton(
                     child: Text(
                       AppLocalizations.of(context).save.toUpperCase(),
@@ -101,8 +99,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
                           ? const TextStyle(color: Colors.white)
                           : null,
                     ),
-                    onPressed:
-                        snapshot != null && snapshot.data ? _saveCard : null),
+                    onPressed: _isChanged && snapshot.data ? _saveCard : null),
           )
         ],
       );
@@ -125,8 +122,7 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   }
 
   Widget _buildUserInput() {
-    // ignore: omit_local_variable_types
-    List<Widget> widgetsList = [
+    final widgetsList = <Widget>[
       // TODO(ksheremet): limit lines in TextField
       TextField(
         key: const Key('frontCardInput'),
@@ -193,6 +189,8 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   void _clearInputFields() {
     _frontTextController.clear();
     _backTextController.clear();
+    _bloc.frontSideTextSink.add('');
+    _bloc.backSideTextSink.add('');
     FocusScope.of(context).requestFocus(_frontSideFocus);
   }
 }

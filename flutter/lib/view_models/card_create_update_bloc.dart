@@ -16,13 +16,14 @@ class CardCreateUpdateBloc {
   final String uid;
   CardModel _cardModel;
   final AppLocalizations locale;
-  bool isAddOperation = false;
+  final bool isAddOperation;
   bool _isOperationEnabled = true;
 
   CardCreateUpdateBloc(
       {@required this.uid, @required cardModel, @required this.locale})
       : assert(uid != null),
-        assert(cardModel != null) {
+        assert(cardModel != null),
+        isAddOperation = cardModel.key == null {
     this._cardModel = cardModel;
     _initFields();
     _initListeners();
@@ -53,9 +54,6 @@ class CardCreateUpdateBloc {
   Stream<bool> get isOperationEnabled => _isOperationEnabledController.stream;
 
   void _initFields() {
-    if (_cardModel.key == null) {
-      isAddOperation = true;
-    }
     _frontText = _cardModel.front ?? '';
     _backText = _cardModel.back ?? '';
   }
@@ -96,14 +94,15 @@ class CardCreateUpdateBloc {
     return t.commit();
   }
 
-  void _startSaving() {
+  Future<void> _disableUI(Future<void> f()) async {
     _isOperationEnabled = false;
-    _checkOperationAvailability();
-  }
-
-  void _endSaving() {
-    _isOperationEnabled = true;
-    _checkOperationAvailability();
+    _isOperationEnabledController.add(_isOperationEnabled);
+    try {
+      await f();
+    } finally {
+      _isOperationEnabled = true;
+      _isOperationEnabledController.add(_isOperationEnabled);
+    }
   }
 
   void _processSavingCard() async {
@@ -111,9 +110,7 @@ class CardCreateUpdateBloc {
       ..front = _frontText.trim()
       ..back = _backText.trim();
     try {
-      _startSaving();
-      await _saveCard();
-      _endSaving();
+      await _disableUI(_saveCard);
       if (!isAddOperation) {
         _onPopController.add(null);
         return;
@@ -134,10 +131,6 @@ class CardCreateUpdateBloc {
   void _clearCard() {
     // Unset Card key so that we create a new one.
     _cardModel.key = null;
-    // Clear front and back for validation
-    _frontText = '';
-    _backText = '';
-    _checkOperationAvailability();
   }
 
   bool _isCardValid() => _addReversedCard
