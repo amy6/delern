@@ -39,10 +39,11 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
           uid: uid,
           cardModel: widget.card,
           locale: AppLocalizations.of(context));
-      _bloc.onUserMessage.listen(_onCardAdded);
+      _bloc.onCardAdded.listen(_onCardAdded);
       _bloc.onPop.listen((data) {
         Navigator.pop(context);
       });
+      _bloc.onErrorOccurred.listen(_onErrorOccurred);
       _frontTextController.text = widget.card.front;
       _backTextController.text = widget.card.back;
     }
@@ -110,8 +111,17 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
   void _onCardAdded(String userMessage) {
     UserMessages.showMessage(_scaffoldKey.currentState, userMessage);
     setState(() {
+      _bloc.isOperationEnabled = true;
       _isChanged = false;
       _clearInputFields();
+    });
+  }
+
+  // Show user message and enable db operations. Do not clean fields
+  void _onErrorOccurred(message) {
+    UserMessages.showMessage(_scaffoldKey.currentState, message);
+    setState(() {
+      _bloc.isOperationEnabled = true;
     });
   }
 

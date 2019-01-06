@@ -36,8 +36,11 @@ class CardCreateUpdateBloc {
   final _saveCardController = StreamController<CreateUpdateUIState>();
   Sink<CreateUpdateUIState> get saveCardSink => _saveCardController.sink;
 
-  final _onUserMessageController = StreamController<String>();
-  Stream<String> get onUserMessage => _onUserMessageController.stream;
+  final _onCardAddedController = StreamController<String>();
+  Stream<String> get onCardAdded => _onCardAddedController.stream;
+
+  final _onErrorController = StreamController<String>();
+  Stream<String> get onErrorOccurred => _onErrorController.stream;
 
   final _onPopController = StreamController<void>();
   Stream<void> get onPop => _onPopController.stream;
@@ -69,7 +72,6 @@ class CardCreateUpdateBloc {
       ..back = cardUIState.back.trim();
     try {
       await _saveCard(cardUIState.addReversed);
-      isOperationEnabled = true;
       if (!isAddOperation) {
         _onPopController.add(null);
         return;
@@ -77,20 +79,21 @@ class CardCreateUpdateBloc {
       // Unset Card key so that we create a new one.
       _cardModel.key = null;
       if (cardUIState.addReversed) {
-        _onUserMessageController.add(locale.cardAndReversedAddedUserMessage);
+        _onCardAddedController.add(locale.cardAndReversedAddedUserMessage);
       } else {
-        _onUserMessageController.add(locale.cardAddedUserMessage);
+        _onCardAddedController.add(locale.cardAddedUserMessage);
       }
     } catch (e, stackTrace) {
       ErrorReporting.report('saveCard', e, stackTrace ?? StackTrace.current);
-      _onUserMessageController
+      _onErrorController
           .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
     }
   }
 
   void dispose() {
     _saveCardController.close();
-    _onUserMessageController.close();
+    _onCardAddedController.close();
     _onPopController.close();
+    _onErrorController.close();
   }
 }
