@@ -31,6 +31,10 @@ class _CardCreateUpdateState extends State<CardCreateUpdate> {
 
   @override
   void didChangeDependencies() {
+    // TODO(ksheremet):
+    // Wrap Bloc in Stateful widget and use InheritedWidget to access it.
+    // It will help to avoid "if" statements when uid or locale changed,
+    // therefore helps to prevent bugs
     final uid = CurrentUserWidget.of(context).user.uid;
     final locale = AppLocalizations.of(context);
     if (_bloc?.uid != uid || _bloc?.locale != locale) {
