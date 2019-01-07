@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/database_observable_list.dart';
 import 'package:delern_flutter/models/base/model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:meta/meta.dart';
@@ -45,7 +45,10 @@ class CardModel implements Model {
   @override
   Map<String, dynamic> toMap(bool isNew) {
     final path = '$rootPath/$key';
-    final map = <String, dynamic>{'$path/front': front, '$path/back': back};
+    final map = <String, dynamic>{
+      '$path/front': front,
+      '$path/back': back,
+    };
     if (isNew) {
       // Important note: we ask server to fill in the timestamp, but we do not
       // update it in our object immediately. Something trivial like
@@ -71,15 +74,15 @@ class CardModel implements Model {
           .map((evt) => CardModel._fromSnapshot(
               deckKey: deckKey, key: key, value: evt.snapshot.value));
 
-  static Stream<DatabaseListEvent<CardModel>> getList(
+  static DatabaseObservableList<CardModel> getList(
           {@required String deckKey}) =>
-      fullThenChildEventsStream(
-          FirebaseDatabase.instance
+      DatabaseObservableList(
+          query: FirebaseDatabase.instance
               .reference()
               .child('cards')
               .child(deckKey)
               .orderByKey(),
-          (key, value) => CardModel._fromSnapshot(
+          snapshotParser: (key, value) => CardModel._fromSnapshot(
                 deckKey: deckKey,
                 key: key,
                 value: value,

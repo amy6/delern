@@ -146,7 +146,7 @@ class _DeckUsersState extends State<DeckUsersWidget> {
 
   @override
   void initState() {
-    _deckAccessesViewModel = DeckAccessesViewModel(widget._deck);
+    _deckAccessesViewModel = DeckAccessesViewModel(deck: widget._deck);
     super.initState();
   }
 

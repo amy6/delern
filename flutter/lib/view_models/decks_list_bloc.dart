@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:delern_flutter/models/base/database_list_event.dart';
+import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
-import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
-import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
+import 'package:meta/meta.dart';
 
 class NumberOfCardsDue {
   int get value => _value;
@@ -35,24 +34,25 @@ class NumberOfCardsDue {
 class DecksListBloc {
   final String uid;
 
-  DecksListBloc(this.uid) {
-    _decksProcessor = FilteredSortedKeyedListProcessor(
-        DatabaseListEventProcessor(() => DeckModel.getList(uid: uid)).list)
-      ..comparator = (d1, d2) => d1.key.compareTo(d2.key);
+  DelayedInitializationObservableList<DeckModel> get decksList => _decksList;
+  final FilteredSortedObservableList<DeckModel> _decksList;
 
+  set decksListFilter(Filter<DeckModel> newValue) =>
+      _decksList.filter = newValue;
+  Filter<DeckModel> get decksListFilter => _decksList.filter;
+
+  DecksListBloc({@required this.uid})
+      : assert(uid != null),
+        _decksList =
+            // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
+            // ignore: unnecessary_parenthesis
+            (FilteredSortedObservableList(DeckModel.getList(uid: uid))
+              ..comparator = (c1, c2) => c1.key.compareTo(c2.key)) {
     // Delay initial data load. In case we have a significant amount of
     // ScheduledCards, loading them slows down decks list, because of the
     // MethodChannel bottleneck.
     Future.delayed(const Duration(milliseconds: 100), _loadScheduledCards);
   }
-
-  ObservableKeyedList<DeckModel> get decksList => _decksProcessor.list;
-
-  Filter<DeckModel> get decksListFilter => _decksProcessor.filter;
-  set decksListFilter(Filter<DeckModel> newValue) =>
-      _decksProcessor.filter = newValue;
-
-  FilteredSortedKeyedListProcessor<DeckModel> _decksProcessor;
 
   static Future<void> createDeck(DeckModel deck, String email) {
     logDeckCreate();
@@ -66,27 +66,31 @@ class DecksListBloc {
   }
 
   void _loadScheduledCards() {
-    ScheduledCardModel.listsForUser(uid).listen((event) {
-      switch (event.eventType) {
-        case ListEventType.itemAdded:
-        case ListEventType.itemChanged:
-          _scheduledCardsChanged(event.key, event.value);
-          break;
-        case ListEventType.itemRemoved:
-          if (_numberOfCardsDue.containsKey(event.key)) {
+    final list = ScheduledCardModel.listsForUser(uid);
+    list.listChanges.listen((changes) {
+      changes.forEach((change) {
+        // TODO(dotdoom): detect changes rather than plain add/remove!
+        change.removed.forEach((scheduledCardsList) {
+          if (_numberOfCardsDue.containsKey(scheduledCardsList.key)) {
             // Do not close the stream. itemRemoved occurs when we do not have
             // any cards left in a deck; once the user adds another card, we
             // will have to notify our subscribers, which will be gone if we
             // call close().
             // TODO(dotdoom): consider using _processor to find out when a deck
             //                is removed and resources can be released.
-            _numberOfCardsDue[event.key]
+            _numberOfCardsDue[scheduledCardsList.key]
               .._refreshTimer?.cancel()
               .._addValue(0);
           }
-          break;
-        default:
-      }
+        });
+
+        for (var listIndex = change.index;
+            listIndex < change.index + change.addedCount;
+            ++listIndex) {
+          _scheduledCardsChanged(
+              list[listIndex].key, list[listIndex].scheduledCards);
+        }
+      });
     });
   }
 

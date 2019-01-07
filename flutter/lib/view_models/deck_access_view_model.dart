@@ -1,28 +1,31 @@
 import 'dart:async';
 
+import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
-import 'package:delern_flutter/view_models/base/database_list_event_processor.dart';
-import 'package:delern_flutter/view_models/base/filtered_sorted_keyed_list_processor.dart';
-import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
+import 'package:delern_flutter/view_models/base/filtered_sorted_observable_list.dart';
+import 'package:meta/meta.dart';
 
 class DeckAccessesViewModel {
   final DeckModel deck;
 
-  DeckAccessesViewModel(this.deck) : assert(deck != null) {
-    _processor = FilteredSortedKeyedListProcessor(DatabaseListEventProcessor(
-        () => DeckAccessModel.getList(deckKey: deck.key)).list)
-      ..comparator = (c1, c2) => c1.access.index.compareTo(c2.access.index);
-  }
+  DelayedInitializationObservableList<DeckAccessModel> get list => _list;
+  final FilteredSortedObservableList<DeckAccessModel> _list;
 
-  ObservableKeyedList<DeckAccessModel> get list => _processor.list;
+  set filter(Filter<DeckAccessModel> newValue) => _list.filter = newValue;
+  Filter<DeckAccessModel> get filter => _list.filter;
 
-  set filter(Filter<DeckAccessModel> newValue) => _processor.filter = newValue;
-  Filter<DeckAccessModel> get filter => _processor.filter;
-
-  FilteredSortedKeyedListProcessor<DeckAccessModel> _processor;
+  DeckAccessesViewModel({@required this.deck})
+      : assert(deck != null),
+        _list =
+            // Analyzer bug: https://github.com/dart-lang/sdk/issues/35577.
+            // ignore: unnecessary_parenthesis
+            (FilteredSortedObservableList(
+                DeckAccessModel.getList(deckKey: deck.key))
+              ..comparator =
+                  (c1, c2) => c1.access.index.compareTo(c2.access.index));
 
   static Future<void> shareDeck(DeckAccessModel access, DeckModel deck) async {
     assert(deck.key == access.deckKey);

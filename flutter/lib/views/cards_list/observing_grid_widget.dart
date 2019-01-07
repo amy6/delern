@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
+import 'package:delern_flutter/models/base/delayed_initialization.dart';
 import 'package:delern_flutter/models/base/keyed_list_item.dart';
-import 'package:delern_flutter/view_models/base/observable_keyed_list.dart';
 import 'package:delern_flutter/views/helpers/empty_list_message_widget.dart';
 import 'package:delern_flutter/views/helpers/progress_indicator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:observable/observable.dart';
 
 typedef ObservingGridItemBuilder<T> = Widget Function(T item);
 
@@ -20,10 +21,9 @@ class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
     Key key,
   }) : super(key: key);
 
-  final ObservableKeyedList<T> items;
+  final DelayedInitializationObservableList<T> items;
   final ObservingGridItemBuilder<T> itemBuilder;
   final double maxCrossAxisExtent;
-  // TODO(dotdoom): make this more abstract or rename to ObservingCardsGridView
   final String emptyGridUserMessage;
 
   @override
@@ -32,11 +32,11 @@ class ObservingGridWidget<T extends KeyedListItem> extends StatefulWidget {
 
 class ObservingGridWidgetState<T extends KeyedListItem>
     extends State<ObservingGridWidget<T>> {
-  StreamSubscription<ListEvent<T>> _listSubscription;
+  StreamSubscription<List<ListChangeRecord<T>>> _listSubscription;
 
   @override
   void initState() {
-    _listSubscription = widget.items.events.listen((_) => setState(() {}));
+    _listSubscription = widget.items.listChanges.listen((_) => setState(() {}));
     super.initState();
   }
 
@@ -49,34 +49,37 @@ class ObservingGridWidgetState<T extends KeyedListItem>
   Widget _buildItem(T item) => widget.itemBuilder(item);
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.items.value == null) {
-      return ProgressIndicatorWidget();
-    }
+  Widget build(BuildContext context) => FutureBuilder(
+      future: widget.items.initializationComplete,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return ProgressIndicatorWidget();
+        }
 
-    if (widget.items.value.isEmpty) {
-      return EmptyListMessageWidget(widget.emptyGridUserMessage);
-    }
+        if (widget.items.isEmpty) {
+          return EmptyListMessageWidget(widget.emptyGridUserMessage);
+        }
 
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        return Column(
           children: <Widget>[
-            Text(
-              AppLocalizations.of(context)
-                  .numberOfCards(widget.items.value.length),
-              style: AppStyles.secondaryText,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  // TODO(dotdoom): make this more abstract.
+                  AppLocalizations.of(context)
+                      .numberOfCards(widget.items.length),
+                  style: AppStyles.secondaryText,
+                ),
+              ],
+            ),
+            Expanded(
+              child: GridView.extent(
+                  maxCrossAxisExtent: widget.maxCrossAxisExtent,
+                  children:
+                      widget.items.map(_buildItem).toList(growable: false)),
             ),
           ],
-        ),
-        Expanded(
-          child: GridView.extent(
-              maxCrossAxisExtent: widget.maxCrossAxisExtent,
-              children:
-                  widget.items.value.map(_buildItem).toList(growable: false)),
-        ),
-      ],
-    );
-  }
+        );
+      });
 }
