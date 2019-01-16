@@ -127,16 +127,29 @@ class DecksListState extends State<DecksList> {
   Widget build(BuildContext context) => Scaffold(
         appBar: SearchBarWidget(title: widget.title, search: setFilter),
         drawer: NavigationDrawer(),
-        body: ObservingAnimatedListWidget(
-          list: _bloc.decksList,
-          itemBuilder: (context, item, animation, index) => SizeTransition(
-                child: DeckListItemWidget(item, _bloc),
-                sizeFactor: animation,
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: ObservingAnimatedListWidget(
+                list: _bloc.decksList,
+                itemBuilder: (context, item, animation, index) =>
+                    SizeTransition(
+                      child: DeckListItemWidget(item, _bloc),
+                      sizeFactor: animation,
+                    ),
+                emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
+                    fabKey: fabKey,
+                    child: EmptyListMessageWidget(
+                        AppLocalizations.of(context).emptyDecksList)),
               ),
-          emptyMessageBuilder: () => ArrowToFloatingActionButtonWidget(
-              fabKey: fabKey,
-              child: EmptyListMessageWidget(
-                  AppLocalizations.of(context).emptyDecksList)),
+            ),
+            // The size of FAB = 56 logical pixels from Material Design.
+            // To make settings available that are behind Fab, padding=60 was
+            // added.
+            const Padding(
+              padding: EdgeInsets.only(bottom: 60),
+            )
+          ],
         ),
         floatingActionButton: CreateDeckWidget(key: fabKey),
       );
