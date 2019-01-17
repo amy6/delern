@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:delern_flutter/flutter/localization.dart';
-import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/base/transaction.dart';
 import 'package:delern_flutter/models/card_model.dart';
 import 'package:delern_flutter/models/card_reply_model.dart';
@@ -10,6 +8,7 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
+import 'package:delern_flutter/view_models/base/base_bloc.dart';
 import 'package:meta/meta.dart';
 
 class DeckSettingsModel {
@@ -18,14 +17,14 @@ class DeckSettingsModel {
   bool isMarkdown;
 }
 
-class DeckSettingsBloc {
+class DeckSettingsBloc extends BaseBloc {
   final DeckModel _deck;
-  final AppLocalizations locale;
 
-  DeckSettingsBloc({@required DeckModel deck, @required this.locale})
+  DeckSettingsBloc({@required DeckModel deck, @required locale})
       : assert(deck != null),
         assert(locale != null),
-        this._deck = deck {
+        this._deck = deck,
+        super(locale) {
     _initListeners();
   }
 
@@ -34,12 +33,6 @@ class DeckSettingsBloc {
 
   final _deleteDeckController = StreamController<void>();
   Sink<void> get deleteDeckSink => _deleteDeckController.sink;
-
-  final _onErrorController = StreamController<String>();
-  Stream<String> get onErrorOccurred => _onErrorController.stream;
-
-  final _onPopController = StreamController<void>();
-  Stream<void> get onPop => _onPopController.stream;
 
   final _deleteDeckIntentionController = StreamController<void>();
   Sink<void> get deleteDeckIntentionSink => _deleteDeckIntentionController.sink;
@@ -68,10 +61,10 @@ class DeckSettingsBloc {
 
   Future<void> save() => (Transaction()..save(_deck)).commit();
 
+  @override
   void dispose() {
+    super.dispose();
     _saveDeckController.close();
-    _onErrorController.close();
-    _onPopController.close();
     _deleteDeckController.close();
     _deleteDeckIntentionController.close();
     _showDialogController.close();
@@ -88,20 +81,18 @@ class DeckSettingsBloc {
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'updateDeck', e, stackTrace ?? StackTrace.current);
-        _onErrorController
-            .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+        super.notifyErrorOccurred(e);
       }
     });
 
     _deleteDeckController.stream.listen((_) async {
       try {
         await _delete();
-        _onPopController.add(null);
+        super.notifyCloseScreen();
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'deleteCard', e, stackTrace ?? StackTrace.current);
-        _onErrorController
-            .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
+        super.notifyErrorOccurred(e);
       }
     });
 
