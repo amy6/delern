@@ -41,6 +41,12 @@ class DeckSettingsBloc {
   final _onPopController = StreamController<void>();
   Stream<void> get onPop => _onPopController.stream;
 
+  final _deleteDeckIntentionController = StreamController<void>();
+  Sink<void> get deleteDeckIntentionSink => _deleteDeckIntentionController.sink;
+
+  final _showDialogController = StreamController<String>();
+  Stream<String> get showDialog => _showDialogController.stream;
+
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
     var t = Transaction()..delete(_deck);
@@ -67,6 +73,8 @@ class DeckSettingsBloc {
     _onErrorController.close();
     _onPopController.close();
     _deleteDeckController.close();
+    _deleteDeckIntentionController.close();
+    _showDialogController.close();
   }
 
   void _initListeners() {
@@ -95,6 +103,20 @@ class DeckSettingsBloc {
         _onErrorController
             .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
       }
+    });
+
+    _deleteDeckIntentionController.stream.listen((_) {
+      String deleteDeckQuestion;
+      switch (_deck.access) {
+        case AccessType.owner:
+          deleteDeckQuestion = locale.deleteDeckOwnerAccessQuestion;
+          break;
+        case AccessType.write:
+        case AccessType.read:
+          deleteDeckQuestion = locale.deleteDeckWriteReadAccessQuestion;
+          break;
+      }
+      _showDialogController.add(deleteDeckQuestion);
     });
   }
 }
