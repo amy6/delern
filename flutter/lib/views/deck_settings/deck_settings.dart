@@ -1,7 +1,6 @@
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
 import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dart';
@@ -36,6 +35,7 @@ class _DeckSettingsState extends State<DeckSettings> {
       _bloc = DeckSettingsBloc(deck: widget._deck, locale: locale);
       _bloc.onPop.listen((_) => Navigator.pop(context));
       _bloc.onErrorOccurred.listen(_onErrorOccurred);
+      _bloc.showDialog.listen(showDeleteDeckDialog);
       _deckNameController.text = widget._deck.name;
       _settingsModel = DeckSettingsModel()
         ..deckName = widget._deck.name
@@ -45,19 +45,24 @@ class _DeckSettingsState extends State<DeckSettings> {
     super.didChangeDependencies();
   }
 
+  void showDeleteDeckDialog(deleteDeckQuestion) async {
+    var deleteDeckDialog = await showSaveUpdatesDialog(
+        context: context,
+        changesQuestion: deleteDeckQuestion,
+        yesAnswer: AppLocalizations.of(context).delete,
+        noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
+    if (deleteDeckDialog) {
+      _bloc.deleteDeckSink.add(null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
           if (_isDeckChanged) {
-            try {
-              // TODO(ksheremet): error handling
-              _bloc.saveDeckSink.add(_settingsModel);
-            } catch (e, stackTrace) {
-              UserMessages.showError(
-                  () => _scaffoldKey.currentState, e, stackTrace);
-              return false;
-            }
+            _bloc.saveDeckSink.add(_settingsModel);
           }
+          // TODO(ksheremet): If error occurred it won't be visible for users
           return true;
         },
         child: Scaffold(
@@ -67,28 +72,7 @@ class _DeckSettingsState extends State<DeckSettings> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () async {
-                  var locale = AppLocalizations.of(context);
-                  String deleteDeckQuestion;
-                  //TODO(ksheremet): Move to bloc
-                  switch (widget._deck.access) {
-                    case AccessType.owner:
-                      deleteDeckQuestion = locale.deleteDeckOwnerAccessQuestion;
-                      break;
-                    case AccessType.write:
-                    case AccessType.read:
-                      deleteDeckQuestion =
-                          locale.deleteDeckWriteReadAccessQuestion;
-                      break;
-                  }
-                  var deleteDeckDialog = await showSaveUpdatesDialog(
-                      context: context,
-                      changesQuestion: deleteDeckQuestion,
-                      yesAnswer: locale.delete,
-                      noAnswer:
-                          MaterialLocalizations.of(context).cancelButtonLabel);
-                  if (deleteDeckDialog) {
-                    _bloc.deleteDeckSink.add(null);
-                  }
+                  _bloc.deleteDeckIntentionSink.add(null);
                 },
               ),
             ]),
