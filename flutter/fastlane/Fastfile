@@ -45,9 +45,6 @@ platform :android do
     supply(
       track: 'internal',
       apk: lane_context[SharedValues::FLUTTER_OUTPUT_APK],
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
     )
   end
 end

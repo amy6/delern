@@ -1,0 +1,9 @@
+Spaced repetition learning system. Ideal for studying. The application works on the principle of flashcards.
+
+Features:
+
+- Synchronized across all devices;
+- Sharing with friend;
+- Background colors for german cards;
+- Available learning in offline;
+- Markdown support.
