@@ -130,3 +130,18 @@ You can get the API key (not secret key, which isn't used) on the Fabric
 
   Base64-encoded private key for a Google Cloud Service Account in `JSON`
   format, which can be obtained from Google Cloud Console in IAM section.
+
+  You can create multiple keys for the same account, in case you need to debug
+  it from your workstation.
+
+* `FASTLANE_USER` and `FASTLANE_PASSWORD`
+
+  Login credentials to an Apple account that has access to publish to App Store.
+  This account does not have to be a Developer enabled account, although this is
+  recommended. For a Developer account, the password has to come from a custom
+  login, since accessing a Developer account normally requires 2FA.
+
+* `MATCH_PASSWORD`
+
+  Password to decrypt keys inside a
+  [match](https://docs.fastlane.tools/actions/match/) Git repository.
