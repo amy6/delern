@@ -1,6 +1,6 @@
+import 'package:delern_flutter/flutter/device_info.dart';
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
-import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,36 +20,19 @@ Future<void> launchEmail(BuildContext context) async {
   final screenSize =
       MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
 
-  // Get info about the device
-  final deviceInfo = DeviceInfoPlugin();
-  var phoneModel = '';
-  var operatingSystem = '';
-  if (Theme.of(context).platform == TargetPlatform.android) {
-    final androidInfo = await deviceInfo.androidInfo;
-    phoneModel = androidInfo.model;
-    // https://developer.android.com/reference/android/os/Build.VERSION
-    operatingSystem = 'Android version: ${androidInfo.version.release};\n'
-        'Android Security Patch level: ${androidInfo.version.securityPatch};\n'
-        'SDK: ${androidInfo.version.sdkInt};';
-  } else {
-    final iosInfo = await deviceInfo.iosInfo;
-    phoneModel = iosInfo.model;
-    // http://pubs.opengroup.org/onlinepubs/7908799/xsh/sysutsname.h.html
-    operatingSystem =
-        'iOS version: ${iosInfo.systemName} ${iosInfo.systemVersion}; \n'
-        'Version level of the release: ${iosInfo.utsname.version}\n'
-        'Hardware Type: ${iosInfo.utsname.machine};';
-  }
-
   // On iPhone Gmail app \n does not work.
+  final deviceInfo = (await DeviceInfo.getDeviceInfo())
+      .info
+      .entries
+      .map((entry) => '${entry.key}: ${entry.value}')
+      .join('; \n');
   final appInfoOptions = {
     'subject': '$appName Feedback',
     'body': '\n\n\nApp Version: $appVersion; \n'
         'Build Number: $buildNumber; \n'
         'App Orientation: $orientation; \n'
         'Screensize: $screenSize; \n'
-        'Device: $phoneModel; \n'
-        '$operatingSystem \n'
+        '$deviceInfo \n'
   };
 
   final mailUrl = _queryEncodingToPercent(Uri(

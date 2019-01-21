@@ -15,7 +15,8 @@ class ErrorReporting {
       {Map<String, dynamic> extra, bool printErrorInfo = true}) async {
     var message = error.toString();
     try {
-      // For DatabaseError, toString() returns "Instance of 'DatabaseError'".
+      // For DatabaseError, toString() returns "Instance of 'DatabaseError'":
+      // https://github.com/flutter/plugins/pull/1096.
       message += ': ${error.message}';
     } catch (e) {
       // We tried.
@@ -43,8 +44,7 @@ class ErrorReporting {
         release: '${packageInfo.version} (${packageInfo.buildNumber})',
         environment: environment,
         extra: {
-          'device.model': deviceInfo.userFriendlyName,
-          'device.sdk': deviceInfo.sdk,
+          'device': deviceInfo.info,
         },
       );
       _sentry = SentryClient(
