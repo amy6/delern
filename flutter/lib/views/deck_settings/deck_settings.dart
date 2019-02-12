@@ -35,7 +35,7 @@ class _DeckSettingsState extends State<DeckSettings> {
       _bloc = DeckSettingsBloc(deck: widget._deck, locale: locale);
       _bloc.onPop.listen((_) => Navigator.pop(context));
       _bloc.onErrorOccurred.listen(_onErrorOccurred);
-      _bloc.showDialog.listen(showDeleteDeckDialog);
+      _bloc.showDialog.listen(_showDeleteDeckDialog);
       _deckNameController.text = widget._deck.name;
       _settingsModel = DeckSettingsModel()
         ..deckName = widget._deck.name
@@ -45,7 +45,7 @@ class _DeckSettingsState extends State<DeckSettings> {
     super.didChangeDependencies();
   }
 
-  void showDeleteDeckDialog(deleteDeckQuestion) async {
+  void _showDeleteDeckDialog(deleteDeckQuestion) async {
     var deleteDeckDialog = await showSaveUpdatesDialog(
         context: context,
         changesQuestion: deleteDeckQuestion,
