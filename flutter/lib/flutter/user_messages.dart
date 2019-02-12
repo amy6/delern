@@ -34,7 +34,7 @@ class UserMessages {
   static void showMessage(ScaffoldState scaffoldState, String message) =>
       scaffoldState.showSnackBar(SnackBar(
         content: Text(message),
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
       ));
 
   static String formUserFriendlyErrorMessage(AppLocalizations locale, e) =>
