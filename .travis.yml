@@ -154,6 +154,9 @@ before_cache:
     # Delete volatile files:
     # https://docs.travis-ci.com/user/languages/java/#projects-using-gradle
     rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+    rm -f  $HOME/.gradle/caches/*/javaCompile/javaCompile.lock
+    rm -fr $HOME/.gradle/caches/journal-1/
     rm -fr $HOME/.gradle/caches/transforms-1/
     rm -fr $HOME/.gradle/caches/*/plugin-resolution/
     rm -fr $HOME/.gradle/caches/*/fileHashes/
+    rm -fr $HOME/.gradle/caches/*/scripts-remapped/
