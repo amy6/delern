@@ -16,6 +16,7 @@ default_platform(:android)
 CI_BUILD_NUMBER_BASE = 4000
 
 lane :build do
+  sh('cd .. && flutter packages get')
   flutter(
     action: 'l10n',
     l10n_strings_file: 'lib/flutter/localization.dart',

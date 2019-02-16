@@ -81,9 +81,6 @@ install:
   # TODO(dotdoom): this may be obsolete.
   - ( cd flutter/android && ./gradlew resolveDependencies )
 
-  # TODO(dotdoom): this may be obsolete.
-  - ( cd flutter && flutter packages get )
-
   # TODO(dotdoom): file bug: Travis ignores node_js and .nvmrc for generic lang.
   # Firebase requires Node version > 8.
   - nvm install 8
