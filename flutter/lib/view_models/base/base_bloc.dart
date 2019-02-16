@@ -4,15 +4,24 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 
 abstract class BaseBloc {
-  final AppLocalizations locale;
+  AppLocalizations _locale;
 
-  BaseBloc([this.locale]);
+  BaseBloc() {
+    _localeController.stream.listen((locale) {
+      _locale = locale;
+    });
+  }
+
+  AppLocalizations get locale => _locale;
 
   final _onPopController = StreamController<void>();
   Stream<void> get onPop => _onPopController.stream;
 
   final _onErrorController = StreamController<String>();
   Stream<String> get onErrorOccurred => _onErrorController.stream;
+
+  final _localeController = StreamController<AppLocalizations>();
+  Sink<AppLocalizations> get localeSink => _localeController.sink;
 
   void notifyErrorOccurred(Exception e) {
     _onErrorController
@@ -26,5 +35,6 @@ abstract class BaseBloc {
   void dispose() {
     _onPopController.close();
     _onErrorController.close();
+    _localeController.close();
   }
 }

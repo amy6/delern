@@ -20,11 +20,9 @@ class DeckSettingsModel {
 class DeckSettingsBloc extends BaseBloc {
   final DeckModel _deck;
 
-  DeckSettingsBloc({@required DeckModel deck, @required locale})
+  DeckSettingsBloc({@required DeckModel deck})
       : assert(deck != null),
-        assert(locale != null),
-        this._deck = deck,
-        super(locale) {
+        _deck = deck {
     _initListeners();
   }
 
@@ -38,7 +36,7 @@ class DeckSettingsBloc extends BaseBloc {
   Sink<void> get deleteDeckIntentionSink => _deleteDeckIntentionController.sink;
 
   final _showDialogController = StreamController<String>();
-  Stream<String> get showDialog => _showDialogController.stream;
+  Stream<String> get showConfirmationDialog => _showDialogController.stream;
 
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
@@ -63,11 +61,11 @@ class DeckSettingsBloc extends BaseBloc {
 
   @override
   void dispose() {
-    super.dispose();
     _saveDeckController.close();
     _deleteDeckController.close();
     _deleteDeckIntentionController.close();
     _showDialogController.close();
+    super.dispose();
   }
 
   void _initListeners() {
