@@ -51,8 +51,9 @@ install:
   - mkdir -p "${SDK_ROOT?}"
 
   # Install and configure gcloud
+  # Since the script is too noisy printing "tar -xv", we have to drop stderr.
   - curl -sSL https://sdk.cloud.google.com |
-    bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null
+    bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null 2>&1
   # This is needed only for iOS to fetch Fastlane match keys repository.
   - git config --global credential.https://source.developers.google.com.helper
     gcloud.sh
