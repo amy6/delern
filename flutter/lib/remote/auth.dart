@@ -119,7 +119,7 @@ class Auth {
 
           final googleAccount = await _googleSignIn.signIn();
           if (googleAccount == null) {
-            return null;
+            return;
           }
           user = await _signInWithGoogle(googleAccount);
           break;
