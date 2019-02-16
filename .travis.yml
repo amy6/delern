@@ -48,8 +48,6 @@ cache:
 # When one of the steps in the install fails, the build stops immediately and is
 # marked as errored.
 install:
-  - mkdir -p "${SDK_ROOT?}"
-
   # Install and configure gcloud
   # Since the script is too noisy printing "tar -xv", we have to drop stderr.
   - curl -sSL https://sdk.cloud.google.com |
