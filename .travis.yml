@@ -76,8 +76,6 @@ install:
       > "${ANDROID_HOME?}/licenses/android-sdk-license"
   # Bootstrap step necessary to run Gradle, which installs Android SDK.
   - echo "flutter.sdk=$SDK_ROOT/flutter" > flutter/android/local.properties
-  # TODO(dotdoom): this may be obsolete.
-  - ( cd flutter/android && ./gradlew resolveDependencies )
 
   # TODO(dotdoom): file bug: Travis ignores node_js and .nvmrc for generic lang.
   # Firebase requires Node version > 8.
