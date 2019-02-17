@@ -24,7 +24,7 @@ class CardCreateUpdateBloc {
       : assert(uid != null),
         assert(cardModel != null),
         isAddOperation = cardModel.key == null {
-    this._cardModel = cardModel;
+    _cardModel = cardModel;
     _initFields();
     _initListeners();
   }

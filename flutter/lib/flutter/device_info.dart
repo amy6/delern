@@ -16,7 +16,7 @@ class DeviceInfo {
       {@required this.userFriendlyName, @required Map<String, dynamic> info})
       : assert(userFriendlyName != null),
         assert(info != null),
-        this.info = Map.unmodifiable(info);
+        info = Map.unmodifiable(info);
 
   static Future<DeviceInfo> getDeviceInfo() async {
     if (_instance == null) {
