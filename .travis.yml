@@ -67,16 +67,6 @@ install:
   # TODO(dotdoom): make it bundle install --deployment.
   - bundle install
 
-  # Install Android SDK.
-  - mkdir -p "${ANDROID_HOME?}/licenses"
-  # This is a hash of accepted licenses, which can be copied verbatim from a
-  # developer's workstation.
-  - |
-    echo d56f5187479451eabf01fb78af6dfcb131a6481e \
-      > "${ANDROID_HOME?}/licenses/android-sdk-license"
-  # Bootstrap step necessary to run Gradle, which installs Android SDK.
-  - echo "flutter.sdk=$SDK_ROOT/flutter" > flutter/android/local.properties
-
   # TODO(dotdoom): file bug: Travis ignores node_js and .nvmrc for generic lang.
   # Firebase requires Node version > 8.
   - nvm install 8

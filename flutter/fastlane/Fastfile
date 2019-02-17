@@ -30,6 +30,12 @@ end
 platform :android do
   lane :build do
     flutter(
+      action: 'bootstrap',
+      android_licenses: {
+        'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
+      },
+    )
+    flutter(
       action: 'build',
       build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
       build_name_override: 'vcs*',
