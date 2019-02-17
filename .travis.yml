@@ -16,6 +16,7 @@ env:
     - TERM=dumb
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
+    # TODO(dotdoom): replace with ANDROID_SDK_ROOT (deprecated).
     - ANDROID_HOME="$SDK_ROOT/android"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
