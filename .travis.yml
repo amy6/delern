@@ -134,10 +134,10 @@ script:
         fi
     else
       echo 'Building a PR. No access to keys. Build debug version w/o signing.'
-      ( cd flutter && bundle exec fastlane android build )
-      # TODO(dotdoom): write proper lane for fastlane.
-      ( cd flutter && flutter build ios --debug --no-codesign )
-      bundle exec fastlane ensure_clean_git
+      ( cd flutter && bundle exec fastlane android build ) &&
+        # TODO(dotdoom): write proper lane for fastlane.
+        ( cd flutter && flutter build ios --debug --no-codesign ) &&
+        bundle exec fastlane ensure_clean_git
     fi
 
 before_cache:
