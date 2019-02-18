@@ -16,6 +16,7 @@ env:
     - TERM=dumb
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
+    # TODO(dotdoom): replace with ANDROID_SDK_ROOT (deprecated).
     - ANDROID_HOME="$SDK_ROOT/android"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
@@ -45,49 +46,27 @@ cache:
     - $ANDROID_HOME
     - $SDK_ROOT/flutter
 
-before_script:
-  - mkdir -p "${SDK_ROOT?}"
-
-  - |
-    # Install and configure gcloud
-    curl -sSL \
-    'https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-227.0.0-darwin-x86_64.tar.gz' | \
-    tar -C "${SDK_ROOT?}" -xz
+# When one of the steps in the install fails, the build stops immediately and is
+# marked as errored.
+install:
+  # Install and configure gcloud
+  # Since the script is too noisy printing "tar -xv", we have to drop stderr.
+  - curl -sSL https://sdk.cloud.google.com |
+    bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null 2>&1
+  # This is needed only for iOS to fetch Fastlane match keys repository.
+  - git config --global credential.https://source.developers.google.com.helper
+    gcloud.sh
   - gcloud version
-  # This is needed only for iOS to fetch match keys repository.
-  - |
-    git config --global credential.https://source.developers.google.com.helper \
-        gcloud.sh
 
-  - |
-    # Install and build flutter (may be cached)
-    if hash flutter; then
-      flutter upgrade
-    else
-      git clone --depth=2 --branch=beta https://github.com/flutter/flutter.git \
-          "${SDK_ROOT?}/flutter"
-    fi
+  # Install and build flutter (may be cached)
+  - flutter upgrade || git clone --depth=2 --branch=beta
+    https://github.com/flutter/flutter.git "${SDK_ROOT?}/flutter"
   - flutter precache
   - flutter --version
 
   - bundle --version
   # TODO(dotdoom): make it bundle install --deployment.
   - bundle install
-
-  # Install Android SDK.
-  - mkdir -p "${ANDROID_HOME?}/licenses"
-  # This is a hash of accepted licenses, which can be copied verbatim from a
-  # developer's workstation.
-  - |
-    echo d56f5187479451eabf01fb78af6dfcb131a6481e \
-      > "${ANDROID_HOME?}/licenses/android-sdk-license"
-  # Bootstrap step necessary to run Gradle, which installs Android SDK.
-  - echo "flutter.sdk=$SDK_ROOT/flutter" > flutter/android/local.properties
-  # TODO(dotdoom): this may be obsolete.
-  - ( cd flutter/android && ./gradlew resolveDependencies )
-
-  # TODO(dotdoom): this may be obsolete.
-  - ( cd flutter && flutter packages get )
 
   # TODO(dotdoom): file bug: Travis ignores node_js and .nvmrc for generic lang.
   # Firebase requires Node version > 8.
@@ -103,6 +82,8 @@ before_script:
   # TODO(dotdoom): this step is very slow and should not even be necessary.
   - pod setup
 
+# When one of the build commands returns a non-zero exit code, the Travis CI
+# build runs the subsequent commands as well, and accumulates the build result.
 script:
   - ( cd flutter && bundle exec fastlane build )
 
@@ -123,38 +104,40 @@ script:
 
       # We use this account to access both Google Play account and GCS.
       # The former requires it to be in the location configured in Appfile.
-      echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > flutter/android/app/play-store-service-account.json
-      gcloud auth activate-service-account --key-file flutter/android/app/play-store-service-account.json
+      echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > \
+          flutter/android/app/play-store-service-account.json
+      gcloud auth activate-service-account --key-file \
+          flutter/android/app/play-store-service-account.json
 
       mkdir -p ~/.android
       gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
       gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
 
       bundle exec fastlane ensure_clean_git &&
-      PROJECT=delern-debug npm --prefix firebase run deploy &&
-      PROJECT=delern-e1b33 npm --prefix firebase run deploy &&
-      ( cd flutter && bundle exec fastlane android publish ) &&
+        PROJECT=delern-debug npm --prefix firebase run deploy &&
+        PROJECT=delern-e1b33 npm --prefix firebase run deploy &&
+        ( cd flutter && bundle exec fastlane android publish ) &&
 
-      if [ -n "$TRAVIS_TAG" ]; then
-        echo 'Building a tag. Upload to TestFlight.'
-        ( cd flutter && bundle exec fastlane ios publish )
-      elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
-        echo 'Building "master" branch. Build debug version, sign. Do not'
-        echo 'upload to TestFlight (review process is too slow, besides,'
-        echo 'version number format will look like a.b.c-N-gCOMMIT, which is'
-        echo 'not accepted by Apple Store).'
+        if [ -n "$TRAVIS_TAG" ]; then
+          echo 'Building a tag. Upload to TestFlight.'
+          ( cd flutter && bundle exec fastlane ios publish )
+        elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
+          echo 'Building "master" branch. Build debug version, sign. Do not'
+          echo 'upload to TestFlight (review process is too slow, besides,'
+          echo 'version number format will look like a.b.c-N-gCOMMIT, which is'
+          echo 'not accepted by Apple Store).'
 
-        ( cd flutter && bundle exec fastlane ios build )
-      else
-        echo 'Unexpected condition for triggering the build!' >&2
-        false
-      fi
+          ( cd flutter && bundle exec fastlane ios build )
+        else
+          echo 'Unexpected condition for triggering the build!' >&2
+          false
+        fi
     else
       echo 'Building a PR. No access to keys. Build debug version w/o signing.'
       ( cd flutter && bundle exec fastlane android build ) &&
-      # TODO(dotdoom): write proper lane for fastlane.
-      ( cd flutter && flutter build ios --debug --no-codesign ) &&
-      bundle exec fastlane ensure_clean_git
+        # TODO(dotdoom): write proper lane for fastlane.
+        ( cd flutter && flutter build ios --debug --no-codesign ) &&
+        bundle exec fastlane ensure_clean_git
     fi
 
 before_cache:
@@ -162,6 +145,9 @@ before_cache:
     # Delete volatile files:
     # https://docs.travis-ci.com/user/languages/java/#projects-using-gradle
     rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+    rm -f  $HOME/.gradle/caches/*/javaCompile/javaCompile.lock
+    rm -fr $HOME/.gradle/caches/journal-1/
     rm -fr $HOME/.gradle/caches/transforms-1/
     rm -fr $HOME/.gradle/caches/*/plugin-resolution/
     rm -fr $HOME/.gradle/caches/*/fileHashes/
+    rm -fr $HOME/.gradle/caches/*/scripts-remapped/

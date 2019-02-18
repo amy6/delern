@@ -16,6 +16,7 @@ default_platform(:android)
 CI_BUILD_NUMBER_BASE = 4000
 
 lane :build do
+  sh('cd .. && flutter packages get')
   flutter(
     action: 'l10n',
     l10n_strings_file: 'lib/flutter/localization.dart',
@@ -28,6 +29,12 @@ end
 
 platform :android do
   lane :build do
+    flutter(
+      action: 'bootstrap',
+      android_licenses: {
+        'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
+      },
+    )
     flutter(
       action: 'build',
       build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
