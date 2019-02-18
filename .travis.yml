@@ -116,7 +116,10 @@ script:
       bundle exec fastlane ensure_clean_git &&
         PROJECT=delern-debug npm --prefix firebase run deploy &&
         PROJECT=delern-e1b33 npm --prefix firebase run deploy &&
-        ( cd flutter && bundle exec fastlane android publish ) &&
+        ( cd flutter &&
+          # TODO(dotdoom): find a better way of downloading Android SDK.
+          bundle exec fastlane android build &&
+          bundle exec fastlane android publish ) &&
 
         if [ -n "$TRAVIS_TAG" ]; then
           echo 'Building a tag. Upload to TestFlight.'
