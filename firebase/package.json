@@ -2,10 +2,10 @@
   "name": "firebase",
   "description": "Umbrella package for Firebase",
   "scripts": {
-    "www": "cd www && mkdir -p __/firebase && curl -SLsf https://${PROJECT:-delern-debug}.firebaseapp.com/__/firebase/init.js -o __/firebase/init.js && polymer serve -H 0.0.0.0",
+    "www": "cd www && mkdir -p __/firebase && curl -SLsf https://${PROJECT:-debug}.firebaseapp.com/__/firebase/init.js -o __/firebase/init.js && polymer serve -H 0.0.0.0",
     "//": "bower has --allow-root flag to run on CI",
     "build": "firebase-bolt database.rules.bolt && cd www && bower --allow-root install && polymer build",
-    "deploy": "npm run build && firebase --project=${PROJECT:-delern-debug} deploy && cd appengine && gcloud --project=${PROJECT:-delern-debug} app deploy --version=ci app.yaml cron.yaml"
+    "deploy": "npm run build && firebase --project=${PROJECT:-debug} deploy && cd appengine && gcloud --project=${PROJECT:-debug} app deploy --version=ci app.yaml cron.yaml"
   },
   "dependencies": {
     "polymer-cli": "^1.6.0",

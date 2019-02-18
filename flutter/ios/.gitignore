@@ -44,3 +44,4 @@ Icon?
 Pods/
 .symlinks/
 GoogleService-Info.plist
+/Runner/GoogleService-Info/org.dasfoo.delern.debug

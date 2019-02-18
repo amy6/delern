@@ -7,7 +7,7 @@ import sys
 import uuid
 
 # TODO(dotdoom): add argparse for these.
-project = os.environ.get('PROJECT', 'delern-debug')
+project = os.environ.get('PROJECT', 'debug')
 number_of_decks = 2
 cards_per_deck = 5000
 
