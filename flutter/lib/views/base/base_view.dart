@@ -3,6 +3,8 @@ import 'package:delern_flutter/view_models/base/base_bloc.dart';
 import 'package:flutter/material.dart';
 
 class BaseView extends StatefulWidget {
+  /// Function that handles onWillPop in WillPopScope. It is called
+  /// when user leaves a screen.
   final Function onWillPop;
   final Widget appBar;
   final Widget body;
