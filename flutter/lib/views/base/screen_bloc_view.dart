@@ -3,20 +3,15 @@ import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:flutter/material.dart';
 
 class ScreenBlocView extends StatefulWidget {
-  /// Function that handles onWillPop in WillPopScope. It is called
-  /// when user leaves a screen.
-  final Function onWillPop;
   final Widget appBar;
   final Widget body;
   final ScreenBloc bloc;
 
-  const ScreenBlocView(
-      {@required this.onWillPop,
-      @required this.appBar,
-      @required this.body,
-      @required this.bloc})
-      : assert(onWillPop != null),
-        assert(appBar != null),
+  const ScreenBlocView({
+    @required this.appBar,
+    @required this.body,
+    @required this.bloc,
+  })  : assert(appBar != null),
         assert(body != null),
         assert(bloc != null);
 
@@ -36,7 +31,11 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
 
   @override
   Widget build(BuildContext context) => WillPopScope(
-      onWillPop: widget.onWillPop,
+      onWillPop: () async {
+        // Bloc decides what happens when user requested to leave screen
+        widget.bloc.closeScreen();
+        return false;
+      },
       child: Scaffold(
         key: _scaffoldKey,
         appBar: widget.appBar,

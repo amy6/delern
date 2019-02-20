@@ -117,6 +117,7 @@ class DeckSettingsBloc extends ScreenBloc {
     });
   }
 
+  @override
   void closeScreen() async {
     // TODO(ksheremet): Consider to check whether deck settings changed
     if (await _saveDeckSettings()) {

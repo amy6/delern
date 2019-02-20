@@ -4,7 +4,7 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:meta/meta.dart';
 
-class ScreenBloc {
+abstract class ScreenBloc {
   AppLocalizations _locale;
 
   ScreenBloc() {
@@ -42,6 +42,8 @@ class ScreenBloc {
   void notifyPop() {
     _onPopController.add(null);
   }
+
+  void closeScreen();
 
   /// Method releases resources
   @mustCallSuper

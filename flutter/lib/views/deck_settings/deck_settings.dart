@@ -57,10 +57,6 @@ class _DeckSettingsState extends State<DeckSettings> {
 
   @override
   Widget build(BuildContext context) => ScreenBlocView(
-        onWillPop: () async {
-          _bloc.closeScreen();
-          return false;
-        },
         appBar: AppBar(title: Text(_settingsModel.deckName), actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.delete),
