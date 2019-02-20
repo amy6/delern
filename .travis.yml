@@ -54,15 +54,6 @@ cache:
 install:
   - tools/ci.sh
 
-  # Install and configure gcloud
-  # Since the script is too noisy printing "tar -xv", we have to drop stderr.
-  - curl -sSL https://sdk.cloud.google.com |
-    bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null 2>&1
-  # This is needed only for iOS to fetch Fastlane match keys repository.
-  - git config --global credential.https://source.developers.google.com.helper
-    gcloud.sh
-  - gcloud version
-
   # Install and build flutter (may be cached)
   - flutter upgrade || git clone --depth=2 --branch=beta
     https://github.com/flutter/flutter.git "${SDK_ROOT?}/flutter"
@@ -107,16 +98,22 @@ script:
       echo 'Building a tag or a branch. Deploy Firebase to debug,'
       echo 'publish to Play Store (internal track).'
 
-      # We use this account to access both Google Play account and GCS.
-      # The former requires it to be in the location configured in Appfile.
-      echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > \
-          flutter/android/app/play-store-service-account.json
-      gcloud auth activate-service-account --key-file \
-          flutter/android/app/play-store-service-account.json
+      # Install and configure gcloud
+      # Since the script is too noisy printing "tar -xv", we drop stderr.
+      curl -sSL https://sdk.cloud.google.com | \
+        bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null \
+        2>&1
+      # This is needed only for iOS to fetch Fastlane match keys repository.
+      git config --global \
+        credential.https://source.developers.google.com.helper \
+        gcloud.sh
+      gcloud version
 
-      mkdir -p ~/.android
-      gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-      gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
+      echo "${GCLOUD_SERVICE_ACCOUNT_DATA?}" > \
+        "${GOOGLE_APPLICATION_CREDENTIALS?}"
+      gcloud auth activate-service-account \
+        --key-file "${GOOGLE_APPLICATION_CREDENTIALS?}"
+      gsutil cp gs://dasfoo-keystore/delern.jks "${ANDROID_KEYSTORE_PATH?}"
 
       bundle exec fastlane ensure_clean_git &&
         PROJECT=delern-debug npm --prefix firebase run deploy &&

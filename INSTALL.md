@@ -126,9 +126,12 @@ You can get the API key (not secret key, which isn't used) on the Fabric
   website, Cloud Functions. More information on the GitHub page of
   [Firebase](https://github.com/firebase/firebase-tools#using-with-ci-systems).
 
-* `GCLOUD_SERVICE_KEY`
+  TODO(dotdoom): use `GCLOUD_SERVICE_ACCOUNT_DATA` once Firebase CLI completely
+  [supports](https://github.com/firebase/firebase-tools/issues/787) it.
 
-  Base64-encoded private key for a Google Cloud Service Account in `JSON`
+* `GCLOUD_SERVICE_ACCOUNT_DATA`
+
+  GCloud Service Account key for a Google Cloud Service Account in `JSON`
   format, which can be obtained from Google Cloud Console in IAM section.
 
   You can create multiple keys for the same account, in case you need to debug
@@ -141,7 +144,7 @@ You can get the API key (not secret key, which isn't used) on the Fabric
   recommended. For a Developer account, the password has to come from a custom
   login, since accessing a Developer account normally requires 2FA.
 
-* `MATCH_PASSWORD`
+* `MATCH_GIT_URL`, `MATCH_PASSWORD`
 
   Password to decrypt keys inside a
   [match](https://docs.fastlane.tools/actions/match/) Git repository.

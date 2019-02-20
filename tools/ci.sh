@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-# These files are neccessary to build debug version of the app. There are no
-# real secrets inside.
+set -ex
 
 cd "$(dirname "$0")"
+
+# These files are neccessary to build debug version of the app. There are no
+# real secrets inside.
 
 cp ci/google-services.json \
    ../flutter/android/app/google-services.json
