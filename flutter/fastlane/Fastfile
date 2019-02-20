@@ -15,6 +15,23 @@ default_platform(:android)
 # number.
 CI_BUILD_NUMBER_BASE = 4000
 
+def android_build(options={})
+  flutter(
+    action: 'bootstrap',
+    android_licenses: {
+      # License hashes. These are NOT secret!
+      # Copy them from $ANDROID_SDK_ROOT/licenses directory for the license
+      # agreements you accept.
+      'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
+    },
+  )
+  flutter({
+    action: 'build',
+    build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
+    build_name_override: 'vcs*',
+  }.merge(options))
+end
+
 lane :build do
   sh('cd .. && flutter packages get')
   flutter(
@@ -29,26 +46,11 @@ end
 
 platform :android do
   lane :build do
-    flutter(
-      action: 'bootstrap',
-      android_licenses: {
-        'android-sdk-license' => '24333f8a63b6825ea9c5514f83c2829b004d1fee',
-      },
-    )
-    flutter(
-      action: 'build',
-      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
-      build_name_override: 'vcs*',
-      debug: true,
-    )
+    android_build(debug: true)
   end
 
   lane :publish do
-    flutter(
-      action: 'build',
-      build_number_override: "ci+#{CI_BUILD_NUMBER_BASE}",
-      build_name_override: 'vcs*',
-    )
+    android_build
     supply(
       track: 'internal',
       apk: lane_context[SharedValues::FLUTTER_OUTPUT_APK],
