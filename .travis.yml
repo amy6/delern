@@ -16,8 +16,7 @@ env:
     - TERM=dumb
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
-    # TODO(dotdoom): replace with ANDROID_SDK_ROOT (deprecated).
-    - ANDROID_HOME="$SDK_ROOT/android"
+    - ANDROID_SDK_ROOT="$SDK_ROOT/android"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
@@ -43,7 +42,7 @@ cache:
     # https://github.com/travis-ci/travis-ci/issues/9009. Cache selectively.
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - $ANDROID_HOME
+    - $ANDROID_SDK_ROOT
     - $SDK_ROOT/flutter
 
 # When one of the steps in the install fails, the build stops immediately and is
