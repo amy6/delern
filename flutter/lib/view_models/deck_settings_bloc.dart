@@ -11,7 +11,7 @@ import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 
-class DeckSettingsModel {
+class DeckSettingsUIState {
   String deckName;
   DeckType deckType;
   bool isMarkdown;
@@ -19,15 +19,13 @@ class DeckSettingsModel {
 
 class DeckSettingsBloc extends ScreenBloc {
   final DeckModel _deck;
+  DeckSettingsUIState _settingsUiState;
 
   DeckSettingsBloc({@required DeckModel deck})
       : assert(deck != null),
         _deck = deck {
     _initListeners();
   }
-
-  final _saveDeckController = StreamController<DeckSettingsModel>();
-  Sink<DeckSettingsModel> get saveDeckSink => _saveDeckController.sink;
 
   final _deleteDeckController = StreamController<void>();
   Sink<void> get deleteDeckSink => _deleteDeckController.sink;
@@ -37,6 +35,11 @@ class DeckSettingsBloc extends ScreenBloc {
 
   final _showDialogController = StreamController<String>();
   Stream<String> get showConfirmationDialog => _showDialogController.stream;
+
+  final _deckSettingsUiStateController =
+      StreamController<DeckSettingsUIState>();
+  Sink<DeckSettingsUIState> get deckSettingsUiState =>
+      _deckSettingsUiStateController.sink;
 
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
@@ -61,28 +64,29 @@ class DeckSettingsBloc extends ScreenBloc {
 
   @override
   void dispose() {
-    _saveDeckController.close();
     _deleteDeckController.close();
     _deleteDeckIntentionController.close();
     _showDialogController.close();
+    _deckSettingsUiStateController.close();
     super.dispose();
   }
 
-  void _initListeners() {
-    _saveDeckController.stream.listen((deckSettingsModel) async {
-      _deck
-        ..name = deckSettingsModel.deckName
-        ..markdown = deckSettingsModel.isMarkdown
-        ..type = deckSettingsModel.deckType;
-      try {
-        await _save();
-      } catch (e, stackTrace) {
-        ErrorReporting.report(
-            'updateDeck', e, stackTrace ?? StackTrace.current);
-        super.notifyErrorOccurred(e);
-      }
-    });
+  Future<bool> _saveDeckSettings() async {
+    _deck
+      ..name = _settingsUiState.deckName
+      ..markdown = _settingsUiState.isMarkdown
+      ..type = _settingsUiState.deckType;
+    try {
+      await _save();
+      return true;
+    } catch (e, stackTrace) {
+      ErrorReporting.report('updateDeck', e, stackTrace ?? StackTrace.current);
+      super.notifyErrorOccurred(e);
+    }
+    return false;
+  }
 
+  void _initListeners() {
     _deleteDeckController.stream.listen((_) async {
       try {
         await _delete();
@@ -107,5 +111,16 @@ class DeckSettingsBloc extends ScreenBloc {
       }
       _showDialogController.add(deleteDeckQuestion);
     });
+
+    _deckSettingsUiStateController.stream.listen((settingsUiState) {
+      _settingsUiState = settingsUiState;
+    });
+  }
+
+  void closeScreen() async {
+    // TODO(ksheremet): Consider to check whether deck settings changed
+    if (await _saveDeckSettings()) {
+      super.notifyPop();
+    }
   }
 }

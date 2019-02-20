@@ -19,16 +19,15 @@ class DeckSettings extends StatefulWidget {
 class _DeckSettingsState extends State<DeckSettings> {
   final TextEditingController _deckNameController = TextEditingController();
   DeckSettingsBloc _bloc;
-  bool _isDeckChanged = false;
 
-  DeckSettingsModel _settingsModel;
+  DeckSettingsUIState _settingsModel;
 
   @override
   void initState() {
     _bloc = DeckSettingsBloc(deck: widget._deck);
     _bloc.showConfirmationDialog.listen(_showDeleteDeckDialog);
     _deckNameController.text = widget._deck.name;
-    _settingsModel = DeckSettingsModel()
+    _settingsModel = DeckSettingsUIState()
       ..deckName = widget._deck.name
       ..deckType = widget._deck.type
       ..isMarkdown = widget._deck.markdown;
@@ -59,11 +58,8 @@ class _DeckSettingsState extends State<DeckSettings> {
   @override
   Widget build(BuildContext context) => ScreenBlocView(
         onWillPop: () async {
-          if (_isDeckChanged) {
-            _bloc.saveDeckSink.add(_settingsModel);
-          }
-          // TODO(ksheremet): If error occurred it won't be visible for users
-          return true;
+          _bloc.closeScreen();
+          return false;
         },
         appBar: AppBar(title: Text(_settingsModel.deckName), actions: <Widget>[
           IconButton(
@@ -89,8 +85,8 @@ class _DeckSettingsState extends State<DeckSettings> {
                 style: AppStyles.primaryText,
                 onChanged: (text) {
                   setState(() {
-                    _isDeckChanged = true;
                     _settingsModel.deckName = text;
+                    _bloc.deckSettingsUiState.add(_settingsModel);
                   });
                 },
               ),
@@ -112,8 +108,8 @@ class _DeckSettingsState extends State<DeckSettings> {
                   DeckTypeDropdownWidget(
                     value: _settingsModel.deckType,
                     valueChanged: (newDeckType) => setState(() {
-                          _isDeckChanged = true;
                           _settingsModel.deckType = newDeckType;
+                          _bloc.deckSettingsUiState.add(_settingsModel);
                         }),
                   ),
                 ],
@@ -129,8 +125,8 @@ class _DeckSettingsState extends State<DeckSettings> {
                     value: _settingsModel.isMarkdown,
                     onChanged: (newValue) {
                       setState(() {
-                        _isDeckChanged = true;
                         _settingsModel.isMarkdown = newValue;
+                        _bloc.deckSettingsUiState.add(_settingsModel);
                       });
                     },
                   )
