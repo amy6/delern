@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
+import 'package:meta/meta.dart';
 
-class BaseBloc {
+class ScreenBloc {
   AppLocalizations _locale;
 
-  BaseBloc() {
+  ScreenBloc() {
     _localeController.stream.listen((locale) {
       _locale = locale;
     });
@@ -17,14 +18,13 @@ class BaseBloc {
 
   final _onPopController = StreamController<void>();
 
-  /// A stream that emit an event when user leaves the screen by pressing
-  /// back button.
-  Stream<void> get onPop => _onPopController.stream;
+  /// A stream that emit an event when screen must be closed
+  Stream<void> get pop => _onPopController.stream;
 
   final _onErrorController = StreamController<String>();
 
   /// A stream that emits an error message when an error occurs.
-  Stream<String> get onErrorOccurred => _onErrorController.stream;
+  Stream<String> get showError => _onErrorController.stream;
 
   final _localeController = StreamController<AppLocalizations>();
 
@@ -37,12 +37,14 @@ class BaseBloc {
         .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
   }
 
-  /// Call when user leaves the screen
-  void notifyCloseScreen() {
+  /// Internal method that called by BLoC when screen must be closed
+  @protected
+  void notifyPop() {
     _onPopController.add(null);
   }
 
   /// Method releases resources
+  @mustCallSuper
   void dispose() {
     _onPopController.close();
     _onErrorController.close();

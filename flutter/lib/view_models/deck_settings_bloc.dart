@@ -8,7 +8,7 @@ import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/models/scheduled_card_model.dart';
 import 'package:delern_flutter/remote/analytics.dart';
 import 'package:delern_flutter/remote/error_reporting.dart';
-import 'package:delern_flutter/view_models/base/base_bloc.dart';
+import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 
 class DeckSettingsModel {
@@ -17,7 +17,7 @@ class DeckSettingsModel {
   bool isMarkdown;
 }
 
-class DeckSettingsBloc extends BaseBloc {
+class DeckSettingsBloc extends ScreenBloc {
   final DeckModel _deck;
 
   DeckSettingsBloc({@required DeckModel deck})
@@ -57,7 +57,7 @@ class DeckSettingsBloc extends BaseBloc {
     await t.commit();
   }
 
-  Future<void> save() => (Transaction()..save(_deck)).commit();
+  Future<void> _save() => (Transaction()..save(_deck)).commit();
 
   @override
   void dispose() {
@@ -75,7 +75,7 @@ class DeckSettingsBloc extends BaseBloc {
         ..markdown = deckSettingsModel.isMarkdown
         ..type = deckSettingsModel.deckType;
       try {
-        await save();
+        await _save();
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'updateDeck', e, stackTrace ?? StackTrace.current);
@@ -86,7 +86,7 @@ class DeckSettingsBloc extends BaseBloc {
     _deleteDeckController.stream.listen((_) async {
       try {
         await _delete();
-        super.notifyCloseScreen();
+        super.notifyPop();
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'deleteCard', e, stackTrace ?? StackTrace.current);

@@ -2,7 +2,7 @@ import 'package:delern_flutter/flutter/localization.dart';
 import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/models/deck_model.dart';
 import 'package:delern_flutter/view_models/deck_settings_bloc.dart';
-import 'package:delern_flutter/views/base/base_view.dart';
+import 'package:delern_flutter/views/base/screen_bloc_view.dart';
 import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dart';
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +37,7 @@ class _DeckSettingsState extends State<DeckSettings> {
 
   @override
   void didChangeDependencies() {
+    // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
     final locale = AppLocalizations.of(context);
     if (_bloc?.locale != locale) {
       _bloc.localeSink.add(locale);
@@ -56,7 +57,7 @@ class _DeckSettingsState extends State<DeckSettings> {
   }
 
   @override
-  Widget build(BuildContext context) => BaseView(
+  Widget build(BuildContext context) => ScreenBlocView(
         onWillPop: () async {
           if (_isDeckChanged) {
             _bloc.saveDeckSink.add(_settingsModel);
