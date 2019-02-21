@@ -16,14 +16,17 @@ env:
     - TERM=dumb
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
-    # TODO(dotdoom): replace with ANDROID_SDK_ROOT (deprecated).
-    - ANDROID_HOME="$SDK_ROOT/android"
+    - ANDROID_SDK_ROOT="$SDK_ROOT/android"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
-    # A workaround to hide large dumps of text files, see also
-    # https://github.com/flutter/flutter/pull/4989.
-    - BOT=false
+    - ANDROID_KEYSTORE_PATH="$HOME/.android/release.keystore"
+    # This environment variable is read by Firebase CLI, which uses the same
+    # account we use to access GCloud, to deploy Firebase artifacts.
+    - GOOGLE_APPLICATION_CREDENTIALS="$HOME/gcloud-service-account.json"
+    # This environment variable is read by Fastlane Supply, which uses the same
+    # account we use to access GCloud, to upload the app to Play Store.
+    - SUPPLY_JSON_KEY="$GOOGLE_APPLICATION_CREDENTIALS"
 
 os: osx
 
@@ -43,20 +46,13 @@ cache:
     # https://github.com/travis-ci/travis-ci/issues/9009. Cache selectively.
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - $ANDROID_HOME
+    - $ANDROID_SDK_ROOT
     - $SDK_ROOT/flutter
 
 # When one of the steps in the install fails, the build stops immediately and is
 # marked as errored.
 install:
-  # Install and configure gcloud
-  # Since the script is too noisy printing "tar -xv", we have to drop stderr.
-  - curl -sSL https://sdk.cloud.google.com |
-    bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null 2>&1
-  # This is needed only for iOS to fetch Fastlane match keys repository.
-  - git config --global credential.https://source.developers.google.com.helper
-    gcloud.sh
-  - gcloud version
+  - tools/ci.sh
 
   # Install and build flutter (may be cached)
   - flutter upgrade || git clone --depth=2 --branch=beta
@@ -102,16 +98,22 @@ script:
       echo 'Building a tag or a branch. Deploy Firebase to debug,'
       echo 'publish to Play Store (internal track).'
 
-      # We use this account to access both Google Play account and GCS.
-      # The former requires it to be in the location configured in Appfile.
-      echo "${GCLOUD_SERVICE_KEY}" | base64 --decode > \
-          flutter/android/app/play-store-service-account.json
-      gcloud auth activate-service-account --key-file \
-          flutter/android/app/play-store-service-account.json
+      # Install and configure gcloud
+      # Since the script is too noisy printing "tar -xv", we drop stderr.
+      curl -sSL https://sdk.cloud.google.com | \
+        bash -s -- --disable-prompts --install-dir="${SDK_ROOT?}" >/dev/null \
+        2>&1
+      # This is needed only for iOS to fetch Fastlane match keys repository.
+      git config --global \
+        credential.https://source.developers.google.com.helper \
+        gcloud.sh
+      gcloud version
 
-      mkdir -p ~/.android
-      gsutil cp gs://dasfoo-keystore/debug.keystore ~/.android/
-      gsutil cp gs://dasfoo-keystore/delern.jks flutter/android/app/
+      echo "${GCLOUD_SERVICE_ACCOUNT_DATA?}" > \
+        "${GOOGLE_APPLICATION_CREDENTIALS?}"
+      gcloud auth activate-service-account \
+        --key-file "${GOOGLE_APPLICATION_CREDENTIALS?}"
+      gsutil cp gs://dasfoo-keystore/delern.jks "${ANDROID_KEYSTORE_PATH?}"
 
       bundle exec fastlane ensure_clean_git &&
         PROJECT=delern-debug npm --prefix firebase run deploy &&

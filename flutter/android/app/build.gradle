@@ -33,7 +33,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('delern.jks')
+            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH'))
             keyAlias 'delern'
             storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
             keyPassword System.getenv('ANDROID_KEYSTORE_KEY_PASSWORD')

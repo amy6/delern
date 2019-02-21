@@ -24,6 +24,9 @@ vendor
 # Directory with firebase tool cache.
 /firebase/.firebase
 
+# Firebase config file (e.g. project aliases).
+/firebase/.firebaserc
+
 # Google Play (and other usage) deploy key
 /flutter/android/app/play-store-service-account.json
 
