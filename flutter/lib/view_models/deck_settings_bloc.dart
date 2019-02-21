@@ -115,13 +115,12 @@ class DeckSettingsBloc extends ScreenBloc {
     _deckSettingsUiStateController.stream.listen((settingsUiState) {
       _settingsUiState = settingsUiState;
     });
-  }
 
-  @override
-  void closeScreen() async {
-    // TODO(ksheremet): Consider to check whether deck settings changed
-    if (await _saveDeckSettings()) {
-      super.notifyPop();
-    }
+    leaveScreen.listen((_) async {
+      // TODO(ksheremet): Consider to check whether deck settings changed
+      if (await _saveDeckSettings()) {
+        notifyPop();
+      }
+    });
   }
 }

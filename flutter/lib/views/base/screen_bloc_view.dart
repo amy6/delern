@@ -33,7 +33,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async {
         // Bloc decides what happens when user requested to leave screen
-        widget.bloc.closeScreen();
+        widget.bloc.closeScreenUserIntention.add(null);
         return false;
       },
       child: Scaffold(
