@@ -17,6 +17,8 @@ env:
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
     - ANDROID_SDK_ROOT="$SDK_ROOT/android"
+    # Gradle uses old env: https://issuetracker.google.com/issues/125138969.
+    - ANDROID_HOME="$ANDROID_SDK_ROOT"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
