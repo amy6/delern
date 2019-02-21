@@ -29,6 +29,9 @@ env:
     # This environment variable is read by Fastlane Supply, which uses the same
     # account we use to access GCloud, to upload the app to Play Store.
     - SUPPLY_JSON_KEY="$GOOGLE_APPLICATION_CREDENTIALS"
+    # A workaround to hide large dumps of text files, see also
+    # https://github.com/flutter/flutter/pull/4989.
+    - BOT=false
 
 os: osx
 
