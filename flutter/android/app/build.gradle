@@ -33,7 +33,11 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH'))
+            // Even when the value of file() is unused (debug build, dependency
+            // resolution etc), the function call is still evaluated. When this
+            // environment variable is unset (null), file() complains, so we
+            // have to provide a default value.
+            storeFile file(System.getenv('ANDROID_KEYSTORE_PATH') ?: 'release.keystore')
             keyAlias 'delern'
             storePassword System.getenv('ANDROID_KEYSTORE_PASSWORD')
             keyPassword System.getenv('ANDROID_KEYSTORE_KEY_PASSWORD')

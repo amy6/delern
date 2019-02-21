@@ -17,6 +17,8 @@ env:
     - PAGER=cat
     - SDK_ROOT="$HOME/sdk"
     - ANDROID_SDK_ROOT="$SDK_ROOT/android"
+    # Gradle uses old env: https://issuetracker.google.com/issues/125138969.
+    - ANDROID_HOME="$ANDROID_SDK_ROOT"
     - PATH="$SDK_ROOT/flutter/bin:$SDK_ROOT/google-cloud-sdk/bin:$PATH"
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
     - CLOUDSDK_CORE_DISABLE_PROMPTS=1
@@ -27,6 +29,9 @@ env:
     # This environment variable is read by Fastlane Supply, which uses the same
     # account we use to access GCloud, to upload the app to Play Store.
     - SUPPLY_JSON_KEY="$GOOGLE_APPLICATION_CREDENTIALS"
+    # A workaround to hide large dumps of text files, see also
+    # https://github.com/flutter/flutter/pull/4989.
+    - BOT=false
 
 os: osx
 

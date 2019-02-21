@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
+
+if [ -z "$CI" -a -t 1 ]; then
+	echo 'This script is not supposed to be run outside of CI. It may'
+	echo 'silently overwrite important files on your filesystem. Press'
+	echo 'Ctrl-C to stop now, or ENTER to continue at your own risk.'
+	read
+	echo 'Proceeding...'
+fi
+
+set -x
 
 cd "$(dirname "$0")"
 
