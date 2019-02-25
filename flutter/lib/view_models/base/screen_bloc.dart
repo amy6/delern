@@ -11,6 +11,15 @@ abstract class ScreenBloc {
     _localeController.stream.listen((locale) {
       _locale = locale;
     });
+    _closeScreenController.stream.listen((_) {
+      _leaveScreenController.add(null);
+    });
+
+    _leaveScreen.listen((_) async {
+      if (await userClosesScreen()) {
+        notifyPop();
+      }
+    });
   }
 
   /// Contains internationalized messages. It used to show user messages
@@ -33,7 +42,8 @@ abstract class ScreenBloc {
   final _closeScreenController = StreamController<void>();
 
   /// A stream that emits an event when user leaves a screen
-  Stream<void> get leaveScreen => _closeScreenController.stream;
+  Stream<void> get _leaveScreen => _leaveScreenController.stream;
+  final _leaveScreenController = StreamController<void>();
 
   /// Call when any errors occur
   @protected
@@ -41,6 +51,12 @@ abstract class ScreenBloc {
     _onErrorController
         .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
   }
+
+  /// Method that checks whether it is ok to close the screen.
+  /// On default method always allows to close a screen. To add more
+  /// functionality it should be overwritten in a subclass.
+  @protected
+  Future<bool> userClosesScreen() async => true;
 
   /// Internal method that called by BLoC when screen must be closed
   @protected
@@ -55,5 +71,6 @@ abstract class ScreenBloc {
     _onErrorController.close();
     _localeController.close();
     _closeScreenController.close();
+    _leaveScreenController.close();
   }
 }

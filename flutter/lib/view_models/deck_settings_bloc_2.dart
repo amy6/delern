@@ -86,7 +86,7 @@ class DeckSettingsBloc extends ScreenBloc {
       return true;
     } catch (e, stackTrace) {
       ErrorReporting.report('updateDeck', e, stackTrace ?? StackTrace.current);
-      super.notifyErrorOccurred(e);
+      notifyErrorOccurred(e);
     }
     return false;
   }
@@ -95,7 +95,7 @@ class DeckSettingsBloc extends ScreenBloc {
     _deleteDeckController.stream.listen((_) async {
       try {
         await _delete();
-        super.notifyPop();
+        notifyPop();
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'deleteCard', e, stackTrace ?? StackTrace.current);
@@ -122,12 +122,8 @@ class DeckSettingsBloc extends ScreenBloc {
     _deckTypeController.stream.listen((deckType) => _deckType = deckType);
 
     _isMarkdownController.stream.listen((markdown) => _isMarkdown = markdown);
-
-    leaveScreen.listen((_) async {
-      // TODO(ksheremet): Consider to check whether deck settings changed
-      if (await _saveDeckSettings()) {
-        notifyPop();
-      }
-    });
   }
+
+  @override
+  Future<bool> userClosesScreen() async => await _saveDeckSettings();
 }
