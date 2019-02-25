@@ -11,19 +11,18 @@ import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:delern_flutter/view_models/base/screen_bloc.dart';
 import 'package:meta/meta.dart';
 
-class DeckSettingsUIState {
-  String deckName;
-  DeckType deckType;
-  bool isMarkdown;
-}
-
 class DeckSettingsBloc extends ScreenBloc {
   final DeckModel _deck;
-  DeckSettingsUIState _settingsUiState;
+  String _deckName;
+  DeckType _deckType;
+  bool _isMarkdown;
 
   DeckSettingsBloc({@required DeckModel deck})
       : assert(deck != null),
         _deck = deck {
+    _deckName = deck.name;
+    _deckType = deck.type;
+    _isMarkdown = deck.markdown;
     _initListeners();
   }
 
@@ -36,10 +35,14 @@ class DeckSettingsBloc extends ScreenBloc {
   final _showDialogController = StreamController<String>();
   Stream<String> get showConfirmationDialog => _showDialogController.stream;
 
-  final _deckSettingsUiStateController =
-      StreamController<DeckSettingsUIState>();
-  Sink<DeckSettingsUIState> get deckSettingsUiState =>
-      _deckSettingsUiStateController.sink;
+  final _deckNameController = StreamController<String>();
+  Sink<String> get deckName => _deckNameController.sink;
+
+  final _deckTypeController = StreamController<DeckType>();
+  Sink<DeckType> get deckType => _deckTypeController.sink;
+
+  final _isMarkdownController = StreamController<bool>();
+  Sink<bool> get isMarkdown => _isMarkdownController.sink;
 
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
@@ -67,21 +70,23 @@ class DeckSettingsBloc extends ScreenBloc {
     _deleteDeckController.close();
     _deleteDeckIntentionController.close();
     _showDialogController.close();
-    _deckSettingsUiStateController.close();
+    _deckTypeController.close();
+    _deckNameController.close();
+    _isMarkdownController.close();
     super.dispose();
   }
 
   Future<bool> _saveDeckSettings() async {
     _deck
-      ..name = _settingsUiState.deckName
-      ..markdown = _settingsUiState.isMarkdown
-      ..type = _settingsUiState.deckType;
+      ..name = _deckName
+      ..markdown = _isMarkdown
+      ..type = _deckType;
     try {
       await _save();
       return true;
     } catch (e, stackTrace) {
       ErrorReporting.report('updateDeck', e, stackTrace ?? StackTrace.current);
-      super.notifyErrorOccurred(e);
+      notifyErrorOccurred(e);
     }
     return false;
   }
@@ -90,7 +95,7 @@ class DeckSettingsBloc extends ScreenBloc {
     _deleteDeckController.stream.listen((_) async {
       try {
         await _delete();
-        super.notifyPop();
+        notifyPop();
       } catch (e, stackTrace) {
         ErrorReporting.report(
             'deleteCard', e, stackTrace ?? StackTrace.current);
@@ -112,9 +117,11 @@ class DeckSettingsBloc extends ScreenBloc {
       _showDialogController.add(deleteDeckQuestion);
     });
 
-    _deckSettingsUiStateController.stream.listen((settingsUiState) {
-      _settingsUiState = settingsUiState;
-    });
+    _deckNameController.stream.listen((name) => _deckName = name);
+
+    _deckTypeController.stream.listen((deckType) => _deckType = deckType);
+
+    _isMarkdownController.stream.listen((markdown) => _isMarkdown = markdown);
   }
 
   @override

@@ -7,6 +7,7 @@ import 'package:delern_flutter/views/deck_settings/deck_type_dropdown_widget.dar
 import 'package:delern_flutter/views/helpers/save_updates_dialog.dart';
 import 'package:flutter/material.dart';
 
+// This view doesn't use any ui state object. For every change there is a sink.
 class DeckSettings extends StatefulWidget {
   final DeckModel _deck;
 
@@ -20,17 +21,20 @@ class _DeckSettingsState extends State<DeckSettings> {
   final TextEditingController _deckNameController = TextEditingController();
   DeckSettingsBloc _bloc;
 
-  DeckSettingsUIState _settingsModel;
+  // I cannot get rid of this field because it is used in 2 places: app bar
+  // and "rename deck" field.
+  String _deckName;
+  DeckType _deckType;
+  bool _isMarkdown;
 
   @override
   void initState() {
+    _deckName = widget._deck.name;
+    _deckType = widget._deck.type;
+    _isMarkdown = widget._deck.markdown;
     _bloc = DeckSettingsBloc(deck: widget._deck);
     _bloc.showConfirmationDialog.listen(_showDeleteDeckDialog);
-    _deckNameController.text = widget._deck.name;
-    _settingsModel = DeckSettingsUIState()
-      ..deckName = widget._deck.name
-      ..deckType = widget._deck.type
-      ..isMarkdown = widget._deck.markdown;
+    _deckNameController.text = _deckName;
     super.initState();
   }
 
@@ -57,7 +61,7 @@ class _DeckSettingsState extends State<DeckSettings> {
 
   @override
   Widget build(BuildContext context) => ScreenBlocView(
-        appBar: AppBar(title: Text(_settingsModel.deckName), actions: <Widget>[
+        appBar: AppBar(title: Text(_deckName), actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
@@ -81,8 +85,8 @@ class _DeckSettingsState extends State<DeckSettings> {
                 style: AppStyles.primaryText,
                 onChanged: (text) {
                   setState(() {
-                    _settingsModel.deckName = text;
-                    _bloc.deckSettingsUiState.add(_settingsModel);
+                    _deckName = text;
+                    _bloc.deckName.add(text);
                   });
                 },
               ),
@@ -102,10 +106,10 @@ class _DeckSettingsState extends State<DeckSettings> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   DeckTypeDropdownWidget(
-                    value: _settingsModel.deckType,
+                    value: _deckType,
                     valueChanged: (newDeckType) => setState(() {
-                          _settingsModel.deckType = newDeckType;
-                          _bloc.deckSettingsUiState.add(_settingsModel);
+                          _deckType = newDeckType;
+                          _bloc.deckType.add(newDeckType);
                         }),
                   ),
                 ],
@@ -118,11 +122,11 @@ class _DeckSettingsState extends State<DeckSettings> {
                     style: AppStyles.secondaryText,
                   ),
                   Switch(
-                    value: _settingsModel.isMarkdown,
+                    value: _isMarkdown,
                     onChanged: (newValue) {
                       setState(() {
-                        _settingsModel.isMarkdown = newValue;
-                        _bloc.deckSettingsUiState.add(_settingsModel);
+                        _isMarkdown = newValue;
+                        _bloc.isMarkdown.add(newValue);
                       });
                     },
                   )
