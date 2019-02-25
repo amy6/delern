@@ -3,6 +3,10 @@
 I'm really glad you're reading this, because we need volunteer developers
 to help this project to become great!:tada::+1:
 
+**To learn about the project structure and how to install a dev environment
+or if you are GSSoC19 participant please have a look on 
+the [Wiki](https://github.com/dasfoo/delern/wiki)**
+
 ## Contributing code in Mobile App
 
 :rocket:Install environment
