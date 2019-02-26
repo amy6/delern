@@ -122,7 +122,7 @@ class CardCreateUpdateBloc {
         _onCardAddedController.add(locale.cardAddedUserMessage);
       }
     } catch (e, stackTrace) {
-      ErrorReporting.report('saveCard', e, stackTrace ?? StackTrace.current);
+      ErrorReporting.report('saveCard', e, stackTrace);
       _onErrorController
           .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
     }

@@ -9,8 +9,7 @@ class UserMessages {
   // TODO(ksheremet): Get rid of it
   static Future<void> showError(ScaffoldState scaffoldFinder(), e,
       [StackTrace stackTrace]) {
-    var errorFuture =
-        ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);
+    var errorFuture = ErrorReporting.report('showError', e, stackTrace);
 
     // Call a finder only *after* reporting the error, in case it crashes
     // (often because Scaffold.of cannot find Scaffold ancestor widget).
@@ -20,11 +19,6 @@ class UserMessages {
     showMessage(scaffoldState, message);
 
     return errorFuture;
-  }
-
-  // TODO(ksheremet): Get rid of it
-  static void reportError(e, [StackTrace stackTrace]) {
-    ErrorReporting.report('showError', e, stackTrace ?? StackTrace.current);
   }
 
   // TODO(ksheremet): Add user message for Snackbar and error message for
