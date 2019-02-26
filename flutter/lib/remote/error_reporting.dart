@@ -29,6 +29,7 @@ class ErrorReporting {
     if (stackTrace == null && error is Error) {
       stackTrace = error.stackTrace;
     }
+    stackTrace ??= StackTrace.current;
 
     if (_sentry == null) {
       var environment = 'production';

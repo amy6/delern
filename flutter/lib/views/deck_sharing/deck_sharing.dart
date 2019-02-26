@@ -6,6 +6,7 @@ import 'package:delern_flutter/flutter/styles.dart';
 import 'package:delern_flutter/flutter/user_messages.dart';
 import 'package:delern_flutter/models/deck_access_model.dart';
 import 'package:delern_flutter/models/deck_model.dart';
+import 'package:delern_flutter/remote/error_reporting.dart';
 import 'package:delern_flutter/remote/user_lookup.dart';
 import 'package:delern_flutter/view_models/deck_access_view_model.dart';
 import 'package:delern_flutter/views/deck_sharing/deck_access_dropdown.dart';
@@ -88,7 +89,6 @@ class _DeckSharingState extends State<DeckSharing> {
   bool _isEmailCorrect() => _textController.text.contains('@');
 
   Future<void> _shareDeck(AccessType deckAccess, BuildContext context) async {
-    print('Share deck: $deckAccess: ${_textController.text}');
     try {
       var uid = await userLookup(_textController.text.toString());
       if (uid == null) {
@@ -109,7 +109,7 @@ class _DeckSharingState extends State<DeckSharing> {
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).offlineUserMessage);
     } on HttpException catch (e, stackTrace) {
-      UserMessages.reportError(e, stackTrace);
+      ErrorReporting.report('share deck', e, stackTrace);
       UserMessages.showMessage(Scaffold.of(context),
           AppLocalizations.of(context).serverUnavailableUserMessage);
     } catch (e, stackTrace) {

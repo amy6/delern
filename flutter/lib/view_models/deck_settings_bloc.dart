@@ -86,7 +86,7 @@ class DeckSettingsBloc extends ScreenBloc {
       await _save();
       return true;
     } catch (e, stackTrace) {
-      ErrorReporting.report('updateDeck', e, stackTrace ?? StackTrace.current);
+      ErrorReporting.report('updateDeck', e, stackTrace);
       notifyErrorOccurred(e);
     }
     return false;
@@ -98,8 +98,7 @@ class DeckSettingsBloc extends ScreenBloc {
         await _delete();
         notifyPop();
       } catch (e, stackTrace) {
-        ErrorReporting.report(
-            'deleteCard', e, stackTrace ?? StackTrace.current);
+        ErrorReporting.report('deleteCard', e, stackTrace);
         super.notifyErrorOccurred(e);
       }
     });
