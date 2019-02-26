@@ -24,8 +24,8 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
 
   @override
   void initState() {
-    widget.bloc.pop.listen((_) => Navigator.pop(context));
-    widget.bloc.showError.listen(_showUserMessage);
+    widget.bloc.doPop.listen((_) => Navigator.pop(context));
+    widget.bloc.doShowError.listen(_showUserMessage);
     super.initState();
   }
 
@@ -33,7 +33,7 @@ class _ScreenBlocViewState extends State<ScreenBlocView> {
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async {
         // Bloc decides what happens when user requested to leave screen
-        widget.bloc.closeScreenUserIntention.add(null);
+        widget.bloc.onCloseScreen.add(null);
         return false;
       },
       child: Scaffold(

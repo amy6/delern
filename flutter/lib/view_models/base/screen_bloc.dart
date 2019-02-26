@@ -11,11 +11,7 @@ abstract class ScreenBloc {
     _localeController.stream.listen((locale) {
       _locale = locale;
     });
-    _closeScreenController.stream.listen((_) {
-      _leaveScreenController.add(null);
-    });
-
-    _leaveScreen.listen((_) async {
+    _closeScreenController.stream.listen((_) async {
       if (await userClosesScreen()) {
         notifyPop();
       }
@@ -26,24 +22,20 @@ abstract class ScreenBloc {
   AppLocalizations get locale => _locale;
 
   /// A stream that emit an event when screen must be closed
-  Stream<void> get pop => _onPopController.stream;
+  Stream<void> get doPop => _onPopController.stream;
   final _onPopController = StreamController<void>();
 
   /// A stream that emits an error message when an error occurs.
-  Stream<String> get showError => _onErrorController.stream;
+  Stream<String> get doShowError => _onErrorController.stream;
   final _onErrorController = StreamController<String>();
 
   /// Sink to write when locale is changed
-  Sink<AppLocalizations> get localeSink => _localeController.sink;
+  Sink<AppLocalizations> get onLocale => _localeController.sink;
   final _localeController = StreamController<AppLocalizations>();
 
   /// Sink to write an event when user decides to leave a screen
-  Sink<void> get closeScreenUserIntention => _closeScreenController.sink;
+  Sink<void> get onCloseScreen => _closeScreenController.sink;
   final _closeScreenController = StreamController<void>();
-
-  /// A stream that emits an event when user leaves a screen
-  Stream<void> get _leaveScreen => _leaveScreenController.stream;
-  final _leaveScreenController = StreamController<void>();
 
   /// Call when any errors occur
   @protected
@@ -71,6 +63,5 @@ abstract class ScreenBloc {
     _onErrorController.close();
     _localeController.close();
     _closeScreenController.close();
-    _leaveScreenController.close();
   }
 }

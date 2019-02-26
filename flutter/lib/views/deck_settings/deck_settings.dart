@@ -43,7 +43,7 @@ class _DeckSettingsState extends State<DeckSettings> {
     // TODO(ksheremet): Locale must be somewhere in ScreenBlocView
     final locale = AppLocalizations.of(context);
     if (_bloc?.locale != locale) {
-      _bloc.localeSink.add(locale);
+      _bloc.onLocale.add(locale);
     }
     super.didChangeDependencies();
   }
