@@ -33,7 +33,7 @@ class _DeckSettingsState extends State<DeckSettings> {
     _deckType = widget._deck.type;
     _isMarkdown = widget._deck.markdown;
     _bloc = DeckSettingsBloc(deck: widget._deck);
-    _bloc.showConfirmationDialog.listen(_showDeleteDeckDialog);
+    _bloc.doShowConfirmationDialog.listen(_showDeleteDeckDialog);
     _deckNameController.text = _deckName;
     super.initState();
   }
@@ -55,7 +55,7 @@ class _DeckSettingsState extends State<DeckSettings> {
         yesAnswer: AppLocalizations.of(context).delete,
         noAnswer: MaterialLocalizations.of(context).cancelButtonLabel);
     if (deleteDeckDialog) {
-      _bloc.deleteDeckSink.add(null);
+      _bloc.onDeleteDeck.add(null);
     }
   }
 
@@ -65,7 +65,7 @@ class _DeckSettingsState extends State<DeckSettings> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
-              _bloc.deleteDeckIntentionSink.add(null);
+              _bloc.onDeleteDeckIntention.add(null);
             },
           ),
         ]),
@@ -86,7 +86,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                 onChanged: (text) {
                   setState(() {
                     _deckName = text;
-                    _bloc.deckName.add(text);
+                    _bloc.onDeckName.add(text);
                   });
                 },
               ),
@@ -109,7 +109,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                     value: _deckType,
                     valueChanged: (newDeckType) => setState(() {
                           _deckType = newDeckType;
-                          _bloc.deckType.add(newDeckType);
+                          _bloc.onDeckType.add(newDeckType);
                         }),
                   ),
                 ],
@@ -126,7 +126,7 @@ class _DeckSettingsState extends State<DeckSettings> {
                     onChanged: (newValue) {
                       setState(() {
                         _isMarkdown = newValue;
-                        _bloc.isMarkdown.add(newValue);
+                        _bloc.onMarkdown.add(newValue);
                       });
                     },
                   )

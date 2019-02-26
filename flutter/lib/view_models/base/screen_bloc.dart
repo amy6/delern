@@ -8,10 +8,10 @@ abstract class ScreenBloc {
   AppLocalizations _locale;
 
   ScreenBloc() {
-    _localeController.stream.listen((locale) {
+    _onLocaleController.stream.listen((locale) {
       _locale = locale;
     });
-    _closeScreenController.stream.listen((_) async {
+    _onCloseScreenController.stream.listen((_) async {
       if (await userClosesScreen()) {
         notifyPop();
       }
@@ -22,25 +22,25 @@ abstract class ScreenBloc {
   AppLocalizations get locale => _locale;
 
   /// A stream that emit an event when screen must be closed
-  Stream<void> get doPop => _onPopController.stream;
-  final _onPopController = StreamController<void>();
+  Stream<void> get doPop => _doPopController.stream;
+  final _doPopController = StreamController<void>();
 
   /// A stream that emits an error message when an error occurs.
-  Stream<String> get doShowError => _onErrorController.stream;
-  final _onErrorController = StreamController<String>();
+  Stream<String> get doShowError => _doShowErrorController.stream;
+  final _doShowErrorController = StreamController<String>();
 
   /// Sink to write when locale is changed
-  Sink<AppLocalizations> get onLocale => _localeController.sink;
-  final _localeController = StreamController<AppLocalizations>();
+  Sink<AppLocalizations> get onLocale => _onLocaleController.sink;
+  final _onLocaleController = StreamController<AppLocalizations>();
 
   /// Sink to write an event when user decides to leave a screen
-  Sink<void> get onCloseScreen => _closeScreenController.sink;
-  final _closeScreenController = StreamController<void>();
+  Sink<void> get onCloseScreen => _onCloseScreenController.sink;
+  final _onCloseScreenController = StreamController<void>();
 
   /// Call when any errors occur
   @protected
   void notifyErrorOccurred(Exception e) {
-    _onErrorController
+    _doShowErrorController
         .add(UserMessages.formUserFriendlyErrorMessage(locale, e));
   }
 
@@ -53,15 +53,15 @@ abstract class ScreenBloc {
   /// Internal method that called by BLoC when screen must be closed
   @protected
   void notifyPop() {
-    _onPopController.add(null);
+    _doPopController.add(null);
   }
 
   /// Method releases resources
   @mustCallSuper
   void dispose() {
-    _onPopController.close();
-    _onErrorController.close();
-    _localeController.close();
-    _closeScreenController.close();
+    _doPopController.close();
+    _doShowErrorController.close();
+    _onLocaleController.close();
+    _onCloseScreenController.close();
   }
 }

@@ -15,34 +15,35 @@ class DeckSettingsBloc extends ScreenBloc {
   final DeckModel _deck;
   String _deckName;
   DeckType _deckType;
-  bool _isMarkdown;
+  bool _markdown;
 
   DeckSettingsBloc({@required DeckModel deck})
       : assert(deck != null),
         _deck = deck {
     _deckName = deck.name;
     _deckType = deck.type;
-    _isMarkdown = deck.markdown;
+    _markdown = deck.markdown;
     _initListeners();
   }
 
-  final _deleteDeckController = StreamController<void>();
-  Sink<void> get deleteDeckSink => _deleteDeckController.sink;
+  final _onDeleteDeckController = StreamController<void>();
+  Sink<void> get onDeleteDeck => _onDeleteDeckController.sink;
 
-  final _deleteDeckIntentionController = StreamController<void>();
-  Sink<void> get deleteDeckIntentionSink => _deleteDeckIntentionController.sink;
+  final _onDeleteDeckIntention = StreamController<void>();
+  Sink<void> get onDeleteDeckIntention => _onDeleteDeckIntention.sink;
 
-  final _showDialogController = StreamController<String>();
-  Stream<String> get showConfirmationDialog => _showDialogController.stream;
+  final _doShowConfirmationDialogController = StreamController<String>();
+  Stream<String> get doShowConfirmationDialog =>
+      _doShowConfirmationDialogController.stream;
 
-  final _deckNameController = StreamController<String>();
-  Sink<String> get deckName => _deckNameController.sink;
+  final _onDeckNameController = StreamController<String>();
+  Sink<String> get onDeckName => _onDeckNameController.sink;
 
-  final _deckTypeController = StreamController<DeckType>();
-  Sink<DeckType> get deckType => _deckTypeController.sink;
+  final _onDeckTypeController = StreamController<DeckType>();
+  Sink<DeckType> get onDeckType => _onDeckTypeController.sink;
 
-  final _isMarkdownController = StreamController<bool>();
-  Sink<bool> get isMarkdown => _isMarkdownController.sink;
+  final _onMarkdownController = StreamController<bool>();
+  Sink<bool> get onMarkdown => _onMarkdownController.sink;
 
   Future<void> _delete() async {
     logDeckDelete(_deck.key);
@@ -67,19 +68,19 @@ class DeckSettingsBloc extends ScreenBloc {
 
   @override
   void dispose() {
-    _deleteDeckController.close();
-    _deleteDeckIntentionController.close();
-    _showDialogController.close();
-    _deckTypeController.close();
-    _deckNameController.close();
-    _isMarkdownController.close();
+    _onDeleteDeckController.close();
+    _onDeleteDeckIntention.close();
+    _doShowConfirmationDialogController.close();
+    _onDeckTypeController.close();
+    _onDeckNameController.close();
+    _onMarkdownController.close();
     super.dispose();
   }
 
   Future<bool> _saveDeckSettings() async {
     _deck
       ..name = _deckName
-      ..markdown = _isMarkdown
+      ..markdown = _markdown
       ..type = _deckType;
     try {
       await _save();
@@ -92,7 +93,7 @@ class DeckSettingsBloc extends ScreenBloc {
   }
 
   void _initListeners() {
-    _deleteDeckController.stream.listen((_) async {
+    _onDeleteDeckController.stream.listen((_) async {
       try {
         await _delete();
         notifyPop();
@@ -103,7 +104,7 @@ class DeckSettingsBloc extends ScreenBloc {
       }
     });
 
-    _deleteDeckIntentionController.stream.listen((_) {
+    _onDeleteDeckIntention.stream.listen((_) {
       String deleteDeckQuestion;
       switch (_deck.access) {
         case AccessType.owner:
@@ -114,14 +115,14 @@ class DeckSettingsBloc extends ScreenBloc {
           deleteDeckQuestion = locale.deleteDeckWriteReadAccessQuestion;
           break;
       }
-      _showDialogController.add(deleteDeckQuestion);
+      _doShowConfirmationDialogController.add(deleteDeckQuestion);
     });
 
-    _deckNameController.stream.listen((name) => _deckName = name);
+    _onDeckNameController.stream.listen((name) => _deckName = name);
 
-    _deckTypeController.stream.listen((deckType) => _deckType = deckType);
+    _onDeckTypeController.stream.listen((deckType) => _deckType = deckType);
 
-    _isMarkdownController.stream.listen((markdown) => _isMarkdown = markdown);
+    _onMarkdownController.stream.listen((markdown) => _markdown = markdown);
   }
 
   @override
