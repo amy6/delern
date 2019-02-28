@@ -5,8 +5,7 @@ description: Spaced repetition learning system (Flutter version)
 # $ flutter build --build-name=... --build-number=...
 # We set a default here for debugging purposes because debug binary is not
 # usually built via Fastlane.
-# TODO(dotdoom): uncomment after https://github.com/flutter/flutter/issues/22788
-#version: 1.0.0+1
+version: 1.0.0+1
 
 dependencies:
   device_info: ^0.3.0
